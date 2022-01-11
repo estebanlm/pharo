@@ -192,10 +192,10 @@ BaselineOfIDE >> baseline: spec [
 		spec baseline: 'HeuristicCompletion' with: [ spec repository: repository ].
 		self specCode: spec.
 		self newTools: spec.
-					
-		"spec baseline: 'Microdown' with: [ spec 
-				repository: self packageRepositoryURL ]."
-	
+		"beautiful comments + microdown"
+		self microdown: spec.
+		self beautifulComments: spec.
+
 		spec 
   			baseline: 'Roassal3' 
   			with: [ spec 
@@ -212,6 +212,13 @@ BaselineOfIDE >> baseline: spec [
 		spec package: 'Kernel-ExtraUtils' 
 		
 	]
+]
+
+{ #category : #baseline }
+BaselineOfIDE >> beautifulComments: spec [
+
+	spec baseline: 'BeautifulComments' with: [ 
+		spec repository: (self class environment at: #BaselineOfPharo) beautifulCommentsRepository ]
 ]
 
 { #category : #actions }
@@ -261,6 +268,22 @@ BaselineOfIDE >> loadIceberg [
 		"Register baselines"
 		Metacello new baseline: 'NewTools'; register ].
 		
+	(Smalltalk classNamed: #BaselineOfMicrodown) ifNotNil: [ :aClass | 
+		pharoPluginClass 
+			addProjectNamed: 'pharo-microdown' 
+			commit: (pharoPluginClass commitOfExternalProject: 'Microdown') 
+			baselines: #(BaselineOfMicrodown).
+		"Register baselines"
+		Metacello new baseline: 'Microdown'; register ].
+		
+	(Smalltalk classNamed: #BaselineOfBeautifulComments) ifNotNil: [ :aClass | 
+		pharoPluginClass 
+			addProjectNamed: 'pharo-beautifulComments' 
+			commit: (pharoPluginClass commitOfExternalProject: 'BeautifulComments') 
+			baselines: #(BaselineOfBeautifulComments).
+		"Register baselines"
+		Metacello new baseline: 'BeautifulComments'; register ].
+
 	pharoPluginClass addIcebergProjectToIceberg.
 	"Register baselines"
 	Metacello new baseline: 'Tonel'; register.
@@ -272,6 +295,15 @@ BaselineOfIDE >> loadIceberg [
 BaselineOfIDE >> makeCalypsoDefaultBrowser [
 
 	(self class environment at: #ClyBrowserMorph) beAllDefault.
+]
+
+{ #category : #baseline }
+BaselineOfIDE >> microdown: spec [
+
+	spec baseline: 'Microdown' with: [ 
+		spec
+			repository: (self class environment at: #BaselineOfPharo) microdownRepository;
+			loads: #('RichText') ]
 ]
 
 { #category : #baseline }
