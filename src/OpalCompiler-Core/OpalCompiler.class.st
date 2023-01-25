@@ -186,7 +186,14 @@ OpalCompiler class >> stopUsingOverlayForDevelopment [
 ]
 
 { #category : #plugins }
+OpalCompiler >> addParsePlugin: aClass [ 
+
+	compilationContext addParseASTTransformationPlugin: aClass
+]
+
+{ #category : #plugins }
 OpalCompiler >> addPlugin: aClass [ 
+
 	compilationContext addASTTransformationPlugin: aClass
 ]
 
@@ -202,11 +209,21 @@ OpalCompiler >> bindings: aDictionary [
 ]
 
 { #category : #private }
+OpalCompiler >> callParsePlugins [
+	| plugins |
+	
+	plugins := compilationContext astParseTransformPlugins ifEmpty: [ ^ self ].
+	plugins sort: [ :a :b | a priority > b priority ]. "priority 0 is sorted last"
+	plugins do: [ :each | ast := each transform: ast ]
+]
+
+{ #category : #private }
 OpalCompiler >> callPlugins [
-	| plugins  |
-	plugins := compilationContext astTransformPlugins ifEmpty: [ ^self ].
-	plugins sort: [:a :b | a priority > b priority]. "priority 0 is sorted last"
-	plugins do: [ :each | ast := each transform: ast].
+	| plugins |
+	
+	plugins := compilationContext astTransformPlugins ifEmpty: [ ^ self ].
+	plugins sort: [ :a :b | a priority > b priority ]. "priority 0 is sorted last"
+	plugins do: [ :each | ast := each transform: ast ]
 ]
 
 { #category : #accessing }
@@ -441,18 +458,19 @@ OpalCompiler >> options: anOptionsArray [
 
 { #category : #'public access' }
 OpalCompiler >> parse [
-	[ast := self compilationContext noPattern 
+
+	[ ast := self compilationContext noPattern 
 		ifTrue: [ self parseExpression ]
 		ifFalse: [ self parseMethod ].
 	ast methodNode compilationContext: self compilationContext.
-	self doSemanticAnalysis]
+	self callParsePlugins.	
+	self doSemanticAnalysis ]
 	on: ReparseAfterSourceEditing 
-			do: 
-			[  	:notification | 
-				self source: notification newSource. 
-				notification retry.  
-			]. 
-	^ast
+	do: [ :notification | 
+		self source: notification newSource. 
+		notification retry ].
+	 
+	^ ast
 ]
 
 { #category : #'public access' }

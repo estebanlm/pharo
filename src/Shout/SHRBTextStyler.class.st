@@ -14,7 +14,8 @@ Class {
 		'font',
 		'isForWorkspace',
 		'pixelHeight',
-		'workspace'
+		'workspace',
+		'plugins'
 	],
 	#classInstVars : [
 		'styleTable',
@@ -839,6 +840,12 @@ SHRBTextStyler class >> vintageStyleTable [
 			(module 								(cyan muchDarker) bold))
 ]
 
+{ #category : #private }
+SHRBTextStyler >> addASTTransformationPlugin: aPlugin [
+
+	self plugins add: aPlugin
+]
+
 { #category : #formatting }
 SHRBTextStyler >> addAttributes: attributes forNode: anRBNode [
 	self 
@@ -868,6 +875,12 @@ SHRBTextStyler >> addAttributesFrom: attributeRuns satisfying: aTestBlock to: aT
 					to: stop ]].
 		
 	^ aText
+]
+
+{ #category : #plugins }
+SHRBTextStyler >> addPlugin: aPlugin [
+
+	self plugins add: aPlugin
 ]
 
 { #category : #formatting }
@@ -1007,16 +1020,28 @@ SHRBTextStyler >> pixelHeight [
 ]
 
 { #category : #private }
+SHRBTextStyler >> plugins [
+
+	^ plugins ifNil: [ plugins := OrderedCollection new ]
+]
+
+{ #category : #private }
 SHRBTextStyler >> privateStyle: aText [
-	| ast |
+	| compiler |
+	
 	aText ifEmpty: [ ^ self ].
-	ast := classOrMetaClass compiler
+
+	compiler := classOrMetaClass compiler
 		source: aText asString;
 		noPattern: self isForWorkspace ;
 		options:  #(+ optionParseErrors + optionSkipSemanticWarnings);
-		requestor: workspace;
-		parse.				
-	^ self style: aText ast: ast
+		requestor: workspace.
+	
+	self plugins do: [ :each | compiler addParsePlugin: each ].
+
+	^ self 
+		style: aText 
+		ast: compiler parse
 ]
 
 { #category : #private }
