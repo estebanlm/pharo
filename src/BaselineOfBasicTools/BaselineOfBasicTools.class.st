@@ -93,9 +93,6 @@ BaselineOfBasicTools >> baseline: spec [
 
 		spec package: 'Tools-CodeNavigation'.
 		spec package: 'Tool-Diff'.
-		spec package: 'Tool-FileList'.
-		spec package: 'Tool-Finder'.
-		spec package: 'Tool-Finder-UI'.
 		spec package: 'Tool-ImageCleaner'.
 		spec package: 'Tools' ]
 ]
@@ -139,6 +136,27 @@ BaselineOfBasicTools >> postload: loader package: packageSpec [
 	ASTTemporariesErrorNode deprecatedAliases: { #RBTemporariesErrorNode }.
 	ASTInvalidCascadeErrorNode deprecatedAliases: { #RBInvalidCascadeErrorNode }.
 	ASTParseErrorNode deprecatedAliases: { #RBParseErrorNode }.
+	
+	ASTAbstractFormatter deprecatedAliases: { #RBAbstractFormatter }.
+	ASTSimpleFormatter deprecatedAliases: { #RBSimpleFormatter }.
+	
+	ASTParseTreeSearcher deprecatedAliases: { #RBParseTreeSearcher }.
+	ASTParseTreeRule deprecatedAliases: { #RBParseTreeRule }.
+	ASTReplaceRule deprecatedAliases: { #RBReplaceRule }.
+	ASTSearchRule deprecatedAliases: { #RBSearchRule }.
+	ASTBlockReplaceRule deprecatedAliases: { #RBBlockReplaceRule }.
+	ASTParseTreeRewriter deprecatedAliases: { #RBParseTreeRewriter }.
+	ASTStringReplacement deprecatedAliases: { #RBStringReplacement }.
+	ASTStringReplaceRule deprecatedAliases: { #RBStringReplaceRule }.
+	
+	ASTReadBeforeWrittenTester deprecatedAliases: { #RBReadBeforeWrittenTester }.
+	ASTProgramNodeVisitor deprecatedAliases: { #RBProgramNodeVisitor }.
+	ASTReturnNodeAdderVisitor deprecatedAliases: { #RBReturnNodeAdderVisitor }.
+	ASTParseErrorNodeVisitor deprecatedAliases: { #RBParseErrorNodeVisitor }.
+	ASTCommentNodeVisitor deprecatedAliases: { #RBCommentNodeVisitor }.
+	ASTGenericNodeVisitor deprecatedAliases: { #RBGenericNodeVisitor }.
+	ASTDumpVisitor deprecatedAliases: { #RBDumpVisitor }.
+	ASTAbstractBlockVisitor deprecatedAliases: { #RBAbstractBlockVisitor }.
 	
 	ASTErrorNotice deprecatedAliases: { #RBErrorNotice }.
 	ASTWarningNotice deprecatedAliases: { #RBWarningNotice }.

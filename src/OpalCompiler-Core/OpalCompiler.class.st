@@ -56,7 +56,7 @@ OpalCompiler class >> compilerClasses [
 	^self package definedClasses
 
 	"Compiler and AST:
-	self package definedClasses, ASTProgramNode package definedClasses, {TRBProgramNodeVisitor}
+	self package definedClasses, ASTProgramNode package definedClasses
 	"
 ]
 
@@ -467,11 +467,7 @@ OpalCompiler >> evaluate [
 	ast ifNil: [ ^ doItMethod ].
 	value := self semanticScope evaluateDoIt: doItMethod.
 
-	self logged == true ifTrue: [
-		Smalltalk globals at: #SystemAnnouncer ifPresent: [ :sysAnn |
-			self semanticScope
-				announceDoItEvaluation: source
-				by: sysAnn uniqueInstance ] ].
+	self logged == true ifTrue: [ self semanticScope announceDoItEvaluation: source by: self class codeSupportAnnouncer ].
 	^ value
 ]
 

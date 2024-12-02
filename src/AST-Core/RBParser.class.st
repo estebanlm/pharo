@@ -228,6 +228,8 @@ RBParser >> getErrorFromClosuresWithMissingOpenings: aCollection [
 
 { #category : 'initialization' }
 RBParser >> initialize [
+
+	super initialize.
 	comments := OrderedCollection new
 ]
 
@@ -292,7 +294,7 @@ RBParser >> parseAssignment [
 	currentToken isAssignment ifTrue: [
 		err := self parseErrorNode: 'variable expected in assigment'.
 		self step. "Consume the :="
-		node := self parseAssignment. "parse the right side".
+		node := self parseAssignment. "parse the right side"
 		node := ASTAssignmentErrorNode from: err contents: { node }.
 		node value: ':='.
 		^ node

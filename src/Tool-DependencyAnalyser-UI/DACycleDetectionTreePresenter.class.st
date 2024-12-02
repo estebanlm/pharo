@@ -26,7 +26,12 @@ DACycleDetectionTreePresenter class >> onPackagesMatch: match [
 
 { #category : 'instance creation' }
 DACycleDetectionTreePresenter class >> onPackagesNamed: aCollection [
-	^ self new
+	self flag: #IncreaseTechnicalDebt.
+	"The flow is BAD AND WRONG! 
+	We should not explicit use StPharoApplication current this is a bad practice. Now I have no idea how to do it otherwise. So let us propagate bad practices.
+	You like debt: here it is"
+
+	^ (self newApplication: StPharoApplication current) 
 		initializeWithPackageName: aCollection;
 		yourself
 ]

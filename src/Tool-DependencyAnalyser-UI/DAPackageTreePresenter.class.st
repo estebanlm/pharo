@@ -88,12 +88,12 @@ DAPackageTreePresenter >> initializePresenters [
 		yourself.
 
 	buttonRefresh := self newButton
-		icon: (self iconNamed: #glamorousRefresh);
+		icon: (self iconNamed: #refresh);
 		label: 'Refresh';
 		help: 'Refresh the list of analyzed packages';
 		yourself.
 
-	browser := Smalltalk tools browser onDefaultEnvironment
+	browser := self application tools browser onDefaultEnvironment
 ]
 
 { #category : 'actions' }
