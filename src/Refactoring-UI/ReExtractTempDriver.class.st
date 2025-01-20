@@ -4,19 +4,12 @@ Class {
 	#instVars : [
 		'interval',
 		'selector',
-		'class',
-		'uiManager'
+		'class'
 	],
-	#category : 'Refactoring-UI-Driver',
+	#category : 'Refactoring-UI-Drivers',
 	#package : 'Refactoring-UI',
-	#tag : 'Driver'
+	#tag : 'Drivers'
 }
-
-{ #category : 'execution' }
-ReExtractTempDriver >> changes [ 
-
-	^ refactoring privateTransform; changes
-]
 
 { #category : 'resources' }
 ReExtractTempDriver >> configureRefactoring [
@@ -39,10 +32,17 @@ ReExtractTempDriver >> extract: anInterval from: aSelector in: aClass [
 { #category : 'user requests' }
 ReExtractTempDriver >> getVariableName: initialAnswer errorMessage: message [
 
-	^ self uiManager
-		request: 'New temp name: ' , message
-		initialAnswer: initialAnswer
-		title: 'Extract code to temp variable'
+	^ self requestDialog 
+		title: 'Extract code to temp variable';
+		label: 'New temp name: ' , message;
+		text: initialAnswer;
+		acceptLabel: 'Ok!';
+		cancelLabel: 'Cancel';
+		onAccept: [ :dialog | dialog presenter text ];
+		openModal
+	
+	
+		
 ]
 
 { #category : 'execution' }
@@ -62,16 +62,4 @@ ReExtractTempDriver >> runRefactoring [
 		[ varName isEmptyOrNil not and: [ failed isEmpty ] ].
 	
 	self applyChanges
-]
-
-{ #category : 'private' }
-ReExtractTempDriver >> uiManager [
-
-	^ uiManager ifNil: [ MorphicUIManager new ]
-]
-
-{ #category : 'private' }
-ReExtractTempDriver >> uiManager: aManager [
-
-	uiManager := aManager
 ]

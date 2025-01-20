@@ -1194,12 +1194,14 @@ UITheme >> createBoxOfSize: finalSizeInteger color: aColor [
 UITheme >> createCloseBoxFor: aSystemWindow [
 	"Answer a button for closing the window."
 
-	^(self
-		newCloseControlIn: aSystemWindow
-		for: aSystemWindow
-		action: [aSystemWindow closeBoxHit]
-		help: 'Close this window' translated)
-		extent: aSystemWindow boxExtent
+	^ (self
+		   newCloseControlIn: aSystemWindow
+		   for: aSystemWindow
+		   action: [
+			   aSystemWindow hide.
+			   aSystemWindow addClosedWindow: aSystemWindow ]
+		   help: 'Close this window' translated) extent:
+		  aSystemWindow boxExtent
 ]
 
 { #category : 'label-styles' }

@@ -77,11 +77,11 @@ RBExtractToTemporaryRefactoring >> compileNewMethod [
 { #category : 'transforming' }
 RBExtractToTemporaryRefactoring >> constructAssignmentFrom: aNode [
 	| valueNode |
-	valueNode := ASTVariableNode named: newVariableName.
+	valueNode := OCVariableNode named: newVariableName.
 	"Use a copy so aNode retains its original parent.
 	In this case the caller is done making use of the parent backlink,
 	but it seems sensible to keep it intact whenever possible."
-	^ASTAssignmentNode variable: valueNode value: aNode copy.
+	^OCAssignmentNode variable: valueNode value: aNode copy.
 ]
 
 { #category : 'initialization' }
@@ -116,7 +116,7 @@ RBExtractToTemporaryRefactoring >> insertTemporary [
 		addNode: (self constructAssignmentFrom: node) before: statementNode;
 		addTemporaryNamed: newVariableName.
 	nodeReferences do: [ :each |
-		each replaceWith: (ASTVariableNode named: newVariableName) ]
+		each replaceWith: (OCVariableNode named: newVariableName) ]
 ]
 
 { #category : 'transforming' }
