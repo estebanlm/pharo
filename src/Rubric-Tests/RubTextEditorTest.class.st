@@ -603,21 +603,19 @@ RubTextEditorTest >> testPreviousWordStopOnUpperCaseComplex [
 ]
 
 { #category : 'tests' }
-RubTextEditorTest >> testPreviousWordStopOnUpperCaseManyUpercases [
-
+RubTextEditorTest >> testPreviousWordStopOnUpperCaseManyUppercases [
 	string := 'AAAb'.
 	editor addString: string.
 
 	self
-		assertPreviousJumpPointFrom: 	'AAAb¶'
-		to: 							  		'AAA¶b'
-		equals: 						  		'AA¶Ab'.	
+		assertPreviousCharGroupFrom:	'AAAb¶'
+		to: 									'AAA¶b'
+		equals: 								'AA¶Ab'.
 
 	self
-		assertPreviousJumpPointFrom:	'AA¶Ab'
-		to: 							  		'¶AAAb'
-		equals: 						  		'¶AAAb'.	
-
+		assertPreviousCharGroupFrom:	'AA¶Ab'
+		to: 									'¶AAAb'
+		equals: 								'¶AAAb'.
 ]
 
 { #category : 'tests' }
