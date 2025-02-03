@@ -1732,32 +1732,38 @@ RubTextEditor >> nextWord: position stopOnUpperCase: stopOnUpperCase [
 	size := string size + 1.
 	position >= size ifTrue: [ ^ size ].
 
-	[
+	[ "Skip blanks"
 	index < string size and: [
 		{
 			Character space.
 			Character tab } includes: (string at: index) ] ] whileTrue: [
 		index := index + 1 ].
 
-	initialIsAlphaNumeric := self isWordCharacterAt: index in: string.
-	
-	
-	index = initialPosition
-		ifTrue: [ index := index + 1 ].
-	
-	[ | nextCharacterInDirection |
-	"If we reach the end"
-	index >= size ifTrue: [ ^ index ].
-	
-	nextCharacterInDirection := string at: index.
-	nextCharacterInDirection = Character cr
-		ifTrue: [ ^ index ].
-	
-		(self
-			 isWordCharacterAt: index
-			 in: string
-			 except: [ :char | stopOnUpperCase and: [ char isUppercase ] ]) = initialIsAlphaNumeric ]
-		whileTrue: [ index := index + 1 ].
+	characterGroupAtStart := self characterGroupAt: index in: string.
+	index = initialPosition ifTrue: [ index := index + 1 ].
+
+	"Do not stop if we are in an uppercase->lowercase transition"
+	(characterGroupAtStart = #upper and: [
+		 stopOnUpperCase not or: [
+			 (self characterGroupAt: index in: string) = #lower ] ]) ifTrue: [
+		characterGroupAtStart := #lower ].
+
+	[ "If we reach the end"
+	index >= size ifTrue: [ ^ size ].
+
+	(string at: index) = Character cr ifTrue: [ ^ index ].
+
+	currentGroup := self characterGroupAt: index in: string.
+	(stopOnUpperCase not and: [ currentGroup = #upper ]) ifTrue: [
+		currentGroup := #lower ].
+
+	currentGroup = characterGroupAtStart ] whileTrue: [
+		index := index + 1 ].
+
+	"Moving to the right from upper to lower, we want to stop before the last upper"
+	(stopOnUpperCase and: [
+		 characterGroupAtStart = #upper and: [ currentGroup = #lower ] ])
+		ifTrue: [ index := index - 1 ].
 
 	^ index
 ]

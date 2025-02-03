@@ -36,7 +36,19 @@ RubTextEditorTest >> assertNextJumpPointOf: actual equals: expected [
 ]
 
 { #category : 'asserting' }
-RubTextEditorTest >> assertPreviousJumpPointFrom: actualFrom to: actualTo equals: expected [
+RubTextEditorTest >> assertNextWordFrom: actualFrom to: actualTo equals: expected [
+
+	| actualIndexFrom actualIndexTo expectedIndex |
+	actualIndexFrom := actualFrom indexOf: $¶.
+	actualIndexTo := actualTo indexOf: $¶.
+	expectedIndex := expected indexOf: $¶.
+
+	actualIndexFrom to: actualIndexTo do: [ :i |
+		self assert: (editor nextWord: i) equals: expectedIndex ]
+]
+
+{ #category : 'asserting' }
+RubTextEditorTest >> assertPreviousCharGroupFrom: actualFrom to: actualTo equals: expected [
 
 	| actualIndexFrom actualIndexTo expectedIndex |
 	actualIndexFrom := actualFrom indexOf: $¶.
@@ -186,6 +198,18 @@ RubTextEditorTest >> testNextWordGoesToEndOfCurrentWord [
 	editor addString: 'abc d'.
 
 	self assert: (editor nextWord: 3) equals: 4
+]
+
+{ #category : 'tests' }
+RubTextEditorTest >> testNextWordManyUppercases [
+
+	string := 'AAAb'.
+	editor addString: string.
+
+	self
+		assertNextWordFrom:	'¶AAAb'
+		to: 						'AAAb¶'
+		equals: 					'AAAb¶'.
 ]
 
 { #category : 'tests' }
