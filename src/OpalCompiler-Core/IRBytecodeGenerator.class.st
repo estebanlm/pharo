@@ -161,14 +161,9 @@ IRBytecodeGenerator >> compiledBlock [
 	| lits quickPrimitive header cb |
 	lits := self literals allButLast "1 free only for compiledBlock".
 	quickPrimitive := self quickMethodPrim.
-	"disabled for now"
-	"(primNumber = 0 and: [quickPrimitive > 0]) ifTrue: [
-		""if we are a quick method we need to add a bytecode at the beginning. #bytecodes
-		takes primitiveBytes into account""
-		primitiveBytes := (ByteArray new: 4) writeStream.
-		encoder stream: primitiveBytes.
-		encoder genCallPrimitive: quickPrimitive.
-	]."
+
+	"Compiled blocks never call primitives"
+	primNumber := 0.
 	header := self spurVMHeader: lits size.
 	cb := CompiledBlock basicNew: self bytecodes size header: header.
 	(WriteStream with: cb)
