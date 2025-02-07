@@ -160,6 +160,7 @@ CompletionEngineTest >> testCompletionAfterKeyword [
 
 	self setEditorTextWithCaret: 'self"x"foo:|"x"baz'.
 	self assert: controller completionToken equals: 'foo:'.
+	self assert: controller tokenToReplace equals: 'foo:'.
 	controller context replaceTokenInEditorWith: 'bar'.
 	self assert: self editorTextWithCaret equals: 'self"x"bar|"x"baz'.
 
@@ -199,6 +200,7 @@ CompletionEngineTest >> testCompletionAfterWord [
 
 	self setEditorTextWithCaret: 'self:=foo|:=baz'.
 	self assert: controller completionToken equals: 'foo'.
+	self assert: controller tokenToReplace equals: 'foo'.
 	controller context replaceTokenInEditorWith: 'bar'.
 	self assert: self editorTextWithCaret equals: 'self:=bar|:=baz'.
 
@@ -296,6 +298,7 @@ CompletionEngineTest >> testCompletionOnFirstLetter [
 
 	self setEditorTextWithCaret: 'self:=f|oo:=baz'.
 	self assert: controller completionToken equals: 'f'.
+	self assert: controller tokenToReplace equals: 'foo'.
 	controller context replaceTokenInEditorWith: 'bar'.
 	self assert: self editorTextWithCaret equals: 'self:=bar|:=baz'.
 
@@ -325,6 +328,7 @@ CompletionEngineTest >> testCompletionOnNoWord [
 
 	self setEditorTextWithCaret: 'self:=|:=baz'.
 	self assert: controller completionToken equals: ''.
+	self assert: controller tokenToReplace equals: ''.
 	controller context replaceTokenInEditorWith: 'bar'.
 	self assert: self editorTextWithCaret equals: 'self:=bar|:=baz'.
 
@@ -658,6 +662,7 @@ CompletionEngineTest >> testReplaceWithSpaces [
 
 	self setEditorTextWithCaret: 'self fo|o baz'.
 	self assert: controller completionToken equals: 'fo'.
+	self assert: controller tokenToReplace equals: 'foo'.
 	controller context replaceTokenInEditorWith: 'bar '.
 	self assert: self editorTextWithCaret equals: 'self bar| baz'.
 
