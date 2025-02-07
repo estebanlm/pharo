@@ -378,9 +378,7 @@ OSSDL2Driver >> setupEventLoop [
 					[ self eventLoopProcessWithoutPlugin ]
 					forkAt: Processor lowIOPriority ] ].
 
-	EventLoopProcess
-		name: 'SDL2 Event loop';
-		resume
+	EventLoopProcess name: 'SDL2 Event loop'
 ]
 
 { #category : 'system startup' }
