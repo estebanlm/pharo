@@ -46,25 +46,33 @@ ClyProtocolEditorMorph >> build [
 
 { #category : 'building' }
 ClyProtocolEditorMorph >> buildEditButton [
-	editButton := IconicButtonMorph new
-		target: self;
-		actionSelector: #openEditor;
-		arguments: #();
-		labelFormSet: (self iconFormSetNamed: #edit);
-		color: Color transparent;
-		borderWidth: 0
+
+	editButton := self theme
+		              newCheckboxIn: self
+		              for: self
+		              getSelected: #isExtensionActive
+		              setSelected: #openEditor
+		              getEnabled: nil
+		              label: ''
+		              help: ''.
+	editButton
+		changeTableLayout;
+		vResizing: #shrinkWrap;
+		hResizing: #shrinkWrap
 ]
 
 { #category : 'building' }
 ClyProtocolEditorMorph >> buildExtensionCheckBoxButton [
+
 	extensionCheckbox := self theme
-		newCheckboxIn: self
-		for: self
-		getSelected: #isExtensionActive
-		setSelected: #toggleExtension
-		getEnabled: nil
-		label: 'extension'
-		help: 'toggle check box to choose/reset package of method'.
+		                     newCheckboxIn: self
+		                     for: self
+		                     getSelected: #isExtensionActive
+		                     setSelected: #toggleExtension
+		                     getEnabled: nil
+		                     label: 'extension'
+		                     help:
+		                     'toggle check box to choose/reset package or protocol of method'.
 	extensionCheckbox
 		changeTableLayout;
 		vResizing: #shrinkWrap;
@@ -171,15 +179,13 @@ ClyProtocolEditorMorph >> toggleExtension [
 ClyProtocolEditorMorph >> update [
 
 	label color: label defaultColor.
-
+ 
 	self isExtensionActive
 		ifTrue: [
-			editButton helpText: 'Choose package for method'.
 			label contents:
 				'Choose package for method, package: '
 				, self printProtocolOrPackage ]
 		ifFalse: [
-			editButton helpText: 'Classify method'.
 			label contents:
 				'Classify method, protocol: ' , self printProtocolOrPackage ]
 ]
