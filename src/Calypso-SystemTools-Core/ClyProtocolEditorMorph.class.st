@@ -22,8 +22,7 @@ Class {
 	#instVars : [
 		'extensionCheckbox',
 		'editButton',
-		'label',
-		'resetButton'
+		'label'
 	],
 	#category : 'Calypso-SystemTools-Core-Editors-Methods',
 	#package : 'Calypso-SystemTools-Core',
@@ -32,8 +31,6 @@ Class {
 
 { #category : 'building' }
 ClyProtocolEditorMorph >> build [
-	self buildResetButton.
-	self addMorphBack: resetButton.
 
 	self buildEditButton.
 	self addMorphBack: editButton.
@@ -43,7 +40,7 @@ ClyProtocolEditorMorph >> build [
 
 	self buildExtensionCheckBoxButton.
 	self addMorphBack: extensionCheckbox.
-
+	self addMorphBack: ClyToolbarSeparatorMorph new.
 	self update
 ]
 
@@ -79,20 +76,6 @@ ClyProtocolEditorMorph >> buildLabel [
 
 	label := self theme newLabelIn: self label: self printProtocolOrPackage.
 	label on: #click send: #openEditor to: self
-]
-
-{ #category : 'building' }
-ClyProtocolEditorMorph >> buildResetButton [
-
-	resetButton := IconicButtonMorph new
-		target: self;
-		actionSelector: #resetProtocolAndPackage;
-		arguments: #();
-		labelFormSet: (self iconFormSetNamed: #close);
-		color: Color transparent;
-		borderWidth: 0;
-		hResizing: #shinkWrap;
-		layoutInset: 4@0
 ]
 
 { #category : 'initialization' }
@@ -186,9 +169,17 @@ ClyProtocolEditorMorph >> toggleExtension [
 
 { #category : 'building' }
 ClyProtocolEditorMorph >> update [
+
 	label color: label defaultColor.
-	label contents: self printProtocolOrPackage.
+
 	self isExtensionActive
-		ifTrue: [ editButton helpText: 'Choose package for method']
-		ifFalse: [ editButton helpText: 'Classify method']
+		ifTrue: [
+			editButton helpText: 'Choose package for method'.
+			label contents:
+				'Choose package for method, package: '
+				, self printProtocolOrPackage ]
+		ifFalse: [
+			editButton helpText: 'Classify method'.
+			label contents:
+				'Classify method, protocol: ' , self printProtocolOrPackage ]
 ]
