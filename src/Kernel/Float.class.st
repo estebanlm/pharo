@@ -205,7 +205,7 @@ Float class >> initialize [
 
 	"Default precision used for comparing two float numbers.
 	Using value described in Numerical Recipes, 3rd edition, Section 5.7, which is pages 229-230 corresponding to the square root of the machine epsilon"
-	DefaultComparisonPrecision :=  1.4901161193847656e-8. "This is the result of `self machineEpsilon sqrt ` but the bootstrap does not work if we do not put the constant directly."
+	DefaultComparisonPrecision :=  1.4901161193847656e-8. "This is the result of `self machineEpsilon sqrt ` but the bootstrap does not work if we do not put the constant directly. This is due to the fact that #sqrt is loaded after this value is initialized."
 
 	MaxVal := 1.7976931348623157e308.
 	MaxValLn := 709.782712893384.
