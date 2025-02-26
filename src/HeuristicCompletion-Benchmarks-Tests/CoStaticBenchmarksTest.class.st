@@ -226,20 +226,64 @@ CoStaticBenchmarksTest >> testMMR [
 ]
 
 { #category : 'tests' }
-CoStaticBenchmarksTest >> testNDCG [
-
+CoStaticBenchmarksTest >> testNDCGValidCase [
     | ndcgValue |
-    "Simulate 2 correct finds at rank=1, prefix=2 => we should get near 1.0 for NDCG.
-     This test just ensures the method runs and returns a value in [0..1]."
-    benchmarks completionBenchs
-        at: 1
-        put: (Dictionary new
-                at: 2 put: #(2 (selA selB));
-                yourself).
+    "Test with a valid case where relevant items exist."
+
+    "Simulate 2 correct finds at rank=1 for prefix=2 => we should get a high NDCG (near 1.0)."
+    benchmarks completionBenchs 
+        at: 1 
+        put: (Dictionary new at: 2 put: #(2 (selA selB)); yourself).
 
 
     ndcgValue := benchmarks ndcgForPrefixSize: 2.
+
     self assert: ndcgValue >= 0.
+    self assert: (ndcgValue >= 1.0 and: [ndcgValue < 2.0]).
+    self assert: ndcgValue > 0.9.
+]
+
+{ #category : 'tests' }
+CoStaticBenchmarksTest >> testNDCGWithEmptyEntries [ 
+
+    "Test with an empty completionBenchs dictionary, should return 0."
+
+    | ndcgValue |
+    ndcgValue := benchmarks ndcgForPrefixSize: 2.
+
+    self assert: ndcgValue = 0.
+]
+
+{ #category : 'tests' }
+CoStaticBenchmarksTest >> testNDCGWithHighRank [
+    | ndcgValue |
+    "Test NDCG calculation when rank exceeds the expected range."
+
+    benchmarks completionBenchs 
+        at: 20 
+        put: (Dictionary new at: 2 put: #(5 (selX selY selZ)); yourself).
+
+    ndcgValue := benchmarks ndcgForPrefixSize: 2.
+
+    self assert: ndcgValue >= 0.
+    self assert: ndcgValue <= 1.
+]
+
+{ #category : 'tests' }
+CoStaticBenchmarksTest >> testNDCGWithMultipleRanks [
+    | ndcgValue |
+    "Test with multiple ranked entries to verify proper discounting."
+
+    benchmarks completionBenchs 
+        at: 1 
+        put: (Dictionary new at: 2 put: #(2 (selA selB)); yourself);
+        at: 2 
+        put: (Dictionary new at: 2 put: #(1 (selC)); yourself).
+
+    ndcgValue := benchmarks ndcgForPrefixSize: 2.
+
+    self assert: ndcgValue > 0.
+    self assert: (ndcgValue > 2.0 and: [ndcgValue < 3.0]).
 ]
 
 { #category : 'tests' }
