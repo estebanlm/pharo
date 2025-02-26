@@ -287,6 +287,18 @@ CoStaticBenchmarksTest >> testNDCGWithMultipleRanks [
 ]
 
 { #category : 'tests' }
+CoStaticBenchmarksTest >> testNDCGWithZeroEntries [
+
+	| ndcgValue |
+	"Test when there are entries but no valid counts."
+	benchmarks completionBenchs at: 1 put: (Dictionary new
+			 at: 2 put: #( 0 #(  ) );
+			 yourself).
+	ndcgValue := benchmarks ndcgForPrefixSize: 2.
+	self assert: ndcgValue equals: 0
+]
+
+{ #category : 'tests' }
 CoStaticBenchmarksTest >> testRankDistributionForPrefixSize [
 
     "We add 1 correct find at ranks 1, 2, and 3 for prefix=2. 
