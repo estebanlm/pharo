@@ -12,6 +12,31 @@
 7. **Recall@K** (measures how often the correct result appears within the top-K results).
 
 
+## API:
+### Key Responsibilities
+
+1. **Execution and Initialization (`run`, `runFor:`)**  
+   - The `run` method iterates through all methods within a specified scope, parsing them to identify message callsites for benchmarking.  
+   - `runFor:` is a convenience method that creates an instance and immediately executes benchmarks for a specified class.  
+
+2. **Benchmarking Callsites (`benchCallsite:atPosition:`)**  
+   - For each callsite, the process iterates over prefix lengths ranging from 2 to 8 characters (or fewer if the selector is shorter).  
+   - It records whether the original selector appears within the top 10 completion candidates and its ranking.  
+   - Completion times are tracked and accumulated in `completionTimes`.  
+
+3. **Accuracy Measurement (`accuracyForCompletionIndex:withPrefixSize:`)**  
+   - Evaluates how frequently the correct selector appears within specific top-index ranges (e.g., 1st, 2nd, 3rd) for a given prefix size.  
+   - Accuracy is calculated by dividing the number of successful completions by the total attempts.  
+
+4. **Performance Timing (`logTime:forPrefix:`, `totalTimeForPrefix:`)**  
+   - Logs execution times for each benchmark run in `completionTimes`.  
+   - Provides methods like `totalTimeForPrefix:` and `averageTimeForPrefix:` to aggregate and analyze performance data.  
+
+5. **Results Analysis and Presentation (`inspectionResults`, `timeResults`)**  
+   - Uses methods annotated with `<inspectorPresentationOrder:>` to format **accuracy results** in a table via `SpTablePresenter`.  
+   - Displays **timing results**, including total and average execution times per prefix size, in a structured manner.
+
+
 
 ## Typical Usage:
 

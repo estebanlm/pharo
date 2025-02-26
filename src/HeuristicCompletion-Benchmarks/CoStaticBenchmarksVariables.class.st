@@ -1,5 +1,5 @@
 "
-`CoStaticBenchmarksMessage` is a subclass of `CoStaticBenchmarks`  focuses on benchmarking variable name (Class Name) completions. It measures the effectiveness of completion algorithms in predicting variable names based on given prefixes. The class includes methods for extracting variable name prefixes, fetching top-ranked completion candidates, and tracking execution performance through various metrics.""
+`CoStaticBenchmarksVariables` is a subclass of `CoStaticBenchmarks`  focuses on benchmarking variable name (Class Name) completions. It measures the effectiveness of completion algorithms in predicting variable names based on given prefixes. The class includes methods for extracting variable name prefixes, fetching top-ranked completion candidates, and tracking execution performance through various metrics.""
 
 
 ## Typical Usage:
