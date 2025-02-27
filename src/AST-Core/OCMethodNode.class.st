@@ -121,11 +121,6 @@ OCMethodNode >> addReturn [
 	^ body addReturn
 ]
 
-{ #category : 'adding-removing' }
-OCMethodNode >> addSelfReturn [
-	^ body addSelfReturn
-]
-
 { #category : 'accessing' }
 OCMethodNode >> allArgumentVariables [
 	^(self argumentNames asOrderedCollection)

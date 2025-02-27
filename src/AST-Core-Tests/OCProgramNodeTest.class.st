@@ -173,20 +173,6 @@ OCProgramNodeTest >> testAddReturn [
 ]
 
 { #category : 'tests - adding' }
-OCProgramNodeTest >> testAddSelfReturn [
-	| tree return |
-	tree := self parseExpression: '1. 2'.
-	return := tree addSelfReturn.
-	self assert: tree statements last equals: return.
-	self assert: (self parseExpression: '1. 2. ^ self') equals: tree.
-
-	tree := self parseExpression: '3. ^ 4'.
-	return := tree addSelfReturn.
-	self assert: tree statements last equals: return.
-	self assert: (self parseExpression: '3. ^ 4') equals: tree
-]
-
-{ #category : 'tests - adding' }
 OCProgramNodeTest >> testAddTemporariesNamed [
 	| tree variables |
 	tree := self parseExpression: '| a | a'.
