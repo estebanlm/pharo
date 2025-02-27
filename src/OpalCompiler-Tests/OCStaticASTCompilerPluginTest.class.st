@@ -21,7 +21,7 @@ OCStaticASTCompilerPluginTest >> testCreateAndUseStaticCompilerPlugin [
 	plugin := OCPluginMeaningOfLife new.
 
 	"Use plugin with compiler"
-	result := Object compiler
+	result := OpalCompiler new
 		          addPlugin: plugin;
 		          evaluate: '42'.
 
