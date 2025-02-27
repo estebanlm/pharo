@@ -1,6 +1,6 @@
 Class {
 	#name : 'OCIRBuilderTest',
-	#superclass : 'AbstractEnvironmentTestCase',
+	#superclass : 'TestCase',
 	#classVars : [
 		'TestToPush'
 	],
