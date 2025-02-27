@@ -6,10 +6,6 @@ Class {
 	#tag : 'FromOld'
 }
 
-{ #category : 'as yet unclassified' }
-OCArrayLiteralTest >> array [  ^ #(#nil #true #false #'nil' #'true' #'false')
-]
-
 { #category : 'running' }
 OCArrayLiteralTest >> compile: methodSourceCode [
 
