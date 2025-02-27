@@ -217,6 +217,15 @@ Internal Representation and Key Implementation Points.'.
 	^ stream contents
 ]
 
+{ #category : 'subclass creation' }
+ClassDescription >> classInstaller [
+	"Answer the class responsible of creating subclasses of myself in the system."
+
+	^ self isAnonymous
+		  ifTrue: [ Smalltalk anonymousClassInstaller ]
+		  ifFalse: [ Smalltalk classInstaller ]
+]
+
 { #category : 'accessing - parallel hierarchy' }
 ClassDescription >> classSide [
 	"Return the metaclass of the couple class/metaclass. Useful to avoid explicit test."
