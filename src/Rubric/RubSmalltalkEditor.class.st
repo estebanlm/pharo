@@ -131,6 +131,12 @@ RubSmalltalkEditor class >> completionEngineClass: aClass [
 ]
 
 { #category : 'completion engine' }
+RubSmalltalkEditor class >> completionEngineInstance [
+
+	^ CompletionEngineInstance 
+]
+
+{ #category : 'completion engine' }
 RubSmalltalkEditor class >> completionEngineInstance: anEngine [
 
 	CompletionEngineInstance := anEngine 
