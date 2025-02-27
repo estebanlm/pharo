@@ -9,7 +9,8 @@ Class {
 		'completionEngine'
 	],
 	#classVars : [
-		'CompletionEngineClass'
+		'CompletionEngineClass',
+		'CompletionEngineInstance'
 	],
 	#category : 'Rubric-Editing-Code',
 	#package : 'Rubric',
@@ -124,9 +125,21 @@ RubSmalltalkEditor class >> completionEngineClass [
 ]
 
 { #category : 'completion engine' }
-RubSmalltalkEditor class >> completionEngineClass: anEngine [
+RubSmalltalkEditor class >> completionEngineClass: aClass [
 
-	CompletionEngineClass := anEngine
+	CompletionEngineClass := aClass
+]
+
+{ #category : 'completion engine' }
+RubSmalltalkEditor class >> completionEngineInstance [
+
+	^ CompletionEngineInstance 
+]
+
+{ #category : 'completion engine' }
+RubSmalltalkEditor class >> completionEngineInstance: anEngine [
+
+	CompletionEngineInstance := anEngine 
 ]
 
 { #category : 'completion engine' }
@@ -359,11 +372,13 @@ RubSmalltalkEditor >> completionAround: aBlock keyStroke: anEvent [
 
 { #category : 'completion engine' }
 RubSmalltalkEditor >> completionEngine [
-
+	
 	^ completionEngine ifNil: [
-		CompletionEngineClass ifNotNil: [
-			self completionEngine: CompletionEngineClass new.
-			completionEngine ] ]
+		CompletionEngineInstance 
+				ifNotNil: [ completionEngine := CompletionEngineInstance ]
+				ifNil: [ 	CompletionEngineClass ifNotNil: [
+								self completionEngine: CompletionEngineClass new.
+								completionEngine ] ] ]
 ]
 
 { #category : 'completion engine' }
