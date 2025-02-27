@@ -286,14 +286,14 @@ OCIRBuilderTest >> testLiteralVariableClassVariable [
 OCIRBuilderTest >> testLiteralVariableGlobale [
 	| iRMethod aCompiledMethod |
 	iRMethod := OCIRBuilder new 
-		pushLiteralVariable: (GlobalVariable new key: #ToT value: 122);
+		pushLiteralVariable: (self class binding );
 		returnTop;
 		ir.
 
 	aCompiledMethod := iRMethod compiledMethod.
 
 	self assert: (aCompiledMethod isKindOf: CompiledMethod).
-	self assert: (aCompiledMethod valueWithReceiver: nil) equals: 122.
+	self assert: (aCompiledMethod valueWithReceiver: nil) equals: self class.
 	^ iRMethod
 ]
 
