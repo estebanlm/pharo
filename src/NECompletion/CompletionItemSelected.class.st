@@ -8,8 +8,9 @@ Class {
 		'item',
 		'index'
 	],
-	#category : 'NECompletion',
-	#package : 'NECompletion'
+	#category : 'NECompletion-Model',
+	#package : 'NECompletion',
+	#tag : 'Model'
 }
 
 { #category : 'accessing' }
