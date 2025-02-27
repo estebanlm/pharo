@@ -27,6 +27,13 @@ OCSimpleFormatterTest >> formatClass: aClass selector: aSymbol [
 ]
 
 { #category : 'private' }
+OCSimpleFormatterTest >> formatNode: aNode [ 
+
+	^ (self formatterClass new format: aNode)
+		
+]
+
+{ #category : 'private' }
 OCSimpleFormatterTest >> formatterClass [
   ^OCSimpleFormatter
 ]
@@ -35,10 +42,9 @@ OCSimpleFormatterTest >> formatterClass [
 OCSimpleFormatterTest >> testCoreSystem [
 	{ Object . Behavior . Boolean . True  . False . Integer . SmallInteger  . Collection . String}
 		do: [ :each |
-			| class |
 			self
-				formatClass: class;
-				formatClass: class class ]
+				formatClass: each;
+				formatClass: each class ]
 ]
 
 { #category : 'tests' }
@@ -47,19 +53,19 @@ OCSimpleFormatterTest >> testFormatPragmaWithLastIsSymbolArgument [
 	"formatter should not create invalid code by removing whitespace between #= and >"
 	inputSource := 'foo  <selector: #= > ^ self'.
 	tree := self parseMethod: inputSource.
-	outputSource := self formatterClass new format: tree.
+	outputSource := self formatNode: tree.
 	self shouldnt: [self parseMethod: outputSource] raise: OCCodeError.
 
 	"already worked and still should for non-symbol arguments"
 	inputSource := 'foo  <selector: 0 > ^ self'.
 	tree := self parseMethod: inputSource.
-	outputSource := self formatterClass new format: tree.
+	outputSource := self formatNode: tree.
 	self shouldnt: [self parseMethod: outputSource] raise: OCCodeError.
 
 	"already worked and should still work for pragmas without arguments"
 	inputSource := 'foo  <selector> ^ self'.
 	tree := self parseMethod: inputSource.
-	outputSource := self formatterClass new format: tree.
+	outputSource := self formatNode: tree.
 	self shouldnt: [self parseMethod: outputSource] raise: OCCodeError
 ]
 
@@ -68,16 +74,16 @@ OCSimpleFormatterTest >> testLiteralDynamicArray [
 	| source tree1 |
 	source := 'foo ^ { ''film'' . ''FILM''} '.
 	tree1 := self parseMethod: source.
-	self assert: ((self formatterClass new format: tree1) occurrencesOf: $.) equals: 1
+	self assert: ((self formatNode: tree1) occurrencesOf: $.) equals: 1
 ]
 
 { #category : 'tests' }
 OCSimpleFormatterTest >> testParseError [
 
 	| source node |
-	source := ' +  foo:  )'.
+	source := ' +  foo: )'.
 	node := self parseFaultyExpression: source.
-	self assert: node formattedCode equals: source
+	self assert: (self formatNode: node) equals: source
 ]
 
 { #category : 'tests' }
