@@ -369,7 +369,7 @@ RubSmalltalkEditor >> completionEngine [
 	
 	^ completionEngine ifNil: [
 		CompletionEngineInstance 
-				ifNotNil: [ completionEngine := CompletionEngine ]
+				ifNotNil: [ completionEngine := CompletionEngineInstance ]
 				ifNil: [ 	CompletionEngineClass ifNotNil: [
 								self completionEngine: CompletionEngineClass new.
 								completionEngine ] ] ]
