@@ -285,15 +285,15 @@ OCIRBuilderTest >> testLiteralVariableClassVariable [
 { #category : 'tests' }
 OCIRBuilderTest >> testLiteralVariableGlobale [
 	| iRMethod aCompiledMethod |
-	iRMethod := OCIRBuilder new
-		pushLiteralVariable: (testingEnvironment associationAt: #Smalltalk);
+	iRMethod := OCIRBuilder new 
+		pushLiteralVariable: (GlobalVariable new key: #ToT value: 122);
 		returnTop;
 		ir.
 
 	aCompiledMethod := iRMethod compiledMethod.
 
 	self assert: (aCompiledMethod isKindOf: CompiledMethod).
-	self assert: (aCompiledMethod valueWithReceiver: nil) equals: Smalltalk.
+	self assert: (aCompiledMethod valueWithReceiver: nil) equals: 122.
 	^ iRMethod
 ]
 
