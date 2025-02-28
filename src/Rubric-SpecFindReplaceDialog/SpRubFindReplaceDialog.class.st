@@ -36,7 +36,7 @@ SpRubFindReplaceDialog class >> defaultLayout [
 				   add: #backwardsCheckBox atPoint: 2 @ 1;
 				   add: #caseCheckBox atPoint: 1 @ 2;
 				   add: #wrapCheckBox atPoint: 2 @ 2;
-				   add: #entireCheckBox at: 1 @ 3;
+				   add: #entireCheckBox atPoint: 1 @ 3;
 				   yourself);
 		  addLast: (SpBoxLayout newHorizontal
 				   borderWidth: 5;

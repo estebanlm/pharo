@@ -71,7 +71,7 @@ OCMessageNode >> acceptVisitor: aProgramNodeVisitor [
 { #category : 'accessing' }
 OCMessageNode >> argumentPartStrings [
 	"Return a collection of string representing the code of the argument."
-	^ arguments collect: [ :each | each formattedCode asString
+	^ arguments collect: [ :each | each sourceCode asString
 			"strangely enough literal formatted code is not a string" ]
 ]
 
