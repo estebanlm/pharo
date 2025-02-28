@@ -475,18 +475,16 @@ StMethodNameEditorPresenter >> renameMap [
 { #category : 'action' }
 StMethodNameEditorPresenter >> renameMethodAndClose: presenter [
 
-	^ self previewResult label = '(invalid)'
-		ifTrue: [ self inform: 'Invalid method name' ]
-		ifFalse: [
-			methodName
-				arguments: self getParametersOrder;
-				selector: selectorInput text;
-				newArgs: self newArgs;
-				renameMap: self renameMap;
-				permutation: self computePermutation.
-			presenter
-				beOk;
-				close ]
+	methodName
+		arguments: self getParametersOrder;
+		selector: selectorInput text;
+		newArgs: self newArgs;
+		renameMap: self renameMap;
+		permutation: self computePermutation.
+	
+	presenter
+		beOk;
+		close
 ]
 
 { #category : 'action' }
