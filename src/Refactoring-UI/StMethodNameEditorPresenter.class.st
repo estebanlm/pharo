@@ -453,8 +453,9 @@ StMethodNameEditorPresenter >> removeArgument: anItem [
 StMethodNameEditorPresenter >> renameArgument: anItem [
 
 	| argName selectedIndex |
+
 	selectedIndex := argumentsList selection selectedIndex.
-	argName := self request: 'Enter default name of argument' initialAnswer: anItem.
+	argName := self request: 'Enter default name of argument' initialAnswer: anItem asString.
 	argName ifNil: [ CmdCommandAborted signal ].
 	(self invalidArgNames includes: argName) ifTrue: [
 		self inform: 'It''s a invalid name'.
