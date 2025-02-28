@@ -493,35 +493,28 @@ CompletionEngine >> smartCharacterWithEvent: anEvent [
 	char := anEvent keyCharacter.
 	editor hasSelection
 		ifTrue: [
-			"we selected a piece of text and we type the same character that previously, so
-		we unwrap it"
-			"we selected a piece of text if the character is not a special one we do nothing."
-			matchingPair := self smartCharacterPairFor: char ifAbsent: [  ^nil ].	"else we wrap the selection"	"editor replaceSelectionWith: (String with: char) , (editor selection) , (String with: opposite)."	"ugly logic it should be encapsulated in the editor "
+			"We selected a piece of text and we type the same character that previously, so we unwrap it"
+			"We selected a piece of text if the character is not a special one we do nothing."
+			matchingPair := self smartCharacterPairFor: char ifAbsent: [ ^ nil ].	"else we wrap the selection"	"editor replaceSelectionWith: (String with: char) , (editor selection) , (String with: opposite)."	"ugly logic it should be encapsulated in the editor "
 
 			editor encloseWith: matchingPair.
 			self invalidateEditorMorph.
-			^ true ].	"we are not in a selection"
+			^ true ].	
+	"We are not in a selection"
 
 	(self smartCharacterShouldClose: char)
-		ifFalse: [
-			"if the character is not a special character"
-			self smartInverseMapping at: char ifAbsent: [ ^ nil ].	"if the character is not a closing special character do nothing"	"The character is special"
-			editor blinkPrevParen: char.
-			(editor nextCharacterIfAbsent: [ ^ nil ]) = char
-				ifFalse: [ ^ nil ].	"do not get this test but if we comment it out we cannot type closing ) anymore"
-			editor selectFrom: editor startIndex + 1 to: editor startIndex.
-			self invalidateEditorMorph.
-			^ true ].
+		ifFalse: [ "It is a closing smart character. Do not ignore it: if the user typed it, then assume the user wants it."
+			^ nil ].
 
-	opposite := self smartCharacterOppositeOf: char ifAbsent: [ ^nil ].
+	"Check if we are typing an opening smart character, and if so, add the matching closing string."
+	opposite := self smartCharacterOppositeOf: char ifAbsent: [ ^ nil ].
 	previous := editor previousCharacterIfAbsent: [ Character space ].
 	next := editor nextCharacterIfAbsent: [ Character space ].
-	insertion := next isSeparator
-				ifFalse: [ char asString ]
-				ifTrue: [
-					previous isSeparator
-						ifFalse: [ char asString ]
-						ifTrue: [ self newSmartCharacterInsertionStringForLeft: char right: opposite ]].
+	(previous ~= $$ and: [ "char literals are not smart"
+		 (next isSeparator and: [ previous isSeparator ]) or: [
+			 char = previous or: [ next = opposite ] ] ]) ifFalse: [ ^ nil ].
+
+	insertion := self newSmartCharacterInsertionStringForLeft: char right: opposite.
 	editor replaceSelectionWith: insertion.
 	insertionCenter := insertion size // 2 max: 1.
 	editor selectFrom: editor startIndex + insertionCenter to: editor startIndex + (insertionCenter - 1).
