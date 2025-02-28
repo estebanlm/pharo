@@ -890,24 +890,16 @@ CompletionEngineTest >> testSmartCharacterWithEventAndSelection [
 
 { #category : 'tests - keyboard' }
 CompletionEngineTest >> testSmartCharacterWithEventSelfClosing [
-	self
-		setEditorText: ' ';
-		selectAt: 2.
 
+	self setEditorTextWithCaret: ' |'.
 	controller smartCharacterWithEvent: (self keyboardEventFor: $().
 	self assert: editor text equals: ' ()'.
 
-	self
-		setEditorText: ' ';
-		selectAt: 2.
-
+	self setEditorTextWithCaret: ' |'.
 	controller smartCharacterWithEvent: (self keyboardEventFor: $)).
 	self assert: editor text equals: ' '.
 
-	self
-		setEditorText: ' ';
-		selectAt: 2.
-
+	self setEditorTextWithCaret: ' |'.
 	controller smartCharacterWithEvent: (self keyboardEventFor: $<).
 	self assert: editor text equals: ' '
 ]
