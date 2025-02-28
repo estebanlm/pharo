@@ -1049,14 +1049,54 @@ CompletionEngineTest >> testSmartDoubleQuoteSurroundsSelection [
 
 { #category : 'tests - keyboard' }
 CompletionEngineTest >> testSmartNeedExtraRemoveInForOppositeAt [
+	"index of cursor = 1 + index of character to remove"
 
-	self assert: (controller smartNeedExtraRemoveIn: '()' for: $( opposite:$) at:1).
-	self deny: (controller smartNeedExtraRemoveIn: '(()' for: $( opposite:$) at:2).
-	self assert: (controller smartNeedExtraRemoveIn: '(1()' for: $( opposite:$) at:3).
-	self assert: (controller smartNeedExtraRemoveIn: '(1(1())' for: $( opposite:$) at:5).
-	self assert: (controller smartNeedExtraRemoveIn: '((1)1())))' for: $( opposite:$) at:6).
-	self deny: (controller smartNeedExtraRemoveIn: '()(()' for: $( opposite:$) at:3).
-	self assert: (controller smartNeedExtraRemoveIn: '(foobar()' for: $( opposite:$) at:8)
+	self setEditorTextWithCaret: '(|)'.
+	self assert: controller smartBackspace. "result: ''"
+
+	self setEditorTextWithCaret: '(()|'.
+	self deny: controller smartBackspace. "result: '(('"
+
+	self setEditorTextWithCaret: '(1(|)'.
+	self assert: controller smartBackspace. "result: '(1'"
+
+	self setEditorTextWithCaret: '(1(1(|))'.
+	self assert: controller smartBackspace. "result: '(1(1)'"
+
+	self setEditorTextWithCaret: '((1)1(|)))'.
+	self assert: controller smartBackspace. "result: '((1)1))'"
+
+	self setEditorTextWithCaret: '()((|)'.
+	self deny: controller smartBackspace. "result: '()()'"
+
+	self setEditorTextWithCaret: '(foobar(|)'.
+	self assert: controller smartBackspace. "result: '(foobar'"
+
+	self setEditorTextWithCaret: '[|]'.
+	self assert: controller smartBackspace. "result: ''"
+
+	self setEditorTextWithCaret: '{|}'.
+	self assert: controller smartBackspace. "result: ''"
+
+	self setEditorTextWithCaret: '"|"'.
+	self assert: controller smartBackspace. "result: ''"
+
+	self setEditorTextWithCaret: '''|'''.
+	self assert: controller smartBackspace "result: ''"
+]
+
+{ #category : 'tests - keyboard' }
+CompletionEngineTest >> testSmartNeedExtraRemoveInForOppositeAtNoRemoveForLiterals [
+	"index of cursor = 1 + index of character to remove"
+
+	self setEditorTextWithCaret: '($(|)'.
+	self deny: controller smartBackspace. "result: '($)'"
+
+	self setEditorTextWithCaret: '$[|]'.
+	self deny: controller smartBackspace. "result: '$]'"
+
+	self setEditorTextWithCaret: '$"|"'.
+	self deny: controller smartBackspace
 ]
 
 { #category : 'tests - keyboard' }

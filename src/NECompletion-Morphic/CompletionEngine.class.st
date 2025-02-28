@@ -564,20 +564,18 @@ CompletionEngine >> smartNeedExtraRemoveIn: currentText for: opposite [
 
 { #category : 'private' }
 CompletionEngine >> smartNeedExtraRemoveIn: currentText for: smartCharacter opposite: opposite at: position [
-	"Test if we need to remove an extra character when removing a smart character (any kind of smart character)"
+	"Test if we need to remove an extra character when removing a smart character (any kind of smart character)
+	 Do not consider literal characters to be smart characters"
 
-	smartCharacter = opposite
-		ifTrue: [
-			(self smartNeedExtraRemoveIn: currentText for: opposite)
-				ifFalse: [ ^ false ] ]
-		ifFalse: [
-			(self
-				smartNeedExtraRemovePairedIn: currentText
-				for: smartCharacter
-				opposite: opposite
-				at: position)
-					ifFalse: [ ^false ] ].
-	^ true
+	^ (position <= 2 or: [ (currentText at: position - 2) ~= $$ ]) and: [
+		  smartCharacter = opposite
+			  ifTrue: [ self smartNeedExtraRemoveIn: currentText for: opposite ]
+			  ifFalse: [
+				  self
+					  smartNeedExtraRemovePairedIn: currentText
+					  for: smartCharacter
+					  opposite: opposite
+					  at: position ] ]
 ]
 
 { #category : 'private' }
