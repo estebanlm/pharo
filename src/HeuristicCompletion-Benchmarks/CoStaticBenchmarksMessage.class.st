@@ -11,7 +11,7 @@
 
 
 ```smalltalk
-global := CoStaticBenchmarksMessage runAllOnClass: SpAbstractAdapter package.
+global := CoStaticBenchmarksMessage runAllOnClass: CompletionSorter package.
 
 global := CoStaticBenchmarksMessage runAllOnPackage: 'NECompletion'.
 
@@ -28,7 +28,7 @@ global := CoStaticBenchmarksMessage runAllOnPackage: 'NECompletion' heuristics: 
 
 ```smalltalk
 global := CoStaticBenchmarksMessage new
-    scope: (CoBenchmarkPackage on: SpAbstractAdapter package);
+    scope: (CoBenchmarkPackage on: CompletionSorter package);
     builder: (CoGlobalSorterResultSetBuilder new
         sorterClass: AlphabeticSorter;
         yourself);
@@ -65,7 +65,7 @@ latex := (global at: #SizeSorter) latexResultsFor: #mmr.
 
 ```smalltalk
 benchA := CoStaticBenchmarksMessage new
-    scope: (CoBenchmarkPackage on: SpAbstractAdapter package);
+    scope: (CoBenchmarkPackage on: CompletionSorter package);
     builder: (CoGlobalSorterResultSetBuilder new
         sorterClass: AlphabeticSorter;
         yourself);
