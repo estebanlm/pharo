@@ -28,7 +28,7 @@ OCMethodNodeTest >> sampleBytecodeMethod [
 OCMethodNodeTest >> sampleBytecodeMethodWithArg: anArg [
 
 	<opalBytecodeMethod>
-	^ IRBuilder buildIR: [ :builder |
+	^ OCIRBuilder buildIR: [ :builder |
 		builder
 				numArgs: 1;
 				addTemps: { #arg };
