@@ -1,6 +1,9 @@
 Class {
 	#name : 'MCMethodDefinitionTest',
 	#superclass : 'MCTestCase',
+	#instVars : [
+		'loader'
+	],
 	#category : 'Monticello-Tests-Base',
 	#package : 'Monticello-Tests',
 	#tag : 'Base'
@@ -33,6 +36,13 @@ MCMethodDefinitionTest >> secondExtensionPackageName [
 	^ 'MonticelloTestsSecondExtensionMockPackage-override'
 ]
 
+{ #category : 'testing' }
+MCMethodDefinitionTest >> setUp [
+
+	super setUp.
+	loader := MCPackageLoader new.
+]
+
 { #category : 'running' }
 MCMethodDefinitionTest >> tearDown [
 
@@ -49,8 +59,64 @@ MCMethodDefinitionTest >> testCannotLoad [
 		              class: 'NoSuchClass'
 		              source: 'kjahs87 ^self'
 		              meta: false.
-	self should: [ definition load ] raise: Error.
+	[
+	definition loadWithLoader: loader.
+	self fail ]
+		on: Error
+		do: [ :error |
+			self
+				assert: error messageText
+				equals: 'key #NoSuchClass not found in SystemEnvironment' ].
 	self assertEmpty: (SystemNavigation new allImplementorsOf: #kjahs87)
+]
+
+{ #category : 'testing' }
+MCMethodDefinitionTest >> testCannotLoadInvalidCodeInStrictMode [
+
+	| definition mockClass |
+	testingEnvironment
+		at: #NoSuchClass
+		put: (mockClass := self mockClass).
+
+	"The source does not parse"
+	definition := self
+		              mockMethod: #kjahs87
+		              class: 'NoSuchClass'
+		              source: 'kjahs87 a :='
+		              meta: false.
+
+	loader beStrict.
+	[
+	definition loadWithLoader: loader.
+	self fail ]
+		on: OCCodeError
+		do: [ :error |
+			self
+				assert: error messageText
+				equals: 'Variable or expression expected' ]
+]
+
+{ #category : 'testing' }
+MCMethodDefinitionTest >> testCannotLoadUndeclaredInStrictMode [
+
+	| definition mockClass |
+	testingEnvironment
+		at: #NoSuchClass
+		put: (mockClass := self mockClass).
+
+	definition := self
+		              mockMethod: #kjahs87
+		              class: 'NoSuchClass'
+		              source: 'kjahs87 ^UNDECLARED'
+		              meta: false.
+
+	loader beStrict.
+	[
+	definition loadWithLoader: loader.
+	self fail ]
+		on: OCCodeError
+		do: [ :error |
+			self assert: error messageText equals: 'Undeclared variable' ]
 ]
 
 { #category : 'testing' }
@@ -84,10 +150,57 @@ MCMethodDefinitionTest >> testLoadAndUnload [
 		              source: 'one ^2'
 		              meta: false.
 	self assert: mockClassInstance one equals: 1.
-	definition load.
+	definition loadWithLoader: loader.
 	self assert: mockClassInstance one equals: 2.
 	definition unload.
 	self deny: (mockClassInstance respondsTo: #one)
+]
+
+{ #category : 'testing' }
+MCMethodDefinitionTest >> testLoadInvalidCodeInLegacyMode [
+
+	| definition mockClass |
+	testingEnvironment
+		at: #NoSuchClass
+		put: (mockClass := self mockClass).
+
+	"The source does not parse"
+	definition := self
+		              mockMethod: #kjahs87
+		              class: 'NoSuchClass'
+		              source: 'kjahs87 a :='
+		              meta: false.
+
+	definition loadWithLoader: loader.
+
+	[
+	mockClass new kjahs87.
+	self fail ]
+		on: OCRuntimeSyntaxError
+		do: [ :error |
+			self
+				assert: error messageText
+				equals: 'Variable or expression expected' ]
+]
+
+{ #category : 'testing' }
+MCMethodDefinitionTest >> testLoadUndeclaredInLegacyMode [
+
+	| definition mockClass |
+	testingEnvironment
+		at: #NoSuchClass
+		put: (mockClass := self mockClass).
+
+	definition := self
+		              mockMethod: #kjahs87
+		              class: 'NoSuchClass'
+		              source: 'kjahs87 ^UNDECLARED'
+		              meta: false.
+
+	definition loadWithLoader: loader.
+
+	self assert:
+		(mockClass >> #kjahs87) literals first isUndeclaredVariable
 ]
 
 { #category : 'testing' }

@@ -213,24 +213,24 @@ MCMethodDefinition >> isOverrideMethod [
 ]
 
 { #category : 'installing' }
-MCMethodDefinition >> load [
-
-	self loadInEnvironment: self class environment
-]
-
-{ #category : 'installing' }
-MCMethodDefinition >> loadInEnvironment: anEnvironment [
+MCMethodDefinition >> loadWithLoader: aLoader [
 
 	| method |
-	method := (self actualClassIn: anEnvironment) compiler
+	method := (self actualClassIn: aLoader targetEnvironment) compiler
 		          protocol: category;
 		          changeStamp: timeStamp;
-		          permitUndeclared: true;
+		          permitUndeclared: aLoader isStrict not;
+		          permitFaulty: aLoader isStrict not;
 		          install: source.
 
 	method selector = selector ifTrue: [ ^ self ].
 	"This can happen if we provide a selector that does not match the source code. I (Cyril Ferlicot) personnaly do not like that. I would prefer even that the MCMethodDefinition would not have a selector variable at all. But this is used in some places of the system :("
-	Warning signal: ('Monticello: Selector missmatch. Got {1}, expected {2} for class {3}.' format: { method selector. selector. self actualClass name }).
+	(aLoader isStrict ifTrue: [ Error ] ifFalse: [ Warning ]) signal:
+		('Monticello: Selector missmatch. Got {1}, expected {2} for class {3}.'
+			 format: {
+					 method selector.
+					 selector.
+					 self actualClass name }).
 	selector := method selector
 ]
 

@@ -61,11 +61,6 @@ MCScriptDefinition >> initializeWithScript: aString packageName: packageString [
 ]
 
 { #category : 'installing' }
-MCScriptDefinition >> installScript [
-	self installScript: script
-]
-
-{ #category : 'installing' }
 MCScriptDefinition >> installScript: aString [
 
 	self systemPackage ifNotNil: [ :package |
@@ -80,8 +75,9 @@ MCScriptDefinition >> isScriptDefinition [
 ]
 
 { #category : 'installing' }
-MCScriptDefinition >> load [
-	self installScript
+MCScriptDefinition >> loadWithLoader: aLoader [
+
+	self installScript: script
 ]
 
 { #category : 'accessing' }
