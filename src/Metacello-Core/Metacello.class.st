@@ -214,6 +214,12 @@ Metacello >> baseline: projectName [
 	self scriptExecutor baselineArg: projectName
 ]
 
+{ #category : 'api options' }
+Metacello >> beStrict: aBoolean [
+
+	self addStatement: #beStrict: args: { aBoolean }
+]
+
 { #category : 'api repository shortcuts' }
 Metacello >> bitbucketUser: userName project: projectName commitish: commitish path: path [
 

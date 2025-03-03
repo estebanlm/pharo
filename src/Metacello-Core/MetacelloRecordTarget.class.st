@@ -163,13 +163,18 @@ MetacelloRecordTarget >> visitProjectReference: aMetacelloProjectReferenceSpec [
 	registered := registration projectSpec.
 
 	(registered compareEqual: projectReferenceToLoad) ifFalse: [ "counts as override, only if they differ in some aspect"
-			override := registered copy.
-			override mergeScriptLoads: projectReferenceToLoad.
-			projectReferenceToLoad := override ].
+		override := registered copy.
+		override mergeScriptLoads: projectReferenceToLoad.
+		projectReferenceToLoad := override ].
 
 	projectReferenceToLoad ensureProjectLoadedWithEngine: engine.
-	requiredArray := projectReferenceToLoad loadListForVersion: projectReferenceToLoad version.
-	projectReferenceToLoad version recordRequiredFromArray: requiredArray withEngine: engine.
+	"Propagate the strictness to the dependency as defined in the dependent before loading"
+	projectReferenceToLoad project strict: projectReferenceToLoad strict.
+	
+	requiredArray := projectSpec loadListForVersion: projectReferenceToLoad version.
+	projectReferenceToLoad version
+		recordRequiredFromArray: requiredArray
+		withEngine: engine.
 	registration registerProject
 ]
 

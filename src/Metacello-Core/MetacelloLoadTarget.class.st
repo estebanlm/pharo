@@ -45,7 +45,9 @@ MetacelloLoadTarget >> visitLinearLoadDirective: aMetacelloLinearLoadDirective [
 { #category : 'visiting' }
 MetacelloLoadTarget >> visitPackageLoadDirective: aMetacelloPackageLoadDirective [
 
-	engine loader loadPackageDirective: aMetacelloPackageLoadDirective
+	engine loader
+		loadAtomicPackageDirectives: { aMetacelloPackageLoadDirective }
+		engine: engine
 ]
 
 { #category : 'visiting' }

@@ -240,6 +240,12 @@ MetacelloPackageSpec >> specs: specNames forPackageOrdering: aVersionSpec [
 	^ packageOrProjectSpecs
 ]
 
+{ #category : 'asserting' }
+MetacelloPackageSpec >> shouldLoadStrict [
+
+	^ strict ifNil: [ project strict ]
+]
+
 { #category : 'accessing' }
 MetacelloPackageSpec >> workingCopy [
 	"Answer a working copy, or nil if the package is not loaded."

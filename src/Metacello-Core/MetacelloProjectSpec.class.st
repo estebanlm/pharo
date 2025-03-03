@@ -126,7 +126,7 @@ MetacelloProjectSpec >> ensureProjectLoadedWithEngine: anEngine [
 
 	(self hasVersion and: [ (self isMutable and: [ anEngine ignoreImage ]) not ]) ifTrue: [ ^ self ].
 
-	project := anEngine loader loadProject: self
+	project := anEngine loader loadProject: self engine: anEngine
 ]
 
 { #category : 'accessing' }

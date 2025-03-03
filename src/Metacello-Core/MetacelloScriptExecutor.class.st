@@ -44,6 +44,12 @@ MetacelloScriptExecutor >> baselineArg: anObject [
 	baselineArg := anObject
 ]
 
+{ #category : 'configuration' }
+MetacelloScriptExecutor >> beStrict: aBoolean [
+
+	self options at: #strict put: aBoolean
+]
+
 { #category : 'args' }
 MetacelloScriptExecutor >> classNameArg [
     ^ classNameArg
