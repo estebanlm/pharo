@@ -135,11 +135,15 @@ MCClassTraitDefinition >> isTraitDefinition [
 { #category : 'installing' }
 MCClassTraitDefinition >> loadWithLoader: aLoader [
 
-	self class compiler
-		environment: aLoader targetEnvironment;
+	| compiler |
+	compiler := self class compiler
 		permitFaulty: aLoader isStrict not;
-		permitUndeclared: aLoader isStrict not;
-		evaluate: self definitionString
+		permitUndeclared: aLoader isStrict not.
+	
+	aLoader targetEnvironment ifNotNil: [
+		compiler environment: aLoader targetEnvironment ].
+
+	compiler evaluate: self definitionString
 ]
 
 { #category : 'accessing' }
