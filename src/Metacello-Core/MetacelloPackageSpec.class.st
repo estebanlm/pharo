@@ -243,7 +243,7 @@ MetacelloPackageSpec >> specs: specNames forPackageOrdering: aVersionSpec [
 { #category : 'asserting' }
 MetacelloPackageSpec >> shouldLoadStrict [
 
-	^ strict ifNil: [ project strict ]
+	^ strict ifNil: [ project ifNotNil: [ :p | p strict ] ]
 ]
 
 { #category : 'accessing' }
