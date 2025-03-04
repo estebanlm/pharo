@@ -36,26 +36,6 @@ MCTraitDefinition >> classSlotDefinitionString [
 				stream nextPutAll: ' }']]
 ]
 
-{ #category : 'installing' }
-MCTraitDefinition >> createClassInEnvironment: anEnvironent [
-
-	^ [
-		  self class classInstaller make: [ :aBuilder |
-				  aBuilder
-					  name: name;
-					  traitComposition: (self class compiler evaluate: self traitCompositionString);
-					  classTraitComposition: (self class compiler evaluate: self classTraitCompositionString);
-					  slots: self instanceVariables;
-					  classSlots: self classInstanceVariables;
-					  package: self packageName;
-					  tag: self tagName;
-					  comment: comment stamp: self commentStamp;
-					  beTrait.
-				  anEnvironent ifNotNil: [ aBuilder environment: anEnvironent ] ] ]
-		  on: Warning , DuplicatedVariableError
-		  do: [ :ex | ex resume ]
-]
-
 { #category : 'testing' }
 MCTraitDefinition >> hasClassInstanceVariables [
 	^ false
@@ -72,6 +52,32 @@ MCTraitDefinition >> hash [
 { #category : 'testing' }
 MCTraitDefinition >> isTraitDefinition [
 	^ true
+]
+
+{ #category : 'installing' }
+MCTraitDefinition >> loadWithLoader: aLoader [
+
+	^ [
+	  self class classInstaller make: [ :aBuilder |
+		  aBuilder
+			  name: name;
+			  traitComposition:
+				  (Smalltalk compiler evaluate: self traitCompositionString);
+			  classTraitComposition:
+				  (Smalltalk compiler evaluate: self classTraitCompositionString);
+			  slots: self instanceVariables;
+			  classSlots: self classInstanceVariables;
+			  package: self packageName;
+			  tag: self tagName;
+			  comment: comment stamp: commentStamp;
+			  beTrait.
+		  aLoader targetEnvironment ifNotNil: [
+			  aBuilder environment: aLoader targetEnvironment ] ] ]
+		  on: Warning , DuplicatedVariableError
+		  do: [ :ex |
+			  aLoader isStrict
+				  ifTrue: [ ex pass ]
+				  ifFalse: [ ex resume ] ]
 ]
 
 { #category : 'printing' }
