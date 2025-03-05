@@ -330,12 +330,6 @@ OCMessageNode >> receiver: aValueNode selector: aSelector keywordsPositions: pos
 ]
 
 { #category : 'adding-removing' }
-OCMessageNode >> removeFromTree [
-
-	self parent removeNode: self
-]
-
-{ #category : 'adding-removing' }
 OCMessageNode >> removeNode: aNode [
 
 	self replaceNode: aNode withNode: aNode receiver
