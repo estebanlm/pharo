@@ -70,7 +70,7 @@ ClyProtocolEditorMorph >> buildExtensionCheckBoxButton [
 		                     getSelected: #isExtensionActive
 		                     setSelected: #toggleExtension
 		                     getEnabled: nil
-		                     label: 'extension'
+		                     label: 'Extension'
 		                     help:
 		                     'toggle check box to choose/reset package or protocol of method'.
 	extensionCheckbox
@@ -179,13 +179,13 @@ ClyProtocolEditorMorph >> toggleExtension [
 ClyProtocolEditorMorph >> update [
 
 	label color: label defaultColor.
- 
+
 	self isExtensionActive
 		ifTrue: [
 			label contents:
-				'Choose package for method, package: '
+				'Packaged in package: '
 				, self printProtocolOrPackage ]
 		ifFalse: [
 			label contents:
-				'Classify method, protocol: ' , self printProtocolOrPackage ]
+				'Classified in protocol: ' , self printProtocolOrPackage ]
 ]
