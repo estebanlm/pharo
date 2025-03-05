@@ -84,14 +84,6 @@ SystemEnvironmentTest >> testEnvironmentOfOrganization [
 	self assert: aDictionary organization environment equals: aDictionary
 ]
 
-{ #category : 'tests' }
-SystemEnvironmentTest >> testHasBindingThatBeginsWith [
-
-	super testHasBindingThatBeginsWith.
-	self assert: (Smalltalk globals hasBindingThatBeginsWith: 'Obje').
-	self deny: (Smalltalk globals hasBindingThatBeginsWith: 'NOTHEREIope')
-]
-
 { #category : 'tests - testing' }
 SystemEnvironmentTest >> testIncludesAssociationNoValue [
 
