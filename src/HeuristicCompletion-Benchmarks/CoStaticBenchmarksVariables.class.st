@@ -9,7 +9,7 @@
 
 
 ```smalltalk
-global := CoStaticBenchmarksVariables runAllOnClass: SpAbstractAdapter package.
+global := CoStaticBenchmarksVariables runAllOnClass: CompletionSorter package.
 
 global := CoStaticBenchmarksVariables runAllOnPackage: 'NECompletion'.
 
@@ -26,7 +26,7 @@ global := CoStaticBenchmarksVariables runAllOnPackage: 'NECompletion' heuristics
 
 ```smalltalk
 global := CoStaticBenchmarksVariables new
-    scope: (CoBenchmarkPackage on: SpAbstractAdapter package);
+    scope: (CoBenchmarkPackage on: CompletionSorter package);
     builder: (CoGlobalSorterResultSetBuilder new
         sorterClass: AlphabeticSorter;
         yourself);
@@ -63,7 +63,7 @@ latex := (global at: #SizeSorter) latexResultsFor: #mmr.
 
 ```smalltalk
 benchA := CoStaticBenchmarksVariables new
-    scope: (CoBenchmarkPackage on: SpAbstractAdapter package);
+    scope: (CoBenchmarkPackage on: CompletionSorter package);
     builder: (CoGlobalSorterResultSetBuilder new
         sorterClass: AlphabeticSorter;
         yourself);
@@ -204,7 +204,7 @@ CoStaticBenchmarksVariables >> maxPrefixSizeFor: receiver [
 	^ receiver name size min: 8
 ]
 
-{ #category : 'benchmarks' }
+{ #category : 'running' }
 CoStaticBenchmarksVariables >> run [
 
 	scope methodsDo: [ :method |
