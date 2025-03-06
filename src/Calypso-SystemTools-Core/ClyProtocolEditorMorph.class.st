@@ -183,9 +183,8 @@ ClyProtocolEditorMorph >> update [
 	self isExtensionActive
 		ifTrue: [
 			label contents:
-				'Packaged in package: '
-				, self printProtocolOrPackage ]
+				'Edit in package: ' , self printProtocolOrPackage ]
 		ifFalse: [
 			label contents:
-				'Classified in protocol: ' , self printProtocolOrPackage ]
+				'Edit in protocol: ' , self printProtocolOrPackage ]
 ]
