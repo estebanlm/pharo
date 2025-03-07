@@ -25,6 +25,16 @@ Class {
 	#tag : 'Conditions'
 }
 
+{ #category : 'as yet unclassified' }
+RBCondition class >> alreadyExistGlobal: aString in: aRBSmalltalk [
+
+	^ self new 
+		  block: [ aRBSmalltalk includesGlobal: aString asSymbol ]
+		  errorString:
+			  'A class or global variable with the name: ' , aString
+			  , ' already exists'
+]
+
 { #category : 'instance creation' }
 RBCondition class >> canUnderstand: aSelector in: aClass [
 

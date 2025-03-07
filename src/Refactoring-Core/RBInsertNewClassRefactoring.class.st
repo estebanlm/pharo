@@ -40,9 +40,9 @@ RBInsertNewClassRefactoring >> applicabilityPreconditions [
 				 	((RBCondition isMetaclass: sub) errorMacro:
 				         'Subclass must <1?not :>be a metaclass') not.
 			        (RBCondition isImmediateSubclass: sub of: superclass) } ].
-	^ cond , {
+	^ cond , { 
 			(RBCondition isValidClassName: className).
-			(RBCondition isGlobal: className in: self model) not.
+			(RBCondition alreadyExistGlobal: className in: self model) not.
 			(RBCondition isSymbol: packageName).
 			((RBCondition withBlock: [ packageName isNotEmpty ]) errorMacro:
 				 'Invalid package name') }
