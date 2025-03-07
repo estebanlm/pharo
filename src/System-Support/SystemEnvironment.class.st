@@ -135,6 +135,24 @@ SystemEnvironment >> at: aKey put: anObject [
  	^ anObject
 ]
 
+{ #category : 'accessing' }
+SystemEnvironment >> at: key update: updateBlock initial: initBlocktOrValue [
+	"I am used to update the value at a given key. The updateBlock is passed
+	the existing value, and the result of the block is stored back.
+	If the key does not exist, store the value of the initBlocktOrValue.
+	initBlocktOrValue can be a block in case the initial value is expencive to compute.
+	I use findElementOrNil: to avoid looking up the key twice."
+	| index |
+	index := self findElementOrNil: key.
+	(array at: index)
+		ifNil: [
+			self
+				atNewIndex: index
+				put: (GlobalVariable key: key value: initBlocktOrValue value).
+			self flushClassNameCache ]
+		ifNotNil: [ :var | var value: (updateBlock value: var value) ]
+]
+
 { #category : 'adding' }
 SystemEnvironment >> atNewIndex: index put: aGlobalVariable [
 
