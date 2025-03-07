@@ -908,7 +908,7 @@ DebugPointTest >> testTranscriptDebugPoint [
 		      withBehaviors: { TranscriptBehavior }.
 	dp text: 'string'.
 	dp hitWithContext: context.
-	Transcript stepGlobal.
+	
 	self assert: Transcript contents equals: 'string'
 ]
 
