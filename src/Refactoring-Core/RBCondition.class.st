@@ -25,7 +25,7 @@ Class {
 	#tag : 'Conditions'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'instance creation' }
 RBCondition class >> alreadyExistGlobal: aString in: aRBSmalltalk [
 
 	^ self new 
