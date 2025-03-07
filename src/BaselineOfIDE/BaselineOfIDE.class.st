@@ -72,15 +72,15 @@ BaselineOfIDE >> baseline: spec [
 		spec package: 'OpalCompiler-UI-Tests'.
 
 		self load: 'Metacello' group: 'Tests' spec: spec.
+
+		spec baseline: 'ReflectionMirrors' with: [ spec repository: repository ].
+		spec baseline: 'FuzzyMatcher' with: [ spec repository: repository ].
+		spec baseline: 'QA' with: [ spec repository: repository ].
 		spec baseline: 'GeneralTests' with: [ spec repository: repository ].
 
 		"Later we will load the UI of enlumineur probably here
 		"
 		spec baseline: 'Shout' with: [ spec repository: repository ].
-
-		spec baseline: 'ReflectionMirrors' with: [ spec repository: repository ].
-		spec baseline: 'FuzzyMatcher' with: [ spec repository: repository ].
-		spec baseline: 'QA' with: [ spec repository: repository ].
 		spec baseline: 'OSWindow' with: [ spec repository: repository ].
 		spec
 			baseline: 'EmergencyDebugger'
