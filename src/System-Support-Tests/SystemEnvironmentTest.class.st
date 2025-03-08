@@ -87,6 +87,15 @@ SystemEnvironmentTest >> testAtUpdateInitial [
 	self assert: (dict at: #a) equals: 20
 ]
 
+{ #category : 'tests - DictionaryIndexAccessing' }
+SystemEnvironmentTest >> testAtUpdateInitialNil [
+	"Only symbols are accepted as keys in SystemEnvironment"
+
+	self
+		should: [ self collection at: nil update: nil initial: nil ]
+		raise: Error
+]
+
 { #category : 'tests' }
 SystemEnvironmentTest >> testClassOrTraitNamedReturnsClassForClasses [
 
