@@ -86,9 +86,8 @@ NautilusRefactoring >> refactoringOptions: aRefactoring [
 		setOption: #shouldNotCreateExtraBindings
 		toUse: [ :ref :string | self shouldNotCreateExtraBindings: string ];
 		setOption: #alreadyDefined
-		toUse: [ :ref :class :selector | self shouldOverride: selector in: class ];
-		setOption: #searchInWholeHierarchy
-		toUse: [ :ref :class | self shouldSearchInHierarchy: class ]
+		toUse: [ :ref :class :selector | self shouldOverride: selector in: class ]
+		
 ]
 
 { #category : 'display' }
