@@ -356,7 +356,7 @@ ReCompositeExtractMethodRefactoring >> newMethodName [
 	newSelector ifNotNil: [ methodName selector: newSelector ].
 
 	[ newAttempt ] whileTrue: [
-		methodName := (RBMethodNameEditor openOn: methodName) methodName.
+		methodName := (StMethodNameEditorPresenter openOn: methodName) methodName.
 		methodName
 			ifNil: [ newAttempt := false ]
 			ifNotNil: [ :newMethodName |
