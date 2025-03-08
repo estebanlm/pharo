@@ -113,7 +113,15 @@ NautilusRefactoring >> requestImplementorToInline: imps [
 
 { #category : 'option' }
 NautilusRefactoring >> requestMethodNameFor: aMethodName [
-	^ self handleMethodNameRequest: aMethodName
+	
+	|dialog|
+	dialog := StMethodNameEditorPresenter
+		openOn: aMethodName
+		canRenameArgs: false
+		canRemoveArgs: false
+		canAddArgs: false.
+	dialog cancelled ifTrue: [  CmdCommandAborted signal ].
+	^ aMethodName
 ]
 
 { #category : 'option' }
