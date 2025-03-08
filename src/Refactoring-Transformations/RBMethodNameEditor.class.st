@@ -21,6 +21,7 @@ Class {
 
 { #category : 'instance creation' }
 RBMethodNameEditor class >> on: aMethodName [
+	self halt.
 	^ self basicNew initializeOn: aMethodName
 ]
 
