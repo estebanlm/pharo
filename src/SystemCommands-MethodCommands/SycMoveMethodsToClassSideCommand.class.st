@@ -36,7 +36,9 @@ SycMoveMethodsToClassSideCommand >> description [
 { #category : 'execution' }
 SycMoveMethodsToClassSideCommand >> execute [
 
-	(ReMoveMethodsToClassSideDriver scopes: refactoringScopes methods: methods) runRefactoring
+	(ReMoveMethodsToClassSideDriver 
+		scopes: refactoringScopes 
+		methods: methods) runRefactoring
 ]
 
 { #category : 'execution' }
