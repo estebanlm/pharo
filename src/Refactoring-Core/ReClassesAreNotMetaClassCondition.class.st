@@ -28,8 +28,8 @@ ReClassesAreNotMetaClassCondition >> violationMessageOn: aStream [
 	self violators do: [ :violator |
 		aStream
 			nextPutAll: violator name;
-			nextPutAll: ' is a meta class.';
-			space ].
+			nextPutAll: ' is a meta class.' ].
+	message ifNotEmpty: [ aStream space ].
 	aStream nextPutAll: message
 ]
 

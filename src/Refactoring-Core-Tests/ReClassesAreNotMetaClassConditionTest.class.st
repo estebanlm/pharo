@@ -31,6 +31,36 @@ ReClassesAreNotMetaClassConditionTest >> testClassIsAMetaclass [
 ]
 
 { #category : 'accessing' }
+ReClassesAreNotMetaClassConditionTest >> testClassIsAMetaclassWithMessages [
+
+	| myClassARoot cond |
+	myClassARoot := self model classNamed: #MyClassARoot.
+	
+	cond := ReClassesAreNotMetaClassCondition new 
+		classes: { myClassARoot classSide }; message: 'Manipulate classes and not metaclasses'.
+		
+	self deny: cond check. 
+	self assert: (String streamContents: [:s | cond violationMessageOn: s] )
+		equals:  'MyClassARoot is a meta class. Manipulate classes and not metaclasses'
+	
+]
+
+{ #category : 'accessing' }
+ReClassesAreNotMetaClassConditionTest >> testClassIsAMetaclassWithoutMessages [
+
+	| myClassARoot cond |
+	myClassARoot := self model classNamed: #MyClassARoot.
+	
+	cond := ReClassesAreNotMetaClassCondition new 
+		classes: { myClassARoot classSide }.
+		
+	self deny: cond check. 
+	self assert: (String streamContents: [:s | cond violationMessageOn: s] )
+		equals:  'MyClassARoot is a meta class.'
+	
+]
+
+{ #category : 'accessing' }
 ReClassesAreNotMetaClassConditionTest >> testClassIsNotAMetaclass [
 
 	| myClassARoot cond |
