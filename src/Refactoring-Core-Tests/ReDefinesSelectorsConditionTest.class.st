@@ -62,3 +62,18 @@ ReDefinesSelectorsConditionTest >> testClassDoesNotDirectlyDefinesSelectorEvenIf
 	self assert: def violators size equals: 1
 
 ]
+
+{ #category : 'accessing' }
+ReDefinesSelectorsConditionTest >> testMetaClassDirectlyDefinesSelector [
+
+	| myClassARoot def |
+	myClassARoot := self model classNamed: #MyClassARoot.
+	myClassARoot := myClassARoot classSide.
+	
+	def := ReDefinesSelectorsCondition new definesSelectors: {#accessingFromClassSide}  in: myClassARoot.
+		
+	" the class MyClassARoot defines the methods #accessing and #accessingSharedVariable"
+	self assert: def check. 	
+	self assert: def violators isEmpty.
+
+]
