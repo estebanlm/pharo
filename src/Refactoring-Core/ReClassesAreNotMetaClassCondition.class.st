@@ -1,10 +1,26 @@
 Class {
 	#name : 'ReClassesAreNotMetaClassCondition',
 	#superclass : 'ReClassesCondition',
+	#instVars : [
+		'message'
+	],
 	#category : 'Refactoring-Core-Conditions',
 	#package : 'Refactoring-Core',
 	#tag : 'Conditions'
 }
+
+{ #category : 'accessing' }
+ReClassesAreNotMetaClassCondition >> initialize [ 
+
+	super initialize.
+	message := ''
+]
+
+{ #category : 'accessing' }
+ReClassesAreNotMetaClassCondition >> message: aStringExplaining [
+
+	message := aStringExplaining 
+]
 
 { #category : 'displaying' }
 ReClassesAreNotMetaClassCondition >> violationMessageOn: aStream [
@@ -14,7 +30,7 @@ ReClassesAreNotMetaClassCondition >> violationMessageOn: aStream [
 			nextPutAll: violator name;
 			nextPutAll: ' is a meta class.';
 			space ].
-	aStream nextPutAll: 'Cannot remove just the metaclass.'
+	aStream nextPutAll: message
 ]
 
 { #category : 'accessing' }
