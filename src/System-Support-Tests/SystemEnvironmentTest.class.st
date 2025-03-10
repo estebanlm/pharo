@@ -66,34 +66,22 @@ SystemEnvironmentTest >> testAtPutNil [
 SystemEnvironmentTest >> testAtUpdate [
 
 	| dict |
-	dict := {
-		        (GlobalVariable key: #a value: 10).
-		        (GlobalVariable key: #b value: 5) } as: self classToBeTested.
-	dict at: #a update: [ :v | v + 10 ].
-	self assert: (dict at: #a) equals: 20.
-	self should: [ dict at: #c update: [ :v | v + 1 ] ] raise: KeyNotFound
+	dict := { (GlobalVariable key: #a value: 10) } as:
+		        self classToBeTested.
+	self
+		should: [ dict at: #a update: [ :v | v + 10 ] ]
+		raise: ShouldNotImplement
 ]
 
 { #category : 'tests' }
 SystemEnvironmentTest >> testAtUpdateInitial [
 
 	| dict |
-	dict := {
-		        (GlobalVariable key: #a value: 10).
-		        (GlobalVariable key: #b value: 5) } as: self classToBeTested.
-	dict at: #c update: [ :v | v + 1 ] initial: [ 17 ].
-	dict at: #a update: [ :v | v + 10 ] initial: [ 0 ].
-	self assert: (dict at: #c) equals: 17.
-	self assert: (dict at: #a) equals: 20
-]
-
-{ #category : 'tests - DictionaryIndexAccessing' }
-SystemEnvironmentTest >> testAtUpdateInitialNil [
-	"Only symbols are accepted as keys in SystemEnvironment"
-
+	dict := { (GlobalVariable key: #a value: 10) } as:
+		        self classToBeTested.
 	self
-		should: [ self collection at: nil update: nil initial: nil ]
-		raise: Error
+		should: [ dict at: #c update: [ :v | v + 1 ] initial: [ 17 ] ]
+		raise: ShouldNotImplement
 ]
 
 { #category : 'tests' }
