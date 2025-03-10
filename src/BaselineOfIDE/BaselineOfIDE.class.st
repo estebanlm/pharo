@@ -115,10 +115,9 @@ BaselineOfIDE >> baseline: spec [
 			spec: spec.
 		spec baseline: 'Ring' with: [ spec repository: repository ].
 		spec baseline: 'HeuristicCompletion' with: [ spec repository: repository ].
-		self
-			load: 'DependencyAnalyzer'
-			group: 'Tool-DependencyAnalyser-UI-Tab'
-			spec: spec.
+		spec package: 'Tool-DependencyAnalyser-UI-Tab' with: [
+			"Depends also on the dependency analyser in newtools"
+			spec requires: #('Calypso') ].
 		self specCode: spec.
 		self roassal: spec.
 		self microdown: spec.
