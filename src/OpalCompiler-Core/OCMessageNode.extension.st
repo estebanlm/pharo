@@ -108,10 +108,10 @@ OCMessageNode >> isInlineToDo [
 	block isBlock ifFalse: [^ false].
 	block arguments size = 1 ifFalse: [^ false].
 	self arguments first isVariable ifTrue: [
-        (block allChildren anySatisfy: [:child | 
-            child isAssignment and: [
-                child variable = self arguments first]]) ifTrue: [^ false].
-    ].
+		(block allChildren anySatisfy: [:child |
+			child isAssignment and: [
+				child variable = self arguments first ]]) ifTrue: [ ^false ].
+	].
 	self arguments size = 3 "to:by:do:" ifTrue: [
 		step := self arguments second.
 		(step isLiteralNode and: [step value isNumber])ifFalse: [^ false].
