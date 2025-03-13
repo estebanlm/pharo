@@ -27,9 +27,9 @@ Class {
 		'newClassName',
 		'referenceVariableName'
 	],
-	#category : 'Refactoring-Transformations-Model-Unused',
-	#package : 'Refactoring-Transformations',
-	#tag : 'Model-Unused'
+	#category : 'Refactoring-Attic-Archived',
+	#package : 'Refactoring-Attic',
+	#tag : 'Archived'
 }
 
 { #category : 'api' }
