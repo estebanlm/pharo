@@ -1,9 +1,8 @@
 Class {
 	#name : 'RBDeprecateClassParametrizedTest',
 	#superclass : 'RBAbstractRefactoringTest',
-	#category : 'Refactoring-Transformations-Tests-SingleParametrized',
-	#package : 'Refactoring-Transformations-Tests',
-	#tag : 'SingleParametrized'
+	#category : 'Refactoring-Attic',
+	#package : 'Refactoring-Attic'
 }
 
 { #category : 'tests' }

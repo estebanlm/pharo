@@ -19,9 +19,9 @@ Class {
 		'shouldRemoveExtensions',
 		'shouldFixSubclasses'
 	],
-	#category : 'Refactoring-Core-Refactorings',
-	#package : 'Refactoring-Core',
-	#tag : 'Refactorings'
+	#category : 'Refactoring-Attic-Archived',
+	#package : 'Refactoring-Attic',
+	#tag : 'Archived'
 }
 
 { #category : 'instance creation' }
