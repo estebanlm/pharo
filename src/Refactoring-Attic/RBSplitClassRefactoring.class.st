@@ -39,9 +39,9 @@ Class {
 		'referenceVariableName',
 		'newClass'
 	],
-	#category : 'Refactoring-Core-Refactorings-Unused',
-	#package : 'Refactoring-Core',
-	#tag : 'Refactorings-Unused'
+	#category : 'Refactoring-Attic-Archived',
+	#package : 'Refactoring-Attic',
+	#tag : 'Archived'
 }
 
 { #category : 'instance creation' }
