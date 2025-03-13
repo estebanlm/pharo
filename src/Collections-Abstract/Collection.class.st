@@ -329,46 +329,6 @@ Collection >> anySatisfy: aBlock [
 	^ false
 ]
 
-{ #category : 'printing' }
-Collection >> asStringOn: aStream delimiter: delimString [
-
-	"Print elements on a stream separated
-	with a delimiter String like: 'a, b, c'
-	Uses #asString instead of #print:."
-
-	"(String streamContents: [:s|
-		'abcd' asStringOn: s delimiter: '->'])
-	>>> 'a->b->c->d'"
-
-	self
-		do: [ :elem | aStream nextPutAll: elem asString ]
-		separatedBy: [ aStream nextPutAll: delimString ]
-]
-
-{ #category : 'printing' }
-Collection >> asStringOn: aStream delimiter: delimString last: lastDelimString [
-
-	"Print elements on a stream separated
-	with a delimiter between all the elements and with
-	a special one before the last like: 'a, b and c'.
-	Uses #asString instead of #print:
-
-	Note: Feel free to improve the code to detect the last element."
-
-	"(String streamContents: [:s|
-		'abcd' asStringOn: s delimiter: ', ' last: ' and '])
-	>>> 'a, b, c and d'"
-
-	| n sz |
-	n := 1.
-	sz := self size.
-	self do: [:elem |
-		n := n + 1.
-		aStream nextPutAll: elem asString]
-	separatedBy: [
-		aStream nextPutAll: (n = sz ifTrue: [lastDelimString] ifFalse: [delimString])]
-]
-
 { #category : 'enumerating' }
 Collection >> associationsDo: aBlock [
 
@@ -1221,42 +1181,6 @@ Collection >> printOn: aStream [
 
 	self printNameOn: aStream.
 	self printElementsOn: aStream
-]
-
-{ #category : 'printing' }
-Collection >> printOn: aStream delimiter: delimString [
-	"Print elements on a stream separated
-	with a delimiter String like: 'a, b, c'"
-
-	"(String streamContents: [:s|
-		{ 10. 'hello'. $x } printOn: s delimiter: ', '])
-		>>> '10, ''hello'', $x'"
-
-	self do: [:elem | aStream print: elem] separatedBy: [aStream nextPutAll: delimString]
-]
-
-{ #category : 'printing' }
-Collection >> printOn: aStream delimiter: delimString last: lastDelimString [
-	"Print elements on a stream separated
-	with a delimiter between all the elements and with
-	a special one before the last like: 'a, b and c'"
-
-	"(String streamContents: [:s|
-		{ 10. 'hello'. $x } printOn: s delimiter: ', ' last: ' & '])
-		>>> '10, ''hello'' & $x'"
-
-	"Note: Feel free to improve the code to detect the last element."
-
-	| n sz |
-	n := 1.
-	sz := self size.
-	self do: [:elem |
-		n := n + 1.
-		aStream print: elem]
-	separatedBy: [
-		n = sz
-			ifTrue: [aStream nextPutAll: lastDelimString]
-			ifFalse: [aStream nextPutAll: delimString]]
 ]
 
 { #category : 'enumerating' }

@@ -87,7 +87,9 @@ TPrintTest >> testPrintOnDelimiter [
 
 	| result allElementsAsString expectedelements |
 	result := String streamContents: [ :aStream |
-		          self nonEmpty printOn: aStream delimiter: ', ' ].
+		          self nonEmpty
+			          do: [ :e | aStream print: e ]
+			          separatedBy: [ aStream print: ', ' ] ].
 
 	allElementsAsString := result findBetweenSubstrings: ', '.
 	expectedelements := self nonEmpty
@@ -95,7 +97,7 @@ TPrintTest >> testPrintOnDelimiter [
 		                    String streamContents: [ :aStream |
 			                    e printOn: aStream ] ]
 		                    as: OrderedCollection.
-		
+
 	self assert: allElementsAsString equals: expectedelements
 ]
 

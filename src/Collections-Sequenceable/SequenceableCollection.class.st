@@ -209,21 +209,6 @@ SequenceableCollection >> asDigitsToPower: anInteger do: aBlock [
 	self asDigitsAt: 1 in: aCollection do: aBlock
 ]
 
-{ #category : 'converting' }
-SequenceableCollection >> asStringWithCr [
-	"Convert to a string with returns between items.  Elements are
-usually strings.
-	 Useful for labels for PopUpMenus."
-	| labelStream |
-	labelStream := (String new: 200) writeStream.
-	self do: [:each |
-		each isString
-			ifTrue: [labelStream nextPutAll: each; cr]
-			ifFalse: [each printOn: labelStream. labelStream cr]].
-	self size > 0 ifTrue: [labelStream skip: -1].
-	^ labelStream contents
-]
-
 { #category : 'accessing' }
 SequenceableCollection >> at: index ifAbsent: exceptionBlock [
 	"Answer the element at my position index. If I do not contain an element
