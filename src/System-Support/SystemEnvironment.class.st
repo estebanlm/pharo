@@ -135,6 +135,13 @@ SystemEnvironment >> at: aKey put: anObject [
  	^ anObject
 ]
 
+{ #category : 'accessing' }
+SystemEnvironment >> at: key update: updateBlock initial: initBlocktOrValue [
+	"Unsupported API: SystemEnvironment is not intended to be used as a dictionary."
+
+	self shouldNotImplement
+]
+
 { #category : 'adding' }
 SystemEnvironment >> atNewIndex: index put: aGlobalVariable [
 
