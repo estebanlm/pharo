@@ -1,9 +1,9 @@
 Class {
 	#name : 'RBSplitClassTransformationTest',
 	#superclass : 'RBAbstractTransformationTest',
-	#category : 'Refactoring-Transformations-Tests-Test',
-	#package : 'Refactoring-Transformations-Tests',
-	#tag : 'Test'
+	#category : 'Refactoring-Attic-Archived',
+	#package : 'Refactoring-Attic',
+	#tag : 'Archived'
 }
 
 { #category : 'tests' }
