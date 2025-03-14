@@ -21,8 +21,8 @@ Class {
 		'lastRun',
 		'lastOffset'
 	],
-	#category : 'Collections-Sequenceable',
-	#package : 'Collections-Sequenceable'
+	#category : 'Text-Core',
+	#package : 'Text-Core'
 }
 
 { #category : 'instance creation' }

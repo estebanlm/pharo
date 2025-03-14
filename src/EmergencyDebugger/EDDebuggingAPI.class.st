@@ -102,7 +102,9 @@ EDDebuggingAPI >> dumpStack [
 
 	| str |
 	str := String new writeStream.
-	self stack printOn: str delimiter: String cr.
+	self stack
+		do: [ :e | str print: e ]
+		separatedBy: [ str print: String cr ].
 	^ str contents
 ]
 

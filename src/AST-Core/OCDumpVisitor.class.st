@@ -133,8 +133,8 @@ OCDumpVisitor >> visitLiteralArrayNode: aLiteralArrayNode [
 		ifTrue: [ '#['  ]
 		ifFalse: [ '#(' ]).
 	(aLiteralArrayNode contents collect: [ :each | each value ])
-		printOn: stream
-		delimiter: ' '.
+		do: [ :e | stream print: e ]
+		separatedBy: [ stream print: ' ' ].
 	stream nextPutAll: (aLiteralArrayNode isForByteArray
 			 ifTrue: [ ']' ]
 			 ifFalse: [ ')' ])
