@@ -2880,7 +2880,7 @@ Morph >> handleMouseDown: anEvent [
 	anEvent hand newMouseFocus: self event: anEvent.
 
 	"Check to open halo"
-	anEvent isSpecialGesture
+	(anEvent isSpecialGesture and: [self cmdGesturesEnabled])
 		ifTrue: [
 			^ self handleSpecialGesture: anEvent ].
 
