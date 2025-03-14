@@ -214,6 +214,15 @@ RunArray >> anySatisfy: aBlock [
 ]
 
 { #category : 'converting' }
+RunArray >> asBag [
+	| aBag |
+	aBag := Bag new: values size.
+	self runsAndValuesDo: [:run :value |
+		aBag add: value withOccurrences: run].
+	^aBag
+]
+
+{ #category : 'converting' }
 RunArray >> asSet [
 	^values asSet
 ]
