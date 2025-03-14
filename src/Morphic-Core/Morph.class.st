@@ -2871,8 +2871,7 @@ Morph >> handleMouseDown: anEvent [
 	anEvent hand removePendingBalloonFor: self.
 	anEvent wasHandled: true.
 
-	(anEvent controlKeyPressed and: [
-		 self cmdGesturesEnabled and: [ anEvent shiftPressed ] ]) ifTrue: [
+	(anEvent isSpecialMetaMenuGesture and: [ self cmdGesturesEnabled ]) ifTrue: [
 		self invokeMetaMenu: anEvent.
 		^ self eventHandler ifNotNil: [ :handler |
 			  handler mouseDown: anEvent fromMorph: self ] ].
