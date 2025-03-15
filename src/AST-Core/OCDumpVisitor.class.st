@@ -126,15 +126,13 @@ OCDumpVisitor >> visitEnglobingErrorNode: anEnglobingErrorNode [
 { #category : 'visiting' }
 OCDumpVisitor >> visitLiteralArrayNode: aLiteralArrayNode [
 
-	stream nextPutAll: aLiteralArrayNode class name;
+	stream
+		nextPutAll: aLiteralArrayNode class name;
 		nextPutAll: ' value: ';
-		nextPutAll: (
-	aLiteralArrayNode isForByteArray
-		ifTrue: [ '#['  ]
-		ifFalse: [ '#(' ]).
-	(aLiteralArrayNode contents collect: [ :each | each value ])
-		do: [ :e | stream print: e ]
-		separatedBy: [ stream print: ' ' ].
+		nextPutAll: (aLiteralArrayNode isForByteArray
+				 ifTrue: [ '#[' ]
+				 ifFalse: [ '#(' ]).
+	(aLiteralArrayNode contents collect: [ :each | each value ]) do: [ :e | stream print: e ] separatedBy: [ stream nextPutAll: ' ' ].
 	stream nextPutAll: (aLiteralArrayNode isForByteArray
 			 ifTrue: [ ']' ]
 			 ifFalse: [ ')' ])
