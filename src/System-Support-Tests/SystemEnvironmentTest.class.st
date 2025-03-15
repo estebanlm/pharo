@@ -4,6 +4,9 @@ SUnit tests for SystemEnvironment
 Class {
 	#name : 'SystemEnvironmentTest',
 	#superclass : 'DictionaryTest',
+	#instVars : [
+		'testingEnvironment'
+	],
 	#category : 'System-Support-Tests-Utilities',
 	#package : 'System-Support-Tests',
 	#tag : 'Utilities'
@@ -46,6 +49,10 @@ SystemEnvironmentTest >> elementToAdd [
 SystemEnvironmentTest >> setUp [
 
 	super setUp.
+	
+	testingEnvironment := SystemEnvironment new.
+	Smalltalk globals keysAndValuesDo: [ :key :value |
+		testingEnvironment at: key put: value ].
 
 	associationNotIn := GlobalVariable key: keyNotIn value: valueNotIn
 ]
