@@ -51,8 +51,13 @@ SystemEnvironmentTest >> setUp [
 	super setUp.
 	
 	testingEnvironment := SystemEnvironment new.
-	Smalltalk globals keysAndValuesDo: [ :key :value |
-		testingEnvironment at: key put: value ].
+
+	ShiftClassBuilder new
+		name: #TestObject;
+		superclass: nil;
+		installingEnvironment: testingEnvironment;
+		package: 'System-Support-Tests';
+		install.
 
 	associationNotIn := GlobalVariable key: keyNotIn value: valueNotIn
 ]
@@ -94,8 +99,12 @@ SystemEnvironmentTest >> testAtUpdateInitial [
 { #category : 'tests' }
 SystemEnvironmentTest >> testClassOrTraitNamedReturnsClassForClasses [
 
-	self assert: Object identicalTo: (testingEnvironment classOrTraitNamed: 'Object').
-	self assert: Object identicalTo: (testingEnvironment classOrTraitNamed: #Object)
+	self
+		assert: (testingEnvironment at: #TestObject)
+		identicalTo: (testingEnvironment classOrTraitNamed: 'TestObject').
+	self
+		assert: (testingEnvironment at: #TestObject)
+		identicalTo: (testingEnvironment classOrTraitNamed: #TestObject)
 ]
 
 { #category : 'tests' }
