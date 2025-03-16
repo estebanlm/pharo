@@ -4,6 +4,9 @@ SUnit tests for SystemEnvironment
 Class {
 	#name : 'SystemEnvironmentTest',
 	#superclass : 'DictionaryTest',
+	#instVars : [
+		'testingEnvironment'
+	],
 	#category : 'System-Support-Tests-Utilities',
 	#package : 'System-Support-Tests',
 	#tag : 'Utilities'
@@ -46,6 +49,15 @@ SystemEnvironmentTest >> elementToAdd [
 SystemEnvironmentTest >> setUp [
 
 	super setUp.
+	
+	testingEnvironment := SystemEnvironment new.
+
+	ShiftClassBuilder new
+		name: #TestObject;
+		superclass: nil;
+		installingEnvironment: testingEnvironment;
+		package: 'System-Support-Tests';
+		install.
 
 	associationNotIn := GlobalVariable key: keyNotIn value: valueNotIn
 ]
@@ -87,8 +99,12 @@ SystemEnvironmentTest >> testAtUpdateInitial [
 { #category : 'tests' }
 SystemEnvironmentTest >> testClassOrTraitNamedReturnsClassForClasses [
 
-	self assert: Object identicalTo: (testingEnvironment classOrTraitNamed: 'Object').
-	self assert: Object identicalTo: (testingEnvironment classOrTraitNamed: #Object)
+	self
+		assert: (testingEnvironment at: #TestObject)
+		identicalTo: (testingEnvironment classOrTraitNamed: 'TestObject').
+	self
+		assert: (testingEnvironment at: #TestObject)
+		identicalTo: (testingEnvironment classOrTraitNamed: #TestObject)
 ]
 
 { #category : 'tests' }
