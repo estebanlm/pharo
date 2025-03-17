@@ -296,8 +296,8 @@ UnifiedDiffChangesMorph >> newJoinSectionFrom: srcRange to: dstRange copyRange: 
 UnifiedDiffChangesMorph >> newStringOfDifference [
 
 	unifiedText := String streamContents: [ :s |
-		               (self difference collect: #value) joinUsing:
-			               String cr ].
+		               s nextPutAll: ((self difference collect: #value) joinUsing:
+			               String cr) ].
 	copyDstMorph := self newCopyMorph.
 	self destTextModel setText: unifiedText
 ]
