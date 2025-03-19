@@ -29,7 +29,7 @@ ThreadSafeTranscript >> interactionModel [
 
 { #category : '*Transcript-Tool' }
 ThreadSafeTranscript class >> menuCommandOn: aBuilder [
-	<worldMenu>
+
 	(aBuilder item: #'Transcript')
 		action: [ (Smalltalk tools toolNamed: #transcript) open ];
 		order: 2;
