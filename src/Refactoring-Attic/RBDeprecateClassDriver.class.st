@@ -21,9 +21,9 @@ Class {
 		'className',
 		'newClassName'
 	],
-	#category : 'Refactoring-UI-Drivers to migrate to new architecture',
-	#package : 'Refactoring-UI',
-	#tag : 'Drivers to migrate to new architecture'
+	#category : 'Refactoring-Attic-Archived',
+	#package : 'Refactoring-Attic',
+	#tag : 'Archived'
 }
 
 { #category : 'instance creation' }
