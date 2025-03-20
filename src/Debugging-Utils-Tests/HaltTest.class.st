@@ -28,6 +28,16 @@ HaltTest >> b1 [
 ]
 
 { #category : 'tests' }
+HaltTest >> differentCallSite: aBoolean [
+	<haltOrBreakpointForTesting>
+	| a |
+	aBoolean 
+		ifTrue: [ self haltOnce. a := 1 ]
+		ifFalse: [ self haltOnce. a := 2 ].
+	^ a
+]
+
+{ #category : 'tests' }
 HaltTest >> haltFromCount [
 	<haltOrBreakpointForTesting>
 
@@ -183,8 +193,39 @@ HaltTest >> testHaltOnce [
 	anObject := Object new.
 	block :=  [ anObject haltOnce ]. 
 	self should: block raise: Halt.
-	"block value."
 	Halt resetOnce.
+]
+
+{ #category : 'tests' }
+HaltTest >> testHaltOnceTwoInARowShouldOnlyRaiseTheFirst [
+	<haltOrBreakpointForTesting>
+	
+	"during the first call in the execution will be stopped by the halt raised."
+	Halt resetOnce.
+	self should: [ self differentCallSite: false ] raise: Halt.
+	
+	"The second call should not raise an halt."
+	self shouldnt: [ | res | 
+						res := self differentCallSite: false.
+						self assert: res equals: 2 ] raise: Halt.
+]
+
+{ #category : 'tests' }
+HaltTest >> testHaltOnceTwoInDifferentCallSitesShouldRaiseHaltThenNot [
+	<haltOrBreakpointForTesting>
+	
+	"during the first call in the execution will be stopped by the halt raised."
+	Halt resetOnce.
+	self should: [ self differentCallSite: false ] raise: Halt.
+	self should: [ self differentCallSite: true ] raise: Halt.
+	
+	"The second call should not raise an halt."
+	self shouldnt: [ | res | 
+						res := self differentCallSite: false.
+						self assert: res equals: 2 ] raise: Halt.
+		self shouldnt: [ | res | 
+						res := self differentCallSite: true.
+						self assert: res equals: 1 ] raise: Halt.
 ]
 
 { #category : 'tests' }

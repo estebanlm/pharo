@@ -207,7 +207,22 @@ Halt class >> once: callingContext [
 	method := callingContext method.
 	
 	LocalRecursionStopper during: [
-		self updateOnceForCallSite: callingContext pc inMethod: method.
+		(OnceDictionary at: method 
+			ifPresent: [ :dict | 
+				| vv |
+				"we have a haltonce for the method but we should check if this
+				is the one for a given callsite.
+				If this is not we add it, else return to avoid firing it. In the future 
+				we can have a haltOnce: 2 and decrement it"
+				vv := dict at: callingContext pc ifAbsent: [ nil ].
+				vv 
+					ifNil: [ dict at: callingContext pc put: true ]
+					ifNotNil: [ :v | ^ self ] ]
+			ifAbsentPut: [ 
+				"There was not entry in for the method at all, so we add it and fire."
+				OnceDictionary at: method put: (Dictionary new at: callingContext pc put: true; yourself) ]
+			).
+		
 		self signalIn: senderContext
 
 	]
