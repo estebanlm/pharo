@@ -185,7 +185,7 @@ HaltTest >> testHaltOnCount [
 	(self class >> #haltOnCount) recompile "Recompile for next execution"
 ]
 
-{ #category : 'tests' }
+{ #category : 'tests - halt once' }
 HaltTest >> testHaltOnce [
 	<haltOrBreakpointForTesting>
 	
@@ -196,7 +196,7 @@ HaltTest >> testHaltOnce [
 	Halt resetOnce.
 ]
 
-{ #category : 'tests' }
+{ #category : 'tests - halt once' }
 HaltTest >> testHaltOnceTwoInARowShouldOnlyRaiseTheFirst [
 	<haltOrBreakpointForTesting>
 	
@@ -210,7 +210,7 @@ HaltTest >> testHaltOnceTwoInARowShouldOnlyRaiseTheFirst [
 						self assert: res equals: 2 ] raise: Halt.
 ]
 
-{ #category : 'tests' }
+{ #category : 'tests - halt once' }
 HaltTest >> testHaltOnceTwoInDifferentCallSitesShouldRaiseHaltThenNot [
 	<haltOrBreakpointForTesting>
 	
@@ -228,7 +228,7 @@ HaltTest >> testHaltOnceTwoInDifferentCallSitesShouldRaiseHaltThenNot [
 						self assert: res equals: 1 ] raise: Halt.
 ]
 
-{ #category : 'tests' }
+{ #category : 'tests - halt once' }
 HaltTest >> testOnce [
 	<haltOrBreakpointForTesting>
 
