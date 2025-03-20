@@ -178,10 +178,19 @@ HaltTest >> testHaltOnCount [
 { #category : 'tests' }
 HaltTest >> testHaltOnce [
 	<haltOrBreakpointForTesting>
+	
 	| anObject block |
 	anObject := Object new.
 	block :=  [ anObject haltOnce ]. 
 	self should: block raise: Halt.
 	"block value."
+	Halt resetOnce.
+]
+
+{ #category : 'tests' }
+HaltTest >> testOnce [
+	<haltOrBreakpointForTesting>
+
+	self should: [ Halt once ] raise: Halt.
 	Halt resetOnce.
 ]

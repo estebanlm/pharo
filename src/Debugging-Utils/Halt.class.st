@@ -72,6 +72,9 @@ But it such design did not allow to debug the unhandled logic itself. For exampl
 Class {
 	#name : 'Halt',
 	#superclass : 'UnhandledException',
+	#classVars : [
+		'OnceDictionary'
+	],
 	#category : 'Debugging-Utils',
 	#package : 'Debugging-Utils'
 }
@@ -140,6 +143,12 @@ Halt class >> ifTest [
 	CurrentExecutionEnvironment value isTest ifTrue: [self signalIn: thisContext home sender ]
 ]
 
+{ #category : 'class initialization' }
+Halt class >> initialize [ 
+	"self initialize"
+	OnceDictionary := WeakIdentityKeyDictionary new
+]
+
 { #category : 'halting' }
 Halt class >> now [
 	<debuggerCompleteToSender>
@@ -184,24 +193,21 @@ Halt class >> onCountWithBehavior: behaviorBlock [
 Halt class >> once [
 	"Stop once and only once the execution of the method containing the expression Halt once. If you need to get it stops another time after the first stop, use Halt resetOnce."
 
-	| callingContext senderContext node |
+	self once: thisContext sender
+]
+
+{ #category : 'halting' }
+Halt class >> once: callingContext [
+	"Stop once and only once the execution of the method containing the expression Halt once. If you need to get it stops another time after the first stop, use Halt resetOnce."
+
+	| senderContext method |
 	<debuggerCompleteToSender>
-
-	"if the compiler is not loaded, we fall back on the standard halt "
-	self environment at: #OpalCompiler ifAbsent: [ ^self now ].
-
-	callingContext := (thisContext findContextSuchThat: [ :ctx |
-		ctx compiledCode sendsAnySelectorOf: #(haltOnce) ]
-	) ifNil: [ thisContext sender ].
-
+	
 	senderContext := thisContext.
-
+	method := callingContext method.
+	
 	LocalRecursionStopper during: [
-		"we need to ignore when the code below calls us again"
-		node := callingContext sourceNodeExecuted.
-		(node hasProperty: #Once) ifTrue: [ ^ self ].
-		node propertyAt: #Once put: true.
-
+		self updateOnceForCallSite: callingContext pc inMethod: method.
 		self signalIn: senderContext
 
 	]
@@ -215,9 +221,29 @@ Halt class >> resetHaltOnCount [
 { #category : 'once-reset' }
 Halt class >> resetOnce [
 	"Once stops an expression once and only once. Halt resetOnce will rearm and make sure that the execution of a method containing Halt once will stop another time."
-	 (#haltOnce senders, #inspectOnce senders) do: [ :method |
-		method ast sendNodes do: [ :sendNode|
-			sendNode removeProperty: #Once ifAbsent: [  ]]]
+	
+	self initialize.
+]
+
+{ #category : 'halting' }
+Halt class >> updateOnceForCallSite: pc inMethod: method [
+
+		(OnceDictionary at: method 
+			ifPresent: [ :v | 
+					"we have a haltonce for the method but we should check if this
+					is the one for a given callsite.
+					If this is not we add it, else return to avoid firing it. In the future 
+					we can have a haltOnce: 2 and decrement it"
+					v 
+						at: pc
+						ifPresent: [ :v | ^ self ]
+						ifAbsent: [ OnceDictionary at: method put: (Dictionary new at: pc put: true; yourself)  ]
+					  ]
+			ifAbsentPut: [ 
+				"There was not entry in for the method at all, so we add it and fire."
+				OnceDictionary at: method put: (Dictionary new at: pc put: true; yourself) ]
+			).
+		
 ]
 
 { #category : 'private' }
