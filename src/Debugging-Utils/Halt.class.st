@@ -110,13 +110,12 @@ Halt class >> counterFor: method andPc: pc [
 		^ value
 ]
 
-{ #category : 'on count' }
+{ #category : 'halting' }
 Halt class >> fromCount: anInteger [
 	"Always halt after a count has been reached"
 
 	<debuggerCompleteToSender>
-	^ self
-		onCountWithBehavior: [ :node | (node propertyAt: #haltCount) >= anInteger ]
+	^ self onCountContext: thisContext sender sender checkPredicate:  [ :v | v >= anInteger ]
 ]
 
 { #category : 'private' }
@@ -203,7 +202,7 @@ Halt class >> now: aString [
 	self signal: aString
 ]
 
-{ #category : 'on count' }
+{ #category : 'halting' }
 Halt class >> onCount: anInteger [
 	"Halts once when a count is reached"
 
@@ -227,7 +226,7 @@ Halt class >> onCountContext: callingContext checkPredicate:  aBlock [
 			^ self signal ] 
 ]
 
-{ #category : 'halt once' }
+{ #category : 'halting' }
 Halt class >> once [
 	"Stop once and only once the execution of the method containing the expression Halt once. If you need to get it stops another time after the first stop, use Halt resetOnce."
 	<debuggerCompleteToSender>
@@ -235,7 +234,7 @@ Halt class >> once [
 	self once: thisContext sender
 ]
 
-{ #category : 'halt once' }
+{ #category : 'halting' }
 Halt class >> once: callingContext [
 	"Stop once and only once the execution of the method containing the expression Halt once. If you need to get it stops another time after the first stop, use Halt resetOnce."
 
