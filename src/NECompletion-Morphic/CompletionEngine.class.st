@@ -134,11 +134,9 @@ CompletionEngine >> handleKeyDownBefore: aKeyboardEvent editor: anEditor [
 
 	This method would be cleaner if splitted."
 
-	| key controlKeyPressed commandKeyPressed |
+	| key |
 	self setEditor: anEditor.
 	key := aKeyboardEvent key.
-	controlKeyPressed := aKeyboardEvent controlKeyPressed.
-	commandKeyPressed := aKeyboardEvent commandKeyPressed.
 
 	(self isMenuOpen not and: [
 		 self editor atCompletionPosition and: [
