@@ -73,6 +73,7 @@ Class {
 	#name : 'Halt',
 	#superclass : 'UnhandledException',
 	#classVars : [
+		'OnCountDictionary',
 		'OnceDictionary'
 	],
 	#category : 'Debugging-Utils',
@@ -189,10 +190,11 @@ Halt class >> onCountWithBehavior: behaviorBlock [
 		ifTrue: [ ^ self signal ]
 ]
 
-{ #category : 'halting' }
+{ #category : 'halt once' }
 Halt class >> once [
 	"Stop once and only once the execution of the method containing the expression Halt once. If you need to get it stops another time after the first stop, use Halt resetOnce."
-
+	<debuggerCompleteToSender>
+	
 	self once: thisContext sender
 ]
 

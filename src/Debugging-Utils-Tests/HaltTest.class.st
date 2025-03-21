@@ -27,7 +27,7 @@ HaltTest >> b1 [
 	self haltIf: #testasdasdfHaltIf
 ]
 
-{ #category : 'tests' }
+{ #category : 'tests - halt once' }
 HaltTest >> differentCallSite: aBoolean [
 	<haltOrBreakpointForTesting>
 	| a |
@@ -64,16 +64,25 @@ HaltTest >> haltFromCount [
 	self assert: haltCount equals: 8
 ]
 
-{ #category : 'tests' }
-HaltTest >> haltOnCount [
+{ #category : 'tests - halt on count' }
+HaltTest >> haltOnCountHelper1 [
 	<haltOrBreakpointForTesting>
 
-	| anObject haltCount |
+	| anObject |
 	anObject := Object new.
 
 	"Should not halt if not executed enough times"
 	self shouldntHaltAfter: 2 times: [ anObject haltOnCount: 3 ].
 	self shouldHaltAfter: 3 times: [ anObject haltOnCount: 3 ].
+
+]
+
+{ #category : 'tests - halt on count' }
+HaltTest >> haltOnCountHelper2 [
+	<haltOrBreakpointForTesting>
+
+	| anObject haltCount |
+	anObject := Object new.
 
 	"Should stop halting after the count is reached"
 	haltCount := 0.
@@ -134,7 +143,7 @@ HaltTest >> testContainsHalt [
 	assert: (annonClass >> #m5) containsHalt
 ]
 
-{ #category : 'tests' }
+{ #category : 'tests - halt on count' }
 HaltTest >> testHaltFromCount [
 
 	<haltOrBreakpointForTesting>
@@ -173,16 +182,38 @@ HaltTest >> testHaltIfNil [
 	self should: [ nil haltIfNil] raise: Halt
 ]
 
-{ #category : 'tests' }
-HaltTest >> testHaltOnCount [
-
+{ #category : 'tests - halt on count' }
+HaltTest >> testHaltOnCountUsingHaltMessage [
 	<haltOrBreakpointForTesting>
-	
-	"Test is in another method due to recompilation is necessary to restart the halt counters"
-	self haltOnCount.
-	
-	"Recompiling this test method itself has problems on debuging (specifically on (un)install metalinks for breakpoints)"
-	(self class >> #haltOnCount) recompile "Recompile for next execution"
+
+	"Should not halt if not executed enough times"
+	self shouldntHaltAfter: 2 times: [ Halt onCount: 3 ].
+	self shouldHaltAfter: 3 times: [ Halt onCount: 3 ].
+
+]
+
+{ #category : 'tests - halt on count' }
+HaltTest >> testHaltOnCountUsingHaltMessage2 [
+	<haltOrBreakpointForTesting>
+
+	| haltCount |
+	haltCount := 0.
+	10 timesRepeat: [ [ Halt onCount: 3 ]
+				on: Halt
+				do: [ haltCount := haltCount + 1 ] ].
+	self assert: haltCount equals: 1
+]
+
+{ #category : 'tests - halt on count' }
+HaltTest >> testHaltOnCountUsingHaltMessageRaisesHaltOnlyOnce [
+	<haltOrBreakpointForTesting>
+
+	| haltCount |
+	haltCount := 0.
+	10 timesRepeat: [ [ Halt onCount: 3 ]
+				on: Halt
+				do: [ haltCount := haltCount + 1 ] ].
+	self assert: haltCount equals: 1
 ]
 
 { #category : 'tests - halt once' }
