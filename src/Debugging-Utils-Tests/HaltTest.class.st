@@ -115,6 +115,20 @@ HaltTest >> testContainsHalt [
 	assert: (annonClass >> #m5) containsHalt
 ]
 
+{ #category : 'tests - halt on count' }
+HaltTest >> testCounterFor [
+
+	Halt initializeOnCount. 
+	self assert: (Halt counterFor: 123 andPc: 1) equals: 1. 
+	self assert: (Halt counterFor: 123 andPc: 1) equals: 2. 
+	self assert: (Halt counterFor: 123 andPc: 1) equals: 3. 
+	
+	self assert: (Halt counterFor: 123 andPc: 2) equals: 1. 
+	self assert: (Halt counterFor: 123 andPc: 2) equals: 2. 
+	
+	self assert: (Halt counterFor: 124 andPc: 1) equals: 1.
+]
+
 { #category : 'tests' }
 HaltTest >> testHaltIf [
 	<haltOrBreakpointForTesting>
@@ -147,7 +161,7 @@ HaltTest >> testHaltOnCountUsingHaltMessage2 [
 	<haltOrBreakpointForTesting>
 
 	| haltCount |
-	Halt initializeOnCount. 
+	Halt initializeOnCount. "This is mandatory else running twice the test will fail."
 	haltCount := 0.
 	10 timesRepeat: [ [ Halt onCount: 3 ]
 				on: Halt
@@ -160,7 +174,7 @@ HaltTest >> testHaltOnCountUsingHaltMessageRaisesHaltOnlyOnce [
 	<haltOrBreakpointForTesting>
 
 	| haltCount |
-	Halt initializeOnCount. 
+	Halt initializeOnCount. "This is mandatory else running twice the test will fail."
 	haltCount := 0.
 	10 timesRepeat: [ [ Halt onCount: 3 ]
 				on: Halt
@@ -173,8 +187,7 @@ HaltTest >> testHaltOnCountUsingObjectHaltOnCount [
 	<haltOrBreakpointForTesting>
 
 	| anObject |
-	Halt initializeOnCount. 
-	"Should not halt if not executed enough times"
+	Halt initializeOnCount. "This is mandatory else running twice the test will fail."
 	anObject := Object new.
 	self shouldntHaltAfter: 2 times: [ anObject haltOnCount: 3 ].
 	self shouldHaltAfter: 3 times: [ anObject haltOnCount: 3 ].
@@ -186,7 +199,7 @@ HaltTest >> testHaltOnCountUsingObjectHaltOnCountRaisesOnlyOnce [
 	<haltOrBreakpointForTesting>
 
 	| anObject haltCount |
-	Halt initializeOnCount. 
+	Halt initializeOnCount. "This is mandatory else running twice the test will fail."
 	anObject := Object new.
 
 	"Should stop halting after the count is reached"

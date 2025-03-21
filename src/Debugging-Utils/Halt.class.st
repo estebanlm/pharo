@@ -86,6 +86,31 @@ Halt class >> captureIfSignalledWhenStepping [
 ]
 
 { #category : 'on count' }
+Halt class >> counterFor: method andPc: pc [
+
+	| methodStructure value |
+	methodStructure := OnCountDictionary at: method ifAbsent: [ nil ].
+		methodStructure 
+			ifNotNil: [ :dict | 
+				| valueForPc |
+				"we have a onCount for the method but we should check if this
+				is the one for a given callsite.
+				If this is not we add it, else just increase the counter."
+				
+				valueForPc := dict at:  pc ifAbsent: [ nil ].
+				valueForPc 
+					ifNil: [ dict at:  pc put: 1. 
+						value := 1.]
+					ifNotNil: [ :v | dict at:  pc put: v + 1.
+						value := v + 1 ]]	
+			ifNil: [ 
+				"There was not entry in for the method at all, so we add it."
+				OnCountDictionary at: method put: (Dictionary new at:  pc put: 1; yourself).
+				value := 1. ].
+		^ value
+]
+
+{ #category : 'on count' }
 Halt class >> fromCount: anInteger [
 	"Always halt after a count has been reached"
 
@@ -195,23 +220,11 @@ Halt class >> onCountContext: callingContext checkPredicate:  aBlock [
 	method := callingContext method.
 	
 	LocalRecursionStopper during: [
-		value := OnCountDictionary at: method 
-			ifPresent: [ :dict | 
-				| valueForPc |
-				"we have a onCount for the method but we should check if this
-				is the one for a given callsite.
-				If this is not we add it, else return to avoid firing it. In the future 
-				we can have a haltOnce: 2 and decrement it"
-				valueForPc := dict at: callingContext pc ifAbsent: [ nil ].
-				valueForPc 
-					ifNil: [ dict at: callingContext pc put: 0 ]
-					ifNotNil: [ :v | dict at: callingContext pc put: v + 1 ] ]
-			ifAbsentPut: [ 
-				"There was not entry in for the method at all, so we add it and fire."
-				OnCountDictionary at: method put: (Dictionary new at: callingContext pc put: 0; yourself) ].
-	
+		value := self counterFor: method andPc: callingContext pc.
+	].
 	(aBlock value: value)
-		ifTrue: [ ^ self signal ] ]
+		ifTrue: [ 
+			^ self signal ] 
 ]
 
 { #category : 'halt once' }
