@@ -183,8 +183,7 @@ Halt class >> onCount: anInteger [
 	"Halts once when a count is reached"
 
 	<debuggerCompleteToSender>
-	^ self
-		onCountWithBehavior: [ :node | (node propertyAt: #haltCount) = anInteger ]
+	^ self onCountContext: thisContext sender sender sender checkPredicate:  [ :v | v = anInteger ]
 ]
 
 { #category : 'on count' }
@@ -213,24 +212,6 @@ Halt class >> onCountContext: callingContext checkPredicate:  aBlock [
 	
 	(aBlock value: value)
 		ifTrue: [ ^ self signal ] ]
-]
-
-{ #category : 'on count' }
-Halt class >> onCountWithBehavior: behaviorBlock [
-	"Halt on the anInteger-th time through, as defined in the behavior block passed as parameter.
-	First parameter of the behaviorBlock is the AST node corresponding to the halt call."
-
-	<debuggerCompleteToSender>
-	| callingContext node |
-	"if the compiler is not loaded, we fall back on the standard halt "
-	self environment at: #OpalCompiler ifAbsent: [ ^ self now ].
-	callingContext := thisContext sender sender sender.
-	node := callingContext sourceNodeExecuted.
-	(node hasProperty: #haltCount)
-		ifFalse: [ node propertyAt: #haltCount put: 0 ].
-	node propertyAt: #haltCount put: (node propertyAt: #haltCount) + 1.
-	(behaviorBlock value: node)
-		ifTrue: [ ^ self signal ]
 ]
 
 { #category : 'halt once' }
@@ -273,12 +254,12 @@ Halt class >> once: callingContext [
 	]
 ]
 
-{ #category : 'once-reset' }
+{ #category : 'once reset' }
 Halt class >> resetHaltOnCount [
 	 self initializeOnCount
 ]
 
-{ #category : 'once-reset' }
+{ #category : 'once reset' }
 Halt class >> resetOnce [
 	"Once stops an expression once and only once. Halt resetOnce will rearm and make sure that the execution of a method containing Halt once will stop another time."
 	
