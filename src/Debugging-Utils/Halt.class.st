@@ -85,7 +85,7 @@ Halt class >> captureIfSignalledWhenStepping [
 	^self == Halt
 ]
 
-{ #category : 'halting' }
+{ #category : 'on count' }
 Halt class >> fromCount: anInteger [
 	"Always halt after a count has been reached"
 
@@ -147,7 +147,22 @@ Halt class >> ifTest [
 { #category : 'class initialization' }
 Halt class >> initialize [ 
 	"self initialize"
-	OnceDictionary := WeakIdentityKeyDictionary new
+	
+	self initializeOnce. 
+	self initializeOnCount.
+]
+
+{ #category : 'class initialization' }
+Halt class >> initializeOnCount [ 
+
+	OnCountDictionary := WeakIdentityKeyDictionary new
+]
+
+{ #category : 'class initialization' }
+Halt class >> initializeOnce [
+	"self initialize"
+	OnceDictionary := WeakIdentityKeyDictionary new.
+	
 ]
 
 { #category : 'halting' }
@@ -163,7 +178,7 @@ Halt class >> now: aString [
 	self signal: aString
 ]
 
-{ #category : 'halting' }
+{ #category : 'on count' }
 Halt class >> onCount: anInteger [
 	"Halts once when a count is reached"
 
@@ -172,7 +187,35 @@ Halt class >> onCount: anInteger [
 		onCountWithBehavior: [ :node | (node propertyAt: #haltCount) = anInteger ]
 ]
 
-{ #category : 'halting' }
+{ #category : 'on count' }
+Halt class >> onCountContext: callingContext checkPredicate:  aBlock [
+
+	<debuggerCompleteToSender>
+	| value method |
+	
+	method := callingContext method.
+	
+	LocalRecursionStopper during: [
+		value := OnCountDictionary at: method 
+			ifPresent: [ :dict | 
+				| valueForPc |
+				"we have a onCount for the method but we should check if this
+				is the one for a given callsite.
+				If this is not we add it, else return to avoid firing it. In the future 
+				we can have a haltOnce: 2 and decrement it"
+				valueForPc := dict at: callingContext pc ifAbsent: [ nil ].
+				valueForPc 
+					ifNil: [ dict at: callingContext pc put: 0 ]
+					ifNotNil: [ :v | dict at: callingContext pc put: v + 1 ] ]
+			ifAbsentPut: [ 
+				"There was not entry in for the method at all, so we add it and fire."
+				OnCountDictionary at: method put: (Dictionary new at: callingContext pc put: 0; yourself) ].
+	
+	(aBlock value: value)
+		ifTrue: [ ^ self signal ] ]
+]
+
+{ #category : 'on count' }
 Halt class >> onCountWithBehavior: behaviorBlock [
 	"Halt on the anInteger-th time through, as defined in the behavior block passed as parameter.
 	First parameter of the behaviorBlock is the AST node corresponding to the halt call."
@@ -198,7 +241,7 @@ Halt class >> once [
 	self once: thisContext sender
 ]
 
-{ #category : 'halting' }
+{ #category : 'halt once' }
 Halt class >> once: callingContext [
 	"Stop once and only once the execution of the method containing the expression Halt once. If you need to get it stops another time after the first stop, use Halt resetOnce."
 
@@ -232,35 +275,14 @@ Halt class >> once: callingContext [
 
 { #category : 'once-reset' }
 Halt class >> resetHaltOnCount [
-	 #haltOnCount: senders do: [ :method | method ast removeProperty: #haltCount ifAbsent: [  ] ]
+	 self initializeOnCount
 ]
 
 { #category : 'once-reset' }
 Halt class >> resetOnce [
 	"Once stops an expression once and only once. Halt resetOnce will rearm and make sure that the execution of a method containing Halt once will stop another time."
 	
-	self initialize.
-]
-
-{ #category : 'halting' }
-Halt class >> updateOnceForCallSite: pc inMethod: method [
-
-		(OnceDictionary at: method 
-			ifPresent: [ :v | 
-					"we have a haltonce for the method but we should check if this
-					is the one for a given callsite.
-					If this is not we add it, else return to avoid firing it. In the future 
-					we can have a haltOnce: 2 and decrement it"
-					v 
-						at: pc
-						ifPresent: [ :v | ^ self ]
-						ifAbsent: [ OnceDictionary at: method put: (Dictionary new at: pc put: true; yourself)  ]
-					  ]
-			ifAbsentPut: [ 
-				"There was not entry in for the method at all, so we add it and fire."
-				OnceDictionary at: method put: (Dictionary new at: pc put: true; yourself) ]
-			).
-		
+	self initializeOnce
 ]
 
 { #category : 'private' }
