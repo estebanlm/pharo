@@ -115,7 +115,7 @@ Halt class >> fromCount: anInteger [
 	"Always halt after a count has been reached"
 
 	<debuggerCompleteToSender>
-	^ self onCountContext: thisContext sender sender checkPredicate:  [ :v | v >= anInteger ]
+	^ self onCountContext: thisContext sender sender haltIfPredicate:  [ :v | v >= anInteger ]
 ]
 
 { #category : 'private' }
@@ -207,11 +207,11 @@ Halt class >> onCount: anInteger [
 	"Halts once when a count is reached"
 
 	<debuggerCompleteToSender>
-	^ self onCountContext: thisContext sender sender sender checkPredicate:  [ :v | v = anInteger ]
+	^ self onCountContext: thisContext sender sender sender haltIfPredicate:  [ :v | v = anInteger ]
 ]
 
 { #category : 'on count' }
-Halt class >> onCountContext: callingContext checkPredicate:  aBlock [
+Halt class >> onCountContext: callingContext haltIfPredicate:  aBlock [
 
 	<debuggerCompleteToSender>
 	| value method |

@@ -15,6 +15,14 @@ Object >> halt: aString [
 ]
 
 { #category : '*Debugging-Utils' }
+Object >> haltCountUpTo: anInteger [
+	"Always halt for a certain amount of time then stop"
+
+	<debuggerCompleteToSender>
+	Halt countUpTo: anInteger
+]
+
+{ #category : '*Debugging-Utils' }
 Object >> haltFromCount: anInteger [
 	"Always halt after a count has been reached"
 
