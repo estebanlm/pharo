@@ -169,28 +169,39 @@ HaltTest >> testHaltIfNil [
 
 { #category : 'tests - halt on count' }
 HaltTest >> testHaltOnCountUsingHaltMessage2 [
+	"On Count will only stop on the exact number not before not after"
+
 	<haltOrBreakpointForTesting>
 
-	| haltCount |
+	| haltCount actionCount |
 	Halt initializeOnCount. "This is mandatory else running twice the test will fail."
 	haltCount := 0.
-	10 timesRepeat: [ [ Halt onCount: 3 ]
+	actionCount := 0.
+	10 timesRepeat: [ [ Halt onCount: 3.
+							actionCount := actionCount + 1 ]
 				on: Halt
 				do: [ haltCount := haltCount + 1 ] ].
-	self assert: haltCount equals: 1
+	self assert: haltCount equals: 1.
+	self assert: actionCount equals: 9
 ]
 
 { #category : 'tests - halt on count' }
 HaltTest >> testHaltOnCountUsingHaltMessageRaisesHaltOnlyOnce [
 	<haltOrBreakpointForTesting>
 
-	| haltCount |
+	| haltCount actionCount |
 	Halt initializeOnCount. "This is mandatory else running twice the test will fail."
 	haltCount := 0.
-	10 timesRepeat: [ [ Halt onCount: 3 ]
+	actionCount := 0.
+	10 timesRepeat: [ [ Halt onCount: 3.
+				actionCount := actionCount + 1 ]
 				on: Halt
 				do: [ haltCount := haltCount + 1 ] ].
-	self assert: haltCount equals: 1
+	
+	self 
+		assert: haltCount 
+		equals: 1.
+	self assert: actionCount equals: 9
 ]
 
 { #category : 'tests - halt on count' }
