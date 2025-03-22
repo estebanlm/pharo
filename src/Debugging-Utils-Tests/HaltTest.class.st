@@ -278,6 +278,58 @@ HaltTest >> testHaltOnceTwoInDifferentCallSitesShouldRaiseHaltThenNot [
 						self assert: res equals: 1 ] raise: Halt.
 ]
 
+{ #category : 'tests' }
+HaltTest >> testHaltUpToShouldNotHaltAfterTimes [
+	<haltOrBreakpointForTesting>
+
+	| anObject count |
+	Halt initialize.
+	anObject := Object new.
+	count := 0.
+	self should: [ 3 timesRepeat: [ 
+									anObject haltFromCount: 2.
+									count := count + 1. ]] raise: Halt.
+	self assert: count equals: 1.
+	
+	
+]
+
+{ #category : 'tests' }
+HaltTest >> testHaltUpToShouldNotHaltAfterTimes2 [
+	<haltOrBreakpointForTesting>
+
+	| anObject count haltCount |
+	Halt initialize.
+	anObject := Object new.
+	count := 0.
+	haltCount := 0.
+	[ 5 timesRepeat: [ Halt upTo: 2.
+									count := count + 1. ]]
+		on: Halt
+		do: [ :ex | 
+				haltCount := haltCount + 1. 
+				ex resume ].
+	self assert: count equals: 5.
+	self assert: haltCount equals: 2.
+	
+	
+]
+
+{ #category : 'tests' }
+HaltTest >> testHaltUpToShouldOnlyTwoTimes [
+	<haltOrBreakpointForTesting>
+
+	| anObject haltCount |
+	Halt initialize.
+	anObject := Object new.
+	"Should continue halting after the count is reached"
+	haltCount := 0.
+	10 timesRepeat: [ [ anObject haltCountUpTo: 2 ]
+				on: Halt
+				do: [ haltCount := haltCount + 1 ] ].
+	self assert: haltCount equals: 2
+]
+
 { #category : 'tests - halt once' }
 HaltTest >> testOnce [
 	<haltOrBreakpointForTesting>

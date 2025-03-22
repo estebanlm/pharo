@@ -278,6 +278,14 @@ Halt class >> resetOnce [
 	self initializeOnce
 ]
 
+{ #category : 'halting' }
+Halt class >> upTo: anInteger [
+	"Always halt for a certain amount of times, then stops"
+	<debuggerCompleteToSender>
+	
+	^ self onCountContext: thisContext sender haltIfPredicate:  [ :v | v <= anInteger ]
+]
+
 { #category : 'private' }
 Halt >> completeProcess: aProcess with: aContext [
 	^ aContext methodNode
