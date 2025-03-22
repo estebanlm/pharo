@@ -106,6 +106,7 @@ HaltTest >> testHaltFromCountShouldContinueToHalt [
 	<haltOrBreakpointForTesting>
 
 	| anObject haltCount |
+	Halt initialize.
 	anObject := Object new.
 	"Should continue halting after the count is reached"
 	haltCount := 0.
@@ -120,6 +121,7 @@ HaltTest >> testHaltFromCountShouldHaltIfExecutedEnoughTimes [
 	<haltOrBreakpointForTesting>
 
 	| anObject |
+	Halt initialize.
 	anObject := Object new.
 	self shouldHaltAfter: 2 times: [ anObject haltFromCount: 2 ].
 	
@@ -134,6 +136,7 @@ HaltTest >> testHaltFromCountShouldNotHaltIfExecutedEnoughTimes [
 	<haltOrBreakpointForTesting>
 
 	| anObject |
+	Halt initialize.
 	anObject := Object new.
 	self shouldntHaltAfter: 2 times: [ anObject haltFromCount: 3 ].
 	
