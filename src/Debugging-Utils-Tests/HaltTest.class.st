@@ -102,30 +102,42 @@ HaltTest >> testCounterFor [
 ]
 
 { #category : 'tests' }
-HaltTest >> testHaltFromCount [
+HaltTest >> testHaltFromCountShouldContinueToHalt [
 	<haltOrBreakpointForTesting>
 
 	| anObject haltCount |
 	anObject := Object new.
-
-	"Halts regardless of whether HaltOnce is false for the image"
-	self shouldHaltWhen: [ anObject haltFromCount: 1 ].
-
-	"Should halt if executed enough times"	
-	self shouldHaltAfter: 2 times: [ anObject haltFromCount: 2 ].
-	
-	"Should still halt if executed again after the count is reached"	
-	self shouldHaltAfter: 2 times: [ anObject haltFromCount: 2 ].
-	
-	"Should not halt if not executed enough times"	
-	self shouldntHaltAfter: 2 times: [ anObject haltFromCount: 3 ].
-	
 	"Should continue halting after the count is reached"
 	haltCount := 0.
 	10 timesRepeat: [ [ anObject haltFromCount: 3 ]
 				on: Halt
 				do: [ haltCount := haltCount + 1 ] ].
 	self assert: haltCount equals: 8
+]
+
+{ #category : 'tests' }
+HaltTest >> testHaltFromCountShouldHaltIfExecutedEnoughTimes [
+	<haltOrBreakpointForTesting>
+
+	| anObject |
+	anObject := Object new.
+	self shouldHaltAfter: 2 times: [ anObject haltFromCount: 2 ].
+	
+	"Should still halt if executed again after the count is reached"	
+	self shouldHaltAfter: 2 times: [ anObject haltFromCount: 2 ].
+	
+	
+]
+
+{ #category : 'tests' }
+HaltTest >> testHaltFromCountShouldNotHaltIfExecutedEnoughTimes [
+	<haltOrBreakpointForTesting>
+
+	| anObject |
+	anObject := Object new.
+	self shouldntHaltAfter: 2 times: [ anObject haltFromCount: 3 ].
+	
+	
 ]
 
 { #category : 'tests' }
