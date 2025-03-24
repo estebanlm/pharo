@@ -324,7 +324,7 @@ HaltTest >> testHaltUpToShouldOnlyTwoTimes [
 	anObject := Object new.
 	"Should continue halting after the count is reached"
 	haltCount := 0.
-	10 timesRepeat: [ [ anObject haltCountUpTo: 2 ]
+	10 timesRepeat: [ [ anObject haltUpTo: 2 ]
 				on: Halt
 				do: [ haltCount := haltCount + 1 ] ].
 	self assert: haltCount equals: 2
