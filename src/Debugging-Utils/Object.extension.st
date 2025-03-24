@@ -72,7 +72,7 @@ Object >> haltOnce [
 
 { #category : '*Debugging-Utils' }
 Object >> haltUpTo: anInteger [
-	"Always halt for a certain amount of time then stop"
+	"Always halt for a certain amount of time then stop."
 
 	<debuggerCompleteToSender>
 	Halt upTo: anInteger

@@ -1,73 +1,105 @@
 "
 Halt is a special exception provided to support breakpoints as defined in  Object>>halt.
 
-!! Basic usage
+## Basic usage
 
 To manually set a breakpoint you can use message halt as follows: 
-[[[			
+
+```			
 anObject halt. 
-]]]
+```
 You can also use 
 
-[[[
+```
 Halt now
-]]]
+```
 
-[[[
+```
 Halt now: 'With a nice explanation'
-]]]
+```
 
-!! Advanced usage
+## Advanced usage
 The class Halt supports different halting mechanisms such as conditionals, based on iteration or simply stopping the first time. 
 
-!!! Conditionals
 
-[[[
+### Conditionals
+
+```
 foo
 	...
 	Halt if: #invokedFromThisSelector
-]]]
+```
 
 This expression will only stop the execution  of method foo if this method is in the call chain (is invoked from ) message invokedFromThisSelector.
 
-[[[
+```
 foo
       ...
       Halt if: aBlock		
-]]]
+```
 
 The execution of foo will stop if aBlock returns true. 
 
-!!! Counting
+### Counting
 Sometimes we need to stop after a given number of iteration.
 
-[[[
+```
 Halt count: 5
-]]]
+```
 
 
 
-!!! Once
+### Once
 It is really useful sometimes to stop only and only one time
 
-[[[
+```
 foo
 	...
 	Halt once. 
-]]]
+```
 
 It will be stopped the first time. 
 Then if you need to rearm it to stop another time you should use
 
-[[[
+```
 Halt resetOnce			
-]]]
+```
 
 
-!! Implementation details
+### Implementation details
 
-In past Halt was a normal exception (not a kind of UnhandledException) and it was processed through UnhandledError indirection. 
-But it such design did not allow to debug the unhandled logic itself. For example halt in UnhandledError>>#defaultAction leaded to infinite recursion
+In the past,  `Halt` was a normal exception (not a kind of UnhandledException) and it was processed through UnhandledError indirection. 
+But such design did not allow to debug the unhandled logic itself. For example halt in `UnhandledError>>#defaultAction` led to infinite recursion.
+
+
+Note that `once`, `upTo:`, `fromCount:`, and `onCount:` are call site depend in the sense that you can have two in the same methods and each own 
+will have its own ""memory"".
+
+Certain messages over a API in Object and one in Halt. The pattern to implement them or new ones is always the same and described now taking `once` implementation as example. 
+
+- There should be an internal method getting a context as argument. 
+- The method in Halt and object should be tagged with `<debuggerCompleteToSender>` 
+- Both APIs should call the internal method. 
+
+``` 
+Halt >> once
+   <debuggerCompleteToSender>
+	
+	self once: thisContext sender
+```
+
+```
+Halt >> haltOnce
+	<debuggerCompleteToSender>
+	
+	Halt once: thisContext sender
+```
+
+
+
+
+
+
 "
 Class {
 	#name : 'Halt',
@@ -115,7 +147,7 @@ Halt class >> fromCount: anInteger [
 	"Always halt after a count has been reached"
 
 	<debuggerCompleteToSender>
-	^ self onCountContext: thisContext sender sender haltIfPredicate:  [ :v | v >= anInteger ]
+	^ self onCountContext: thisContext sender haltIfPredicate:  [ :v | v >= anInteger ]
 ]
 
 { #category : 'private' }
@@ -207,7 +239,7 @@ Halt class >> onCount: anInteger [
 	"Halts once when a count is reached"
 
 	<debuggerCompleteToSender>
-	^ self onCountContext: thisContext sender sender sender haltIfPredicate:  [ :v | v = anInteger ]
+	^ self onCountContext: thisContext sender haltIfPredicate:  [ :v | v = anInteger ]
 ]
 
 { #category : 'on count' }
