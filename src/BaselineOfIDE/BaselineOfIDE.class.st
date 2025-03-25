@@ -122,14 +122,14 @@ BaselineOfIDE >> baseline: spec [
 		spec
 			baseline: 'HeuristicCompletion'
 			with: [ spec repository: repository ].
-		self
-			load: 'DependencyAnalyzer'
-			group: 'Tool-DependencyAnalyser-UI-Tab'
-			spec: spec.
+		spec package: 'Tool-DependencyAnalyser-UI-Tab' with: [
+			"Depends also on the dependency analyser in newtools"
+			spec requires: #('Calypso') ].
 		self specCode: spec.
 		self roassal: spec.
 		self microdown: spec.
 		self newTools: spec.
+		self processBrowser: spec.
 		self drTests: spec.
 		spec package: #'BeautifulComments'  with: [ spec requires:  #( 'Microdown') ].
 		
@@ -313,6 +313,15 @@ BaselineOfIDE >> postload: loader package: packageSpec [
 	self makeCalypsoDefaultBrowser.
 
 	Initialized := true.
+]
+
+{ #category : 'baselines - dependencies' }
+BaselineOfIDE >> processBrowser: spec [ 
+
+	spec baseline: 'ProcessBrowser' with: [
+		spec 
+			repository: (self classNamed: #BaselineOfPharo) processBrowserRepository;
+			loads: #('default') ]
 ]
 
 { #category : 'actions' }
