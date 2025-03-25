@@ -126,7 +126,7 @@ OSEnvironment >> at: aKey ifAbsent: aBlock [
 	This is the common denominator API for all platforms.
 	Rationale: Windows does not (compared to *nix systems) provide a encoded byte representation of the value. Windows has instead its own wide string representation."
 
-	self subclassResponsibility
+	^ self platform environmentVariableNamed: aKey ifAbsent: aBlock
 ]
 
 { #category : 'accessing' }
@@ -175,7 +175,7 @@ OSEnvironment >> at: aKey put: aValue [
 	This is the common denominator API for all platforms.
 	Rationale: Windows does not (compared to *nix systems) provide a encoded byte representation of the value. Windows has instead its own wide string representation."
 
-	^ self subclassResponsibility
+	^ self platform environmentVariableNamed: aKey put: aValue
 ]
 
 { #category : 'enumeration' }
@@ -211,16 +211,8 @@ OSEnvironment >> keys [
 
 { #category : 'enumeration' }
 OSEnvironment >> keysAndValuesDo: aBlock [
-	self subclassResponsibility
-]
 
-{ #category : 'enumeration' }
-OSEnvironment >> keysAndValuesDo: aBlock withAssociationString: associationString [
-	| equalsIndex |
-	equalsIndex := associationString indexOf: $=.
-	aBlock
-		value: (associationString first: equalsIndex-1)
-		value: (associationString allButFirst: equalsIndex)
+	^ self platform environmentVariablesDo: aBlock
 ]
 
 { #category : 'enumeration' }
@@ -242,14 +234,14 @@ OSEnvironment >> removeKey: aKey [
 	This is the common denominator API for all platforms.
 	Rationale: Windows does not (compared to *nix systems) provide a encoded byte representation of the value. Windows has instead its own wide string representation."
 
-	^ self subclassResponsibility
+	^ self platform removeEnvironmentVariableNamed: aKey
 ]
 
 { #category : 'accessing' }
 OSEnvironment >> setEnv: nameString value: valueString [
 	"This method calls the the platform specific set environment routine"
 
-	^ self subclassResponsibility
+	^ self platform setEnv: nameString value: valueString
 ]
 
 { #category : 'accessing' }
@@ -263,13 +255,6 @@ OSEnvironment >> setEnv: nameString value: valueString during: aBlock [
 		oldValue
 			ifNil: [ self removeKey: nameString ]
 			ifNotNil: [ self setEnv: nameString value: oldValue ] ]
-]
-
-{ #category : 'accessing' }
-OSEnvironment >> unsetEnv: string [
-	"This method calls the the platform specific unset environment routine"
-
-	^ self ffiCall: #(int unsetenv #(String string)) module: LibC
 ]
 
 { #category : 'accessing' }
