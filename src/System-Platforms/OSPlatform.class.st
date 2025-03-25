@@ -128,6 +128,13 @@ OSPlatform >> environmentVariableNamed: aKey put: aValue [
 	
 ]
 
+{ #category : 'environment' }
+OSPlatform >> environmentVariablesDo: aBlock [
+	"Nothing by default"
+
+	
+]
+
 { #category : 'accessing' }
 OSPlatform >> family [
 	"Returns a symbol specific to the platform family (MacOSX, Windows, Unix, RiscOS).

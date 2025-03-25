@@ -96,13 +96,6 @@ AbstractUnixPlatform >> environmentVariableNamed: aKey put: aValue [
 
 { #category : 'environment' }
 AbstractUnixPlatform >> environmentVariablesDo: aBlock [
-	"Do nothing by default"
-
-	
-]
-
-{ #category : 'environment' }
-AbstractUnixPlatform >> keysAndValuesDo: aBlock [
 
 	| index associationString |
 	index := 1.

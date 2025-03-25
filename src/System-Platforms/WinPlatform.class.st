@@ -98,6 +98,23 @@ WinPlatform >> environmentVariableNamed: aKey put: aValue [
 	return = 0 ifTrue: [ self error: 'An error occurred while setting environment variable ' , aKey asString , ' to ' , aValue asString ]
 ]
 
+{ #category : 'environment' }
+WinPlatform >> environmentVariablesDo: aBlock [
+	"Under windows the environemtn variables are a single big String."
+
+	"Lines starting with an equal sign are invalid per
+	  http://stackoverflow.com/questions/10431689/what-are-these-strange-environment-variables"
+
+	| environmentStrings nextString win32WideString |
+	environmentStrings := self environmentStrings.
+	[
+	win32WideString := Win32WideString fromHandle: environmentStrings.
+	nextString := win32WideString asString.
+	nextString ifEmpty: [ ^ self ].
+	nextString first = $= ifFalse: [ self keysAndValuesDo: aBlock withAssociationString: nextString ].
+	environmentStrings := environmentStrings + win32WideString byteSize ] repeat
+]
+
 { #category : 'accessing' }
 WinPlatform >> family [
 	^#Windows
@@ -174,23 +191,6 @@ WinPlatform >> isWindows [
 { #category : 'accessing' }
 WinPlatform >> keyForValue: aKeyValue [
 	^KeyboardKey valueForWindowsPlatform: aKeyValue
-]
-
-{ #category : 'environment' }
-WinPlatform >> keysAndValuesDo: aBlock [
-	"Under windows the environemtn variables are a single big String."
-
-	"Lines starting with an equal sign are invalid per
-	  http://stackoverflow.com/questions/10431689/what-are-these-strange-environment-variables"
-
-	| environmentStrings nextString win32WideString |
-	environmentStrings := self environmentStrings.
-	[
-	win32WideString := Win32WideString fromHandle: environmentStrings.
-	nextString := win32WideString asString.
-	nextString ifEmpty: [ ^ self ].
-	nextString first = $= ifFalse: [ self keysAndValuesDo: aBlock withAssociationString: nextString ].
-	environmentStrings := environmentStrings + win32WideString byteSize ] repeat
 ]
 
 { #category : 'accessing' }
