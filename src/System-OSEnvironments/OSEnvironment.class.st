@@ -12,8 +12,6 @@ In other words, methods
 - #at:put:
 
 and its variants receive normal strings and decide whether they have to encode those strings to platform bytes or not depending on the platform.
-
-My subclasses may or may not provide additional APIs to have more control on the particular encoding used.
 "
 Class {
 	#name : 'OSEnvironment',
@@ -31,20 +29,7 @@ Class {
 
 { #category : 'instance creation' }
 OSEnvironment class >> current [
-	^ Current ifNil: [ Current := self environmentFor: OSPlatform current ]
-]
-
-{ #category : 'private - accessing' }
-OSEnvironment class >> environmentFor: aPlatform [
-	| environmentClass |
-
-	environmentClass := self allSubclasses
-		detect: [ :each | each isDefaultFor: aPlatform ]
-		ifNone: [ nil ].
-
-	^ (environmentClass isNotNil and: [ environmentClass isAvailable  ])
-		ifTrue: [ environmentClass platform: aPlatform ]
-		ifFalse: [ NullOSEnvironment platform: aPlatform ]
+	^ Current ifNil: [ Current := self platform: OSPlatform current ]
 ]
 
 { #category : 'examples' }
@@ -57,18 +42,6 @@ OSEnvironment class >> example [
 OSEnvironment class >> initialize [
 	SessionManager default
 		registerSystemClassNamed: self name
-]
-
-{ #category : 'testing' }
-OSEnvironment class >> isAvailable [
-	self flag: #pharoTodo. "Replace this for a check of FFI available"
-	self environment at: #FFICalloutAPI ifAbsent: [ ^ false ].
-	^ true
-]
-
-{ #category : 'testing' }
-OSEnvironment class >> isDefaultFor: aPlatform [
-	^ false
 ]
 
 { #category : 'instance creation' }
