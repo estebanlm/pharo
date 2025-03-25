@@ -93,5 +93,9 @@ ReSearchingLiteralRule >> initialize [
 	self
 		replace:
 		'`#literal1 == ``@object or: [`#literal2 == ``@object or: [`#literal3 == ``@object]]'
-		with: '#(`#literal1 `#literal2 `#literal3) includes: ``@object'
+		with: '#(`#literal1 `#literal2 `#literal3) includes: ``@object'.
+		
+	self
+		replace: '``@object = `#literal1 or: [#() = ``@object | (#() == ``@object)]'
+		with: '#(`#literal1 #()) includes: ``@object'.
 ]
