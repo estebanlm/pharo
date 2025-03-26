@@ -428,36 +428,31 @@ CompletionEngine >> showDetail [
 { #category : 'keyboard' }
 CompletionEngine >> smartBackspace [
 
-	| opposite currentText currentEditor smartCharacter index |
-	currentEditor := editor.
-	currentEditor hasSelection ifTrue: [ ^ false ].
-	currentText := currentEditor text.
-
-	smartCharacter := currentText
-		                  at: currentEditor startIndex - 1
+	| opposite smartCharacter index |
+	editor hasSelection ifTrue: [ ^ false ].
+	smartCharacter := editor text
+		                  at: editor startIndex - 1
 		                  ifAbsent: [ ^ false ]. "take the opposite"
 	opposite := self
 		            smartCharacterOppositeOf: smartCharacter
 		            ifAbsent: [ ^ false ].
 
-	index := currentEditor stopIndex.
+	index := editor stopIndex.
 	[
-	index <= currentText size and: [ (currentText at: index) isSeparator ] ]
+	index <= editor text size and: [ (editor text at: index) isSeparator ] ]
 		whileTrue: [ index := index + 1 ].
 
-	(index <= currentText size and: [ (currentText at: index) = opposite ])
+	(index <= editor text size and: [ (editor text at: index) = opposite ])
 		ifFalse: [ ^ false ].
 	(self
-		 smartNeedExtraRemoveIn: currentText
+		 smartNeedExtraRemoveIn: editor text
 		 for: smartCharacter
 		 opposite: opposite
-		 at: currentEditor startIndex) ifFalse: [ ^ false ].
+		 at: editor startIndex) ifFalse: [ ^ false ].
 
-	currentEditor closeTypeIn.
-	currentEditor
-		selectInvisiblyFrom: currentEditor startIndex - 1
-		to: index.
-	currentEditor replaceSelectionWith: currentEditor nullText.
+	editor closeTypeIn.
+	editor selectInvisiblyFrom: editor startIndex - 1 to: index.
+	editor replaceSelectionWith: editor nullText.
 	self invalidateEditorMorph.
 	^ true
 ]
