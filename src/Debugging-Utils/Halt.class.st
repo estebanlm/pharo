@@ -142,6 +142,17 @@ Halt class >> counterFor: method andPc: pc [
 		^ value
 ]
 
+{ #category : 'testing' }
+Halt class >> during: aBlock [
+
+	| onceTable counTable |
+	onceTable := OnceDictionary.
+	counTable := OnCountDictionary.
+	aBlock ensure: 
+		[ OnceDictionary := onceTable.
+		OnCountDictionary := counTable ]
+]
+
 { #category : 'halting' }
 Halt class >> fromCount: anInteger [
 	"Always halt after a count has been reached"
