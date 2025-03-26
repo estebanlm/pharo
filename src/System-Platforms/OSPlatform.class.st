@@ -113,28 +113,6 @@ OSPlatform >> defaultMaximumPathLength [
 	 ^self subclassResponsibility
 ]
 
-{ #category : 'environment' }
-OSPlatform >> environmentVariableNamed: aKey ifAbsent: aBlock [
-	"Gets the value of an environment variable called `aKey`. Execute aBlock if absent.
-	As there is nowhere to look up the key just evaluate the given block"
-
-	^ aBlock value
-]
-
-{ #category : 'environment' }
-OSPlatform >> environmentVariableNamed: aKey put: aValue [
-	"Do nothing by default"
-
-	
-]
-
-{ #category : 'environment' }
-OSPlatform >> environmentVariablesDo: aBlock [
-	"Nothing by default"
-
-	
-]
-
 { #category : 'accessing' }
 OSPlatform >> family [
 	"Returns a symbol specific to the platform family (MacOSX, Windows, Unix, RiscOS).
@@ -193,15 +171,6 @@ OSPlatform >> isX11 [
 	^ self windowSystemName = 'X11'
 ]
 
-{ #category : 'environment' }
-OSPlatform >> keysAndValuesDo: aBlock withAssociationString: associationString [
-	| equalsIndex |
-	equalsIndex := associationString indexOf: $=.
-	aBlock
-		value: (associationString first: equalsIndex-1)
-		value: (associationString allButFirst: equalsIndex)
-]
-
 { #category : 'accessing' }
 OSPlatform >> lineEnding [
 
@@ -228,18 +197,6 @@ OSPlatform >> platformFamily [
 { #category : 'compatbility' }
 OSPlatform >> platformName [
 	^ self name
-]
-
-{ #category : 'environment' }
-OSPlatform >> removeEnvironmentVariableNamed: key [
-	"Do nothing"
-
-	
-]
-
-{ #category : 'environment' }
-OSPlatform >> setEnv: nameString value: valueString [
-	"We do not support environment Variables. Do Nothing"
 ]
 
 { #category : 'accessing' }
