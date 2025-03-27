@@ -22,7 +22,8 @@ Class {
 		'focusIndicator',
 		'windowActiveDropShadowStyle',
 		'useScrollbarThumbShadow',
-		'colorPalette'
+		'colorPalette',
+		'tasklistMorph'
 	],
 	#classVars : [
 		'Builder',
@@ -3305,24 +3306,6 @@ UITheme >> newSeparatorIn: aThemedMorph [
 		borderStyle: (BorderStyle inset baseColor: Color blue; width: 1 scaledByDisplayScaleFactor);
 		extent: (2@2) scaledByDisplayScaleFactor;
 		hResizing: #spaceFill
-]
-
-{ #category : 'morph creation' }
-UITheme >> newSliderIn: aThemedMorph for: aModel getValue: getSel setValue: setSel min: min max: max quantum: quantum getEnabled: enabledSel help: helpText [
-	"Answer a slider. Resizing set for horizontal usage by default."
-
-	^(PluggableSliderMorph
-			on: aModel
-			getValue: getSel
-			setValue: setSel
-			min: min
-			max: max
-			quantum: quantum)
-		getEnabledSelector: enabledSel;
-		hResizing: #spaceFill;
-		vResizing: #shrinkWrap;
-		setBalloonText: helpText;
-		minHeight: 16 scaledByDisplayScaleFactor
 ]
 
 { #category : 'morph creation' }

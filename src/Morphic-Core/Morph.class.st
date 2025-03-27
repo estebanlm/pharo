@@ -118,14 +118,16 @@ Morph class >> morphNavigationShortcutsOn: aBuilder [
 	"Basic, general navigation shortcut among morphs. #MorphNoCtrl will not work for TextMorphs."
 
 	<keymap>
-	(aBuilder shortcut: #navigateFocusForwardCtrl)
-		category: #MorphFocusCtrlNavigation
+	(aBuilder shortcut: #navigateWindowsForwardCtrl)
+		category: #MorphCtrlNavigation
 		default: Character tab ctrl asKeyCombination
-		do: [ :target :morph :event | morph navigateFocusForward ].
-	(aBuilder shortcut: #navigateFocusBackwardCtrl)
-		category: #MorphFocusCtrlNavigation
+		do: [ :target :morph :event |
+			morph world theme openTaskListIn: morph world from: event ].
+	(aBuilder shortcut: #navigateWindowsBackwardCtrl)
+		category: #MorphCtrlNavigation
 		default: Character tab shift ctrl asKeyCombination
-		do: [ :target :morph :event | morph navigateFocusBackward ].
+		do: [ :target :morph :event |
+			morph world theme openTaskListIn: morph world from: event ].
 	(aBuilder shortcut: #navigateFocusForward)
 		category: #MorphFocusNavigation
 		default: Character tab asKeyCombination
@@ -2869,8 +2871,7 @@ Morph >> handleMouseDown: anEvent [
 	anEvent hand removePendingBalloonFor: self.
 	anEvent wasHandled: true.
 
-	(anEvent controlKeyPressed and: [
-		 self cmdGesturesEnabled and: [ anEvent shiftPressed ] ]) ifTrue: [
+	(anEvent isSpecialMetaMenuGesture and: [ self cmdGesturesEnabled ]) ifTrue: [
 		self invokeMetaMenu: anEvent.
 		^ self eventHandler ifNotNil: [ :handler |
 			  handler mouseDown: anEvent fromMorph: self ] ].
@@ -2879,7 +2880,7 @@ Morph >> handleMouseDown: anEvent [
 	anEvent hand newMouseFocus: self event: anEvent.
 
 	"Check to open halo"
-	anEvent isSpecialGesture
+	(anEvent isSpecialGesture and: [self cmdGesturesEnabled])
 		ifTrue: [
 			^ self handleSpecialGesture: anEvent ].
 

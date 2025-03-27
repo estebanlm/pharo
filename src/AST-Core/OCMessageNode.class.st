@@ -71,7 +71,7 @@ OCMessageNode >> acceptVisitor: aProgramNodeVisitor [
 { #category : 'accessing' }
 OCMessageNode >> argumentPartStrings [
 	"Return a collection of string representing the code of the argument."
-	^ arguments collect: [ :each | each formattedCode asString
+	^ arguments collect: [ :each | each sourceCode asString
 			"strangely enough literal formatted code is not a string" ]
 ]
 
@@ -330,12 +330,6 @@ OCMessageNode >> receiver: aValueNode selector: aSelector keywordsPositions: pos
 ]
 
 { #category : 'adding-removing' }
-OCMessageNode >> removeFromTree [
-
-	self parent removeNode: self
-]
-
-{ #category : 'adding-removing' }
 OCMessageNode >> removeNode: aNode [
 
 	self replaceNode: aNode withNode: aNode receiver
@@ -460,7 +454,7 @@ OCMessageNode >> selectorAndArgumentNames [
 							st
 								<< sel asString;
 								<< ' ';
-								<< arg formattedCode;
+								<< arg sourceCode;
 								<< ' ']]) allButLast ]
 ]
 
