@@ -1576,7 +1576,9 @@ EFFormatter >> installNewContext: aContext [
 { #category : 'private - formatting' }
 EFFormatter >> isEmptyBlock: aBlockNode [
 
-	^ (aBlockNode arguments isEmpty) and: [ aBlockNode body statements isEmpty ]
+	^ (aBlockNode arguments isEmpty and: [
+		   aBlockNode body statements isEmpty ]) and: [
+		  aBlockNode comments isEmpty ]
 ]
 
 { #category : 'accessing' }
