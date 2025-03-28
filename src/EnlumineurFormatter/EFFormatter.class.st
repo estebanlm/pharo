@@ -1191,8 +1191,8 @@ EFFormatter >> formatBlock: aBlockNode [
 	
 	isMultiline := self willBeMultiline: aBlockNode body.
 	isMultiline ifTrue: [ self incrementIdentation ].
-	
-	aBlockNode body statements ifNotEmpty: [ codeStream nextPutAll: self spacesInsideBlocksString ]. 
+
+	(self isEmptyBlock: aBlockNode) ifFalse: [ codeStream nextPutAll: self spacesInsideBlocksString ].
 
 	self formatBlockArgumentsFor: aBlockNode.
 	self formatBlockCommentFor: aBlockNode.
@@ -1571,6 +1571,12 @@ EFFormatter >> initializeTemporaryLookAheadCode [
 EFFormatter >> installNewContext: aContext [
 	
 	context := aContext
+]
+
+{ #category : 'private - formatting' }
+EFFormatter >> isEmptyBlock: aBlockNode [
+
+	^ (aBlockNode arguments isEmpty) and: [ aBlockNode body statements isEmpty ]
 ]
 
 { #category : 'accessing' }
