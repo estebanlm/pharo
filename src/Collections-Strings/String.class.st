@@ -787,6 +787,9 @@ String >> asUnsignedInteger [
 { #category : 'converting' }
 String >> asUppercase [
 	"Answer a String made up from the receiver whose characters are all uppercase."
+	"'pharo' asUppercase >>> 'PHARO'"
+	"'' asUppercase >>> ''"
+	"' ' asUppercase >>> ' '"
 
 	^self copy asString translateToUppercase
 ]
@@ -2629,6 +2632,9 @@ String >> trim [
 { #category : 'copying' }
 String >> trimBoth [
 	"Trim separators from both sides of the receiving string."
+	"'  hello  ' trimBoth >>> 'hello'"
+	"'hello' trimBoth >>> 'hello'"
+	"'' trimBoth >>> ''"
 
 	^ self trimBoth: [ :char | char isSeparator ]
 ]
@@ -2643,6 +2649,9 @@ String >> trimBoth: aBlock [
 { #category : 'copying' }
 String >> trimLeft [
 	"Trim separators from the left side of the receiving string."
+	"'  hello  ' trimLeft >>> 'hello  '"
+	"'hello' trimLeft >>> 'hello'"
+	"'' trimLeft >>> ''"
 
 	^ self trimLeft: [ :char | char isSeparator ]
 ]
@@ -2684,6 +2693,9 @@ String >> trimLineSpaces [
 { #category : 'copying' }
 String >> trimRight [
 	"Trim separators from the right side of the receiving string."
+	"'  hello  ' trimRight >>> '  hello'"
+	"'hello' trimRight >>> 'hello'"
+	"'' trimRight >>> ''"
 
 	^ self trimRight: [ :char | char isSeparator ]
 ]
@@ -2697,6 +2709,11 @@ String >> trimRight: aBlock [
 
 { #category : 'copying' }
 String >> trimmed [
+	"Trim separators from both sides of the receiving string."
+	"'  hello  ' trimmed >>> 'hello'"
+	"'hello' trimmed >>> 'hello'"
+	"'' trimmed >>> ''"
+	
 	^ self trimBoth
 ]
 
@@ -2731,6 +2748,9 @@ String >> typeTable [
 { #category : 'converting' }
 String >> uncapitalized [
 	"Return a copy with the first letter downShifted (in lower case)"
+	"'Pharo' uncapitalized >>> 'pharo'"
+	"'PHARO' uncapitalized >>> 'pHARO'"
+	"'' uncapitalized >>> ''"
 
 	| answer |
 	self ifEmpty: [ ^ self copy ].
