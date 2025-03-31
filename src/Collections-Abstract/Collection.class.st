@@ -405,20 +405,27 @@ Collection >> collect: aBlock into: aCollection [
 
 { #category : 'enumerating' }
 Collection >> collect: collectBlock thenDo: doBlock [
+
 	"Utility method to improve readability."
+
 	"Evaluates collectBlock for each element, then evaluates doBlock with the result."
+
 	"| sum | sum := 0. #(1 2 3) collect: [:e | e * 2] thenDo: [:e | sum := sum + e]. sum >>> 12"
+
 	"| result | result := OrderedCollection new. #('a' 'bb' 'ccc') collect: [:e | e size] thenDo: [:e | result add: e]. result >>> #(1 2 3) asOrderedCollection"
 
-	^ self do: [ :each|
-		doBlock value: (collectBlock value: each)]
+	^ self do: [ :each | doBlock value: (collectBlock value: each) ]
 ]
 
 { #category : 'enumerating' }
 Collection >> collect: collectBlock thenReject: selectBlock [
+
 	"Utility method to improve readability."
+
 	"Evaluates collectBlock for each element, then rejects elements for which selectBlock returns true."
+
 	"#(1 2 3 4) collect: [:e | e * 2] thenReject: [:e | e > 5] >>> #(2 4)"
+
 	"#('a' 'bb' 'ccc') collect: [:e | e size] thenReject: [:e | e even] >>> #(1 3)"
 
 	^ (self collect: collectBlock) reject: selectBlock
@@ -510,17 +517,24 @@ Collection >> copyWithoutAll: aCollection [
 { #category : 'copying' }
 Collection >> copyWithoutDuplicates [
 	"Answer a copy of the receiver without any duplicated elements"
+
 	"(#(2 3 4 4 5 6) copyWithoutDuplicates asSet)  >>> #(2 3 4 5 6) asSet"
+
 	"(#('do' 'la' 'si' 'do' 'la') copyWithoutDuplicates) >>> #('la' 'do' 'si')"
+
 	"(#(#do #la #si #do #la) copyWithoutDuplicates) >>> #(#la #do #si)"
+
 	^ self asSet asArray
 ]
 
 { #category : 'copying' }
 Collection >> copyWithoutFirst: anObject [
 	"Answer a copy of the receiver that does not contain the first occurrence of anObject."
+
 	"#(2 3 4 3 5) copyWithoutFirst: 3 >>> #(2 4 3 5)"
+
 	"#(2 3 4 3 5) copyWithoutFirst: 6 >>> #(2 3 4 3 5)"
+
 	"'hello' copyWithoutFirst: $l >>> 'helo'"
 	
 	| done |
