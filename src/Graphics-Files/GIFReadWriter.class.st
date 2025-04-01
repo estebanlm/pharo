@@ -193,41 +193,9 @@ GIFReadWriter >> nextImage [
 GIFReadWriter >> nextPutFrame: anAnimatedImageFrame [
 	"Given the current settings, write the bytes onto the
 	output stream for the given ImageFrame and its form"
-	| aForm reduced tempForm tempFrame |
+	| reduced tempFrame |
 
-	aForm := anAnimatedImageFrame form copy.
-	aForm unhibernate.
-	aForm depth > 8 ifTrue:[
-		reduced := aForm colorReduced.  "minimize depth"
-		reduced depth > 8 ifTrue: [
-			"Not enough color space; do it the hard way."
-			reduced := reduced asFormOfDepth: 8].
-	] ifFalse:[reduced := aForm].
-	reduced depth < 8 ifTrue: [
-		"writeBitData: expects depth of 8"
-		tempForm := reduced class extent: reduced extent depth: 8.
-		(reduced isColorForm) ifTrue:[
-			tempForm
-				copyBits: reduced boundingBox
-				from: reduced at: 0@0
-				clippingBox: reduced boundingBox
-				rule: Form over
-				fillColor: nil
-				map: nil.
-			tempForm colors: reduced colors.
-		] ifFalse: [reduced displayOn: tempForm].
-		reduced := tempForm.
-	].
-	(reduced isColorForm) ifTrue:[
-		(reduced colorsUsed includes: Color transparent) ifTrue: [
-			transparentIndex := (reduced colors indexOf: Color transparent) - 1.
-		]
-	] ifFalse: [transparentIndex := nil].
-	width := reduced width.
-	height := reduced height.
-	bitsPerPixel := reduced depth.
-	colorPalette := reduced colormapIfNeededForDepth: 32.
-	interlace := false.
+	reduced := self prepareToPut: anAnimatedImageFrame form copy.
 	tempFrame := AnimatedImageFrame new
 		form: reduced;
 		offset: anAnimatedImageFrame offset;
@@ -242,19 +210,31 @@ GIFReadWriter >> nextPutFrame: anAnimatedImageFrame [
 GIFReadWriter >> nextPutImage: aForm [
 	"Given the current settings, write the bytes onto the
 	output stream for the given ImageFrame and its form"
-	| reduced tempForm tempFrame |
+	| reduced tempFrame |
 
+	reduced := self prepareToPut: aForm.
+	tempFrame := AnimatedImageFrame new
+		form: reduced;
+		offset: reduced offset.
+	self writeHeader.
+	self writeFrameHeader: tempFrame.
+	self writeBitData: reduced bits
+]
+
+{ #category : 'private' }
+GIFReadWriter >> prepareToPut: aForm [
+	| reduced tempForm |
 	aForm unhibernate.
-	aForm depth > 8 ifTrue:[
-		reduced := aForm colorReduced.  "minimize depth"
+	aForm depth > 8 ifTrue: [
+		reduced := aForm colorReduced. "minimize depth"
 		reduced depth > 8 ifTrue: [
 			"Not enough color space; do it the hard way."
 			reduced := reduced asFormOfDepth: 8].
-	] ifFalse:[reduced := aForm].
+	] ifFalse: [reduced := aForm].
 	reduced depth < 8 ifTrue: [
 		"writeBitData: expects depth of 8"
 		tempForm := reduced class extent: reduced extent depth: 8.
-		(reduced isColorForm) ifTrue:[
+		reduced isColorForm ifTrue: [
 			tempForm
 				copyBits: reduced boundingBox
 				from: reduced at: 0@0
@@ -266,7 +246,7 @@ GIFReadWriter >> nextPutImage: aForm [
 		] ifFalse: [reduced displayOn: tempForm].
 		reduced := tempForm.
 	].
-	(reduced isColorForm) ifTrue:[
+	reduced isColorForm ifTrue: [
 		(reduced colorsUsed includes: Color transparent) ifTrue: [
 			transparentIndex := (reduced colors indexOf: Color transparent) - 1.
 		]
@@ -274,14 +254,9 @@ GIFReadWriter >> nextPutImage: aForm [
 	width := reduced width.
 	height := reduced height.
 	bitsPerPixel := reduced depth.
-	colorPalette := reduced colormapIfNeededForDepth: 32.
+	localColorTable := reduced colormapIfNeededForDepth: 32.
 	interlace := false.
-	tempFrame := AnimatedImageFrame new
-		form: reduced;
-		offset: reduced offset.
-	self writeHeader.
-	self writeFrameHeader: tempFrame.
-	self writeBitData: reduced bits
+	^ reduced
 ]
 
 { #category : 'private - decoding' }
@@ -571,9 +546,10 @@ GIFReadWriter >> setStream: aStream [
 	stream := aStream
 ]
 
-{ #category : 'accessing' }
+{ #category : 'testing' }
 GIFReadWriter >> understandsImageFormat [
-	^('abc' collect: [:x | stream next asCharacter]) = 'GIF'
+	"first three bytes should spell GIF"
+	^ #( 71 73 70 ) allSatisfy: [ :byte | stream next = byte ]
 ]
 
 { #category : 'private' }
@@ -650,7 +626,7 @@ GIFReadWriter >> writeDisposal: aSymbol toPackedByte: aByte [
 GIFReadWriter >> writeFrameHeader: anImageFrame [
 	"Write any Extensions and/or headers that apply
 	to individual frames/subimages"
-	| interlaceByte |
+	| byte hasLocalColorTable |
 	anImageFrame delay isNotNil | transparentIndex ifNotNil: [
 		self writeGCEForFrame: anImageFrame ].
 
@@ -662,10 +638,20 @@ GIFReadWriter >> writeFrameHeader: anImageFrame [
 		writeWord: (anImageFrame form extent x);
 		writeWord: (anImageFrame form extent y).
 
-	interlaceByte := interlace
-		ifTrue: [ 64 ]
-		ifFalse: [ 0 ].
-	self nextPut: interlaceByte
+	byte := interlace ifTrue: [ 64 ] ifFalse: [ 0 ].
+	hasLocalColorTable := colorPalette ~= localColorTable.
+	hasLocalColorTable ifTrue: [
+		"bit 7 = local color table flag
+		bits 0-2 = size of table (as 2^(N+1))"
+		byte := byte bitOr: 128 + (bitsPerPixel - 1) ].
+	self nextPut: byte.
+
+	hasLocalColorTable ifTrue: [
+		localColorTable do: [ :pixelValue |
+			self
+				nextPut: ((pixelValue bitShift: -16) bitAnd: 255);
+				nextPut: ((pixelValue bitShift: -8) bitAnd: 255);
+				nextPut: (pixelValue bitAnd: 255) ] ]
 ]
 
 { #category : 'private - encoding' }
@@ -720,6 +706,7 @@ GIFReadWriter >> writeHeader [
 	self nextPut: byte.
 	self nextPut: 0. "background color."
 	self nextPut: 0. "reserved / unused 'pixel aspect ratio"
+	colorPalette := localColorTable. "promoted to global color table"
 	colorPalette do: [ :pixelValue |
 		self
 			nextPut: ((pixelValue bitShift: -16) bitAnd: 255);
