@@ -14,9 +14,8 @@ Class {
 	#instVars : [
 		'gapSize'
 	],
-	#category : 'Morphic-Widgets-Pluggable-Lists',
-	#package : 'Morphic-Widgets-Pluggable',
-	#tag : 'Lists'
+	#category : 'Morphic-Deprecated',
+	#package : 'Morphic-Deprecated'
 }
 
 { #category : 'instance creation' }

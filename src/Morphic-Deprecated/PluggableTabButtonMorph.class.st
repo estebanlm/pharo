@@ -17,9 +17,8 @@ Class {
 		'arcLengths',
 		'subMorph'
 	],
-	#category : 'Morphic-Widgets-Pluggable-Tabs',
-	#package : 'Morphic-Widgets-Pluggable',
-	#tag : 'Tabs'
+	#category : 'Morphic-Deprecated',
+	#package : 'Morphic-Deprecated'
 }
 
 { #category : 'instance creation' }

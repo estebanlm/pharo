@@ -75,7 +75,6 @@ BaselineOfMorphic >> baseline: spec [
 		spec package: 'Regex-Core'.
 
 		spec package: 'Morphic-Base'.
-		spec package: 'Morphic-Examples'.
 		spec package: 'Morphic-Widgets-Basic'.
 		spec package: 'Morphic-Widgets-ColorPicker'.
 		spec package: 'Morphic-Widgets-Extra'.

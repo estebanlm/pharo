@@ -15,9 +15,8 @@ WidgetExamples exampleWindowWithToolbars.
 Class {
 	#name : 'WidgetExample',
 	#superclass : 'Model',
-	#category : 'Morphic-Examples-Widgets',
-	#package : 'Morphic-Examples',
-	#tag : 'Widgets'
+	#category : 'Morphic-Deprecated',
+	#package : 'Morphic-Deprecated'
 }
 
 { #category : 'private - accessing' }

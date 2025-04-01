@@ -5,9 +5,8 @@ LazyClassListExample new openOn: Object
 Class {
 	#name : 'LazyClassListExample',
 	#superclass : 'ClassListExample',
-	#category : 'Morphic-Examples-MorphTreeWidget',
-	#package : 'Morphic-Examples',
-	#tag : 'MorphTreeWidget'
+	#category : 'Morphic-Deprecated',
+	#package : 'Morphic-Deprecated'
 }
 
 { #category : 'examples' }
