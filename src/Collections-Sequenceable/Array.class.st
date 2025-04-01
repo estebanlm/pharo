@@ -127,7 +127,7 @@ Array >> atWrap: index [
 { #category : 'accessing' }
 Array >> atWrap: index put: anObject [
 	
-	Optimized to go through the primitive if possible"
+	"Optimized to go through the primitive if possible"
 
 	"Answer the index'th element of the receiver. If index is out of bounds,
 	let it wrap around from the end to the beginning until it is in bounds."
