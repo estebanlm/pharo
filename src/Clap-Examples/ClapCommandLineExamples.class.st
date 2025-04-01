@@ -79,11 +79,6 @@ ClapCommandLineExamples class >> hello [
 		yourself
 ]
 
-{ #category : 'accessing - private' }
-ClapCommandLineExamples >> argumentAt: identifier [
-	^ (arguments at: identifier) value: self
-]
-
 { #category : 'accessing' }
 ClapCommandLineExamples >> defaultLanguage [
 	^ #en
