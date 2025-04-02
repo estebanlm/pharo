@@ -121,8 +121,6 @@ BaselineOfMorphic >> baseline: spec [
 		spec package: 'Text-Edition'.
 		spec package: 'Text-Scanning'.
 
-		spec package: 'Morphic-Widgets-TickList'.
-
 		spec package: 'System-Identification'.
 
 		"Tool-Base extends and uses morphic, so it depends on it"
