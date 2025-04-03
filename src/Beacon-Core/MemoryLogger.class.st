@@ -156,6 +156,15 @@ MemoryLogger >> initialize [
 	announcer := Announcer new
 ]
 
+{ #category : 'inspector' }
+MemoryLogger >> inspectionEntries [
+	<inspectorPresentationOrder: 10 title: 'Entries'>
+	
+	^ SpListPresenter new 
+		items: entries;
+		yourself
+]
+
 { #category : 'logging' }
 MemoryLogger >> nextPut: aSignal [
 

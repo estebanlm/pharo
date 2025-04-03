@@ -46,22 +46,23 @@ MemoryLoggerTest >> testNewlyCreatedLoggerIsEmpty [
 
 { #category : 'testing' }
 MemoryLoggerTest >> testRecordOneSignal [
+
 	| logger |
 	logger := MemoryLogger new runDuring: [ StringSignal emit: 'test' ].
-	self assert: logger recordings size equals: 1.
-	self assert: logger recordings first message equals: 'test'
+	self assert: logger entries size equals: 1.
+	self assert: logger entries first message equals: 'test'
 ]
 
 { #category : 'testing' }
 MemoryLoggerTest >> testRecordTwoSignalsInTheRightOrder [
+
 	| logger |
-	logger := MemoryLogger new
-					runDuring: [
-						StringSignal emit: 'test1'.
-						StringSignal emit: 'test2' ].
-	self assert: logger recordings size equals: 2.
-	self assert: logger recordings first message equals: 'test1'.
-	self assert: logger recordings last message equals: 'test2'
+	logger := MemoryLogger new runDuring: [
+			          StringSignal emit: 'test1'.
+			          StringSignal emit: 'test2' ].
+	self assert: logger entries size equals: 2.
+	self assert: logger entries first message equals: 'test1'.
+	self assert: logger entries last message equals: 'test2'
 ]
 
 { #category : 'testing' }
