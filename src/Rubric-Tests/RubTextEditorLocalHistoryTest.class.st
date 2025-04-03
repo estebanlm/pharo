@@ -61,6 +61,45 @@ RubTextEditorLocalHistoryTest >> testRedoLeavesCursorInOriginalPosition [
 ]
 
 { #category : 'tests - undo' }
+RubTextEditorLocalHistoryTest >> testUndoAfterFormatShouldRestoreOriginalCode [
+
+	editor textArea beForSmalltalkCode.
+
+	"If the caret is at the end of a word, replace the entire word"
+	editor addString: 'method (to be formatted; but) maybe not nice'.
+	editor closeTypeIn.
+	editor unselect.
+
+	"let's replace the to be formatted by a shorter sequence"
+	editor selectFrom: 'method (to ' size + 1 to: 'method (to be formatted' size.
+	editor addString: 'format'.
+	
+	editor unselect.
+	editor textArea formatMethodCode.
+
+	self expectText: 'method
+
+	(to
+		 format;
+		 but) maybe not nice'.
+
+	"Undo the format"	
+	editor undo.
+
+	self expectText: 'method (to format; but) maybe not nice'.	
+	
+	"Undo the addition"
+	editor undo.
+	
+	self expectText: 'method (to ; but) maybe not nice'.
+	
+	"Undo the removal"
+	editor undo.
+	
+	self expectText: 'method (to be formatted; but) maybe not nice'
+]
+
+{ #category : 'tests - undo' }
 RubTextEditorLocalHistoryTest >> testUndoAfterTypeThenTabUndoesOnlyTheTab [
 
 	editor addString: 'self'.
