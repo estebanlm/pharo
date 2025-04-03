@@ -7,7 +7,7 @@ Class {
 }
 
 { #category : 'tests' }
-SignalLoggerTest >> testStartForMultipleSignals [
+SignalLoggerTest >> testRunForFiltersSignals [
 
 	| logger |
 	logger := MemoryLogger new.
@@ -16,6 +16,18 @@ SignalLoggerTest >> testStartForMultipleSignals [
 			DummySignal new emit.
 			StringSignal emit: 'This one too' ].
 	self assert: logger entries size equals: 2
+]
+
+{ #category : 'tests' }
+SignalLoggerTest >> testRunForMultipleSignals [
+
+	| logger |
+	logger := MemoryLogger new.
+	logger runFor: StringSignal, DummySignal during: [
+			StringSignal emit: 'This should be recorded.'.
+			DummySignal new emit.
+			StringSignal emit: 'This one too' ].
+	self assert: logger entries size equals: 3
 ]
 
 { #category : 'tests' }
