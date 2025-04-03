@@ -565,17 +565,6 @@ ClyBrowserMorph >> okToChange [
 ]
 
 { #category : 'opening/closing' }
-ClyBrowserMorph >> open [
-	| window |
-
-	self ensureInitialState.
-	window := self openInWindow.
-	window model: self.
-	self updateWindowTitle.
-	window minimumExtent: (650@500.0) scaledByDisplayScaleFactor
-]
-
-{ #category : 'opening/closing' }
 ClyBrowserMorph >> openAnotherBrowser: aBrowser [
 	aBrowser open
 ]
