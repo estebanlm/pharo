@@ -6,6 +6,9 @@ This is an abstract class, subclasses should implement #socketStreamClass
 Class {
 	#name : 'ZdcAbstractSocketStreamTest',
 	#superclass : 'TestCase',
+	#instVars : [
+		'port'
+	],
 	#category : 'Zodiac-Tests',
 	#package : 'Zodiac-Tests'
 }
@@ -48,7 +51,7 @@ ZdcAbstractSocketStreamTest >> openConnectionToHostNamed: host port: port [
 
 { #category : 'accessing' }
 ZdcAbstractSocketStreamTest >> port [
-	^ 1701
+	^ port
 ]
 
 { #category : 'private' }
@@ -70,9 +73,10 @@ ZdcAbstractSocketStreamTest >> runClient: block [
 { #category : 'private' }
 ZdcAbstractSocketStreamTest >> runServer: block [
 	| serverSocket semaphore |
-	serverSocket := self serverSocketOn: self port.
+	serverSocket := self serverSocketOn: 0.
 	self assert: serverSocket notNil.
-	self assert: serverSocket localPort equals: self port.
+	port := serverSocket port.
+	
 	semaphore := Semaphore new.
 	[
 	semaphore signal.
