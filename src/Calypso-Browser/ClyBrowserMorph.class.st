@@ -128,6 +128,9 @@ Class {
 	#classVars : [
 		'NavigationHistoryClass'
 	],
+	#classInstVars : [
+		'postOpeningBlock'
+	],
 	#category : 'Calypso-Browser-UI',
 	#package : 'Calypso-Browser',
 	#tag : 'UI'
@@ -142,6 +145,12 @@ ClyBrowserMorph class >> beAllDefault [
 { #category : 'testing' }
 ClyBrowserMorph class >> canBeDefault [
 	^self class includesSelector: #beDefaultBrowser
+]
+
+{ #category : 'class initialization' }
+ClyBrowserMorph class >> initialize [
+
+	postOpeningBlock := [ :w |  ]
 ]
 
 { #category : 'settings' }
@@ -168,6 +177,18 @@ ClyBrowserMorph class >> on: aNavigationEnvironment [
 ClyBrowserMorph class >> on: aNavigationEnvironment systemScope: aSystemScope [
 	^(self on: aNavigationEnvironment)
 		systemScope: aSystemScope
+]
+
+{ #category : 'accessing' }
+ClyBrowserMorph class >> postOpeningBlock [
+
+	^ postOpeningBlock
+]
+
+{ #category : 'accessing' }
+ClyBrowserMorph class >> postOpeningBlock: aBlock [
+
+	postOpeningBlock := aBlock
 ]
 
 { #category : 'settings' }
@@ -562,6 +583,18 @@ ClyBrowserMorph >> newWindowTitle [
 ClyBrowserMorph >> okToChange [
 
 	^tabManager okToChange
+]
+
+{ #category : 'opening/closing' }
+ClyBrowserMorph >> open [
+
+	| window |
+	self ensureInitialState.
+	window := self openInWindow.
+	window model: self.
+	self updateWindowTitle.
+	window minimumExtent: (650 @ 500.0) scaledByDisplayScaleFactor.
+	ClyBrowserMorph postOpeningBlock value: window
 ]
 
 { #category : 'opening/closing' }
