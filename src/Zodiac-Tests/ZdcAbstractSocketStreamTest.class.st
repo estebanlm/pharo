@@ -38,15 +38,15 @@ ZdcAbstractSocketStreamTest >> listenBacklogSize [
 ]
 
 { #category : 'private' }
-ZdcAbstractSocketStreamTest >> openConnectionToHost: host port: port [
+ZdcAbstractSocketStreamTest >> openConnectionToHost: host port: aPort [
 	^ self socketStreamClass
-		openConnectionToHost: host port: port
+		openConnectionToHost: host port: aPort
 ]
 
 { #category : 'private' }
-ZdcAbstractSocketStreamTest >> openConnectionToHostNamed: host port: port [
+ZdcAbstractSocketStreamTest >> openConnectionToHostNamed: host port: aPort [
 	^ self socketStreamClass
-		openConnectionToHostNamed: host port: port
+		openConnectionToHostNamed: host port: aPort
 ]
 
 { #category : 'accessing' }
@@ -94,15 +94,15 @@ ZdcAbstractSocketStreamTest >> serverPriority [
 ]
 
 { #category : 'private' }
-ZdcAbstractSocketStreamTest >> serverSocketOn: port [
+ZdcAbstractSocketStreamTest >> serverSocketOn: aPort [
 	| socket |
 	(socket := Socket newTCP)
 		setOption: 'TCP_NODELAY' value: 1;
 		setOption: 'SO_SNDBUF' value: self socketBufferSize;
 		setOption: 'SO_RCVBUF' value: self socketBufferSize .
-	socket listenOn: port backlogSize: self listenBacklogSize.
+	socket listenOn: aPort backlogSize: self listenBacklogSize.
 	socket isValid
-		ifFalse: [ self error: 'Cannot create socket on port ', port printString ].
+		ifFalse: [ self error: 'Cannot create socket on port ', aPort printString ].
 	^ socket
 ]
 
