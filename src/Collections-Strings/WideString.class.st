@@ -9,7 +9,7 @@ Class {
 	#category : 'Collections-Strings-Base',
 	#package : 'Collections-Strings',
 	#tag : 'Base'
-}
+}.
 
 { #category : 'instance creation' }
 WideString class >> from: aString [

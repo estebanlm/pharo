@@ -424,7 +424,7 @@ Collection >> collect: collectBlock thenReject: selectBlock [
 
 	"Evaluates collectBlock for each element, then rejects elements for which selectBlock returns true."
 
-	"#(1 2 3 4) collect: [:e | e * 2] thenReject: [:e | e > 5] >>> #(2 4)"
+	"(#(1 2 3 4) collect: [:e | e * 2] thenReject: [:e | e > 5]) >>> #(2 4)"
 
 	^ (self collect: collectBlock) reject: selectBlock
 ]
@@ -435,7 +435,7 @@ Collection >> collect: collectBlock thenSelect: selectBlock [
 
 	"Evaluates collectBlock for each element, then selects elements for which selectBlock returns true."
 
-	"#(1 2 3 4) collect: [:e | e * 2] thenSelect: [:e | e > 5] >>> #(6 8)"
+	"(#(1 2 3 4) collect: [:e | e * 2] thenSelect: [:e | e > 5]) >>> #(6 8)"
 
 	^ (self collect: collectBlock) select: selectBlock
 ]
@@ -530,7 +530,7 @@ Collection >> copyWithoutDuplicates [
 Collection >> copyWithoutFirst: anObject [
 	"Answer a copy of the receiver that does not contain the first occurrence of anObject."
 
-	"#(2 3 4 3 5) copyWithoutFirst: 3 >>> #(2 4 3 5)"
+	"(#(2 3 4 3 5) copyWithoutFirst: 3) >>> #(2 4 3 5)"
 	
 	| done |
 	done := false.
@@ -544,7 +544,7 @@ Collection >> copyWithoutFirst: anObject [
 Collection >> copyWithoutFirstOccurrenceOf: anObject [
 	"Answer a copy of the receiver that does not contain the first occurrence of anObject."
 
-	"#(2 3 4 3 5) copyWithoutFirstOccurrenceOf: 3 >>> #(2 4 3 5)"
+	"(#(2 3 4 3 5) copyWithoutFirstOccurrenceOf: 3) >>> #(2 4 3 5)"
 
 	| done |
 	done := false.
