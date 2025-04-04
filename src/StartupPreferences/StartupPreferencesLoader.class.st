@@ -283,7 +283,8 @@ StartupPreferencesLoader >> addTemplateForStartupInDirectory: aFileReference nam
 	
 	aFileReference ensureCreateDirectory.
 	aFileReference / fileName writeStreamDo: [ :stream | 
-		stream nextPutAll: self templateString ]
+		stream nextPutAll: self templateString ].
+	(aFileReference / fileName) inspect
 ]
 
 { #category : 'private' }
