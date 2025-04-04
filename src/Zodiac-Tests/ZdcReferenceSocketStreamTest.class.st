@@ -14,9 +14,9 @@ ZdcReferenceSocketStreamTest class >> isAbstract [
 ]
 
 { #category : 'private' }
-ZdcReferenceSocketStreamTest >> openConnectionToHost: host port: port [
+ZdcReferenceSocketStreamTest >> openConnectionToHost: host port: aPort [
 	| stream |
-	stream := super openConnectionToHost: host port: port.
+	stream := super openConnectionToHost: host port: aPort.
 	self setReferenceSocketStreamOptions: stream.
 	^ stream
 ]
