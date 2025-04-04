@@ -5,7 +5,6 @@ Class {
 	#name : 'StackSignal',
 	#superclass : 'BeaconSignal',
 	#instVars : [
-		'target',
 		'stack'
 	],
 	#category : 'Beacon-Core-Signals',
@@ -19,7 +18,7 @@ StackSignal class >> emit [
 	^ self new emit; yourself
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 StackSignal >> currentStack [
 	
 	| fullStack |
@@ -42,6 +41,5 @@ StackSignal >> prepareForDelivery [
 { #category : 'initialization' }
 StackSignal >> stack [ 
 	
-	stack ifNil: [ stack := self currentStack ].
-	^ stack
+	^ stack ifNil: [ stack := self currentStack ]
 ]
