@@ -11,8 +11,8 @@ Class {
 	#instVars : [
 		'storeValue'
 	],
-	#category : 'Morphic-Widgets-TickList',
-	#package : 'Morphic-Widgets-TickList'
+	#category : 'Morphic-Deprecated',
+	#package : 'Morphic-Deprecated'
 }
 
 { #category : 'event' }

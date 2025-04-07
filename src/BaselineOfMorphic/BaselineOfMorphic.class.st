@@ -68,8 +68,6 @@ BaselineOfMorphic >> baseline: spec [
 				repository: repository;
 				loads: 'core' ].
 
-		spec package: 'Transcript-Core'.
-
 		spec package: 'Native-Browser'.
 
 		spec package: 'Regex-Core'.
@@ -119,8 +117,6 @@ BaselineOfMorphic >> baseline: spec [
 		spec package: 'Text-Diff'.
 		spec package: 'Text-Edition'.
 		spec package: 'Text-Scanning'.
-
-		spec package: 'Morphic-Widgets-TickList'.
 
 		spec package: 'System-Identification'.
 

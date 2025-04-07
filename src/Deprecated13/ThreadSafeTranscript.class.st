@@ -30,10 +30,38 @@ Class {
 		'deferredEndEntry',
 		'stepContents'
 	],
-	#category : 'Transcript-Core-Base',
-	#package : 'Transcript-Core',
-	#tag : 'Base'
+	#category : 'Deprecated13',
+	#package : 'Deprecated13'
 }
+
+{ #category : 'ui' }
+ThreadSafeTranscript class >> ensureOpen [
+	"Open a Transcript only if not opened yet. If it is already open, bring it as top window."
+
+	<script>
+	^ self new ensureOpen
+]
+
+{ #category : 'ui' }
+ThreadSafeTranscript class >> menuCommandOn: aBuilder [
+
+	(aBuilder item: #'Transcript')
+		action: [ (Smalltalk tools toolNamed: #transcript) open ];
+		order: 2;
+		parent: #InputOutput;
+		help: 'Transcript';
+		keyText: 'o, t';
+		help: 'Window on the Transcript output stream, which is useful for writing log messages.';
+		iconName: self taskbarIconName.
+	aBuilder withSeparatorAfter
+]
+
+{ #category : 'ui' }
+ThreadSafeTranscript class >> open [
+	<script>
+
+	^ self new open
+]
 
 { #category : 'icons' }
 ThreadSafeTranscript class >> taskbarIconName [
@@ -91,6 +119,20 @@ ThreadSafeTranscript >> doItReceiver [
 	^ nil
 ]
 
+{ #category : 'ui building' }
+ThreadSafeTranscript >> ensureOpen [
+
+	<script: 'self new ensureOpen'>
+	^ (self currentWorld windowsSatisfying: [ :w | w label = self title ]) ifEmpty: [ self open ] ifNotEmpty: [ :ws |
+		  | window |
+		  window := ws first.
+		  "If the window is minimized, maximize it. Else, be sure it has the focus."
+		  window isMinimized
+			  ifTrue: [ window restore ]
+			  ifFalse: [ window activate ].
+		  window ]
+]
+
 { #category : 'streaming' }
 ThreadSafeTranscript >> flush [
 	"The next #stepGlobal message (usually invoked by Morhic stepping) will raise an #appendEntry update and reset the stream."
@@ -118,6 +160,11 @@ ThreadSafeTranscript >> initialize [
 	deferredClear := false.
 	deferredEndEntry := false.
 	stepContents := ''
+]
+
+{ #category : 'ui building' }
+ThreadSafeTranscript >> interactionModel [
+	^ self
 ]
 
 { #category : 'self evaluating' }
@@ -148,6 +195,27 @@ ThreadSafeTranscript >> nextPutAll: value [
 
 	self critical: [ stream nextPutAll: value ].
 	^ value
+]
+
+{ #category : 'ui building' }
+ThreadSafeTranscript >> open [
+	<script: 'self new open'>
+
+	^ self openLabel: self title
+]
+
+{ #category : 'ui building' }
+ThreadSafeTranscript >> openLabel: aString [
+	| window m |
+	window := (SystemWindow labelled: aString) model: self.
+	m := RubPluggableTextMorph new
+		getTextSelector: #contents;
+		setTextSelector: #clear;
+		on: self;
+		beForSmalltalkScripting.
+	m onAnnouncement: MorphDeleted do: [ self announcer unsubscribe: m  ].
+	window addMorph: m frame: (0 @ 0 corner: 1 @ 1).
+	^ window openInWorld
 ]
 
 { #category : 'printing' }
