@@ -280,10 +280,13 @@ StartupPreferencesLoader >> addAtStartupInPreferenceVersionFolder: aCollection n
 
 { #category : 'private' }
 StartupPreferencesLoader >> addTemplateForStartupInDirectory: aFileReference named: fileName [
-	
-	aFileReference ensureCreateDirectory.
-	aFileReference / fileName writeStreamDo: [ :stream | 
-		stream nextPutAll: self templateString ].
+
+	(aFileReference / fileName) exists
+		ifFalse: [
+				aFileReference ensureCreateDirectory.
+				aFileReference / fileName writeStreamDo: [ :stream |
+					stream nextPutAll: self templateString ] ]
+		ifTrue: [ self inform: 'This file already exists' ].
 	(aFileReference / fileName) inspect
 ]
 
