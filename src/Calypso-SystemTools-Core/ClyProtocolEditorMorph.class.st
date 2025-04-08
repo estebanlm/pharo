@@ -47,18 +47,13 @@ ClyProtocolEditorMorph >> build [
 { #category : 'building' }
 ClyProtocolEditorMorph >> buildEditButton [
 
-	editButton := self theme
-		              newCheckboxIn: self
-		              for: self
-		              getSelected: #isExtensionActive
-		              setSelected: #openEditor
-		              getEnabled: nil
-		              label: ''
-		              help: ''.
-	editButton
-		changeTableLayout;
-		vResizing: #shrinkWrap;
-		hResizing: #shrinkWrap
+	editButton := IconicButtonMorph new
+		              target: self;
+		              actionSelector: #openEditor;
+		              arguments: #(  );
+		              labelFormSet: (self iconFormSetNamed: #edit);
+		              color: Color transparent;
+		              borderWidth: 0
 ]
 
 { #category : 'building' }
