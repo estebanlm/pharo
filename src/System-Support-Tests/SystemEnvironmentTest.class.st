@@ -4,6 +4,9 @@ SUnit tests for SystemEnvironment
 Class {
 	#name : 'SystemEnvironmentTest',
 	#superclass : 'DictionaryTest',
+	#instVars : [
+		'testingEnvironment'
+	],
 	#category : 'System-Support-Tests-Utilities',
 	#package : 'System-Support-Tests',
 	#tag : 'Utilities'
@@ -46,6 +49,15 @@ SystemEnvironmentTest >> elementToAdd [
 SystemEnvironmentTest >> setUp [
 
 	super setUp.
+	
+	testingEnvironment := SystemEnvironment new.
+
+	ShiftClassBuilder new
+		name: #TestObject;
+		superclass: nil;
+		installingEnvironment: testingEnvironment;
+		package: 'System-Support-Tests';
+		install.
 
 	associationNotIn := GlobalVariable key: keyNotIn value: valueNotIn
 ]
@@ -54,6 +66,16 @@ SystemEnvironmentTest >> setUp [
 SystemEnvironmentTest >> supportsNilKey [
 
 	^ false
+]
+
+{ #category : 'tests' }
+SystemEnvironmentTest >> testAddFlushesCaches [
+	"we add to the environemnt with #add:"
+	testingEnvironment add: (GlobalVariable key: #Object value: Object).
+	"we can find it with at:"
+	self assert: (testingEnvironment at: #Object) equals: Object.
+	"and via #allBehavior, which uses the cache"
+	self assert: (testingEnvironment allBehaviors includes: Object).
 ]
 
 { #category : 'tests - DictionaryIndexAccessing' }
@@ -87,8 +109,12 @@ SystemEnvironmentTest >> testAtUpdateInitial [
 { #category : 'tests' }
 SystemEnvironmentTest >> testClassOrTraitNamedReturnsClassForClasses [
 
-	self assert: Object identicalTo: (testingEnvironment classOrTraitNamed: 'Object').
-	self assert: Object identicalTo: (testingEnvironment classOrTraitNamed: #Object)
+	self
+		assert: (testingEnvironment at: #TestObject)
+		identicalTo: (testingEnvironment classOrTraitNamed: 'TestObject').
+	self
+		assert: (testingEnvironment at: #TestObject)
+		identicalTo: (testingEnvironment classOrTraitNamed: #TestObject)
 ]
 
 { #category : 'tests' }

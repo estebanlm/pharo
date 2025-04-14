@@ -4,8 +4,8 @@ A TickSelectionListNodeMorph is the morph used to render the tree used to render
 Class {
 	#name : 'TickSelectionListNodeMorph',
 	#superclass : 'MorphTreeNodeMorph',
-	#category : 'Morphic-Widgets-TickList',
-	#package : 'Morphic-Widgets-TickList'
+	#category : 'Morphic-Deprecated',
+	#package : 'Morphic-Deprecated'
 }
 
 { #category : 'drawing' }
