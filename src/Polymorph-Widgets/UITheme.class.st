@@ -212,6 +212,16 @@ UITheme >> backgroundColor [
 	^ colorPalette backgroundColor
 ]
 
+{ #category : 'basic-colors' }
+UITheme >> badgeColor [
+	^ Color red
+]
+
+{ #category : 'basic-colors' }
+UITheme >> badgeTextColor [
+	^ Color white
+]
+
 { #category : 'accessing - colors' }
 UITheme >> balloonBackgroundColor [
 
