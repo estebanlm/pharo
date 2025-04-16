@@ -122,6 +122,7 @@ BaselineOfIDE >> baseline: spec [
 		self roassal: spec.
 		self microdown: spec.
 		self newTools: spec.
+		self processBrowser: spec.
 		self drTests: spec.
 		spec package: #'BeautifulComments'  with: [ spec requires:  #( 'Microdown') ].
 		
@@ -305,6 +306,15 @@ BaselineOfIDE >> postload: loader package: packageSpec [
 	self makeCalypsoDefaultBrowser.
 
 	Initialized := true.
+]
+
+{ #category : 'baselines - dependencies' }
+BaselineOfIDE >> processBrowser: spec [ 
+
+	spec baseline: 'ProcessBrowser' with: [
+		spec 
+			repository: (self classNamed: #BaselineOfPharo) processBrowserRepository;
+			loads: #('default') ]
 ]
 
 { #category : 'actions' }
