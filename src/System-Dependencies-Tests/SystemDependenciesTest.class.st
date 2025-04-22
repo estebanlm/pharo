@@ -64,15 +64,6 @@ SystemDependenciesTest >> knownKernelDependencies [
 ]
 
 { #category : 'known dependencies' }
-SystemDependenciesTest >> knownLocalMonticelloDependencies [
-	"ideally this list should be empty"
-
-	"Remove Zinc-HTTP next line once Zinc-Resource-Meta-Core does not depend anymore on Zinc-HTTP."
-
-	^ #( #'Zinc-HTTP' )
-]
-
-{ #category : 'known dependencies' }
 SystemDependenciesTest >> knownMorphicCoreDependencies [
 	"ideally this list should be empty"
 
@@ -254,7 +245,7 @@ SystemDependenciesTest >> testExternalLocalMonticelloDependencies [
 		                , BaselineOfPharoBootstrap multilingualPackageNames , BaselineOfPharoBootstrap fileSystemPackageNames
 		                , BaselineOfPharoBootstrap kernelAdditionalPackagesNames , BaselineOfMonticello corePackageNames.
 
-	self assertCollection: dependencies hasSameElements: self knownLocalMonticelloDependencies
+	self assertEmpty: dependencies
 ]
 
 { #category : 'tests' }
