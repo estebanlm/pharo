@@ -946,48 +946,6 @@ TEasilyThemed >> newLabelGroup: labelsAndControls font: aFont labelColor: aColor
 ]
 
 { #category : 'controls' }
-TEasilyThemed >> newListFor: aModel list: listSelector selected: getSelector changeSelected: setSelector getEnabled: enabledSel help: helpText [
-	"Answer a list for the given model."
-
-	^self theme
-		newListIn: self
-		for: aModel
-		list: listSelector
-		selected: getSelector
-		changeSelected: setSelector
-		getEnabled: enabledSel
-		help: helpText
-]
-
-{ #category : 'controls' }
-TEasilyThemed >> newListFor: aModel list: listSelector selected: getSelector changeSelected: setSelector help: helpText [
-	"Answer a list for the given model."
-
-	^self
-		newListFor: aModel
-		list: listSelector
-		selected: getSelector
-		changeSelected: setSelector
-		getEnabled: nil
-		help: helpText
-]
-
-{ #category : 'controls' }
-TEasilyThemed >> newListFor: aModel list: listSelector selected: getSelector changeSelected: setSelector icon: iconSelector getEnabled: enabledSel help: helpText [
-	"Answer a list for the given model."
-
-	^self theme
-		newListIn: self
-		for: aModel
-		list: listSelector
-		selected: getSelector
-		changeSelected: setSelector
-		icon: iconSelector
-		getEnabled: enabledSel
-		help: helpText
-]
-
-{ #category : 'controls' }
 TEasilyThemed >> newMenu [
 	"Answer a new menu."
 
@@ -1003,33 +961,6 @@ TEasilyThemed >> newMenuFor: aModel [
 	^self theme
 		newMenuIn: self
 		for: aModel
-]
-
-{ #category : 'controls' }
-TEasilyThemed >> newMorphListFor: aModel list: listSelector getSelected: getSelector setSelected: setSelector getEnabled: enabledSel help: helpText [
-	"Answer a morph list for the given model."
-
-	^self theme
-		newMorphListIn: self
-		for: aModel
-		list: listSelector
-		getSelected: getSelector
-		setSelected: setSelector
-		getEnabled: enabledSel
-		help: helpText
-]
-
-{ #category : 'controls' }
-TEasilyThemed >> newMorphListFor: aModel list: listSelector getSelected: getSelector setSelected: setSelector help: helpText [
-	"Answer a morph list for the given model."
-
-	^self
-		newMorphListFor: aModel
-		list: listSelector
-		getSelected: getSelector
-		setSelected: setSelector
-		getEnabled: nil
-		help: helpText
 ]
 
 { #category : 'controls' }

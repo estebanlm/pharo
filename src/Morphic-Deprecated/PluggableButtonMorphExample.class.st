@@ -9,9 +9,8 @@ Class {
 		'state',
 		'icon'
 	],
-	#category : 'Morphic-Examples-Widgets',
-	#package : 'Morphic-Examples',
-	#tag : 'Widgets'
+	#category : 'Morphic-Deprecated',
+	#package : 'Morphic-Deprecated'
 }
 
 { #category : 'examples' }

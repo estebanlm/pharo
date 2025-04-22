@@ -4,9 +4,8 @@ I keep some examples on how to use a PluggableToggleButtonMorph
 Class {
 	#name : 'PluggableToggleButtonMorphExample',
 	#superclass : 'PluggableButtonMorphExample',
-	#category : 'Morphic-Examples-Widgets',
-	#package : 'Morphic-Examples',
-	#tag : 'Widgets'
+	#category : 'Morphic-Deprecated',
+	#package : 'Morphic-Deprecated'
 }
 
 { #category : 'examples' }

@@ -6,9 +6,8 @@ Class {
 	#superclass : 'ModelMorph',
 	#traits : 'TEasilyThemed',
 	#classTraits : 'TEasilyThemed classTrait',
-	#category : 'Morphic-Examples-Widgets',
-	#package : 'Morphic-Examples',
-	#tag : 'Widgets'
+	#category : 'Morphic-Deprecated',
+	#package : 'Morphic-Deprecated'
 }
 
 { #category : 'services' }

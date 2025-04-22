@@ -15,9 +15,8 @@ Class {
 		'listModel',
 		'window'
 	],
-	#category : 'Morphic-Examples-Tabs',
-	#package : 'Morphic-Examples',
-	#tag : 'Tabs'
+	#category : 'Morphic-Deprecated',
+	#package : 'Morphic-Deprecated'
 }
 
 { #category : 'instance creation' }

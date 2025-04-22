@@ -4,9 +4,8 @@ Example for a pakage node
 Class {
 	#name : 'PackageNodeExample',
 	#superclass : 'PackageAbstractNodeExample',
-	#category : 'Morphic-Examples-MorphTreeWidget',
-	#package : 'Morphic-Examples',
-	#tag : 'MorphTreeWidget'
+	#category : 'Morphic-Deprecated',
+	#package : 'Morphic-Deprecated'
 }
 
 { #category : 'accessing' }

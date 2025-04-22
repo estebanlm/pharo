@@ -8,9 +8,8 @@ Class {
 	#instVars : [
 		'rootClass'
 	],
-	#category : 'Morphic-Examples-MorphTreeWidget',
-	#package : 'Morphic-Examples',
-	#tag : 'MorphTreeWidget'
+	#category : 'Morphic-Tests',
+	#package : 'Morphic-Tests'
 }
 
 { #category : 'examples' }
