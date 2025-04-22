@@ -18,9 +18,8 @@ Class {
 		'wantsDropSelector',
 		'dragItemSelector'
 	],
-	#category : 'Morphic-Widgets-Pluggable-Tree',
-	#package : 'Morphic-Widgets-Pluggable',
-	#tag : 'Tree'
+	#category : 'Morphic-Deprecated',
+	#package : 'Morphic-Deprecated'
 }
 
 { #category : 'morphic' }

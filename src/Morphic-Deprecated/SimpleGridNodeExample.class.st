@@ -4,9 +4,8 @@ Example for a simple grid node
 Class {
 	#name : 'SimpleGridNodeExample',
 	#superclass : 'MorphTreeNodeModel',
-	#category : 'Morphic-Examples-MorphTreeWidget',
-	#package : 'Morphic-Examples',
-	#tag : 'MorphTreeWidget'
+	#category : 'Morphic-Deprecated',
+	#package : 'Morphic-Deprecated'
 }
 
 { #category : 'accessing' }

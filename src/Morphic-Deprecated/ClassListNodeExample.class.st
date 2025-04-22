@@ -4,9 +4,8 @@ Example for a class list node
 Class {
 	#name : 'ClassListNodeExample',
 	#superclass : 'MorphTreeNodeModel',
-	#category : 'Morphic-Examples-MorphTreeWidget',
-	#package : 'Morphic-Examples',
-	#tag : 'MorphTreeWidget'
+	#category : 'Morphic-Deprecated',
+	#package : 'Morphic-Deprecated'
 }
 
 { #category : 'accessing' }

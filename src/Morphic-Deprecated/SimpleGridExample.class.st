@@ -4,9 +4,8 @@ SimpleGridExample new open
 Class {
 	#name : 'SimpleGridExample',
 	#superclass : 'MorphTreeModel',
-	#category : 'Morphic-Examples-MorphTreeWidget',
-	#package : 'Morphic-Examples',
-	#tag : 'MorphTreeWidget'
+	#category : 'Morphic-Deprecated',
+	#package : 'Morphic-Deprecated'
 }
 
 { #category : 'examples' }
