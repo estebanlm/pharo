@@ -99,7 +99,8 @@ ReleaseTest >> knownProcesses [
 		Delay schedulingProcess.
 		TKTWatchDog onDuty pharoProcess.
 		OSSDL2Driver eventLoopProcess.
-		TFCallbackQueue uniqueInstance callbackProcess } asSet
+		TFCallbackQueue uniqueInstance callbackProcess.
+		Transcript workerProcess } asSet
 ]
 
 { #category : 'tests - variables' }
