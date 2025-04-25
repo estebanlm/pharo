@@ -242,6 +242,24 @@ DateAndTimeTest >> testFromDos [
 ]
 
 { #category : 'tests' }
+DateAndTimeTest >> testFromMethodTimestamp [
+
+	self assert: (DateAndTime fromMethodTimestamp: '4/25/2025 10:55') equals: (DateAndTime year: 2025 month: 4 day: 25 hour: 10 minute: 55).
+	self assert: (DateAndTime fromMethodTimestamp: '04/6/2025 6:01') equals: (DateAndTime year: 2025 month: 4 day: 6 hour: 6 minute: 1).
+	self assert: (DateAndTime fromMethodTimestamp: '4/3/2025 23:17') equals: (DateAndTime year: 2025 month: 4 day: 3 hour: 23 minute: 17).
+	
+	self assert: (DateAndTime fromMethodTimestamp: '4/3/2025') isNil.
+	self assert: (DateAndTime fromMethodTimestamp: '23:17') isNil.
+	self assert: (DateAndTime fromMethodTimestamp: 'noPrefixAllowed 4/3/2025 23:17') isNil.
+	self assert: (DateAndTime fromMethodTimestamp: '4/3/2025 23:17noPostfixAllowed') isNil.
+	self assert: (DateAndTime fromMethodTimestamp: '4/3/2025OnlySpaceAllowed23:17') isNil.
+	self assert: (DateAndTime fromMethodTimestamp: '4/3/2025 23:17 09:13') isNil.
+	self assert: (DateAndTime fromMethodTimestamp: '13/3/2025 23:17') isNil.
+	self assert: (DateAndTime fromMethodTimestamp: '04-03-2025 23:17') isNil.
+	self assert: (DateAndTime fromMethodTimestamp: '04/03/2025 24:00') isNil.
+]
+
+{ #category : 'tests' }
 DateAndTimeTest >> testFromString [
 	| fromString fromStringNoOffset |
 	fromString := DateAndTime fromString: '-1199-01-05T20:33:14.321-05:00'.
