@@ -134,18 +134,9 @@ DateAndTime class >> fromInternalTime: anInteger [
 
 { #category : 'instance creation' }
 DateAndTime class >> fromMethodTimestamp: aString [
-	"A method timestamp in the change file looks like this: 4/25/2025 10:55. The date is in US format."
+	"Answer a DateAndTime for the given timestamp read from the changes file."
 
-	| date time parts datePart timePart |
-	parts := aString splitOn: Character space.
-	parts size = 2 ifFalse: [ ^ nil ].
-	datePart := parts first.
-	timePart := parts second.
-	date := [ (DateParser readingFrom: datePart readStream pattern: 'm/d/yyyy') parse ]
-		on: DateError
-		do: [ ^ nil ].
-	time := [ Time readFrom: timePart readStream ] on: Error do: [ ^ nil ].
-	^ self date: date time: time
+	^ [ self readFromString: aString ] on: Error do: [ nil ]
 ]
 
 { #category : 'instance creation' }
