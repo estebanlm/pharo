@@ -17,7 +17,7 @@ The architecture of Beacon is illustrated in Figure *@archi@*.
 
 
 
-![Beacon architecture. %anchor=archi](figures/beacon.png)
+![Beacon architecture. %anchor=archi](figures/Architecture.png)
 
 In Beacon, objects emit `BeaconSignal`s (announcement) that are handled by an announcer and loggers that registered to such announcer.
 Beacon architectural elements are:
