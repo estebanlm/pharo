@@ -100,7 +100,7 @@ ReleaseTest >> knownProcesses [
 		TKTWatchDog onDuty pharoProcess.
 		OSSDL2Driver eventLoopProcess.
 		TFCallbackQueue uniqueInstance callbackProcess.
-		(Smalltalk classNamed: StThreadSafeTranscript) ifNotNil: [ :aClass | aClass uniqueInstance workerProcess ] 
+		(Smalltalk classNamed: #StThreadSafeTranscript) ifNotNil: [ :aClass | aClass uniqueInstance workerProcess ] 
 	} asSet
 ]
 
