@@ -116,7 +116,7 @@ l runDuring: [
 l
 ```
 
-![Inspector. %anchor=inspector](figures/inspector)
+![Inspector. %anchor=inspector](figures/inspector.png)
 
 You can then define your own signal objects and specific inspector extensions.
 
