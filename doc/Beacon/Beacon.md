@@ -199,6 +199,11 @@ We could also discard the object once the information is extracted. We could als
 information at the creation of the signal.
 
 
+### Conclusion
+
+Beacon provides a nice way to log objects instead of mere strings. 
+In addition, you can filter and control the scope of the logged signals. 
+Take the opportunity to understand how powerful it is.
 
 
 
