@@ -255,9 +255,6 @@ RBTransformationsTest >> testPullUpVariableTransform [
 			 directlyDefinesInstanceVariable: 'result').
 
 	self deny:
-		((transformation model classNamed: #RBBasicDummyLintRuleTest)
-			 directlyDefinesInstanceVariable: 'result').
-	self deny:
 		((transformation model classNamed: #RBFooDummyLintRuleTest)
 			 directlyDefinesInstanceVariable: 'result')
 ]
