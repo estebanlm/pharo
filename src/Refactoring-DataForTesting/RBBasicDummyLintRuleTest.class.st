@@ -8,3 +8,9 @@ Class {
 	#package : 'Refactoring-DataForTesting',
 	#tag : 'LittleHierarchy'
 }
+
+{ #category : 'accessing' }
+RBBasicDummyLintRuleTest >> result [
+
+	^ result
+]
