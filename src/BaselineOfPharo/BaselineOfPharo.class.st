@@ -104,23 +104,6 @@ BaselineOfPharo class >> newToolsRepository [
 	^ (self externalProjectNamed: 'NewTools') repository
 ]
 
-{ #category : 'accessing - external projects' }
-BaselineOfPharo class >> processBrowser [
-	<externalProject>
-
-	^ PharoExternalProject 
-		newName: 'ProcessBrowser' 
-		owner: 'pharo-spec' 
-		project: 'NewTools-ProcessBrowser' 
-		version: 'Pharo13'
-]
-
-{ #category : 'repository urls' }
-BaselineOfPharo class >> processBrowserRepository [
-
-	^ (self externalProjectNamed: 'ProcessBrowser') repository
-]
-
 { #category : 'class initialization' }
 BaselineOfPharo class >> reset [
 	<script>
@@ -215,7 +198,8 @@ BaselineOfPharo >> baseline: spec [
 
 		spec
 			package: 'Morphic-Deprecated';
-			package: 'Deprecated13' ]
+			package: 'Deprecated13';
+			package: 'Deprecated14' ]
 ]
 
 { #category : 'actions' }
