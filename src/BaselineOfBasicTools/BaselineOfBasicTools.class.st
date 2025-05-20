@@ -61,8 +61,8 @@ BaselineOfBasicTools >> baseline: spec [
 			spec
 				loads: 'Core';
 				repository: repository ].
-
-		spec package: 'Tool-ProcessBrowser'.
+		
+		spec package: 'ClassDefinitionPrinters'.
 		spec package: 'Tool-Profilers'.
 		spec package: 'NECompletion'.
 		spec package: 'NECompletion-Morphic'.
@@ -73,14 +73,19 @@ BaselineOfBasicTools >> baseline: spec [
 		spec package: 'MonticelloGUI' with: [ spec requires: #( 'Tool-Diff' ) ].
 		spec package: 'System-Sources-Tests'. "<= Not sure this one should be here but it is where the classes were loaded before been extracted from Tests package."
 
+		spec package: 'ClassDefinitionPrinters-Tests'.
 		spec package: 'Kernel-CodeModel-Tests'.
 		spec package: 'Monticello-Tests'.
-		spec package: 'MonticelloGUI-Tests'.
+		spec package: 'MonticelloMocks'.
 		spec package: 'Network-Mail'.
 		spec package: 'Network-Mail-Tests'.
 		spec package: 'ProfStef-Core'.
 		spec package: 'StartupPreferences'.
 
+
+
+		spec package: 'OpalCompiler-ToolFeatures'.
+		spec package: 'OpalCompiler-ToolFeatures-Tests'.
 		spec baseline: 'Refactoring' with: [
 			spec
 				repository: repository;
@@ -238,6 +243,64 @@ BaselineOfBasicTools >> postload: loader package: packageSpec [
 		 { #RBPatternVariableNode. #ASTPatternVariableNode }.
 	 OCPatternPragmaNode deprecatedAliases:
 		 { #RBPatternPragmaNode. #ASTPatternPragmaNode }.
+
+	OCDoItVariable deprecatedAliases: { #DoItVariable }.
+	
+	
+	"IR"
+	
+	OCIRBuilder deprecatedAliases: { #IRBuilder }.
+	
+	"
+	OCIRInstruction 
+  withAllSubclassesDo: [ :class |
+        | deprecatedClass |
+        deprecatedClass := (class name allButFirst: 2) asSymbol.
+        s nextPutAll:  class name, ' deprecatedAliases: { #', deprecatedClass, ' }.'.
+		  s cr ] ] 
+
+" 
+
+OCIRPushFullClosure deprecatedAliases: { #IRPushFullClosure }.
+OCIRAccess deprecatedAliases: { #IRAccess }.
+OCIRPop deprecatedAliases: { #IRPop }.
+OCIRPushArray deprecatedAliases: { #IRPushArray }.
+OCIRTempVector deprecatedAliases: { #IRTempVector }.
+OCIRJump deprecatedAliases: { #IRJump }.
+OCIRSend deprecatedAliases: { #IRSend }.
+OCIRPushDup deprecatedAliases: { #IRPushDup }.
+OCIRPushLiteral deprecatedAliases: { #IRPushLiteral }.
+OCIRReturn deprecatedAliases: { #IRReturn }.
+OCIRPushReceiver deprecatedAliases: { #IRPushReceiver }.
+OCIRPushThisContext deprecatedAliases: { #IRPushThisContext }.
+OCIRLiteralVariableAccess deprecatedAliases: { #IRLiteralVariableAccess }.
+OCIRTempAccess deprecatedAliases: { #IRTempAccess }.
+OCIRInstVarAccess deprecatedAliases: { #IRInstVarAccess }.
+OCIRPushThisProcess deprecatedAliases: { #IRPushThisProcess }.
+OCIRJumpIf deprecatedAliases: { #IRJumpIf }.
+OCIRBlockReturnTop deprecatedAliases: { #IRBlockReturnTop }.
+OCIRReturnLiteral deprecatedAliases: { #IRReturnLiteral }.
+OCIRReturnReceiver deprecatedAliases: { #IRReturnReceiver }.
+OCIRReturnInstVar deprecatedAliases: { #IRReturnInstVar }.
+OCIRStoreLiteralVariable deprecatedAliases: { #IRStoreLiteralVariable }.
+OCIRPushLiteralVariable deprecatedAliases: { #IRPushLiteralVariable }.
+OCIRPopIntoLiteralVariable deprecatedAliases: { #IRPopIntoLiteralVariable }.
+OCIRRemoteTempAccess deprecatedAliases: { #IRRemoteTempAccess }.
+OCIRStoreTemp deprecatedAliases: { #IRStoreTemp }.
+OCIRPushTemp deprecatedAliases: { #IRPushTemp }.
+OCIRPopIntoTemp deprecatedAliases: { #IRPopIntoTemp }.
+OCIRPopIntoInstVar deprecatedAliases: { #IRPopIntoInstVar }.
+OCIRStoreInstVar deprecatedAliases: { #IRStoreInstVar }.
+OCIRPushInstVar deprecatedAliases: { #IRPushInstVar }.
+OCIRPushRemoteTemp deprecatedAliases: { #IRPushRemoteTemp }.
+OCIRPopIntoRemoteTemp deprecatedAliases: { #IRPopIntoRemoteTemp }.
+OCIRStoreRemoteTemp deprecatedAliases: { #IRStoreRemoteTemp }.
+OCIRInstruction deprecatedAliases: { #IRInstruction }.
+
+
+
+
+
 
 	 CompletionSorter register.
 	 RubSmalltalkEditor completionEngineClass: CompletionEngine.

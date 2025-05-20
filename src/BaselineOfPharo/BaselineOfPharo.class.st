@@ -78,7 +78,7 @@ BaselineOfPharo class >> microdown [
 		newName: 'Microdown' 
 		owner: 'pillar-markup' 
 		project: 'Microdown' 
-		version: 'Pharo13'
+		version: 'v2.8.0'
 ]
 
 { #category : 'repository urls' }
@@ -119,7 +119,7 @@ BaselineOfPharo class >> roassal [
 		  newName: 'Roassal'
 		  owner: 'pharo-graphics'
 		  project: 'Roassal'
-		  version: 'v1.06f'
+		  version: 'v1.7.0'
 ]
 
 { #category : 'repository urls' }
@@ -153,7 +153,7 @@ BaselineOfPharo class >> spec [
 		newName: 'Spec2' 
 		owner: 'pharo-spec' 
 		project:'Spec' 
-		version: 'Pharo13'
+		version: 'v2.0.1'
 ]
 
 { #category : 'repository urls' }
@@ -179,23 +179,6 @@ BaselineOfPharo class >> toploRepository [
 	^ (self externalProjectNamed: 'Toplo') repository
 ]
 
-{ #category : 'accessing - external projects' }
-BaselineOfPharo class >> welcomeBrowser [
-	<externalProject>
-	
-	^ PharoExternalProject 
-		newName: 'WelcomeBrowser' 
-		owner: 'pharo-spec' 
-		project: 'NewTools-WelcomeBrowser' 
-		version: 'main'
-]
-
-{ #category : 'repository urls' }
-BaselineOfPharo class >> welcomeBrowserRepository [
-
-	^ (self externalProjectNamed: 'WelcomeBrowser') repository
-]
-
 { #category : 'baselines' }
 BaselineOfPharo >> baseline: spec [
 
@@ -213,7 +196,9 @@ BaselineOfPharo >> baseline: spec [
 				repository: repository;
 				loads: #( 'IcebergSupport' ) ].
 
-		spec package: 'Deprecated13' ]
+		spec
+			package: 'Morphic-Deprecated';
+			package: 'Deprecated13' ]
 ]
 
 { #category : 'actions' }

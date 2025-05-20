@@ -43,10 +43,10 @@ ReRemoveInstanceVariablesDriver >> configureRefactoring [
 	refactoring prepareForInteractiveMode
 ]
 
-{ #category : 'execution' }
+{ #category : 'configuration' }
 ReRemoveInstanceVariablesDriver >> defaultSelectDialog [
 
-	^ SpSelectDialog new
+	^ self class defaultSelectDialog
 		  title: 'There are references to variables!';
 		  items: self breakingChoices;
 		  display: [ :each | each description ];
@@ -85,11 +85,4 @@ ReRemoveInstanceVariablesDriver >> scopes: refactoringScopes variables: aCollect
 	model := self refactoringScopeOn: scopes first.
 	variables := aCollection.
 	class := aClass
-]
-
-{ #category : 'execution' }
-ReRemoveInstanceVariablesDriver >> selectDialog [
-	
-	^ selectDialog ifNil: [ selectDialog := self defaultSelectDialog ].
-	
 ]

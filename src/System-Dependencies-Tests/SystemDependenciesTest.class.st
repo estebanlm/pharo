@@ -45,12 +45,8 @@ SystemDependenciesTest >> externalDependendiesOf: packagesCollection [
 SystemDependenciesTest >> knownBasicToolsDependencies [
 	"ideally this list should be empty"
 
-	^ #( 'Athens-Cairo' 'Athens-Core' #'Athens-Morphic'
-	     #'Refactoring-Critics' #'Commander-Core' #Reflectivity
-	     #'Reflectivity-Tools' #Shout 'HeuristicCompletion-Model'
-	     #VariablesLibrary #'Spec2-CommonWidgets' #'NewTools-Scopes'
-		  #'Traits-Tests' 'NewTools-Scopes' #'Commander-Activators-Shortcut' 
-		  #'NewTools-FileBrowser')
+	^ #( 'Athens-Cairo' 'Athens-Core' #'Refactoring-Critics' #'Commander-Core' #Reflectivity #'Reflectivity-Tools' #Shout 'HeuristicCompletion-Model'
+	     #VariablesLibrary #'Spec2-CommonWidgets' #'NewTools-Scopes' #'Traits-Tests' 'NewTools-Scopes' 'NewTools-Transcript' #'NewTools-FileBrowser' )
 ]
 
 { #category : 'known dependencies' }
@@ -88,9 +84,8 @@ SystemDependenciesTest >> knownMorphicCoreDependencies [
 SystemDependenciesTest >> knownMorphicDependencies [
 	"ideally this list should be empty"
 
-	^ #( #'Refactoring-Critics' #'Refactoring-Environment'
-	     #'Spec2-Core' #'NewTools-FileBrowser' #'Athens-Morphic'
-	     #'Tools-CodeNavigation' 'Debugger-Oups' ) "Rubric has a dependency on It"
+	^ #( #'Refactoring-Critics' #'Refactoring-Environment' #'NewTools-FileBrowser' #'Tools-CodeNavigation' 'Debugger-Oups' ) "Rubric has a dependency on It"
+
 ]
 
 { #category : 'known dependencies' }
@@ -105,7 +100,6 @@ SystemDependenciesTest >> knownSpec2Dependencies [
 
 	^ #(
 		'WebBrowser-Core' "Spec's Link adapter"
-		'NewTools-SpTextPresenterDecorators'
 		)
 ]
 
@@ -120,11 +114,8 @@ SystemDependenciesTest >> knownUFFIDependencies [
 SystemDependenciesTest >> knownUIDependencies [
 	"ideally this list should be empty"
 
-	^ #('Athens-Cairo' 'Athens-Core'
-	#'Athens-Morphic' #'Refactoring-Critics' #'Refactoring-Environment' 'Reflectivity-Tools' 
-	#Shout #'Tool-Diff' #'HeuristicCompletion-Model' 'NECompletion-Morphic' 
-	#VariablesLibrary #'Tools-CodeNavigation' #'Spec2-CommonWidgets' 
-	#'NewTools-Scopes' #'Commander-Activators-Shortcut' #'NewTools-FileBrowser')
+	^ #( 'Athens-Cairo' 'Athens-Core' #'Refactoring-Critics' #'Refactoring-Environment' 'Reflectivity-Tools' #Shout #'Tool-Diff' #'HeuristicCompletion-Model'
+	     'NECompletion-Morphic' #VariablesLibrary #'Tools-CodeNavigation' #'Spec2-CommonWidgets' #'NewTools-Scopes' #'NewTools-FileBrowser' )
 ]
 
 { #category : 'accessing' }
@@ -171,6 +162,7 @@ SystemDependenciesTest >> testExternalBasicToolsDependencies [
 	dependencies := self externalDependendiesOf: (
 		self metacelloPackageNames,
 		self tonelCorePackageNames,
+		BaselineOfKernelTests withAllPackageNames,
 		BaselineOfTraits corePackages,
 		BaselineOfSUnit withAllPackageNames, "ALL"
 		BaselineOfDisplay withAllPackageNames,

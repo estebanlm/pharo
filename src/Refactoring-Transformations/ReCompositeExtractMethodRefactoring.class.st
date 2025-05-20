@@ -5,17 +5,20 @@ If the name of the new method is not provided (i.e., nil), it prompts a dialog w
 Similarly, if the number of arguments in the new method provided by the developer is higher than the number of arguments as calculated by the transformation, it prompts a dialog window so the developer selects which values must be passed as arguments.
 
 Usage:
-transformation := (RBExtractMethodTransformation
-	extract: '(RecursiveSelfRule executeTree: rewriteRule tree initialAnswer: false)
+```
+| transformation |
+transformation := (ReCompositeExtractMethodRefactoring
+	extractSource: '(RecursiveSelfRule executeTree: rewriteRule tree initialAnswer: false)
 		ifFalse: [builder
 					compile: rewriteRule tree printString
 					in: class
 					classified: aSmalllintContext protocols]'
 	from: #checkMethod:
 	to: #foo:
-	in: #RBTransformationRuleTest)
-	transform.
-(ChangesBrowser changes: transformation model changes changes) open
+	in: #RBTransformationDummyRuleTest)
+	generateChanges.
+(StRefactoringPreviewPresenter for: transformation) open
+```
 "
 Class {
 	#name : 'ReCompositeExtractMethodRefactoring',
@@ -318,26 +321,6 @@ ReCompositeExtractMethodRefactoring >> getSourceFromInterval [
 	^source copyFrom: interval first to: interval last
 ]
 
-{ #category : 'utilities' }
-ReCompositeExtractMethodRefactoring >> mapArguments: args toValues: values in: aTree [
-	self flag: #toRemove.
-	^ (args size = values size)
-		"map directly"
-		ifTrue: [
-			| argsAndValues |
-			argsAndValues := OrderedCollection new.
-			args with: values do: [ :arg :val |
-				argsAndValues add: (arg name asString -> val value storeString) ].
-			argsAndValues ]
-		"open browser"
-		ifFalse: [
-			(RBMethodArgumentsSelector
-				openOn: (args collect: [:e | e name asString])
-				and: (values collect: [ :e | e value storeString ])
-				in: aTree)
-				argumentsAndValues ]
-]
-
 { #category : 'executing' }
 ReCompositeExtractMethodRefactoring >> messageSendWith: aMethodName [
 
@@ -373,7 +356,7 @@ ReCompositeExtractMethodRefactoring >> newMethodName [
 	newSelector ifNotNil: [ methodName selector: newSelector ].
 
 	[ newAttempt ] whileTrue: [
-		methodName := (RBMethodNameEditor openOn: methodName) methodName.
+		methodName := (StMethodNameEditorPresenter openOn: methodName) methodName.
 		methodName
 			ifNil: [ newAttempt := false ]
 			ifNotNil: [ :newMethodName |
@@ -381,7 +364,7 @@ ReCompositeExtractMethodRefactoring >> newMethodName [
 				newAttempt := newSelector isNil.
 
 				"it's a valid selector"
-				(newSelector isString and: [newSelector isValidSelector])
+				(newSelector isString and: [ self isValidSelector: newSelector])
 					ifFalse: [ self inform: newSelector asString, ' is not a valid selector.'.
 								  newSelector := nil ].
 

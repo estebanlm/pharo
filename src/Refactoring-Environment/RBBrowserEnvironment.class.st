@@ -57,6 +57,16 @@ RBBrowserEnvironment >> & anEnvironment [
 	^RBAndEnvironment onEnvironment: self and: anEnvironment
 ]
 
+{ #category : 'comparing' }
+RBBrowserEnvironment >> = anotherObject [
+
+	self == anotherObject ifTrue: [ ^ true ].
+
+	"The default browser environment is always equals to other default"
+
+	^ self class = anotherObject class
+]
+
 { #category : 'accessing' }
 RBBrowserEnvironment >> accessGuard [
 	^ accessGuard ifNil: [ accessGuard := Mutex new ]
@@ -265,6 +275,11 @@ RBBrowserEnvironment >> defaultPlugins [
 	^ OrderedCollection new
 ]
 
+{ #category : 'accessing' }
+RBBrowserEnvironment >> definedClasses [
+	^ self allClasses
+]
+
 { #category : 'testing' }
 RBBrowserEnvironment >> definesClass: aClass [
 	^ true
@@ -350,6 +365,12 @@ RBBrowserEnvironment >> handleSystemChange: aSystemAnnouncement [
 		anyResult := todoList anyOne.
 		anyResult handleSystemChange: aSystemAnnouncement.
 		todoList remove: anyResult]
+]
+
+{ #category : 'comparing' }
+RBBrowserEnvironment >> hash [ 
+	
+	^ self class hash
 ]
 
 { #category : 'environments' }

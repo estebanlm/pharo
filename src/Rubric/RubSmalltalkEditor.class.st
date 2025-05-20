@@ -9,7 +9,8 @@ Class {
 		'completionEngine'
 	],
 	#classVars : [
-		'CompletionEngineClass'
+		'CompletionEngineClass',
+		'CompletionEngineInstance'
 	],
 	#category : 'Rubric-Editing-Code',
 	#package : 'Rubric',
@@ -124,9 +125,21 @@ RubSmalltalkEditor class >> completionEngineClass [
 ]
 
 { #category : 'completion engine' }
-RubSmalltalkEditor class >> completionEngineClass: anEngine [
+RubSmalltalkEditor class >> completionEngineClass: aClass [
 
-	CompletionEngineClass := anEngine
+	CompletionEngineClass := aClass
+]
+
+{ #category : 'completion engine' }
+RubSmalltalkEditor class >> completionEngineInstance [
+
+	^ CompletionEngineInstance 
+]
+
+{ #category : 'completion engine' }
+RubSmalltalkEditor class >> completionEngineInstance: anEngine [
+
+	CompletionEngineInstance := anEngine 
 ]
 
 { #category : 'completion engine' }
@@ -267,7 +280,7 @@ RubSmalltalkEditor >> browseClassFrom: aClassString [
 		                 withCaption: 'choose a class to browse...'.
 	selectedClass ifNil: [
 		^ self internalCallToImplementorsOf: aClassString ].
-	self tools browser openOnClass: selectedClass
+	(self tools toolNamed: #browser) openOnClass: selectedClass
 ]
 
 { #category : 'menu messages' }
@@ -286,6 +299,12 @@ RubSmalltalkEditor >> browseIt: aKeyboardEvent [
 
  	self browseFullClass.
 	^true
+]
+
+{ #category : 'accessing' }
+RubSmalltalkEditor >> characterAt: anInteger [ 
+	
+	^ self text at: anInteger
 ]
 
 { #category : 'menu messages' }
@@ -343,9 +362,9 @@ RubSmalltalkEditor >> completionAround: aBlock keyDown: anEvent [
 RubSmalltalkEditor >> completionAround: aBlock keyStroke: anEvent [
 	"I'm a editor for Smalltalk, so, do completion around"
 
-	self isCompletionEnabled ifFalse: [  ^aBlock value ].
+	self isCompletionEnabled ifFalse: [ ^ aBlock value ].
 
-	(completionEngine handleKeystrokeBefore: anEvent editor: self) ifTrue:  [^ self ].
+	(completionEngine handleKeystrokeBefore: anEvent editor: self) ifTrue: [ ^ self ].
 
 	aBlock value.
 	completionEngine handleKeystrokeAfter: anEvent editor: self
@@ -353,11 +372,13 @@ RubSmalltalkEditor >> completionAround: aBlock keyStroke: anEvent [
 
 { #category : 'completion engine' }
 RubSmalltalkEditor >> completionEngine [
-
+	
 	^ completionEngine ifNil: [
-		CompletionEngineClass ifNotNil: [
-			self completionEngine: CompletionEngineClass new.
-			completionEngine ] ]
+		CompletionEngineInstance 
+				ifNotNil: [ completionEngine := CompletionEngineInstance ]
+				ifNil: [ 	CompletionEngineClass ifNotNil: [
+								self completionEngine: CompletionEngineClass new.
+								completionEngine ] ] ]
 ]
 
 { #category : 'completion engine' }
@@ -697,11 +718,6 @@ RubSmalltalkEditor >> findValidKeywordIn: sourceCode at: locationIndex ifFound: 
 ]
 
 { #category : 'do-its' }
-RubSmalltalkEditor >> format [
-	self model formatSourceCodeInView
-]
-
-{ #category : 'do-its' }
 RubSmalltalkEditor >> highlightEvaluateAndDo: aBlock [
 	"Treat the current selection as an expression; evaluate it and invoke aBlock with the result."
 
@@ -775,7 +791,7 @@ RubSmalltalkEditor >> internalCallToBrowse: aSelector [
 		          classFromPattern: aSelector
 		          withCaption: 'choose a class to browse...'.
 	aClass ifNil: [ ^ self ].
-	self tools browser openOnClass: aClass
+	(self tools toolNamed: #browser) openOnClass: aClass
 ]
 
 { #category : 'menu messages' }

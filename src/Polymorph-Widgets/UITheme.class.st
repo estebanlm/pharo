@@ -22,7 +22,8 @@ Class {
 		'focusIndicator',
 		'windowActiveDropShadowStyle',
 		'useScrollbarThumbShadow',
-		'colorPalette'
+		'colorPalette',
+		'tasklistMorph'
 	],
 	#classVars : [
 		'Builder',
@@ -149,7 +150,7 @@ UITheme class >> newDefault [
 	^self new
 ]
 
-{ #category : 'initialize-release' }
+{ #category : 'class initialization' }
 UITheme class >> resetBuilder [
 	<script>
 
@@ -209,6 +210,16 @@ UITheme >> autoMenuColor [
 UITheme >> backgroundColor [
 
 	^ colorPalette backgroundColor
+]
+
+{ #category : 'basic-colors' }
+UITheme >> badgeColor [
+	^ Color red
+]
+
+{ #category : 'basic-colors' }
+UITheme >> badgeTextColor [
+	^ Color white
 ]
 
 { #category : 'accessing - colors' }
@@ -801,18 +812,20 @@ UITheme >> chooseForSaveFileReferenceIn: aThemedMorph title: title extensions: e
 	path and preview type.
 	Answer nil or a filename."
 
-	| dialog |
-	
+	| dialog directory |
 	dialog := self fileSaveDialogWindowClass new.
-	exts 
-		ifNotNil: [ dialog filter: (StCustomExtensionsFilter extensions: exts) ].
-	path 
-		ifNotNil: [ dialog nameText: path asFileReference basename ].
+	exts ifNotNil: [
+		dialog filter: (StCustomExtensionsFilter extensions: exts) ].
+	path ifNotNil: [
+		dialog nameText: path asFileReference nextVersion basename ].
+	directory := path
+		             ifNil: [ StFileSystemModel defaultDirectory ]
+		             ifNotNil: [ path parent ].
 	^ dialog
-		defaultFolder: (path ifNil: [ StFileSystemModel defaultDirectory ]);
-		title: (title ifNil: [ 'Save as' translated ] ifNotNil: [ title ]);
-		openModal;
-		selectedEntry
+		  defaultFolder: directory;
+		  title: (title ifNil: [ 'Save as' translated ] ifNotNil: [ title ]);
+		  openModal;
+		  selectedEntry
 ]
 
 { #category : 'services' }
@@ -1194,12 +1207,19 @@ UITheme >> createBoxOfSize: finalSizeInteger color: aColor [
 UITheme >> createCloseBoxFor: aSystemWindow [
 	"Answer a button for closing the window."
 
+	| announcement |
 	^ (self
 		   newCloseControlIn: aSystemWindow
 		   for: aSystemWindow
 		   action: [
-			   aSystemWindow hide.
-			   aSystemWindow addClosedWindow: aSystemWindow ]
+			   SystemWindow useHideForClose
+				   ifTrue: [
+					   aSystemWindow hide.
+					   announcement := WindowClosed new
+						                   window: aSystemWindow;
+						                   yourself.
+					   self currentWorld announcer announce: announcement ]
+				   ifFalse: [ aSystemWindow closeBoxHit ] ]
 		   help: 'Close this window' translated) extent:
 		  aSystemWindow boxExtent
 ]
@@ -1380,16 +1400,6 @@ UITheme >> defaultSettings [
 		fadedBackgroundWindows: false;
 		flatMenu: true;
 		yourself
-]
-
-{ #category : 'services' }
-UITheme >> denyIn: aThemedMorph text: aStringOrText title: aString [
-	"Answer the result of an deny dialog (true) with the given label and title."
-
-	^ ((DenyDialogWindow newWithTheme: aThemedMorph theme)
-		   textFont: self textFont;
-		   title: aString;
-		   text: aStringOrText) openModal cancelled not
 ]
 
 { #category : 'fill-styles' }
@@ -2771,22 +2781,6 @@ UITheme >> newEmbeddedMenuIn: aThemedMorph for: aModel [
 ]
 
 { #category : 'morph creation' }
-UITheme >> newExpanderIn: aThemedMorph label: aString forAll: controls [
-	"Answer an expander with the given label and controls."
-
-	|answer|
-	answer := ExpanderMorph basicNew
-		basicTheme: self;
-		initialize;
-		font: self menuFont;
-		titleText: aString;
-		basicTheme: nil.
-	controls do: [:m |
-		answer addMorphBack: m].
-	^answer
-]
-
-{ #category : 'morph creation' }
 UITheme >> newFocusIndicatorMorphFor: aMorph [
 	"Answer a new focus indicator for the given morph."
 
@@ -2811,17 +2805,6 @@ UITheme >> newFormSetsForScale: scale [
 		at: #whiteTreeExpanded put: (self newTreeFormSet: true size: size color: Color white);
 		at: #whiteTreeUnexpanded put: (self newTreeFormSet: false size: size color: Color white);
 		yourself
-]
-
-{ #category : 'morph creation' }
-UITheme >> newFuzzyLabelIn: aThemedMorph for: aModel label: aString offset: offset alpha: alpha getEnabled: enabledSel [
-	"Answer a new fuzzy label."
-
-	^(FuzzyLabelMorph contents: aString font: self labelFont)
-		offset: offset;
-		alpha: alpha;
-		model: aModel;
-		getEnabledSelector: enabledSel
 ]
 
 { #category : 'morph creation' }
@@ -3074,77 +3057,12 @@ UITheme >> newListIn: aThemedMorph for: aModel list: listSelector selected: getS
 ]
 
 { #category : 'morph creation' }
-UITheme >> newListIn: aThemedMorph for: aModel list: listSelector selected: getSelector changeSelected: setSelector icon: iconSelector getEnabled: enabledSel help: helpText [
-	"Answer an icon list for the given model."
-
-	^PluggableIconListMorph new
-		selectionColor: self selectionColor;
-		textColor: self listTextColor;
-		font: self listFont;
-		on: aModel
-		list: listSelector
-		selected: getSelector
-		changeSelected: setSelector
-		menu: nil
-		keystroke: nil;
-		autoDeselect: false;
-		cornerStyle: aThemedMorph preferredCornerStyle;
-		color: Color white;
-		borderStyle: (BorderStyle inset width: 1 scaledByDisplayScaleFactor);
-		hResizing: #spaceFill;
-		vResizing: #spaceFill;
-		getIconSelector: iconSelector;
-		getEnabledSelector: enabledSel;
-		setBalloonText: helpText
-]
-
-{ #category : 'morph creation' }
 UITheme >> newMenuIn: aThemedMorph for: aModel [
 	"Answer a new menu."
 
 	^MenuMorph new
 		defaultTarget: aModel;
 		color: (self menuColorFor: aThemedMorph)
-]
-
-{ #category : 'morph creation' }
-UITheme >> newMorphDropListIn: aThemedMorph for: aModel list: listSel getSelected: getSel setSelected: setSel getEnabled: enabledSel useIndex: useIndex help: helpText [
-	"Answer a morph drop list for the given model."
-
-	^(MorphDropListMorph
-			on: aModel
-			list: listSel
-			selected: getSel
-			changeSelected: setSel
-			useIndex: useIndex)
-		selectionColor: self selectionColor;
-		getEnabledSelector: enabledSel;
-		cornerStyle: aThemedMorph preferredCornerStyle;
-		hResizing: #spaceFill;
-		vResizing: #shrinkWrap;
-		setBalloonText: helpText
-]
-
-{ #category : 'morph creation' }
-UITheme >> newMorphListIn: aThemedMorph for: aModel list: listSelector getSelected: getSelector setSelected: setSelector getEnabled: enabledSel help: helpText [
-	"Answer a morph list for the given model."
-
-	^(PluggableMorphListMorph
-			on: aModel
-			list: listSelector
-			selected: getSelector
-			changeSelected: setSelector
-			menu: nil
-			keystroke: nil)
-		selectionColor: self selectionColor;
-		autoDeselect: false;
-		cornerStyle: aThemedMorph preferredCornerStyle;
-		color: Color white;
-		borderStyle: (BorderStyle inset width: 1 scaledByDisplayScaleFactor);
-		hResizing: #spaceFill;
-		vResizing: #spaceFill;
-		getEnabledSelector: enabledSel;
-		setBalloonText: helpText
 ]
 
 { #category : 'morph creation' }
@@ -3184,15 +3102,6 @@ UITheme >> newOKButtonIn: aThemedMorph for: aModel getEnabled: enabledSel [
 		getEnabled: enabledSel
 		label: 'OK' translated
 		help: 'Apply changes and close the window' translated
-]
-
-{ #category : 'morph creation' }
-UITheme >> newOverflowRowIn: aThemedMorph forAll: aCollectionOfMorphs [
-	"Answer a new overflow row morph with the given contents."
-
-	^OverflowRowMorph new
-		baseMorphs: aCollectionOfMorphs;
-		yourself
 ]
 
 { #category : 'morph creation' }
@@ -3296,24 +3205,6 @@ UITheme >> newSeparatorIn: aThemedMorph [
 		borderStyle: (BorderStyle inset baseColor: Color blue; width: 1 scaledByDisplayScaleFactor);
 		extent: (2@2) scaledByDisplayScaleFactor;
 		hResizing: #spaceFill
-]
-
-{ #category : 'morph creation' }
-UITheme >> newSliderIn: aThemedMorph for: aModel getValue: getSel setValue: setSel min: min max: max quantum: quantum getEnabled: enabledSel help: helpText [
-	"Answer a slider. Resizing set for horizontal usage by default."
-
-	^(PluggableSliderMorph
-			on: aModel
-			getValue: getSel
-			setValue: setSel
-			min: min
-			max: max
-			quantum: quantum)
-		getEnabledSelector: enabledSel;
-		hResizing: #spaceFill;
-		vResizing: #shrinkWrap;
-		setBalloonText: helpText;
-		minHeight: 16 scaledByDisplayScaleFactor
 ]
 
 { #category : 'morph creation' }
@@ -3506,17 +3397,6 @@ UITheme >> newTitleIn: aThemedMorph label: aString for: control [
 		control})
 		cellPositioning: #leftCenter;
 		cellInset: 2 scaledByDisplayScaleFactor
-]
-
-{ #category : 'morph creation' }
-UITheme >> newToolDockingBarIn: aThemedMorph [
-	"Answer a new tool docking bar."
-
-	^ToolDockingBarMorph new
-		borderWidth: 0;
-		hResizing: #spaceFill;
-		vResizing: #shrinkWrap;
-		clipSubmorphs: true
 ]
 
 { #category : 'morph creation' }
