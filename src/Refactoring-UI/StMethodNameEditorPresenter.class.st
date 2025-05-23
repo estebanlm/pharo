@@ -113,7 +113,7 @@ StMethodNameEditorPresenter class >> openOn: aMethod withInvalidArgs: aSet canRe
 StMethodNameEditorPresenter >> addArgumentToKeywordSelector: argumentName [
 	"The argument is an instance of RBArgumentName"
 	
-	| newArg newArgSymbol argValue selectedIndex keywordInput newKeywordPart |
+	| newArg newArgSymbol argValue selectedIndex keywordInput |
 	keywordInput := self getNewKeywordPartBodyName.
 	keywordInput := keywordInput  select: [ :each | each isAlphaNumeric ].
 	
@@ -121,8 +121,8 @@ StMethodNameEditorPresenter >> addArgumentToKeywordSelector: argumentName [
 		ifTrue: [ newArgSymbol := (self newArgName: 'anObject') asSymbol ]
 		ifFalse: [ newArgSymbol := (self newArgName: keywordInput) asSymbol ].
 	selectedIndex := argumentsList selection selectedIndex.
-	newKeywordPart := keywordInput isEmptyOrNil ifTrue: [ 'with:' ] ifFalse: [ newArgSymbol, ':' ].
-	self selectorInput text: self selectorInput text , newKeywordPart.
+	
+	self selectorInput text: self selectorInput text ,  'with:'.
 
 	argValue := self getDefaultValue.
 	argValue isEmptyOrNil ifTrue: [ CmdCommandAborted signal ].

@@ -64,7 +64,7 @@ StMethodNameEditorPresenterTest >> testAddArgumentToKeywordSelector [
 	methodNameEditor invalidArgNames: ((self class >> #a:b:c:) ast arguments collect: [:each | each name]).
 	methodNameEditor requestor: dialog.
 	methodNameEditor addArgumentToKeywordSelector: (RBArgumentName name: 'arg' value: nil).
-	self assert: methodNameEditor previewResult label equals: 'a: a b: b c: c arg: arg'
+	self assert: methodNameEditor previewResult label equals: 'a: a b: b c: c with: arg'
 	
 	
 ]
@@ -94,7 +94,7 @@ StMethodNameEditorPresenterTest >> testAddArgumentToKeywordSelectorBogusEmptyInF
 	methodNameEditor invalidArgNames: ((self class >> #a:b:c:) ast arguments collect: [:each | each name]).
 	methodNameEditor requestor: dialog.
 	methodNameEditor addArgumentToKeywordSelector: (RBArgumentName name: '%%%%' value: nil).
-	self assert: methodNameEditor previewResult label equals: 'a: a b: b c: c anObject: anObject'
+	self assert: methodNameEditor previewResult label equals: 'a: a b: b c: c with: anObject'
 	
 	
 ]
@@ -109,7 +109,7 @@ StMethodNameEditorPresenterTest >> testAddArgumentToKeywordSelectorBogusNotEmpty
 	methodNameEditor invalidArgNames: ((self class >> #a:b:c:) ast arguments collect: [:each | each name]).
 	methodNameEditor requestor: dialog.
 	methodNameEditor addArgumentToKeywordSelector: (RBArgumentName name: '%arg' value: nil).
-	self assert: methodNameEditor previewResult label equals: 'a: a b: b c: c arg: arg'
+	self assert: methodNameEditor previewResult label equals: 'a: a b: b c: c with: arg'
 	
 	
 ]
