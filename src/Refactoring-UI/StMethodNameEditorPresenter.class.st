@@ -109,38 +109,44 @@ StMethodNameEditorPresenter class >> openOn: aMethod withInvalidArgs: aSet canRe
 ]
 
 { #category : 'action' }
-StMethodNameEditorPresenter >> addArgument [
+StMethodNameEditorPresenter >> addArgumentToKeywordSelector: anItem [
 
-	| newArg argValue newKeyword |
-	newKeyword := self getNewKeywordName.
-	newKeyword isEmptyOrNil ifTrue: [ CmdCommandAborted signal ].
-	newArg := self newArgName asSymbol.
+	| newArg newArgSymbol argValue selectedIndex keywordInput |
+	keywordInput := self getNewKeywordName.
+	
+	keywordInput isEmptyOrNil
+		ifTrue: [ newArgSymbol := (self newArgName: 'anObject') asSymbol ]
+		ifFalse: [ newArgSymbol := (self newArgName: keywordInput) asSymbol ].
+	selectedIndex := argumentsList selection selectedIndex.
+
 	argValue := self getDefaultValue.
 	argValue isEmptyOrNil ifTrue: [ CmdCommandAborted signal ].
-	newArg := RBArgumentName name: newArg value: argValue.
-	argumentsList items: { newArg }.
-	self selectorInput text: self selectorInput text , newKeyword ,':' .
-	argumentsList selectIndex: 1.
+	newArg := RBArgumentName name: newArgSymbol value: argValue.
+	argumentsList items:
+		(argumentsList items copyUpThrough: anItem) , { newArg }
+		, (argumentsList items copyAfter: anItem).
+	self selectorInput text: self selectorInput text , newArgSymbol  , ':'.
+	argumentsList selectIndex: selectedIndex + 1.
 	self canEditName: true.
 	self updateLabel
 ]
 
 { #category : 'action' }
-StMethodNameEditorPresenter >> addArgumentAfter: anItem [
+StMethodNameEditorPresenter >> addArgumentToUnarySelector [
 
-	| newArg argValue selectedIndex newKeyword |
+	| newArg argValue newKeyword selectorText |
 	newKeyword := self getNewKeywordName.
-	newKeyword isEmptyOrNil ifTrue: [ CmdCommandAborted signal ].
-	selectedIndex := argumentsList selection selectedIndex.
-	newArg := self newArgName asSymbol.
+	newKeyword isEmptyOrNil
+		ifTrue: [ newArg := (self newArgName: 'anObject') asSymbol ]
+		ifFalse: [ newArg := (self newArgName: newKeyword) asSymbol ].
+
 	argValue := self getDefaultValue.
 	argValue isEmptyOrNil ifTrue: [ CmdCommandAborted signal ].
+
 	newArg := RBArgumentName name: newArg value: argValue.
-	argumentsList items:
-		(argumentsList items copyUpThrough: anItem) , { newArg }
-		, (argumentsList items copyAfter: anItem).
-	self selectorInput text: self selectorInput text , newKeyword, ':'.
-	argumentsList selectIndex: selectedIndex + 1.
+	argumentsList items: { newArg }.
+	self selectorInput text: self selectorInput text , ':'.
+	argumentsList selectIndex: 1.
 	self canEditName: true.
 	self updateLabel
 ]
@@ -168,7 +174,7 @@ StMethodNameEditorPresenter >> argumentsListActions [
 			name: 'Add';
 			actionEnabled: [ self canAddArgs ];
 			iconName: #add;
-			action: [ self addArgumentAfter: argumentsList selectedItem ] ];
+			action: [ self addArgumentToKeywordSelector: argumentsList selectedItem ] ];
 		addActionWith: [ :anItem | anItem
 			name: 'Remove';
 			actionEnabled: [ argumentsList selectedItem canBeRemoved ];
@@ -275,9 +281,8 @@ StMethodNameEditorPresenter >> getDefaultValue [
 
 { #category : 'action' }
 StMethodNameEditorPresenter >> getNewKeywordName [
-
 	^ self
-		  request: 'Enter name for new keyword'
+		  request: 'Enter keyword part name without the ending :'
 		  initialAnswer: 'arg'
 ]
 
@@ -304,8 +309,8 @@ StMethodNameEditorPresenter >> initializeAddButton [
 		label: '+';
 		action: [
 			argumentsList items
-				ifEmpty: [ self addArgument ]
-				ifNotEmpty: [ self addArgumentAfter: argumentsList items last ].
+				ifEmpty: [ self addArgumentToUnarySelector ]
+				ifNotEmpty: [ self addArgumentToKeywordSelector: argumentsList items last ].
 			self updateReorderButtonStatus. ].
 ]
 
@@ -389,14 +394,14 @@ StMethodNameEditorPresenter >> methodName [
 ]
 
 { #category : 'utilities' }
-StMethodNameEditorPresenter >> newArgName [
-	| baseString index newString |
-	newString := baseString := 'anObject'.
+StMethodNameEditorPresenter >> newArgName: baseName [
+	| index newString |
+	newString := baseName.
 	index := 0.
 	[ self invalidArgNames, (self newArgs collect: [:each | each name]) includes: newString ]
 		whileTrue:
 			[index := index + 1.
-			newString := baseString , index printString].
+			newString := baseName , index printString].
 	^ newString
 ]
 
