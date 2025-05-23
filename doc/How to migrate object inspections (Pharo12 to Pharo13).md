@@ -1,7 +1,7 @@
 # How to migrate an inspection
 
-You may have noticed than in Pharo 13 we removed on of the ways we useIn fact, this is very simple, since we had to declare `inspections` (you know, those add-ons for a class that allows you to enhance the inspector showing the object in the way you prefer).
-I say "one of the ways" because in fact we had two ways before, but we were often using the one we removed, and that can be an annoyance for people that knew just that way.
+You may have noticed than in Pharo 13 we removed one of the ways we use to create `inspections` (you know, those add-ons to a class that allows you to enhance the inspector showing the object in the way you prefer).  
+I say "one of the ways" because in fact we had two ways before, but we were often using the one we removed, and that can be an annoyance for people that knew just that way.  
 
 ## What changed?
 
