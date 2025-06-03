@@ -141,24 +141,6 @@ CommandLineUIManager >> confirm: queryString trueChoice: trueLabel falseChoice: 
 	^ self choose: questions title: queryString
 ]
 
-{ #category : 'debug' }
-CommandLineUIManager >> debugProcess: process context: context label: title fullView: bool notification: notificationString [
-	| description |
-	description := String streamContents: [ :stream |
-		stream
-			nextPutAll: 'debugging process: ';
-			nextPutAll: process name;
-			cr;
-			nextPutAll: 'context:';
-			cr;
-			print: context.
-		notificationString ifNotNil: [ stream nextPutAll: notificationString ] ].
-	self
-		logTitle: title
-		andDescription: description
-		to: self stderr
-]
-
 { #category : 'ui TEasilyThemed' }
 CommandLineUIManager >> deny: aStringOrText [
 	"Open a denial dialog."
@@ -180,14 +162,6 @@ CommandLineUIManager >> exitFailure [
 		doNotQuitOnRestart ifFalse: [ Smalltalk exitFailure ].
 		doNotQuitOnRestart := false.
 	]
-]
-
-{ #category : 'handle debug requests' }
-CommandLineUIManager >> handleDebugRequest: aDebugRequest fromDebuggerSystem: anOupsDebuggerSystem [
-
-	anOupsDebuggerSystem
-		logDebugRequest: aDebugRequest
-		withUIManager: self
 ]
 
 { #category : 'error handling' }
@@ -426,12 +400,4 @@ CommandLineUIManager >> textEntry: aStringOrText title: aString [
 { #category : 'ui TEasilyThemed' }
 CommandLineUIManager >> textEntry: aStringOrText title: aString entryText: defaultEntryText [
 	"Open a text entry dialog."
-]
-
-{ #category : 'default actions' }
-CommandLineUIManager >> unhandledErrorDefaultAction: anException [
-
-	self quitFrom: anException signalerContext  withMessage: anException description.
-
-
 ]

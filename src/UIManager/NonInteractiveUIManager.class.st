@@ -101,11 +101,6 @@ NonInteractiveUIManager >> confirm: queryString trueChoice: trueChoice falseChoi
 	^  self nonInteractiveRequest: queryString
 ]
 
-{ #category : 'debug' }
-NonInteractiveUIManager >> debugProcess: process context: context label: title fullView: bool notification: notificationString [
-	^ self nonInteractiveWarning: 'Opening Debugger'
-]
-
 { #category : 'ui requests' }
 NonInteractiveUIManager >> edit: aText label: labelString accept: aBlockOrNil [
 	"Open an editor on the given string/text"
