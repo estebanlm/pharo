@@ -126,16 +126,13 @@ RePullUpMethodDriver >> configureRefactoring [
 { #category : 'execution' }
 RePullUpMethodDriver >> defaultSelectDialog [
 
-	^ self application newSelectMultiple
-		  title: 'There are potential breaking changes';
+	^ self class defaultSelectDialog
+		  title: 'There are potential breaking changes!';
 		  label: self labelBasedOnBreakingChanges;
 		  items: self breakingChoices;
 		  display: [ :each | each description ];
-		  onAccept: [ :dialog |
-				  | selectedChanges |
-				  selectedChanges := dialog presenter selectedItems.
-				  selectedChanges do: #action ];
-		  openDialog
+		  displayIcon: [ :each | self iconNamed: each systemIconName ];
+		  openModal
 ]
 
 { #category : 'execution' }
@@ -147,7 +144,9 @@ RePullUpMethodDriver >> gatherUserInput [
 RePullUpMethodDriver >> handleBreakingChanges [
 	"Display previous transformations that will fix the fixable breaking conditions"
 
-	self selectDialog
+	| select |
+	select := self selectDialog.
+	select ifNotNil: [ select action ]
 ]
 
 { #category : 'ui - dialogs' }
