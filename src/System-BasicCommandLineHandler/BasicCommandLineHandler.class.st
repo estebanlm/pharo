@@ -211,8 +211,8 @@ BasicCommandLineHandler >> handleArgument: aString [
 
 { #category : 'activation' }
 BasicCommandLineHandler >> handleEmptyArguments [
-	Smalltalk isHeadless
-		ifFalse: [ ^ self ].
+
+	Smalltalk isInteractive ifTrue: [ ^ self ].
 
 	self help
 ]

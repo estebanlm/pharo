@@ -832,18 +832,6 @@ SmalltalkImage >> installLowSpaceWatcher [
 ]
 
 { #category : 'testing' }
-SmalltalkImage >> isHeadless [
-	"Check if vm were run with headless parameter.
-	Different VMs for different platform have different multiple way(s) to indicate that"
-
-	-1000 to: 1000 do: [ :n |
-		(#('display=none' '-headless' '-vm-display-null' '-nodisplay' '--headless' '--vm-display-null' '--nodisplay')
-			includes: (self vm getSystemAttribute: n))
-				ifTrue: [ ^ true ]].
-	^ false
-]
-
-{ #category : 'testing' }
 SmalltalkImage >> isInteractive [
 	"Check if vm were run headless and with interactive (graphics) parameter.
 	 Using the headless VM, the need of a GUI environment is indicated by sending --interactive
