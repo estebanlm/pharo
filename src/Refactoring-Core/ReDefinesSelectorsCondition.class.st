@@ -20,6 +20,12 @@ ReDefinesSelectorsCondition >> definesSelectors: aSelectorsList in: aClass [
 	selectors := aSelectorsList
 ]
 
+{ #category : 'as yet unclassified' }
+ReDefinesSelectorsCondition >> nonViolators [
+
+	^ selectors reject: [ :sel | violators contains: sel ]
+]
+
 { #category : 'displaying' }
 ReDefinesSelectorsCondition >> violationMessageOn: aStream [
 

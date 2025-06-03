@@ -24,6 +24,12 @@ ReReifiedCondition >> isTrue [
 	^ self check
 ]
 
+{ #category : 'logical operations' }
+ReReifiedCondition >> not [ 
+
+	^ ReNewNegationCondition on: self
+]
+
 { #category : 'displaying' }
 ReReifiedCondition >> violationMessageOn: aStream [
 
