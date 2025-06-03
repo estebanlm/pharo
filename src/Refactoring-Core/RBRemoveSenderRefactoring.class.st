@@ -116,6 +116,12 @@ RBRemoveSenderRefactoring >> preconditions [
 	^ self applicabilityPreconditions
 ]
 
+{ #category : 'initialization' }
+RBRemoveSenderRefactoring >> prepareForExecution [
+
+	self checkSelectedMessage
+]
+
 { #category : 'transforming' }
 RBRemoveSenderRefactoring >> privateTransform [
 	self inlineParseTree.
