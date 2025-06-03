@@ -20,7 +20,7 @@ ReDefinesSelectorsCondition >> definesSelectors: aSelectorsList in: aClass [
 	selectors := aSelectorsList
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReDefinesSelectorsCondition >> nonViolators [
 
 	^ selectors reject: [ :sel | violators contains: sel ]
