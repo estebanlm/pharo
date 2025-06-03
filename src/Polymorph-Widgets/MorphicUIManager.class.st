@@ -30,7 +30,7 @@ MorphicUIManager class >> isValidForCurrentSystemConfiguration [
 	^ Smalltalk isHeadless not
 		or: [
 			Smalltalk isHeadless
-			and: [ Smalltalk isInteractiveGraphic ] ]
+			and: [ Smalltalk isInteractive ] ]
 ]
 
 { #category : 'cleanup' }
