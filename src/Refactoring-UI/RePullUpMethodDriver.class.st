@@ -53,11 +53,11 @@ RePullUpMethodDriver >> breakingChoices [
 
 	| choices |
 	choices := OrderedCollection new.
-	choices add: (RePullUpMethodTransformationChoice new driver: self).
 	notSharedVarRefs isFalse ifTrue: [
 		choices add: (RePushUpSharedVariableChoice new driver: self) ].
 	notInstVarRefs isFalse ifTrue: [
 		choices add: (RePushUpInstanceVariableChoice new driver: self) ].
+	choices add: (RePullUpMethodTransformationChoice new driver: self).
 	notOverrides isFalse ifTrue: [ 
 		notOverrides violators.
 		choices add: (ReBrowseMethodOverridesChoice new 
@@ -126,7 +126,7 @@ RePullUpMethodDriver >> configureRefactoring [
 { #category : 'execution' }
 RePullUpMethodDriver >> defaultSelectDialog [
 
-	^ self class defaultSelectDialog
+	^ self application newSelectMultiple
 		  title: 'There are potential breaking changes!';
 		  label: self labelBasedOnBreakingChanges;
 		  items: self breakingChoices;
@@ -144,9 +144,10 @@ RePullUpMethodDriver >> gatherUserInput [
 RePullUpMethodDriver >> handleBreakingChanges [
 	"Display previous transformations that will fix the fixable breaking conditions"
 
-	| select |
-	select := self selectDialog.
-	select ifNotNil: [ select action ]
+	| dialog |
+	dialog := self selectDialog.
+	dialog isCancelled ifTrue: [ ^ self ].
+	dialog presenter selectedItems do: [ :item | item action ]
 ]
 
 { #category : 'ui - dialogs' }
