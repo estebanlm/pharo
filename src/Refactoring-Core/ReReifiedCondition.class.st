@@ -12,6 +12,18 @@ ReReifiedCondition >> errorString [
 	^ String streamContents: [ :aStream | self violationMessageOn: aStream ]
 ]
 
+{ #category : 'checking' }
+ReReifiedCondition >> isFalse [
+
+	^ self isTrue not
+]
+
+{ #category : 'checking' }
+ReReifiedCondition >> isTrue [ 
+
+	^ self check
+]
+
 { #category : 'displaying' }
 ReReifiedCondition >> violationMessageOn: aStream [
 
