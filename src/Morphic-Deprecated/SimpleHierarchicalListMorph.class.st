@@ -22,8 +22,8 @@ Class {
 		'searchedElement',
 		'keystrokeActionSelector'
 	],
-	#category : 'Morphic-Widgets-List',
-	#package : 'Morphic-Widgets-List'
+	#category : 'Morphic-Deprecated',
+	#package : 'Morphic-Deprecated'
 }
 
 { #category : 'shortcuts' }
@@ -90,7 +90,7 @@ SimpleHierarchicalListMorph class >> exampleSubmorphs [
 	"[SimpleHierarchicalListMorph exampleSubmorphs]"
 	| morph |
 	morph :=
-		SimpleHierarchicalListMorph
+		self
 			on: [ Array with:  (MorphWithSubmorphsWrapper with: self currentWorld)  ]
 			list: #value
 			selected: nil

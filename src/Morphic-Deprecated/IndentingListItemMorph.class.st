@@ -32,8 +32,8 @@ Class {
 		'nextSibling',
 		'icon'
 	],
-	#category : 'Morphic-Widgets-List',
-	#package : 'Morphic-Widgets-List'
+	#category : 'Morphic-Deprecated',
+	#package : 'Morphic-Deprecated'
 }
 
 { #category : 'drag and drop' }
