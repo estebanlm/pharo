@@ -1700,25 +1700,26 @@ Color >> isColor [
 
 { #category : 'testing' }
 Color >> isContrastCompliantForISO92413: aColor [
-	"Return true if the ISO92413 stardard consider myself and the given color with enough contrast to be used in an UI."
+	"Return true if the ISO 9241-3 standard considers the given color and myself to have sufficient contrast to be used in a UI.
+	Failing to achieve this level of contrast can result in reduced readability and poor visual clarity."
 
-	^ (self contrast: aColor) > 3
+	^ (self contrast: aColor) >= 3
 ]
 
 { #category : 'testing' }
 Color >> isContrastCompliantForWCAG2AA: aColor [
-	"Return true if the WCAG2AA stardard consider myself and the given color with enough contrast to be used in an UI.
-	With this standard respecrted, your UI is considered good for the majority of population"
+	"Return true if the WCAG 2 AA standard considers the given color and myself to have sufficient contrast to be used in a UI.
+	With this standard respected, your UI is considered suitable for the majority of the population."
 
-	^ (self contrast: aColor) > 4.5
+	^ (self contrast: aColor) >= 4.5
 ]
 
 { #category : 'testing' }
 Color >> isContrastCompliantForWCAG2AAA: aColor [
-	"Return true if the WCAG2AA stardard consider myself and the given color with enough contrast to be used in an UI.
-	With this standard respecrted, your UI is considered good for people of 80yo"
+	"Return true if the WCAG 2 AAA standard considers the given color and myself to have sufficient contrast to be used in a UI.
+	With this standard respected, your UI is considered suitable for people aged 80 and older."
 
-	^ (self contrast: aColor) > 7
+	^ (self contrast: aColor) >= 7
 ]
 
 { #category : 'testing' }
