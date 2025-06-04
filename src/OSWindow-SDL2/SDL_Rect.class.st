@@ -28,6 +28,11 @@ SDL_Rect class >> fieldsDesc [
  	)
 ]
 
+{ #category : 'fields description' }
+SDL_Rect class >> newX: x y: y w: w h: h [
+	^ self new x: x; y: y; w: w; h: h; yourself
+]
+
 { #category : 'accessing - structure variables' }
 SDL_Rect >> h [
 	"This method was automatically generated"
