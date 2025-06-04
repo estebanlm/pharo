@@ -382,6 +382,12 @@ SDL2 class >> showCursor: toggle [
 	^ self ffiCall: #( int SDL_ShowCursor ( int toggle ) )
 ]
 
+{ #category : 'timer' }
+SDL2 class >> ticks [
+	"Gets the number of milliseconds since the SDL library was initialized"
+	^ self ffiCall: #( Uint32 SDL_GetTicks ( ) )
+]
+
 { #category : 'common' }
 SDL2 class >> version [
 	"Answer the SDL version. For example, a SDL_Version(2.0.7)."
