@@ -1068,6 +1068,15 @@ SimpleHierarchicalListMorph >> takesKeyboardFocus [
 	^true
 ]
 
+{ #category : 'private' }
+SimpleHierarchicalListMorph >> themeChanged [
+	"Update the selection colour."
+
+	self selectionColor: self theme selectionColor.
+	self color: self defaultColor.
+	super themeChanged
+]
+
 { #category : 'keyboard navigation' }
 SimpleHierarchicalListMorph >> toggleExpandedState: aMorph [
 	aMorph toggleExpandedState.
