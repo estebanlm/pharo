@@ -252,6 +252,11 @@ IndentingListItemMorph >> drawOn: aCanvas [
 ]
 
 { #category : 'drawing' }
+IndentingListItemMorph >> drawOnAthensCanvas: anAthensCanvas [
+	self drawOnCanvasWrapperFor: anAthensCanvas
+]
+
+{ #category : 'drawing' }
 IndentingListItemMorph >> drawToggleOn: aCanvas in: aRectangle [
 
 	| aFormSet centeringOffset |
