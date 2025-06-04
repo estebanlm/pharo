@@ -28,7 +28,7 @@ BaselineOfPharo class >> documentBrowser [
 		newName: 'DocumentBrowser' 
 		owner: 'pharo-spec' 
 		project: 'NewTools-DocumentBrowser' 
-		version: 'Pharo13'
+		version: 'Pharo14'
 ]
 
 { #category : 'repository urls' }
@@ -60,7 +60,7 @@ BaselineOfPharo class >> iceberg [
 		newName: 'Iceberg' 
 		owner: 'pharo-vcs' 
 		project: 'iceberg' 
-		version: 'Pharo13'
+		version: 'Pharo14'
 		sourceDir: nil
 ]
 
@@ -78,7 +78,7 @@ BaselineOfPharo class >> microdown [
 		newName: 'Microdown' 
 		owner: 'pillar-markup' 
 		project: 'Microdown' 
-		version: 'v2.8.0'
+		version: 'Pharo14' 
 ]
 
 { #category : 'repository urls' }
@@ -95,7 +95,7 @@ BaselineOfPharo class >> newTools [
 		newName: 'NewTools' 
 		owner: 'pharo-spec' 
 		project: 'NewTools' 
-		version: 'Pharo13'
+		version: 'Pharo14'
 ]
 
 { #category : 'repository urls' }
@@ -119,7 +119,7 @@ BaselineOfPharo class >> roassal [
 		  newName: 'Roassal'
 		  owner: 'pharo-graphics'
 		  project: 'Roassal'
-		  version: 'v1.7.0'
+		  version: 'Pharo14'
 ]
 
 { #category : 'repository urls' }
@@ -136,7 +136,7 @@ BaselineOfPharo class >> scriptableDebugger [
 		newName: 'ScriptableDebugger' 
 		owner: 'pharo-spec' 
 		project: 'ScriptableDebugger' 
-		version: 'Pharo13'
+		version: 'Pharo14'
 ]
 
 { #category : 'repository urls' }
@@ -153,7 +153,7 @@ BaselineOfPharo class >> spec [
 		newName: 'Spec2' 
 		owner: 'pharo-spec' 
 		project:'Spec' 
-		version: 'v2.0.1'
+		version: 'Pharo14'
 ]
 
 { #category : 'repository urls' }
@@ -170,7 +170,7 @@ BaselineOfPharo class >> toplo [
 		newName: 'Toplo' 
 		owner: 'pharo-graphics' 
 		project: 'Toplo' 
-		version: 'Pharo12'
+		version: 'dev'
 ]
 
 { #category : 'repository urls' }
@@ -198,7 +198,8 @@ BaselineOfPharo >> baseline: spec [
 
 		spec
 			package: 'Morphic-Deprecated';
-			package: 'Deprecated13' ]
+			package: 'Deprecated13';
+			package: 'Deprecated14' ]
 ]
 
 { #category : 'actions' }
