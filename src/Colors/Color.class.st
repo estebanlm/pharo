@@ -1314,9 +1314,9 @@ Color >> colorForInsets [
 
 { #category : 'accessing' }
 Color >> contrast: aColor [
-	"Get a constrast ratio between to colors. 
-	Constrast is computed from luminance value of these colors.
-	Formula L1/L2 is based on ISO-9241-3 and ANSI-HFES-100-1988.
+	"Get the contrast ratio between the given color and me. 
+	Contrast is computed from the luminance values of these colors.
+	The L1/L2 formula is based on ISO 9241-3 and ANSI/HFES 100-1988.
 	https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests"
 
 	| l1 l2 a |
@@ -1333,10 +1333,10 @@ Color >> contrast: aColor [
 Color >> contrastingBlackAndWhiteColor [
 	"Answer black or white depending on the luminance."
 
-	self isTransparent ifTrue: [ ^ self class black].
-	^self luminance > 0.5
-		ifTrue: [self class black]
-		ifFalse: [self class white]
+	self isTransparent ifTrue: [ ^ self class black ].
+	^ self luminance > 0.5
+		ifTrue: [ self class black ]
+		ifFalse: [ self class white ]
 ]
 
 { #category : 'converting' }
@@ -1344,10 +1344,9 @@ Color >> contrastingColorAdjustment [
 	"Answer darker or lighter color depending on the luminance."
 
 	self isTransparent ifTrue: [ ^ self ].
-
 	^ self luminance > 0.5
 		ifTrue: [ self darker ]
-		ifFalse:  [ self lighter ]
+		ifFalse: [ self lighter ]
 ]
 
 { #category : 'transformations' }
@@ -2015,7 +2014,9 @@ Color >> red [
 
 { #category : 'accessing' }
 Color >> relativeLuminance [
-	"Return the relative luminance Y of this color, a derivation of luminance signal from ITU-R BT.709-6 to considere human eye colors different sensitivity.
+	"Return the relative luminance (Y) of this color.
+	Unlike absolute luminance, Y is based on the luminance signal defined in ITU-R BT.709-6
+	that accounts for the varying sensitivity of the human eye to colors.
 	https://www.w3.org/WAI/GL/wiki/Relative_luminance"
 
 	| r g b a |
