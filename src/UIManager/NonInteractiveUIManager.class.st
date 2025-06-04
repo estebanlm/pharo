@@ -28,7 +28,7 @@ Class {
 { #category : 'testing' }
 NonInteractiveUIManager class >> isValidForCurrentSystemConfiguration [
 
-	^ Smalltalk isInteractiveGraphic not
+	^ Smalltalk isInteractive not
 ]
 
 { #category : 'accessing' }
