@@ -23,6 +23,22 @@ ShModifyClassTest >> testChangingSuperclassOfAClassWithDuplicatedSlotsIsNotAppli
 ]
 
 { #category : 'tests' }
+ShModifyClassTest >> testChangingSuperclassOfAClassWithDuplicatedSlotsIsNotAppliedInDeeperHierarchy [
+
+	builder name: #ShCBClassWithSubclass.
+	builder superclassName: #ShCBAClasWithAnotherSlot.
+
+	self should: [result := builder build] raise: DuplicatedSlotName.
+
+	result := self class environment classNamed: #ShCBClassWithSubclass.
+
+	self validateResult.
+	self validateSuperclass: Object.
+	self validateMethods: #(  ).
+
+]
+
+{ #category : 'tests' }
 ShModifyClassTest >> testEmptyClass [
 
 	builder name: #ShCBEmptyClass.

@@ -108,7 +108,7 @@ ShLayoutDefinition >> validate [
 	builder oldClass ifNil: [ ^ self ].
 	
 	superclassSlots := #(). 
-	superclassClassSlots := #()
+	superclassClassSlots := #().
 	
 	builder superclass 
 		ifNotNil: [:aSuperclass| 
@@ -118,7 +118,7 @@ ShLayoutDefinition >> validate [
 	slotNames := (superclassSlots , slots) collect: [ :e | e name ].
 	classSlotNames := (superclassClassSlots , classSlots) collect: [ :e | e name ].
 
-	builder oldClass subclassesDo: [ :aSubclass |
+	builder oldClass allSubclassesDo: [ :aSubclass |
 		aSubclass slots do: [ :anotherSlot |
 			(slotNames includes: anotherSlot name) ifTrue: [
 				DuplicatedSlotName new
@@ -128,7 +128,7 @@ ShLayoutDefinition >> validate [
 						signal
 			] ]	 ].
 
-	builder oldClass subclassesDo: [ :aSubclass |
+	builder oldClass allSubclassesDo: [ :aSubclass |
 		aSubclass class slots do: [ :anotherSlot |
 			(classSlotNames includes: anotherSlot name) ifTrue: [
 				DuplicatedSlotName new
