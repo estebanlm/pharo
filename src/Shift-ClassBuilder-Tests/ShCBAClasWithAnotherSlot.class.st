@@ -11,3 +11,10 @@ Class {
 	#package : 'Shift-ClassBuilder-Tests',
 	#tag : 'TestClasses'
 }
+
+{ #category : 'initialization' }
+ShCBAClasWithAnotherSlot >> initialize [ 
+
+	super initialize.
+	anotherSlot := 1.
+]
