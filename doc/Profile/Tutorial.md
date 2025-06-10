@@ -2,6 +2,7 @@
 
 ## Overview
 I scan the current windows and build a profile from the presenters or tools inside them. A **profile** is a set of window configurations also called **placeholders**.
+I am in the **Windows** menu, named **Profiles**
 
 ### Key Concepts
 - **Placeholder**: A description of the window on the screen (extent, position, kind, strategy)
@@ -15,7 +16,7 @@ To fully understand the functionality, you can:
    - Click on 'New Profile' in the Profiles menu
 
 2. **View Current Profile**
-   - Select 'Show/hide current profile' to display visual placeholders of the current profile
+   - Select 'Toggle profile preview' to display visual placeholders of the current profile
    - **Left click** on a placeholder to change the strategy associated with the window
    - **Right click** on a placeholder to remove a registered window from the current profile
 
