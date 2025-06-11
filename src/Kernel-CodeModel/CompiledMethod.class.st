@@ -933,12 +933,6 @@ CompiledMethod >> storeOn: aStream [
 	aStream nextPut: $)
 ]
 
-{ #category : 'source code management' }
-CompiledMethod >> tempNames [
-	"on the level of the compiled method, tempNames includes argument names"
-	^self ast argumentNames, self ast temporaryNames
-]
-
 { #category : 'accessing - protocols' }
 CompiledMethod >> unclassify [
 

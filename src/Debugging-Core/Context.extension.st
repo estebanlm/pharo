@@ -345,18 +345,6 @@ Context >> temporaryVariables [
 ]
 
 { #category : '*Debugging-Core' }
-Context >> tempsAndValues [
-	"Return a string of the temporary variabls and their current values"
-	
-	^ String streamContents: [ :aStream |
-		self tempNames 
-			do: [ :name  |
-			 aStream nextPutAll: name; nextPut: $:; space; tab.
-			 self print: (self tempNamed: name) on: aStream]
-			separatedBy: [aStream cr ]]
-]
-
-{ #category : '*Debugging-Core' }
 Context >> tempsAndValuesLimitedTo: sizeLimit indent: indent [
 	"Return a string of the temporary variabls and their current values"
 

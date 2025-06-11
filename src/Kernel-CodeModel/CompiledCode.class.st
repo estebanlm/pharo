@@ -931,12 +931,6 @@ Smalltalk browseAllSelect: [:m | m scanFor: 134]
 ]
 
 { #category : 'accessing' }
-CompiledCode >> scanner [
-
-	^ InstructionStream on: self
-]
-
-{ #category : 'accessing' }
 CompiledCode >> selector [
 
 	<reflection: 'Class structural inspection - Selectors and methods inspection'>
