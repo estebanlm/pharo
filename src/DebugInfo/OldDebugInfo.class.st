@@ -143,6 +143,12 @@ OldDebugInfo >> privateSourceNodeForPC: aBytecodePC [
 ]
 
 { #category : 'accessing' }
+OldDebugInfo >> rangeForPC: aPC [
+
+	^ (self privateSourceNodeForPC: aPC) debugHighlightRange
+]
+
+{ #category : 'accessing' }
 OldDebugInfo >> shouldStopAt: aBytecodePC [
 
 	"Is this PC the first PC in its lexical context (the sequence node)?
