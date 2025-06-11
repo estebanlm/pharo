@@ -155,11 +155,6 @@ CompiledBlock >> methodClass [
 ]
 
 { #category : 'accessing' }
-CompiledBlock >> methodNode [
-	^ self outerCode methodNode
-]
-
-{ #category : 'accessing' }
 CompiledBlock >> outerCode [
 	"answer the compiled code that I am installed in, or nil if none."
 	^self literalAt: self numLiterals

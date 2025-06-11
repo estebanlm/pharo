@@ -1001,16 +1001,6 @@ CompiledCode >> sourceCode [
 	^ self subclassResponsibility
 ]
 
-{ #category : 'accessing' }
-CompiledCode >> sourceNode [
-	^ self subclassResponsibility
-]
-
-{ #category : 'accessing' }
-CompiledCode >> sourceNodeForPC: arg1 [
-	^ self subclassResponsibility
-]
-
 { #category : 'source code management' }
 CompiledCode >> sourcePointer [
 	^ self subclassResponsibility
