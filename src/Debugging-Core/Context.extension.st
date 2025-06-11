@@ -305,12 +305,14 @@ Context class >> tallyMethods: aBlock [
 { #category : '*Debugging-Core' }
 Context >> tempNamed: aName [
 	"Returns the value of the temporaries, aName"
-	| var |
-	var := self lookupVar: aName.
-	"To be checked. if we keep the error, we should raise a dedicated exception, 
-	but no client would catch it, so why do we need it at all?"
- 	var isLocalVariable ifFalse: [ ^self error: var name, ' is not a temp but, ', var class name].
-	^var readInContext: self
+	
+	| debugInfo variables variable |
+	
+	debugInfo := self method debugInfo.
+	variables := debugInfo variablesAt: self pc.
+	variable := variables detect: [ :e | e name = aName ]
+		ifNone: [ self error: 'Temp variable not found: ', aName ].
+	^variable readInContext: self
 ]
 
 { #category : '*Debugging-Core' }
@@ -354,13 +356,22 @@ Context >> tempsAndValuesLimitedTo: sizeLimit indent: indent [
 	"Return a string of the temporary variabls and their current values"
 
 	^ String streamContents: [ :aStream |
-		self tempNames 
-			do: [ :name |
-				indent timesRepeat: [ aStream tab ].
-				aStream nextPutAll: name; nextPut: $:; space; tab.
-				aStream nextPutAll: 
-					((self tempNamed: name) printStringLimitedTo: (sizeLimit -3 -name size max: 1))]
-			separatedBy: [aStream cr ]]
+			  | variables |
+			  variables := self method debugInfo variablesAt: self pc.
+			  variables
+				  do: [ :variable |
+						  | name |
+						  indent timesRepeat: [ aStream tab ].
+						  name := variable name.
+						  aStream
+							  nextPutAll: variable name;
+							  nextPut: $:;
+							  space;
+							  tab.
+						  aStream nextPutAll:
+							  ((variable readInContext: self) printStringLimitedTo:
+								   (sizeLimit - 3 - name size max: 1)) ]
+				  separatedBy: [ aStream cr ] ]
 ]
 
 { #category : '*Debugging-Core' }
