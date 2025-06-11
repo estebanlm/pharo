@@ -3,7 +3,7 @@ I have instvar accesses and I have a super class with variables that I access
 "
 Class {
 	#name : 'VariableBreakpointMockSubclass',
-	#superclass : 'VariableBreakpointMockClass',
+	#superclass : 'Object',
 	#instVars : [
 		'v2'
 	],

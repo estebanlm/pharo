@@ -16,19 +16,16 @@ Class {
 
 { #category : 'method groups' }
 ClyReflectiveEnvironmentPlugin >> collectMethodGroupProviders [
-	^{ClyBreakpointMethodGroupProvider new. ClyMethodCounterGroupProvider new. ClyWatchMethodGroupProvider new}
+
+	^ { ClyBreakpointMethodGroupProvider new }
 ]
 
 { #category : 'item decoration' }
 ClyReflectiveEnvironmentPlugin >> decorateBrowserItem: anItem ofMethod: aMethod [
 
 	aMethod containsHalt ifTrue: [ anItem markWith: ClyMethodWithHaltTag ].
-	aMethod hasBreakpoint ifTrue: [ anItem markWith: ClyMethodWithBreakpointTag ].
-
-	(self doesMethodHasExecutionCounter: aMethod)
-		ifTrue: [ anItem markWith: ClyMethodWithExecutionCounterTag ].
-	(self doesMethodHasWatch: aMethod)
-		ifTrue: [ anItem markWith: ClyMethodWithWatchTag ]
+	aMethod hasBreakpoint ifTrue: [
+		anItem markWith: ClyMethodWithBreakpointTag ]
 ]
 
 { #category : 'item decoration' }

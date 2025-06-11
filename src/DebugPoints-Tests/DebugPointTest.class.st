@@ -56,7 +56,10 @@ DebugPointTest >> setUp [
 	node := (DummyTestClass methods select: [ :method |
 		         method name = 'DummyTestClass>>#id:' ]) first ast.
 	context := self setUpContext.
-	cls := self newDummyClass
+	cls := self newDummyClass.
+	
+	"For those tests hitting on the transcript..."
+	Transcript clear.
 ]
 
 { #category : 'initialization' }

@@ -6,9 +6,8 @@ use class Breakpoint to insert me reflectively
 Class {
 	#name : 'Break',
 	#superclass : 'Halt',
-	#category : 'Reflectivity-Breakpoints',
-	#package : 'Reflectivity',
-	#tag : 'Breakpoints'
+	#category : 'Debugging-Utils',
+	#package : 'Debugging-Utils'
 }
 
 { #category : 'break' }
