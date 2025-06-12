@@ -100,7 +100,7 @@ WinPlatform >> removeEnvironmentVariable: nameString [
 ]
 
 { #category : '*System-OSEnvironments' }
-WinPlatform >> removeKey: aKey [
+WinPlatform >> removeEnvironmentVariableNamed: aKey [
 	"The primitive on Windows currently uses the ascii version of the Windows API.
 	In such chase try to get value of the environment variable using FFI."
 
