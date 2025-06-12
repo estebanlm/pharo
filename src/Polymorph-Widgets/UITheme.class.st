@@ -2808,17 +2808,6 @@ UITheme >> newFormSetsForScale: scale [
 ]
 
 { #category : 'morph creation' }
-UITheme >> newFuzzyLabelIn: aThemedMorph for: aModel label: aString offset: offset alpha: alpha getEnabled: enabledSel [
-	"Answer a new fuzzy label."
-
-	^(FuzzyLabelMorph contents: aString font: self labelFont)
-		offset: offset;
-		alpha: alpha;
-		model: aModel;
-		getEnabledSelector: enabledSel
-]
-
-{ #category : 'morph creation' }
 UITheme >> newGroupboxIn: aThemedMorph [
 	"Answer a plain groupbox."
 
@@ -3483,28 +3472,6 @@ UITheme >> newTreeFormSet: expanded size: size color: color [
 	^ FormSet forms: {
 		self newTreeForm: expanded size: size color: color.
 		self newTreeForm: expanded size: size * 2 color: color }
-]
-
-{ #category : 'morph creation' }
-UITheme >> newTreeIn: aThemedMorph for: aModel list: listSelector selected: getSelector changeSelected: setSelector [
-	"Answer a new tree morph."
-
-	^TreeListMorph new
-		selectionColor: self selectionColor;
-		font: self listFont;
-		on: aModel
-		list: listSelector
-		selected: getSelector
-		changeSelected: setSelector
-		menu: nil
-		keystroke: nil;
-		cornerStyle: aThemedMorph preferredCornerStyle;
-		"color: Color white;"
-		borderStyle: (BorderStyle inset width: 1 scaledByDisplayScaleFactor);
-		hResizing: #spaceFill;
-		vResizing: #spaceFill;
-		autoDeselect: false;
-		yourself
 ]
 
 { #category : 'morph creation' }
