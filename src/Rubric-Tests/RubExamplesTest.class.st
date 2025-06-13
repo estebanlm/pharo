@@ -7,6 +7,22 @@ Class {
 }
 
 { #category : 'tests' }
+RubExamplesTest >> testRubLipsumBasicExampleSmoke [
+
+	| morph |
+	[ self shouldnt: [ morph := RubLipsumBasicExample openNotWrapped ] raise: Error ] ensure: [ morph ifNotNil: [ morph delete ] ].
+	[ self shouldnt: [ morph := RubLipsumBasicExample openWrapped ] raise: Error ] ensure: [ morph ifNotNil: [ morph delete ] ]
+]
+
+{ #category : 'tests' }
+RubExamplesTest >> testRubLipsumWithSegmentsExampleSmoke [
+
+	| morph |
+	[ self shouldnt: [ morph := RubLipsumWithSegmentsExample openNotWrapped ] raise: Error ] ensure: [ morph ifNotNil: [ morph delete ] ].
+	[ self shouldnt: [ morph := RubLipsumWithSegmentsExample openWrapped ] raise: Error ] ensure: [ morph ifNotNil: [ morph delete ] ]
+]
+
+{ #category : 'tests' }
 RubExamplesTest >> testRubTextFieldExampleSmoke [
 
 	| morph |
