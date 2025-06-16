@@ -41,7 +41,7 @@ StRefactoringPreviewPresenter class >> changes: aCompositeRefactoring [
 
 { #category : 'instance creation' }
 StRefactoringPreviewPresenter class >> for: aCompositeRefactoring [
-	
+	self halt.
 	^ self new
 		  changesFrom: aCompositeRefactoring scopes: { RBBrowserEnvironment new };
 		  yourself
