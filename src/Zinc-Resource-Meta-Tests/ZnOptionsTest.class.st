@@ -1,8 +1,8 @@
 Class {
 	#name : 'ZnOptionsTest',
 	#superclass : 'TestCase',
-	#category : 'Zinc-Tests',
-	#package : 'Zinc-Tests'
+	#category : 'Zinc-Resource-Meta-Tests',
+	#package : 'Zinc-Resource-Meta-Tests'
 }
 
 { #category : 'options' }

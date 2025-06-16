@@ -35,9 +35,8 @@ Class {
 	#classVars : [
 		'globalDefault'
 	],
-	#category : 'Zinc-HTTP-Support',
-	#package : 'Zinc-HTTP',
-	#tag : 'Support'
+	#category : 'Zinc-Resource-Meta-Core',
+	#package : 'Zinc-Resource-Meta-Core'
 }
 
 { #category : 'utilities' }
