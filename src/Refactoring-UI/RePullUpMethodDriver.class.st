@@ -110,7 +110,7 @@ RePullUpMethodDriver >> configureAndRunRefactoring [
 	self setBreakingChangesPreconditions.
 	refactoring failedBreakingChangePreconditions
 		ifEmpty: [ self applyChanges ]
-		ifNotEmpty: [ self handleBreakingChanges ]
+		ifNotEmpty: [ self handleBreakingChanges ; applyChanges ]
 ]
 
 { #category : 'resources' }
@@ -192,9 +192,11 @@ RePullUpMethodDriver >> pullUpMethods [
 { #category : 'actions' }
 RePullUpMethodDriver >> pullUpReferencedInstVars [
 
-	notInstVarRefs referencedInstanceVariables do: [ :instVar | 
-		"We add the pushUpVariable transformation to the refactoring previous transformations"
-		refactoring pullUpVariable: instVar ]
+	( notInstVarRefs referencedInstanceVariables do: [ :instVar | 
+		"We add the pushUpVariable refactoring to the refactoring previous transformations."
+		"should we not call privateTransform instead of generateChanges"
+		(refactoring pullUpVariable: instVar) generateChanges ]).
+	
 ]
 
 { #category : 'actions' }
