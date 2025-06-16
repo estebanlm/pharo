@@ -59,6 +59,12 @@ RBRefactoryChange >> changesSize [
 	^ 1
 ]
 
+{ #category : 'printing' }
+RBRefactoryChange >> changesToDisplayIn: aChangeBrowser [
+
+	^ { self }
+]
+
 { #category : 'displaying' }
 RBRefactoryChange >> displayString [
 
@@ -139,6 +145,8 @@ RBRefactoryChange >> textToDisplay [
 
 { #category : 'printing' }
 RBRefactoryChange >> whatToDisplayIn: aChangeBrowser [
-
-	^ { self }
+	"We will deprecate this method in the future. For now fixing all the 
+	local senders."
+	
+	^ self changesToDisplayIn: aChangeBrowser 
 ]

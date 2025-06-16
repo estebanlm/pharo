@@ -110,7 +110,14 @@ RePullUpMethodDriver >> configureAndRunRefactoring [
 	self setBreakingChangesPreconditions.
 	refactoring failedBreakingChangePreconditions
 		ifEmpty: [ self applyChanges ]
-		ifNotEmpty: [ self handleBreakingChanges ]
+		ifNotEmpty: [ 
+			| res |
+			res := self handleBreakingChanges.
+			res ifTrue: [  self applyChanges ] ]
+		
+	"applying the changes blindly after handleBreakingChanges is not 
+	good because the user may have press cancel. 
+	and in such a case we should cancel the complete flow."
 ]
 
 { #category : 'resources' }
@@ -146,8 +153,9 @@ RePullUpMethodDriver >> handleBreakingChanges [
 
 	| dialog |
 	dialog := self selectDialog.
-	dialog isCancelled ifTrue: [ ^ self ].
-	dialog presenter selectedItems do: [ :item | item action ]
+	dialog isCancelled ifTrue: [ ^ false ].
+	dialog presenter selectedItems do: [ :item | item action ].
+	^ true
 ]
 
 { #category : 'ui - dialogs' }
@@ -192,9 +200,11 @@ RePullUpMethodDriver >> pullUpMethods [
 { #category : 'actions' }
 RePullUpMethodDriver >> pullUpReferencedInstVars [
 
-	notInstVarRefs referencedInstanceVariables do: [ :instVar | 
-		"We add the pushUpVariable transformation to the refactoring previous transformations"
-		refactoring pullUpVariable: instVar ]
+	( notInstVarRefs referencedInstanceVariables do: [ :instVar | 
+		"We add the pushUpVariable refactoring to the refactoring previous transformations."
+		"should we not call privateTransform instead of generateChanges"
+		(refactoring pullUpVariable: instVar) ]).
+	
 ]
 
 { #category : 'actions' }

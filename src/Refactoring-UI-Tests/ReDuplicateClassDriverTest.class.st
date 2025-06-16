@@ -30,7 +30,7 @@ ReDuplicateClassDriverTest >> setUpMocksOn: driver [
 	
 	requestClass := MockObject new.
 	requestClass
-		on: #for:scopes: respond: dialog;
+		on: #withChanges:scopes: respond: dialog;
 		on: #application: respond: dialog;
 		on: #refactoring: respond: dialog;
 		on: #openModal respond: dialog.		

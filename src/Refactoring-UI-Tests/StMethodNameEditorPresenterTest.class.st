@@ -4,8 +4,8 @@ Class {
 	#instVars : [
 		'methodNameEditor'
 	],
-	#category : 'SystemCommands-RefactoringSupport-Tests',
-	#package : 'SystemCommands-RefactoringSupport-Tests'
+	#category : 'Refactoring-UI-Tests',
+	#package : 'Refactoring-UI-Tests'
 }
 
 { #category : 'accessing' }
