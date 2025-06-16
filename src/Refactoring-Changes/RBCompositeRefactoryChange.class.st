@@ -118,6 +118,12 @@ RBCompositeRefactoryChange >> changesSize [
 ]
 
 { #category : 'refactory - changes' }
+RBCompositeRefactoryChange >> changesToDisplayIn: aBrowser [
+
+	^ self changes flatCollect: [:each | each changesToDisplayIn: aBrowser ]
+]
+
+{ #category : 'refactory - changes' }
 RBCompositeRefactoryChange >> comment: aString in: aClass [
 
 	^ self addChange: (changeFactory comment: aString in: aClass)
@@ -299,10 +305,4 @@ RBCompositeRefactoryChange >> selector: aSelector in: aClass classified: aProtoc
 							selector: aSelector
 							in: aClass
 							classified: aProtocol)
-]
-
-{ #category : 'printing' }
-RBCompositeRefactoryChange >> whatToDisplayIn: aBrowser [
-
-	^ self changes flatCollect: [:each | each whatToDisplayIn: aBrowser ]
 ]

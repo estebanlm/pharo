@@ -89,7 +89,7 @@ StRefactoringPreviewPresenter >> changesFrom: aCompositeChange [
 	compositeChange := aCompositeChange.
 	"we keep the composite because we want to use it for performing changes later on."
 	
-	changes := aCompositeChange whatToDisplayIn: self.
+	changes := aCompositeChange changesToDisplayIn: self.
 	self updateScopeList.
 	self updateChanges.
 	self updateTablePresenter

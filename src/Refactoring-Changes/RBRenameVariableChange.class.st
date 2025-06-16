@@ -81,6 +81,13 @@ RBRenameVariableChange >> changeString [
 	^ 'Rename ' , oldName , ' to ' , newName
 ]
 
+{ #category : 'accessing' }
+RBRenameVariableChange >> changesToDisplayIn: aChangeBrowser [
+
+	
+	^ { self } , (self changes flatCollect: [:e | e changes ])
+]
+
 { #category : 'private' }
 RBRenameVariableChange >> copyOldValuesToNewVariable [
 
@@ -167,12 +174,4 @@ RBRenameVariableChange >> removeOldVariable [
 RBRenameVariableChange >> textToDisplay [
 
 	^ self printString
-]
-
-{ #category : 'accessing' }
-RBRenameVariableChange >> whatToDisplayIn: aChangeBrowser [
-
-	| result |
-	result := OrderedCollection with: self.
-	^ result, (self changes flatCollect: [:e | e changes ])
 ]

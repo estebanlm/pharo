@@ -34,6 +34,12 @@ RBRenameClassChange >> changeClass [
 		  onSystemEnvironment classNamed: newName ]
 ]
 
+{ #category : 'accessing' }
+RBRenameClassChange >> changesToDisplayIn: aChangeBrowser [
+
+	^ { self }
+]
+
 { #category : 'private' }
 RBRenameClassChange >> executeNotifying: aBlock [
 
@@ -115,10 +121,4 @@ RBRenameClassChange >> textToDisplay [
 	^ String streamContents: [ :s |
          s << self printString ; cr.
          self changes do: [ :c | 	s << c textToDisplay; cr ]]
-]
-
-{ #category : 'accessing' }
-RBRenameClassChange >> whatToDisplayIn: aChangeBrowser [
-
-	^ { self }
 ]
