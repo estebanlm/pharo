@@ -24,7 +24,7 @@ StRequestClassPresenterTest >> newPresenter [
 	^ self subclassResponsibility
 ]
 
-{ #category : 'accessing' }
+{ #category : 'running' }
 StRequestClassPresenterTest >> setUp [
 	super setUp.
 	presenter := self newPresenter
