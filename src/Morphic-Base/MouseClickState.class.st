@@ -174,7 +174,10 @@ MouseClickState >> doubleClickTimeoutSelector: anObject [
 { #category : 'event handling' }
 MouseClickState >> drag: event [
 
-	dragSelector ifNotNil: [clickClient perform: dragSelector with: event]
+	dragSelector ifNotNil: [
+		clickClient perform: dragSelector with: event ].
+	WorldMorph cavroisDragBlock ifNotNil: [
+		WorldMorph cavroisDragBlock value: clickClient ]
 ]
 
 { #category : 'event handling' }

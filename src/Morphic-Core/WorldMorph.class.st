@@ -18,7 +18,10 @@ Class {
 		'LastScreenModeSelected'
 	],
 	#classInstVars : [
-		'displayScaleFactor'
+		'displayScaleFactor',
+		'cavroisDropBlock',
+		'cavroisDragBlock',
+		'cavroisResizeBlock'
 	],
 	#category : 'Morphic-Core-Worlds',
 	#package : 'Morphic-Core',
@@ -42,6 +45,42 @@ WorldMorph class >> allowDropFiles [
 { #category : 'accessing' }
 WorldMorph class >> allowDropFiles: anObject [
 	AllowDropFiles := anObject
+]
+
+{ #category : 'accessing' }
+WorldMorph class >> cavroisDragBlock [
+
+	^ cavroisDragBlock
+]
+
+{ #category : 'accessing' }
+WorldMorph class >> cavroisDragBlock: aBlock [
+
+	cavroisDragBlock := aBlock
+]
+
+{ #category : 'accessing' }
+WorldMorph class >> cavroisDropBlock [
+
+	^ cavroisDropBlock
+]
+
+{ #category : 'accessing' }
+WorldMorph class >> cavroisDropBlock: aBlock [
+
+	cavroisDropBlock := aBlock
+]
+
+{ #category : 'accessing' }
+WorldMorph class >> cavroisResizeBlock [
+
+	^ cavroisResizeBlock
+]
+
+{ #category : 'accessing' }
+WorldMorph class >> cavroisResizeBlock: aBlock [
+
+	cavroisResizeBlock := aBlock
 ]
 
 { #category : 'startup - shutdown' }
@@ -121,7 +160,11 @@ WorldMorph class >> fullscreen: aBoolean [
 
 { #category : 'class initialization' }
 WorldMorph class >> initialize [
-	ExtraWorldListMutex := Semaphore forMutualExclusion
+
+	ExtraWorldListMutex := Semaphore forMutualExclusion.
+	cavroisDropBlock := nil.
+	cavroisDragBlock := nil.
+	cavroisResizeBlock := nil
 ]
 
 { #category : 'settings' }

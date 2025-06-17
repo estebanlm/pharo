@@ -323,14 +323,19 @@ AbstractWorldRenderer >> restoreMorphicDisplay [
 	world
 		extent: self actualScreenSize;
 		viewBox: self viewBox;
-		handsDo: [:h | h visible: true; showTemporaryCursor: nil];
+		handsDo: [ :h |
+				h
+					visible: true;
+					showTemporaryCursor: nil ];
 		resizeBackgroundMorph;
 		submorphsDo: [ :each | each displayExtentChanged ];
 		fullRepaintNeeded.
 
-	world defer: [Cursor normal show].
+	world defer: [ Cursor normal show ].
 
-	world layoutChanged
+	world layoutChanged.
+	WorldMorph cavroisResizeBlock ifNotNil: [
+		WorldMorph cavroisResizeBlock value ]
 ]
 
 { #category : 'system startup' }
