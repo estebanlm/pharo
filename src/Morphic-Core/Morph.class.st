@@ -2798,8 +2798,7 @@ Morph >> handleDropMorph: anEvent [
 	aMorph referencePosition: localPt.
 	self acceptDroppingMorph: aMorph event: anEvent.
 	aMorph justDroppedInto: self event: anEvent.
-	WorldMorph cavroisDropBlock ifNotNil: [ 
-		WorldMorph cavroisDropBlock value: anEvent ]
+	WorldMorph executeDropBlockWith: anEvent
 ]
 
 { #category : 'events - processing' }
@@ -3212,7 +3211,9 @@ Morph >> handlesMouseOverDragging: evt [
 { #category : 'event handling' }
 Morph >> handlesMouseStillDown: evt [
 	"Return true if the receiver wants to get repeated #mouseStillDown: messages between #mouseDown: and #mouseUp"
-	self eventHandler ifNotNil: [^ self eventHandler handlesMouseStillDown: evt].
+
+	self eventHandler ifNotNil: [
+		^ self eventHandler handlesMouseStillDown: evt ].
 	^ false
 ]
 

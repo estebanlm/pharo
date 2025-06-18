@@ -334,8 +334,7 @@ AbstractWorldRenderer >> restoreMorphicDisplay [
 	world defer: [ Cursor normal show ].
 
 	world layoutChanged.
-	WorldMorph cavroisResizeBlock ifNotNil: [
-		WorldMorph cavroisResizeBlock value ]
+	WorldMorph executeResizeBlock
 ]
 
 { #category : 'system startup' }

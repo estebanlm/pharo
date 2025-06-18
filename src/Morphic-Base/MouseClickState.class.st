@@ -176,8 +176,7 @@ MouseClickState >> drag: event [
 
 	dragSelector ifNotNil: [
 		clickClient perform: dragSelector with: event ].
-	WorldMorph cavroisDragBlock ifNotNil: [
-		WorldMorph cavroisDragBlock value: clickClient ]
+	WorldMorph executeDragBlockWith: clickClient
 ]
 
 { #category : 'event handling' }
