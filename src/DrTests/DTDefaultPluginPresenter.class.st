@@ -402,11 +402,26 @@ DTDefaultPluginPresenter >> whenItemsSelectionChanged: itemsSelected [
 { #category : 'private' }
 DTDefaultPluginPresenter >> whenPackagesSelectionChanged: packagesSelected [
 
+	| allPaths getPaths |
 	itemsList
 		roots: ((plugin itemsToBeAnalysedFor: packagesSelected) sorted:
 					 #name ascending);
 		children: [ :aClass | aClass subclasses sorted: #name ascending ];
-		expandAll;
-		selectAll.
+		expandAll.
+	itemsList roots: itemsList items.
+	allPaths := OrderedCollection new.
+	getPaths := [ :items :currentPath |
+		                     items withIndexDo: [ :item :index |
+				                     | itemPath |
+				                     itemPath := currentPath , { index }.
+				                     allPaths add: itemPath.
+				                     item subclasses ifNotEmpty: [
+					                     getPaths
+						                     value: item subclasses
+						                     value: itemPath ] ] ].
+
+	getPaths value: itemsList items value: #(  ).
+	itemsList selectPaths: allPaths.
+	itemsList selectAll.
 	self updatePackagesListLabel
 ]

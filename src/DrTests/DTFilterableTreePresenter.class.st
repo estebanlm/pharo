@@ -219,6 +219,12 @@ DTFilterableTreePresenter >> selectItems: aBlock [
 	^ self treePresenter selectItems: aBlock
 ]
 
+{ #category : 'api - selection' }
+DTFilterableTreePresenter >> selectPaths: aPathArray [
+
+	self treePresenter selectPaths: aPathArray
+]
+
 { #category : 'accessing' }
 DTFilterableTreePresenter >> selectedItems [
 
