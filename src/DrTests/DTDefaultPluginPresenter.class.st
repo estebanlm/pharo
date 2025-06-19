@@ -142,22 +142,23 @@ DTDefaultPluginPresenter >> drTests [
 { #category : 'initialization' }
 DTDefaultPluginPresenter >> initializeItemsListAndLabel [
 
-	itemsList := self newFilterableListPresenter.
+	itemsList := self newFilterableTreePresenter.
 	itemsList
-		displayIcon: [ :aClass | self iconNamed: aClass systemIconName  ];
+		displayIcon: [ :aClass | self iconNamed: aClass systemIconName ];
 		displayColor: [ :aClass |
-			(self packagesSelected includes: aClass package)
-				ifTrue: [ self theme textColor ]
-				ifFalse: [ self theme classExtensionColor ] ];
-		help: 'Select the classes to analyze. Cmd+A or Ctrl+A to select all classes.';
-		sortingBlock: #name ascending;
+				(self packagesSelected includes: aClass package)
+					ifTrue: [ self theme textColor ]
+					ifFalse: [ self theme classExtensionColor ] ];
+		help:
+			'Select the classes to analyze. Cmd+A or Ctrl+A to select all classes.';
 		displayBlock: [ :item | item name ];
-		whenSelectionChangedDo: [ self whenItemsSelectionChanged: self selectedItems ];
+		whenSelectionChangedDo: [
+			self whenItemsSelectionChanged: self selectedItems ];
 		beMultipleSelection;
 		actions: (self rootCommandsGroup / 'List items menu') beRoot.
 
-	packagesList
-		whenSelectionChangedDo: [ self whenPackagesSelectionChanged: self packagesSelected ]
+	packagesList whenSelectionChangedDo: [
+		self whenPackagesSelectionChanged: self packagesSelected ]
 ]
 
 { #category : 'initialization' }
@@ -221,6 +222,12 @@ DTDefaultPluginPresenter >> itemsList [
 DTDefaultPluginPresenter >> newFilterableListPresenter [
 
 	^ self instantiate: DTFilterableListPresenter
+]
+
+{ #category : 'widgets' }
+DTDefaultPluginPresenter >> newFilterableTreePresenter [
+
+	^ self instantiate: DTFilterableTreePresenter
 ]
 
 { #category : 'accessing' }
@@ -396,7 +403,10 @@ DTDefaultPluginPresenter >> whenItemsSelectionChanged: itemsSelected [
 DTDefaultPluginPresenter >> whenPackagesSelectionChanged: packagesSelected [
 
 	itemsList
-		items: (plugin itemsToBeAnalysedFor: packagesSelected);
+		roots: ((plugin itemsToBeAnalysedFor: packagesSelected) sorted:
+					 #name ascending);
+		children: [ :aClass | aClass subclasses sorted: #name ascending ];
+		expandAll;
 		selectAll.
 	self updatePackagesListLabel
 ]
