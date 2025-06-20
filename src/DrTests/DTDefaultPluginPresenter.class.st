@@ -422,6 +422,5 @@ DTDefaultPluginPresenter >> whenPackagesSelectionChanged: packagesSelected [
 
 	getPaths value: itemsList items value: #(  ).
 	itemsList selectPaths: allPaths.
-	itemsList selectAll.
 	self updatePackagesListLabel
 ]
