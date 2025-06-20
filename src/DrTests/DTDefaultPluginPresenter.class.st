@@ -38,8 +38,12 @@ DTDefaultPluginPresenter class >> buildContextualPackageGroupWith: presenterInst
 DTDefaultPluginPresenter class >> buildItemsListGroupWith: presenterInstance [
 
 	^ (CmCommandGroup named: 'List items menu') asSpecGroup
-		register: (DTBrowseSelectedItemCommand forSpec context: presenterInstance);
-		yourself
+		  register:
+			  (DTInspectSelectedItemCommand forSpecContext: presenterInstance)
+				  beHiddenWhenCantBeRun;
+		  register:
+			  (DTBrowseSelectedItemCommand forSpec context: presenterInstance);
+		  yourself
 ]
 
 { #category : 'private - commands' }
@@ -59,21 +63,24 @@ DTDefaultPluginPresenter class >> buildPackageGroupWith: presenterInstance [
 
 { #category : 'private - commands' }
 DTDefaultPluginPresenter class >> buildResultGroupWith: presenterInstance [
-	| commandGroup pluginCommands plugin |
 
+	| commandGroup pluginCommands plugin |
 	commandGroup := (CmCommandGroup named: 'Results tools') asSpecGroup
-		description: 'Commands related to result.';
-		register: (DTResultBrowseCommand forSpecContext: presenterInstance) beHiddenWhenCantBeRun;
-		yourself.
+		                description: 'Commands related to result.';
+		                register:
+			                (DTResultBrowseCommand forSpecContext:
+					                 presenterInstance) beHiddenWhenCantBeRun;
+		                yourself.
 
 	plugin := presenterInstance plugin.
 	plugin ifNil: [ ^ commandGroup ].
 
-	pluginCommands := plugin buildContextualMenuGroupWith: presenterInstance.
+	pluginCommands := plugin buildContextualMenuGroupWith:
+		                  presenterInstance.
 	pluginCommands entries ifEmpty: [ ^ commandGroup ].
 	^ commandGroup
-		register: pluginCommands beDisplayedAsGroup;
-		yourself
+		  register: pluginCommands beDisplayedAsGroup;
+		  yourself
 ]
 
 { #category : 'actions' }
@@ -83,6 +90,12 @@ DTDefaultPluginPresenter >> browseSelectedItem [
 	"
 
 	self selectedItems first drTestsBrowse
+]
+
+{ #category : 'actions' }
+DTDefaultPluginPresenter >> browseSelectedPackage [
+
+	self selectedPackage browse
 ]
 
 { #category : 'actions' }
@@ -213,6 +226,18 @@ DTDefaultPluginPresenter >> initializeResultsTreeAndLabel [
 			(DTResultBrowseCommand forSpecContext: self) execute ]
 ]
 
+{ #category : 'actions' }
+DTDefaultPluginPresenter >> inspectSelectedItem [
+
+	self selectedItems first inspect
+]
+
+{ #category : 'actions' }
+DTDefaultPluginPresenter >> inspectSelectedPackage [
+
+	self selectedPackage inspect
+]
+
 { #category : 'accessing' }
 DTDefaultPluginPresenter >> itemsList [
 	^ itemsList
@@ -292,6 +317,12 @@ DTDefaultPluginPresenter >> selectNoneInPackageList [
 DTDefaultPluginPresenter >> selectedItems [
 
 	^ itemsList selectedItems
+]
+
+{ #category : 'accessing' }
+DTDefaultPluginPresenter >> selectedPackage [
+
+	^ packagesList selectedItem
 ]
 
 { #category : 'accessing' }
