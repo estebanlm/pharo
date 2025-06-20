@@ -31,9 +31,9 @@ StRefactoringAddClassPresenter >> defaultLayout [
 
 	^ SpGridLayout new
 		  add: 'New class name' atPoint: 1 @ 1;
-		  add: textInput at: 2 @ 1 span: 2 @ 1;
-		  add: 'Package' at: 1 @ 2;
-		  add: packagePresenter at: 2 @ 2 span: 2 @ 1;
+		  add: textInput atPoint: 2 @ 1 span: 2 @ 1;
+		  add: 'Package' atPoint: 1 @ 2;
+		  add: packagePresenter atPoint: 2 @ 2 span: 2 @ 1;
 		  add: 'Tag' at: 1 @ 3;
 		  add: tagPresenter at: 2 @ 3 span: 2 @ 1;
 		  add: 'Comment' at: 1 @ 4;
