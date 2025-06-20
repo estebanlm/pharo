@@ -210,7 +210,7 @@ DTFilterableTreePresenter >> roots: aBlock [
 { #category : 'actions' }
 DTFilterableTreePresenter >> selectAll [
 
-	^ self treePresenter selectItems: self treePresenter roots
+	^ self treePresenter selectAll
 ]
 
 { #category : 'accessing' }
