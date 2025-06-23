@@ -124,3 +124,13 @@ StItemsSelectionPresenter >> label: aString withItems: coll1 selecting: coll2 [
 StItemsSelectionPresenter >> selectedItems [
 	^ selectedItems
 ]
+
+{ #category : 'initialization' }
+StItemsSelectionPresenter >> title: aTitle label: aString withItems: coll1 selecting: coll2 [
+
+	titleHolder := aTitle.
+	label label: aString.
+	table
+		items: coll1;
+		selectItems: coll2
+]
