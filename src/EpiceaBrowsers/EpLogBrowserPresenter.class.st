@@ -20,8 +20,7 @@ Class {
 		'entryContentPresenter',
 		'itemsPresenter',
 		'toolbarPresenter',
-		'searchPresenter',
-		'searchButtonPresenter'
+		'searchPresenter'
 	],
 	#category : 'EpiceaBrowsers-UI-Log',
 	#package : 'EpiceaBrowsers',
