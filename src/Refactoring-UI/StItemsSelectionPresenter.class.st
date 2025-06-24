@@ -48,6 +48,18 @@ StItemsSelectionPresenter class >> label: aString withItems: items selecting: se
 		yourself 
 ]
 
+{ #category : 'specs' }
+StItemsSelectionPresenter class >> title: aTitle label: aString withItems: items selecting: selectedItems [
+
+	^ self new
+		  title: aTitle
+		  label: aString
+		  withItems: items
+		  selecting: selectedItems; 
+		  openBlockedDialog;
+		  yourself
+]
+
 { #category : 'actions' }
 StItemsSelectionPresenter >> accept [
 
