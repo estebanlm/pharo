@@ -133,7 +133,7 @@ RePullUpMethodDriver >> configureRefactoring [
 { #category : 'execution' }
 RePullUpMethodDriver >> defaultSelectDialog [
 
-	^ self application newSelectMultiple
+	^ self defaultSelectDialog 
 		  title: 'There are potential breaking changes!';
 		  label: self labelBasedOnBreakingChanges;
 		  items: self breakingChoices;
@@ -231,6 +231,7 @@ RePullUpMethodDriver >> selectMethodsAndClass [
 	classes := class allSuperclasses removeAllSuchThat: [ :each |
 		           each == Object or: [ each == ProtoObject ] ].
 	dialog := self methodsAndSuperclassSelectionPresenterClass
+		          title: 'There are potential breaking changes!'
 		          label: 'Methods to be pulled up'
 		          dropLabel: 'Pull up methods from ' , class name , ' to:'
 		          withItems:
@@ -239,8 +240,8 @@ RePullUpMethodDriver >> selectMethodsAndClass [
 		          selecting: methods asOrderedCollection
 		          dropItems: classes
 		          acceptBlock: [ :selectedClass :selectedMethods |
-			          superclass := selectedClass.
-			          methods := selectedMethods ].
+				          superclass := selectedClass.
+				          methods := selectedMethods ].
 
 	dialog cancelled ifFalse: [ ^ self ].
 	superclass := nil.
