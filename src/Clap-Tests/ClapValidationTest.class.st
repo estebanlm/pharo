@@ -29,7 +29,7 @@ ClapValidationTest >> testErrorReportingWhenMissingNestedPositional [
 ClapValidationTest >> testErrorReportingWhenNotMatched [
 
 	| match context validationReport errorString |
-	context := ClapCommandLineExamples hello activateWith: #('hello' 'world' '--helpe').
+	context := ClapHelloCommandLineExample hello activateWith: #('hello' 'world' '--helpe').
 	match := context match.
 	validationReport := context allValidations.
 

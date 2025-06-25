@@ -8,6 +8,15 @@ Class {
 	#package : 'Clap-Examples'
 }
 
+{ #category : 'accessing' }
+ClapGitAddCommandExample class >> specification [
+
+	^ (ClapCommandSpec id: 'add')
+			description: 'Add file contents to the index';
+			commandClass: self;
+			yourself
+]
+
 { #category : 'execution' }
 ClapGitAddCommandExample >> execute [
 

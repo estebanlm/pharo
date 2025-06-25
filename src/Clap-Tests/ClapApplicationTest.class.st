@@ -28,7 +28,7 @@ ClapApplicationTest >> stdoutString [
 ClapApplicationTest >> testCanGetFlags [
 
 	| command |
-	context := ClapCommandLineExamples hello activateWith: #('hello' 'world' '--shout' '--language' 'fr').
+	context := ClapHelloCommandLineExample hello activateWith: #('hello' 'world' '--shout' '--language' 'fr').
 	command := context command.
 
 	self 
@@ -39,7 +39,7 @@ ClapApplicationTest >> testCanGetFlags [
 { #category : 'tests' }
 ClapApplicationTest >> testCanPrintHelp [
 
-	context := ClapCommandLineExamples git activateWith: #().
+	context := ClapGitCommandExample git activateWith: #().
 	context command printHelp.
 	
 	self assertStdOutIncludes: 'Usage: git'.
@@ -49,7 +49,7 @@ ClapApplicationTest >> testCanPrintHelp [
 { #category : 'tests' }
 ClapApplicationTest >> testCanPrintHelpWhenSubcommand [
 
-	context := ClapCommandLineExamples git activateWith: #('git' 'add').
+	context := ClapGitCommandExample git activateWith: #('git' 'add').
 	context command printHelp.
 	
 	self assertStdOutIncludes: 'Usage: git add'.

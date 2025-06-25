@@ -32,7 +32,7 @@ ClapDocumentationTest >> testFlagWithPositionalShouldPrintBothFlagAndPositional 
 { #category : 'tests' }
 ClapDocumentationTest >> testHelloShortUsage [
 	| command doc lines |
-	command := ClapCommandLineExamples hello.
+	command := ClapHelloCommandLineExample hello.
 	
 	doc := ClapDocumenter stringFrom: [ :documenter | documenter explain: command ].
 	lines := doc lines.

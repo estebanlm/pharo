@@ -12,7 +12,7 @@ Class {
 { #category : 'tests' }
 ClapCommandTest >> testShouldArgumentsBeOkWhenMatched [
 	| command |
-	context := ClapCommandLineExamples hello activateWith: #('hello' 'world' '--help').
+	context := ClapHelloCommandLineExample hello activateWith: #('hello' 'world' '--help').
 	command := context command.
 	
 	self assertCollection: command commandSpecIdentifiers hasSameElements: #('hello').
@@ -23,7 +23,7 @@ ClapCommandTest >> testShouldArgumentsBeOkWhenMatched [
 { #category : 'tests' }
 ClapCommandTest >> testShouldGetCollectionWhenAskingForAMultiplePositional [
 	| command |
-	context := ClapContext specification: ClapCommandLineExamples hello.
+	context := ClapContext specification: ClapHelloCommandLineExample hello.
 	command := context
 		arguments: #('hello' 'foo' 'bar');
 		command.
@@ -37,7 +37,7 @@ ClapCommandTest >> testShouldGetCollectionWhenAskingForAMultiplePositional [
 { #category : 'tests' }
 ClapCommandTest >> testShouldGetCollectionWhenAskingForAMultiplePositionalWithOneValue [
 	| command |
-	context := ClapContext specification: ClapCommandLineExamples hello.
+	context := ClapContext specification: ClapHelloCommandLineExample hello.
 	command := context
 		arguments: #('hello' 'foo');
 		command.
@@ -51,7 +51,7 @@ ClapCommandTest >> testShouldGetCollectionWhenAskingForAMultiplePositionalWithOn
 { #category : 'tests' }
 ClapCommandTest >> testShouldGetDefaultValueWhenAskingForAMissingNestedPositionalWithDefaultValueSpecified [
 	| command |
-	context := ClapContext specification: ClapCommandLineExamples hello.
+	context := ClapContext specification: ClapHelloCommandLineExample hello.
 	command := context
 		arguments: #('hello');
 		command.
@@ -87,7 +87,7 @@ ClapCommandTest >> testShouldGetDefaultValueWhenAskingForAMissingNestedPositiona
 { #category : 'tests' }
 ClapCommandTest >> testShouldGetFlagPositionalValueWhenAskingForAFlagHavingPositional [
 	| command |
-	context := ClapContext specification: ClapCommandLineExamples hello.
+	context := ClapContext specification: ClapHelloCommandLineExample hello.
 	command := context
 		arguments: #('hello' '--language' 'fr');
 		command.
@@ -101,7 +101,7 @@ ClapCommandTest >> testShouldGetFlagPositionalValueWhenAskingForAFlagHavingPosit
 { #category : 'tests' }
 ClapCommandTest >> testShouldReturnFalseWhenAskingForAMissingFlag [
 	| command |
-	context := ClapContext specification: ClapCommandLineExamples hello.
+	context := ClapContext specification: ClapHelloCommandLineExample hello.
 	command := context
 		arguments: #('hello' 'world');
 		command.
@@ -112,7 +112,7 @@ ClapCommandTest >> testShouldReturnFalseWhenAskingForAMissingFlag [
 { #category : 'tests' }
 ClapCommandTest >> testShouldSubCommandsBeOkWhenMatched [
 	| command |
-	context := ClapContext specification: ClapCommandLineExamples git.
+	context := ClapContext specification: ClapGitCommandExample git.
 	command := context
 		arguments: #('git' 'status');
 		command.
@@ -126,7 +126,7 @@ ClapCommandTest >> testShouldSubCommandsBeOkWhenMatched [
 ClapCommandTest >> testShouldThrowNotFoundWhenAskingForAMissingPositional [
 	| spec command |
 	
-	spec := ClapCommandLineExamples hello.
+	spec := ClapHelloCommandLineExample hello.
 	spec addFlagWithPositional: #foo description: 'some foo'.
 	context := ClapContext specification: spec.
 	command := context
