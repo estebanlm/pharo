@@ -51,19 +51,16 @@ Context >> methodReturnConstant: value [
 
 { #category : '*Debugging-Core' }
 Context >> pcRangeContextIsActive: contextIsActive [
- 	"return the debug highlight for aPC"		 
-	| thePC |
+	"return the debug highlight for aPC"
 
-  	"make sure we have some usable value (can happen for contexts in the ProcessBrowser"		
- 	thePC := self isDead ifTrue: [self endPC] ifFalse: [pc].
-
-  	"When on the top of the stack the pc is pointing to right instruction, but deeper in the stack		
- 	the pc was already advanced one bytecode, so we need to go back this one bytecode, which		
- 	can consist of multiple bytes. But on IR, we record the *last* bytecode offset as the offset of		
- 	the IR instruction, which means we can just go back one"		
- 	thePC := contextIsActive ifTrue: [thePC] ifFalse: [thePC - 1].		
-
-  	^self method debugInfo rangeForPC: thePC
+	| pcToHighlight |
+	"If the context is suspended on a send, we want to highlight the send.
+	However, the context already executed the send, and the PC advanced to the next instruction.
+	Thus, we want the instruction previously executed!"
+	pcToHighlight := contextIsActive
+		                 ifTrue: [ self currentPC ]
+		                 ifFalse: [ self executedPC ].
+	^ self method debugInfo rangeForPC: pcToHighlight
 ]
 
 { #category : '*Debugging-Core' }
@@ -336,7 +333,11 @@ Context >> tempNames [
 	In addition, even vars that are accessed in this context could be stored
 	in a temp vector, which itself would be a copied temp that has no name..."
 	
-	^ (self method debugInfo variablesAt: self pc) collect: [ :e | e name ]
+	"Use #executedPC to return the temps available in the caller at the previous PC (the send of #tempNames).
+	Otherwise, the PC will be set just after the send to #tempNames.
+	And chances are that this will be a different lexical scope."
+	^ (self method debugInfo variablesAt: self executedPC)
+		collect: [ :e | e name ]
 ]
 
 { #category : '*Debugging-Core' }
@@ -348,7 +349,8 @@ Context >> temporaryVariableNamed: aName [
 
 { #category : '*Debugging-Core' }
 Context >> temporaryVariables [
-	^self sourceNode temporaries collect: [ :each | each binding ]
+
+	^ self method debugInfo variablesAt: self pc
 ]
 
 { #category : '*Debugging-Core' }
