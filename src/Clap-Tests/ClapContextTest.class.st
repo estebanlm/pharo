@@ -12,7 +12,7 @@ Class {
 { #category : 'running' }
 ClapContextTest >> setUp [
 	super setUp.
-	context := ClapContext specification: ClapCommandLineExamples hello
+	context := ClapContext specification: ClapHelloCommandLineExample hello
 ]
 
 { #category : 'tests' }
@@ -20,7 +20,7 @@ ClapContextTest >> testCanGetCommandInstanceRelatedToLastSubcommand [
 
 	| command |
 	
-	context := ClapContext specification: ClapCommandLineExamples git.
+	context := ClapContext specification: ClapGitCommandExample git.
 	command := context 
 		arguments: #( 'git' 'add');
 		match;
@@ -116,7 +116,7 @@ ClapContextTest >> testShouldValidationBeOkWhenMatched [
 	self assert: context isMatch.
 	self assert: context isValid.
 	self assert: context leftovers isEmpty.
-	self assert: result class equals: ClapCommandLineExamples.
+	self assert: result class equals: ClapHelloCommandLineExample.
 ]
 
 { #category : 'tests' }

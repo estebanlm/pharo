@@ -38,23 +38,8 @@ Class {
 
 { #category : 'predefined commands' }
 ClapCommandSpec class >> forHelp [
-	^ (self id: #helpCommand)
-		description: 'Prints command documentation';
-		canonicalName: 'help';
 
-		add: ((ClapPositional id: #topic)
-			description: 'The subcommand to document (defaults to the current one)';
-			meaning: [ :pos :cmd | cmd subcommandNamed: pos word ifNone: nil ];
-			implicitMeaning: [ :pos :cmd | cmd ]);
-
-		meaning: [ :match | | doc parent query topic |
-			doc := ClapDocumenter on: match context stdout.
-			parent := match parent specification.
-			query := match at: #topic.
-			topic := query value: parent.
-			topic
-				ifNil: [ match context exitFailure: 'Unknown subcommand: ' , query word ]
-				ifNotNil: [ doc explain: topic ] ]
+	^ ClapHelpCommand specification
 ]
 
 { #category : 'adding' }

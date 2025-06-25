@@ -322,7 +322,7 @@ ClapContext >> setStdio: anStdio [
 
 { #category : 'testing' }
 ClapContext >> shouldObeyExit [
-	^ obeyingExits and: [ Smalltalk isInteractive not ]
+	^ obeyingExits and: [ Smalltalk isInteractiveGraphic not ]
 ]
 
 { #category : 'streams' }
