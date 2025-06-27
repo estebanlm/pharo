@@ -260,6 +260,21 @@ Context >> stepToHome: aContext [
 ]
 
 { #category : '*Debugging-Core' }
+Context >> stepToSendOrReturn [
+	"Simulate the execution of bytecodes until either sending a message or 
+	returning a value to the receiver (that is, until switching contexts)."
+
+	| stream context |
+	stream := InstructionStream on: method pc: pc.	
+	[ self isDead or: [ stream willSend or: [ stream willReturn or: [ stream willStore or: [ stream willCreateBlock ] ] ] ] ]
+		whileFalse: [
+			context := stream interpretNextInstructionFor: self.
+			context == self ifFalse: [
+				"Caused by mustBeBoolean handling"
+				^context ]]
+]
+
+{ #category : '*Debugging-Core' }
 Context class >> tallyInstructions: aBlock [
 	"Count the occurrences of each bytecode during the execution of aBlock.
 	Return a Array of associations using the byte as key and the occurrences as values sorted by the instruction opcode numeric values.
