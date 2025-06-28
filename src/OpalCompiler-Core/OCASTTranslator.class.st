@@ -358,6 +358,9 @@ OCASTTranslator >> emitToDo: aMessageNode step: step [
 	block := aMessageNode arguments last.
 	iterator := block arguments first variable.
 
+	"The iterator variable name could collide with a method temp variable!"
+	self maybeRenameInlinedTemp: iterator.	
+
 	limitEmit := [self visitNode: limit].
 	"if the limit is not just a literal or a non-writable variable, make a temp store it there"
 	(limit isLiteralNode or: [limit isVariable and: [limit variable isWritable not]]) ifFalse: [
@@ -426,6 +429,13 @@ OCASTTranslator >> ir [
 	^ methodBuilder ir
 ]
 
+{ #category : 'visitor - double dispatching' }
+OCASTTranslator >> maybeRenameInlinedTemp: aVariable [
+
+	(methodBuilder currentScope tempKeys includes: aVariable name)
+		ifTrue: [ aVariable name: ('_' , aVariable name) asSymbol ]
+]
+
 { #category : 'inline messages' }
 OCASTTranslator >> nextUniqueInlineID [
 
@@ -436,6 +446,16 @@ OCASTTranslator >> nextUniqueInlineID [
 { #category : 'private' }
 OCASTTranslator >> privateMethodBuilder [
 	^ methodBuilder
+]
+
+{ #category : 'visitor - double dispatching' }
+OCASTTranslator >> renameInlinedTempsIn: temporaries [
+
+	(methodBuilder currentScope tempKeys intersection: temporaries) do: [:collisionTemp | | newName |
+		newName := ('_', collisionTemp) asSymbol.
+		temporaries replaceAll: collisionTemp with: newName.
+		"1haltOnce."
+		"(methodBuilder ir allInstructionsAccessingTemp: collisionTemp) do: [:inst | inst name: newName ]" ].
 ]
 
 { #category : 'private' }
@@ -593,17 +613,25 @@ OCASTTranslator >> visitInlinedBlockNode: anOptimizedBlockNode [
 			- we call IRBuilder to add temps
 	"
 
+	|  blockTempVariables blockArguments |
 	methodBuilder mapToNode: anOptimizedBlockNode.
 	anOptimizedBlockNode scope tempVector ifNotEmpty: [
 		methodBuilder
 			createTempVectorNamed: anOptimizedBlockNode scope tempVectorName
 			withVars: anOptimizedBlockNode scope tempVectorVarNames.
 	].
-	methodBuilder addTemps: anOptimizedBlockNode scope tempVarNamesWithoutArguments.
+
+	blockTempVariables := anOptimizedBlockNode scope tempVarNamesWithoutArguments. 
+	blockArguments :=	anOptimizedBlockNode argumentNames.
+		
+	self renameInlinedTempsIn: blockTempVariables.
+	self renameInlinedTempsIn: blockArguments.
+
 	methodBuilder addTemps: anOptimizedBlockNode scope inComingCopiedVarNames.
-	methodBuilder addTemps: anOptimizedBlockNode argumentNames.
+	methodBuilder addTemps: blockTempVariables.
+	methodBuilder addTemps: blockArguments.
 	anOptimizedBlockNode isInlinedLoop ifTrue: [
-		anOptimizedBlockNode scope tempVarNamesWithoutArguments do: [ :tempName |
+		blockTempVariables do: [ :tempName |
 			methodBuilder pushLiteral: nil.
 			methodBuilder storeTemp: tempName.
 			methodBuilder popTop.
