@@ -613,7 +613,7 @@ OCASTTranslator >> visitInlinedBlockNode: anOptimizedBlockNode [
 			- we call IRBuilder to add temps
 	"
 
-	|  blockTempVariables blockArguments |
+	|  blockTempVariables blockArguments copiedBody |
 	methodBuilder mapToNode: anOptimizedBlockNode.
 	anOptimizedBlockNode scope tempVector ifNotEmpty: [
 		methodBuilder
@@ -637,7 +637,15 @@ OCASTTranslator >> visitInlinedBlockNode: anOptimizedBlockNode [
 			methodBuilder popTop.
 		]].
 
-	self visitNode: anOptimizedBlockNode body.
+	copiedBody := anOptimizedBlockNode body copy.
+
+	copiedBody allChildren 
+		select: [ :node | node isTempVariable and: [ node name = 'a' ] ]
+		thenDo: [ :node | node name: '_a'].
+	(copiedBody scope lookupVar: 'a' asSymbol) ifNotNil: [ :var | var name: '_a' ] .
+
+
+	self visitNode: copiedBody.
 	methodBuilder popMap
 ]
 

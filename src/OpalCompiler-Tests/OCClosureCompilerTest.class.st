@@ -421,6 +421,50 @@ OCClosureCompilerTest >> testInlineBlockCollectionSD1 [
 ]
 
 { #category : 'tests' }
+OCClosureCompilerTest >> testInlineBlockShadowVariable1 [
+	| a |
+	a := 23.
+	1 to: 17 do: [ :i | | a | ].
+	self assert: a equals: 23 
+]
+
+{ #category : 'tests' }
+OCClosureCompilerTest >> testInlineBlockShadowVariable2 [
+	| a |
+	a := 23.
+	1 to: 17 do: [ :a | ].
+	self assert: a equals: 23 
+
+
+
+]
+
+{ #category : 'tests' }
+OCClosureCompilerTest >> testInlineBlockShadowVariable3 [
+	| a |
+	a := 23.
+	1 to: 17 do: [ :i | | a | 
+		a := 7 ].
+	self assert: a equals: 23 
+	
+
+]
+
+{ #category : 'tests' }
+OCClosureCompilerTest >> testInlineBlockShadowVariable4 [
+	| a |
+	a := 23.
+	1 to: 17 do: [ :i | | a | 
+		a := 7 ].
+	1 to: 17 do: [ :i | | a | 
+		self assert: a isNil ].
+	self assert: a equals: 23 
+	
+	
+
+]
+
+{ #category : 'tests' }
 OCClosureCompilerTest >> testOptimizedBlockLocalNilling1 [
 	"Whether a block is optimized or not a block-local temp
 	 should be nil at the start of each evaluation of the block."
