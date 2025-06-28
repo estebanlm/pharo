@@ -8,3 +8,9 @@ Class {
 	#package : 'Refactoring-DataForTesting',
 	#tag : 'StaticModel'
 }
+
+{ #category : 'asserting' }
+MyClassB >> shouldNotBeOverriddenByAdd [
+
+	^ 666
+]

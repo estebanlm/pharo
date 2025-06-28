@@ -14,6 +14,22 @@ RBAddMethodRefactoringTest >> setUp [
 ]
 
 { #category : 'failure tests' }
+RBAddMethodRefactoringTest >> testAddMethodOverrideInSubclassShouldWarn [
+
+	| rbNamespace refact |
+	rbNamespace := RBNamespace onEnvironment: (RBClassEnvironment classes:  {MyClassA . MyClassB. MyClassC2}).
+	rbClass := rbNamespace classNamed: #MyClassC2.
+	"The refactoring will override a method of the superclass and it should not."
+
+	refact := (RBAddMethodRefactoring
+				 model: rbNamespace
+				 sourceCode: 'shouldNotBeOverriddenByAdd ^1'
+				 in: rbClass
+				 withProtocol: #accessing).
+	self shouldWarn: refact. 
+]
+
+{ #category : 'failure tests' }
 RBAddMethodRefactoringTest >> testWarnModelExistingSelector [
 
 	self
