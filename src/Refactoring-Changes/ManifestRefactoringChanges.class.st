@@ -4,12 +4,11 @@ Please describe the package using the class comment of the included manifest cla
 Class {
 	#name : 'ManifestRefactoringChanges',
 	#superclass : 'PackageManifest',
-	#category : 'Refactoring-Changes-Manifest',
-	#package : 'Refactoring-Changes',
-	#tag : 'Manifest'
+	#category : 'Refactoring-Changes',
+	#package : 'Refactoring-Changes'
 }
 
 { #category : 'code-critics' }
 ManifestRefactoringChanges class >> ruleUtilityMethodsRuleV1FalsePositive [
-	^ #(#(#(#RGClassDefinition #(#RBRefactoryChangeFactory)) #'2021-10-08T23:52:53.51808+02:00') )
+	^ #(#(#(#RGClassDefinition #(#ReChangeFactory)) #'2021-10-08T23:52:53.51808+02:00') )
 ]
