@@ -1081,11 +1081,11 @@ String >> copyReplaceTokens: oldSubstring with: newSubstring [
 String >> copyUpToSubstring: aSubstring [
    "Answer a copy of the receiver up to the given substring"
 
-	"'abcdef' copyUpToSubstring: 'de' >>> 'abc'"
-	"'abcdef' copyUpToSubstring: 'f' >>> 'abcde'"
-	"'' copyUpToSubstring: 'abc' >>> ''"
-	"'abcdef' copyUpToSubstring: 'gh' >>> 'abcdef'"
-	"'abcdef' copyUpToSubstring: 'ab' >>> ''"
+	"('abcdef' copyUpToSubstring: 'de') >>> 'abc'"
+	"('abcdef' copyUpToSubstring: 'f') >>> 'abcde'"
+	"('' copyUpToSubstring: 'abc') >>> ''"
+	"('abcdef' copyUpToSubstring: 'gh') >>> 'abcdef'"
+	"('abcdef' copyUpToSubstring: 'ab') >>> ''"
 
 	| index |
 	aSubstring ifEmpty: [
