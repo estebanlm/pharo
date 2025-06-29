@@ -34,6 +34,12 @@ RBRenameClassChange >> changeClass [
 		  onSystemEnvironment classNamed: newName ]
 ]
 
+{ #category : 'accessing' }
+RBRenameClassChange >> changesToDisplayIn: aChangeBrowser [
+
+	^ { self }
+]
+
 { #category : 'private' }
 RBRenameClassChange >> executeNotifying: aBlock [
 
@@ -42,6 +48,9 @@ RBRenameClassChange >> executeNotifying: aBlock [
 	undos := changes collect: [ :each |
 		(each renameChangesForClass: oldName asSymbol to: newName asSymbol)
 			executeNotifying: aBlock ].
+	"Cleanup of undeclared registry because during the renaming process the old class was registered as 
+	undeclared, now that we updated all references we can safely remove undeclared entry."
+	self changeClass undeclaredRegistry removeKey: oldName asSymbol ifAbsent: [ ].
 	^ self copy
 		changes: undos reverse;
 		rename: newName to: oldName;
@@ -112,10 +121,4 @@ RBRenameClassChange >> textToDisplay [
 	^ String streamContents: [ :s |
          s << self printString ; cr.
          self changes do: [ :c | 	s << c textToDisplay; cr ]]
-]
-
-{ #category : 'accessing' }
-RBRenameClassChange >> whatToDisplayIn: aChangeBrowser [
-
-	^ { self }
 ]
