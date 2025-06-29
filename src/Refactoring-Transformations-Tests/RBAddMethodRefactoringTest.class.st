@@ -23,7 +23,7 @@ B >>shouldNotBeOverriddenByAdd ^ something
 
 
 	| rbNamespace refact |
-	rbNamespace := RBNamespace onEnvironment: (RBClassEnvironment classes:  {MyClassA . MyClassB. MyClassC2}).
+	rbNamespace := RBNamespace onEnvironment: (RBClassEnvironment classes:  {MyClassA . MyClassB2. MyClassC2}).
 	rbClass := rbNamespace classNamed: #MyClassC2.
 	"The refactoring will override a method of the superclass and it should not."
 
@@ -42,8 +42,8 @@ RBAddMethodRefactoringTest >> testAddMethodOverridenWithSuperCallShouldWarn [
      		C >> x ^ super x + 10 "
 		
 	| rbNamespace refact |
-	rbNamespace := RBNamespace onEnvironment: (RBClassEnvironment classes:  {MyClassA . MyClassB. MyClassC2}).
-	rbClass := rbNamespace classNamed: #MyClassB.
+	rbNamespace := RBNamespace onEnvironment: (RBClassEnvironment classes:  {MyClassA . MyClassB2. MyClassC2}).
+	rbClass := rbNamespace classNamed: #MyClassB2.
 	"The refactoring will override a method of the superclass and it should not."
 
 	refact := (RBAddMethodRefactoring

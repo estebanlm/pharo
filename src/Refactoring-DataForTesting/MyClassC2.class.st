@@ -1,6 +1,6 @@
 Class {
 	#name : 'MyClassC2',
-	#superclass : 'MyClassB',
+	#superclass : 'MyClassB2',
 	#category : 'Refactoring-DataForTesting-StaticModel',
 	#package : 'Refactoring-DataForTesting',
 	#tag : 'StaticModel'
