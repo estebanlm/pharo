@@ -2951,9 +2951,9 @@ String >> withoutPeriodSuffix [
 String >> withoutPrefix: prefix [
 	"Remove the given prefix, if present."
 
-	"'UMLClass' withoutPrefix: 'UML' >>> 'Class'"
+	"('UMLClass' withoutPrefix: 'UML') >>> 'Class'"
 
-	"'UMLClass' withoutPrefix: 'ML' >>> 'UMLClass'"
+	"('UMLClass' withoutPrefix: 'ML') >>> 'UMLClass'"
 
 	^ (self beginsWith: prefix)
 		  ifTrue: [ self copyFrom: 1 + prefix size to: self size ]
@@ -2980,9 +2980,9 @@ String >> withoutQuoting [
 String >> withoutSuffix: suffix [
 	"Remove the given suffix, if present."
 
-	"'UMLClass' withoutSuffix: 'Class' >>> 'UML'"
+	"('UMLClass' withoutSuffix: 'Class') >>> 'UML'"
 
-	"'UMLClass' withoutSuffix: 'Cass' >>> 'UMLClass'"
+	"('UMLClass' withoutSuffix: 'Cass') >>> 'UMLClass'"
 
 	^ (self endsWith: suffix)
 		  ifTrue: [ self copyFrom: 1 to: self size - suffix size ]
