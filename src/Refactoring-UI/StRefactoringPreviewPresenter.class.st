@@ -183,7 +183,7 @@ StRefactoringPreviewPresenter >> performChanges [
 	It should be moved to the driver or the refactoring itself because the driver is a model of interaction.
 	May be this should be in the refactoring."
 
-	[ RBRefactoryChangeManager instance
+	[ ReChangeManager instance
 			performChanges: selectedChanges ]
 		asJob
 		title: 'Refactoring';
