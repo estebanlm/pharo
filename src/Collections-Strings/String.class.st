@@ -2727,10 +2727,10 @@ String >> trimmed [
 	"'' trimmed >>> ''"
 
 	self
-		deprecated: 'Use trimBoth instead of current one'
+		deprecated: 'Use trimBoth instead'
 		on: '28 June 2025'
-		in:
-		'Pharo-14.0.0+SNAPSHOT.build.65.sha.0f5e6f044b9def90db65333a1de70d8d1108318e (64 Bit)'.
+		in: 'pharo14'
+		transformWith: '`@receiver trimmed' -> '`@receiver trimBoth'.
 
 	^ self trimBoth
 ]
