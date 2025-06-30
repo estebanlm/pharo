@@ -46,7 +46,6 @@ CoTransitiveDependencyPackageScopedGlobalVariableFetcher >> entriesDo: aBlock [
 	dependentClassNames := dependentPackages inject: OrderedCollection new into: [ :acc :pkgName |
 		| pkg |
 		pkg := organizer packageNamed: pkgName ifAbsent: [ nil ].
-		self flag: #todo. "why this test"
 		pkg isNil ifFalse: [
 			acc addAll: (pkg definedClasses collect: [ :each | each name ])
 		].
