@@ -7,6 +7,27 @@ Class {
 }
 
 { #category : 'running' }
+CoGlobalVariableFetcherAdditionalTest >> setUp [
+
+	super setUp.
+	systemNavigation := CoMockSystemNavigation new
+		globals: {'Ab' . 'B' . 'AIGlobal' . 'AIa' };
+		yourself.
+
+	fetcher := CoGlobalVariableFetcher new.
+	
+	fetcher systemNavigation: systemNavigation.
+	fetcher filter: (CoBeginsWithFilter caseSensitive: false filterString: 'AI').
+
+	completionClass := CoMockClass new name: 'CoInP1'. 
+	
+	expectedElements := {
+		NECGlobalEntry contents: 'AIGlobal' node: nil .
+		NECGlobalEntry contents: 'AIa' node: nil.
+		  }
+]
+
+{ #category : 'running' }
 CoGlobalVariableFetcherAdditionalTest >> testCaseSensitive [ 
 
 	"Tests that a case-sensitive filter 'AI' does not return e.g. 'aiGlobal'"
