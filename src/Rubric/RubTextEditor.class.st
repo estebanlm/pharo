@@ -1787,7 +1787,7 @@ RubTextEditor >> offerFontMenu: aKeyboardEvent [
 	^ true
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'cursor' }
 RubTextEditor >> offsetToVisualColumn: line ofColumn: columnIndex [
 
 	^ (line first to: line first + columnIndex - 1)
@@ -2777,7 +2777,7 @@ RubTextEditor >> visibleHeight [
 	^textArea owner bounds height
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'cursor' }
 RubTextEditor >> visualCharacterSize: aCharacter atOffset: anOffset [ 
 	
 	| tabSize |
@@ -2788,7 +2788,7 @@ RubTextEditor >> visualCharacterSize: aCharacter atOffset: anOffset [
 	^ tabSize - (anOffset rem: tabSize)
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'cursor' }
 RubTextEditor >> visualToOffsetColumn: line ofColumn: columnIndex [
 
 	| visualIndex offset |

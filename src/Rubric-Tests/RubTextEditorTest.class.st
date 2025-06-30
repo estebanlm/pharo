@@ -210,9 +210,9 @@ RubTextEditorTest >> setUp [
 
 { #category : 'running' }
 RubTextEditorTest >> tearDown [ 
-
-	super tearDown. 
-	EFFormatter numberOfSpacesInIndent: indentSpaces 
+ 
+	EFFormatter numberOfSpacesInIndent: indentSpaces.
+	super tearDown.
 ]
 
 { #category : 'tests' }
