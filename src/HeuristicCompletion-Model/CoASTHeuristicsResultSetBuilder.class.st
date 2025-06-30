@@ -77,11 +77,13 @@ CoASTHeuristicsResultSetBuilder >> symbolsHeuristic: aHeuristics [
 
 { #category : 'heuristics' }
 CoASTHeuristicsResultSetBuilder >> variablesHeuristic [
+
 	^ variablesHeuristic ifNil: [ variablesHeuristic := self newHeuristicBuilder
 		add: CoLocalScopeVariablesHeuristic new;
 		add: CoWorkspaceVariablesHeuristic new;
 		add: CoInstanceAccessibleVariablesHeuristic new;
-		add: CoGlobalVariablesHeuristic new;
+		add: (CoGlobalVariablesHeuristic new globalVariableFetcherClass:
+					CoDependencyPackageScopedGlobalVariableFetcher);
 		build ]
 ]
 
