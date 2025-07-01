@@ -66,20 +66,6 @@ RBRemoveSenderRefactoring class >> remove: anInterval inMethod: aSelector forCla
 		forClass: aClass
 ]
 
-{ #category : 'preconditions' }
-RBRemoveSenderRefactoring >> applicabilityPreconditions [
-
-	^ {
-		  (RBCondition definesSelector: sourceSelector in: class).
-		  (RBCondition withBlock: [
-			   "self parseInlineMethod."
-			   (sourceMessage parent isReturn or: [
-				    self hasMultipleReturns not ]) ifFalse: [
-				   self refactoringError:
-					   'Cannot inline method since it contains multiple returns that cannot be rewritten' ].
-			   true ]) }
-]
-
 { #category : 'transforming' }
 RBRemoveSenderRefactoring >> checkSelectedMessage [
 
