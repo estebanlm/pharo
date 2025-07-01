@@ -70,9 +70,6 @@ RBRemoveSenderRefactoring class >> remove: anInterval inMethod: aSelector forCla
 RBRemoveSenderRefactoring >> applicabilityPreconditions [
 
 	^ {
-		  (RBCondition withBlock: [
-			   class ifNil: [ self refactoringError: 'Invalid class name' ].
-			   true ]).
 		  (RBCondition definesSelector: sourceSelector in: class).
 		  (RBCondition withBlock: [
 			   "self parseInlineMethod."

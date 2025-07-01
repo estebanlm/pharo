@@ -117,6 +117,7 @@ RBInlineMethodRefactoring >> checkOverridden: aBoolean [
 { #category : 'preconditions' }
 RBInlineMethodRefactoring >> checkSelectedMessage [
 
+	class ifNil: [ self refactoringError: 'Class could not be found.' ].
 	sourceParseTree := class parseTreeForSelector: sourceSelector.
 	sourceParseTree ifNil: [
 		self refactoringError: 'Could not parse sources' ].
