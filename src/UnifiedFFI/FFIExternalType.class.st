@@ -79,6 +79,12 @@ would have an FFI declaration...
 	^ ByteArray new: self externalTypeSize
 ]
 
+{ #category : 'instance creation' }
+FFIExternalType class >> newValueHolder [
+
+	^ FFIValueHolder newType: self
+]
+
 { #category : 'accessing' }
 FFIExternalType class >> pointerAlignment [
 	^ OSPlatform current ffiPointerAlignment
