@@ -75,9 +75,7 @@ RBRemoveSenderRefactoring >> applicabilityPreconditions [
 			   true ]).
 		  (RBCondition definesSelector: sourceSelector in: class).
 		  (RBCondition withBlock: [
-			   self checkSelectedMessage.
 			   "self parseInlineMethod."
-			   self rewriteInlinedTree.
 			   (sourceMessage parent isReturn or: [
 				    self hasMultipleReturns not ]) ifFalse: [
 				   self refactoringError:
@@ -119,7 +117,8 @@ RBRemoveSenderRefactoring >> preconditions [
 { #category : 'initialization' }
 RBRemoveSenderRefactoring >> prepareForExecution [
 
-	self checkSelectedMessage
+	self checkSelectedMessage.
+	self rewriteInlinedTree.
 ]
 
 { #category : 'transforming' }

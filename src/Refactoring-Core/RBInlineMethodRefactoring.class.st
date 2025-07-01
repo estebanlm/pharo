@@ -82,10 +82,7 @@ RBInlineMethodRefactoring >> applicabilityPreconditions [
 	^ {
 		  (RBCondition definesSelector: sourceSelector in: class).
 		  (RBCondition withBlock: [
-			   inlineParseTree isPrimitive ifTrue: [
-				   self refactoringError: 'Cannot inline primitives' ].
 			   self checkSuperMessages.
-			   self rewriteInlinedTree.
 			   (sourceMessage parent isReturn or: [
 				    self hasMultipleReturns not ]) ifFalse: [
 				   self refactoringError:
@@ -339,7 +336,9 @@ RBInlineMethodRefactoring >> parseInlineMethod [
 	inlineParseTree := self classOfTheMethodToInline parseTreeForSelector: self inlineSelector.
 	inlineParseTree ifNil: [ self refactoringError: 'Could not parse sources' ].
 	inlineParseTree lastIsReturn
-		ifFalse: [ inlineParseTree addSelfReturn ]
+		ifFalse: [ inlineParseTree addSelfReturn ].
+   inlineParseTree isPrimitive ifTrue: [
+	   self refactoringError: 'Cannot inline primitives' ].
 ]
 
 { #category : 'preconditions' }
@@ -352,7 +351,8 @@ RBInlineMethodRefactoring >> preconditions [
 RBInlineMethodRefactoring >> prepareForExecution [
 
 	self checkSelectedMessage.
-	self parseInlineMethod
+	self parseInlineMethod.
+	self rewriteInlinedTree.
 ]
 
 { #category : 'transforming' }
