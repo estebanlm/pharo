@@ -82,7 +82,6 @@ RBInlineMethodRefactoring >> applicabilityPreconditions [
 	^ {
 		  (RBCondition definesSelector: sourceSelector in: class).
 		  (RBCondition withBlock: [
-			   self checkSuperMessages.
 			   (sourceMessage parent isReturn or: [
 				    self hasMultipleReturns not ]) ifFalse: [
 				   self refactoringError:
@@ -101,7 +100,11 @@ RBInlineMethodRefactoring >> breakingChangePreconditions [
 					    , String cr , 'You can break you hooks with this inline.'
 						    expandMacrosWith: self classOfTheMethodToInline
 						    with: self inlineSelector) ] ].
-		   true ]) }
+		   true ]) .
+		(RBCondition withBlock: [
+		   self checkSuperMessages.
+		   true ])
+	}
 ]
 
 { #category : 'accessing' }
@@ -145,7 +148,7 @@ RBInlineMethodRefactoring >> checkSuperMessages [
 		(self classOfTheMethodToInline superclass
 			 whichClassIncludesSelector: each)
 		= (class superclass whichClassIncludesSelector: each) ifFalse: [
-			self refactoringError:
+			self refactoringWarning:
 				('Cannot inline method since it sends a super message <1s> that is overriden'
 					 expandMacrosWith: each) ] ]
 ]
