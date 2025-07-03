@@ -458,6 +458,47 @@ OCASTTranslator >> renameInlinedTempsIn: temporaries [
 		"(methodBuilder ir allInstructionsAccessingTemp: collisionTemp) do: [:inst | inst name: newName ]" ].
 ]
 
+{ #category : 'visitor - double dispatching' }
+OCASTTranslator >> replaceVariables: temporaries using: replacements [
+
+	replacements keysAndValuesDo: [ :oldName :newName |
+		temporaries replaceAll: oldName with: newName ]
+]
+
+{ #category : 'visitor - double dispatching' }
+OCASTTranslator >> replaceVariablesInBlock: anOptimizedBlockNode using: replacements [
+
+	| copiedBody |
+	copiedBody := anOptimizedBlockNode body copy.
+
+	replacements keysAndValuesDo: [ :k :v |
+			copiedBody allChildren
+				select: [ :node |
+				node isTempVariable and: [ node name = k asString ] ]
+				thenDo: [ :node | node name: v asString ].
+			(copiedBody scope lookupVar: k asSymbol) ifNotNil: [ :var |
+				var name: v asString ] ].
+
+	^ copiedBody
+]
+
+{ #category : 'visitor - double dispatching' }
+OCASTTranslator >> replacementsForInlinedShadowVariables: anOptimizedBlockNode [
+
+	| blockTempVariables blockArguments temporaries |
+	blockTempVariables := anOptimizedBlockNode scope
+		                      tempVarNamesWithoutArguments.
+	blockArguments := anOptimizedBlockNode argumentNames.
+	temporaries := blockTempVariables , blockArguments.
+
+	^ (methodBuilder currentScope tempKeys intersection: temporaries)
+		  collect: [ :collisionTemp |
+				  | newName |
+				  newName := ('_' , collisionTemp) asSymbol.
+				  collisionTemp -> newName ]
+			as: Dictionary 
+]
+
 { #category : 'private' }
 OCASTTranslator >> subTranslator [
 	"Return a new translator that can be used on blocks"
@@ -613,7 +654,7 @@ OCASTTranslator >> visitInlinedBlockNode: anOptimizedBlockNode [
 			- we call IRBuilder to add temps
 	"
 
-	|  blockTempVariables blockArguments copiedBody |
+	|  blockTempVariables blockArguments copiedBody replacements |
 	methodBuilder mapToNode: anOptimizedBlockNode.
 	anOptimizedBlockNode scope tempVector ifNotEmpty: [
 		methodBuilder
@@ -621,11 +662,13 @@ OCASTTranslator >> visitInlinedBlockNode: anOptimizedBlockNode [
 			withVars: anOptimizedBlockNode scope tempVectorVarNames.
 	].
 
+	replacements := self replacementsForInlinedShadowVariables: anOptimizedBlockNode.
+
 	blockTempVariables := anOptimizedBlockNode scope tempVarNamesWithoutArguments. 
 	blockArguments :=	anOptimizedBlockNode argumentNames.
-		
-	self renameInlinedTempsIn: blockTempVariables.
-	self renameInlinedTempsIn: blockArguments.
+	
+	self replaceVariables: blockTempVariables using: replacements.
+	self replaceVariables: blockArguments using: replacements.
 
 	methodBuilder addTemps: anOptimizedBlockNode scope inComingCopiedVarNames.
 	methodBuilder addTemps: blockTempVariables.
@@ -637,13 +680,7 @@ OCASTTranslator >> visitInlinedBlockNode: anOptimizedBlockNode [
 			methodBuilder popTop.
 		]].
 
-	copiedBody := anOptimizedBlockNode body copy.
-
-	copiedBody allChildren 
-		select: [ :node | node isTempVariable and: [ node name = 'a' ] ]
-		thenDo: [ :node | node name: '_a'].
-	(copiedBody scope lookupVar: 'a' asSymbol) ifNotNil: [ :var | var name: '_a' ] .
-
+	copiedBody := self replaceVariablesInBlock: anOptimizedBlockNode using: replacements.
 
 	self visitNode: copiedBody.
 	methodBuilder popMap
