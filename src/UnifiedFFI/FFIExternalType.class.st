@@ -82,7 +82,7 @@ would have an FFI declaration...
 { #category : 'instance creation' }
 FFIExternalType class >> newValueHolder [
 
-	^ FFIValueHolder newType: self
+	^ FFIValueHolder newType: self new
 ]
 
 { #category : 'accessing' }
