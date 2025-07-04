@@ -421,7 +421,39 @@ OCClosureCompilerTest >> testInlineBlockCollectionSD1 [
 ]
 
 { #category : 'tests' }
-OCClosureCompilerTest >> testInlineBlockShadowVariable1 [
+OCClosureCompilerTest >> testInlineBlockShadowVariableAssignedInside [
+	| a |
+	a := 23.
+	1 to: 17 do: [ :i | | a | 
+		a := 7 ].
+	self assert: a equals: 23 
+	
+
+]
+
+{ #category : 'tests' }
+OCClosureCompilerTest >> testInlineBlockShadowVariableInnerBlocks [
+
+	| n |
+	n := 1.
+	n > 0 ifTrue: [ | n |
+		n := 2.
+		n > 0 ifTrue: [ | n |
+			n := 3. ].
+		self assert: n equals: 2 ].
+	self assert: n equals: 1
+]
+
+{ #category : 'tests' }
+OCClosureCompilerTest >> testInlineBlockShadowVariableParameter [
+	| a |
+	a := 23.
+	1 to: 17 do: [ :a | ].
+	self assert: a equals: 23 
+]
+
+{ #category : 'tests' }
+OCClosureCompilerTest >> testInlineBlockShadowVariableTemporary [
 	| a |
 	a := 23.
 	1 to: 17 do: [ :i | | a | ].
@@ -429,37 +461,35 @@ OCClosureCompilerTest >> testInlineBlockShadowVariable1 [
 ]
 
 { #category : 'tests' }
-OCClosureCompilerTest >> testInlineBlockShadowVariable2 [
-	| a |
-	a := 23.
-	1 to: 17 do: [ :a | ].
-	self assert: a equals: 23 
+OCClosureCompilerTest >> testInlineBlockShadowVariableTwoBlocksParameter [
 
-
-
+	| first second |
+	1 ifNotNil: [ :n | first := n ].
+	2 ifNotNil: [ :n | second := n ].
+	self assert: first equals: 1.
+	self assert: second equals: 2 
 ]
 
 { #category : 'tests' }
-OCClosureCompilerTest >> testInlineBlockShadowVariable3 [
+OCClosureCompilerTest >> testInlineBlockShadowVariableTwoBlocksTemporary [
 	| a |
 	a := 23.
-	1 to: 17 do: [ :i | | a | 
-		a := 7 ].
-	self assert: a equals: 23 
-	
-
-]
-
-{ #category : 'tests' }
-OCClosureCompilerTest >> testInlineBlockShadowVariable4 [
-	| a |
-	a := 23.
-	1 to: 17 do: [ :i | | a | 
-		a := 7 ].
 	1 to: 17 do: [ :i | | a | 
 		self assert: a isNil ].
+	1 to: 17 do: [ :i | | a | 
+		a := 7.
+		self assert: a equals: 7 ].
 	self assert: a equals: 23 
-	
+]
+
+{ #category : 'tests' }
+OCClosureCompilerTest >> testInlineBlockShadowVariableUsedInside [
+	| a result |
+	a := 23.
+	1 to: 17 do: [ :i | | a | 
+		result := a ].
+	self assert: a equals: 23.
+	self assert: result isNil
 	
 
 ]
