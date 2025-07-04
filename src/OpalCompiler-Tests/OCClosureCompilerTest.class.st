@@ -375,7 +375,7 @@ OCClosureCompilerTest >> testInlineBlockCollectionEM1 [
 OCClosureCompilerTest >> testInlineBlockCollectionLR1 [
 	"Test case from Lukas Renggli"
 
-	| col |
+	| col | 
 	col := OrderedCollection new.
 	1 to: 11 do: [ :each | col add: [ each ] ].
 	self assert: (col collect: [ :each | each value ]) asArray equals: (1 to: 11) asArray
@@ -437,9 +437,9 @@ OCClosureCompilerTest >> testInlineBlockShadowVariableInnerBlocks [
 	| n |
 	n := 1.
 	n > 0 ifTrue: [ | n |
-		n := 2.
+		n := 2. 
 		n > 0 ifTrue: [ | n |
-			n := 3. ].
+			n := 3. ]. 
 		self assert: n equals: 2 ].
 	self assert: n equals: 1
 ]

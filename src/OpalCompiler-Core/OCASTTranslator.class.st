@@ -436,6 +436,13 @@ OCASTTranslator >> maybeRenameInlinedTemp: aVariable [
 		ifTrue: [ aVariable name: ('_' , aVariable name) asSymbol ]
 ]
 
+{ #category : 'visitor - double dispatching' }
+OCASTTranslator >> maybeRenameInlinedTemp: aVariable from: aBlockNode [
+
+	(methodBuilder currentScope tempKeys includes: aVariable name)
+		ifTrue: [ aVariable name: (aBlockNode identityHash asString, '_' , aVariable name) asSymbol ]
+]
+
 { #category : 'inline messages' }
 OCASTTranslator >> nextUniqueInlineID [
 
@@ -446,16 +453,6 @@ OCASTTranslator >> nextUniqueInlineID [
 { #category : 'private' }
 OCASTTranslator >> privateMethodBuilder [
 	^ methodBuilder
-]
-
-{ #category : 'visitor - double dispatching' }
-OCASTTranslator >> renameInlinedTempsIn: temporaries [
-
-	(methodBuilder currentScope tempKeys intersection: temporaries) do: [:collisionTemp | | newName |
-		newName := ('_', collisionTemp) asSymbol.
-		temporaries replaceAll: collisionTemp with: newName.
-		"1haltOnce."
-		"(methodBuilder ir allInstructionsAccessingTemp: collisionTemp) do: [:inst | inst name: newName ]" ].
 ]
 
 { #category : 'visitor - double dispatching' }
@@ -494,7 +491,7 @@ OCASTTranslator >> replacementsForInlinedShadowVariables: anOptimizedBlockNode [
 	^ (methodBuilder currentScope tempKeys intersection: temporaries)
 		  collect: [ :collisionTemp |
 				  | newName |
-				  newName := ('_' , collisionTemp) asSymbol.
+				  newName := (anOptimizedBlockNode identityHash asString, '_' , collisionTemp) asSymbol.
 				  collisionTemp -> newName ]
 			as: Dictionary 
 ]
@@ -721,6 +718,14 @@ OCASTTranslator >> visitMessageNode: aMessageNode [
 
 	aMessageNode isInlined ifTrue: [
 		methodBuilder addLiteral: aMessageNode selector. "so searching for senders will work"
+	
+		aMessageNode arguments 
+			select: [ :arg | arg isBlock and: [ arg arguments isNotEmpty ] ]
+			thenDo: [ :blockWithArgument |
+				blockWithArgument arguments do: [ :blockArg | 
+					self maybeRenameInlinedTemp: blockArg variable from: blockWithArgument ]				
+				 ].
+		
 		^self
 			perform: (OptimizedMessages at: aMessageNode selector)
 			with: aMessageNode].
