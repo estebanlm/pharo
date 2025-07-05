@@ -4,8 +4,9 @@ Please describe the package using the class comment of the included manifest cla
 Class {
 	#name : 'ManifestRefactoringChanges',
 	#superclass : 'PackageManifest',
-	#category : 'Refactoring-Changes',
-	#package : 'Refactoring-Changes'
+	#category : 'Refactoring-Changes-Manifest',
+	#package : 'Refactoring-Changes',
+	#tag : 'Manifest'
 }
 
 { #category : 'code-critics' }
