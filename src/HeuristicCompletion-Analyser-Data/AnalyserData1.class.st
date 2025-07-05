@@ -11,6 +11,12 @@ Class {
 	#package : 'HeuristicCompletion-Analyser-Data'
 }
 
+{ #category : 'as yet unclassified' }
+AnalyserData1 >> accessingAnalyserData1SharedPool [
+
+	^ AnalyserData1SharedPool
+]
+
 { #category : 'accessing' }
 AnalyserData1 >> foo [  
 
