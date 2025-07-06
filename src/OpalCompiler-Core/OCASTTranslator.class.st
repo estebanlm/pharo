@@ -466,15 +466,20 @@ OCASTTranslator >> replaceVariables: temporaries using: replacements [
 OCASTTranslator >> replaceVariablesInBlock: anOptimizedBlockNode using: replacements [
 
 	| copiedBody |
+	replacements ifEmpty: [ 
+		"Avoid crazy stuff with the AST"
+		^ anOptimizedBlockNode body ].
+	
+	"Leave the original AST as the original code"
 	copiedBody := anOptimizedBlockNode body copy.
-
 	replacements keysAndValuesDo: [ :k :v |
 			copiedBody allChildren
 				select: [ :node |
 				node isTempVariable and: [ node name = k asString ] ]
 				thenDo: [ :node | node name: v asString ].
 			(copiedBody scope lookupVar: k asSymbol) ifNotNil: [ :var |
-				var name: v asString ] ].
+				var name: v asString.
+				var originalVar name: v asString ] ].
 
 	^ copiedBody
 ]

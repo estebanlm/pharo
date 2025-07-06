@@ -424,11 +424,9 @@ OCClosureCompilerTest >> testInlineBlockCollectionSD1 [
 OCClosureCompilerTest >> testInlineBlockShadowVariableAssignedInside [
 	| a |
 	a := 23.
-	1 to: 17 do: [ :i | | a | 
+	1 to: 17 do: [ :i | | a |
 		a := 7 ].
-	self assert: a equals: 23 
-	
-
+	self assert: a equals: 23
 ]
 
 { #category : 'tests' }
@@ -483,7 +481,7 @@ OCClosureCompilerTest >> testInlineBlockShadowVariableTwoBlocksTemporary [
 ]
 
 { #category : 'tests' }
-OCClosureCompilerTest >> testInlineBlockShadowVariableUsedInside [
+OCClosureCompilerTest >> testInlineBlockShadowVariableUsedInBlock [
 	| a result |
 	a := 23.
 	1 to: 17 do: [ :i | | a | 
@@ -492,6 +490,16 @@ OCClosureCompilerTest >> testInlineBlockShadowVariableUsedInside [
 	self assert: result isNil
 	
 
+]
+
+{ #category : 'tests' }
+OCClosureCompilerTest >> testInlineBlockShadowVariableUsedInInnerBlock [
+	| a result |
+	a := 23.
+	1 to: 17 do: [ :i | | a | 
+		[result := a] value ].
+	self assert: a equals: 23.
+	self assert: result isNil  
 ]
 
 { #category : 'tests' }
