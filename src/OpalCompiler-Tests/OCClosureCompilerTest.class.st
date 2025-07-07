@@ -434,9 +434,9 @@ OCClosureCompilerTest >> testInlineBlockShadowVariableInnerBlocks [
 
 	| n |
 	n := 1.
-	n > 0 ifTrue: [ | n |
+	n > 0 ifTrue: [ | n | 
 		n := 2. 
-		n > 0 ifTrue: [ | n |
+		n > 0 ifTrue: [ | n | 
 			n := 3. ]. 
 		self assert: n equals: 2 ].
 	self assert: n equals: 1
@@ -448,6 +448,16 @@ OCClosureCompilerTest >> testInlineBlockShadowVariableParameter [
 	a := 23.
 	1 to: 17 do: [ :a | ].
 	self assert: a equals: 23 
+]
+
+{ #category : 'tests' }
+OCClosureCompilerTest >> testInlineBlockShadowVariableParameterUsedInInnerBlock [
+	| a result |
+	a := 23.
+	1 to: 17 do: [ :i |
+		[result := i] value ].
+	self assert: a equals: 23.
+	self assert: result equals: 17  
 ]
 
 { #category : 'tests' }
@@ -499,7 +509,21 @@ OCClosureCompilerTest >> testInlineBlockShadowVariableUsedInInnerBlock [
 	1 to: 17 do: [ :i | | a | 
 		[result := a] value ].
 	self assert: a equals: 23.
-	self assert: result isNil  
+	self assert: result isNil 
+]
+
+{ #category : 'tests' }
+OCClosureCompilerTest >> testInlineBlockShadowVariableUsedInInnerInnerBlock [
+
+	| a result |
+	a := 23.
+	1 to: 7 do: [ :a |
+		7 to: 17 do: [ :j | 
+			a.
+			[ result := a ] value ] ].
+
+	self assert: a equals: 23.
+	self assert: result equals: 7
 ]
 
 { #category : 'tests' }
