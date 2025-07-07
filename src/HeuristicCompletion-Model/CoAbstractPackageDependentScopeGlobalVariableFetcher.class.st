@@ -7,9 +7,6 @@ Class {
 	#classVars : [
 		'Dependencies'
 	],
-	#classInstVars : [
-		'dependencies'
-	],
 	#category : 'HeuristicCompletion-Model-Fetchers',
 	#package : 'HeuristicCompletion-Model',
 	#tag : 'Fetchers'
