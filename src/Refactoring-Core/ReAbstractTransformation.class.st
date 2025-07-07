@@ -371,7 +371,7 @@ ReAbstractTransformation >> performChanges [
 ReAbstractTransformation >> performChanges: aCompositeChange [
 	"Perform the changes contained in a composite change"
 	
-	RBRefactoryChangeManager instance
+	ReChangeManager instance
 		performCompositeChange: aCompositeChange
 ]
 
