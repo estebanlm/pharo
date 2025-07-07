@@ -12,24 +12,30 @@ Class {
 }
 
 { #category : 'accessing' }
+AnalyserData1 >> accessingAnalyserData1SharedPool [
+
+	^ AnalyserData1SharedPool
+]
+
+{ #category : 'accessing' }
 AnalyserData1 >> foo [  
 
 	^ AnalyserA 
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 AnalyserData1 >> referToAnalyzer1 [
 
 	^ AnalyserData1 foo
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 AnalyserData1 >> sharedCaller [
 
 	^ Ans foo
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 AnalyserData1 >> sharedPoolCaller [
 
 	^ Ansp1 foo

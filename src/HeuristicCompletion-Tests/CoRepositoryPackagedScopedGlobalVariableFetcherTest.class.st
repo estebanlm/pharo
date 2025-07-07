@@ -24,7 +24,7 @@ Class {
 	#tag : 'Core'
 }
 
-{ #category : 'one local one global' }
+{ #category : 'running' }
 CoRepositoryPackagedScopedGlobalVariableFetcherTest >> setUp [
 	" we have
 		2 packages 
