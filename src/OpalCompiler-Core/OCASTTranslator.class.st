@@ -436,13 +436,6 @@ OCASTTranslator >> maybeRenameInlinedTemp: aVariable [
 		ifTrue: [ aVariable name: ('_' , aVariable name) asSymbol ]
 ]
 
-{ #category : 'visitor - double dispatching' }
-OCASTTranslator >> maybeRenameInlinedTemp: aVariable from: aBlockNode [
-
-	(methodBuilder currentScope tempKeys includes: aVariable name)
-		ifTrue: [ aVariable name: (aBlockNode identityHash asString, '_' , aVariable name) asSymbol ]
-]
-
 { #category : 'inline messages' }
 OCASTTranslator >> nextUniqueInlineID [
 
@@ -450,9 +443,38 @@ OCASTTranslator >> nextUniqueInlineID [
 	^ '0', nextUniqueInlineID asString asSymbol
 ]
 
+{ #category : 'visitor - double dispatching' }
+OCASTTranslator >> prepareForInlining: aMessageNode [
+
+	| currentTemps |
+	"so searching for senders will work"
+	methodBuilder addLiteral: aMessageNode selector.
+
+	"avoid argument shadowing after inline"
+	currentTemps := methodBuilder currentScope tempKeys asOrderedCollection.
+	aMessageNode arguments
+		select: [ :arg | arg isBlock ]
+		thenDo: [ :blockNode |
+				blockNode arguments do: [ :arg |
+						(currentTemps includes: arg name) ifTrue: [
+							self renameInlinedTemp: arg variable from: blockNode ] ].
+				blockNode scope localTempNames traceCr.
+				currentTemps addAll: blockNode scope localTempNames ]
+
+
+	"Move all transformations for renaming variables here?"
+]
+
 { #category : 'private' }
 OCASTTranslator >> privateMethodBuilder [
 	^ methodBuilder
+]
+
+{ #category : 'visitor - double dispatching' }
+OCASTTranslator >> renameInlinedTemp: aVariable from: aBlockNode [
+
+	aVariable name:
+		(aBlockNode identityHash asString , '_' , aVariable name) asSymbol
 ]
 
 { #category : 'visitor - double dispatching' }
@@ -657,12 +679,14 @@ OCASTTranslator >> visitInlinedBlockNode: anOptimizedBlockNode [
 	"
 
 	|  blockTempVariables blockArguments copiedBody replacements |
+
 	methodBuilder mapToNode: anOptimizedBlockNode.
 	anOptimizedBlockNode scope tempVector ifNotEmpty: [
 		methodBuilder
 			createTempVectorNamed: anOptimizedBlockNode scope tempVectorName
 			withVars: anOptimizedBlockNode scope tempVectorVarNames.
 	].
+
 
 	replacements := self replacementsForInlinedShadowVariables: anOptimizedBlockNode.
 
@@ -722,18 +746,11 @@ OCASTTranslator >> visitMessageNode: aMessageNode [
 		^ aMessageNode receiver emitValue: methodBuilder ].
 
 	aMessageNode isInlined ifTrue: [
-		methodBuilder addLiteral: aMessageNode selector. "so searching for senders will work"
-	
-		aMessageNode arguments 
-			select: [ :arg | arg isBlock and: [ arg arguments isNotEmpty ] ]
-			thenDo: [ :blockWithArgument |
-				blockWithArgument arguments do: [ :blockArg | 
-					self maybeRenameInlinedTemp: blockArg variable from: blockWithArgument ]				
-				 ].
-		
+		self prepareForInlining: aMessageNode.
 		^self
 			perform: (OptimizedMessages at: aMessageNode selector)
 			with: aMessageNode].
+		
 	^ self emitMessageNode: aMessageNode
 ]
 

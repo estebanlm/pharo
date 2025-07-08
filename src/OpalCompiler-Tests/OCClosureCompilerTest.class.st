@@ -435,7 +435,7 @@ OCClosureCompilerTest >> testInlineBlockShadowVariableInnerBlocks [
 	| n |
 	n := 1.
 	n > 0 ifTrue: [ | n | 
-		n := 2. 
+		n := 2.
 		n > 0 ifTrue: [ | n | 
 			n := 3. ]. 
 		self assert: n equals: 2 ].
@@ -447,7 +447,15 @@ OCClosureCompilerTest >> testInlineBlockShadowVariableParameter [
 	| a |
 	a := 23.
 	1 to: 17 do: [ :a | ].
-	self assert: a equals: 23 
+	self assert: a equals: 23
+]
+
+{ #category : 'tests' }
+OCClosureCompilerTest >> testInlineBlockShadowVariableParameterAndVariable [
+
+	| result |
+	result := 1 ifNil: [ | res | ] ifNotNil: [ :res | res ].
+	self assert: result equals: 1 
 ]
 
 { #category : 'tests' }
