@@ -1,14 +1,14 @@
-Extension { #name : 'SHRBTextStyler' }
+Extension { #name : 'SHTextStyler' }
 
 { #category : '*PharoDocComment' }
-SHRBTextStyler >> styleDocComment: aComment [
+SHTextStyler >> styleDocComment: aComment [
 	aComment pharoDocCommentNodes
 		do: [ :pharoDocComment |
 			self styleDocExpression: pharoDocComment expression in: aComment. ]
 ]
 
 { #category : '*PharoDocComment' }
-SHRBTextStyler >> styleDocExpression: aPharoDocExpression in: aComment [
+SHTextStyler >> styleDocExpression: aPharoDocExpression in: aComment [
 
 	| expressionText expressionNode off |
 	expressionNode := aPharoDocExpression expressionNode.
@@ -29,7 +29,7 @@ SHRBTextStyler >> styleDocExpression: aPharoDocExpression in: aComment [
 ]
 
 { #category : '*PharoDocComment' }
-SHRBTextStyler >> visitMethodComments: aNode [
+SHTextStyler >> visitMethodComments: aNode [
 
 	PharoDocCommentNode docCommentEnabled ifTrue: [ aNode comments do: [ :comment | self styleDocComment: comment ] ]
 ]
