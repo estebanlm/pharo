@@ -426,6 +426,12 @@ OCASTTranslator >> ir [
 	^ methodBuilder ir
 ]
 
+{ #category : 'visitor - double dispatching' }
+OCASTTranslator >> newNameForInlinedVariable: aVariableName from: aBlockNode [
+
+	^ (aVariableName , '_' , aBlockNode identityHash asString) asSymbol
+]
+
 { #category : 'inline messages' }
 OCASTTranslator >> nextUniqueInlineID [
 
@@ -462,8 +468,7 @@ OCASTTranslator >> privateMethodBuilder [
 { #category : 'visitor - double dispatching' }
 OCASTTranslator >> renameInlinedTemp: aVariable from: aBlockNode [
 
-	aVariable name:
-		(aBlockNode identityHash asString , '_' , aVariable name) asSymbol
+	aVariable name: (self newNameForInlinedVariable: aVariable name from: aBlockNode)
 ]
 
 { #category : 'visitor - double dispatching' }
@@ -507,7 +512,7 @@ OCASTTranslator >> replacementsForInlinedShadowVariables: anOptimizedBlockNode [
 	^ (methodBuilder currentScope tempKeys intersection: temporaries)
 		  collect: [ :collisionTemp |
 				  | newName |
-				  newName := (anOptimizedBlockNode identityHash asString, '_' , collisionTemp) asSymbol.
+				  newName := self newNameForInlinedVariable: collisionTemp from: anOptimizedBlockNode.
 				  collisionTemp -> newName ]
 			as: Dictionary 
 ]
