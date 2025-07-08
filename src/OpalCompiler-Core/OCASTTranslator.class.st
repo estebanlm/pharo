@@ -358,9 +358,6 @@ OCASTTranslator >> emitToDo: aMessageNode step: step [
 	block := aMessageNode arguments last.
 	iterator := block arguments first variable.
 
-	"The iterator variable name could collide with a method temp variable!"
-	self maybeRenameInlinedTemp: iterator.	
-
 	limitEmit := [self visitNode: limit].
 	"if the limit is not just a literal or a non-writable variable, make a temp store it there"
 	(limit isLiteralNode or: [limit isVariable and: [limit variable isWritable not]]) ifFalse: [
@@ -427,13 +424,6 @@ OCASTTranslator >> initialize [
 OCASTTranslator >> ir [
 
 	^ methodBuilder ir
-]
-
-{ #category : 'visitor - double dispatching' }
-OCASTTranslator >> maybeRenameInlinedTemp: aVariable [
-
-	(methodBuilder currentScope tempKeys includes: aVariable name)
-		ifTrue: [ aVariable name: ('_' , aVariable name) asSymbol ]
 ]
 
 { #category : 'inline messages' }
