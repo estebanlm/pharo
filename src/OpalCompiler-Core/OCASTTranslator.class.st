@@ -458,7 +458,6 @@ OCASTTranslator >> prepareForInlining: aMessageNode [
 				blockNode arguments do: [ :arg |
 						(currentTemps includes: arg name) ifTrue: [
 							self renameInlinedTemp: arg variable from: blockNode ] ].
-				blockNode scope localTempNames traceCr.
 				currentTemps addAll: blockNode scope localTempNames ]
 
 
