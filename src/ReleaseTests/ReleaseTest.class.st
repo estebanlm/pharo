@@ -391,7 +391,8 @@ ReleaseTest >> testNoShadowedVariablesInMethods [
 	"No other exceptions beside the ones mentioned here should be allowed"
 	validExceptions := {
 		RBSmalllintTestObject>>#tempVarOverridesInstVar.
-		ReTempVarOverridesInstVarRuleTest>>#sampleMethod:}.
+		ReTempVarOverridesInstVarRuleTest>>#sampleMethod:},
+		OCClosureCompilerTest methods.
 
 	remaining := found asOrderedCollection
 								removeAll: validExceptions;
