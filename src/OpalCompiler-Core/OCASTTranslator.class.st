@@ -443,10 +443,11 @@ OCASTTranslator >> nextUniqueInlineID [
 OCASTTranslator >> prepareForInlining: aMessageNode [
 
 	| currentTemps |
-	"so searching for senders will work"
+	"Searching for senders will work"
 	methodBuilder addLiteral: aMessageNode selector.
 
-	"avoid argument shadowing after inline"
+	"Rename shadowing arguments before inline"
+	"Temp vars are renamed in OCASTTranslator >> visitInlinedBlockNode:"
 	currentTemps := methodBuilder currentScope tempKeys asOrderedCollection.
 	aMessageNode arguments
 		select: [ :arg | arg isBlock ]
@@ -455,9 +456,6 @@ OCASTTranslator >> prepareForInlining: aMessageNode [
 						(currentTemps includes: arg name) ifTrue: [
 							self renameInlinedTemp: arg variable from: blockNode ] ].
 				currentTemps addAll: blockNode scope localTempNames ]
-
-
-	"Move all transformations for renaming variables here?"
 ]
 
 { #category : 'private' }
