@@ -60,17 +60,9 @@ CompiledMethod >> sourceNode [
 ]
 
 { #category : '*OpalCompiler-Core' }
-CompiledMethod >> sourceNodeForPC: aPC [
-
-	| sourceNode |
-	sourceNode := self sourceNode.
-
-	self
-		propertyAt: self bcToASTCacheKey asSymbol
-		ifPresent: [ :bcToASTCache | 
-			^ bcToASTCache nodeForPC: aPC ].
-
-	^ sourceNode sourceNodeForPC: aPC
+CompiledMethod >> temporaryVariableNamed: aName [
+	(self hasTemporaryVariableNamed: aName) ifFalse: [ ^nil ].
+	^self sourceNode scope lookupVar: aName
 ]
 
 { #category : '*OpalCompiler-Core' }

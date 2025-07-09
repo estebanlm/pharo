@@ -350,7 +350,10 @@ Context >> temporaryVariableNamed: aName [
 { #category : '*Debugging-Core' }
 Context >> temporaryVariables [
 
-	^ self method debugInfo variablesAt: self pc
+	"If this context did not yet execute, consider the initial PC"
+	| suspendedPC |
+	suspendedPC := self executedPC max: self method initialPC.
+	^ self method debugInfo variablesAt: suspendedPC
 ]
 
 { #category : '*Debugging-Core' }

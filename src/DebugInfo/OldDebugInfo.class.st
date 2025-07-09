@@ -127,19 +127,10 @@ OldDebugInfo >> isSourceStore: aBytecodePC [
 { #category : 'testing' }
 OldDebugInfo >> privateSourceNodeForPC: aBytecodePC [
 
-	| sourceNode key |
-	code isCompiledBlock
-		ifTrue: [
-			sourceNode := code outerCode sourceNodeForPC: code pcInOuter.
-			key := code bcToASTCacheKey asSymbol ]
-		ifFalse: [
-			sourceNode := code sourceNode.
-			key := #bcToASTCache ].
-
-	code method
-		propertyAt: key
-		ifPresent: [ :bcToASTCache | ^ bcToASTCache nodeForPC: aBytecodePC ].
-	^ sourceNode bcToASTCache nodeForPC: aBytecodePC
+	| sourceNode bytecodeToASTCache |
+	sourceNode := code sourceNode.
+	bytecodeToASTCache := OCBytecodeToASTCache generateForNode: sourceNode.
+	^ bytecodeToASTCache nodeForPC: aBytecodePC
 ]
 
 { #category : 'accessing' }

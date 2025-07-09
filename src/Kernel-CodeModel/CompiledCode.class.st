@@ -995,6 +995,25 @@ CompiledCode >> sourceCode [
 	^ self subclassResponsibility
 ]
 
+{ #category : 'accessing' }
+CompiledCode >> sourceNode [
+	^ self subclassResponsibility
+]
+
+{ #category : 'accessing' }
+CompiledCode >> sourceNodeForPC: aPC [
+
+	| sourceNode |
+	sourceNode := self sourceNode.
+
+	self method
+		propertyAt: self bcToASTCacheKey asSymbol
+		ifPresent: [ :bcToASTCache |
+			^ bcToASTCache nodeForPC: aPC ].
+
+	^ sourceNode sourceNodeForPC: aPC
+]
+
 { #category : 'source code management' }
 CompiledCode >> sourcePointer [
 	^ self subclassResponsibility

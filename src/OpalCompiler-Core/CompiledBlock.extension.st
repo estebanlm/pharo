@@ -34,20 +34,6 @@ CompiledBlock >> sourceNode [
 ]
 
 { #category : '*OpalCompiler-Core' }
-CompiledBlock >> sourceNodeForPC: aPC [
-
-	| sourceNode |
-	sourceNode := self sourceNode.
-
-	self method
-		propertyAt: self bcToASTCacheKey asSymbol
-		ifPresent: [ :bcToASTCache |
-			^ bcToASTCache nodeForPC: aPC ].
-
-	^ sourceNode sourceNodeForPC: aPC
-]
-
-{ #category : '*OpalCompiler-Core' }
 CompiledBlock >> sourceNodeInOuter [
 	^ self outerCode sourceNodeForPC: self pcInOuter
 ]
