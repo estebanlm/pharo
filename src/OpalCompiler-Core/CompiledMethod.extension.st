@@ -1,6 +1,12 @@
 Extension { #name : 'CompiledMethod' }
 
 { #category : '*OpalCompiler-Core' }
+CompiledMethod >> bcToASTCacheKey [
+
+	^ #bcToASTCache
+]
+
+{ #category : '*OpalCompiler-Core' }
 CompiledMethod >> decompile [
 	^Smalltalk globals
 		at: #FBDDecompiler
@@ -59,8 +65,11 @@ CompiledMethod >> sourceNodeForPC: aPC [
 	| sourceNode |
 	sourceNode := self sourceNode.
 
-	self propertyAt: #bcToASTCache ifPresent: [ :bcToASTCache |
-		^ bcToASTCache nodeForPC: aPC ].
+	self
+		propertyAt: self bcToASTCacheKey asSymbol
+		ifPresent: [ :bcToASTCache | 
+			^ bcToASTCache nodeForPC: aPC ].
+
 	^ sourceNode sourceNodeForPC: aPC
 ]
 

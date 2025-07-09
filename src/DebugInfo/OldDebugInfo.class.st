@@ -139,7 +139,7 @@ OldDebugInfo >> privateSourceNodeForPC: aBytecodePC [
 	code method
 		propertyAt: key
 		ifPresent: [ :bcToASTCache | ^ bcToASTCache nodeForPC: aBytecodePC ].
-	^ sourceNode sourceNodeForPC: aBytecodePC
+	^ sourceNode bcToASTCache nodeForPC: aBytecodePC
 ]
 
 { #category : 'accessing' }
