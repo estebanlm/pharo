@@ -84,6 +84,7 @@ CoASTHeuristicsResultSetBuilder >> variablesHeuristic [
 		add: CoInstanceAccessibleVariablesHeuristic new;
 		add: (CoGlobalVariablesHeuristic new globalVariableFetcherClass:
 					CoDependencyPackageScopedGlobalVariableFetcher);
+			add: CoGlobalVariablesHeuristic new;
 		build ]
 ]
 
