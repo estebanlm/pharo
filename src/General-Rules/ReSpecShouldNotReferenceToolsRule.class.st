@@ -4,9 +4,9 @@ This rule warn the user if ```Smalltalk Tools``` is referenced in a Spec subclas
 Class {
 	#name : 'ReSpecShouldNotReferenceToolsRule',
 	#superclass : 'ReNodeBasedRule',
-	#category : 'Renraku-Rules',
-	#package : 'Renraku',
-	#tag : 'Rules'
+	#category : 'General-Rules-Optimization',
+	#package : 'General-Rules',
+	#tag : 'Optimization'
 }
 
 { #category : 'accessing' }
@@ -39,10 +39,10 @@ ReSpecShouldNotReferenceToolsRule >> isToolReference: aMessageNode [
 				toolClass name = aMessageNode receiver name ifTrue: [ ^ true ] ] ].
 
 	(aMessageNode receiver isMessage and: [
-			 aMessageNode receiver selector = #tools and: [
+			 aMessageNode receiver selector = #tools and: [ 
 					 aMessageNode receiver receiver isVariable and: [
 						 aMessageNode receiver receiver name = #Smalltalk ] ] ])
 		ifTrue: [ ^ true ].
 
-	^ false 
+	^ false
 ]
