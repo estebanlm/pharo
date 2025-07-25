@@ -143,8 +143,11 @@ OCAbstractMethodScope >> localTemps [
 OCAbstractMethodScope >> lookupDefiningContextForVariable: var startingFrom: aContext [
 	"Is this the definition context for var? If it not, we look in the outer context using the corresponding outer scope. If found, we return the context"
 
+	| nextContext |
+	nextContext := self nextOuterScopeContextOf: aContext.
+	nextContext ifNil: [ self error: var name, ' optimized out' ].
 	^self = var scope
-		ifFalse: [ self outerScope lookupDefiningContextForVariable: var startingFrom: (self nextOuterScopeContextOf: aContext) ]
+		ifFalse: [ self outerScope lookupDefiningContextForVariable: var startingFrom: nextContext ]
 		ifTrue: [ aContext ]
 ]
 
