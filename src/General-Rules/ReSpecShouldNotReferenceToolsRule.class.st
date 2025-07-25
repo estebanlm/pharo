@@ -1,5 +1,5 @@
 "
-This rule warn the user if ```Smalltalk Tools``` is referenced in a Spec subclass, which should not indeed.
+This rule warn the user if `Smalltalk tools` is referenced in a Spec subclass. Presenters should access the tools via the application doing `self application tools` instead.
 "
 Class {
 	#name : 'ReSpecShouldNotReferenceToolsRule',
@@ -26,7 +26,7 @@ ReSpecShouldNotReferenceToolsRule >> basicCheck: aNode [
 
 	| class |
 	aNode isMessage ifFalse: [ ^ false ].
-	class := aNode methodNode compiledMethod methodClass. 
+	class := aNode methodNode methodClass.
 	(class inheritsFrom: StPresenter) ifFalse: [ ^ false ].
 	^ self isToolReference: aNode
 ]
@@ -38,11 +38,8 @@ ReSpecShouldNotReferenceToolsRule >> isToolReference: aMessageNode [
 			Smalltalk tools tools valuesDo: [ :toolClass |
 				toolClass name = aMessageNode receiver name ifTrue: [ ^ true ] ] ].
 
-	(aMessageNode receiver isMessage and: [
-			 aMessageNode receiver selector = #tools and: [ 
-					 aMessageNode receiver receiver isVariable and: [
-						 aMessageNode receiver receiver name = #Smalltalk ] ] ])
-		ifTrue: [ ^ true ].
+	(aMessageNode receiver isVariable and: [
+		 aMessageNode receiver name = 'Smalltalk' ]) ifFalse: [ ^ false ].
 
-	^ false
+	^ aMessageNode keywords = #( 'tools' )
 ]

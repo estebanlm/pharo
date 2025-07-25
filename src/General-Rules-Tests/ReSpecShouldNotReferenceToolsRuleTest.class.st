@@ -25,16 +25,18 @@ ReSpecShouldNotReferenceToolsRuleTest >> tearDown [
 
 { #category : 'tests' }
 ReSpecShouldNotReferenceToolsRuleTest >> testRule [
- 
+
 	| class |
-	class := classFactory make: [ :builder | builder slots: { } ].
+	class := classFactory make: [ :builder |
+		         builder superclass: StPresenter ].
+
 	class
-		superclass: StPresenter;
 		compile: 'method ^ Smalltalk tools inspector'
 		classified: 'initialization'.
+
 	self
 		assert: (self myCritiquesOnMethod: class >> #method) size
-		equals: 1 
+		equals: 1
 ]
 
 { #category : 'tests' }
