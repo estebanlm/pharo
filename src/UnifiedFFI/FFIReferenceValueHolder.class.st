@@ -9,12 +9,6 @@ Class {
 	#tag : 'Objects'
 }
 
-{ #category : 'converting' }
-FFIReferenceValueHolder >> tfPointerAddress [
-
-	^ self getHandle tfPointerAddress
-]
-
 { #category : 'accessing' }
 FFIReferenceValueHolder >> value: anOpaqueObject [
 
