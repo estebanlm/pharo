@@ -9,7 +9,7 @@ Class {
 	#tag : 'Objects'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'instance creation' }
 FFIReferenceValueHolder >> arrayOfSize: aNumber [ 
 	| first |
 
