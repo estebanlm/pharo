@@ -6,10 +6,28 @@ Class {
 }
 
 { #category : 'accessing' }
+FFIValueHolderTest >> ffiMethodCharPointerPointer: value [
+
+	^ self 
+		ffiCall: #(int TestCharPointerPointerValueHolder(char **value))
+		module: 'to-test'
+		options: #(+optCallbackCall)
+]
+
+{ #category : 'accessing' }
 FFIValueHolderTest >> ffiMethodInt: value [
 
 	^ self 
 		ffiCall: #(int TestIntValueHolder(int *value))
+		module: 'to-test'
+		options: #(+optCallbackCall)
+]
+
+{ #category : 'accessing' }
+FFIValueHolderTest >> ffiMethodIntPointer: value [
+
+	^ self 
+		ffiCall: #(int TestIntPointerValueHolder(int *value))
 		module: 'to-test'
 		options: #(+optCallbackCall)
 ]
@@ -72,6 +90,65 @@ FFIValueHolderTest >> testCallBasicValueWithValueHolder [
 	self assert: result equals: 1.
 	resultValue := holder value.
 	self assert: resultValue equals: 42
+]
+
+{ #category : 'tests' }
+FFIValueHolderTest >> testCallCharPointerPointerWithValueHolder [
+	| holder result string |
+	
+	holder :=  FFIOop newValueHolder.
+	
+	FFICallbackFunctionResolution 
+		registerCallback: (FFICallback 
+			signature: #(int (char **aValue)) 
+			block: [ :aValue |
+				| externalString |
+				externalString := ExternalAddress fromString: 'Hello, World'.
+				aValue pointerAt: 1 put: externalString.
+				1 ])
+		as: #TestCharPointerPointerValueHolder.
+
+	result := self ffiMethodCharPointerPointer: holder.
+	
+	self assert: result equals: 1.
+	string := holder value.
+	self 
+		assert: string utf8StringFromCString
+		equals: 'Hello, World'.
+	string free
+]
+
+{ #category : 'tests' }
+FFIValueHolderTest >> testCallIntPointerWithValueHolder [
+	| holder result resultIntegers |
+	
+	"since I will keep a list of integers (and not just one integer), 
+	 I will need a pointer holder (otherwise the buffer will have a wrong size)"
+	holder :=  FFIOop newValueHolder.
+
+	FFICallbackFunctionResolution 
+		registerCallback: (FFICallback 
+			signature: #(int (int *aValue)) 
+			block: [ :aValue |
+				| integers |
+				integers := ExternalAddress allocate: FFIInt32 externalTypeSize * 5.
+				integers signedLongAt: 1 put: 1.
+				integers signedLongAt: 5 put: 2.
+				integers signedLongAt: 9 put: 3.
+				integers signedLongAt: 13 put: 4.
+				integers signedLongAt: 17 put: 42.
+				aValue pointerAt: 1 put: integers.
+				1 ])
+		as: #TestIntPointerValueHolder.
+
+	result := self ffiMethodIntPointer: holder.
+
+	self assert: result equals: 1.
+	resultIntegers := holder arrayOf: #int size: 5.
+	self 
+		assert: resultIntegers
+		equals: #(1 2 3 4 42).
+	holder value free
 ]
 
 { #category : 'tests' }

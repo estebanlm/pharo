@@ -74,6 +74,26 @@ FFIValueHolder class >> newType: aTypeClass handle: aHandle [
 	yourself
 ]
 
+{ #category : 'private' }
+FFIValueHolder >> adoptAddress: anExternalAddress [
+
+	handle := anExternalAddress getHandle
+]
+
+{ #category : 'accessing' }
+FFIValueHolder >> arrayOf: aTypeOrClass size: aNumber [ 
+	| first arrayType |
+	
+	arrayType := FFIExternalType resolveType: aTypeOrClass.
+	first := self getHandle pointerAt: 1.
+	^ Array streamContents: [ :stream |
+		0 to: aNumber - 1 do: [ :index |
+			| next value |
+			next := first + (index * arrayType externalTypeSize).
+			value := arrayType handle: next at: 1.
+			stream nextPut: value ] ]
+]
+
 { #category : 'accessing' }
 FFIValueHolder >> getHandle [
 	"for compatibility"
@@ -95,6 +115,13 @@ FFIValueHolder >> initializeType: aType handle: aHandle [
 	self initialize
 ]
 
+{ #category : 'converting' }
+FFIValueHolder >> packToArity: aNumber [
+	"holders do not packarity"
+
+	^ self
+]
+
 { #category : 'private' }
 FFIValueHolder >> pointer [
 	"used for boxing/unboxing the typed pointers e.g. int* with take a pointer"
@@ -102,10 +129,23 @@ FFIValueHolder >> pointer [
 	^ self getHandle
 ]
 
+{ #category : 'converting' }
+FFIValueHolder >> tfPointerAddress [
+
+	^ self getHandle tfPointerAddress
+]
+
 { #category : 'accessing' }
 FFIValueHolder >> type [
 
 	^ type
+]
+
+{ #category : 'converting' }
+FFIValueHolder >> unpackFromArity: aNumber [
+	"holders do not pack arity"
+
+	^ self
 ]
 
 { #category : 'accessing' }
