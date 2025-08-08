@@ -109,6 +109,8 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		spec package: 'Shift-ClassBuilder'.
 		spec package: 'System-Announcements'.
 		spec package: 'System-BasicCommandLineHandler'.
+		spec package: 'Clap-Core'.
+		spec package: 'Clap-CommandLine'.
 		spec package: 'System-CommandLine'.
 		spec package: 'System-CommandLineHandler'.
 		spec package: 'System-Finalization'.
