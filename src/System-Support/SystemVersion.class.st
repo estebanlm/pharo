@@ -114,7 +114,9 @@ SystemVersion class >> useCurrent: aSystemVersion during: aBlock [
 
 	| backup |
 	backup := Current.
-	[ aBlock value ] ensure: [ Current := backup ]
+	[
+		Current := aSystemVersion.
+		aBlock value ] ensure: [ Current := backup ]
 ]
 
 { #category : 'accessing - properties' }
