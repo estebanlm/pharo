@@ -8,10 +8,28 @@ Class {
 	#package : 'Clap-Commands-Pharo'
 }
 
+{ #category : 'adding' }
+ClapPharoApplication class >> addKeepAliveOptionTo: aCommandSpec [
+
+	aCommandSpec addFlag: #keepAlive description: 'Keep the image running after the command terminates'
+]
+
+{ #category : 'adding' }
+ClapPharoApplication class >> addRenameOptionTo: aCommandSpec [
+
+	aCommandSpec addFlag: #rename description: 'Rename the image as <NAME> before running the command'
+]
+
+{ #category : 'adding' }
+ClapPharoApplication class >> addSaveFlagTo: aCommandSpec [
+	aCommandSpec addFlag: #save description: 'Save the image after the command terminates'
+]
+
 { #category : 'execution' }
 ClapPharoApplication >> execute [
 
-	self prepareImage
+	self prepareImage.
+	self shouldQuit ifFalse: [ self context doNotObeyExits ]
 ]
 
 { #category : 'execution' }
@@ -27,7 +45,17 @@ ClapPharoApplication >> prepareImage [
 ]
 
 { #category : 'execution' }
+ClapPharoApplication >> saveSessionIfAsked [
+
+	self shouldSave ifTrue: [ Smalltalk saveSession ]
+]
+
+{ #category : 'testing' }
+ClapPharoApplication >> shouldQuit [
+	^ (self hasFlag: #keepAlive) not
+]
+
+{ #category : 'testing' }
 ClapPharoApplication >> shouldSave [
-	^ (self hasFlag: #save)
-		or: [ (self hasFlag: #noSave) not ]
+	^ self hasFlag: #save
 ]
