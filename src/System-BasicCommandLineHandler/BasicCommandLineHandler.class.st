@@ -169,6 +169,7 @@ BasicCommandLineHandler >> firstArgument [
 
 { #category : 'activation' }
 BasicCommandLineHandler >> handleArgument: aString [
+	self handleCommandWithClap ifTrue: [ ^ self ].
 
 	"give priority to subcommands"
 	self handleSubcommand == self
@@ -207,6 +208,17 @@ BasicCommandLineHandler >> handleArgument: aString [
 
 	"none of the previous options matched hence we output an error message"
 	self error
+]
+
+{ #category : 'activation' }
+BasicCommandLineHandler >> handleCommandWithClap [
+	
+	| arguments |
+	self firstArgument = 'printVersion' ifFalse: [ ^ false ].
+	
+	arguments := commandLine arguments copyWithFirst: 'clap'.
+	ClapCommandLineHandler activateWith:( commandLine class withArguments: arguments).
+	^ true
 ]
 
 { #category : 'activation' }

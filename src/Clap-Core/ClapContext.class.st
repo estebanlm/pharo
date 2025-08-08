@@ -146,6 +146,11 @@ ClapContext >> doMatch [
 	^ match
 ]
 
+{ #category : 'initialization' }
+ClapContext >> doNotObeyExits [
+	obeyingExits := false
+]
+
 { #category : 'accessing' }
 ClapContext >> documenter [
 	^ ClapDocumenter on: self stdout
