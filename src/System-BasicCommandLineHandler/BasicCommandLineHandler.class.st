@@ -216,6 +216,7 @@ BasicCommandLineHandler >> handleCommandWithClap [
 	| arguments |
 	(#('bootstrap' 'loadHermes' 'printVersion') includes: self firstArgument) ifFalse: [ ^ false ].
 	
+	'Handling command with Clap ...' traceCr.	
 	arguments := commandLine arguments copyWithFirst: 'clap'.
 	ClapCommandLineHandler activateWith:( commandLine class withArguments: arguments).
 	^ true
