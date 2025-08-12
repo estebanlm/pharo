@@ -6,8 +6,8 @@ Do not use it on full Pharo images!
 Class {
 	#name : 'ClapPharoBootstrapCommand',
 	#superclass : 'ClapPharoApplication',
-	#category : 'Clap-Commands-Pharo',
-	#package : 'Clap-Commands-Pharo'
+	#category : 'Clap-CommandLine',
+	#package : 'Clap-CommandLine'
 }
 
 { #category : 'command line' }

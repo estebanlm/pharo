@@ -27,8 +27,8 @@ pharo Pharo.image initializePackages --protocols=protocols.txt --packages --save
 Class {
 	#name : 'ClapPharoFixMethodsCommand',
 	#superclass : 'ClapPharoBootstrapCommand',
-	#category : 'Clap-Commands-Pharo',
-	#package : 'Clap-Commands-Pharo'
+	#category : 'InitializePackagesCommandLineHandler',
+	#package : 'InitializePackagesCommandLineHandler'
 }
 
 { #category : 'command line' }
