@@ -91,5 +91,8 @@ ClapPharoFixMethodsCommand >> fixMethodsIn: aFileName [
 			| stream |
 			stream := ZnCharacterReadStream on: binaryStream encoding: 'utf8'.
 			[ stream atEnd ] whileFalse: [
-				self fixMethod: (stream upTo: Character cr) ] ]
+					| line items |
+					line := stream upTo: Character cr.
+					items := line findTokens: String tab.
+					self fixMethod: items ] ]
 ]
