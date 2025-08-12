@@ -1,13 +1,13 @@
 Class {
-	#name : 'ClapHermesCommandTest',
+	#name : 'HermesClapCommandTest',
 	#superclass : 'ClapPharoCommandsTest',
 	#category : 'Clap-Tests-Commands',
 	#package : 'Clap-Tests',
 	#tag : 'Commands'
 }
 
-{ #category : 'tests' }
-ClapHermesCommandTest >> testDuplicationModeIsFailWhenOptionNotSpecified [
+{ #category : 'tests - duplication mode' }
+HermesClapCommandTest >> testDuplicationModeIsFailWhenOptionNotSpecified [
 	| command |
 	context := HermesClapCommand commandSpecification activationWith: #('loadHermes' 'foo.hermes').
 	command := context command.
@@ -17,8 +17,8 @@ ClapHermesCommandTest >> testDuplicationModeIsFailWhenOptionNotSpecified [
 		equals: #fail
 ]
 
-{ #category : 'tests' }
-ClapHermesCommandTest >> testDuplicationModeIsFailWhenOptionSpecifiedAsFail [
+{ #category : 'tests - duplication mode' }
+HermesClapCommandTest >> testDuplicationModeIsFailWhenOptionSpecifiedAsFail [
 	| command |
 	context := HermesClapCommand commandSpecification activationWith: #('loadHermes' 'foo.hermes' '--on-duplication' 'fail' ).
 	command := context command.
@@ -28,8 +28,8 @@ ClapHermesCommandTest >> testDuplicationModeIsFailWhenOptionSpecifiedAsFail [
 		equals: #fail
 ]
 
-{ #category : 'tests' }
-ClapHermesCommandTest >> testDuplicationModeIsIgnoreWhenOptionSpecifiedAsIgnore [
+{ #category : 'tests - duplication mode' }
+HermesClapCommandTest >> testDuplicationModeIsIgnoreWhenOptionSpecifiedAsIgnore [
 	| command |
 	context := HermesClapCommand commandSpecification activationWith: #('loadHermes' 'foo.hermes' '--on-duplication' 'ignore' ).
 	command := context command.
@@ -39,8 +39,28 @@ ClapHermesCommandTest >> testDuplicationModeIsIgnoreWhenOptionSpecifiedAsIgnore 
 		equals: #ignore
 ]
 
+{ #category : 'tests - duplication mode' }
+HermesClapCommandTest >> testDuplicationModeIsReplaceWhenOptionSpecifiedAsReplace [
+	| command |
+	context := HermesClapCommand commandSpecification activationWith: #('loadHermes' 'foo.hermes' '--on-duplication' 'replace' ).
+	command := context command.
+	
+	self 
+		assert: command duplicationMode
+		equals: #replace
+]
+
+{ #category : 'tests - fail on undeclared' }
+HermesClapCommandTest >> testFailOnUndeclaredWhenNoOption [
+	| command |
+	context := HermesClapCommand commandSpecification activationWith: #('loadHermes' 'foo.hermes').
+	command := context command.
+	
+	self assert: command shouldFailOnUndeclared
+]
+
 { #category : 'tests' }
-ClapHermesCommandTest >> testGetManyFilesToProcessWhenManyHermesFileGivenInArguments [
+HermesClapCommandTest >> testGetManyFilesToProcessWhenManyHermesFileGivenInArguments [
 
 	| command |
 	context := HermesClapCommand commandSpecification activationWith:
@@ -53,7 +73,7 @@ ClapHermesCommandTest >> testGetManyFilesToProcessWhenManyHermesFileGivenInArgum
 ]
 
 { #category : 'tests' }
-ClapHermesCommandTest >> testGetOneFileToProcessWheOneHermesFileGivenInArguments [
+HermesClapCommandTest >> testGetOneFileToProcessWheOneHermesFileGivenInArguments [
 
 	| command |
 	context := HermesClapCommand commandSpecification activationWith:
@@ -65,8 +85,8 @@ ClapHermesCommandTest >> testGetOneFileToProcessWheOneHermesFileGivenInArguments
 		hasSameElements: #( 'foo.hermes' )
 ]
 
-{ #category : 'tests' }
-ClapHermesCommandTest >> testNoFailOnUndeclaredOption [
+{ #category : 'tests - fail on undeclared' }
+HermesClapCommandTest >> testNoFailOnUndeclaredWhenOptionSpecified [
 	| command |
 	context := HermesClapCommand commandSpecification activationWith: #('loadHermes' 'foo.hermes' '--no-fail-on-undeclared' ).
 	command := context command.
@@ -75,7 +95,7 @@ ClapHermesCommandTest >> testNoFailOnUndeclaredOption [
 ]
 
 { #category : 'tests' }
-ClapHermesCommandTest >> testRunningHermesWithoutFileExitsWithErrorMessage [
+HermesClapCommandTest >> testRunningHermesWithoutFileExitsWithErrorMessage [
 	context := HermesClapCommand commandSpecification activateWith: #('loadHermes').
 	
 	self assertFailure.
@@ -85,7 +105,7 @@ ClapHermesCommandTest >> testRunningHermesWithoutFileExitsWithErrorMessage [
 ]
 
 { #category : 'tests' }
-ClapHermesCommandTest >> testRunningHermesWithoutHermesFileExitsWithErrorMessage [
+HermesClapCommandTest >> testRunningHermesWithoutHermesFileExitsWithErrorMessage [
 	context := HermesClapCommand commandSpecification activateWith: #('loadHermes' 'foo.txt').
 	
 	self assertFailure.
