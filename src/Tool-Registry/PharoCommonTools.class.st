@@ -84,3 +84,9 @@ PharoCommonTools class >> worldMenuOn: aBuilder [
 			a model."
 			((Smalltalk at: #IceTipRepositoriesBrowser) new) open ]
 ]
+
+{ #category : 'accessing' }
+PharoCommonTools >> tools [
+
+	^ tools
+]
