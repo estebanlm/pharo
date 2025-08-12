@@ -34,7 +34,6 @@ Class {
 { #category : 'command line' }
 ClapPharoFixMethodsCommand class >> commandSpecification [ 
 
-	<commandline>
 	| command |
 	command := (ClapCommandSpec id: #fixMethods)
 		  description: 'Fix methods created by espell by setting their protocol or package if extension.';
