@@ -34,7 +34,9 @@ ClapPharoPerformCommand class >> commandSpecification [
 { #category : 'accessing' }
 ClapPharoPerformCommand >> arguments [
 
-	^ self positional: #arguments ifAbsent: [ #(  ) ]
+	^ self positional: #arguments 
+		ifPresent: [ :args | args asArray ]
+		ifAbsent: [ #(  ) ]
 ]
 
 { #category : 'execution' }
@@ -47,7 +49,8 @@ ClapPharoPerformCommand >> execute [
 	result := self targetClass perform: self selector withArguments: self arguments. 
 	self outputStreamDo: [ :out | out print: result; lf ].
 	
-	self saveSessionIfAsked
+	self saveSessionIfAsked.
+	^ result
 ]
 
 { #category : 'accessing' }

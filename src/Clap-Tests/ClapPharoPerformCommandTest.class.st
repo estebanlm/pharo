@@ -11,7 +11,7 @@ ClapPharoPerformCommandTest >> testCanGetArguments [
 	context := ClapPharoPerformCommand commandSpecification activationWith: #('perform' 'Array' 'with:with:' 'a' 'b'). 
 	
 	self
-		assertCollection: context command arguments asArray
+		assertCollection: context command arguments
 		equals: #('a' 'b')
 ]
 
@@ -31,6 +31,18 @@ ClapPharoPerformCommandTest >> testCanGetSelector [
 	self
 		assert: context command selector
 		equals: 'empty'
+]
+
+{ #category : 'tests' }
+ClapPharoPerformCommandTest >> testExecution [
+	| result |
+	context := ClapPharoPerformCommand commandSpecification activationWith: #('perform' 'Array' 'with:with:' 'a' 'b').
+	
+	result := context command execute.
+	
+	self
+		assert: result
+		equals: #('a' 'b')
 ]
 
 { #category : 'tests' }
