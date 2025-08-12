@@ -53,7 +53,7 @@ ClapPharoPerformCommand >> execute [
 { #category : 'accessing' }
 ClapPharoPerformCommand >> selector [ 
 
-	^ self positional: #selector
+	^ (self positional: #selector) asSymbol
 ]
 
 { #category : 'accessing' }
