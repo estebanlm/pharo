@@ -18,8 +18,7 @@ ClapPharoVersion class >> commandSpecification [
 		  addHelp;
 		  addFlag: #full description: 'Full image version (default format)';
 		  addFlag: #release description: 'Major.minor alpha/stable';
-		  addFlag: #numeric
-		  description: '5-digit sequential integration number';
+		  addFlag: #numeric description: '5-digit sequential integration number';
 		  addFlag: #hash description: 'Integration commit hash';
 		  addFlag: #vm description: 'VM build and version';
 		  addFlag: #license description: 'Licensing and copyright';
