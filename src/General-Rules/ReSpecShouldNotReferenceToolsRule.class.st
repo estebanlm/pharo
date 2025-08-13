@@ -27,6 +27,7 @@ ReSpecShouldNotReferenceToolsRule >> basicCheck: aNode [
 	| class |
 	aNode isMessage ifFalse: [ ^ false ].
 	class := aNode methodNode methodClass.
+	class ifNil: [ ^ false ].
 	(class inheritsFrom: StPresenter) ifFalse: [ ^ false ].
 	^ self isToolReference: aNode
 ]
