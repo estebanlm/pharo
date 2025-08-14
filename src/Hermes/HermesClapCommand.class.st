@@ -56,7 +56,7 @@ HermesClapCommand class >> commandSpecification [
 		        addHelp;
 		        addPositional: #FILE spec: [ :positional |
 					positional
-						description: 'The Pharo expression to evaluate, joining successive arguments with spaces (if omitted, read the expression from stdin)';
+						description: 'The Hermes file to load';
 						multiple: true ];
 		        addFlag: #'no-fail-on-undeclared' description: 'Does not fail the loading if there are new undeclared variables.';
 		        addFlagWithPositional: #'on-duplication' description: 'When there is a duplication in the loading package what is the action to take:
@@ -106,6 +106,8 @@ HermesClapCommand >> duplicationMode [
 { #category : 'execution' }
 HermesClapCommand >> execute [ 
 
+	super execute.
+	
 	self validateParameters.
 	self processFiles.
 	self saveSessionIfAsked

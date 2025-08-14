@@ -8,29 +8,110 @@ Class {
 	#package : 'Clap-Commands-Pharo'
 }
 
+{ #category : 'accessing' }
+ClapCodeEvaluator class >> commandDescription [ 
+
+	^ 'A command that evaluates a Phero expression, outputs the evaluated result and quits the image. 
+
+This command either evaluates the arguments passed to the image:
+	pharo Pharo.image eval  1 + 2
+	
+or it can read directly from stdin:
+
+	echo "1+2" | $PHARO_VM my.image eval
+
+Important: don''t manually save the image at the end of the expression by calling something like ''Smalltalk snapshot: true andSave: true''! Instead, use the safer --save option.'
+]
+
 { #category : 'command line' }
-ClapCodeEvaluator class >> evaluate [
+ClapCodeEvaluator class >> commandSpecification [
 	<commandline>
-	^ (ClapCommandSpec id: #evaluate)
+	| spec |
+	spec := (ClapCommandSpec id: #evaluate)
 		aliases: #('eval');
 		commandClass: self;
-		description: 'Print the result of a Pharo expression';
+		description: self commandDescription;
 		addHelp;
-		addFlag: #save description: 'Save the image after evaluation';
-		addFlag: #keepAlive description: 'Keep image running';
 		addPositional: #EXPR spec: [ :positional |
 			positional
-				description: 'The expression to evaluate, joining successive arguments with spaces (if omitted, read the expression from stdin)';
+				description: 'The Pharo expression to evaluate, joining successive arguments with spaces (if omitted, read the expression from stdin)';
 				multiple: true;
 				defaultValue: [ :match | "in the absence of an explicit argument, read from standard input"
 					Array with: match context stdin upToEnd ] ];
-		yourself
+		yourself.
+		
+	self 
+		addSaveFlagTo: spec;
+		addKeepAliveOptionTo: spec;
+		addRenameOptionTo: spec.
+	^ spec
+]
+
+{ #category : 'printing' }
+ClapCodeEvaluator class >> printCodeError: aCodeError on: aVTermOutputDriver [
+	| position contents errorLine errorMessage maxLineNumberSize lineNumber |
+
+	"format the error"
+	position := aCodeError position.
+	contents := aCodeError sourceCode.
+	errorLine := contents lineNumberCorrespondingToIndex: position.
+
+	"first gather the error title to be able to underline it properly"
+	errorMessage := String streamContents: [ :s|
+		s nextPutAll: 'Syntax Error on line ';
+			print: errorLine; nextPutAll: ': ';
+			print: aCodeError messageText].
+
+	 aVTermOutputDriver red;
+		nextPutAll: errorMessage; lf;
+		nextPutAll: ('' padLeftTo: errorMessage size with: $=); lf;
+		clear.
+
+	"print each source line and mark the found syntax error"
+	maxLineNumberSize := contents lines size asString size.
+	lineNumber := 0.
+	contents lineIndicesDo: [:start :endWithoutDelimiters :end |
+		lineNumber := lineNumber + 1.
+		lineNumber == errorLine ifTrue: [ aVTermOutputDriver errorColor ].
+		"0 pad the line numbers to the same size"
+		aVTermOutputDriver
+			nextPutAll: (lineNumber asString padLeftTo: maxLineNumberSize with: $0);
+			nextPutAll: ': ';
+			nextPutAll: (contents copyFrom: start to: endWithoutDelimiters);
+			lf.
+			"print the marker under the error line"
+		(lineNumber == errorLine)
+			ifTrue: [
+					aVTermOutputDriver nextPutAll:( '_^_' padLeftTo: position - start + maxLineNumberSize + 4);
+							 lf;
+							 clear]
+	]
+]
+
+{ #category : 'execution' }
+ClapCodeEvaluator >> evaluate [
+	
+	"polymorphism with ST file evaluator"
+	self evaluateExpression
+]
+
+{ #category : 'execution' }
+ClapCodeEvaluator >> evaluateExpression [
+	
+	[ Smalltalk compiler evaluate: self source "OCCodeError signal" ]
+		on: Error
+		do: [ :error | self handleError: error ]
 ]
 
 { #category : 'execution' }
 ClapCodeEvaluator >> execute [
 	| result |
-	result := Smalltalk compiler evaluate: self source.
+	
+	self validateParameters.
+	super execute.
+	
+	result := self evaluate.
+	self saveSessionIfAsked.
 	
 	self context hasSessionChanged "we might be waking up after a #save:andQuit:"
 		ifFalse: [ self outputStreamDo: [ :out | out print: result; lf ] ]
@@ -74,4 +155,10 @@ ClapCodeEvaluator >> handleErrorsDuring: aBlock reference: aReference [
 { #category : 'accessing' }
 ClapCodeEvaluator >> source [
 	^ String space join: (self positional: #EXPR)
+]
+
+{ #category : 'validating' }
+ClapCodeEvaluator >> validateParameters [
+
+	"nothing to do"
 ]

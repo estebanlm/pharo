@@ -1,0 +1,130 @@
+Class {
+	#name : 'ClapSTFileEvaluatorTest',
+	#superclass : 'ClapPharoCommandsTest',
+	#classVars : [
+		'TestValue'
+	],
+	#category : 'Clap-Tests-Commands',
+	#package : 'Clap-Tests',
+	#tag : 'Commands'
+}
+
+{ #category : 'accessing' }
+ClapSTFileEvaluatorTest class >> testValue [
+
+	^ TestValue
+]
+
+{ #category : 'accessing' }
+ClapSTFileEvaluatorTest class >> testValue: aValue [
+
+	TestValue := aValue 
+]
+
+{ #category : 'running' }
+ClapSTFileEvaluatorTest >> setUp [ 
+
+	super setUp.
+	self class testValue: nil.
+]
+
+{ #category : 'tests' }
+ClapSTFileEvaluatorTest >> testCanRunStFile [
+	| file |
+	file := FileLocator temp / 'pharo-tests-' , UUID new asString / 'dummy.st'.
+	
+	[ file parent ensureCreateDirectory.
+	file writeStreamDo: [ :stream | stream nextPutAll: 'ClapSTFileEvaluatorTest testValue: 3' ].
+	
+	context := ClapSTFileEvaluator commandSpecification activateWith: {'st' . file fullName} ]
+		ensure: [ file parent deleteAll ].
+	
+	self
+		assert: self class testValue
+		equals: 3
+]
+
+{ #category : 'tests' }
+ClapSTFileEvaluatorTest >> testCanSkipShebang [
+	| file |
+	file := FileLocator temp / 'pharo-tests-' , UUID new asString / 'dummy.st'.
+	
+	[ file parent ensureCreateDirectory.
+	file writeStreamDo: [ :stream | stream nextPutAll: '#!/usr/bin/env pharo
+		ClapSTFileEvaluatorTest testValue: 4' ].
+	
+	context := ClapSTFileEvaluator commandSpecification activateWith: {'st' . file fullName} ]
+		ensure: [ file parent deleteAll ].
+	
+	self
+		assert: self class testValue
+		equals: 4
+]
+
+{ #category : 'tests' }
+ClapSTFileEvaluatorTest >> testEvaluateWithError [	
+	| file |
+	file := FileLocator temp / 'pharo-tests-' , UUID new asString / 'dummy.st'.
+	
+	[ file parent ensureCreateDirectory.
+	file writeStreamDo: [ :stream | stream nextPutAll: '#!/usr/bin/env pharo
+		1 := .' ].
+	
+	context := ClapSTFileEvaluator commandSpecification activateWith: {'st' . file fullName} ]
+		ensure: [ file parent deleteAll ].
+	
+	self
+		assert: self errorString
+		equals: '[31mSyntax Error on line 1: ''End of statement expected''
+===================================================
+[0m[31m1: 1 := .
+    _^_
+[0m' withUnixLineEndings.
+	
+	self assertFailure.
+]
+
+{ #category : 'tests' }
+ClapSTFileEvaluatorTest >> testGetManyFilesToProcessWheManyFuelFilesGivenInArguments [
+
+	| command |
+	context := ClapSTFileEvaluator commandSpecification activationWith: #( 'st' 'foo.st' 'foo.bar' 'bar.st' 'baz.st').
+	command := context command.
+
+	self
+		assertCollection: command allStFiles 
+		hasSameElements: #( 'foo.st' 'bar.st' 'baz.st' )
+]
+
+{ #category : 'tests' }
+ClapSTFileEvaluatorTest >> testGetOneFileToProcessWheOneStFileGivenInArguments [
+
+	| command |
+	context := ClapSTFileEvaluator commandSpecification activationWith:
+		           #( 'st' 'foo.st' ).
+	command := context command.
+
+	self
+		assertCollection: command allStFiles
+		hasSameElements: #( 'foo.st' )
+]
+
+{ #category : 'tests' }
+ClapSTFileEvaluatorTest >> testRunningStWithoutFileExitsWithErrorMessage [
+	context := ClapSTFileEvaluator commandSpecification activateWith: #('st').
+
+	self assertFailure.
+	self
+		assert: context exitException messageText
+		equals: 'Missing st file as argument'
+]
+
+{ #category : 'tests' }
+ClapSTFileEvaluatorTest >> testRunningStWithoutStFileExitsWithErrorMessage [
+	context := ClapSTFileEvaluator commandSpecification activateWith: #('st' 'foo.txt').
+
+	self assertFailure.
+	self
+		assert: context exitException messageText
+		equals: 'Missing st file as argument'
+]
