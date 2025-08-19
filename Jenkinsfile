@@ -55,6 +55,19 @@ def runTests(architecture, prefix=''){
   }
 }
 
+def runCommandLineTests(){
+  cleanWs()
+  dir('cli-tests') {
+    try {
+        unstash "bootstrap64"
+        shell "bash -c 'tests/bootstrap/scripts/runPharoCommandLineTests.sh'"
+        junit allowEmptyResults: true, testResults: "report.xml"
+    } finally {
+        archiveArtifacts allowEmptyArchive: true, artifacts: "report.xml", fingerprint: true
+    }
+  }
+}
+
 def shellOutput(params){
   return (isWindows())? bat(returnStdout: true, script: params).trim() : sh(returnStdout: true, script: params).trim()
 }
@@ -255,6 +268,17 @@ try{
       }
     }
   }
+
+  testers["unix-commandline"] = {
+    node("unix") {
+      stage("Tests-Pharo-command-line") {
+        timeout(5) {
+          runCommandLineTests()
+        }
+      }
+    }
+  }
+
   parallel testers
 
   notifyBuild("SUCCESS")
