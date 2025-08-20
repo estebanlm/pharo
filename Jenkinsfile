@@ -60,7 +60,7 @@ def runCommandLineTests(){
   dir('cli-tests') {
     try {
         unstash "bootstrap64"
-        shell "bash -c 'tests/bootstrap/scripts/runPharoCommandLineTests.sh'"
+        shell "bash -c 'tests/runPharoCommandLineTests.sh'"
         junit allowEmptyResults: true, testResults: "report.xml"
     } finally {
         archiveArtifacts allowEmptyArchive: true, artifacts: "report.xml", fingerprint: true
@@ -165,7 +165,7 @@ def bootstrapImage(architectures){
 
           stage ("Full Image-${architecture}") {
             shell "BUILD_NUMBER=${BUILD_NUMBER} BOOTSTRAP_ARCH=${architecture} bash ./bootstrap/scripts/4-build.sh"
-            stash includes: "build/bootstrap-cache/*.zip,build/bootstrap-cache/*.sources,bootstrap/scripts/**", name: "bootstrap${architecture}"
+            stash includes: "build/bootstrap-cache/*.zip,build/bootstrap-cache/*.sources,bootstrap/scripts/**,tests/*", name: "bootstrap${architecture}"
           }
 
           if( isDevelopmentBranch() ) {
