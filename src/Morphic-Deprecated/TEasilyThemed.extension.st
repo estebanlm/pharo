@@ -63,6 +63,87 @@ TEasilyThemed >> newExpander: aString forAll: controls [
 ]
 
 { #category : '*Morphic-Deprecated' }
+TEasilyThemed >> newFuzzyLabel: aString [
+	"Answer a new fuzzy label."
+
+	^self theme
+		newFuzzyLabelIn: self
+		for: nil
+		label: aString
+		offset: 1
+		alpha: 0.5
+		getEnabled: nil
+]
+
+{ #category : '*Morphic-Deprecated' }
+TEasilyThemed >> newFuzzyLabelFor: aModel label: aString getEnabled: enabledSel [
+	"Answer a new fuzzy label."
+
+	^self theme
+		newFuzzyLabelIn: self
+		for: aModel
+		label: aString
+		offset: 1
+		alpha: 0.5
+		getEnabled: enabledSel
+]
+
+{ #category : '*Morphic-Deprecated' }
+TEasilyThemed >> newFuzzyLabelFor: aModel label: aString offset: offset alpha: alpha getEnabled: enabledSel [
+	"Answer a new fuzzy label."
+
+	^self theme
+		newFuzzyLabelIn: self
+		for: aModel
+		label: aString
+		offset: offset
+		alpha: alpha
+		getEnabled: enabledSel
+]
+
+{ #category : '*Morphic-Deprecated' }
+TEasilyThemed >> newListFor: aModel list: listSelector selected: getSelector changeSelected: setSelector getEnabled: enabledSel help: helpText [
+	"Answer a list for the given model."
+
+	^self theme
+		newListIn: self
+		for: aModel
+		list: listSelector
+		selected: getSelector
+		changeSelected: setSelector
+		getEnabled: enabledSel
+		help: helpText
+]
+
+{ #category : '*Morphic-Deprecated' }
+TEasilyThemed >> newListFor: aModel list: listSelector selected: getSelector changeSelected: setSelector help: helpText [
+	"Answer a list for the given model."
+
+	^self
+		newListFor: aModel
+		list: listSelector
+		selected: getSelector
+		changeSelected: setSelector
+		getEnabled: nil
+		help: helpText
+]
+
+{ #category : '*Morphic-Deprecated' }
+TEasilyThemed >> newListFor: aModel list: listSelector selected: getSelector changeSelected: setSelector icon: iconSelector getEnabled: enabledSel help: helpText [
+	"Answer a list for the given model."
+
+	^self theme
+		newListIn: self
+		for: aModel
+		list: listSelector
+		selected: getSelector
+		changeSelected: setSelector
+		icon: iconSelector
+		getEnabled: enabledSel
+		help: helpText
+]
+
+{ #category : '*Morphic-Deprecated' }
 TEasilyThemed >> newMorphDropListFor: aModel list: listSel getSelected: getSel setSelected: setSel getEnabled: enabledSel help: helpText [
 	"Answer a morph drop list for the given model."
 
@@ -102,6 +183,33 @@ TEasilyThemed >> newMorphDropListFor: aModel list: listSel getSelected: getSel s
 		setSelected: setSel
 		getEnabled: nil
 		useIndex: true
+		help: helpText
+]
+
+{ #category : '*Morphic-Deprecated' }
+TEasilyThemed >> newMorphListFor: aModel list: listSelector getSelected: getSelector setSelected: setSelector getEnabled: enabledSel help: helpText [
+	"Answer a morph list for the given model."
+
+	^self theme
+		newMorphListIn: self
+		for: aModel
+		list: listSelector
+		getSelected: getSelector
+		setSelected: setSelector
+		getEnabled: enabledSel
+		help: helpText
+]
+
+{ #category : '*Morphic-Deprecated' }
+TEasilyThemed >> newMorphListFor: aModel list: listSelector getSelected: getSelector setSelected: setSelector help: helpText [
+	"Answer a morph list for the given model."
+
+	^self
+		newMorphListFor: aModel
+		list: listSelector
+		getSelected: getSelector
+		setSelected: setSelector
+		getEnabled: nil
 		help: helpText
 ]
 

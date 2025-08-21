@@ -814,18 +814,22 @@ UITheme >> chooseForSaveFileReferenceIn: aThemedMorph title: title extensions: e
 
 	| dialog directory |
 	dialog := self fileSaveDialogWindowClass new.
-	exts ifNotNil: [
-		dialog filter: (StCustomExtensionsFilter extensions: exts) ].
-	path ifNotNil: [
-		dialog nameText: path asFileReference nextVersion basename ].
+	exts ifNotNil: [ dialog filter: (StCustomExtensionsFilter extensions: exts) ].
+	path ifNotNil: [ dialog nameText: path asFileReference nextVersion basename ].
 	directory := path
 		             ifNil: [ StFileSystemModel defaultDirectory ]
 		             ifNotNil: [ path parent ].
-	^ dialog
-		  defaultFolder: directory;
-		  title: (title ifNil: [ 'Save as' translated ] ifNotNil: [ title ]);
-		  openModal;
-		  selectedEntry
+
+	dialog
+		defaultFolder: directory;
+		title: (title
+				 ifNil: [ 'Save as' translated ]
+				 ifNotNil: [ title ]);
+		openModal.
+
+	^ dialog cancelled
+		  ifTrue: [ nil ]
+		  ifFalse: [ dialog selectedEntry ]
 ]
 
 { #category : 'services' }
@@ -2808,17 +2812,6 @@ UITheme >> newFormSetsForScale: scale [
 ]
 
 { #category : 'morph creation' }
-UITheme >> newFuzzyLabelIn: aThemedMorph for: aModel label: aString offset: offset alpha: alpha getEnabled: enabledSel [
-	"Answer a new fuzzy label."
-
-	^(FuzzyLabelMorph contents: aString font: self labelFont)
-		offset: offset;
-		alpha: alpha;
-		model: aModel;
-		getEnabledSelector: enabledSel
-]
-
-{ #category : 'morph creation' }
 UITheme >> newGroupboxIn: aThemedMorph [
 	"Answer a plain groupbox."
 
@@ -3068,59 +3061,12 @@ UITheme >> newListIn: aThemedMorph for: aModel list: listSelector selected: getS
 ]
 
 { #category : 'morph creation' }
-UITheme >> newListIn: aThemedMorph for: aModel list: listSelector selected: getSelector changeSelected: setSelector icon: iconSelector getEnabled: enabledSel help: helpText [
-	"Answer an icon list for the given model."
-
-	^PluggableIconListMorph new
-		selectionColor: self selectionColor;
-		textColor: self listTextColor;
-		font: self listFont;
-		on: aModel
-		list: listSelector
-		selected: getSelector
-		changeSelected: setSelector
-		menu: nil
-		keystroke: nil;
-		autoDeselect: false;
-		cornerStyle: aThemedMorph preferredCornerStyle;
-		color: Color white;
-		borderStyle: (BorderStyle inset width: 1 scaledByDisplayScaleFactor);
-		hResizing: #spaceFill;
-		vResizing: #spaceFill;
-		getIconSelector: iconSelector;
-		getEnabledSelector: enabledSel;
-		setBalloonText: helpText
-]
-
-{ #category : 'morph creation' }
 UITheme >> newMenuIn: aThemedMorph for: aModel [
 	"Answer a new menu."
 
 	^MenuMorph new
 		defaultTarget: aModel;
 		color: (self menuColorFor: aThemedMorph)
-]
-
-{ #category : 'morph creation' }
-UITheme >> newMorphListIn: aThemedMorph for: aModel list: listSelector getSelected: getSelector setSelected: setSelector getEnabled: enabledSel help: helpText [
-	"Answer a morph list for the given model."
-
-	^(PluggableMorphListMorph
-			on: aModel
-			list: listSelector
-			selected: getSelector
-			changeSelected: setSelector
-			menu: nil
-			keystroke: nil)
-		selectionColor: self selectionColor;
-		autoDeselect: false;
-		cornerStyle: aThemedMorph preferredCornerStyle;
-		color: Color white;
-		borderStyle: (BorderStyle inset width: 1 scaledByDisplayScaleFactor);
-		hResizing: #spaceFill;
-		vResizing: #spaceFill;
-		getEnabledSelector: enabledSel;
-		setBalloonText: helpText
 ]
 
 { #category : 'morph creation' }
@@ -3530,28 +3476,6 @@ UITheme >> newTreeFormSet: expanded size: size color: color [
 	^ FormSet forms: {
 		self newTreeForm: expanded size: size color: color.
 		self newTreeForm: expanded size: size * 2 color: color }
-]
-
-{ #category : 'morph creation' }
-UITheme >> newTreeIn: aThemedMorph for: aModel list: listSelector selected: getSelector changeSelected: setSelector [
-	"Answer a new tree morph."
-
-	^TreeListMorph new
-		selectionColor: self selectionColor;
-		font: self listFont;
-		on: aModel
-		list: listSelector
-		selected: getSelector
-		changeSelected: setSelector
-		menu: nil
-		keystroke: nil;
-		cornerStyle: aThemedMorph preferredCornerStyle;
-		"color: Color white;"
-		borderStyle: (BorderStyle inset width: 1 scaledByDisplayScaleFactor);
-		hResizing: #spaceFill;
-		vResizing: #spaceFill;
-		autoDeselect: false;
-		yourself
 ]
 
 { #category : 'morph creation' }

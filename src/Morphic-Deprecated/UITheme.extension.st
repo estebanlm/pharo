@@ -27,6 +27,42 @@ UITheme >> newExpanderIn: aThemedMorph label: aString forAll: controls [
 ]
 
 { #category : '*Morphic-Deprecated' }
+UITheme >> newFuzzyLabelIn: aThemedMorph for: aModel label: aString offset: offset alpha: alpha getEnabled: enabledSel [
+	"Answer a new fuzzy label."
+
+	^(FuzzyLabelMorph contents: aString font: self labelFont)
+		offset: offset;
+		alpha: alpha;
+		model: aModel;
+		getEnabledSelector: enabledSel
+]
+
+{ #category : '*Morphic-Deprecated' }
+UITheme >> newListIn: aThemedMorph for: aModel list: listSelector selected: getSelector changeSelected: setSelector icon: iconSelector getEnabled: enabledSel help: helpText [
+	"Answer an icon list for the given model."
+
+	^PluggableIconListMorph new
+		selectionColor: self selectionColor;
+		textColor: self listTextColor;
+		font: self listFont;
+		on: aModel
+		list: listSelector
+		selected: getSelector
+		changeSelected: setSelector
+		menu: nil
+		keystroke: nil;
+		autoDeselect: false;
+		cornerStyle: aThemedMorph preferredCornerStyle;
+		color: Color white;
+		borderStyle: (BorderStyle inset width: 1 scaledByDisplayScaleFactor);
+		hResizing: #spaceFill;
+		vResizing: #spaceFill;
+		getIconSelector: iconSelector;
+		getEnabledSelector: enabledSel;
+		setBalloonText: helpText
+]
+
+{ #category : '*Morphic-Deprecated' }
 UITheme >> newMorphDropListIn: aThemedMorph for: aModel list: listSel getSelected: getSel setSelected: setSel getEnabled: enabledSel useIndex: useIndex help: helpText [
 	"Answer a morph drop list for the given model."
 
@@ -41,6 +77,28 @@ UITheme >> newMorphDropListIn: aThemedMorph for: aModel list: listSel getSelecte
 		cornerStyle: aThemedMorph preferredCornerStyle;
 		hResizing: #spaceFill;
 		vResizing: #shrinkWrap;
+		setBalloonText: helpText
+]
+
+{ #category : '*Morphic-Deprecated' }
+UITheme >> newMorphListIn: aThemedMorph for: aModel list: listSelector getSelected: getSelector setSelected: setSelector getEnabled: enabledSel help: helpText [
+	"Answer a morph list for the given model."
+
+	^(PluggableMorphListMorph
+			on: aModel
+			list: listSelector
+			selected: getSelector
+			changeSelected: setSelector
+			menu: nil
+			keystroke: nil)
+		selectionColor: self selectionColor;
+		autoDeselect: false;
+		cornerStyle: aThemedMorph preferredCornerStyle;
+		color: Color white;
+		borderStyle: (BorderStyle inset width: 1 scaledByDisplayScaleFactor);
+		hResizing: #spaceFill;
+		vResizing: #spaceFill;
+		getEnabledSelector: enabledSel;
 		setBalloonText: helpText
 ]
 
@@ -80,4 +138,26 @@ UITheme >> newToolDockingBarIn: aThemedMorph [
 		hResizing: #spaceFill;
 		vResizing: #shrinkWrap;
 		clipSubmorphs: true
+]
+
+{ #category : '*Morphic-Deprecated' }
+UITheme >> newTreeIn: aThemedMorph for: aModel list: listSelector selected: getSelector changeSelected: setSelector [
+	"Answer a new tree morph."
+
+	^TreeListMorph new
+		selectionColor: self selectionColor;
+		font: self listFont;
+		on: aModel
+		list: listSelector
+		selected: getSelector
+		changeSelected: setSelector
+		menu: nil
+		keystroke: nil;
+		cornerStyle: aThemedMorph preferredCornerStyle;
+		"color: Color white;"
+		borderStyle: (BorderStyle inset width: 1 scaledByDisplayScaleFactor);
+		hResizing: #spaceFill;
+		vResizing: #spaceFill;
+		autoDeselect: false;
+		yourself
 ]
