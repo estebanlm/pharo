@@ -60,7 +60,7 @@ def runCommandLineTests(){
   dir('cli-tests') {
     try {
         unstash "bootstrap64"
-        shell "bash -c 'tests/runPharoCommandLineTests.sh'"
+        shell "bash -c 'bootstrap/scripts/runPharoCommandLineTests.sh'"
         junit allowEmptyResults: true, testResults: "report.xml"
     } finally {
         archiveArtifacts allowEmptyArchive: true, artifacts: "report.xml", fingerprint: true
