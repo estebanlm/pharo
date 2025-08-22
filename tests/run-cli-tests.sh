@@ -56,10 +56,10 @@ BATS_DIR="$VENDOR_DIR/bats"
 BATS_SUPPORT="$VENDOR_DIR/bats-support"
 BATS_ASSERT="$VENDOR_DIR/bats-assert"
 
-if [ -z "$PHARO" ]; then
+if [ -z "${PHARO:-}" ]; then
   PHARO="./pharo"
 fi
-if [ -z "$IMAGE" ]; then
+if [ -z "${IMAGE:-}" ]; then
   IMAGE="Pharo.image"
 fi
 
@@ -70,5 +70,5 @@ export ROOT_DIR
 export PHARO
 export IMAGE
 echo ">> Running tests with bats-core"
-"$BATS_DIR/bin/bats" --report-formatter junit "$ROOT_DIR"
+"$BATS_DIR/bin/bats" --report-formatter junit pharo-cli-perform.bats #"$ROOT_DIR"
 

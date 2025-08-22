@@ -14,6 +14,7 @@ SCRIPTS="$(cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P)"
 . ${SCRIPTS}/envvars.sh
 
 CACHE="${BOOTSTRAP_CACHE}"
+ARCH=64
 
 find ${CACHE}
 
@@ -36,12 +37,12 @@ TEST_VM_VERSION=`echo ${TEST_NAME_PREFIX} | cut -d'.' -f 1 | cut -d'-' -f 1 | cu
 
 TEST_VM_KIND="vm"
 
-${BOOTSTRAP_REPOSITORY:-.}/bootstrap/scripts/getPharoVM.sh ${TEST_VM_VERSION} ${TEST_VM_KIND} ${1}
+${BOOTSTRAP_REPOSITORY:-.}/bootstrap/scripts/getPharoVM.sh ${TEST_VM_VERSION} ${TEST_VM_KIND} ${ARCH}
 
-IMAGE_ARCHIVE=$(find ${CACHE} -name ${TEST_NAME_PREFIX}-${1}bit-*.zip)
+IMAGE_ARCHIVE=$(find ${CACHE} -name ${TEST_NAME_PREFIX}-${ARCH}bit-*.zip)
 unzip $IMAGE_ARCHIVE
-IMAGE_FILE=$(find . -name Pharo*-${1}bit-*.image)
-CHANGES_FILE=$(find . -name Pharo*-${1}bit-*.changes)
+IMAGE_FILE=$(find . -name Pharo*-${ARCH}bit-*.image)
+CHANGES_FILE=$(find . -name Pharo*-${ARCH}bit-*.changes)
 				
 cp ${CACHE}/*.sources .
 mv $IMAGE_FILE Pharo.image
