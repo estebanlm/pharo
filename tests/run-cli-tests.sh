@@ -70,5 +70,5 @@ export ROOT_DIR
 export PHARO
 export IMAGE
 echo ">> Running tests with bats-core"
-"$BATS_DIR/bin/bats" --report-formatter junit pharo-cli-perform.bats #"$ROOT_DIR"
+"$BATS_DIR/bin/bats" --report-formatter junit "$ROOT_DIR"
 
