@@ -19,6 +19,12 @@ NECUsageTracker class >> incrementUsageFor: aString [
 	UsageCounts at: aString put: (UsageCounts at: aString) + 1.
 ]
 
+{ #category : 'class initialization' }
+NECUsageTracker class >> reset [
+     <script>
+     UsageCounts := nil
+]
+
 { #category : 'tracking' }
 NECUsageTracker class >> usageCountFor: aString [
 	UsageCounts ifNil: [ ^ 0 ].
