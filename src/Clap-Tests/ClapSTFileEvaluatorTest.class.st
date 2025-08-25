@@ -1,25 +1,10 @@
 Class {
 	#name : 'ClapSTFileEvaluatorTest',
 	#superclass : 'ClapPharoCommandsTest',
-	#classVars : [
-		'TestValue'
-	],
 	#category : 'Clap-Tests-Commands',
 	#package : 'Clap-Tests',
 	#tag : 'Commands'
 }
-
-{ #category : 'accessing' }
-ClapSTFileEvaluatorTest class >> testValue [
-
-	^ TestValue
-]
-
-{ #category : 'accessing' }
-ClapSTFileEvaluatorTest class >> testValue: aValue [
-
-	TestValue := aValue 
-]
 
 { #category : 'running' }
 ClapSTFileEvaluatorTest >> setUp [ 
