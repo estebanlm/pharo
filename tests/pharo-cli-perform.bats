@@ -42,21 +42,21 @@ teardown() {
 
 @test "perform does not save if flag --save absent" {
   copy_image "test-save.image"
-  run_pharo bootstrap perform ClapSTFileEvaluatorTest testValue: Wednesday.
+  run_pharo bootstrap perform ClapPharoCommandsTest testValue: Wednesday.
   assert_success
 
-  run_pharo bootstrap perform ClapSTFileEvaluatorTest testValue
+  run_pharo bootstrap perform ClapPharoCommandsTest testValue
   assert_success
   refute_output --partial "Wednesday"
 }
 
 @test "perform --save preserves changes in the image" {
   copy_image "test-save.image"
-  run_pharo bootstrap perform --save ClapSTFileEvaluatorTest testValue: Wednesday.
+  run_pharo bootstrap perform --save ClapPharoCommandsTest testValue: Wednesday.
   assert_success
 
   # Check that the evaluation of the previous script has been persisted
-  run_pharo bootstrap perform ClapSTFileEvaluatorTest testValue
+  run_pharo bootstrap perform ClapPharoCommandsTest testValue
   assert_success
   assert_output --partial "Wednesday"
 }
