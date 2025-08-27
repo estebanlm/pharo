@@ -353,7 +353,7 @@ Context >> temporaryVariables [
 	"If this context did not yet execute, consider the initial PC"
 	| suspendedPC |
 	suspendedPC := self executedPC max: self method initialPC.
-	^ self method debugInfo variablesAt: suspendedPC
+	^ self method debugInfo asCachedDebugInfo variablesAt: suspendedPC
 ]
 
 { #category : '*Debugging-Core' }

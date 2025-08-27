@@ -80,6 +80,19 @@ LocalVariable >> createCopiedVariableFor: aScope [
 			scope: aScope
 ]
 
+{ #category : 'escaping' }
+LocalVariable >> descriptionArrayForScope: aScope [
+
+	| distance |
+	distance := aScope nonOptimizedDistanceTo: self scope.
+
+	^ {
+		  self name.
+		  self isArgumentVariable.
+		  distance.
+		  index }
+]
+
 { #category : 'emitting' }
 LocalVariable >> emitStore: methodBuilder [
 

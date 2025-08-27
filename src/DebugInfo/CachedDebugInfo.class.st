@@ -59,3 +59,9 @@ CachedDebugInfo >> sourceCode: aString [
 CachedDebugInfo >> stopTable: aCollection [ 
 	stopTable := aCollection
 ]
+
+{ #category : 'accessing' }
+CachedDebugInfo >> variablesAt: aBytecodePC [
+
+	^ (self debugScopeAt: aBytecodePC) variables
+]
