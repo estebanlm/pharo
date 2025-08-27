@@ -10,6 +10,17 @@ teardown-workdir() {
   rm -rf "$WORKDIR"
 }
 
+set-process-group() {
+  pgid=$(ps -o pgid= -p "$pid" | tr -d ' ')
+}
+
+kill-process-group() {
+  # Kill the whole process group if still alive
+  if [[ -n "$pgid" ]]; then
+    kill -9 -"$pgid" 2>/dev/null || true
+  fi
+}
+
 run_with_timeout() {
   local seconds="$1"
   shift

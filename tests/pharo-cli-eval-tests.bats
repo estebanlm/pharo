@@ -7,6 +7,7 @@ setup() {
 }
 
 teardown() {
+  kill-process-group
   teardown-workdir
 }
 
@@ -40,13 +41,11 @@ teardown() {
 @test "eval with --no-quit keeps the image alive" {
   "$PHARO" --headless "$IMAGE" eval --no-quit 42 &
   pid=$!
+  set-process-group
   # Give it a moment to start
   sleep 2
 
   assert_is_running $pid
-
-  # Cleanup: kill it so test suite can continue
-  kill -9 $pid || true
 }
 
 @test "eval does not save if flag --save absent" {

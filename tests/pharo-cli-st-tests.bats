@@ -7,6 +7,7 @@ setup() {
 }
 
 teardown() {
+  kill-process-group
   teardown-workdir
 }
 
@@ -43,13 +44,11 @@ teardown() {
   echo '42' > "$WORKDIR/long-running.st"
   "$PHARO" --headless "$IMAGE" st "$WORKDIR/long-running.st" &
   pid=$!
+  set-process-group
   # Give it a moment to start
   sleep 2
 
   assert_is_running $pid
-
-  # Cleanup: kill it so test suite can continue
-  kill -9 $pid || true
 }
 
 @test "st does not save if flag --save absent" {
