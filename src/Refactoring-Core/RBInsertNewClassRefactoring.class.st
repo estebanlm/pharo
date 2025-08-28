@@ -122,7 +122,7 @@ RBInsertNewClassRefactoring >> subclasses: aCollection [
 { #category : 'accessing' }
 RBInsertNewClassRefactoring >> superclass: aClass [
 	"set the superclass object"
-	
+
 	superclass := self classObjectFor: aClass
 ]
 

@@ -1,8 +1,9 @@
 "
-I am a command to create new subclass og given class (my targetClass)
+I am a command to insert new superclass into my target class.
+I create new class using supeclass of my target class. And I replace superclass of target class with new created class
 "
 Class {
-	#name : 'SycCmInsertSubclassCommand2',
+	#name : 'SycCmInsertSuperclassCommand2',
 	#superclass : 'SycCmNewClassCreationCommand',
 	#category : 'SystemCommands-ClassCommands-Creation',
 	#package : 'SystemCommands-ClassCommands',
@@ -10,62 +11,51 @@ Class {
 }
 
 { #category : 'executing' }
-SycCmInsertSubclassCommand2 >> executeRefactoring [
+SycCmInsertSuperclassCommand2 >> executeRefactoring [
 	"The class name is necessary so the browser can select the new subclass"
+	
 	| driver |
-	driver := (ReInsertSubclassDriver 
-		superclass: self targetClass 
-		packageNames: self packageNames)
-			scopes: refactoringScopes.
-	driver subclass
+	driver := (ReInsertSuperclassDriver 
+		superclass: self targetClass
+		packageNames: self packageNames) scopes: refactoringScopes.
+	"Pay attention superclass meansthe class above which the new class was inserted"
+	driver superclass
 		ifNil: [ ^ self ]. " cancelled "
 	driver runRefactoring.
-	newClassName := driver subclass.
+	newClassName := driver superclass name.
 ]
 
 { #category : 'accessing' }
-SycCmInsertSubclassCommand2 >> icon [
-	^self iconNamed:#add
+SycCmInsertSuperclassCommand2 >> icon [
+	^ self iconNamed: #smallLoadProject
 ]
 
 { #category : 'testing' }
-SycCmInsertSubclassCommand2 >> isApplicable [
+SycCmInsertSuperclassCommand2 >> isApplicable [
 
 	^ context lastSelectedClass isTrait not
 ]
 
 { #category : 'accessing' }
-SycCmInsertSubclassCommand2 >> name [
-	^ '(R) Insert subclass'
+SycCmInsertSuperclassCommand2 >> name [
+	^ '(R) Insert superclass'
 ]
 
 { #category : 'accessing' }
-SycCmInsertSubclassCommand2 >> newClassName [
-
-	^ newClassName 
+SycCmInsertSuperclassCommand2 >> order [
+	^ 30
 ]
 
 { #category : 'accessing' }
-SycCmInsertSubclassCommand2 >> newClassName: aString [ 
-
-	newClassName := aString asSymbol
-]
-
-{ #category : 'accessing' }
-SycCmInsertSubclassCommand2 >> order [
-	^ 10100.1
-]
-
-{ #category : 'accessing' }
-SycCmInsertSubclassCommand2 >> packageNames [
+SycCmInsertSuperclassCommand2 >> packageNames [
 	"Answer a <Collection> of <Symbol> of the packages available to the new class"
 	
 	^ PackageOrganizer default packageNames
 ]
 
 { #category : 'preparation' }
-SycCmInsertSubclassCommand2 >> prepareFullExecution [
-	
+SycCmInsertSuperclassCommand2 >> prepareFullExecution [
+
 	"Here there is a bug when we repplace firstNavigationScopes by refactoringScopes
 	when using refactoringScopes the model is not able to find the superclass of a class. 
 	Probably because the model is just made for the class and not the class hierarchy.

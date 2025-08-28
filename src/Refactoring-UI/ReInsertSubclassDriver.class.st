@@ -1,3 +1,8 @@
+"
+Given a class I insert a class betweeb that class and its subclasses.
+
+Note that the argument of the class side method is the actual class below which the new subclass should be inserted.
+"
 Class {
 	#name : 'ReInsertSubclassDriver',
 	#superclass : 'ReClassInteractionDriver',
@@ -13,7 +18,7 @@ Class {
 
 { #category : 'accessing - class hierarchy' }
 ReInsertSubclassDriver class >> superclass: aClass [
-	"Answer a new instance using aClass as the superclass of the receiver's subclass"
+	"superclass is the class that acts as a reference. A new subclass will be inserted below"
 
 	^ self basicNew
 		superclass: aClass;
@@ -103,7 +108,8 @@ ReInsertSubclassDriver >> scopes: refactoringScopes [
 
 	scopes := refactoringScopes.
 	model := self refactoringScopeOn: scopes last.
-	superclass := model classFor: model environment classes anyOne.
+	superclass := model classObjectFor: superclass
+
 ]
 
 { #category : 'accessing' }
