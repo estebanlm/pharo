@@ -18,7 +18,7 @@ teardown() {
 
 @test "loadHermes can load a hermes file and quit" {
   copy_image "test-hermes.image"
-  run_pharo loadHermes exported-empty-package.hermes --save
+  run_pharo loadHermes $ROOT_DIR/exported-empty-package.hermes --save
   assert_success
 
   run_pharo eval Package named: "#empty"
