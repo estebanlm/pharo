@@ -27,3 +27,4 @@ github--*.zip
 **/.DS_STORE
 
 tests/vendor/
+tests/report.xml

@@ -7,7 +7,7 @@ setup() {
 }
 
 teardown() {
-  kill-process-group
+  kill-process
   teardown-workdir
 }
 
@@ -39,10 +39,7 @@ teardown() {
 }
 
 @test "eval with --no-quit keeps the image alive" {
-  "$PHARO" --headless "$IMAGE" eval --no-quit 42 &
-  pid=$!
-  set-process-group
-  # Give it a moment to start
+  run_pharo_in_backgroud eval --no-quit 42
   sleep 2
 
   assert_is_running $pid

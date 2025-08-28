@@ -10,14 +10,9 @@ teardown-workdir() {
   rm -rf "$WORKDIR"
 }
 
-set-process-group() {
-  pgid=$(ps -o pgid= -p "$pid" | tr -d ' ')
-}
-
-kill-process-group() {
-  # Kill the whole process group if still alive
-  if [[ -n "$pgid" ]]; then
-    kill -9 -"$pgid" 2>/dev/null || true
+kill-process() {
+  if [[ -n "$pid" ]]; then
+    kill -9 "$pid" 2>/dev/null || true
   fi
 }
 
@@ -29,6 +24,15 @@ run_with_timeout() {
 
 run_pharo() {
   run_with_timeout 2 "$PHARO" --headless "$IMAGE" "$@"
+}
+
+run_pharo_in_backgroud() {
+  (
+    # make this process the group leader
+    set -m           # enable job control
+    exec "$PHARO" --headless "$IMAGE" "$@"
+  ) &
+  pid=$!
 }
 
 # Copy a Pharo image + changes file to a new name inside $WORKDIR
@@ -61,6 +65,6 @@ assert_is_running() {
     return 0
   else
     # fail with a nice error message
-    bats_fail "Expected process with PID $pid to be running, but it is not."
+    fail "Expected process with PID $pid to be running, but it is not."
   fi
 }

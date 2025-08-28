@@ -7,7 +7,7 @@ setup() {
 }
 
 teardown() {
-  kill-process-group
+  kill-process
   teardown-workdir
 }
 
@@ -42,9 +42,7 @@ teardown() {
 
 @test "st without --quit keeps the image alive" {
   echo '42' > "$WORKDIR/long-running.st"
-  "$PHARO" --headless "$IMAGE" st "$WORKDIR/long-running.st" &
-  pid=$!
-  set-process-group
+  run_pharo_in_backgroud  st "$WORKDIR/long-running.st"
   # Give it a moment to start
   sleep 2
 
