@@ -82,7 +82,7 @@ ThemeIcons class >> destinationPath [
 
 { #category : 'private' }
 ThemeIcons class >> loadDefault [
-
+	<script>
 	^ self new
 		  name: self defaultIconsPack;
 		  loadIconsFromUrl;
@@ -263,6 +263,13 @@ ThemeIcons >> iconsPerScale [
 	^ iconsPerScale ifNil: [ iconsPerScale := Dictionary new ]
 ]
 
+{ #category : 'initialization' }
+ThemeIcons >> initialize [
+
+	super initialize.
+	scale := 1
+]
+
 { #category : 'testing' }
 ThemeIcons >> isReportingNotFound [
 	^ reportNotFound ifNil: [ reportNotFound := false ]
@@ -367,7 +374,7 @@ ThemeIcons >> readPNGFrom: aReference [
 
 { #category : 'accessing' }
 ThemeIcons >> scale [
-	^ scale ifNil: [ scale := 1 ]
+	^ scale
 ]
 
 { #category : 'accessing' }
