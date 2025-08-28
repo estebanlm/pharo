@@ -2,7 +2,7 @@
 I am a command to create new subclass og given class (my targetClass)
 "
 Class {
-	#name : 'SycCmAddSubclassCommand',
+	#name : 'SycCmInsertSubclassCommand2',
 	#superclass : 'SycCmNewClassCreationCommand',
 	#category : 'SystemCommands-ClassCommands-Creation',
 	#package : 'SystemCommands-ClassCommands',
@@ -10,10 +10,10 @@ Class {
 }
 
 { #category : 'executing' }
-SycCmAddSubclassCommand >> executeRefactoring [
+SycCmInsertSubclassCommand2 >> executeRefactoring [
 	"The class name is necessary so the browser can select the new subclass"
 	| driver |
-	driver := (ReAddSubclassDriver 
+	driver := (ReInsertSubclassDriver 
 		superclass: self targetClass 
 		packageNames: self packageNames)
 			scopes: refactoringScopes.
@@ -24,47 +24,47 @@ SycCmAddSubclassCommand >> executeRefactoring [
 ]
 
 { #category : 'accessing' }
-SycCmAddSubclassCommand >> icon [
+SycCmInsertSubclassCommand2 >> icon [
 	^self iconNamed:#add
 ]
 
 { #category : 'testing' }
-SycCmAddSubclassCommand >> isApplicable [
+SycCmInsertSubclassCommand2 >> isApplicable [
 
 	^ context lastSelectedClass isTrait not
 ]
 
 { #category : 'accessing' }
-SycCmAddSubclassCommand >> name [
-	^ '(R) New subclass'
+SycCmInsertSubclassCommand2 >> name [
+	^ '(R) Insert subclass'
 ]
 
 { #category : 'accessing' }
-SycCmAddSubclassCommand >> newClassName [
+SycCmInsertSubclassCommand2 >> newClassName [
 
 	^ newClassName 
 ]
 
 { #category : 'accessing' }
-SycCmAddSubclassCommand >> newClassName: aString [ 
+SycCmInsertSubclassCommand2 >> newClassName: aString [ 
 
 	newClassName := aString asSymbol
 ]
 
 { #category : 'accessing' }
-SycCmAddSubclassCommand >> order [
+SycCmInsertSubclassCommand2 >> order [
 	^ 10100.1
 ]
 
 { #category : 'accessing' }
-SycCmAddSubclassCommand >> packageNames [
+SycCmInsertSubclassCommand2 >> packageNames [
 	"Answer a <Collection> of <Symbol> of the packages available to the new class"
 	
 	^ PackageOrganizer default packageNames
 ]
 
 { #category : 'preparation' }
-SycCmAddSubclassCommand >> prepareFullExecution [
+SycCmInsertSubclassCommand2 >> prepareFullExecution [
 	
 	refactoringScopes := context refactoringScopes.
 	targetClass := context lastSelectedClass.

@@ -60,8 +60,8 @@ StRequestClassPresenter >> initializeTagsPresenter [
 { #category : 'accessing' }
 StRequestClassPresenter >> newClassName [
 	"Answer a <String> containing the current contents of the new class name presenter"
-	
-	^ textInput text trimmed
+
+	^ textInput text trimBoth
 ]
 
 { #category : 'api - showing' }
