@@ -1,5 +1,5 @@
 Class {
-	#name : 'ReAddSubclassDriverTest',
+	#name : 'ReInsertSubclassDriverTest',
 	#superclass : 'ReDriverTest',
 	#instVars : [
 		'testingEnvironment'
@@ -10,47 +10,33 @@ Class {
 }
 
 { #category : 'tests' }
-ReAddSubclassDriverTest >> assertSubclassesOf: rbClass [
-
-
-	| expectedSubclassNames |
-	expectedSubclassNames := OrderedCollection new. 
-	expectedSubclassNames add: self newSubclassName;
-		addAll:  (self superclassToAddSubclass subclasses collect: [ :each | each name ]).
-		
-	self assert: rbClass subclasses size equals: 3.
-	self 
-		assertCollection: (rbClass subclasses collect: [ :each | each name ]) 
-		hasSameElements: expectedSubclassNames
-]
-
-{ #category : 'tests' }
-ReAddSubclassDriverTest >> newSubclassName [
+ReInsertSubclassDriverTest >> newSubclassName [
 
 	^ #ReChangeMock
 ]
 
 { #category : 'running' }
-ReAddSubclassDriverTest >> setUp [
+ReInsertSubclassDriverTest >> setUp [
 
 	super setUp.
 	testingEnvironment := RBClassEnvironment classes: self superclassToAddSubclass withAllSubclasses 
 ]
 
 { #category : 'tests' }
-ReAddSubclassDriverTest >> superclassToAddSubclass [
+ReInsertSubclassDriverTest >> superclassToAddSubclass [
 	"Answer the <Class> which will be subclassed"
 	
 	^ RBRootClassForInsertingSubclasses 
 ]
 
 { #category : 'tests' }
-ReAddSubclassDriverTest >> testAddSingleSubclass [
+ReInsertSubclassDriverTest >> testInsertSubclass [
 
 	| driver rbClass |
 
-	driver := ReAddSubclassDriver new. 
+	driver := ReInsertSubclassDriver new. 
 	self setUpDriver: driver.
+	
 	driver 
 		superclass: self superclassToAddSubclass;
 		scopes: { testingEnvironment };
@@ -64,34 +50,47 @@ ReAddSubclassDriverTest >> testAddSingleSubclass [
 	
 	self 
 		assert: driver refactoring changes changes size 
-		equals: 1.
+		equals: 3.
 		
-	self assertSubclassesOf: rbClass
+	"one because the subclasses got a new root the new subclass of the superclass"
+	self assert: rbClass subclasses size equals: 1.
+	self assert: rbClass subclasses first subclasses size equals: 2.
+	
+	self assert: rbClass subclasses first name equals: self newSubclassName
 ]
 
 { #category : 'tests' }
-ReAddSubclassDriverTest >> testAddSingleSubclassToDifferentPackage [
+ReInsertSubclassDriverTest >> testInsertSubclassInADifferentPackage [
 
 	| driver rbClass |
 
-	driver := ReAddSubclassDriver new. 
+	driver := ReInsertSubclassDriver new. 
 	self setUpDriver: driver.
-
-	driver	
-		superclass: self superclassToAddSubclass name;
-		subclass: self newSubclassName;
+	
+	driver 
+		superclass: self superclassToAddSubclass;
 		scopes: { testingEnvironment };
 		packageName: ReAddSubclassDriver packageName;	
-		runRefactoring.
-		
+		subclass: self newSubclassName.
+	
 	rbClass := driver superclass.
+	
+	self assert: rbClass subclasses size equals: 2.
+
+	driver runRefactoring.
 	
 	self 
 		assert: driver refactoring changes changes size 
-		equals: 1.
+		equals: 3.
+		
+	"one because the subclasses got a new root the new subclass of the superclass"
+	self assert: rbClass subclasses size equals: 1.
+	self assert: rbClass subclasses first subclasses size equals: 2.
+	
+	self assert: rbClass subclasses first name equals: self newSubclassName.
+	
+
 	self
 		assert: driver refactoring changes changes first package
-		equals: ReAddSubclassDriver packageName.
-		
-	self assertSubclassesOf: rbClass
+		equals: ReAddSubclassDriver packageName
 ]

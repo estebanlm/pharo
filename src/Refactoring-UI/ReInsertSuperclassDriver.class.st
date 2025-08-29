@@ -1,11 +1,9 @@
 "
-Interaction object responsible for driving the analysis and interactive adding of classes.
-
-The driver could be instantiated by providing a superclass, and additionally, a `Collection` of package names.
-
+Given a class I insert a superclass between its superclass and the class.
+Note that the class is given with the superclass for now.
 "
 Class {
-	#name : 'ReAddSubclassDriver',
+	#name : 'ReInsertSuperclassDriver',
 	#superclass : 'ReClassInteractionDriver',
 	#instVars : [
 		'superclass',
@@ -18,8 +16,8 @@ Class {
 }
 
 { #category : 'accessing - class hierarchy' }
-ReAddSubclassDriver class >> superclass: aClass [
-	"superclass is the class that acts as a reference. A new subclass will be inserted below"
+ReInsertSuperclassDriver class >> superclass: aClass [
+	"superclass is the class that acts as a reference. A new subclass will be inserted above"
 
 	^ self basicNew
 		superclass: aClass;
@@ -28,7 +26,7 @@ ReAddSubclassDriver class >> superclass: aClass [
 ]
 
 { #category : 'instance creation' }
-ReAddSubclassDriver class >> superclass: aClass packageNames: packages [
+ReInsertSuperclassDriver class >> superclass: aClass packageNames: packages [
 	"Answer a new instance using aClass as the superclass of the receiver's subclass, and packages as a <Collection> of <String> specifying the package names where the new subclass will be created"
 
 	^ self basicNew
@@ -39,24 +37,25 @@ ReAddSubclassDriver class >> superclass: aClass packageNames: packages [
 ]
 
 { #category : 'accessing' }
-ReAddSubclassDriver >> comment [
+ReInsertSuperclassDriver >> comment [
 
 	^ comment
 ]
 
 { #category : 'accessing' }
-ReAddSubclassDriver >> comment: aString [ 
+ReInsertSuperclassDriver >> comment: anObject [
 
-	comment := aString
+	comment := anObject
 ]
 
 { #category : 'accessing' }
-ReAddSubclassDriver >> configureRefactoring [
-
-
-	refactoring := (RBInsertNewClassRefactoring className: self subclass)
+ReInsertSuperclassDriver >> configureRefactoring [
+	
+	
+	refactoring := (RBInsertNewClassRefactoring className: self subclass asString)
 		model: model;
-		superclass: self superclass;
+		superclass: self superclass superclass name;
+		subclasses: (self superclass superclass subclasses collect: [ :each | each name ]);
 		packageName: self packageName;
 		tagName: self tagName;
 		comment: self comment;
@@ -64,13 +63,13 @@ ReAddSubclassDriver >> configureRefactoring [
 ]
 
 { #category : 'accessing' }
-ReAddSubclassDriver >> dialogTitleForClassSelection [
+ReInsertSuperclassDriver >> dialogTitleForClassSelection [
 
-	^ 'Add new subclass of ' , superclass name
+	^ 'Insert new superclass of ' , superclass name
 ]
 
 { #category : 'accessing' }
-ReAddSubclassDriver >> packageName [
+ReInsertSuperclassDriver >> packageName [
 	"Answer a <Symbol> representing the receiver's package name where the new class will be add"
 
 	^ packageName
@@ -79,7 +78,7 @@ ReAddSubclassDriver >> packageName [
 ]
 
 { #category : 'initialization' }
-ReAddSubclassDriver >> requestSingleSubclass [
+ReInsertSuperclassDriver >> requestClass [
 
 	(StRefactoringAddClassPresenter on: self)
 		onCancel: [ : dialog | dialog close ];
@@ -93,15 +92,11 @@ ReAddSubclassDriver >> requestSingleSubclass [
 ]
 
 { #category : 'execution' }
-ReAddSubclassDriver >> runRefactoring [
-	
-	subclass ifNil: [ 
-		self requestSingleSubclass ].
-	"the refactoring was cancelled."
+ReInsertSuperclassDriver >> runRefactoring [
+
+	subclass ifNil: [ self requestClass ].
 	subclass ifNil: [ ^ false ].
-	
 	self configureRefactoring.
-	
 	refactoring failedApplicabilityPreconditions
 		ifNotEmpty: [ : conditions | self informConditions: conditions. ^ false ].
 	self applyChanges.
@@ -109,43 +104,34 @@ ReAddSubclassDriver >> runRefactoring [
 ]
 
 { #category : 'accessing' }
-ReAddSubclassDriver >> scopes: refactoringScopes [
+ReInsertSuperclassDriver >> scopes: refactoringScopes [
 
 	scopes := refactoringScopes.
 	model := self refactoringScopeOn: scopes last.
 	superclass := model classObjectFor: superclass
-
+	
 ]
 
 { #category : 'accessing' }
-ReAddSubclassDriver >> subclass [
+ReInsertSuperclassDriver >> subclass [
 
 	^ subclass
 ]
 
 { #category : 'accessing' }
-ReAddSubclassDriver >> subclass: aClass [
+ReInsertSuperclassDriver >> subclass: anObject [
 
-	subclass := aClass
+	subclass := anObject
 ]
 
 { #category : 'accessing' }
-ReAddSubclassDriver >> superclass [
+ReInsertSuperclassDriver >> superclass [
 
 	^ superclass
 ]
 
 { #category : 'accessing' }
-ReAddSubclassDriver >> superclass: anObject [
+ReInsertSuperclassDriver >> superclass: anObject [
 
 	superclass := anObject
-]
-
-{ #category : 'accessing' }
-ReAddSubclassDriver >> tagName [
-	"Answer a <Symbol> representing the receiver's tag name where the new class will be add"
-
-	^ tagName
-		ifNil: [ self superclass tagName ]
-
 ]
