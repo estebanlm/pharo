@@ -18,7 +18,7 @@ Class Instance Variables:
 "
 Class {
 	#name : 'MCWorkingCopy',
-	#superclass : 'Model',
+	#superclass : 'Object',
 	#instVars : [
 		'ancestry',
 		'counter',
