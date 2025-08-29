@@ -53,6 +53,7 @@ ReAddSubclassDriver >> comment: aString [
 { #category : 'accessing' }
 ReAddSubclassDriver >> configureRefactoring [
 
+
 	refactoring := (RBInsertNewClassRefactoring className: self subclass)
 		model: model;
 		superclass: self superclass;
@@ -60,14 +61,6 @@ ReAddSubclassDriver >> configureRefactoring [
 		tagName: self tagName;
 		comment: self comment;
 		yourself
-]
-
-{ #category : 'initialization' }
-ReAddSubclassDriver >> initialize [
-
-	super initialize.
-	self requestSingleSubclass.
-
 ]
 
 { #category : 'accessing' }
@@ -96,7 +89,12 @@ ReAddSubclassDriver >> requestSingleSubclass [
 { #category : 'execution' }
 ReAddSubclassDriver >> runRefactoring [
 
+	subclass ifNil: [ 
+		self requestSingleSubclass ].
+	subclass ifNil: [ ^ self ].
+	
 	self configureRefactoring.
+	
 	refactoring failedApplicabilityPreconditions
 		ifNotEmpty: [ : conditions | ^ self informConditions: conditions ].
 	self applyChanges
