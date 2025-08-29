@@ -821,9 +821,7 @@ UITheme >> chooseForSaveFileReferenceIn: aThemedMorph title: title extensions: e
 	directory := path
 		             ifNil: [ StFileSystemModel defaultDirectory ]
 		             ifNotNil: [
-				             (path isKindOf: FileReference)
-					             ifTrue: [ path parent ]
-					             ifFalse: [ path asFileReference parent ] ].
+				           path asFileReference parent ].
 
 	dialog
 		defaultFolder: directory;
