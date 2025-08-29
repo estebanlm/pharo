@@ -57,10 +57,6 @@ SocketAddress class >> zero [
 	^ self basicNew: 4
 ]
 
-{ #category : 'converting' }
-SocketAddress >> asSocketAddress [
-]
-
 { #category : 'displaying' }
 SocketAddress >> displayStringOn: stream [
 	"Overwrite to get standard object behaviour"
