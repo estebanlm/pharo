@@ -254,20 +254,13 @@ ThemeIcons >> iconNamed: aSymbol ifNone: aBlock [
 { #category : 'accessing' }
 ThemeIcons >> icons [
 
-	^ self iconsPerScale at: scale ifAbsentPut: [ IdentityDictionary new ]
+	^ self iconsPerScale at: self scale ifAbsentPut: [ IdentityDictionary new ]
 ]
 
 { #category : 'accessing' }
 ThemeIcons >> iconsPerScale [
 
 	^ iconsPerScale ifNil: [ iconsPerScale := Dictionary new ]
-]
-
-{ #category : 'initialization' }
-ThemeIcons >> initialize [
-
-	super initialize.
-	scale := 1
 ]
 
 { #category : 'testing' }
@@ -374,7 +367,7 @@ ThemeIcons >> readPNGFrom: aReference [
 
 { #category : 'accessing' }
 ThemeIcons >> scale [
-	^ scale
+	^ scale ifNil: [ scale := 1 ]
 ]
 
 { #category : 'accessing' }
