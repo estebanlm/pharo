@@ -62,7 +62,7 @@ ReInsertSuperclassDriver >> configureRefactoring [
 		yourself
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReInsertSuperclassDriver >> dialogTitleForClassSelection [
 
 	^ 'Insert new superclass of ' , superclass name

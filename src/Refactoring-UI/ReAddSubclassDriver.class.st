@@ -63,7 +63,7 @@ ReAddSubclassDriver >> configureRefactoring [
 		yourself
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReAddSubclassDriver >> dialogTitleForClassSelection [
 
 	^ 'Add new subclass of ' , superclass name

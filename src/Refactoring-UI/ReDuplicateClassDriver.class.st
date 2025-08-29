@@ -52,7 +52,7 @@ ReDuplicateClassDriver >> configureRefactoring [
 	refactoring := ReDuplicateClassRefactoring copyClass: rbClass
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReDuplicateClassDriver >> dialogTitleForClassSelection [
 
 	^ 'Duplicate class ' , className

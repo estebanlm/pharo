@@ -16,7 +16,7 @@ ReClassInteractionDriver >> configureRefactoring [
 	^ self subclassResponsibility
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReClassInteractionDriver >> dialogTitleForClassSelection [
 
 	^ self subclassResponsibility 
