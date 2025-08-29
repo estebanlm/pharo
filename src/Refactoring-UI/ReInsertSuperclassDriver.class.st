@@ -62,16 +62,6 @@ ReInsertSuperclassDriver >> configureRefactoring [
 		yourself
 ]
 
-{ #category : 'initialization' }
-ReInsertSuperclassDriver >> initialize [
-
-	super initialize.
-	self requestSingleSubclass.
-	"once invoked the subclass instance variable has a string with the new name.
-	and it is basically the name of the inserted superclass :("
-	
-]
-
 { #category : 'accessing' }
 ReInsertSuperclassDriver >> packageName [
 	"Answer a <Symbol> representing the receiver's package name where the new class will be add"
@@ -82,7 +72,7 @@ ReInsertSuperclassDriver >> packageName [
 ]
 
 { #category : 'initialization' }
-ReInsertSuperclassDriver >> requestSingleSubclass [
+ReInsertSuperclassDriver >> requestClass [
 
 	(StRefactoringAddClassPresenter on: self)
 		onCancel: [ : dialog | dialog close ];
@@ -98,10 +88,13 @@ ReInsertSuperclassDriver >> requestSingleSubclass [
 { #category : 'execution' }
 ReInsertSuperclassDriver >> runRefactoring [
 
+	subclass ifNil: [ self requestClass ].
+	subclass ifNil: [ ^ false ].
 	self configureRefactoring.
 	refactoring failedApplicabilityPreconditions
-		ifNotEmpty: [ : conditions | ^ self informConditions: conditions ].
-	self applyChanges
+		ifNotEmpty: [ : conditions | self informConditions: conditions. ^ false ].
+	self applyChanges.
+	^ true
 ]
 
 { #category : 'accessing' }

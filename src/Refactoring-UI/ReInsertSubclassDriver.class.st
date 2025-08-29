@@ -62,15 +62,6 @@ ReInsertSubclassDriver >> configureRefactoring [
 		yourself
 ]
 
-{ #category : 'initialization' }
-ReInsertSubclassDriver >> initialize [
-
-	super initialize.
-	self requestSingleSubclass.
-	"once invoked the subclass instance variable has a string with the new name."
-	
-]
-
 { #category : 'accessing' }
 ReInsertSubclassDriver >> packageName [
 	"Answer a <Symbol> representing the receiver's package name where the new class will be add"
@@ -81,7 +72,7 @@ ReInsertSubclassDriver >> packageName [
 ]
 
 { #category : 'initialization' }
-ReInsertSubclassDriver >> requestSingleSubclass [
+ReInsertSubclassDriver >> requestClass [
 
 	(StRefactoringAddClassPresenter on: self)
 		onCancel: [ : dialog | dialog close ];
@@ -97,10 +88,17 @@ ReInsertSubclassDriver >> requestSingleSubclass [
 { #category : 'execution' }
 ReInsertSubclassDriver >> runRefactoring [
 
+	subclass ifNil: [ self requestClass ].
+	subclass ifNil: [ ^ false ].
 	self configureRefactoring.
+	
+	"We suspect that the this is impossible to have failed applicability preconditions. 
+	Because the dialog is checking already a lot and in particular that the newclass should not already
+	exist."
 	refactoring failedApplicabilityPreconditions
-		ifNotEmpty: [ : conditions | ^ self informConditions: conditions ].
-	self applyChanges
+		ifNotEmpty: [ :conditions | self informConditions: conditions. ^ false].
+	self applyChanges.
+	^ true
 ]
 
 { #category : 'accessing' }

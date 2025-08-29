@@ -88,16 +88,18 @@ ReAddSubclassDriver >> requestSingleSubclass [
 
 { #category : 'execution' }
 ReAddSubclassDriver >> runRefactoring [
-
+	
 	subclass ifNil: [ 
 		self requestSingleSubclass ].
-	subclass ifNil: [ ^ self ].
+	"the refactoring was cancelled."
+	subclass ifNil: [ ^ false ].
 	
 	self configureRefactoring.
 	
 	refactoring failedApplicabilityPreconditions
-		ifNotEmpty: [ : conditions | ^ self informConditions: conditions ].
-	self applyChanges
+		ifNotEmpty: [ : conditions | self informConditions: conditions. ^ false ].
+	self applyChanges.
+	^ true
 ]
 
 { #category : 'accessing' }

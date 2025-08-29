@@ -19,9 +19,9 @@ SycCmInsertSuperclassCommand2 >> executeRefactoring [
 		superclass: self targetClass
 		packageNames: self packageNames) scopes: refactoringScopes.
 	"Pay attention superclass meansthe class above which the new class was inserted"
-	driver superclass
-		ifNil: [ ^ self ]. " cancelled "
-	driver runRefactoring.
+
+	driver runRefactoring
+		ifFalse: [ ^ self ].
 	newClassName := driver superclass name.
 ]
 

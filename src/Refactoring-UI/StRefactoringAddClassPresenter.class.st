@@ -110,7 +110,7 @@ StRefactoringAddClassPresenter >> updateTagItems: item [
 	"Note that as it seems there is no Spec drop list with editable text, we provide a 'Core' tag by default if the package has no tags"
 
 	| pkg superclassTag |
-	superclassTag := driver superclass packageTag name.
+	superclassTag := driver superclass packageTagName.
 	item
 		ifNil: [
 				superclassTag

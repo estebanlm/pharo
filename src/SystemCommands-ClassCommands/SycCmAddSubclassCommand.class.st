@@ -17,9 +17,8 @@ SycCmAddSubclassCommand >> executeRefactoring [
 		superclass: self targetClass 
 		packageNames: self packageNames)
 			scopes: refactoringScopes.
-	driver subclass
-		ifNil: [ ^ self ]. " cancelled "
-	driver runRefactoring.
+	driver runRefactoring
+		ifFalse: [ ^ self ].
 	newClassName := driver subclass.
 ]
 
