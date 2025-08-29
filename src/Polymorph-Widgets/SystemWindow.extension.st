@@ -881,17 +881,6 @@ SystemWindow >> navigationKey: event [
 ]
 
 { #category : '*Polymorph-Widgets' }
-SystemWindow >> nextMorphAcrossInWindow [
-	"Answer the next morph in the window. Traverse
-	from the receiver to its next sibling or owner's next sibling etc.
-	Make sure we behave like a normal Morph, if we aren't a toplevel window ( or not visible) "
-
-	^ (self owner isNotNil and: [ self owner isWorldMorph ])
-		ifTrue: [ self ]
-		ifFalse: [ super nextMorphAcrossInWindow ]
-]
-
-{ #category : '*Polymorph-Widgets' }
 SystemWindow >> nextMorphInWindow [
 	"Answer the next morph in the window. Traverse
 	from the receiver to its first pane."
@@ -950,15 +939,6 @@ SystemWindow >> preferredCornerStyle [
 	"Answer the preferred corner style."
 
 	^self theme windowPreferredCornerStyleFor: self
-]
-
-{ #category : '*Polymorph-Widgets' }
-SystemWindow >> previousMorphInWindow [
-	"Answer the previous morph in the window. This will be the
-	last submorph recursively of the first pane morph."
-
-	^self hasSubmorphs
-		ifTrue: [self lastSubmorphRecursive]
 ]
 
 { #category : '*Polymorph-Widgets' }
@@ -1175,16 +1155,6 @@ SystemWindow >> themeChanged [
 	self isEmbedded ifTrue: [ self borderWidth: 0 ].
 
 	super themeChanged
-]
-
-{ #category : '*Polymorph-Widgets' }
-SystemWindow >> toggleVisibleAndRaise [
-	"Toggle the visibility of the receiver, bringing to
-	the front if becoming visible. Activate or passivate here."
-
-	self isActive ifTrue: [self world navigateVisibleWindowForward].
-	super toggleVisibleAndRaise.
-	self visible ifTrue: [self activate]
 ]
 
 { #category : '*Polymorph-Widgets' }

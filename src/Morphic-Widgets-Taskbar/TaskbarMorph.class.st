@@ -305,14 +305,6 @@ TaskbarMorph >> ownerChanged [
 	super ownerChanged
 ]
 
-{ #category : 'theme' }
-TaskbarMorph >> preferredButtonCornerStyle [
-	"Answer the preferred button corner style
-	for submorphs."
-
-	^#square
-]
-
 { #category : 'recategorized' }
 TaskbarMorph >> rejectsEvent: anEvent [
 	(anEvent isMouse and: [ anEvent isMouseDown ]) ifTrue: [ ^ (self submorphs anySatisfy: [ :each | each containsPoint: anEvent cursorPoint ]) not ].

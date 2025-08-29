@@ -1503,6 +1503,17 @@ SystemWindow >> navigateFocus [
 		]
 ]
 
+{ #category : 'as yet unclassified' }
+SystemWindow >> nextMorphAcrossInWindow [
+	"Answer the next morph in the window. Traverse
+	from the receiver to its next sibling or owner's next sibling etc.
+	Make sure we behave like a normal Morph, if we aren't a toplevel window ( or not visible) "
+
+	^ (self owner isNotNil and: [ self owner isWorldMorph ])
+		ifTrue: [ self ]
+		ifFalse: [ super nextMorphAcrossInWindow ]
+]
+
 { #category : 'menu actions' }
 SystemWindow >> offerWindowMenu [
 	| aMenu |
@@ -1639,6 +1650,15 @@ SystemWindow >> preOpenInWorld: aWorld [
 	"This msg and its callees result in the window being activeOnlyOnTop"
 
 	self bounds: (RealEstateAgent initialFrameFor: self initialExtent: self initialExtent world: aWorld)
+]
+
+{ #category : 'as yet unclassified' }
+SystemWindow >> previousMorphInWindow [
+	"Answer the previous morph in the window. This will be the
+	last submorph recursively of the first pane morph."
+
+	^self hasSubmorphs
+		ifTrue: [self lastSubmorphRecursive]
 ]
 
 { #category : 'activation' }
