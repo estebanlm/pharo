@@ -19,7 +19,7 @@ ReAddSubclassDriverTest >> newSubclassName [
 ReAddSubclassDriverTest >> setUp [
 
 	super setUp.
-	testingEnvironment := RBClassEnvironment class: self superclassToAddSubclass. 
+	testingEnvironment := RBClassEnvironment classes: { self superclassToAddSubclass} 
 ]
 
 { #category : 'tests' }
@@ -68,7 +68,9 @@ ReAddSubclassDriverTest >> testAddSingleSubclassToDifferentPackage [
 
 	driver := ReAddSubclassDriver basicNew. 
 	self setUpDriver: driver.
+
 	driver	
+		superclass: self superclassToAddSubclass name;
 		subclass: self newSubclassName;
 		scopes: { testingEnvironment };
 		packageName: ReAddSubclassDriver packageName;	
@@ -78,6 +80,6 @@ ReAddSubclassDriverTest >> testAddSingleSubclassToDifferentPackage [
 		assert: driver refactoring changes changes size 
 		equals: 1.
 	self
-		assert: driver refactoring changes changes anyOne package
+		assert: driver refactoring changes changes first package
 		equals: ReAddSubclassDriver packageName
 ]
