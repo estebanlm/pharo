@@ -18,6 +18,13 @@ StRequestClassPresenter >> initializeClassNamePresenter [
 ]
 
 { #category : 'initialization' }
+StRequestClassPresenter >> initializeDialogWindow: aDialogPresenter [
+
+	super initializeDialogWindow: aDialogPresenter.
+	aDialogPresenter title: self windowTitle
+]
+
+{ #category : 'initialization' }
 StRequestClassPresenter >> initializeFocus [
 	^ self subclassResponsibility
 ]
@@ -140,4 +147,10 @@ StRequestClassPresenter >> validateClassNameBlock [
 StRequestClassPresenter >> validatePackageNameBlock [
 
 	^ [ :txt | txt isNotNil and: [ txt isNotEmpty ] ]
+]
+
+{ #category : 'accessing' }
+StRequestClassPresenter >> windowTitle [
+
+	^  driver dialogTitleForClassSelection
 ]

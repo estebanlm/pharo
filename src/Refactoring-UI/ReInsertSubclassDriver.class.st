@@ -62,6 +62,12 @@ ReInsertSubclassDriver >> configureRefactoring [
 		yourself
 ]
 
+{ #category : 'initialization' }
+ReInsertSubclassDriver >> dialogTitleForClassSelection [
+
+	^ 'Insert subclass of ', superclass name
+]
+
 { #category : 'accessing' }
 ReInsertSubclassDriver >> packageName [
 	"Answer a <Symbol> representing the receiver's package name where the new class will be add"

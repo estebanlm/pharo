@@ -138,9 +138,3 @@ StRefactoringAddClassPresenter >> windowIcon [
 
 	^ self iconNamed: #add
 ]
-
-{ #category : 'accessing' }
-StRefactoringAddClassPresenter >> windowTitle [ 
-
-	^ 'Add new subclass of ' , driver superclass name
-]
