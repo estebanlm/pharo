@@ -1,7 +1,12 @@
-Extension { #name : 'OCCodeSnippetTest' }
+Class {
+	#name : 'MonticelloCodeSnippetTest',
+	#superclass : 'OCCompileCodeSnippetTest',
+	#category : 'Monticello-Tests',
+	#package : 'Monticello-Tests'
+}
 
-{ #category : '*Monticello-Tests' }
-OCCodeSnippetTest >> testMonticello [
+{ #category : 'as yet unclassified' }
+MonticelloCodeSnippetTest >> testMonticello [
 
 	| definition |
 

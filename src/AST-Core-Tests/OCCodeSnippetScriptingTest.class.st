@@ -1,6 +1,6 @@
 Class {
 	#name : 'OCCodeSnippetScriptingTest',
-	#superclass : 'OCCodeSnippetTest',
+	#superclass : 'OCCompileCodeSnippetTest',
 	#category : 'AST-Core-Tests-Snippets',
 	#package : 'AST-Core-Tests',
 	#tag : 'Snippets'

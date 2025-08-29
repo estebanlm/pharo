@@ -1,7 +1,12 @@
-Extension { #name : 'IntegerTest' }
+Class {
+	#name : 'FSPrintingTest',
+	#superclass : 'TestCase',
+	#category : 'FileSystem-Core-Tests',
+	#package : 'FileSystem-Core-Tests'
+}
 
-{ #category : '*FileSystem-Core-Tests' }
-IntegerTest >> testHumanReadableByteSizeString [
+{ #category : 'tests' }
+FSPrintingTest >> testHumanReadableByteSizeString [
 	self assert: 1000 humanReadableByteSizeString equals: '1000.00 B'.
 	self assert: 1024 humanReadableByteSizeString equals: '1.00 KB'.
 

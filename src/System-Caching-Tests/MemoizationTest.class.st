@@ -1,7 +1,12 @@
-Extension { #name : 'BlockClosureTest' }
+Class {
+	#name : 'MemoizationTest',
+	#superclass : 'TestCase',
+	#category : 'System-Caching-Tests',
+	#package : 'System-Caching-Tests'
+}
 
-{ #category : '*System-Caching-Tests' }
-BlockClosureTest >> testMemoizedDictionary [
+{ #category : 'tests' }
+MemoizationTest >> testMemoizedDictionary [
 
 	| cache factorial result |
 	cache := Dictionary new.
@@ -22,13 +27,13 @@ BlockClosureTest >> testMemoizedDictionary [
 			(5 -> 120) } asSet
 ]
 
-{ #category : '*System-Caching-Tests' }
-BlockClosureTest >> testMemoizedLRUCache [
+{ #category : 'tests' }
+MemoizationTest >> testMemoizedLRUCache [
 	| cache factorial result |
 	cache := LRUCache new maximumWeight: 3.
 	factorial := 0. "avoid not-initialized warning when saving method source"
 	factorial := [ :n | n = 1 ifTrue: [1] ifFalse: [(factorial value: n - 1) * n] ] memoizedUsing: cache.
 	result := (1 to: 5) collect: factorial.
 	self assert: result equals: #(1 2 6 24 120).
-	self assert: cache testSupportGetCachedAssociations equals: { 3->6.   4->24.   5->120 }
+	self assert: cache cachedAssociations equals: { 3->6.   4->24.   5->120 }
 ]

@@ -1,7 +1,13 @@
-Extension { #name : 'OCCodeSnippetTest' }
+Class {
+	#name : 'OCCompileCodeSnippetTest',
+	#superclass : 'OCCodeSnippetTest',
+	#category : 'AST-Core-Tests-Snippets',
+	#package : 'AST-Core-Tests',
+	#tag : 'Snippets'
+}
 
-{ #category : '*OpalCompiler-Tests' }
-OCCodeSnippetTest >> compileSnippet: anOCCodeSnippet [ 
+{ #category : 'helpers' }
+OCCompileCodeSnippetTest >> compileSnippet: anOCCodeSnippet [ 
 
 	^ [ OpalCompiler new
 		  permitFaulty: true;
@@ -15,8 +21,8 @@ OCCodeSnippetTest >> compileSnippet: anOCCodeSnippet [
 		e pass ]
 ]
 
-{ #category : '*OpalCompiler-Tests' }
-OCCodeSnippetTest >> compileSnippet: aSnippet onError: errorBlock [
+{ #category : 'helpers' }
+OCCompileCodeSnippetTest >> compileSnippet: aSnippet onError: errorBlock [
 
 	^ [
 	  OpalCompiler new
@@ -26,8 +32,8 @@ OCCodeSnippetTest >> compileSnippet: aSnippet onError: errorBlock [
 		  do: [ :e | errorBlock cull: e ]
 ]
 
-{ #category : '*OpalCompiler-Tests' }
-OCCodeSnippetTest >> testCompileFailBlock [
+{ #category : 'tests' }
+OCCompileCodeSnippetTest >> testCompileFailBlock [
 
 	| method error |
 	error := nil.
@@ -50,8 +56,8 @@ OCCodeSnippetTest >> testCompileFailBlock [
 			self testExecute: method ]
 ]
 
-{ #category : '*OpalCompiler-Tests' }
-OCCodeSnippetTest >> testCompileFaulty [
+{ #category : 'tests' }
+OCCompileCodeSnippetTest >> testCompileFaulty [
 
 	| method |
 
@@ -74,8 +80,8 @@ OCCodeSnippetTest >> testCompileFaulty [
 	self testExecute: method
 ]
 
-{ #category : '*OpalCompiler-Tests' }
-OCCodeSnippetTest >> testCompileOnError [
+{ #category : 'tests' }
+OCCompileCodeSnippetTest >> testCompileOnError [
 
 	| method error |
 	error := nil.
@@ -92,8 +98,8 @@ OCCodeSnippetTest >> testCompileOnError [
 			self testExecute: method ]
 ]
 
-{ #category : '*OpalCompiler-Tests' }
-OCCodeSnippetTest >> testCompileOnErrorResume [
+{ #category : 'tests' }
+OCCompileCodeSnippetTest >> testCompileOnErrorResume [
 
 	| method error |
 	error := nil.
@@ -107,8 +113,8 @@ OCCodeSnippetTest >> testCompileOnErrorResume [
 	self testExecute: method
 ]
 
-{ #category : '*OpalCompiler-Tests' }
-OCCodeSnippetTest >> testCompileUndeclaredFaultyFailBlock [
+{ #category : 'tests' }
+OCCompileCodeSnippetTest >> testCompileUndeclaredFaultyFailBlock [
 
 	| method error |
 	error := nil.
@@ -132,8 +138,8 @@ OCCodeSnippetTest >> testCompileUndeclaredFaultyFailBlock [
 			self testExecute: method ]
 ]
 
-{ #category : '*OpalCompiler-Tests' }
-OCCodeSnippetTest >> testCompileWithRequestor [
+{ #category : 'tests' }
+OCCompileCodeSnippetTest >> testCompileWithRequestor [
 
 	| requestor method |
 	requestor := OCMockRequestor new.
@@ -162,8 +168,52 @@ OCCodeSnippetTest >> testCompileWithRequestor [
 	self testExecute: method
 ]
 
-{ #category : '*OpalCompiler-Tests' }
-OCCodeSnippetTest >> testDoSemanticAnalysis [
+{ #category : 'tests' }
+OCCompileCodeSnippetTest >> testCritiques [
+
+	| ast critiques |
+	ast := snippet parse.
+	critiques := ast critiques.
+
+	snippet numberOfCritiques ifNotNil: [ :n |
+		self assert: critiques size equals: n.
+		^ self ].
+
+	"Alone blocks will have ReDeadBlockRule. Currently no other critiques are fired."
+	"When we get some critiques, we will add a instance vaviable in the snippet to validate them"
+	ast isBlock
+		ifTrue: [
+			self assert: critiques size equals: 1.
+			self assert: critiques anyOne rule class equals: ReDeadBlockRule ]
+		ifFalse: [ self assert: critiques isEmpty ]
+]
+
+{ #category : 'tests' }
+OCCompileCodeSnippetTest >> testDecompile [
+
+	| method ast |
+	method := self compileSnippet: snippet.
+	method ifNil: [ ^ self skip ]. "Another test responsibility"
+	ast := method decompile.
+	self assert: ast isMethod.
+	ast := method parseTree.
+	self assert: ast isMethod.
+	"Decompilation lose many information. Not sure how to test more"
+]
+
+{ #category : 'tests' }
+OCCompileCodeSnippetTest >> testDecompileIR [
+
+	| method ir |
+	method := self compileSnippet: snippet.
+	method ifNil: [ ^ self skip ]. "Another test responsibility"
+	ir := method decompileIR.
+	self assert: ir class equals: OCIRMethod.
+	"Decompilation lose information. Not sure how to test more"
+]
+
+{ #category : 'tests' }
+OCCompileCodeSnippetTest >> testDoSemanticAnalysis [
 	"We should test more than that"
 
 	| ast |
@@ -174,8 +224,8 @@ OCCodeSnippetTest >> testDoSemanticAnalysis [
 	self assert: (snippet hasAllNotices: ast allNotices)
 ]
 
-{ #category : '*OpalCompiler-Tests' }
-OCCodeSnippetTest >> testDoSemanticAnalysisOnError [
+{ #category : 'tests' }
+OCCompileCodeSnippetTest >> testDoSemanticAnalysisOnError [
 	"We should test more than that"
 
 	| ast error |
@@ -190,8 +240,8 @@ OCCodeSnippetTest >> testDoSemanticAnalysisOnError [
 			self assert: error isNil ]
 ]
 
-{ #category : '*OpalCompiler-Tests' }
-OCCodeSnippetTest >> testDump [
+{ #category : 'tests' }
+OCCompileCodeSnippetTest >> testDump [
 
 	| ast dump ast2 dump2 |
 	ast := snippet parse.
@@ -202,8 +252,8 @@ OCCodeSnippetTest >> testDump [
 	self assert: dump2 equals: dump
 ]
 
-{ #category : '*OpalCompiler-Tests' }
-OCCodeSnippetTest >> testExecute: method [
+{ #category : 'helpers' }
+OCCompileCodeSnippetTest >> testExecute: method [
 
 	| runBlock phonyArgs |
 	self skipIf: #exec.
@@ -215,8 +265,8 @@ OCCodeSnippetTest >> testExecute: method [
 	self testExecuteBlock: runBlock
 ]
 
-{ #category : '*OpalCompiler-Tests' }
-OCCodeSnippetTest >> testExecuteBlock: aRunBlock [
+{ #category : 'helpers' }
+OCCompileCodeSnippetTest >> testExecuteBlock: aRunBlock [
 
 	| runBlock |
 	"a block that apply value on aRunBlock until it's no more a block"
