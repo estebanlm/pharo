@@ -1,7 +1,15 @@
-Extension { #name : 'MethodAnnouncementsTest' }
+"
+I am a test case specialized in checking that the announcements linked to protocol management are right.
+"
+Class {
+	#name : 'TraitMethodAnnouncementsTest',
+	#superclass : 'AbstractClassDescriptionAnnouncementTest',
+	#category : 'Traits-Tests',
+	#package : 'Traits-Tests'
+}
 
-{ #category : '*Traits-Tests' }
-MethodAnnouncementsTest >> testCompileMethodAnnounceAdditionOnlyInTrait [
+{ #category : 'as yet unclassified' }
+TraitMethodAnnouncementsTest >> testCompileMethodAnnounceAdditionOnlyInTrait [
 
 	| trait |
 	[
@@ -29,8 +37,8 @@ MethodAnnouncementsTest >> testCompileMethodAnnounceAdditionOnlyInTrait [
 	self assert: numberOfAnnouncements equals: 1 ] ensure: [ self packageOrganizer removePackage: self packageNameForTests , '2' ]
 ]
 
-{ #category : '*Traits-Tests' }
-MethodAnnouncementsTest >> testRemoveMethodAnnounceRemovalOnlyInTrait [
+{ #category : 'as yet unclassified' }
+TraitMethodAnnouncementsTest >> testRemoveMethodAnnounceRemovalOnlyInTrait [
 
 	| trait |
 	[
@@ -60,8 +68,8 @@ MethodAnnouncementsTest >> testRemoveMethodAnnounceRemovalOnlyInTrait [
 	self assert: numberOfAnnouncements equals: 1 ] ensure: [ self packageOrganizer removePackage: self packageNameForTests , '2' ]
 ]
 
-{ #category : '*Traits-Tests' }
-MethodAnnouncementsTest >> testUpdateMethodAnnounceModificationOnlyInTrait [
+{ #category : 'as yet unclassified' }
+TraitMethodAnnouncementsTest >> testUpdateMethodAnnounceModificationOnlyInTrait [
 
 	| trait |
 	[
@@ -93,8 +101,8 @@ MethodAnnouncementsTest >> testUpdateMethodAnnounceModificationOnlyInTrait [
 	self assert: numberOfAnnouncements equals: 1 ] ensure: [ self packageOrganizer removePackage: self packageNameForTests , '2' ]
 ]
 
-{ #category : '*Traits-Tests' }
-MethodAnnouncementsTest >> testUpdateMethodAnnounceRecategorizationOnlyInTrait [
+{ #category : 'as yet unclassified' }
+TraitMethodAnnouncementsTest >> testUpdateMethodAnnounceRecategorizationOnlyInTrait [
 
 	| trait |
 	[
