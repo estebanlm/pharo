@@ -7,7 +7,7 @@ setup() {
 }
 
 teardown() {
-  kill-process
+  kill-process-or-process-group
   teardown-workdir
 }
 

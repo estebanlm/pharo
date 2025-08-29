@@ -49,12 +49,31 @@ download_extract "bats-support" \
 download_extract "bats-assert" \
   "https://github.com/bats-core/bats-assert/archive/refs/tags/v2.2.0.tar.gz"
 
+# -------------------------------
+# Detect OS type
+# -------------------------------
+detect_os() {
+    OS_TYPE="$(uname)"
+    case "$OS_TYPE" in
+        Darwin)
+            echo "macos"
+            ;;
+        Linux)
+            echo "linux"
+            ;;
+        *)
+            echo "unknown"
+            ;;
+    esac
+}
+
 check_timeout_command
 
 # Setting env
 BATS_DIR="$VENDOR_DIR/bats"
 BATS_SUPPORT="$VENDOR_DIR/bats-support"
 BATS_ASSERT="$VENDOR_DIR/bats-assert"
+detect_os
 
 if [ -z "${PHARO:-}" ]; then
   PHARO="./pharo"
@@ -69,6 +88,7 @@ export BATS_ASSERT
 export ROOT_DIR
 export PHARO
 export IMAGE
+export OS_TYPE
 echo ">> Running tests with bats-core"
-"$BATS_DIR/bin/bats" --report-formatter junit "$ROOT_DIR"
+"$BATS_DIR/bin/bats" --show-output-of-passing-tests --report-formatter junit "$ROOT_DIR"
 

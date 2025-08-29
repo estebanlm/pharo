@@ -10,10 +10,24 @@ teardown-workdir() {
   rm -rf "$WORKDIR"
 }
 
+kill-process-or-process-group() {
+  if [[ "$OS_TYPE" == "Darwin" ]]; then
+    kill-process
+  else
+    kill-process-group
+  fi
+}
+
 kill-process() {
   if [[ -n "$pid" ]]; then
     kill -9 "$pid" 2>/dev/null || true
   fi
+}
+
+kill-process-group() {
+  if [[ -n "$pgid" ]]; then
+    kill -9 -"$pgid" 2>/dev/null || true
+  fi 
 }
 
 run_with_timeout() {
@@ -26,13 +40,20 @@ run_pharo() {
   run_with_timeout 2 "$PHARO" --headless "$IMAGE" "$@"
 }
 
+# Run Pharo as a standalone process. Keeps it pid and pgid to have the ability to kill it. 
+# On Mac Os, killing a process group does not work but is needed on Linux
 run_pharo_in_backgroud() {
-  (
-    # make this process the group leader
-    set -m           # enable job control
-    exec "$PHARO" --headless "$IMAGE" "$@"
-  ) &
+  if [[ "$OS_TYPE" == "Darwin" ]]; then
+    (
+      exec "$PHARO" --headless "$IMAGE" "$@"
+    ) &
+  else
+    (
+      setsid "$PHARO" --headless "$IMAGE" "$@"
+    ) &
+  fi
   pid=$!
+  pgid=$(ps -o pgid= -p "$pid" | tr -d ' ')
 }
 
 # Copy a Pharo image + changes file to a new name inside $WORKDIR
