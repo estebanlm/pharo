@@ -11,7 +11,7 @@ Class {
 { #category : 'accessing' }
 ClapCodeEvaluator class >> commandDescription [ 
 
-	^ 'A command that evaluates a Phero expression, outputs the evaluated result and quits the image. 
+	^ 'A command that evaluates a Pharo expression, outputs the evaluated result and quits the image. 
 
 This command either evaluates the arguments passed to the image:
 	pharo Pharo.image eval  1 + 2
@@ -129,7 +129,7 @@ ClapCodeEvaluator >> handleError: error [
 
 { #category : 'error handling' }
 ClapCodeEvaluator >> handleError: error reference: aReference [
-	"Print a header before failing on an errro / syntax notification from the the script loaded by the given request"
+	"Print a header before failing on an error / syntax notification from the the script loaded by the given request"
 
 	"Display CodeError nicely"
 
