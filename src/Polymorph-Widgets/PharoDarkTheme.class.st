@@ -115,6 +115,12 @@ PharoDarkTheme >> menuBorderWidth [
 	^ self borderWidth
 ]
 
+{ #category : 'accessing - colors' }
+PharoDarkTheme >> popoverButtonColor [
+
+	^ self lightBaseColor
+]
+
 { #category : 'fill-styles - scrollbars' }
 PharoDarkTheme >> scrollbarPressedThumbFillStyleFor: aScrollbar [
 

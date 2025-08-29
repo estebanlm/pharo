@@ -2360,6 +2360,13 @@ UITheme >> messageIn: aThemedMorph text: aStringOrText title: aString [
 		   text: aStringOrText) openModal cancelled not
 ]
 
+{ #category : 'accessing' }
+UITheme >> modalBackdropColor [
+	self flag: #pharoTodo. "This method should probably be moved to Pharo later."
+
+	^ Color black alpha: 0.2
+]
+
 { #category : 'border-styles' }
 UITheme >> morphTreeColumnBorderStyleFor: aMorph [
 	^ self buttonNormalBorderStyleFor: aMorph
@@ -3562,6 +3569,12 @@ UITheme >> overTextCursorFor: aTextMorph [
 	^ Cursor overEditableText
 ]
 
+{ #category : 'accessing' }
+UITheme >> paginatorSelectionColor [
+
+	^ colorPalette paginatorSelectionColor 
+]
+
 { #category : 'fill-styles' }
 UITheme >> paneColorFor: aWindow [
 	"Answer the pane color that should be used."
@@ -3598,6 +3611,12 @@ UITheme >> plainGroupPanelBorderStyleFor: aGroupPanel [
 	^SimpleBorderStyle new
 		width: 1 scaledByDisplayScaleFactor;
 		baseColor: Color transparent
+]
+
+{ #category : 'accessing' }
+UITheme >> popoverButtonColor [
+
+	^ self darkBaseColor
 ]
 
 { #category : 'copying' }
