@@ -35,6 +35,7 @@ BaselineOfMorphicCore >> baseline: spec [
 		spec baseline: 'Display' with: [ spec repository: repository ].
 		spec baseline: 'UnifiedFFI' with: [ spec repository: repository ].
 
+		spec package: 'System-Model'.
 		spec package: 'System-Object Events'.
 		spec package: 'System-Caching'.
 		spec package: 'System-Utilities'.

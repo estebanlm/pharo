@@ -35,7 +35,6 @@ BaselineOfMonticello >> baseline: spec [
 			package: 'Monticello-Model';
 			package: 'Monticello';
 			package: 'Ring-Definitions-Monticello';
-			package: 'System-Model';
 			
 			package: 'Network-Kernel';
 			package: 'Network-MIME';
