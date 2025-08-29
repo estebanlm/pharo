@@ -433,6 +433,12 @@ Morph >> setShadowOffset: evt [
 ]
 
 { #category : '*Morphic-Base' }
+Morph class >> systemIconName [
+
+	^ #morph
+]
+
+{ #category : '*Morphic-Base' }
 Morph >> useBitmapFill [
 	"Make receiver use a solid fill style (e.g., a simple color)"
 	| fill |

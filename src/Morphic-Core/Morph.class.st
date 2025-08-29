@@ -4352,6 +4352,12 @@ Morph >> morphicLayerNumber [
 	"leave lots of room for special things"
 ]
 
+{ #category : 'theme' }
+Morph >> morphicUIManager [
+
+	^ MorphicUIManager new
+]
+
 { #category : 'submorphs - accessing' }
 Morph >> morphsAt: aPoint [
 	"Return a collection of all morphs in this morph structure that contain the given point, possibly including the receiver itself.  The order is deepest embedding first."
@@ -4810,6 +4816,13 @@ Morph >> paneColorOrNil [
 		(self owner ifNil: [^nil]) paneColorOrNil]
 ]
 
+{ #category : 'activation' }
+Morph >> passivate [
+	"Mark the receiver and submorphs as passive (background)."
+
+	self submorphsDo: [:m | m passivate]
+]
+
 { #category : 'base - worlds' }
 Morph >> pasteUpMorph [
 	"Answer the closest containing morph that is a PasteUp morph"
@@ -4938,6 +4951,13 @@ Morph >> preOpenInWorld: aWorld [
 	"
 	(aWorld visibleClearArea origin ~= (0@0) and: [self position = (0@0)]) ifTrue:
 		[self position: aWorld visibleClearArea origin]
+]
+
+{ #category : 'accessing' }
+Morph >> preferredCornerStyle [
+	"Answer the preferred corner style."
+
+	^#square
 ]
 
 { #category : 'halos and balloon help' }
