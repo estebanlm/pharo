@@ -825,7 +825,7 @@ UITheme >> chooseForSaveFileReferenceIn: aThemedMorph title: title extensions: e
 
 	dialog
 		defaultFolder: directory;
-		title: (title ifNil: [ 'Save as' translated ] ifNotNil: [ title ]);
+		title: (title ifNil: [ 'Save as' ] ifNotNil: [ title ]);
 		openModal.
 
 	^ dialog cancelled
