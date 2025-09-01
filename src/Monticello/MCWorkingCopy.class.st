@@ -205,8 +205,8 @@ MCWorkingCopy class >> unregisterForNotifications [
 
 { #category : 'operations' }
 MCWorkingCopy >> adopt: aVersion [
-	ancestry addAncestor: aVersion info.
-	self changed.
+
+	ancestry addAncestor: aVersion info
 ]
 
 { #category : 'accessing' }
@@ -309,17 +309,17 @@ MCWorkingCopy >> initializeWithPackage: aPackage [
 
 { #category : 'operations' }
 MCWorkingCopy >> loaded: aVersion [
+
 	ancestry := MCWorkingAncestry new addAncestor: aVersion info.
-	requiredPackages := OrderedCollection withAll: (aVersion dependencies collect: [:ea | ea package]).
-	self modified: false.
-	self changed
+	requiredPackages := OrderedCollection withAll: (aVersion dependencies collect: [ :ea | ea package ]).
+	self modified: false
 ]
 
 { #category : 'operations' }
 MCWorkingCopy >> merged: aVersion [
+
 	ancestry addAncestor: aVersion info.
-	aVersion dependencies do: [:ea | self requirePackage: ea package].
-	self changed
+	aVersion dependencies do: [ :ea | self requirePackage: ea package ]
 ]
 
 { #category : 'accessing' }
