@@ -332,7 +332,6 @@ MCWorkingCopy >> modified: aBoolean [
 
 	modified = aBoolean ifTrue: [ ^ self ].
 	modified := aBoolean.
-	self changed: #modified.
 	modified ifFalse: [ ChangesLog default logChange: '"' , self packageName , '"' ]
 ]
 
@@ -491,8 +490,7 @@ MCWorkingCopy >> unload [
 { #category : 'operations' }
 MCWorkingCopy >> unregister [
 
-	self class registry removeKey: package ifAbsent: [ ^ self ].
-	self class changed: { #unregistered . package }
+	self class registry removeKey: package ifAbsent: [ ^ self ]
 ]
 
 { #category : 'accessing' }
