@@ -14,8 +14,8 @@ teardown() {
 @test "eval --help prints help" {
   run_pharo eval --help
   assert_success
-  assert_line --index 0 "Usage: eval [--help] [--save] [ --no-quit ] <smalltalk expression>"
-  assert_line --index 1 --regexp "--help[[:blank:]]+list this help message"
+  assert_output --partial "Usage: evaluate [--help] [--save] [--keepAlive] [--no-quit] [--rename] [<EXPR>]"
+  assert_line --partial  "--help      Prints this documentation"
 }
 
 # @test "eval without valid Smalltalk expression exits with error" {

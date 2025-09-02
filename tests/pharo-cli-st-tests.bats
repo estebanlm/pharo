@@ -14,8 +14,8 @@ teardown() {
 @test "st --help prints help" {
   run_pharo st --help
   assert_success
-  assert_line --index 0 "Usage: st [--help] [ --quit ] <FILE>"
-  assert_line --index 1 --partial "--help    list this help message"
+  assert_output --partial "Usage: st [--help] [--quit] [--save] [--rename] [<FILE>]"
+  assert_line --partial  "--help      Prints this documentation"
 }
 
 # @test "st without st file exits with error" {
