@@ -4,8 +4,6 @@ mcPackages := #(
  'System-FileRegistry'
  'FileSystem-Memory'
  'StartupPreferences'
- 'PragmaCollector'
- 'System-FileRegistry'
  'MonticelloFileTree-Core'
  'MonticelloFileTree-FileSystem-Utilities'
  'Metacello-Base'
