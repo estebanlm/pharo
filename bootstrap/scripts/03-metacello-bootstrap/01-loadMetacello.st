@@ -1,7 +1,6 @@
 | mcPackages |
 mcPackages := #(
  'ScriptingExtensions'
- 'System-FileRegistry'
  'FileSystem-Memory'
  'StartupPreferences'
  'MonticelloFileTree-Core'
