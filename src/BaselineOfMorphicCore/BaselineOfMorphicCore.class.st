@@ -35,7 +35,6 @@ BaselineOfMorphicCore >> baseline: spec [
 		spec baseline: 'Display' with: [ spec repository: repository ].
 		spec baseline: 'UnifiedFFI' with: [ spec repository: repository ].
 
-		spec package: 'System-Model'.
 		spec package: 'System-Object Events'.
 		spec package: 'System-Caching'.
 		spec package: 'System-Utilities'.
@@ -44,7 +43,8 @@ BaselineOfMorphicCore >> baseline: spec [
 		spec package: 'Tool-Registry'.
 		spec package: 'Fonts-Abstract'.
 		spec package: 'Text-Core'.
-		spec package: 'Morphic-Core' ]
+		spec package: 'Morphic-Core'.
+		spec package: 'System-Model' with: [ spec requires: #( 'Morphic-Core' ) ]. ]
 ]
 
 { #category : 'actions' }
