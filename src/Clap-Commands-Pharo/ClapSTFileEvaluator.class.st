@@ -23,6 +23,7 @@ ClapSTFileEvaluator class >> commandSpecification [
 		commandClass: self;
 		description: 'The ST command evaluates Pharo code stored in a .st file ';
 		addHelp;
+		addFlag: #'quit' description: 'quit the image after file evaluation (default is to keep the image running)';
 		addPositional: #FILE spec: [ :positional |
 			positional
 				description: 'The Smalltalk file to evaluate (must have .st extension)';
@@ -31,7 +32,6 @@ ClapSTFileEvaluator class >> commandSpecification [
 		
 	self 
 		addSaveFlagTo: spec;
-		addKeepAliveOptionTo: spec;
 		addRenameOptionTo: spec.
 	^ spec
 ]
@@ -53,23 +53,12 @@ ClapSTFileEvaluator >> evaluate [
 { #category : 'execution' }
 ClapSTFileEvaluator >> evaluateStFile: aFile [
 
-	| codeImporter |
-
-	"first, parse the code"
-	aFile readStreamDo: [ :binary | | stream |
-		stream := ZnCharacterReadStream on: binary encoding: 'utf8'.
-		self
-			handleErrorsDuring: [
-				self skipShebangFrom: stream.
-				codeImporter := CodeImporter fileStream: stream.
-				codeImporter logSource: self shouldLogSource.
-				codeImporter parseChunks ]
-			reference: aFile ].
-
-	"evaluate the declarations in a second step to allow for properly closing the source file stream"
-	self
-		handleErrorsDuring: [ codeImporter evaluate ]
-		reference: aFile
+	aFile readStreamDo: [ :binary |
+			| stream |
+			stream := ZnCharacterReadStream on: binary encoding: 'utf8'.
+			[ self evaluateStStream: stream ]
+				on: Error
+				do: [ :e | self handleError: e reference: aFile ] ]
 ]
 
 { #category : 'execution' }
@@ -79,10 +68,31 @@ ClapSTFileEvaluator >> evaluateStFiles [
 		self evaluateStFile: (File named: fileName) ]
 ]
 
+{ #category : 'execution' }
+ClapSTFileEvaluator >> evaluateStStream: aStream [
+
+	self skipShebangFrom: aStream.
+	(CodeImporter fileStream: aStream)
+		logSource: self shouldLogSource;
+		parseChunks;
+		evaluate
+]
+
+{ #category : 'asserting' }
+ClapSTFileEvaluator >> shouldLogEvaluationResult [
+
+	^ false
+]
+
 { #category : 'accessing' }
 ClapSTFileEvaluator >> shouldLogSource [
 
 	^ (self hasFlag: #'no-source') not
+]
+
+{ #category : 'testing' }
+ClapSTFileEvaluator >> shouldQuit [
+	^ self hasFlag: #quit
 ]
 
 { #category : 'execution' }

@@ -43,6 +43,7 @@ ClapCodeEvaluator class >> commandSpecification [
 	self 
 		addSaveFlagTo: spec;
 		addKeepAliveOptionTo: spec;
+		addNoQuitOptionTo: spec;
 		addRenameOptionTo: spec.
 	^ spec
 ]
@@ -92,13 +93,14 @@ ClapCodeEvaluator class >> printCodeError: aCodeError on: aVTermOutputDriver [
 ClapCodeEvaluator >> evaluate [
 	
 	"polymorphism with ST file evaluator"
-	self evaluateExpression
+
+	^ self evaluateExpression
 ]
 
 { #category : 'execution' }
 ClapCodeEvaluator >> evaluateExpression [
 	
-	[ Smalltalk compiler evaluate: self source "OCCodeError signal" ]
+	^ [ self class compiler evaluate: self source ]
 		on: Error
 		do: [ :error | self handleError: error ]
 ]
@@ -113,18 +115,15 @@ ClapCodeEvaluator >> execute [
 	result := self evaluate.
 	self saveSessionIfAsked.
 	
-	self context hasSessionChanged "we might be waking up after a #save:andQuit:"
-		ifFalse: [ self outputStreamDo: [ :out | out print: result; lf ] ]
+	self shouldLogEvaluationResult
+		ifTrue: [ self outputStreamDo: [ :out | out print: result; lf ] ]
 ]
 
 { #category : 'error handling' }
 ClapCodeEvaluator >> handleError: error [
 	"for syntax errors we print more detailed error informations"
 
-	(error isKindOf: OCCodeError) ifTrue: [
-		self class printCodeError: error on: (VTermOutputDriver on: context stderr) ].
-
-	error pass
+	self handleError: error reference: nil
 ]
 
 { #category : 'error handling' }
@@ -138,18 +137,18 @@ ClapCodeEvaluator >> handleError: error reference: aReference [
 				printCodeError: error
 				on: (VTermOutputDriver on: context stderr) ].
 
-	"spit out a warning if in headless mode, otherwise a debugger will popup"
-	Smalltalk isInteractive ifFalse: [
-		self inform: 'Errors in script loaded from ' , aReference name ].
+	"put out a warning if in headless mode, otherwise a debugger will popup"
+	(aReference isNotNil and: [ Smalltalk isInteractive not ]) 
+		ifTrue: [ self inform: 'Errors in script loaded from ' , aReference name ].
 
 	error pass
 ]
 
-{ #category : 'error handling' }
-ClapCodeEvaluator >> handleErrorsDuring: aBlock reference: aReference [
-	aBlock
-		on: Error
-		do: [ :e | self handleError: e reference: aReference ]
+{ #category : 'asserting' }
+ClapCodeEvaluator >> shouldLogEvaluationResult [
+
+	"we might be waking up after a #save:andQuit:"
+	^ self context hasSessionChanged not
 ]
 
 { #category : 'accessing' }

@@ -113,3 +113,19 @@ ClapSTFileEvaluatorTest >> testRunningStWithoutStFileExitsWithErrorMessage [
 		assert: context exitException messageText
 		equals: 'Missing st file as argument'
 ]
+
+{ #category : 'tests' }
+ClapSTFileEvaluatorTest >> testShoulLogSourceWhenNoSourceOptionAbsent [
+		
+	context := ClapSTFileEvaluator commandSpecification activationWith: #('st' 'foo.st').
+	
+	self assert: context command shouldLogSource 
+]
+
+{ #category : 'tests' }
+ClapSTFileEvaluatorTest >> testShoulNotLogSourceWhenNoSourceOptionGiven [
+		
+	context := ClapSTFileEvaluator commandSpecification activationWith: #('st' 'foo.st' '--no-source').
+	
+	self assert: context command shouldLogSource 
+]

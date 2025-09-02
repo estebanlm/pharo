@@ -40,6 +40,26 @@ ClapCodeEvaluatorTest >> testEvaluatePipeIn [
 ]
 
 { #category : 'tests' }
+ClapCodeEvaluatorTest >> testEvaluateShouldBeKeptAliveWhenKeepAliveFlagPresent [
+
+	| command |
+	context := ClapCodeEvaluator commandSpecification activationWith: #('evaluate' '--keepAlive' '1').
+	command := context command.
+	
+	self deny: command shouldQuit
+]
+
+{ #category : 'tests' }
+ClapCodeEvaluatorTest >> testEvaluateShouldBeKeptAliveWhenNoQuitFlagPresent [
+
+	| command |
+	context := ClapCodeEvaluator commandSpecification activationWith: #('evaluate' '--no-quit' '1').
+	command := context command.
+	
+	self deny: command shouldQuit
+]
+
+{ #category : 'tests' }
 ClapCodeEvaluatorTest >> testEvaluateWithCompilationError [
 	context := ClapCodeEvaluator commandSpecification activationWith: #('eval' '1 := .').
 	[ context execute ]
