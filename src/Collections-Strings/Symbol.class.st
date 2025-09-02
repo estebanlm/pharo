@@ -323,6 +323,12 @@ Symbol >> = aSymbol [
 	^ super = aSymbol
 ]
 
+{ #category : 'accessing' }
+Symbol >> argumentCount [
+
+	^ self numArgs + 1
+]
+
 { #category : 'converting' }
 Symbol >> asAccessor [
 	"Return a accessor (getter) message from a setter message.
@@ -643,6 +649,18 @@ Symbol >> uncapitalized [
 { #category : 'evaluating' }
 Symbol >> value: anObject [
 	^anObject perform: self
+]
+
+{ #category : 'evaluating' }
+Symbol >> value: anObject value: arg [
+
+	^ anObject perform: self with: arg
+]
+
+{ #category : 'evaluating' }
+Symbol >> valueWithArguments: aCollection [
+
+	^ aCollection first perform: self withArguments: aCollection allButFirst
 ]
 
 { #category : 'copying' }
