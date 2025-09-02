@@ -12,9 +12,18 @@ Class {
 	#classVars : [
 		'SmtpServer'
 	],
-	#category : 'Network-Mail',
-	#package : 'Network-Mail'
+	#category : 'Morphic-Deprecated',
+	#package : 'Morphic-Deprecated'
 }
+
+{ #category : 'testing' }
+MailComposition class >> isDeprecated [
+	"This class provides a Morphic interface to send mail but the code inside is really bad because it always recreates messages and lose most of its info when sending.
+	If you wish to have a mail client it should be a project outside the Pharo IDE and should be done in Spec and not Morphic.
+	There is for now no replacement for this class."
+
+	^ true
+]
 
 { #category : 'instance creation' }
 MailComposition class >> sendMailMessage: aMailMessage [
