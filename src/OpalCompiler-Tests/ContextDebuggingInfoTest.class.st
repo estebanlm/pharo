@@ -7,8 +7,9 @@ Class {
 	#classVars : [
 		'classVarForTestLookupSymbol'
 	],
-	#category : 'OpalCompiler-Tests',
-	#package : 'OpalCompiler-Tests'
+	#category : 'OpalCompiler-Tests-Misc',
+	#package : 'OpalCompiler-Tests',
+	#tag : 'Misc'
 }
 
 { #category : 'closures for testing' }

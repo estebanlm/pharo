@@ -1,6 +1,20 @@
-Extension { #name : 'OCCodeSnippetScriptingTest' }
+Class {
+	#name : 'OCCodeSnippetScriptingTest',
+	#superclass : 'OCCompileCodeSnippetTest',
+	#category : 'OpalCompiler-Tests-Snippets',
+	#package : 'OpalCompiler-Tests',
+	#tag : 'Snippets'
+}
 
-{ #category : '*OpalCompiler-Tests' }
+{ #category : 'tests' }
+OCCodeSnippetScriptingTest class >> testParameters [
+
+	^ ParametrizedTestMatrix new
+		  forSelector: #snippet addOptions: (OCCodeSnippet allSnippets select: [:each | each isScripting ]);
+		  yourself
+]
+
+{ #category : 'tests' }
 OCCodeSnippetScriptingTest >> testEvaluateFailBlock [
 
 	| runBlock error |
@@ -21,7 +35,7 @@ OCCodeSnippetScriptingTest >> testEvaluateFailBlock [
 			self testExecuteBlock: runBlock ]
 ]
 
-{ #category : '*OpalCompiler-Tests' }
+{ #category : 'tests' }
 OCCodeSnippetScriptingTest >> testEvaluateFaulty [
 
 	| runBlock |
@@ -35,7 +49,7 @@ OCCodeSnippetScriptingTest >> testEvaluateFaulty [
 	self testExecuteBlock: runBlock
 ]
 
-{ #category : '*OpalCompiler-Tests' }
+{ #category : 'tests' }
 OCCodeSnippetScriptingTest >> testEvaluateOnError [
 
 	| runBlock value |
@@ -51,7 +65,7 @@ OCCodeSnippetScriptingTest >> testEvaluateOnError [
 		ifFalse: [ self testExecuteBlock: runBlock ]
 ]
 
-{ #category : '*OpalCompiler-Tests' }
+{ #category : 'tests' }
 OCCodeSnippetScriptingTest >> testEvaluateOnErrorResume [
 
 	| runBlock value |
