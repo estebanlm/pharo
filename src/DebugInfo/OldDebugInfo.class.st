@@ -88,7 +88,7 @@ OldDebugInfo >> compiledCode: anObject [
 	compiledCode := anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : 'private' }
 OldDebugInfo >> debugScopeAt: aBytecodePC [
 
 	| node scope |
@@ -99,10 +99,16 @@ OldDebugInfo >> debugScopeAt: aBytecodePC [
 	^ OldDebugScope on: scope
 ]
 
-{ #category : 'accessing' }
+{ #category : 'api' }
 OldDebugInfo >> initialPC [
 
 	^ compiledCode initialPC
+]
+
+{ #category : 'api' }
+OldDebugInfo >> isArgumentNamed: aName at: aContext [
+
+	^ (self debugScopeAt: aContext pc) isArgumentNamed: aName
 ]
 
 { #category : 'testing' }
@@ -129,7 +135,7 @@ OldDebugInfo >> isSourceStore: aBytecodePC [
 	^ (self privateSourceNodeForPC: aBytecodePC) isAssignment 
 ]
 
-{ #category : 'testing' }
+{ #category : 'private' }
 OldDebugInfo >> privateSourceNodeForPC: aBytecodePC [
 
 	| sourceNode bytecodeToASTCache |
@@ -144,7 +150,7 @@ OldDebugInfo >> rangeForPC: aPC [
 	^ (self privateSourceNodeForPC: aPC) debugHighlightRange
 ]
 
-{ #category : 'testing' }
+{ #category : 'api' }
 OldDebugInfo >> readVariableNamed: aName at: aContext [
 
 	^ (self debugScopeAt: aContext pc)
@@ -152,7 +158,7 @@ OldDebugInfo >> readVariableNamed: aName at: aContext [
 		  at: aContext
 ]
 
-{ #category : 'accessing' }
+{ #category : 'testing' }
 OldDebugInfo >> shouldStopAt: aBytecodePC [
 
 	"Is this PC the first PC in its lexical context (the sequence node)?
@@ -170,14 +176,8 @@ OldDebugInfo >> sourceCode [
 	^ compiledCode sourceCode
 ]
 
-{ #category : 'accessing' }
+{ #category : 'api' }
 OldDebugInfo >> variableNamesAt: aBytecodePC [
 
 	^ (self debugScopeAt: aBytecodePC) variableNames
-]
-
-{ #category : 'accessing' }
-OldDebugInfo >> variablesAt: aBytecodePC [
-
-	^ (self debugScopeAt: aBytecodePC) variables
 ]

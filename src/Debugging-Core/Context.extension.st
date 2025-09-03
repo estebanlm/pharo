@@ -37,7 +37,7 @@ Context >> findSimilarSender [
 
 { #category : '*Debugging-Core' }
 Context >> hasTemporaryVariableNamed: aName [
-	^ self tempNames includes: aName
+	^ self temporaryVariableNames includes: aName
 ]
 
 { #category : '*Debugging-Core' }
