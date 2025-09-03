@@ -17,21 +17,27 @@ CachedDebugInfo >> debugScopeAt: aBytecodePC [
 ]
 
 { #category : 'testing' }
-CachedDebugInfo >> isSourceReturn: anInteger [ 
+CachedDebugInfo >> isSourceReturn: aBytecodePC [ 
 	
-	^ (stopTable at: anInteger) third
+	^ (stopTable at: aBytecodePC) third
 ]
 
 { #category : 'testing' }
-CachedDebugInfo >> isSourceSend: anInteger [ 
+CachedDebugInfo >> isSourceSend: aBytecodePC [ 
 	
-	^ (stopTable at: anInteger) fourth
+	^ (stopTable at: aBytecodePC) fourth
 ]
 
 { #category : 'testing' }
-CachedDebugInfo >> isSourceStore: anInteger [ 
+CachedDebugInfo >> isSourceStore: aBytecodePC [ 
 	
-	^ (stopTable at: anInteger) second
+	^ (stopTable at: aBytecodePC) second
+]
+
+{ #category : 'testing' }
+CachedDebugInfo >> rangeForPC: aBytecodePC [ 
+	
+	^ (stopTable at: aBytecodePC) fifth
 ]
 
 { #category : 'accessing' }
@@ -40,9 +46,9 @@ CachedDebugInfo >> rootScope: aCachedDebugScope [
 ]
 
 { #category : 'accessing' }
-CachedDebugInfo >> shouldStopAt: anInteger [ 
+CachedDebugInfo >> shouldStopAt: aBytecodePC [ 
 	
-	^ (stopTable at: anInteger) first
+	^ (stopTable at: aBytecodePC) first
 ]
 
 { #category : 'accessing' }

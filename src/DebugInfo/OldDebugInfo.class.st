@@ -2,7 +2,7 @@ Class {
 	#name : 'OldDebugInfo',
 	#superclass : 'Object',
 	#instVars : [
-		'code'
+		'compiledCode'
 	],
 	#category : 'DebugInfo',
 	#package : 'DebugInfo'
@@ -12,7 +12,7 @@ Class {
 OldDebugInfo class >> for: code [
 
 	^ self new
-		  code: code;
+		  compiledCode: code;
 		  yourself
 ]
 
@@ -23,64 +23,69 @@ OldDebugInfo >> asCachedDebugInfo [
 	cachedInfo := CachedDebugInfo new.
 	cachedInfo sourceCode: self sourceCode.
 
-	stopTable := code symbolicBytecodes
+	stopTable := compiledCode symbolicBytecodes
 		             collect: [ :e |
-			             | data |
-			             data := {
-				                     (self shouldStopAt: e offset).
-				                     (self isSourceStore: e offset).
-				                     (self isSourceReturn: e offset).
-				                     (self isSourceSend: e offset) }.
-			             e offset -> data ]
+				             | data |
+				             data := {
+					                     (self shouldStopAt: e offset).
+					                     (self isSourceStore: e offset).
+					                     (self isSourceReturn: e offset).
+					                     (self isSourceSend: e offset).
+					                     (self rangeForPC: e offset) }.
+				             e offset -> data ]
 		             as: Dictionary.
 	cachedInfo stopTable: stopTable.
 
-	astScopes := (OCScopesCollector new visitNode: code ast) scopes.
+	astScopes := (OCScopesCollector new visitNode: compiledCode ast)
+		             scopes.
 
 	scopes := Dictionary new.
 	astScopes do: [ :astScope |
-		| cachedScope tempDescriptions |
-		cachedScope := CachedDebugScope new.
-		tempDescriptions := astScope allTemps collect: [ :temp |
-			                    temp descriptionArrayForScope: astScope ].
+			| cachedScope tempDescriptions |
+			cachedScope := CachedDebugScope new.
+			tempDescriptions := astScope allTemps collect: [ :temp |
+				                    temp descriptionArrayForScope: astScope ].
 
-		(astScope isBlockScope and: [ astScope isOptimized and: [ astScope node body statements isNotEmpty ] ])
-			ifTrue: [
-				cachedScope bytecodeRange:
-					((astScope outerNotOptimizedScope node bcToASTCache
-						  firstRecursiveBcOffsetForStatementNode:
-						  astScope node body statements first) to:
-						 (astScope outerNotOptimizedScope node lastPcForNode:
-							  astScope node body statements last)) ]
-			ifFalse: [
-				| bytecodeCache |
-				bytecodeCache := astScope outerNotOptimizedScope node bcToASTCache.
+			(astScope isBlockScope and: [
+				 astScope isOptimized and: [
+					 astScope node body statements isNotEmpty ] ])
+				ifTrue: [
+						cachedScope bytecodeRange:
+							((astScope outerNotOptimizedScope node bcToASTCache
+								  firstRecursiveBcOffsetForStatementNode:
+								  astScope node body statements first) to:
+								 (astScope outerNotOptimizedScope node lastPcForNode:
+									  astScope node body statements last)) ]
+				ifFalse: [
+						| bytecodeCache |
+						bytecodeCache := astScope outerNotOptimizedScope node
+							                 bcToASTCache.
 
-				cachedScope bytecodeRange:
-					(bytecodeCache firstBcOffset to: bytecodeCache lastBcOffset) ].
-		cachedScope variables: tempDescriptions.
+						cachedScope bytecodeRange:
+							(bytecodeCache firstBcOffset to: bytecodeCache lastBcOffset) ].
+			cachedScope variables: tempDescriptions.
 
-		scopes at: astScope put: cachedScope ].
+			scopes at: astScope put: cachedScope ].
 
 	astScopes do: [ :each |
-		scopes
-			at: each outerScope
-			ifPresent: [ :parent | parent addChild: (scopes at: each) ] ].
-	cachedInfo rootScope: (scopes at: code ast scope).
+			scopes
+				at: each outerScope
+				ifPresent: [ :parent | parent addChild: (scopes at: each) ] ].
+	cachedInfo rootScope: (scopes at: compiledCode ast scope).
 
 	^ cachedInfo
 ]
 
 { #category : 'accessing' }
-OldDebugInfo >> code [
+OldDebugInfo >> compiledCode [
 
-	^ code
+	^ compiledCode
 ]
 
 { #category : 'accessing' }
-OldDebugInfo >> code: anObject [
+OldDebugInfo >> compiledCode: anObject [
 
-	code := anObject
+	compiledCode := anObject
 ]
 
 { #category : 'accessing' }
@@ -97,7 +102,7 @@ OldDebugInfo >> debugScopeAt: aBytecodePC [
 { #category : 'accessing' }
 OldDebugInfo >> initialPC [
 
-	^ code initialPC
+	^ compiledCode initialPC
 ]
 
 { #category : 'testing' }
@@ -108,7 +113,7 @@ OldDebugInfo >> isSourceReturn: aBytecodePC [
 	 - explicit returns with ^ -- these are in the AST
 	 - implicit block local returns -- not in AST
 	 - implicit method returns -- not in AST"
-	^ code encoderClass isReturnAt: aBytecodePC in: code
+	^ compiledCode encoderClass isReturnAt: aBytecodePC in: compiledCode
 ]
 
 { #category : 'testing' }
@@ -128,7 +133,7 @@ OldDebugInfo >> isSourceStore: aBytecodePC [
 OldDebugInfo >> privateSourceNodeForPC: aBytecodePC [
 
 	| sourceNode bytecodeToASTCache |
-	sourceNode := code sourceNode.
+	sourceNode := compiledCode sourceNode.
 	bytecodeToASTCache := OCBytecodeToASTCache generateForNode: sourceNode.
 	^ bytecodeToASTCache nodeForPC: aBytecodePC
 ]
@@ -154,7 +159,7 @@ OldDebugInfo >> shouldStopAt: aBytecodePC [
 { #category : 'accessing' }
 OldDebugInfo >> sourceCode [
 	
-	^ code sourceCode
+	^ compiledCode sourceCode
 ]
 
 { #category : 'accessing' }
