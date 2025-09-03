@@ -11,8 +11,8 @@ pharo Pharo.image code.st
 Class {
 	#name : 'ClapSTFileEvaluator',
 	#superclass : 'ClapCodeEvaluator',
-	#category : 'Clap-Commands-Pharo',
-	#package : 'Clap-Commands-Pharo'
+	#category : 'CodeImport-Commands',
+	#package : 'CodeImport-Commands'
 }
 
 { #category : 'command line' }

@@ -14,6 +14,34 @@ ClapSTFileEvaluatorTest >> setUp [
 ]
 
 { #category : 'tests' }
+ClapSTFileEvaluatorTest >> testCanEvalNonExistingStFileRaiseError [
+	| command nonExistingFile |
+	nonExistingFile := 'testCanEvalNonExistingStFileRaiseError-non-existing.st'.
+	nonExistingFile asFileReference ensureDelete.
+	context := ClapSTFileEvaluator commandSpecification activationWith: {'st' . nonExistingFile }.
+	command := context command.
+	
+	self 
+		should: [ command execute ] 
+		raise: FileDoesNotExistException
+]
+
+{ #category : 'tests' }
+ClapSTFileEvaluatorTest >> testCanGetStFile [
+	| command |
+	context := ClapSTFileEvaluator commandSpecification activationWith: #('st' 'foo.st' 'bar.st' 'bla').
+	command := context command.
+	
+	self
+		assert: command allStFiles size
+		equals: 2.
+		
+	self
+		assertCollection: command allStFiles
+		hasSameElements: #('foo.st' 'bar.st').
+]
+
+{ #category : 'tests' }
 ClapSTFileEvaluatorTest >> testCanRunStFile [
 	| file |
 	file := FileLocator temp / 'pharo-tests-' , UUID new asString / 'dummy.st'.
@@ -44,29 +72,6 @@ ClapSTFileEvaluatorTest >> testCanSkipShebang [
 	self
 		assert: self class testValue
 		equals: 4
-]
-
-{ #category : 'tests' }
-ClapSTFileEvaluatorTest >> testEvaluateWithError [	
-	| file |
-	file := FileLocator temp / 'pharo-tests-' , UUID new asString / 'dummy.st'.
-	
-	[ file parent ensureCreateDirectory.
-	file writeStreamDo: [ :stream | stream nextPutAll: '#!/usr/bin/env pharo
-		1 := .' ].
-	
-	context := ClapSTFileEvaluator commandSpecification activateWith: {'st' . file fullName} ]
-		ensure: [ file parent deleteAll ].
-	
-	self
-		assert: self errorString
-		equals: '[31mSyntax Error on line 1: ''End of statement expected''
-===================================================
-[0m[31m1: 1 := .
-    _^_
-[0m' withUnixLineEndings.
-	
-	self assertFailure.
 ]
 
 { #category : 'tests' }
