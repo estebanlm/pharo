@@ -34,7 +34,7 @@ DebugInfoTest >> testBlockArgumentVariableIsArgument [
 
 	debugInfo := OldDebugInfo for: context method.
 
-	self assert: (debugInfo isArgumentNamed: #blockArgument at: context)
+	self assert: (debugInfo isArgumentNamed: #blockArgument at: context pc)
 ]
 
 { #category : 'tests - arguments' }
@@ -45,7 +45,7 @@ DebugInfoTest >> testBlockTemporaryVariableIsNotArgument [
 
 	debugInfo := OldDebugInfo for: context method.
 
-	self deny: (debugInfo isArgumentNamed: #tempInBlock at: context)
+	self deny: (debugInfo isArgumentNamed: #tempInBlock at: context pc)
 ]
 
 { #category : 'tests - listing variables' }
@@ -192,7 +192,7 @@ DebugInfoTest >> testMethodArgumentVariableIsArgument [
 	debugInfo := OldDebugInfo for: contextWithArguments method.
 
 	self assert:
-		(debugInfo isArgumentNamed: #anArgument at: contextWithArguments)
+		(debugInfo isArgumentNamed: #anArgument at: contextWithArguments pc)
 ]
 
 { #category : 'tests - arguments' }
@@ -204,7 +204,7 @@ DebugInfoTest >> testMethodTemporaryVariableIsNotArgument [
 
 	self deny: (debugInfo
 			 isArgumentNamed: #contextWithArguments
-			 at: contextWithArguments)
+			 at: contextWithArguments pc)
 ]
 
 { #category : 'tests - arguments' }
@@ -214,7 +214,7 @@ DebugInfoTest >> testNonExistingVariableIsArgumentRaisesError [
 	context := thisContext copy.
 	debugInfo := OldDebugInfo for: context method.
 
-	[ debugInfo isArgumentNamed: #notAVariable at: context.
+	[ debugInfo isArgumentNamed: #notAVariable at: context pc.
 		self fail ]
 		on: Error
 		do: [ :err | 
@@ -234,7 +234,7 @@ DebugInfoTest >> testOptimizedBlockArgumentVariableIsArgument [
 
 	debugInfo := OldDebugInfo for: context method.
 
-	self assert: (debugInfo isArgumentNamed: #blockArgument at: context)
+	self assert: (debugInfo isArgumentNamed: #blockArgument at: context pc)
 ]
 
 { #category : 'tests - arguments' }
@@ -250,7 +250,7 @@ DebugInfoTest >> testOptimizedBlockTemporaryVariableIsNotArgument [
 
 	debugInfo := OldDebugInfo for: context method.
 
-	self deny: (debugInfo isArgumentNamed: #inOptimizedScope at: context)
+	self deny: (debugInfo isArgumentNamed: #inOptimizedScope at: context pc)
 ]
 
 { #category : 'tests - read variables' }
@@ -261,7 +261,7 @@ DebugInfoTest >> testReadLocalBlockArgumentVariable [
 
 	debugInfo := OldDebugInfo for: context method.
 
-	self assert: (debugInfo readVariableNamed: #blockArgument at: context) equals: 7
+	self assert: (debugInfo readVariableNamed: #blockArgument fromContext: context) equals: 7
 ]
 
 { #category : 'tests - read variables' }
@@ -291,7 +291,7 @@ DebugInfoTest >> testReadLocalBlockTempVectorTemporaryVariableFromClosure [
 		debugInfo := OldDebugInfo for: context method.
 
 		self
-			assert: (debugInfo readVariableNamed: #tempInTempVector at: context)
+			assert: (debugInfo readVariableNamed: #tempInTempVector fromContext: context)
 			equals: 3
 	] value: 7.
 	
@@ -322,7 +322,7 @@ DebugInfoTest >> testReadLocalBlockTempVectorTemporaryVariableFromMethod [
 	debugInfo := OldDebugInfo for: context method.
 
 	self
-		assert: (debugInfo readVariableNamed: #tempInTempVector at: context)
+		assert: (debugInfo readVariableNamed: #tempInTempVector fromContext: context)
 		equals: 3
 ]
 
@@ -334,7 +334,7 @@ DebugInfoTest >> testReadLocalBlockTemporaryVariable [
 
 	debugInfo := OldDebugInfo for: context method.
 
-	self assert: (debugInfo readVariableNamed: #tempInBlock at: context) equals: 42
+	self assert: (debugInfo readVariableNamed: #tempInBlock fromContext: context) equals: 42
 ]
 
 { #category : 'tests - read variables' }
@@ -345,7 +345,7 @@ DebugInfoTest >> testReadLocalMethodArgumentVariable [
 	debugInfo := OldDebugInfo for: contextWithArguments method.
 
 	self assert:
-		(debugInfo readVariableNamed: #anArgument at: contextWithArguments) equals: 17
+		(debugInfo readVariableNamed: #anArgument fromContext: contextWithArguments) equals: 17
 ]
 
 { #category : 'tests - read variables' }
@@ -358,7 +358,7 @@ DebugInfoTest >> testReadLocalMethodTemporaryVariable [
 	self
 		deny: (debugInfo
 				 readVariableNamed: #contextWithArguments
-				 at: contextWithArguments)
+				 fromContext: contextWithArguments)
 		equals: contextWithArguments
 ]
 
@@ -375,7 +375,7 @@ DebugInfoTest >> testReadLocalOptimizedBlockArgumentVariable [
 
 	debugInfo := OldDebugInfo for: context method.
 
-	self assert: (debugInfo readVariableNamed: #blockArgument at: context) equals: self
+	self assert: (debugInfo readVariableNamed: #blockArgument fromContext: context) equals: self
 ]
 
 { #category : 'tests - read variables' }
@@ -391,7 +391,7 @@ DebugInfoTest >> testReadLocalOptimizedBlockTemporaryVariable [
 
 	debugInfo := OldDebugInfo for: context method.
 
-	self deny: (debugInfo readVariableNamed: #inOptimizedScope at: context) equals: context
+	self deny: (debugInfo readVariableNamed: #inOptimizedScope fromContext: context) equals: context
 ]
 
 { #category : 'tests - read variables' }
@@ -401,7 +401,7 @@ DebugInfoTest >> testReadNonExistingVariableRaisesError [
 	context := thisContext copy.
 	debugInfo := OldDebugInfo for: context method.
 
-	[ debugInfo readVariableNamed: #notAVariable at: context.
+	[ debugInfo readVariableNamed: #notAVariable fromContext: context.
 		self fail ]
 		on: Error
 		do: [ :err | 
@@ -416,7 +416,7 @@ DebugInfoTest >> testReadOuterBlockArgumentVariableFromClosure [
 
 	debugInfo := OldDebugInfo for: context method.
 
-	self assert: (debugInfo readVariableNamed: #blockArgument at: context) equals: 7
+	self assert: (debugInfo readVariableNamed: #blockArgument fromContext: context) equals: 7
 ]
 
 { #category : 'tests - read variables' }
@@ -427,7 +427,7 @@ DebugInfoTest >> testReadOuterBlockArgumentVariableFromOptimizedBlock [
 
 	debugInfo := OldDebugInfo for: context method.
 
-	self assert: (debugInfo readVariableNamed: #blockArgument at: context) equals: 7
+	self assert: (debugInfo readVariableNamed: #blockArgument fromContext: context) equals: 7
 ]
 
 { #category : 'tests - read variables' }
@@ -438,7 +438,7 @@ DebugInfoTest >> testReadOuterBlockCopiedArgumentVariableFromClosure [
 
 	debugInfo := OldDebugInfo for: context method.
 
-	self assert: (debugInfo readVariableNamed: #blockArgument at: context) equals: 7
+	self assert: (debugInfo readVariableNamed: #blockArgument fromContext: context) equals: 7
 ]
 
 { #category : 'tests - read variables' }
@@ -465,7 +465,7 @@ DebugInfoTest >> testReadOuterBlockCopiedTemporaryVariableFromClosure [
 			debugInfo := OldDebugInfo for: context method.
 
 			self
-				assert: (debugInfo readVariableNamed: #tempInBlock at: context)
+				assert: (debugInfo readVariableNamed: #tempInBlock fromContext: context)
 				equals: 42 ] value ] value: 7.
 	
 	"Verify that the inner block got effectively executed"
@@ -497,7 +497,7 @@ DebugInfoTest >> testReadOuterBlockTempVectorTemporaryVariableFromClosure [
 			debugInfo := OldDebugInfo for: context method.
 
 			self
-				assert: (debugInfo readVariableNamed: #tempInTempVector at: context)
+				assert: (debugInfo readVariableNamed: #tempInTempVector fromContext: context)
 				equals: 3 ] value ] value: 7.
 	
 	"Verify that the inner block got effectively executed"
@@ -525,7 +525,7 @@ DebugInfoTest >> testReadOuterBlockTemporaryVariableFromClosure [
 			debugInfo := OldDebugInfo for: context method.
 
 			self
-				assert: (debugInfo readVariableNamed: #tempInBlock at: context)
+				assert: (debugInfo readVariableNamed: #tempInBlock fromContext: context)
 				equals: 42 ] value ] value: 7.
 	
 	"Verify that the inner block got effectively executed"
@@ -553,7 +553,7 @@ DebugInfoTest >> testReadOuterBlockTemporaryVariableFromOptimizedBlock [
 			debugInfo := OldDebugInfo for: context method.
 
 			self
-				assert: (debugInfo readVariableNamed: #tempInBlock at: context)
+				assert: (debugInfo readVariableNamed: #tempInBlock fromContext: context)
 				equals: 42 ] ] value: 7.
 	
 	"Verify that the inner block got effectively executed"
@@ -568,7 +568,7 @@ DebugInfoTest >> testReadOuterMethodArgumentVariableFromClosure [
 	debugInfo := OldDebugInfo for: contextWithArguments method.
 
 	self assert:
-		(debugInfo readVariableNamed: #anArgument at: contextWithArguments) equals: 17
+		(debugInfo readVariableNamed: #anArgument fromContext: contextWithArguments) equals: 17
 ]
 
 { #category : 'tests - read variables' }
@@ -579,7 +579,7 @@ DebugInfoTest >> testReadOuterMethodArgumentVariableFromOptimizedBlock [
 	debugInfo := OldDebugInfo for: contextWithArguments method.
 
 	self assert:
-		(debugInfo readVariableNamed: #anArgument at: contextWithArguments) equals: 17
+		(debugInfo readVariableNamed: #anArgument fromContext: contextWithArguments) equals: 17
 ]
 
 { #category : 'tests - read variables' }
@@ -592,7 +592,7 @@ DebugInfoTest >> testReadOuterMethodTemporaryVariableFromClosure [
 	self
 		assert: (debugInfo
 				 readVariableNamed: #contextWithArguments
-				 at: contextWithArguments)
+				 fromContext: contextWithArguments)
 		equals: contextWithArguments
 ]
 
@@ -608,6 +608,6 @@ DebugInfoTest >> testReadOuterMethodTemporaryVariableFromOptimizedBlock [
 	self
 		assert: (debugInfo
 				 readVariableNamed: #outerVariable
-				 at: contextWithArguments)
+				 fromContext: contextWithArguments)
 		equals: outerVariable
 ]

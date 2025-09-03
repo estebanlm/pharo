@@ -34,7 +34,7 @@ OldDebugScope >> isArgumentNamed: aName [
 ]
 
 { #category : 'testing' }
-OldDebugScope >> readVariableNamed: aName at: aContext [
+OldDebugScope >> readVariableNamed: aName fromContext: aContext [
 
 	^ (self variableNamed: aName) readInContext: aContext
 ]

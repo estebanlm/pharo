@@ -61,11 +61,11 @@ CachedDebugInfo >> rangeForPC: aBytecodePC [
 ]
 
 { #category : 'testing' }
-CachedDebugInfo >> readVariableNamed: aName at: aContext [
+CachedDebugInfo >> readVariableNamed: aName fromContext: aContext [
 
 	^ (self debugScopeAt: aContext pc)
 		  readVariableNamed: aName
-		  at: aContext
+		  fromContext: aContext
 ]
 
 { #category : 'accessing' }

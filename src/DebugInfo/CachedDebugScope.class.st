@@ -71,7 +71,7 @@ CachedDebugScope >> matchesBytecodePC: aPC [
 ]
 
 { #category : 'as yet unclassified' }
-CachedDebugScope >> readVariableNamed: aName at: aContext [
+CachedDebugScope >> readVariableNamed: aName fromContext: aContext [
 
 	| variableDescriptor definingContext tempValue |
 	variableDescriptor := variables

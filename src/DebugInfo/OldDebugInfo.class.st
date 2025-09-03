@@ -106,9 +106,9 @@ OldDebugInfo >> initialPC [
 ]
 
 { #category : 'api' }
-OldDebugInfo >> isArgumentNamed: aName at: aContext [
+OldDebugInfo >> isArgumentNamed: aName at: aBytecodePC [
 
-	^ (self debugScopeAt: aContext pc) isArgumentNamed: aName
+	^ (self debugScopeAt: aBytecodePC) isArgumentNamed: aName
 ]
 
 { #category : 'testing' }
@@ -151,11 +151,11 @@ OldDebugInfo >> rangeForPC: aPC [
 ]
 
 { #category : 'api' }
-OldDebugInfo >> readVariableNamed: aName at: aContext [
+OldDebugInfo >> readVariableNamed: aName fromContext: aContext [
 
 	^ (self debugScopeAt: aContext pc)
 		  readVariableNamed: aName
-		  at: aContext
+		  fromContext: aContext
 ]
 
 { #category : 'testing' }
