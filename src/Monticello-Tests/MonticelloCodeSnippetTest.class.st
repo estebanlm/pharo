@@ -5,7 +5,7 @@ Class {
 	#package : 'Monticello-Tests'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 MonticelloCodeSnippetTest >> testMonticello [
 
 	| definition |

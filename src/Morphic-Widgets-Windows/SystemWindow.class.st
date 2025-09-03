@@ -2398,7 +2398,7 @@ SystemWindow >> navigationKey: event [
 	^false
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'navigation' }
 SystemWindow >> nextMorphAcrossInWindow [
 	"Answer the next morph in the window. Traverse
 	from the receiver to its next sibling or owner's next sibling etc.
@@ -2591,7 +2591,7 @@ SystemWindow >> preferredCornerStyle [
 	^self theme windowPreferredCornerStyleFor: self
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'navigation' }
 SystemWindow >> previousMorphInWindow [
 	"Answer the previous morph in the window. This will be the
 	last submorph recursively of the first pane morph."

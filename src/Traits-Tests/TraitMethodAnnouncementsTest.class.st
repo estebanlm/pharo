@@ -8,7 +8,7 @@ Class {
 	#package : 'Traits-Tests'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 TraitMethodAnnouncementsTest >> testCompileMethodAnnounceAdditionOnlyInTrait [
 
 	| trait |
@@ -37,7 +37,7 @@ TraitMethodAnnouncementsTest >> testCompileMethodAnnounceAdditionOnlyInTrait [
 	self assert: numberOfAnnouncements equals: 1 ] ensure: [ self packageOrganizer removePackage: self packageNameForTests , '2' ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 TraitMethodAnnouncementsTest >> testRemoveMethodAnnounceRemovalOnlyInTrait [
 
 	| trait |
@@ -68,7 +68,7 @@ TraitMethodAnnouncementsTest >> testRemoveMethodAnnounceRemovalOnlyInTrait [
 	self assert: numberOfAnnouncements equals: 1 ] ensure: [ self packageOrganizer removePackage: self packageNameForTests , '2' ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 TraitMethodAnnouncementsTest >> testUpdateMethodAnnounceModificationOnlyInTrait [
 
 	| trait |
@@ -101,7 +101,7 @@ TraitMethodAnnouncementsTest >> testUpdateMethodAnnounceModificationOnlyInTrait 
 	self assert: numberOfAnnouncements equals: 1 ] ensure: [ self packageOrganizer removePackage: self packageNameForTests , '2' ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 TraitMethodAnnouncementsTest >> testUpdateMethodAnnounceRecategorizationOnlyInTrait [
 
 	| trait |

@@ -5,7 +5,7 @@ Class {
 	#package : 'ScriptingExtensions-Tests'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 ScriptingExtensionTest >> testStringAsClassIfAbsent [
 
 	self
@@ -16,7 +16,7 @@ ScriptingExtensionTest >> testStringAsClassIfAbsent [
 	self fail
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 ScriptingExtensionTest >> testStringAsClassIfPresent [
 
 	'String' asClassIfPresent: [ :class |
@@ -25,7 +25,7 @@ ScriptingExtensionTest >> testStringAsClassIfPresent [
 	'+' asClassIfPresent: [ ^ self fail ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 ScriptingExtensionTest >> testStringAsClassInEnvironment [
 
 	self
@@ -33,7 +33,7 @@ ScriptingExtensionTest >> testStringAsClassInEnvironment [
 		equals: String
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 ScriptingExtensionTest >> testSymbolAsClassIfAbsent [
 
 	self
@@ -44,7 +44,7 @@ ScriptingExtensionTest >> testSymbolAsClassIfAbsent [
 	self fail
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 ScriptingExtensionTest >> testSymbolAsClassIfPresent [
 
 	#Symbol asClassIfPresent: [ :class |
@@ -53,7 +53,7 @@ ScriptingExtensionTest >> testSymbolAsClassIfPresent [
 	#'+' asClassIfPresent: [ ^ self fail ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 ScriptingExtensionTest >> testSymbolAsClassInEnvironment [
 
 	self

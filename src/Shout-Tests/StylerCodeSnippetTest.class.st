@@ -5,7 +5,7 @@ Class {
 	#package : 'Shout-Tests'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'helpers' }
 StylerCodeSnippetTest >> mockedStyledText [
 
 	| text |
@@ -21,7 +21,7 @@ StylerCodeSnippetTest >> mockedStyledText [
 		  as: String
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'helpers' }
 StylerCodeSnippetTest >> styledText [
 
 	| text |
@@ -30,7 +30,7 @@ StylerCodeSnippetTest >> styledText [
 	^ text
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'tests' }
 StylerCodeSnippetTest >> testStyler [
 	"We should test more than that"
 
