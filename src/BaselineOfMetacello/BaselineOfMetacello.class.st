@@ -12,10 +12,8 @@ BaselineOfMetacello >> baseline: spec [
 	spec for: #common do: [
 		spec 
 			package: 'ScriptingExtensions';
-			package: 'System-FileRegistry';
 			package: 'FileSystem-Memory';
 			package: 'StartupPreferences';
-			package: 'PragmaCollector';
 			package: 'Metacello-Base';
 			package: 'Metacello-Bitbucket';
 			package: 'Metacello-Core';
