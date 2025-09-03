@@ -26,13 +26,13 @@ Class {
 { #category : 'debugging' }
 OCVectorTempVariable >> descriptionArrayForScope: aScope [
 
-	| vectorVariable distance |
+	| vectorVariable lexicalDistance |
 	vectorVariable := aScope lookupVar: vectorName.
-	distance := aScope nonOptimizedDistanceTo: vectorVariable scope.
+	lexicalDistance := aScope nonOptimizedDistanceTo: vectorVariable scope.
 	^ {
 		  name.
 		  self isArgumentVariable.
-		  distance.
+		  lexicalDistance.
 		  vectorVariable index.
 		  index }
 ]

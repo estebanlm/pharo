@@ -36,6 +36,11 @@ Context >> findSimilarSender [
 ]
 
 { #category : '*Debugging-Core' }
+Context >> hasTemporaryVariableNamed: aName [
+	^ self tempNames includes: aName
+]
+
+{ #category : '*Debugging-Core' }
 Context >> instructionStream [
 	
 	^ InstructionStream on: method pc: pc
@@ -302,14 +307,10 @@ Context class >> tallyMethods: aBlock [
 { #category : '*Debugging-Core' }
 Context >> tempNamed: aName [
 	"Returns the value of the temporaries, aName"
-	
-	| debugInfo variables variable |
-	
+
+	| debugInfo |
 	debugInfo := self method debugInfo.
-	variables := debugInfo variablesAt: self pc.
-	variable := variables detect: [ :e | e name = aName ]
-		ifNone: [ self error: 'Temp variable not found: ', aName ].
-	^variable readInContext: self
+	^ debugInfo readVariableNamed: aName at: self
 ]
 
 { #category : '*Debugging-Core' }
@@ -324,23 +325,6 @@ Context >> tempNamed: aName put: anObject [
 ]
 
 { #category : '*Debugging-Core' }
-Context >> tempNames [
-	"Answer all the temp names in scope in aContext starting with the home's first local 
-	(the first argument or first temporary if no arguments).
-	
-	These are all the temps that a programmer could access in the context, but keep in mind
-	that as they might not be accesses here. 
-	In addition, even vars that are accessed in this context could be stored
-	in a temp vector, which itself would be a copied temp that has no name..."
-	
-	"Use #executedPC to return the temps available in the caller at the previous PC (the send of #tempNames).
-	Otherwise, the PC will be set just after the send to #tempNames.
-	And chances are that this will be a different lexical scope."
-	^ (self method debugInfo variablesAt: self executedPC)
-		collect: [ :e | e name ]
-]
-
-{ #category : '*Debugging-Core' }
 Context >> temporaryVariableNamed: aName [
 	(self hasTemporaryVariableNamed: aName)
 		ifFalse: [ ^ nil ].
@@ -348,12 +332,12 @@ Context >> temporaryVariableNamed: aName [
 ]
 
 { #category : '*Debugging-Core' }
-Context >> temporaryVariables [
+Context >> temporaryVariableNames [
 
 	"If this context did not yet execute, consider the initial PC"
 	| suspendedPC |
 	suspendedPC := self executedPC max: self method initialPC.
-	^ self method debugInfo asCachedDebugInfo variablesAt: suspendedPC
+	^ self method debugInfo variableNamesAt: suspendedPC
 ]
 
 { #category : '*Debugging-Core' }
@@ -361,20 +345,18 @@ Context >> tempsAndValuesLimitedTo: sizeLimit indent: indent [
 	"Return a string of the temporary variabls and their current values"
 
 	^ String streamContents: [ :aStream |
-			  | variables |
-			  variables := self method debugInfo variablesAt: self pc.
-			  variables
-				  do: [ :variable |
-						  | name |
+			  | variableNames |
+			  variableNames := self temporaryVariableNames.
+			  variableNames
+				  do: [ :name |
 						  indent timesRepeat: [ aStream tab ].
-						  name := variable name.
 						  aStream
-							  nextPutAll: variable name;
+							  nextPutAll: name;
 							  nextPut: $:;
 							  space;
 							  tab.
 						  aStream nextPutAll:
-							  ((variable readInContext: self) printStringLimitedTo:
+							  ((self tempNamed: name) printStringLimitedTo:
 								   (sizeLimit - 3 - name size max: 1)) ]
 				  separatedBy: [ aStream cr ] ]
 ]

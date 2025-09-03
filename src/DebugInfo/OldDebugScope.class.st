@@ -27,6 +27,26 @@ OldDebugScope >> astScope: anOCMethodScope [
 	astScope := anOCMethodScope 
 ]
 
+{ #category : 'testing' }
+OldDebugScope >> isArgumentNamed: aName [
+
+	^ (self variableNamed: aName) isArgumentVariable
+]
+
+{ #category : 'testing' }
+OldDebugScope >> readVariableNamed: aName at: aContext [
+
+	^ (self variableNamed: aName) readInContext: aContext
+]
+
+{ #category : 'testing' }
+OldDebugScope >> variableNamed: aName [
+
+	^ self variables
+		detect: [ :e | e name = aName ]
+		ifNone: [ self error: 'Variable not found: ', aName  ]
+]
+
 { #category : 'as yet unclassified' }
 OldDebugScope >> variableNames [
 	

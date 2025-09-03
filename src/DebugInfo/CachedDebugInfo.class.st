@@ -34,10 +34,38 @@ CachedDebugInfo >> isSourceStore: aBytecodePC [
 	^ (stopTable at: aBytecodePC) second
 ]
 
-{ #category : 'testing' }
-CachedDebugInfo >> rangeForPC: aBytecodePC [ 
+{ #category : 'as yet unclassified' }
+CachedDebugInfo >> precedingBytecodePC: aBytecodePC [
 	
-	^ (stopTable at: aBytecodePC) fifth
+	| found |
+	stopTable keys sorted do: [ :each |
+		"If we went over the asked bytecode PC, we need to return the previous one"
+		each >= aBytecodePC ifTrue: [ 
+			"If asking for the bytecode before the first bytecode, fail"
+			found ifNil: [ self error: 'There is no bytecode before PC ', aBytecodePC asString ].
+			^ found ].
+		found := each.
+	].
+]
+
+{ #category : 'testing' }
+CachedDebugInfo >> rangeForPC: aBytecodePC [
+
+	^ (stopTable
+		   at: aBytecodePC
+		   ifAbsent: [ "If absent, somebody asked me for a *non-pc* because it is trying to guess.
+		See for example Context >> #pcRangeContextIsActive:
+		In that case, let's return the range of the preceding bytecodePC"
+			   ^ self rangeForPC: (self precedingBytecodePC: aBytecodePC) ])
+		  fifth
+]
+
+{ #category : 'testing' }
+CachedDebugInfo >> readVariableNamed: aName at: aContext [
+
+	^ (self debugScopeAt: aContext pc)
+		  readVariableNamed: aName
+		  at: aContext
 ]
 
 { #category : 'accessing' }
@@ -64,6 +92,12 @@ CachedDebugInfo >> sourceCode: aString [
 { #category : 'accessing' }
 CachedDebugInfo >> stopTable: aCollection [ 
 	stopTable := aCollection
+]
+
+{ #category : 'accessing' }
+CachedDebugInfo >> variableNamesAt: aBytecodePC [
+
+	^ (self debugScopeAt: aBytecodePC) variableNames
 ]
 
 { #category : 'accessing' }

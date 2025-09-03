@@ -144,6 +144,14 @@ OldDebugInfo >> rangeForPC: aPC [
 	^ (self privateSourceNodeForPC: aPC) debugHighlightRange
 ]
 
+{ #category : 'testing' }
+OldDebugInfo >> readVariableNamed: aName at: aContext [
+
+	^ (self debugScopeAt: aContext pc)
+		  readVariableNamed: aName
+		  at: aContext
+]
+
 { #category : 'accessing' }
 OldDebugInfo >> shouldStopAt: aBytecodePC [
 
@@ -160,6 +168,12 @@ OldDebugInfo >> shouldStopAt: aBytecodePC [
 OldDebugInfo >> sourceCode [
 	
 	^ compiledCode sourceCode
+]
+
+{ #category : 'accessing' }
+OldDebugInfo >> variableNamesAt: aBytecodePC [
+
+	^ (self debugScopeAt: aBytecodePC) variableNames
 ]
 
 { #category : 'accessing' }

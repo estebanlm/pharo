@@ -56,6 +56,14 @@ CachedDebugScope >> initialize [
 	children := #()
 ]
 
+{ #category : 'as yet unclassified' }
+CachedDebugScope >> isArgumentNamed: aString [
+
+	| variableDescriptor |
+	variableDescriptor := variables detect: [ :e | e first = aString ].
+	^ variableDescriptor second
+]
+
 { #category : 'accessing' }
 CachedDebugScope >> matchesBytecodePC: aPC [
 
@@ -63,18 +71,20 @@ CachedDebugScope >> matchesBytecodePC: aPC [
 ]
 
 { #category : 'as yet unclassified' }
-CachedDebugScope >> readVariableNamed: aString at: aContext [
+CachedDebugScope >> readVariableNamed: aName at: aContext [
 
 	| variableDescriptor definingContext tempValue |
-	variableDescriptor := variables detect: [ :e | e first = aString ].
+	variableDescriptor := variables
+		detect: [ :e | e first = aName ]
+		ifNone: [ self error: 'Variable not found: ', aName  ].
 	definingContext := aContext.
-	variableDescriptor second timesRepeat: [
-		definingContext := aContext sender ].
+	variableDescriptor third timesRepeat: [
+		definingContext := aContext outerContext ].
 
-	tempValue := definingContext tempAt: variableDescriptor third.
+	tempValue := definingContext tempAt: variableDescriptor fourth.
 	"If it is a temp vector, lookup inside"
-	variableDescriptor size > 3 ifTrue: [
-		tempValue := tempValue at: variableDescriptor fourth ].
+	variableDescriptor size > 4 ifTrue: [
+		tempValue := tempValue at: variableDescriptor fifth ].
 	^ tempValue
 ]
 
