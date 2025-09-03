@@ -38,6 +38,14 @@ teardown() {
   assert_line --index 1 --regexp "[[:blank:]]*SmallInteger>>/"
 }
 
+@test "eval outputs error if any when evaluating an invalid Smalltalk expression" {
+  run_pharo eval 1 := .
+  assert_failure
+  assert_line --index 0 --regexp "[[:blank:]]*Syntax Error on line 1: 'End of statement expected'"
+  assert_line --index 2 --regexp "[[:blank:]]*1: 1 := ."
+  assert_line --index 3 --partial "_^_"
+}
+
 @test "eval with --no-quit keeps the image alive" {
   run_pharo_in_backgroud eval --no-quit 42
   # Give it a moment to start
