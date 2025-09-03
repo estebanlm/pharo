@@ -132,5 +132,7 @@ ClapSTFileEvaluatorTest >> testShoulNotLogSourceWhenNoSourceOptionGiven [
 		
 	context := ClapSTFileEvaluator commandSpecification activationWith: #('st' 'foo.st' '--no-source').
 	
-	self assert: context command shouldLogSource 
+	self assert: context isMatch.
+	self assert: context isValid.
+	self deny: context command shouldLogSource 
 ]

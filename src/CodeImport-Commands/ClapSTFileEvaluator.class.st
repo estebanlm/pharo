@@ -23,6 +23,7 @@ ClapSTFileEvaluator class >> commandSpecification [
 		commandClass: self;
 		description: 'The ST command evaluates Pharo code stored in a .st file ';
 		addHelp;
+		addFlag: #'no-source' description: 'if specified, do not write to the .changes file';
 		addFlag: #'quit' description: 'quit the image after file evaluation (default is to keep the image running)';
 		addPositional: #FILE spec: [ :positional |
 			positional
