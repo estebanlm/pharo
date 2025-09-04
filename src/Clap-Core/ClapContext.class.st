@@ -25,13 +25,6 @@ Class {
 }
 
 { #category : 'accessing' }
-ClapContext class >> boostrapCommands [
-	"In early stages of the bootsrap, pragmas cannot be used.
-	We cannot fetch available commands. We provide commands we need."
-	^ { HermesClapCommand commandSpecification . ClapPharoBootstrapCommand commandSpecification }
-]
-
-{ #category : 'accessing' }
 ClapContext class >> defaultRoot [
 	^ (ClapRoot id: #clap)
 		description: 'Entry point for commands implemented with Clap';
@@ -50,6 +43,20 @@ ClapContext class >> defaultRoot [
 				help value; exitSuccess ].
 			args validateAll ];
 		yourself
+]
+
+{ #category : 'accessing' }
+ClapContext class >> ensureBoostrapCommandsIn: aCommandList [
+	"In early stages of the bootsrap, pragmas cannot be used.
+	We cannot fetch available commands. We provide commands we need."
+
+	| foundCommands |
+	foundCommands := aCommandList collect: [ :commandSpec | commandSpec identifier ].
+
+	{ HermesClapCommand . ClapPharoBootstrapCommand } do: [ :class |
+		(foundCommands includes: class commandSpecification identifier) 
+			ifFalse: [ aCommandList add: class commandSpecification ] ].
+	^ aCommandList
 ]
 
 { #category : 'accessing' }
@@ -72,7 +79,7 @@ ClapContext class >> withAll: commandCandidates [
 { #category : 'instance creation' }
 ClapContext class >> withPragmaCommands [ 
 
-	^ self withAll: (self pragmaCommands ifEmpty: [ self boostrapCommands ])
+	^ self withAll: (self ensureBoostrapCommandsIn: self pragmaCommands asOrderedCollection)
 ]
 
 { #category : 'validation' }
