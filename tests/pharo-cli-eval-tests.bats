@@ -31,7 +31,7 @@ teardown() {
   assert_output "8"
 }
 
-@test "eval outputs error if any when evaluating a valid Smalltalk expression" {
+@test "eval outputs error if any when evaluating a valid Smalltalk expression with runtime error" {
   run_pharo eval 1 / 0
   assert_failure
   assert_line --index 0 --regexp "[[:blank:]]*ZeroDivide"

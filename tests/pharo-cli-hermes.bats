@@ -16,7 +16,7 @@ teardown() {
   assert_output --partial "Usage: loadHermes [--help] [--no-fail-on-undeclared] [--on-duplication <on-duplication-value>] [--save] [<FILE>]"
 }
 
-@test "loadHermes can load a hermes file and quit" {
+@test "loadHermes can load a hermes file and save before quitting" {
   copy_image "test-hermes.image"
   run_pharo loadHermes $ROOT_DIR/exported-empty-package.hermes --save
   assert_success

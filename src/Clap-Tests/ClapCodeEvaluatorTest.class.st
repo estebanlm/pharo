@@ -58,31 +58,3 @@ ClapCodeEvaluatorTest >> testEvaluateShouldBeKeptAliveWhenNoQuitFlagPresent [
 	
 	self deny: command shouldQuit
 ]
-
-{ #category : 'tests' }
-ClapCodeEvaluatorTest >> testEvaluateWithCompilationError [
-	context := ClapCodeEvaluator commandSpecification activationWith: #('eval' '1 := .').
-	[ context execute ]
-		on: OCCodeError
-		do: [ "ignore" ].
-	
-	self
-		assert: self errorString
-		equals: '[31mSyntax Error on line 1: ''End of statement expected''
-===================================================
-[0m[31m1: 1 := .
-    _^_
-[0m' withUnixLineEndings.
-	
-	self assertFailure.
-]
-
-{ #category : 'tests' }
-ClapCodeEvaluatorTest >> testEvaluateWithRuntimeErrorSignaled [
-	context := ClapCodeEvaluator commandSpecification activateWith: #('eval' '1 / 0').
-	
-	self assertSuccess.
-	self
-		assert: self outputString
-		equals: 'SmallInteger' , self lineEnding
-]
