@@ -1,6 +1,9 @@
 Class {
 	#name : 'ClapTestRunnerTest',
-	#superclass : 'ClapPharoCommandsTest',
+	#superclass : 'TestCase',
+	#instVars : [
+		'context'
+	],
 	#category : 'JenkinsTools-Tests-Commands',
 	#package : 'JenkinsTools-Tests',
 	#tag : 'Commands'
