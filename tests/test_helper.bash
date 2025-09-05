@@ -95,3 +95,12 @@ assert_is_running() {
     fail "Expected process with PID $pid to be running, but it is not."
   fi
 }
+
+assert_file_exists() {
+  local file="$1"
+
+  if [[ ! -e "$file" ]]; then
+    echo "Expected file to exist, but it does not: $file" >&2
+    return 1
+  fi
+}
