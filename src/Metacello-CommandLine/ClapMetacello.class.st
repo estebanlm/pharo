@@ -4,8 +4,8 @@ I allow to load code with Metacello from command line.
 Class {
 	#name : 'ClapMetacello',
 	#superclass : 'ClapPharoApplication',
-	#category : 'MetacelloCommandLineHandler-Core',
-	#package : 'MetacelloCommandLineHandler-Core'
+	#category : 'Metacello-CommandLine',
+	#package : 'Metacello-CommandLine'
 }
 
 { #category : 'command line' }

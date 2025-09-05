@@ -1,8 +1,8 @@
 Class {
 	#name : 'ClapMetacelloTest',
 	#superclass : 'ClapPharoCommandsTest',
-	#category : 'MetacelloCommandLineHandler-Tests',
-	#package : 'MetacelloCommandLineHandler-Tests'
+	#category : 'Metacello-CommandLine-Tests',
+	#package : 'Metacello-CommandLine-Tests'
 }
 
 { #category : 'tests' }
