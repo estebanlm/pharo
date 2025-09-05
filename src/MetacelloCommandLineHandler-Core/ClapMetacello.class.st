@@ -13,7 +13,7 @@ ClapMetacello class >> commandSpecification [
 	<commandline>
 	
 	| spec |
-	spec := (ClapCommandSpec id: #metacello)
+	spec := (ClapCommandSpec id: #install)
 		description: 'Load and install code using Metacello';
 		commandClass: self;
 		addHelp;
@@ -21,6 +21,7 @@ ClapMetacello class >> commandSpecification [
 		addPositional: #repository description: 'URL of the repository to load code from';
 		addPositional: #project description: 'Name of the project to load (i.e. the name coming after BaselineOf)';
 		addFlagWithPositional: #groups description: 'Names of groups to load, comma-separated';
+		addFlag: #signalErrorOnWarning description: 'Signal an error if a warning is raised during metacello load';
 		yourself.
 		
 	self 
@@ -28,7 +29,12 @@ ClapMetacello class >> commandSpecification [
 		addKeepAliveOptionTo: spec;
 		addNoQuitOptionTo: spec;
 		addRenameOptionTo: spec.
-	^ spec
+		
+	^ (ClapCommandSpec id: #metacello)
+		addHelp;
+		add: ClapCommandSpec forHelp;
+		addSubcommand: spec;
+		yourself
 ]
 
 { #category : 'execution' }
@@ -40,6 +46,8 @@ ClapMetacello >> execute [
 		             baseline: self projectName;
 		             repository: self repositoryUrl;
 		             yourself.
+	self shouldSignalErrorOnWarning 
+		ifTrue: [ metacello onWarning: [ :e | Error signal: e messageText in: e signalerContext ] ].
 	self groups 
 		ifEmpty: [ metacello load ] 
 		ifNotEmpty: [ metacello load: self groups ].
@@ -75,4 +83,9 @@ ClapMetacello >> projectName [
 { #category : 'accessing' }
 ClapMetacello >> repositoryUrl [
 	^ self positional: #repository
+]
+
+{ #category : 'accessing' }
+ClapMetacello >> shouldSignalErrorOnWarning [
+	^ self hasFlag: #signalErrorOnWarning
 ]

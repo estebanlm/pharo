@@ -9,7 +9,7 @@ Class {
 ClapMetacelloTest >> testCanGetMultipleGroups [
 
 	| command |
-	context := ClapMetacello commandSpecification activationWith: #( 'metacello' 'github://myorg/myproject:main/src' 'MyProject' '--groups' 'core,tests').
+	context := ClapMetacello commandSpecification activationWith: #( 'metacello' 'install' 'github://myorg/myproject:main/src' 'MyProject' '--groups' 'core,tests').
 	command := context command.
 
 	self
@@ -21,7 +21,7 @@ ClapMetacelloTest >> testCanGetMultipleGroups [
 ClapMetacelloTest >> testCanGetOneGroup [
 
 	| command |
-	context := ClapMetacello commandSpecification activationWith: #( 'metacello' 'github://myorg/myproject:main/src' 'MyProject' '--groups' 'core').
+	context := ClapMetacello commandSpecification activationWith: #( 'metacello' 'install' 'github://myorg/myproject:main/src' 'MyProject' '--groups' 'core').
 	command := context command.
 
 	self
@@ -33,7 +33,7 @@ ClapMetacelloTest >> testCanGetOneGroup [
 ClapMetacelloTest >> testCanKeepAlive [
 
 	| command |
-	context := ClapMetacello commandSpecification activationWith: #( 'metacello' '--keepAlive' 'github://myorg/myproject:main/src' 'MyProject').
+	context := ClapMetacello commandSpecification activationWith: #( 'metacello' 'install' '--keepAlive' 'github://myorg/myproject:main/src' 'MyProject').
 	command := context command.
 
 	self deny: command shouldQuit
@@ -43,7 +43,7 @@ ClapMetacelloTest >> testCanKeepAlive [
 ClapMetacelloTest >> testCanKeepAliveWithNoQuitOption [
 
 	| command |
-	context := ClapMetacello commandSpecification activationWith: #( 'metacello' '--no-quit' 'github://myorg/myproject:main/src' 'MyProject').
+	context := ClapMetacello commandSpecification activationWith: #( 'metacello' 'install' '--no-quit' 'github://myorg/myproject:main/src' 'MyProject').
 	command := context command.
 
 	self deny: command shouldQuit
@@ -53,27 +53,47 @@ ClapMetacelloTest >> testCanKeepAliveWithNoQuitOption [
 ClapMetacelloTest >> testCanSave [
 
 	| command |
-	context := ClapMetacello commandSpecification activationWith: #( 'metacello' '--save' 'github://myorg/myproject:main/src' 'MyProject').
+	context := ClapMetacello commandSpecification activationWith: #( 'metacello' 'install' '--save' 'github://myorg/myproject:main/src' 'MyProject').
 	command := context command.
 
 	self assert: command shouldSave
 ]
 
 { #category : 'tests' }
+ClapMetacelloTest >> testCanSignalErrorOnWarning [
+
+	| command |
+	context := ClapMetacello commandSpecification activationWith: #( 'metacello' 'install' '--signalErrorOnWarning' 'github://myorg/myproject:main/src' 'MyProject').
+	command := context command.
+
+	self assert: command shouldSignalErrorOnWarning
+]
+
+{ #category : 'tests' }
 ClapMetacelloTest >> testDoesNotSaveByDefault [
 
 	| command |
-	context := ClapMetacello commandSpecification activationWith: #( 'metacello' 'github://myorg/myproject:main/src' 'MyProject').
+	context := ClapMetacello commandSpecification activationWith: #( 'metacello' 'install' 'github://myorg/myproject:main/src' 'MyProject').
 	command := context command.
 
 	self deny: command shouldSave
 ]
 
 { #category : 'tests' }
+ClapMetacelloTest >> testDoesNotSignalErrorOnWarningByDefault [
+
+	| command |
+	context := ClapMetacello commandSpecification activationWith: #( 'metacello' 'install' 'github://myorg/myproject:main/src' 'MyProject').
+	command := context command.
+
+	self deny: command shouldSignalErrorOnWarning
+]
+
+{ #category : 'tests' }
 ClapMetacelloTest >> testGetEmptyCollectionWhenNoGroupSpecified [
 
 	| command |
-	context := ClapMetacello commandSpecification activationWith: #( 'metacello' 'github://myorg/myproject:main/src' 'MyProject').
+	context := ClapMetacello commandSpecification activationWith: #( 'metacello' 'install' 'github://myorg/myproject:main/src' 'MyProject').
 	command := context command.
 
 	self assert: command groups isEmpty
@@ -83,7 +103,7 @@ ClapMetacelloTest >> testGetEmptyCollectionWhenNoGroupSpecified [
 ClapMetacelloTest >> testQuitByDefault [
 
 	| command |
-	context := ClapMetacello commandSpecification activationWith: #( 'metacello' 'github://myorg/myproject:main/src' 'MyProject').
+	context := ClapMetacello commandSpecification activationWith: #( 'metacello' 'install' 'github://myorg/myproject:main/src' 'MyProject').
 	command := context command.
 
 	self assert: command shouldQuit
@@ -93,7 +113,7 @@ ClapMetacelloTest >> testQuitByDefault [
 ClapMetacelloTest >> testRepositoryUrl [ 
 
 	| command |
-	context := ClapMetacello commandSpecification activationWith: #( 'metacello' 'github://myorg/myproject:main/src' 'MyProject').
+	context := ClapMetacello commandSpecification activationWith: #( 'metacello' 'install' 'github://myorg/myproject:main/src' 'MyProject').
 	command := context command.
 
 	self assert: command repositoryUrl equals: 'github://myorg/myproject:main/src'
