@@ -213,7 +213,7 @@ ${VM} "${PHARO_IMAGE_NAME}.image" "${IMAGE_FLAGS}" eval --save "Smalltalk vm par
 env 2>&1 > env.log
 
 ${VM} "${PHARO_IMAGE_NAME}.image" "${IMAGE_FLAGS}" eval --save "MCCacheRepository uniqueInstance disable"
-${VM} "${PHARO_IMAGE_NAME}.image" "${IMAGE_FLAGS}" metacello install --save --signalErrorOnWarning 'tonel://${BOOTSTRAP_REPOSITORY}/src' Pharo
+${VM} "${PHARO_IMAGE_NAME}.image" "${IMAGE_FLAGS}" metacello install --save --signalErrorOnWarning "tonel://${BOOTSTRAP_REPOSITORY}/src" Pharo
 
 #Storing the image version into the image header
 ${VM} "${PHARO_IMAGE_NAME}.image" "${IMAGE_FLAGS}" eval --save "Smalltalk vm saveImageVersionInImageHeader"
