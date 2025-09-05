@@ -12,7 +12,7 @@ mcPackages := #(
  'Metacello-Gitlab'
  'Metacello-GitHub'
  'Metacello-Bitbucket'
- 'MetacelloCommandLineHandler-Core'
+ 'Metacello-CommandLine'
  ).
 
 MCMethodDefinition initializersEnabled: false.
