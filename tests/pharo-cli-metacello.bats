@@ -20,7 +20,7 @@ teardown() {
 
 @test "metacello install --help prints help" {
   run_pharo metacello install --help
-  assert_output --partial "Usage: metacello install [--help] [--groups <groups-value>] [--save] [--keepAlive] [--no-quit] [--rename] [<repository>] [<project>]"
+  assert_output --partial "Usage: metacello install [--help] [--groups <groups-value>] [--signalErrorOnWarning] [--save] [--keepAlive] [--no-quit] [--rename] [<repository>] [<project>]"
   assert_success
 }
 
