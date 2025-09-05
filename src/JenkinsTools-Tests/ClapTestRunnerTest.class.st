@@ -1,8 +1,8 @@
 Class {
 	#name : 'ClapTestRunnerTest',
 	#superclass : 'ClapPharoCommandsTest',
-	#category : 'Clap-Tests-Commands',
-	#package : 'Clap-Tests',
+	#category : 'JenkinsTools-Tests-Commands',
+	#package : 'JenkinsTools-Tests',
 	#tag : 'Commands'
 }
 

@@ -4,8 +4,8 @@ I run unit tests found in specified packages, and display their results to stand
 Class {
 	#name : 'ClapTestRunner',
 	#superclass : 'ClapPharoApplication',
-	#category : 'Clap-Commands-Pharo',
-	#package : 'Clap-Commands-Pharo'
+	#category : 'JenkinsTools-Core',
+	#package : 'JenkinsTools-Core'
 }
 
 { #category : 'command line' }
@@ -66,6 +66,12 @@ ClapTestRunner >> execute [
 ]
 
 { #category : 'private - printing' }
+ClapTestRunner >> inform: aString [
+
+	self outputStreamDo: [ :out | out << aString << OSPlatform current lineEnding ]
+]
+
+{ #category : 'private - printing' }
 ClapTestRunner >> informResults: results [
 
 	self outputStreamDo: [ :out |
@@ -87,9 +93,9 @@ ClapTestRunner >> packages [
 ClapTestRunner >> runPackages [
 	| packages results |
 	
-	packages := self packages.
+	packages := self testPackages.
 	self inform: 'Running tests in ', packages size asString, ' Packages'.
-	results := (self testRunner runPackages: self packages) select: #isNotNil.
+	results := (self testRunner runPackages: packages) select: #isNotNil.
 				
 	self informResults: results.
 	self saveSessionIfAsked.
