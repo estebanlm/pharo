@@ -14,6 +14,7 @@ metacello install <repository url> (<baseline>|<configuration>) [--version=<vers
 	--no-save           Don't save the image after Baseline/Configuration install
 	
 Examples:
+```
 	# Display this help message
 	pharo Pharo.image metacello OR pharo Pharo.image metacello --help
 	
@@ -22,8 +23,7 @@ Examples:
 	
 	# Install a specific version '1.5' and only a specific group 'Tests'
 	pharo Pharo.image metacello install $REPOS_URL ConfigurationOfFoo --version=1.5 --groups=Tests
-	
-	
+```	
 "
 Class {
 	#name : 'MetacelloCommandLineHandler',
