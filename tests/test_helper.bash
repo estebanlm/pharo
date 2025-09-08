@@ -123,3 +123,12 @@ assert_file_exists() {
     return 1
   fi
 }
+
+refute_file_exists() {
+  local file="$1"
+
+  if [[ -e "$file" ]]; then
+    echo "Expected file to does not exist, but it does: $file" >&2
+    return 1
+  fi
+}
