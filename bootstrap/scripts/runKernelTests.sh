@@ -70,4 +70,4 @@ export PHARO_CI_TESTING_ENVIRONMENT=1
 ./pharo bootstrap.image loadHermes Debugging-Utils.hermes SUnit-Core.hermes JenkinsTools-Core.hermes JenkinsTools-Core.hermes SUnit-Tests.hermes --save --no-fail-on-undeclared --on-duplication ignore
 
 #Running tests
-./pharo bootstrap.image test --junit-xml-output --stage-name=${2} SUnit-Core SUnit-Tests
+./pharo bootstrap.image test --junit-xml-output --stage-name ${2} SUnit-Core SUnit-Tests
