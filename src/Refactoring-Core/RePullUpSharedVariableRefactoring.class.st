@@ -2,7 +2,7 @@
 I am a refactoring for moving a class variable up to the superclass.
 "
 Class {
-	#name : 'RBPullUpClassVariableRefactoring',
+	#name : 'RePullUpSharedVariableRefactoring',
 	#superclass : 'RBVariableRefactoring',
 	#category : 'Refactoring-Core-Refactorings',
 	#package : 'Refactoring-Core',
@@ -10,32 +10,33 @@ Class {
 }
 
 { #category : 'preconditions' }
-RBPullUpClassVariableRefactoring >> applicabilityPreconditions [
+RePullUpSharedVariableRefactoring >> applicabilityPreconditions [
 
 	^ {
 		  (RBCondition isMetaclass: class) not.
-		  (RBCondition withBlock: [
-			   (class hierarchyDefinesClassVariable: variableName) ifFalse: [
-				   self refactoringError: 'No subclass defines ' , variableName ].
-			   true ]) }
+		  (ReHierarchyDefinesSharedVariableCondition new
+			   class: class;
+			   sharedVariables: { variableName };
+			   yourself) }
 ]
 
 { #category : 'preconditions' }
-RBPullUpClassVariableRefactoring >> breakingChangePreconditions [
+RePullUpSharedVariableRefactoring >> breakingChangePreconditions [
 
 	^ { (RBCondition withBlock: [
 		   (class subclasses anySatisfy: [ :each |
 			    (each directlyDefinesClassVariable: variableName) not ])
 			   ifTrue: [
 				   self refactoringWarning:
-					   'Not all subclasses have an class variable named.<n> Do you want pull up this variable anyway?'
+					   'Not all subclasses have a shared variable named.<n> Do you want pull up this variable anyway?'
 					   , variableName , '.' ].
 		   true ]) }
 ]
 
 { #category : 'transforming' }
-RBPullUpClassVariableRefactoring >> privateTransform [
-
+RePullUpSharedVariableRefactoring >> privateTransform [
+	"Remove all the variables in the hierarchy below the classes and define one on the top."
+	
 	class allSubclasses do:
 		[:each |
 		(each directlyDefinesClassVariable: variableName)
