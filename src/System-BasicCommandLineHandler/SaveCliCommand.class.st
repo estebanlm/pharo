@@ -24,12 +24,13 @@ Class {
 SaveCliCommand class >> commandSpecification [
 
 	<commandline>
-	^ (ClapCommandSpec id: #save)
+	^ (ClapCommandSpec id: #'save-command')
+	     canonicalName: 'save';
 		  description: 'Saves the image and changes file under a new name.';
 		  commandClass: self;
 		  addHelp;
 		  addFlag: #'delete-old' description: 'remove the old image and changes file';
-		  addPositional: #imageName description: 'the new name of the image to be saved';
+		  addPositional: #imageName description: 'the new name (without extension) of the image to be saved';
 		  yourself
 ]
 
@@ -37,8 +38,10 @@ SaveCliCommand class >> commandSpecification [
 SaveCliCommand >> execute [
 
 	| oldImageFile oldChangesFile |
+	self isValidImageName ifFalse: [ ^ self exitFailure: 'Image name is mandatory' ].
+	
 	oldImageFile := File named: Smalltalk imagePath.
-	oldChangesFile := File named: (Smalltalk imagePath copyUpToLast: '.') , '.changes'.
+	oldChangesFile := File named: (Smalltalk imagePath copyUpToLast: $.) , '.changes'.
 	
 	(Smalltalk saveAs: self imageName) isImageStarting 
 		ifTrue: [ "rebooting, when executing this, we are already in the renamed image" ^ self ].
@@ -53,6 +56,14 @@ SaveCliCommand >> execute [
 SaveCliCommand >> imageName [
 
 	^ self positional: #imageName
+]
+
+{ #category : 'testing' }
+SaveCliCommand >> isValidImageName [
+
+	^ [ self imageName isNotNil and: [ self imageName isNotEmpty ] ]
+	on: NotFound
+	do: [ false ]
 ]
 
 { #category : 'testing' }
