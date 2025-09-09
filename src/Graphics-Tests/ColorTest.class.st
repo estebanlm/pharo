@@ -29,7 +29,10 @@ ColorTest >> classToBeTested [
 ColorTest >> test32BitBlackColorTranformation [
 	"Solve bug: https://pharo.manuscript.com/f/cases/14619"
 
-	self assert: ((Color black pixelWordForDepth: 32) asColorOfDepth: 32) equals: Color black
+	| colorInteger newColor |
+	colorInteger := (Color black pixelWordForDepth: 32).
+	newColor := Color colorFromPixelValue: colorInteger depth: 32.
+	self assert: newColor equals: Color black
 ]
 
 { #category : 'tests - 32 bit' }

@@ -7,12 +7,12 @@ Class {
 	#name : 'LessonView',
 	#superclass : 'Object',
 	#instVars : [
-		'shoutMorph',
-		'window',
-		'sourceTextModel'
+		'page',
+		'window'
 	],
-	#category : 'ProfStef-Core',
-	#package : 'ProfStef-Core'
+	#category : 'ProfStef-Core-Base',
+	#package : 'ProfStef-Core',
+	#tag : 'Base'
 }
 
 { #category : 'gui' }
