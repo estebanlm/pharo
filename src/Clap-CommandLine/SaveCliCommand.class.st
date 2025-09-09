@@ -15,9 +15,8 @@ Examples:
 Class {
 	#name : 'SaveCliCommand',
 	#superclass : 'ClapPharoApplication',
-	#category : 'System-BasicCommandLineHandler-Base',
-	#package : 'System-BasicCommandLineHandler',
-	#tag : 'Base'
+	#category : 'Clap-CommandLine',
+	#package : 'Clap-CommandLine'
 }
 
 { #category : 'command line' }

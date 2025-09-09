@@ -4,8 +4,8 @@ Class {
 	#instVars : [
 		'context'
 	],
-	#category : 'System-BasicCommandLineHandler-Tests-Commands',
-	#package : 'System-BasicCommandLineHandler-Tests',
+	#category : 'Clap-Tests-Commands',
+	#package : 'Clap-Tests',
 	#tag : 'Commands'
 }
 
