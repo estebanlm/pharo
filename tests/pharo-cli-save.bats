@@ -41,3 +41,10 @@ teardown() {
   refute_file_exists "$IMAGE"
   refute_file_exists "$changes_file"
 }
+
+@test "Save without providing an image name fails" {
+  run_pharo save
+
+  assert_failure
+  assert_line --index 0 --partial "Image name is mandatory"
+}
