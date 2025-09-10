@@ -1,6 +1,9 @@
 Class {
 	#name : 'DebugInfoTest',
 	#superclass : 'TestCase',
+	#classVars : [
+		'ClassVar'
+	],
 	#category : 'DebugInfo-Tests',
 	#package : 'DebugInfo-Tests'
 }
@@ -24,6 +27,86 @@ DebugInfoTest >> methodWithArgumentCapturingOptimizedBlockContext: anArgument [
 
 	"anArgument is unused, but the context should capture it"
 	^ true ifTrue: [ thisContext copy ]
+]
+
+{ #category : 'tests - shouldStopAt' }
+DebugInfoTest >> methodWithConstantBlockReturn [
+
+	[ 1 ]
+]
+
+{ #category : 'tests - shouldStopAt' }
+DebugInfoTest >> methodWithDynamicArrayCreation [
+
+	{ 1 + 2 . 17 }
+]
+
+{ #category : 'tests - shouldStopAt' }
+DebugInfoTest >> methodWithFullBlockReturn [
+
+	| stolen |
+	[ stolen ]
+]
+
+{ #category : 'tests - shouldStopAt' }
+DebugInfoTest >> methodWithGlobalVariableAssignment [
+
+	ClassVar := #toto
+]
+
+{ #category : 'tests - shouldStopAt' }
+DebugInfoTest >> methodWithImplicitReturn [
+
+	"^ self"
+]
+
+{ #category : 'tests - shouldStopAt' }
+DebugInfoTest >> methodWithInstanceVariableAssignment [
+
+	"Just to test, this code is never executed"
+	testSelector := #toto
+]
+
+{ #category : 'tests - shouldStopAt' }
+DebugInfoTest >> methodWithLiterals [
+
+	17 . #asd . 'asd' . 1.77777 . #() . nil . true . false
+]
+
+{ #category : 'tests - shouldStopAt' }
+DebugInfoTest >> methodWithLocalVariableAssignment [
+
+	| local |
+	local := #toto
+]
+
+{ #category : 'tests - shouldStopAt' }
+DebugInfoTest >> methodWithOptimizedSend [
+
+	1 to: 3 do: [ :i | 17 + 42 ]
+]
+
+{ #category : 'tests - shouldStopAt' }
+DebugInfoTest >> methodWithReturn [
+
+	^ self
+]
+
+{ #category : 'tests - shouldStopAt' }
+DebugInfoTest >> methodWithSend [
+
+	self yourself
+]
+
+{ #category : 'tests - shouldStopAt' }
+DebugInfoTest >> methodWithVariableReads [
+
+	| temp |
+	
+	temp.
+	testSelector.
+	ClassVar.
+	DebugInfoTest
 ]
 
 { #category : 'tests - arguments' }
@@ -55,7 +138,7 @@ DebugInfoTest >> testDoNotListVariablesDefinedInFollowingNonSurroundingLexicalSc
 	
 	"We capture the context outside of the if statement.
 	Thus, the variable defined inside the conditional block should not be visible"
-	context := thisContext.
+	context := thisContext copy.
 	true ifTrue: [ 
 		| inOptimizedScope |  ].
 
@@ -76,7 +159,7 @@ DebugInfoTest >> testDoNotListVariablesDefinedInPreviousNonSurroundingLexicalSco
 
 	"We capture the context outside of the if statement.
 	Thus, the variable defined inside the conditional block should not be visible"
-	context := thisContext.
+	context := thisContext copy.
 	debugInfo := OldDebugInfo for: context method.
 
 	self
@@ -112,10 +195,11 @@ DebugInfoTest >> testListBlockArguments [
 { #category : 'tests - listing variables' }
 DebugInfoTest >> testListMethodTemps [
 
-	| debugInfo |
-	debugInfo := OldDebugInfo for: thisContext method.
+	| debugInfo context |
+	context := thisContext copy.
+	debugInfo := OldDebugInfo for: context method.
 
-	self assert: (debugInfo variableNamesAt: thisContext pc) equals: #(debugInfo)
+	self assert: (debugInfo variableNamesAt: context pc) equals: #(debugInfo context)
 ]
 
 { #category : 'tests - listing variables' }
@@ -219,6 +303,112 @@ DebugInfoTest >> testNonExistingVariableIsArgumentRaisesError [
 		on: Error
 		do: [ :err | 
 			self assert: err messageText equals: 'Variable not found: notAVariable' ]
+]
+
+{ #category : 'tests - shouldStopAt' }
+DebugInfoTest >> testNotStopAtAllButFirstBytecodeOfOptimizedSend [
+
+	| debugInfo methodToTest send todoPCs |
+	methodToTest := self class >> #methodWithOptimizedSend.
+	debugInfo := OldDebugInfo for: methodToTest.
+
+	"a to:do: send should stop at the to:do: point but not in the intermediate steps"
+	send := methodToTest ast statements first.
+	todoPCs := send methodNode pcsForNode: send.
+	self assert: todoPCs size > 1.
+	
+	todoPCs allButFirst do: [ :otherPC |
+		self deny: (debugInfo shouldStopAt: otherPC). ]
+]
+
+{ #category : 'tests - shouldStopAt' }
+DebugInfoTest >> testNotStopAtConstantBlockCreation [
+
+	| debugInfo methodToTest blockNode blockCreationPC |
+	methodToTest := self class >> #methodWithConstantBlockReturn.
+	debugInfo := OldDebugInfo for: methodToTest.
+
+	blockNode := methodToTest ast statements first.
+	blockCreationPC := (blockNode methodNode pcsForNode: blockNode) first.
+	
+	self deny: (debugInfo shouldStopAt: blockCreationPC)
+]
+
+{ #category : 'tests - shouldStopAt' }
+DebugInfoTest >> testNotStopAtDynamicArrayCreation [
+
+	| debugInfo methodToTest dynamicArrayCreationNode blockCreationPCs |
+	methodToTest := self class >> #methodWithDynamicArrayCreation.
+	debugInfo := OldDebugInfo for: methodToTest.
+
+	dynamicArrayCreationNode := methodToTest ast statements first.
+	blockCreationPCs := dynamicArrayCreationNode methodNode pcsForNode: dynamicArrayCreationNode.
+	self assert: blockCreationPCs notEmpty.
+	
+	blockCreationPCs do: [ :e |
+		self deny: (debugInfo shouldStopAt: e). ]
+]
+
+{ #category : 'tests - shouldStopAt' }
+DebugInfoTest >> testNotStopAtFullBlockCreation [
+
+	| debugInfo methodToTest blockNode blockCreationPCs |
+	methodToTest := self class >> #methodWithFullBlockReturn.
+	debugInfo := OldDebugInfo for: methodToTest.
+
+	blockNode := methodToTest ast statements first.
+	"A block may have many PCs: the creation of the block but also the creation of the temp verctor and the copied vars
+	None of them are stop points."
+	blockCreationPCs := (blockNode methodNode pcsForNode: blockNode).
+	self assert: blockCreationPCs notEmpty.
+	
+	blockCreationPCs do: [ :e |
+		self deny: (debugInfo shouldStopAt: e)
+	]
+]
+
+{ #category : 'tests - shouldStopAt' }
+DebugInfoTest >> testNotStopAtLiterals [
+
+	| debugInfo methodToTest literalNodes |
+	methodToTest := self class >> #methodWithLiterals.
+	debugInfo := OldDebugInfo for: methodToTest.
+
+	literalNodes := methodToTest ast statements.
+	self assert: literalNodes notEmpty.
+	
+	literalNodes do: [ :node | | literalPCs |
+		"Some literal nodes are eliminated from the bytecode (and others not?)
+		Thus, some are mapped and others not.
+		
+		For our purposes we don't care. If not mapped we will not stop.
+		But if mapped, we should not stop on them"
+		literalPCs := (node methodNode pcsForNode: node).
+		self assert: (literalPCs isEmpty or: [ (debugInfo shouldStopAt: literalPCs first) not ])
+	]
+	
+]
+
+{ #category : 'tests - shouldStopAt' }
+DebugInfoTest >> testNotStopAtVariableReads [
+
+	| debugInfo methodToTest variableNodes |
+	methodToTest := self class >> #methodWithVariableReads.
+	debugInfo := OldDebugInfo for: methodToTest.
+
+	variableNodes := methodToTest ast statements.
+	self assert: variableNodes notEmpty.
+	
+	variableNodes do: [ :node | | variableReadPCs |
+		"Some variable nodes are eliminated from the bytecode (and others not?)
+		Thus, some are mapped and others not.
+		
+		For our purposes we don't care. If not mapped we will not stop.
+		But if mapped, we should not stop on them"
+		variableReadPCs := (node methodNode pcsForNode: node).
+		self assert: (variableReadPCs isEmpty or: [ (debugInfo shouldStopAt: variableReadPCs first) not ])
+	]
+	
 ]
 
 { #category : 'tests - arguments' }
@@ -610,4 +800,163 @@ DebugInfoTest >> testReadOuterMethodTemporaryVariableFromOptimizedBlock [
 				 readVariableNamed: #outerVariable
 				 fromContext: contextWithArguments)
 		equals: outerVariable
+]
+
+{ #category : 'tests - shouldStopAt' }
+DebugInfoTest >> testStopAtConstantBlockReturn [
+
+	| debugInfo methodToTest returnPC blockNode constantBlock |
+	methodToTest := self class >> #methodWithConstantBlockReturn.
+	constantBlock := methodToTest literalAt: 1.
+	debugInfo := OldDebugInfo for: constantBlock compiledBlock.
+
+	"Since the return does not exist in the AST, the block return bytecode is mapped to the block's sequence node (differently than methods)"
+	blockNode := methodToTest ast statements first.
+	"The return bytecode is the last bytecode of the block"
+	returnPC := (blockNode pcsForNode: blockNode body) last.
+	
+	self assert: (debugInfo shouldStopAt: returnPC).
+]
+
+{ #category : 'tests - shouldStopAt' }
+DebugInfoTest >> testStopAtExplicitReturn [
+
+	| debugInfo methodToTest return returnPC |
+	methodToTest := self class >> #methodWithReturn.
+	debugInfo := OldDebugInfo for: methodToTest.
+
+	return := methodToTest ast statements first.
+	returnPC := (return methodNode pcsForNode: return) first.
+	
+	self assert: (debugInfo shouldStopAt: returnPC).
+]
+
+{ #category : 'tests - shouldStopAt' }
+DebugInfoTest >> testStopAtFirstBytecodeOfOptimizedSend [
+
+	| debugInfo methodToTest send sendPC |
+	methodToTest := self class >> #methodWithOptimizedSend.
+	debugInfo := OldDebugInfo for: methodToTest.
+
+	"a to:do: send should stop at the to:do: point"
+	send := methodToTest ast statements first.
+	sendPC := (send methodNode pcsForNode: send) first.
+	
+	self assert: (debugInfo shouldStopAt: sendPC).
+]
+
+{ #category : 'tests - shouldStopAt' }
+DebugInfoTest >> testStopAtFullBlockReturn [
+
+	| debugInfo methodToTest returnPC blockNode compiledBlock |
+	methodToTest := self class >> #methodWithFullBlockReturn.
+	compiledBlock := methodToTest literalAt: 1.
+	debugInfo := OldDebugInfo for: compiledBlock.
+
+	"Since the return does not exist in the AST, the block return bytecode is mapped to the block's sequence node (differently than methods).
+	This happens because a block node is mapped to its creation!
+	However: why we don't map sequences in methods too?"
+	blockNode := methodToTest ast statements first.
+	"The return bytecode is the last bytecode of the block"
+	returnPC := (blockNode pcsForNode: blockNode body) last.
+	
+	self assert: (debugInfo shouldStopAt: returnPC).
+]
+
+{ #category : 'tests - shouldStopAt' }
+DebugInfoTest >> testStopAtGlobalVariableAssignment [
+
+	| debugInfo methodToTest returnPC assignmentNode |
+	methodToTest := self class >> #methodWithGlobalVariableAssignment.
+	debugInfo := OldDebugInfo for: methodToTest.
+
+	assignmentNode := methodToTest ast statements first.
+	returnPC := (assignmentNode methodNode pcsForNode: assignmentNode) first.
+	
+	self assert: (debugInfo shouldStopAt: returnPC).
+]
+
+{ #category : 'tests - shouldStopAt' }
+DebugInfoTest >> testStopAtImplicitMethodReturn [
+
+	| debugInfo methodToTest returnPC methodNode |
+	methodToTest := self class >> #methodWithImplicitReturn.
+	debugInfo := OldDebugInfo for: methodToTest.
+
+	"Since the return does not exist in the AST, the return bytecode is mapped to the method node"
+	methodNode := methodToTest ast.
+	"The return bytecode is the last bytecode of the method"
+	returnPC := (methodNode pcsForNode: methodNode) last.
+	
+	self assert: (debugInfo shouldStopAt: returnPC).
+]
+
+{ #category : 'tests - shouldStopAt' }
+DebugInfoTest >> testStopAtInstanceVariableAssignment [
+
+	| debugInfo methodToTest returnPC assignmentNode |
+	methodToTest := self class >> #methodWithInstanceVariableAssignment.
+	debugInfo := OldDebugInfo for: methodToTest.
+
+	assignmentNode := methodToTest ast statements first.
+	returnPC := (assignmentNode methodNode pcsForNode: assignmentNode) first.
+	
+	self assert: (debugInfo shouldStopAt: returnPC).
+]
+
+{ #category : 'tests - shouldStopAt' }
+DebugInfoTest >> testStopAtLocalVariableAssignment [
+
+	| debugInfo methodToTest returnPC assignmentNode |
+	methodToTest := self class >> #methodWithLocalVariableAssignment.
+	debugInfo := OldDebugInfo for: methodToTest.
+
+	assignmentNode := methodToTest ast statements first.
+	returnPC := (assignmentNode methodNode pcsForNode: assignmentNode) first.
+	
+	self assert: (debugInfo shouldStopAt: returnPC).
+]
+
+{ #category : 'tests - shouldStopAt' }
+DebugInfoTest >> testStopAtSend [
+
+	| debugInfo methodToTest send sendPC |
+	methodToTest := self class >> #methodWithSend.
+	debugInfo := OldDebugInfo for: methodToTest.
+
+	send := methodToTest ast statements first.
+	sendPC := (send methodNode pcsForNode: send) first.
+	
+	self assert: (debugInfo shouldStopAt: sendPC).
+]
+
+{ #category : 'tests - shouldStopAt' }
+DebugInfoTest >> testStopAtSendInDynamicArray [
+
+	| debugInfo methodToTest dynamicArrayNode sendInsideDynamicArrayNode sendPC |
+	methodToTest := self class >> #methodWithDynamicArrayCreation.
+	debugInfo := OldDebugInfo for: methodToTest.
+
+	dynamicArrayNode := methodToTest ast statements first.
+	sendInsideDynamicArrayNode := dynamicArrayNode statements first.
+	self assert: sendInsideDynamicArrayNode isMessage.
+
+	sendPC := (sendInsideDynamicArrayNode methodNode pcsForNode: sendInsideDynamicArrayNode) first.
+	
+	self assert: (debugInfo shouldStopAt: sendPC)
+]
+
+{ #category : 'tests - shouldStopAt' }
+DebugInfoTest >> testStopAtSendInInlinedBlock [
+
+	| debugInfo methodToTest todoSend sendInsideToDoBlock sendPC |
+	methodToTest := self class >> #methodWithOptimizedSend.
+	debugInfo := OldDebugInfo for: methodToTest.
+
+	todoSend := methodToTest ast statements first.
+	sendInsideToDoBlock := todoSend arguments second body statements first.
+	self assert: sendInsideToDoBlock isMessage.
+	sendPC := (sendInsideToDoBlock methodNode pcsForNode: sendInsideToDoBlock) first.
+	
+	self assert: (debugInfo shouldStopAt: sendPC)
 ]

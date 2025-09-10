@@ -111,7 +111,27 @@ OldDebugInfo >> isArgumentNamed: aName at: aBytecodePC [
 	^ (self debugScopeAt: aBytecodePC) isArgumentNamed: aName
 ]
 
-{ #category : 'testing' }
+{ #category : 'private' }
+OldDebugInfo >> isFirstPCOfMessage: aBytecodePC [
+
+	"Check if the given bytecode PC is the first bytecode PC of its mapped node.
+	
+	An AST node can be expanded/inlined in many bytecodes.
+	But, from a source/user point of view, it does not make sense to stop at each bytecode.
+	Instead, let's stop at the first bytecode of the expansion.
+	
+	The implementation is tricky.
+	First we get the AST node for the pc (many pcs can be mapped to the same node).
+	Now, a node does not know its expansion.
+	It is its (first non-optimized) parent that knows.
+	So, fetch its (non-optimized) lexical parent, ask it for the first PC for the mapped node.
+	Return if this first PC is the one as argument"
+	| mappedNode |
+	mappedNode := self privateSourceNodeForPC: aBytecodePC.
+	^ (mappedNode methodOrBlockNode scope outerNotOptimizedScope node firstPcForNode: mappedNode) = aBytecodePC
+]
+
+{ #category : 'private' }
 OldDebugInfo >> isSourceReturn: aBytecodePC [
 
 	"We should stop at all returns inserted by the compiler in the bytecode.
@@ -122,16 +142,19 @@ OldDebugInfo >> isSourceReturn: aBytecodePC [
 	^ compiledCode encoderClass isReturnAt: aBytecodePC in: compiledCode
 ]
 
-{ #category : 'testing' }
+{ #category : 'private' }
 OldDebugInfo >> isSourceSend: aBytecodePC [
 
+	"Deal with inlined messages using isFirstPCOfMessagePC:"
+	(self privateSourceNodeForPC: aBytecodePC) ifNil: [ ^ false ].
 	^ (self privateSourceNodeForPC: aBytecodePC) isMessage and: [
-		  self shouldStopAt: aBytecodePC ]
+		  self isFirstPCOfMessage: aBytecodePC ]
 ]
 
-{ #category : 'testing' }
+{ #category : 'private' }
 OldDebugInfo >> isSourceStore: aBytecodePC [
 	
+	(self privateSourceNodeForPC: aBytecodePC) ifNil: [ ^ false ].
 	^ (self privateSourceNodeForPC: aBytecodePC) isAssignment 
 ]
 
@@ -158,16 +181,12 @@ OldDebugInfo >> readVariableNamed: aName fromContext: aContext [
 		  fromContext: aContext
 ]
 
-{ #category : 'testing' }
+{ #category : 'api' }
 OldDebugInfo >> shouldStopAt: aBytecodePC [
 
-	"Is this PC the first PC in its lexical context (the sequence node)?
-	A single AST node can spawn multiple bytecode.
-	Get the first PC of that node to check if it is the one we are looking for.
-	Take into account also that optimized blocks will not have a bc mapping so we need to get its outest parent that has it."
-	| mappedNode |
-	mappedNode := self privateSourceNodeForPC: aBytecodePC.
-	^ (mappedNode methodOrBlockNode scope outerNotOptimizedScope node firstPcForNode: mappedNode) = aBytecodePC
+	^ (self isSourceSend: aBytecodePC) or: [
+			  (self isSourceReturn: aBytecodePC) or: [
+				  self isSourceStore: aBytecodePC ] ]
 ]
 
 { #category : 'accessing' }

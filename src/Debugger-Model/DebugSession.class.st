@@ -553,14 +553,13 @@ DebugSession >> stepToFirstInterestingBytecodeInContext: aContext [
 		self error: 'Cannot step into dead context' ].
 
 	debugInfo := aContext method debugInfo.
-	bytecodeInterpreter := InstructionStream on: aContext method pc: aContext pc.
-	[
-		(debugInfo isSourceSend: aContext pc) or: [
-				(debugInfo isSourceReturn: aContext pc) or: [
-					debugInfo isSourceStore: aContext pc ] ] ] whileFalse: [
-			context := bytecodeInterpreter interpretNextInstructionFor: aContext.
-			context == aContext ifFalse: [
-				"Caused all non-send, non-store, non-return instructions
+	bytecodeInterpreter := InstructionStream
+		                       on: aContext method
+		                       pc: aContext pc.
+	[ debugInfo shouldStopAt: aContext pc ] whileFalse: [
+			context := bytecodeInterpreter interpretNextInstructionFor:
+				           aContext.
+			context == aContext ifFalse: [ "Caused all non-send, non-store, non-return instructions
 				that may activate a method. This is today the case of mustBeBoolean.
 				
 				If a mustBeBoolean has been activated, we need to change contexts"
