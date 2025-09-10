@@ -17,6 +17,12 @@ CachedDebugInfo >> debugScopeAt: aBytecodePC [
 ]
 
 { #category : 'testing' }
+CachedDebugInfo >> isArgumentNamed: aName at: aBytecodePC [
+
+	^ (self debugScopeAt: aBytecodePC) isArgumentNamed: aName
+]
+
+{ #category : 'testing' }
 CachedDebugInfo >> isSourceReturn: aBytecodePC [ 
 	
 	^ (stopTable at: aBytecodePC) third

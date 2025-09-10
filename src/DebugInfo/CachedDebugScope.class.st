@@ -57,10 +57,12 @@ CachedDebugScope >> initialize [
 ]
 
 { #category : 'as yet unclassified' }
-CachedDebugScope >> isArgumentNamed: aString [
+CachedDebugScope >> isArgumentNamed: aName [
 
 	| variableDescriptor |
-	variableDescriptor := variables detect: [ :e | e first = aString ].
+	variableDescriptor := variables
+		detect: [ :e | e first = aName ]
+		ifNone: [ NotFound signal: 'Variable not found: ', aName ].
 	^ variableDescriptor second
 ]
 

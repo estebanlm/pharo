@@ -1,12 +1,42 @@
 Class {
 	#name : 'DebugInfoTest',
-	#superclass : 'TestCase',
+	#superclass : 'ParametrizedTestCase',
+	#instVars : [
+		'cached'
+	],
 	#classVars : [
 		'ClassVar'
 	],
 	#category : 'DebugInfo-Tests',
 	#package : 'DebugInfo-Tests'
 }
+
+{ #category : 'building suites' }
+DebugInfoTest class >> testParameters [
+
+	^ ParametrizedTestMatrix new
+		  forSelector: #cached
+		  addOptions: { false. true }
+]
+
+{ #category : 'accessing' }
+DebugInfoTest >> cached [
+
+	^ cached
+]
+
+{ #category : 'accessing' }
+DebugInfoTest >> cached: anObject [
+
+	cached := anObject
+]
+
+{ #category : 'tests - listing variables' }
+DebugInfoTest >> initialize [
+
+	super initialize.
+	cached := false.
+]
 
 { #category : 'helpers' }
 DebugInfoTest >> methodWithArgumentCapturingContext: anArgument [
@@ -109,24 +139,36 @@ DebugInfoTest >> methodWithVariableReads [
 	DebugInfoTest
 ]
 
+{ #category : 'helpers' }
+DebugInfoTest >> newDebugInfoFor: context [
+
+	| debugInfo |
+	debugInfo := OldDebugInfo for: context method.
+	cached ifTrue: [ debugInfo := debugInfo asCachedDebugInfo ].
+	^ debugInfo
+]
+
 { #category : 'tests - arguments' }
 DebugInfoTest >> testBlockArgumentVariableIsArgument [
 
 	| debugInfo context |
 	context := [ :blockArgument | thisContext copy ] value: 7.
 
-	debugInfo := OldDebugInfo for: context method.
+	debugInfo := self newDebugInfoFor: context.
 
-	self assert: (debugInfo isArgumentNamed: #blockArgument at: context pc)
+	self assert:
+		(debugInfo isArgumentNamed: #blockArgument at: context pc)
 ]
 
 { #category : 'tests - arguments' }
 DebugInfoTest >> testBlockTemporaryVariableIsNotArgument [
 
 	| debugInfo context |
-	context := [ :blockArgument | | tempInBlock | thisContext copy ] value: 7.
+	context := [ :blockArgument |
+		           | tempInBlock |
+		           thisContext copy ] value: 7.
 
-	debugInfo := OldDebugInfo for: context method.
+	debugInfo := self newDebugInfoFor: context.
 
 	self deny: (debugInfo isArgumentNamed: #tempInBlock at: context pc)
 ]
@@ -135,14 +177,14 @@ DebugInfoTest >> testBlockTemporaryVariableIsNotArgument [
 DebugInfoTest >> testDoNotListVariablesDefinedInFollowingNonSurroundingLexicalScopes [
 
 	| debugInfo context |
-	
 	"We capture the context outside of the if statement.
 	Thus, the variable defined inside the conditional block should not be visible"
 	context := thisContext copy.
-	true ifTrue: [ 
-		| inOptimizedScope |  ].
+	true ifTrue: [
+			| inOptimizedScope |
+			 ].
 
-	debugInfo := OldDebugInfo for: context method.
+	debugInfo := self newDebugInfoFor: context.
 
 	self
 		assert: (debugInfo variableNamesAt: context pc)
@@ -153,14 +195,14 @@ DebugInfoTest >> testDoNotListVariablesDefinedInFollowingNonSurroundingLexicalSc
 DebugInfoTest >> testDoNotListVariablesDefinedInPreviousNonSurroundingLexicalScopes [
 
 	| debugInfo context |
-	
-	true ifTrue: [ 
-		| inOptimizedScope |  ].
+	true ifTrue: [
+			| inOptimizedScope |
+			 ].
 
 	"We capture the context outside of the if statement.
 	Thus, the variable defined inside the conditional block should not be visible"
 	context := thisContext copy.
-	debugInfo := OldDebugInfo for: context method.
+	debugInfo := self newDebugInfoFor: context.
 
 	self
 		assert: (debugInfo variableNamesAt: context pc)
@@ -172,7 +214,7 @@ DebugInfoTest >> testListArguments [
 
 	| debugInfo contextWithArguments |
 	contextWithArguments := self methodWithArgumentCapturingContext: 17.
-	debugInfo := OldDebugInfo for: contextWithArguments method.
+	debugInfo := self newDebugInfoFor: contextWithArguments.
 
 	self
 		assert: (debugInfo variableNamesAt: contextWithArguments pc)
@@ -185,7 +227,7 @@ DebugInfoTest >> testListBlockArguments [
 	| debugInfo context |
 	context := [ :blockArgument | thisContext copy ] value: 7.
 
-	debugInfo := OldDebugInfo for: context method.
+	debugInfo := self newDebugInfoFor: context.
 
 	self
 		assert: (debugInfo variableNamesAt: context pc)
@@ -197,23 +239,25 @@ DebugInfoTest >> testListMethodTemps [
 
 	| debugInfo context |
 	context := thisContext copy.
-	debugInfo := OldDebugInfo for: context method.
+	debugInfo := self newDebugInfoFor: context.
 
-	self assert: (debugInfo variableNamesAt: context pc) equals: #(debugInfo context)
+	self
+		assert: (debugInfo variableNamesAt: context pc)
+		equals: #( debugInfo context )
 ]
 
 { #category : 'tests - listing variables' }
 DebugInfoTest >> testListOptimizedBlockArguments [
 
 	| debugInfo context |
-	context := self ifNotNil: [ :blockArgument | 
-		| inOptimizedScope | 
-		"Put an assignment just after the context capture.
+	context := self ifNotNil: [ :blockArgument |
+			           | inOptimizedScope |
+			           "Put an assignment just after the context capture.
 		Like this, the captured context PC will be inside the block (at the assignment point).
 		Thus, lexically we are inside the block and the variables of the block are visible"
-		inOptimizedScope := thisContext copy ].
+			           inOptimizedScope := thisContext copy ].
 
-	debugInfo := OldDebugInfo for: context method.
+	debugInfo := self newDebugInfoFor: context.
 
 	self
 		assert: (debugInfo variableNamesAt: context pc)
@@ -226,7 +270,7 @@ DebugInfoTest >> testListOuterVariables [
 	| debugInfo context |
 	context := [ thisContext copy ] value.
 
-	debugInfo := OldDebugInfo for: context method.
+	debugInfo := self newDebugInfoFor: context.
 
 	self
 		assert: (debugInfo variableNamesAt: context pc)
@@ -242,7 +286,7 @@ DebugInfoTest >> testListShadowedVariablesAreNotDuplicated [
 		           debugInfo := 17.
 		           thisContext copy ] value.
 
-	debugInfo := OldDebugInfo for: context method.
+	debugInfo := self newDebugInfoFor: context.
 
 	self
 		assert: (debugInfo variableNamesAt: context pc)
@@ -253,15 +297,14 @@ DebugInfoTest >> testListShadowedVariablesAreNotDuplicated [
 DebugInfoTest >> testListVariablesWithinOptimizedContext [
 
 	| debugInfo context |
-	
-	context := true ifTrue: [ 
-		| inOptimizedScope | 
-		"Put an assignment just after the context capture.
+	context := true ifTrue: [
+			           | inOptimizedScope |
+			           "Put an assignment just after the context capture.
 		Like this, the captured context PC will be inside the block (at the assignment point).
 		Thus, lexically we are inside the block and the variables of the block are visible"
-		inOptimizedScope := thisContext copy ].
+			           inOptimizedScope := thisContext copy ].
 
-	debugInfo := OldDebugInfo for: context method.
+	debugInfo := self newDebugInfoFor: context.
 
 	self
 		assert: (debugInfo variableNamesAt: context pc)
@@ -273,7 +316,7 @@ DebugInfoTest >> testMethodArgumentVariableIsArgument [
 
 	| debugInfo contextWithArguments |
 	contextWithArguments := self methodWithArgumentCapturingContext: 17.
-	debugInfo := OldDebugInfo for: contextWithArguments method.
+	debugInfo := self newDebugInfoFor: contextWithArguments.
 
 	self assert:
 		(debugInfo isArgumentNamed: #anArgument at: contextWithArguments pc)
@@ -284,7 +327,7 @@ DebugInfoTest >> testMethodTemporaryVariableIsNotArgument [
 
 	| debugInfo contextWithArguments |
 	contextWithArguments := thisContext copy.
-	debugInfo := OldDebugInfo for: contextWithArguments method.
+	debugInfo := self newDebugInfoFor: contextWithArguments.
 
 	self deny: (debugInfo
 			 isArgumentNamed: #contextWithArguments
@@ -296,13 +339,16 @@ DebugInfoTest >> testNonExistingVariableIsArgumentRaisesError [
 
 	| debugInfo context |
 	context := thisContext copy.
-	debugInfo := OldDebugInfo for: context method.
+	debugInfo := self newDebugInfoFor: context.
 
-	[ debugInfo isArgumentNamed: #notAVariable at: context pc.
+	[
+		debugInfo isArgumentNamed: #notAVariable at: context pc.
 		self fail ]
 		on: Error
-		do: [ :err | 
-			self assert: err messageText equals: 'Variable not found: notAVariable' ]
+		do: [ :err |
+				self
+					assert: err messageText
+					equals: 'Variable not found: notAVariable' ]
 ]
 
 { #category : 'tests - shouldStopAt' }
@@ -415,32 +461,195 @@ DebugInfoTest >> testNotStopAtVariableReads [
 DebugInfoTest >> testOptimizedBlockArgumentVariableIsArgument [
 
 	| debugInfo context |
-	context := self ifNotNil: [ :blockArgument | 
-		| inOptimizedScope | 
-		"Put an assignment just after the context capture.
+	context := self ifNotNil: [ :blockArgument |
+			           | inOptimizedScope |
+			           "Put an assignment just after the context capture.
 		Like this, the captured context PC will be inside the block (at the assignment point).
 		Thus, lexically we are inside the block and the variables of the block are visible"
-		inOptimizedScope := thisContext copy ].
+			           inOptimizedScope := thisContext copy ].
 
-	debugInfo := OldDebugInfo for: context method.
+	debugInfo := self newDebugInfoFor: context.
 
-	self assert: (debugInfo isArgumentNamed: #blockArgument at: context pc)
+	self assert:
+		(debugInfo isArgumentNamed: #blockArgument at: context pc)
 ]
 
 { #category : 'tests - arguments' }
 DebugInfoTest >> testOptimizedBlockTemporaryVariableIsNotArgument [
 
 	| debugInfo context |
-	context := self ifNotNil: [ :blockArgument | 
-		| inOptimizedScope | 
-		"Put an assignment just after the context capture.
+	context := self ifNotNil: [ :blockArgument |
+			           | inOptimizedScope |
+			           "Put an assignment just after the context capture.
 		Like this, the captured context PC will be inside the block (at the assignment point).
 		Thus, lexically we are inside the block and the variables of the block are visible"
-		inOptimizedScope := thisContext copy ].
+			           inOptimizedScope := thisContext copy ].
 
-	debugInfo := OldDebugInfo for: context method.
+	debugInfo := self newDebugInfoFor: context.
 
-	self deny: (debugInfo isArgumentNamed: #inOptimizedScope at: context pc)
+	self deny:
+		(debugInfo isArgumentNamed: #inOptimizedScope at: context pc)
+]
+
+{ #category : 'tests - rangeForPC' }
+DebugInfoTest >> testRangeForConstantBlockReturn [
+
+	| debugInfo methodToTest returnPC blockNode constantBlock |
+	methodToTest := self class >> #methodWithConstantBlockReturn.
+	constantBlock := methodToTest literalAt: 1.
+	debugInfo := OldDebugInfo for: constantBlock compiledBlock.
+
+	"Since the return does not exist in the AST, the block return bytecode is mapped to the block's sequence node (differently than methods)"
+	blockNode := methodToTest ast statements first.
+	"The return bytecode is the last bytecode of the block"
+	returnPC := (blockNode pcsForNode: blockNode body) last.
+	
+	self assert: (debugInfo rangeForPC: returnPC) equals: blockNode body debugHighlightRange
+]
+
+{ #category : 'tests - rangeForPC' }
+DebugInfoTest >> testRangeForExplicitReturn [
+
+	| debugInfo methodToTest return returnPC |
+	methodToTest := self class >> #methodWithReturn.
+	debugInfo := OldDebugInfo for: methodToTest.
+
+	return := methodToTest ast statements first.
+	returnPC := (return methodNode pcsForNode: return) first.
+	
+	self assert: (debugInfo rangeForPC: returnPC) equals: return debugHighlightRange.
+]
+
+{ #category : 'tests - rangeForPC' }
+DebugInfoTest >> testRangeForFirstBytecodeOfOptimizedSend [
+
+	| debugInfo methodToTest send sendPC |
+	methodToTest := self class >> #methodWithOptimizedSend.
+	debugInfo := OldDebugInfo for: methodToTest.
+
+	"a to:do: send should stop at the to:do: point"
+	send := methodToTest ast statements first.
+	sendPC := (send methodNode pcsForNode: send) first.
+	
+	"We highlight from the beginning of #to: up to the end of #do: without selecting the receiver or the block"
+	self assert: (debugInfo rangeForPC: sendPC) equals: (send keywordsPositions first to: send stopWithoutParentheses).
+]
+
+{ #category : 'tests - rangeForPC' }
+DebugInfoTest >> testRangeForFullBlockReturn [
+
+	| debugInfo methodToTest returnPC blockNode compiledBlock |
+	methodToTest := self class >> #methodWithFullBlockReturn.
+	compiledBlock := methodToTest literalAt: 1.
+	debugInfo := OldDebugInfo for: compiledBlock.
+
+	"Since the return does not exist in the AST, the block return bytecode is mapped to the block's sequence node (differently than methods).
+	This happens because a block node is mapped to its creation!
+	However: why we don't map sequences in methods too?"
+	blockNode := methodToTest ast statements first.
+	"The return bytecode is the last bytecode of the block"
+	returnPC := (blockNode pcsForNode: blockNode body) last.
+	
+	self assert: (debugInfo rangeForPC: returnPC) equals: blockNode body debugHighlightRange.
+]
+
+{ #category : 'tests - rangeForPC' }
+DebugInfoTest >> testRangeForGlobalVariableAssignment [
+
+	| debugInfo methodToTest returnPC assignmentNode |
+	methodToTest := self class >> #methodWithGlobalVariableAssignment.
+	debugInfo := OldDebugInfo for: methodToTest.
+
+	assignmentNode := methodToTest ast statements first.
+	returnPC := (assignmentNode methodNode pcsForNode: assignmentNode) first.
+	
+	self assert: (debugInfo rangeForPC: returnPC) equals: assignmentNode debugHighlightRange.
+]
+
+{ #category : 'tests - rangeForPC' }
+DebugInfoTest >> testRangeForImplicitMethodReturn [
+
+	| debugInfo methodToTest returnPC methodNode |
+	methodToTest := self class >> #methodWithImplicitReturn.
+	debugInfo := OldDebugInfo for: methodToTest.
+
+	"Since the return does not exist in the AST, the return bytecode is mapped to the method node"
+	methodNode := methodToTest ast.
+	"The return bytecode is the last bytecode of the method"
+	returnPC := (methodNode pcsForNode: methodNode) last.
+	
+	"Why here the sequence node does not have a correct source mapping??"
+	self assert: (debugInfo rangeForPC: returnPC) equals: methodNode debugHighlightRange.
+]
+
+{ #category : 'tests - rangeForPC' }
+DebugInfoTest >> testRangeForInstanceVariableAssignment [
+
+	| debugInfo methodToTest returnPC assignmentNode |
+	methodToTest := self class >> #methodWithInstanceVariableAssignment.
+	debugInfo := OldDebugInfo for: methodToTest.
+
+	assignmentNode := methodToTest ast statements first.
+	returnPC := (assignmentNode methodNode pcsForNode: assignmentNode) first.
+	
+	self assert: (debugInfo rangeForPC: returnPC) equals: assignmentNode debugHighlightRange
+]
+
+{ #category : 'tests - rangeForPC' }
+DebugInfoTest >> testRangeForLocalVariableAssignment [
+
+	| debugInfo methodToTest returnPC assignmentNode |
+	methodToTest := self class >> #methodWithLocalVariableAssignment.
+	debugInfo := OldDebugInfo for: methodToTest.
+
+	assignmentNode := methodToTest ast statements first.
+	returnPC := (assignmentNode methodNode pcsForNode: assignmentNode) first.
+	
+	self assert: (debugInfo rangeForPC: returnPC) equals: assignmentNode debugHighlightRange
+]
+
+{ #category : 'tests - rangeForPC' }
+DebugInfoTest >> testRangeForSend [
+
+	| debugInfo methodToTest send sendPC |
+	methodToTest := self class >> #methodWithSend.
+	debugInfo := OldDebugInfo for: methodToTest.
+
+	send := methodToTest ast statements first.
+	sendPC := (send methodNode pcsForNode: send) first.
+	
+	self assert: (debugInfo rangeForPC: sendPC) equals: (send keywordsPositions first to: send stopWithoutParentheses)
+]
+
+{ #category : 'tests - rangeForPC' }
+DebugInfoTest >> testRangeForSendInDynamicArray [
+
+	| debugInfo methodToTest dynamicArrayNode sendInsideDynamicArrayNode sendPC |
+	methodToTest := self class >> #methodWithDynamicArrayCreation.
+	debugInfo := OldDebugInfo for: methodToTest.
+
+	dynamicArrayNode := methodToTest ast statements first.
+	sendInsideDynamicArrayNode := dynamicArrayNode statements first.
+	self assert: sendInsideDynamicArrayNode isMessage.
+
+	sendPC := (sendInsideDynamicArrayNode methodNode pcsForNode: sendInsideDynamicArrayNode) first.
+	
+	self assert: (debugInfo rangeForPC: sendPC) equals: (sendInsideDynamicArrayNode keywordsPositions first to: sendInsideDynamicArrayNode stopWithoutParentheses)
+]
+
+{ #category : 'tests - rangeForPC' }
+DebugInfoTest >> testRangeForSendInInlinedBlock [
+
+	| debugInfo methodToTest todoSend sendInsideToDoBlock sendPC |
+	methodToTest := self class >> #methodWithOptimizedSend.
+	debugInfo := OldDebugInfo for: methodToTest.
+
+	todoSend := methodToTest ast statements first.
+	sendInsideToDoBlock := todoSend arguments second body statements first.
+	self assert: sendInsideToDoBlock isMessage.
+	sendPC := (sendInsideToDoBlock methodNode pcsForNode: sendInsideToDoBlock) first.
+	
+	self assert: (debugInfo rangeForPC: sendPC) equals: (sendInsideToDoBlock keywordsPositions first to: sendInsideToDoBlock stopWithoutParentheses)
 ]
 
 { #category : 'tests - read variables' }
@@ -449,14 +658,16 @@ DebugInfoTest >> testReadLocalBlockArgumentVariable [
 	| debugInfo context |
 	context := [ :blockArgument | thisContext copy ] value: 7.
 
-	debugInfo := OldDebugInfo for: context method.
+	debugInfo := self newDebugInfoFor: context.
 
-	self assert: (debugInfo readVariableNamed: #blockArgument fromContext: context) equals: 7
+	self
+		assert:
+		(debugInfo readVariableNamed: #blockArgument fromContext: context)
+		equals: 7
 ]
 
 { #category : 'tests - read variables' }
 DebugInfoTest >> testReadLocalBlockTempVectorTemporaryVariableFromClosure [
-
 	"This test is tricky.
 	
 	If done like the other tests (copying and returning the captured context) this breaks the closures.
@@ -465,26 +676,27 @@ DebugInfoTest >> testReadLocalBlockTempVectorTemporaryVariableFromClosure [
 	
 	Instead of making a transitive closure of the graph copy, let's just put the assertion in the block
 	"
+
 	| debugInfo |
 	[ :blockArgument |
 		| tempInTempVector context |
 		tempInTempVector := 42.
-		
+
 		"Create and execute a block that steals an enclosing variable"
 		"tempInTempVector is assigned in two different lexical contexts.
-		It is then candidate to be put in a temp vector, which will be copied in the block activation"	
-		[
-			tempInTempVector := 3
-		] value.
-		
+		It is then candidate to be put in a temp vector, which will be copied in the block activation"
+		[ tempInTempVector := 3 ] value.
+
 		context := thisContext.
-		debugInfo := OldDebugInfo for: context method.
+		debugInfo := self newDebugInfoFor: context.
 
 		self
-			assert: (debugInfo readVariableNamed: #tempInTempVector fromContext: context)
-			equals: 3
-	] value: 7.
-	
+			assert:
+			(debugInfo
+				 readVariableNamed: #tempInTempVector
+				 fromContext: context)
+			equals: 3 ] value: 7.
+
 	"Verify that the inner block got effectively executed"
 	self assert: debugInfo notNil
 ]
@@ -509,10 +721,11 @@ DebugInfoTest >> testReadLocalBlockTempVectorTemporaryVariableFromMethod [
 	[ tempInTempVector := 3 ] value.
 
 	context := thisContext.
-	debugInfo := OldDebugInfo for: context method.
+	debugInfo := self newDebugInfoFor: context.
 
 	self
-		assert: (debugInfo readVariableNamed: #tempInTempVector fromContext: context)
+		assert:
+		(debugInfo readVariableNamed: #tempInTempVector fromContext: context)
 		equals: 3
 ]
 
@@ -520,11 +733,17 @@ DebugInfoTest >> testReadLocalBlockTempVectorTemporaryVariableFromMethod [
 DebugInfoTest >> testReadLocalBlockTemporaryVariable [
 
 	| debugInfo context |
-	context := [ :blockArgument | | tempInBlock | tempInBlock := 42. thisContext copy ] value: 7.
+	context := [ :blockArgument |
+		           | tempInBlock |
+		           tempInBlock := 42.
+		           thisContext copy ] value: 7.
 
-	debugInfo := OldDebugInfo for: context method.
+	debugInfo := self newDebugInfoFor: context.
 
-	self assert: (debugInfo readVariableNamed: #tempInBlock fromContext: context) equals: 42
+	self
+		assert:
+		(debugInfo readVariableNamed: #tempInBlock fromContext: context)
+		equals: 42
 ]
 
 { #category : 'tests - read variables' }
@@ -532,10 +751,13 @@ DebugInfoTest >> testReadLocalMethodArgumentVariable [
 
 	| debugInfo contextWithArguments |
 	contextWithArguments := self methodWithArgumentCapturingContext: 17.
-	debugInfo := OldDebugInfo for: contextWithArguments method.
+	debugInfo := self newDebugInfoFor: contextWithArguments.
 
-	self assert:
-		(debugInfo readVariableNamed: #anArgument fromContext: contextWithArguments) equals: 17
+	self
+		assert: (debugInfo
+				 readVariableNamed: #anArgument
+				 fromContext: contextWithArguments)
+		equals: 17
 ]
 
 { #category : 'tests - read variables' }
@@ -543,7 +765,7 @@ DebugInfoTest >> testReadLocalMethodTemporaryVariable [
 
 	| debugInfo contextWithArguments |
 	contextWithArguments := thisContext copy.
-	debugInfo := OldDebugInfo for: contextWithArguments method.
+	debugInfo := self newDebugInfoFor: contextWithArguments.
 
 	self
 		deny: (debugInfo
@@ -556,32 +778,38 @@ DebugInfoTest >> testReadLocalMethodTemporaryVariable [
 DebugInfoTest >> testReadLocalOptimizedBlockArgumentVariable [
 
 	| debugInfo context |
-	context := self ifNotNil: [ :blockArgument | 
-		| inOptimizedScope | 
-		"Put an assignment just after the context capture.
+	context := self ifNotNil: [ :blockArgument |
+			           | inOptimizedScope |
+			           "Put an assignment just after the context capture.
 		Like this, the captured context PC will be inside the block (at the assignment point).
 		Thus, lexically we are inside the block and the variables of the block are visible"
-		inOptimizedScope := thisContext copy ].
+			           inOptimizedScope := thisContext copy ].
 
-	debugInfo := OldDebugInfo for: context method.
+	debugInfo := self newDebugInfoFor: context.
 
-	self assert: (debugInfo readVariableNamed: #blockArgument fromContext: context) equals: self
+	self
+		assert:
+		(debugInfo readVariableNamed: #blockArgument fromContext: context)
+		equals: self
 ]
 
 { #category : 'tests - read variables' }
 DebugInfoTest >> testReadLocalOptimizedBlockTemporaryVariable [
 
 	| debugInfo context |
-	context := self ifNotNil: [ :blockArgument | 
-		| inOptimizedScope | 
-		"Put an assignment just after the context capture.
+	context := self ifNotNil: [ :blockArgument |
+			           | inOptimizedScope |
+			           "Put an assignment just after the context capture.
 		Like this, the captured context PC will be inside the block (at the assignment point).
 		Thus, lexically we are inside the block and the variables of the block are visible"
-		inOptimizedScope := thisContext copy ].
+			           inOptimizedScope := thisContext copy ].
 
-	debugInfo := OldDebugInfo for: context method.
+	debugInfo := self newDebugInfoFor: context.
 
-	self deny: (debugInfo readVariableNamed: #inOptimizedScope fromContext: context) equals: context
+	self
+		deny:
+		(debugInfo readVariableNamed: #inOptimizedScope fromContext: context)
+		equals: context
 ]
 
 { #category : 'tests - read variables' }
@@ -589,51 +817,66 @@ DebugInfoTest >> testReadNonExistingVariableRaisesError [
 
 	| debugInfo context |
 	context := thisContext copy.
-	debugInfo := OldDebugInfo for: context method.
+	debugInfo := self newDebugInfoFor: context.
 
-	[ debugInfo readVariableNamed: #notAVariable fromContext: context.
+	[
+		debugInfo readVariableNamed: #notAVariable fromContext: context.
 		self fail ]
 		on: Error
-		do: [ :err | 
-			self assert: err messageText equals: 'Variable not found: notAVariable' ]
+		do: [ :err |
+				self
+					assert: err messageText
+					equals: 'Variable not found: notAVariable' ]
 ]
 
 { #category : 'tests - read variables' }
 DebugInfoTest >> testReadOuterBlockArgumentVariableFromClosure [
 
 	| debugInfo context |
-	context := [ :blockArgument | [thisContext copy] value ] value: 7.
+	context := [ :blockArgument | [ thisContext copy ] value ] value: 7.
 
-	debugInfo := OldDebugInfo for: context method.
+	debugInfo := self newDebugInfoFor: context.
 
-	self assert: (debugInfo readVariableNamed: #blockArgument fromContext: context) equals: 7
+	self
+		assert:
+		(debugInfo readVariableNamed: #blockArgument fromContext: context)
+		equals: 7
 ]
 
 { #category : 'tests - read variables' }
 DebugInfoTest >> testReadOuterBlockArgumentVariableFromOptimizedBlock [
 
 	| debugInfo context |
-	context := [ :blockArgument | true ifTrue: [thisContext copy] ] value: 7.
+	context := [ :blockArgument | true ifTrue: [ thisContext copy ] ]
+		           value: 7.
 
-	debugInfo := OldDebugInfo for: context method.
+	debugInfo := self newDebugInfoFor: context.
 
-	self assert: (debugInfo readVariableNamed: #blockArgument fromContext: context) equals: 7
+	self
+		assert:
+		(debugInfo readVariableNamed: #blockArgument fromContext: context)
+		equals: 7
 ]
 
 { #category : 'tests - read variables' }
 DebugInfoTest >> testReadOuterBlockCopiedArgumentVariableFromClosure [
 
 	| debugInfo context |
-	context := [ :blockArgument | [ blockArgument. thisContext copy] value ] value: 7.
+	context := [ :blockArgument |
+		           [
+			           blockArgument.
+			           thisContext copy ] value ] value: 7.
 
-	debugInfo := OldDebugInfo for: context method.
+	debugInfo := self newDebugInfoFor: context.
 
-	self assert: (debugInfo readVariableNamed: #blockArgument fromContext: context) equals: 7
+	self
+		assert:
+		(debugInfo readVariableNamed: #blockArgument fromContext: context)
+		equals: 7
 ]
 
 { #category : 'tests - read variables' }
 DebugInfoTest >> testReadOuterBlockCopiedTemporaryVariableFromClosure [
-
 	"This test is tricky.
 	
 	If done like the other tests (copying and returning the captured context) this breaks the closures.
@@ -642,6 +885,7 @@ DebugInfoTest >> testReadOuterBlockCopiedTemporaryVariableFromClosure [
 	
 	Instead of making a transitive closure of the graph copy, let's just put the assertion in the block
 	"
+
 	| debugInfo |
 	[ :blockArgument |
 		| tempInBlock |
@@ -652,19 +896,19 @@ DebugInfoTest >> testReadOuterBlockCopiedTemporaryVariableFromClosure [
 			tempInBlock.
 
 			context := thisContext.
-			debugInfo := OldDebugInfo for: context method.
+			debugInfo := self newDebugInfoFor: context.
 
 			self
-				assert: (debugInfo readVariableNamed: #tempInBlock fromContext: context)
+				assert:
+				(debugInfo readVariableNamed: #tempInBlock fromContext: context)
 				equals: 42 ] value ] value: 7.
-	
+
 	"Verify that the inner block got effectively executed"
 	self assert: debugInfo notNil
 ]
 
 { #category : 'tests - read variables' }
 DebugInfoTest >> testReadOuterBlockTempVectorTemporaryVariableFromClosure [
-
 	"This test is tricky.
 	
 	If done like the other tests (copying and returning the captured context) this breaks the closures.
@@ -673,6 +917,7 @@ DebugInfoTest >> testReadOuterBlockTempVectorTemporaryVariableFromClosure [
 	
 	Instead of making a transitive closure of the graph copy, let's just put the assertion in the block
 	"
+
 	| debugInfo |
 	[ :blockArgument |
 		| tempInTempVector |
@@ -684,19 +929,21 @@ DebugInfoTest >> testReadOuterBlockTempVectorTemporaryVariableFromClosure [
 			tempInTempVector := 3.
 
 			context := thisContext.
-			debugInfo := OldDebugInfo for: context method.
+			debugInfo := self newDebugInfoFor: context.
 
 			self
-				assert: (debugInfo readVariableNamed: #tempInTempVector fromContext: context)
+				assert:
+				(debugInfo
+					 readVariableNamed: #tempInTempVector
+					 fromContext: context)
 				equals: 3 ] value ] value: 7.
-	
+
 	"Verify that the inner block got effectively executed"
 	self assert: debugInfo notNil
 ]
 
 { #category : 'tests - read variables' }
 DebugInfoTest >> testReadOuterBlockTemporaryVariableFromClosure [
-
 	"This test is tricky.
 	
 	If done like the other tests (copying and returning the captured context) this breaks the closures.
@@ -705,6 +952,7 @@ DebugInfoTest >> testReadOuterBlockTemporaryVariableFromClosure [
 	
 	Instead of making a transitive closure of the graph copy, let's just put the assertion in the block
 	"
+
 	| debugInfo |
 	[ :blockArgument |
 		| tempInBlock |
@@ -712,19 +960,19 @@ DebugInfoTest >> testReadOuterBlockTemporaryVariableFromClosure [
 		[
 			| context |
 			context := thisContext.
-			debugInfo := OldDebugInfo for: context method.
+			debugInfo := self newDebugInfoFor: context.
 
 			self
-				assert: (debugInfo readVariableNamed: #tempInBlock fromContext: context)
+				assert:
+				(debugInfo readVariableNamed: #tempInBlock fromContext: context)
 				equals: 42 ] value ] value: 7.
-	
+
 	"Verify that the inner block got effectively executed"
 	self assert: debugInfo notNil
 ]
 
 { #category : 'tests - read variables' }
 DebugInfoTest >> testReadOuterBlockTemporaryVariableFromOptimizedBlock [
-
 	"This test is tricky.
 	
 	If done like the other tests (copying and returning the captured context) this breaks the closures.
@@ -733,19 +981,21 @@ DebugInfoTest >> testReadOuterBlockTemporaryVariableFromOptimizedBlock [
 	
 	Instead of making a transitive closure of the graph copy, let's just put the assertion in the block
 	"
+
 	| debugInfo |
 	[ :blockArgument |
 		| tempInBlock |
 		tempInBlock := 42.
 		true ifTrue: [
-			| context |
-			context := thisContext.
-			debugInfo := OldDebugInfo for: context method.
+				| context |
+				context := thisContext.
+				debugInfo := self newDebugInfoFor: context.
 
-			self
-				assert: (debugInfo readVariableNamed: #tempInBlock fromContext: context)
-				equals: 42 ] ] value: 7.
-	
+				self
+					assert:
+					(debugInfo readVariableNamed: #tempInBlock fromContext: context)
+					equals: 42 ] ] value: 7.
+
 	"Verify that the inner block got effectively executed"
 	self assert: debugInfo notNil
 ]
@@ -754,30 +1004,40 @@ DebugInfoTest >> testReadOuterBlockTemporaryVariableFromOptimizedBlock [
 DebugInfoTest >> testReadOuterMethodArgumentVariableFromClosure [
 
 	| debugInfo contextWithArguments |
-	contextWithArguments := self methodWithArgumentCapturingFullBlockContext: 17.
-	debugInfo := OldDebugInfo for: contextWithArguments method.
+	contextWithArguments := self
+		                        methodWithArgumentCapturingFullBlockContext:
+		                        17.
+	debugInfo := self newDebugInfoFor: contextWithArguments.
 
-	self assert:
-		(debugInfo readVariableNamed: #anArgument fromContext: contextWithArguments) equals: 17
+	self
+		assert: (debugInfo
+				 readVariableNamed: #anArgument
+				 fromContext: contextWithArguments)
+		equals: 17
 ]
 
 { #category : 'tests - read variables' }
 DebugInfoTest >> testReadOuterMethodArgumentVariableFromOptimizedBlock [
 
 	| debugInfo contextWithArguments |
-	contextWithArguments := self methodWithArgumentCapturingOptimizedBlockContext: 17.
-	debugInfo := OldDebugInfo for: contextWithArguments method.
+	contextWithArguments := self
+		                        methodWithArgumentCapturingOptimizedBlockContext:
+		                        17.
+	debugInfo := self newDebugInfoFor: contextWithArguments.
 
-	self assert:
-		(debugInfo readVariableNamed: #anArgument fromContext: contextWithArguments) equals: 17
+	self
+		assert: (debugInfo
+				 readVariableNamed: #anArgument
+				 fromContext: contextWithArguments)
+		equals: 17
 ]
 
 { #category : 'tests - read variables' }
 DebugInfoTest >> testReadOuterMethodTemporaryVariableFromClosure [
 
 	| debugInfo contextWithArguments |
-	contextWithArguments := [thisContext copy] value.
-	debugInfo := OldDebugInfo for: contextWithArguments method.
+	contextWithArguments := [ thisContext copy ] value.
+	debugInfo := self newDebugInfoFor: contextWithArguments.
 
 	self
 		assert: (debugInfo
@@ -791,9 +1051,9 @@ DebugInfoTest >> testReadOuterMethodTemporaryVariableFromOptimizedBlock [
 
 	| debugInfo contextWithArguments outerVariable |
 	outerVariable := 17.
-	
-	contextWithArguments := true ifTrue: [thisContext copy].
-	debugInfo := OldDebugInfo for: contextWithArguments method.
+
+	contextWithArguments := true ifTrue: [ thisContext copy ].
+	debugInfo := self newDebugInfoFor: contextWithArguments.
 
 	self
 		assert: (debugInfo

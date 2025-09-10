@@ -45,17 +45,22 @@ OldDebugInfo >> asCachedDebugInfo [
 			cachedScope := CachedDebugScope new.
 			tempDescriptions := astScope allTemps collect: [ :temp |
 				                    temp descriptionArrayForScope: astScope ].
-
-			(astScope isBlockScope and: [
-				 astScope isOptimized and: [
-					 astScope node body statements isNotEmpty ] ])
+			(astScope isBlockScope and: [ astScope isOptimized ])
 				ifTrue: [
-						cachedScope bytecodeRange:
-							((astScope outerNotOptimizedScope node bcToASTCache
-								  firstRecursiveBcOffsetForStatementNode:
-								  astScope node body statements first) to:
-								 (astScope outerNotOptimizedScope node lastPcForNode:
-									  astScope node body statements last)) ]
+						| mappedPCs bytecodeToASTCache blockBody blockStatements |
+						blockBody := astScope node body.
+						blockStatements := blockBody statements.
+						bytecodeToASTCache := astScope outerNotOptimizedScope node
+							                      bcToASTCache.
+						blockStatements
+							ifEmpty: [
+							mappedPCs := bytecodeToASTCache pcsForNode: blockBody ]
+							ifNotEmpty: [
+									mappedPCs := (bytecodeToASTCache pcsForNode:
+										              blockStatements first) first to:
+									             (bytecodeToASTCache pcsForNode:
+										              blockStatements last) last ].
+						cachedScope bytecodeRange: (mappedPCs first to: mappedPCs last) ]
 				ifFalse: [
 						| bytecodeCache |
 						bytecodeCache := astScope outerNotOptimizedScope node
