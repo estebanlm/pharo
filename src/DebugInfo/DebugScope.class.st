@@ -2,9 +2,10 @@ Class {
 	#name : 'DebugScope',
 	#superclass : 'Object',
 	#instVars : [
-		'bytecodeRange',
 		'variables',
-		'children'
+		'children',
+		'rangeStart',
+		'rangeStop'
 	],
 	#category : 'DebugInfo',
 	#package : 'DebugInfo'
@@ -21,19 +22,27 @@ DebugScope class >> on: anOCMethodScope [
 { #category : 'adding' }
 DebugScope >> addChild: aCachedDebugScope [ 
 	
+	children ifNil: [ children := #() ].
 	children := children copyWith: aCachedDebugScope
 ]
 
 { #category : 'accessing' }
 DebugScope >> bytecodeRange [
 
-	^ bytecodeRange
+	^ rangeStart to: rangeStop
 ]
 
 { #category : 'accessing' }
-DebugScope >> bytecodeRange: anObject [
+DebugScope >> bytecodeRange: aRange [
 
-	bytecodeRange := anObject
+	rangeStart := aRange first.
+	rangeStop := aRange last
+]
+
+{ #category : 'adding' }
+DebugScope >> children [
+
+	^ children ifNil: [ #() ]
 ]
 
 { #category : 'accessing' }
@@ -41,7 +50,7 @@ DebugScope >> debugScopeAt: aBytecodePC [
 
 	"Precondition: this method is only valid if I match the argument PC"
 
-	children do: [ :child |
+	self children do: [ :child |
 		(child matchesBytecodePC: aBytecodePC)
 			ifTrue: [ ^ child debugScopeAt: aBytecodePC ] ].
 	
@@ -49,18 +58,11 @@ DebugScope >> debugScopeAt: aBytecodePC [
 	^ self
 ]
 
-{ #category : 'initialization' }
-DebugScope >> initialize [
-
-	super initialize.
-	children := #()
-]
-
 { #category : 'as yet unclassified' }
 DebugScope >> isArgumentNamed: aName [
 
 	| variableDescriptor |
-	variableDescriptor := variables
+	variableDescriptor := self variables
 		detect: [ :e | e first = aName ]
 		ifNone: [ NotFound signal: 'Variable not found: ', aName ].
 	^ variableDescriptor second
@@ -69,14 +71,14 @@ DebugScope >> isArgumentNamed: aName [
 { #category : 'accessing' }
 DebugScope >> matchesBytecodePC: aPC [
 
-	^ bytecodeRange includes: aPC
+	^ self bytecodeRange includes: aPC
 ]
 
 { #category : 'as yet unclassified' }
 DebugScope >> readVariableNamed: aName fromContext: aContext [
 
 	| variableDescriptor definingContext tempValue |
-	variableDescriptor := variables
+	variableDescriptor := self variables
 		detect: [ :e | e first = aName ]
 		ifNone: [ self error: 'Variable not found: ', aName  ].
 	definingContext := aContext.
@@ -93,13 +95,13 @@ DebugScope >> readVariableNamed: aName fromContext: aContext [
 { #category : 'as yet unclassified' }
 DebugScope >> variableNames [
 	
-	^ variables collect: [ :each | each first ]
+	^ self variables collect: [ :each | each first ]
 ]
 
 { #category : 'as yet unclassified' }
 DebugScope >> variables [
 	
-	^ variables
+	^ variables ifNil: [ #() ]
 ]
 
 { #category : 'accessing' }

@@ -18,23 +18,46 @@ DebugInfoBuilder class >> for: code [
 ]
 
 { #category : 'building' }
+DebugInfoBuilder >> asBitMask: aCollectionOfFlags [
+
+	| flags |
+	self assert: aCollectionOfFlags size < SmallInteger maxVal highBit.
+	flags := 0.
+	aCollectionOfFlags
+		do: [ :f | flags := flags + f asBit ]
+		separatedBy: [ flags := flags << 1 ].
+	^ flags
+]
+
+{ #category : 'building' }
 DebugInfoBuilder >> build [
 
 	| debugInfo stopTable astScopes scopes |
 	debugInfo := DebugInfo new.
-	debugInfo sourceCode: self sourceCode.
+	debugInfo sourceCode: nil. "self sourceCode"
 
-	stopTable := compiledCode symbolicBytecodes
-		             collect: [ :e |
-				             | data |
-				             data := {
-					                     (self computeShouldStopAt: e offset).
-					                     (self computeIsSourceStore: e offset).
-					                     (self computeIsSourceReturn: e offset).
-					                     (self computeIsSourceSend: e offset).
-					                     (self computeRangeForPC: e offset) }.
-				             e offset -> data ]
-		             as: Dictionary.
+	stopTable := compiledCode symbolicBytecodes asArray
+		             select: [ :e | self computeShouldStopAt: e offset ]
+		             thenCollect: [ :e |
+				             | range stopTableInfo |
+				             range := self computeRangeForPC: e offset.
+				             stopTableInfo := {
+					                              e offset.
+					                              (self asBitMask: {
+							                               (self computeIsSourceStore:
+								                                e offset).
+							                               (self computeIsSourceReturn:
+								                                e offset).
+							                               (self computeIsSourceSend:
+								                                e offset) }).
+					                              range first.
+					                              range last }.
+				             stopTableInfo ].
+
+	"Compress the stop table as a byte array if possible"
+	stopTable := stopTable flattened.
+	(stopTable allSatisfy: [ :byte | byte < 255 ]) ifTrue: [
+		stopTable := stopTable asByteArray ].
 	debugInfo stopTable: stopTable.
 
 	astScopes := (OCScopesCollector new visitNode: compiledCode ast)
@@ -69,7 +92,9 @@ DebugInfoBuilder >> build [
 
 						cachedScope bytecodeRange:
 							(bytecodeCache firstBcOffset to: bytecodeCache lastBcOffset) ].
-			cachedScope variables: tempDescriptions.
+
+			tempDescriptions ifNotEmpty: [
+				cachedScope variables: tempDescriptions ].
 
 			scopes at: astScope put: cachedScope ].
 

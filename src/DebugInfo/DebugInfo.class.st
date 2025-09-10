@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'stopTable',
 		'sourceCode',
-		'rootScope'
+		'rootScope',
+		'stopTableDictionary'
 	],
 	#category : 'DebugInfo',
 	#package : 'DebugInfo'
@@ -16,6 +17,16 @@ DebugInfo >> debugScopeAt: aBytecodePC [
 	^ rootScope debugScopeAt: aBytecodePC
 ]
 
+{ #category : 'accessing' }
+DebugInfo >> inflatedStopTableInfoFromFlags: flags [
+
+	| stopTableInfo |
+	stopTableInfo := OrderedCollection new.
+	1 to: 3 "Num of flags" do: [ :e | 
+		stopTableInfo addLast: (flags anyMask: 1) ].
+	^ stopTableInfo
+]
+
 { #category : 'testing' }
 DebugInfo >> isArgumentNamed: aName at: aBytecodePC [
 
@@ -25,26 +36,26 @@ DebugInfo >> isArgumentNamed: aName at: aBytecodePC [
 { #category : 'testing' }
 DebugInfo >> isSourceReturn: aBytecodePC [
 
-	^ (stopTable at: aBytecodePC ifAbsent: [ ^ false ]) third
+	^ (self stopTableDictionary at: aBytecodePC ifAbsent: [ ^ false ]) second
 ]
 
 { #category : 'testing' }
 DebugInfo >> isSourceSend: aBytecodePC [ 
 	
-	^ (stopTable at: aBytecodePC ifAbsent: [ ^ false ]) fourth
+	^ (self stopTableDictionary at: aBytecodePC ifAbsent: [ ^ false ]) third
 ]
 
 { #category : 'testing' }
 DebugInfo >> isSourceStore: aBytecodePC [ 
 	
-	^ (stopTable at: aBytecodePC ifAbsent: [ ^ false ]) second
+	^ (self stopTableDictionary at: aBytecodePC ifAbsent: [ ^ false ]) first
 ]
 
 { #category : 'as yet unclassified' }
 DebugInfo >> precedingBytecodePC: aBytecodePC [
 	
 	| found |
-	stopTable keys sorted do: [ :each |
+	self stopTableDictionary keys sorted do: [ :each |
 		"If we went over the asked bytecode PC, we need to return the previous one"
 		each >= aBytecodePC ifTrue: [ 
 			"If asking for the bytecode before the first bytecode, fail"
@@ -57,13 +68,13 @@ DebugInfo >> precedingBytecodePC: aBytecodePC [
 { #category : 'testing' }
 DebugInfo >> rangeForPC: aBytecodePC [
 
-	^ (stopTable
+	^ (self stopTableDictionary
 		   at: aBytecodePC
 		   ifAbsent: [ "If absent, somebody asked me for a *non-pc* because it is trying to guess.
 		See for example Context >> #pcRangeContextIsActive:
 		In that case, let's return the range of the preceding bytecodePC"
 			   ^ self rangeForPC: (self precedingBytecodePC: aBytecodePC) ])
-		  fifth
+		  fourth
 ]
 
 { #category : 'testing' }
@@ -80,9 +91,9 @@ DebugInfo >> rootScope: aCachedDebugScope [
 ]
 
 { #category : 'accessing' }
-DebugInfo >> shouldStopAt: aBytecodePC [ 
-	
-	^ (stopTable at: aBytecodePC ifAbsent: [ ^ false ]) first
+DebugInfo >> shouldStopAt: aBytecodePC [
+
+	^ self stopTableDictionary includesKey: aBytecodePC
 ]
 
 { #category : 'accessing' }
@@ -96,8 +107,35 @@ DebugInfo >> sourceCode: aString [
 ]
 
 { #category : 'accessing' }
+DebugInfo >> stopTable [
+	
+	^ stopTable
+]
+
+{ #category : 'accessing' }
 DebugInfo >> stopTable: aCollection [ 
 	stopTable := aCollection
+]
+
+{ #category : 'accessing' }
+DebugInfo >> stopTableDictionary [
+
+	stopTableDictionary ifNotNil: [ ^ stopTableDictionary ].
+
+
+	stopTableDictionary := (stopTable groupsOf: 4 atATimeCollect: [ :e |
+			                        | stopTableFlags stopTableRange stopTableInflatedInfo |
+			                        stopTableFlags := e second.
+			                        stopTableRange := e third to: e fourth.
+			                        stopTableInflatedInfo := (self
+				                                                  inflatedStopTableInfoFromFlags:
+				                                                  stopTableFlags)
+				                                                 copyWith:
+				                                                 stopTableRange.
+
+			                        e first -> stopTableInflatedInfo ])
+		                       asDictionary.
+	^ stopTableDictionary
 ]
 
 { #category : 'accessing' }
