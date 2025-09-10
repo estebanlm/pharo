@@ -2,7 +2,8 @@ Class {
 	#name : 'DebugInfoBuilder',
 	#superclass : 'Object',
 	#instVars : [
-		'compiledCode'
+		'compiledCode',
+		'bytecodeToASTCache'
 	],
 	#category : 'DebugInfo',
 	#package : 'DebugInfo'
@@ -157,9 +158,15 @@ DebugInfoBuilder >> isFirstPCOfMessage: aBytecodePC [
 { #category : 'private' }
 DebugInfoBuilder >> privateSourceNodeForPC: aBytecodePC [
 
-	| sourceNode bytecodeToASTCache |
+	| sourceNode |
+
+	"Lazy initialize the bytecode to AST cache"
+	bytecodeToASTCache ifNotNil: [
+		^ bytecodeToASTCache nodeForPC: aBytecodePC ].
+
 	sourceNode := compiledCode sourceNode.
-	bytecodeToASTCache := OCBytecodeToASTCache generateForNode: sourceNode.
+	bytecodeToASTCache := OCBytecodeToASTCache generateForNode:
+		                      sourceNode.
 	^ bytecodeToASTCache nodeForPC: aBytecodePC
 ]
 
