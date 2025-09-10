@@ -23,21 +23,21 @@ DebugInfo >> isArgumentNamed: aName at: aBytecodePC [
 ]
 
 { #category : 'testing' }
-DebugInfo >> isSourceReturn: aBytecodePC [ 
-	
-	^ (stopTable at: aBytecodePC) third
+DebugInfo >> isSourceReturn: aBytecodePC [
+
+	^ (stopTable at: aBytecodePC ifAbsent: [ ^ false ]) third
 ]
 
 { #category : 'testing' }
 DebugInfo >> isSourceSend: aBytecodePC [ 
 	
-	^ (stopTable at: aBytecodePC) fourth
+	^ (stopTable at: aBytecodePC ifAbsent: [ ^ false ]) fourth
 ]
 
 { #category : 'testing' }
 DebugInfo >> isSourceStore: aBytecodePC [ 
 	
-	^ (stopTable at: aBytecodePC) second
+	^ (stopTable at: aBytecodePC ifAbsent: [ ^ false ]) second
 ]
 
 { #category : 'as yet unclassified' }
@@ -82,7 +82,7 @@ DebugInfo >> rootScope: aCachedDebugScope [
 { #category : 'accessing' }
 DebugInfo >> shouldStopAt: aBytecodePC [ 
 	
-	^ (stopTable at: aBytecodePC) first
+	^ (stopTable at: aBytecodePC ifAbsent: [ ^ false ]) first
 ]
 
 { #category : 'accessing' }
