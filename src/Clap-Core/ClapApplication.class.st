@@ -89,7 +89,13 @@ ClapApplication >> hasFlag: anIdentifier [
 	^ self context hasFlag: anIdentifier asSymbol
 ]
 
-{ #category : 'execution' }
+{ #category : 'printing' }
+ClapApplication >> lineEnding [
+
+	^ OSPlatform current lineEnding
+]
+
+{ #category : 'printing' }
 ClapApplication >> outputStreamDo: aBlock [
 	aBlock value: self context stdout
 ]
