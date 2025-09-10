@@ -1,5 +1,5 @@
 Class {
-	#name : 'CachedDebugScope',
+	#name : 'DebugScope',
 	#superclass : 'Object',
 	#instVars : [
 		'bytecodeRange',
@@ -11,7 +11,7 @@ Class {
 }
 
 { #category : 'instance creation' }
-CachedDebugScope class >> on: anOCMethodScope [
+DebugScope class >> on: anOCMethodScope [
 
 	^ self new
 		  astScope: anOCMethodScope;
@@ -19,25 +19,25 @@ CachedDebugScope class >> on: anOCMethodScope [
 ]
 
 { #category : 'adding' }
-CachedDebugScope >> addChild: aCachedDebugScope [ 
+DebugScope >> addChild: aCachedDebugScope [ 
 	
 	children := children copyWith: aCachedDebugScope
 ]
 
 { #category : 'accessing' }
-CachedDebugScope >> bytecodeRange [
+DebugScope >> bytecodeRange [
 
 	^ bytecodeRange
 ]
 
 { #category : 'accessing' }
-CachedDebugScope >> bytecodeRange: anObject [
+DebugScope >> bytecodeRange: anObject [
 
 	bytecodeRange := anObject
 ]
 
 { #category : 'accessing' }
-CachedDebugScope >> debugScopeAt: aBytecodePC [
+DebugScope >> debugScopeAt: aBytecodePC [
 
 	"Precondition: this method is only valid if I match the argument PC"
 
@@ -50,14 +50,14 @@ CachedDebugScope >> debugScopeAt: aBytecodePC [
 ]
 
 { #category : 'initialization' }
-CachedDebugScope >> initialize [
+DebugScope >> initialize [
 
 	super initialize.
 	children := #()
 ]
 
 { #category : 'as yet unclassified' }
-CachedDebugScope >> isArgumentNamed: aName [
+DebugScope >> isArgumentNamed: aName [
 
 	| variableDescriptor |
 	variableDescriptor := variables
@@ -67,13 +67,13 @@ CachedDebugScope >> isArgumentNamed: aName [
 ]
 
 { #category : 'accessing' }
-CachedDebugScope >> matchesBytecodePC: aPC [
+DebugScope >> matchesBytecodePC: aPC [
 
 	^ bytecodeRange includes: aPC
 ]
 
 { #category : 'as yet unclassified' }
-CachedDebugScope >> readVariableNamed: aName fromContext: aContext [
+DebugScope >> readVariableNamed: aName fromContext: aContext [
 
 	| variableDescriptor definingContext tempValue |
 	variableDescriptor := variables
@@ -91,18 +91,18 @@ CachedDebugScope >> readVariableNamed: aName fromContext: aContext [
 ]
 
 { #category : 'as yet unclassified' }
-CachedDebugScope >> variableNames [
+DebugScope >> variableNames [
 	
 	^ variables collect: [ :each | each first ]
 ]
 
 { #category : 'as yet unclassified' }
-CachedDebugScope >> variables [
+DebugScope >> variables [
 	
 	^ variables
 ]
 
 { #category : 'accessing' }
-CachedDebugScope >> variables: aCollection [ 
+DebugScope >> variables: aCollection [ 
 	variables := aCollection
 ]

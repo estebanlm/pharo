@@ -1,6 +1,6 @@
 Class {
 	#name : 'DebugInfoTest',
-	#superclass : 'ParametrizedTestCase',
+	#superclass : 'TestCase',
 	#instVars : [
 		'cached'
 	],
@@ -10,33 +10,6 @@ Class {
 	#category : 'DebugInfo-Tests',
 	#package : 'DebugInfo-Tests'
 }
-
-{ #category : 'building suites' }
-DebugInfoTest class >> testParameters [
-
-	^ ParametrizedTestMatrix new
-		  forSelector: #cached
-		  addOptions: { false. true }
-]
-
-{ #category : 'accessing' }
-DebugInfoTest >> cached [
-
-	^ cached
-]
-
-{ #category : 'accessing' }
-DebugInfoTest >> cached: anObject [
-
-	cached := anObject
-]
-
-{ #category : 'tests - listing variables' }
-DebugInfoTest >> initialize [
-
-	super initialize.
-	cached := false.
-]
 
 { #category : 'helpers' }
 DebugInfoTest >> methodWithArgumentCapturingContext: anArgument [
@@ -140,12 +113,9 @@ DebugInfoTest >> methodWithVariableReads [
 ]
 
 { #category : 'helpers' }
-DebugInfoTest >> newDebugInfoFor: context [
+DebugInfoTest >> newDebugInfoFor: methodToTest [
 
-	| debugInfo |
-	debugInfo := OldDebugInfo for: context method.
-	cached ifTrue: [ debugInfo := debugInfo asCachedDebugInfo ].
-	^ debugInfo
+	^ (DebugInfoBuilder for: methodToTest) build
 ]
 
 { #category : 'tests - arguments' }
@@ -154,7 +124,7 @@ DebugInfoTest >> testBlockArgumentVariableIsArgument [
 	| debugInfo context |
 	context := [ :blockArgument | thisContext copy ] value: 7.
 
-	debugInfo := self newDebugInfoFor: context.
+	debugInfo := self newDebugInfoFor: context method.
 
 	self assert:
 		(debugInfo isArgumentNamed: #blockArgument at: context pc)
@@ -168,7 +138,7 @@ DebugInfoTest >> testBlockTemporaryVariableIsNotArgument [
 		           | tempInBlock |
 		           thisContext copy ] value: 7.
 
-	debugInfo := self newDebugInfoFor: context.
+	debugInfo := self newDebugInfoFor: context method.
 
 	self deny: (debugInfo isArgumentNamed: #tempInBlock at: context pc)
 ]
@@ -184,7 +154,7 @@ DebugInfoTest >> testDoNotListVariablesDefinedInFollowingNonSurroundingLexicalSc
 			| inOptimizedScope |
 			 ].
 
-	debugInfo := self newDebugInfoFor: context.
+	debugInfo := self newDebugInfoFor: context method.
 
 	self
 		assert: (debugInfo variableNamesAt: context pc)
@@ -202,7 +172,7 @@ DebugInfoTest >> testDoNotListVariablesDefinedInPreviousNonSurroundingLexicalSco
 	"We capture the context outside of the if statement.
 	Thus, the variable defined inside the conditional block should not be visible"
 	context := thisContext copy.
-	debugInfo := self newDebugInfoFor: context.
+	debugInfo := self newDebugInfoFor: context method.
 
 	self
 		assert: (debugInfo variableNamesAt: context pc)
@@ -214,7 +184,7 @@ DebugInfoTest >> testListArguments [
 
 	| debugInfo contextWithArguments |
 	contextWithArguments := self methodWithArgumentCapturingContext: 17.
-	debugInfo := self newDebugInfoFor: contextWithArguments.
+	debugInfo := self newDebugInfoFor: contextWithArguments method.
 
 	self
 		assert: (debugInfo variableNamesAt: contextWithArguments pc)
@@ -227,7 +197,7 @@ DebugInfoTest >> testListBlockArguments [
 	| debugInfo context |
 	context := [ :blockArgument | thisContext copy ] value: 7.
 
-	debugInfo := self newDebugInfoFor: context.
+	debugInfo := self newDebugInfoFor: context method.
 
 	self
 		assert: (debugInfo variableNamesAt: context pc)
@@ -239,7 +209,7 @@ DebugInfoTest >> testListMethodTemps [
 
 	| debugInfo context |
 	context := thisContext copy.
-	debugInfo := self newDebugInfoFor: context.
+	debugInfo := self newDebugInfoFor: context method.
 
 	self
 		assert: (debugInfo variableNamesAt: context pc)
@@ -257,7 +227,7 @@ DebugInfoTest >> testListOptimizedBlockArguments [
 		Thus, lexically we are inside the block and the variables of the block are visible"
 			           inOptimizedScope := thisContext copy ].
 
-	debugInfo := self newDebugInfoFor: context.
+	debugInfo := self newDebugInfoFor: context method.
 
 	self
 		assert: (debugInfo variableNamesAt: context pc)
@@ -270,7 +240,7 @@ DebugInfoTest >> testListOuterVariables [
 	| debugInfo context |
 	context := [ thisContext copy ] value.
 
-	debugInfo := self newDebugInfoFor: context.
+	debugInfo := self newDebugInfoFor: context method.
 
 	self
 		assert: (debugInfo variableNamesAt: context pc)
@@ -286,7 +256,7 @@ DebugInfoTest >> testListShadowedVariablesAreNotDuplicated [
 		           debugInfo := 17.
 		           thisContext copy ] value.
 
-	debugInfo := self newDebugInfoFor: context.
+	debugInfo := self newDebugInfoFor: context method.
 
 	self
 		assert: (debugInfo variableNamesAt: context pc)
@@ -304,7 +274,7 @@ DebugInfoTest >> testListVariablesWithinOptimizedContext [
 		Thus, lexically we are inside the block and the variables of the block are visible"
 			           inOptimizedScope := thisContext copy ].
 
-	debugInfo := self newDebugInfoFor: context.
+	debugInfo := self newDebugInfoFor: context method.
 
 	self
 		assert: (debugInfo variableNamesAt: context pc)
@@ -316,7 +286,7 @@ DebugInfoTest >> testMethodArgumentVariableIsArgument [
 
 	| debugInfo contextWithArguments |
 	contextWithArguments := self methodWithArgumentCapturingContext: 17.
-	debugInfo := self newDebugInfoFor: contextWithArguments.
+	debugInfo := self newDebugInfoFor: contextWithArguments method.
 
 	self assert:
 		(debugInfo isArgumentNamed: #anArgument at: contextWithArguments pc)
@@ -327,7 +297,7 @@ DebugInfoTest >> testMethodTemporaryVariableIsNotArgument [
 
 	| debugInfo contextWithArguments |
 	contextWithArguments := thisContext copy.
-	debugInfo := self newDebugInfoFor: contextWithArguments.
+	debugInfo := self newDebugInfoFor: contextWithArguments method.
 
 	self deny: (debugInfo
 			 isArgumentNamed: #contextWithArguments
@@ -339,7 +309,7 @@ DebugInfoTest >> testNonExistingVariableIsArgumentRaisesError [
 
 	| debugInfo context |
 	context := thisContext copy.
-	debugInfo := self newDebugInfoFor: context.
+	debugInfo := self newDebugInfoFor: context method.
 
 	[
 		debugInfo isArgumentNamed: #notAVariable at: context pc.
@@ -356,15 +326,15 @@ DebugInfoTest >> testNotStopAtAllButFirstBytecodeOfOptimizedSend [
 
 	| debugInfo methodToTest send todoPCs |
 	methodToTest := self class >> #methodWithOptimizedSend.
-	debugInfo := OldDebugInfo for: methodToTest.
+	debugInfo := self newDebugInfoFor: methodToTest.
 
 	"a to:do: send should stop at the to:do: point but not in the intermediate steps"
 	send := methodToTest ast statements first.
 	todoPCs := send methodNode pcsForNode: send.
 	self assert: todoPCs size > 1.
-	
+
 	todoPCs allButFirst do: [ :otherPC |
-		self deny: (debugInfo shouldStopAt: otherPC). ]
+		self deny: (debugInfo shouldStopAt: otherPC) ]
 ]
 
 { #category : 'tests - shouldStopAt' }
@@ -372,11 +342,11 @@ DebugInfoTest >> testNotStopAtConstantBlockCreation [
 
 	| debugInfo methodToTest blockNode blockCreationPC |
 	methodToTest := self class >> #methodWithConstantBlockReturn.
-	debugInfo := OldDebugInfo for: methodToTest.
+	debugInfo := self newDebugInfoFor: methodToTest.
 
 	blockNode := methodToTest ast statements first.
 	blockCreationPC := (blockNode methodNode pcsForNode: blockNode) first.
-	
+
 	self deny: (debugInfo shouldStopAt: blockCreationPC)
 ]
 
@@ -385,14 +355,14 @@ DebugInfoTest >> testNotStopAtDynamicArrayCreation [
 
 	| debugInfo methodToTest dynamicArrayCreationNode blockCreationPCs |
 	methodToTest := self class >> #methodWithDynamicArrayCreation.
-	debugInfo := OldDebugInfo for: methodToTest.
+	debugInfo := self newDebugInfoFor: methodToTest.
 
 	dynamicArrayCreationNode := methodToTest ast statements first.
-	blockCreationPCs := dynamicArrayCreationNode methodNode pcsForNode: dynamicArrayCreationNode.
+	blockCreationPCs := dynamicArrayCreationNode methodNode pcsForNode:
+		                    dynamicArrayCreationNode.
 	self assert: blockCreationPCs notEmpty.
-	
-	blockCreationPCs do: [ :e |
-		self deny: (debugInfo shouldStopAt: e). ]
+
+	blockCreationPCs do: [ :e | self deny: (debugInfo shouldStopAt: e) ]
 ]
 
 { #category : 'tests - shouldStopAt' }
@@ -400,17 +370,15 @@ DebugInfoTest >> testNotStopAtFullBlockCreation [
 
 	| debugInfo methodToTest blockNode blockCreationPCs |
 	methodToTest := self class >> #methodWithFullBlockReturn.
-	debugInfo := OldDebugInfo for: methodToTest.
+	debugInfo := self newDebugInfoFor: methodToTest.
 
 	blockNode := methodToTest ast statements first.
 	"A block may have many PCs: the creation of the block but also the creation of the temp verctor and the copied vars
 	None of them are stop points."
-	blockCreationPCs := (blockNode methodNode pcsForNode: blockNode).
+	blockCreationPCs := blockNode methodNode pcsForNode: blockNode.
 	self assert: blockCreationPCs notEmpty.
-	
-	blockCreationPCs do: [ :e |
-		self deny: (debugInfo shouldStopAt: e)
-	]
+
+	blockCreationPCs do: [ :e | self deny: (debugInfo shouldStopAt: e) ]
 ]
 
 { #category : 'tests - shouldStopAt' }
@@ -418,21 +386,21 @@ DebugInfoTest >> testNotStopAtLiterals [
 
 	| debugInfo methodToTest literalNodes |
 	methodToTest := self class >> #methodWithLiterals.
-	debugInfo := OldDebugInfo for: methodToTest.
+	debugInfo := self newDebugInfoFor: methodToTest.
 
 	literalNodes := methodToTest ast statements.
 	self assert: literalNodes notEmpty.
-	
-	literalNodes do: [ :node | | literalPCs |
-		"Some literal nodes are eliminated from the bytecode (and others not?)
+
+	literalNodes do: [ :node |
+			| literalPCs |
+			"Some literal nodes are eliminated from the bytecode (and others not?)
 		Thus, some are mapped and others not.
 		
 		For our purposes we don't care. If not mapped we will not stop.
 		But if mapped, we should not stop on them"
-		literalPCs := (node methodNode pcsForNode: node).
-		self assert: (literalPCs isEmpty or: [ (debugInfo shouldStopAt: literalPCs first) not ])
-	]
-	
+			literalPCs := node methodNode pcsForNode: node.
+			self assert: (literalPCs isEmpty or: [
+					 (debugInfo shouldStopAt: literalPCs first) not ]) ]
 ]
 
 { #category : 'tests - shouldStopAt' }
@@ -440,21 +408,21 @@ DebugInfoTest >> testNotStopAtVariableReads [
 
 	| debugInfo methodToTest variableNodes |
 	methodToTest := self class >> #methodWithVariableReads.
-	debugInfo := OldDebugInfo for: methodToTest.
+	debugInfo := self newDebugInfoFor: methodToTest.
 
 	variableNodes := methodToTest ast statements.
 	self assert: variableNodes notEmpty.
-	
-	variableNodes do: [ :node | | variableReadPCs |
-		"Some variable nodes are eliminated from the bytecode (and others not?)
+
+	variableNodes do: [ :node |
+			| variableReadPCs |
+			"Some variable nodes are eliminated from the bytecode (and others not?)
 		Thus, some are mapped and others not.
 		
 		For our purposes we don't care. If not mapped we will not stop.
 		But if mapped, we should not stop on them"
-		variableReadPCs := (node methodNode pcsForNode: node).
-		self assert: (variableReadPCs isEmpty or: [ (debugInfo shouldStopAt: variableReadPCs first) not ])
-	]
-	
+			variableReadPCs := node methodNode pcsForNode: node.
+			self assert: (variableReadPCs isEmpty or: [
+					 (debugInfo shouldStopAt: variableReadPCs first) not ]) ]
 ]
 
 { #category : 'tests - arguments' }
@@ -468,7 +436,7 @@ DebugInfoTest >> testOptimizedBlockArgumentVariableIsArgument [
 		Thus, lexically we are inside the block and the variables of the block are visible"
 			           inOptimizedScope := thisContext copy ].
 
-	debugInfo := self newDebugInfoFor: context.
+	debugInfo := self newDebugInfoFor: context method.
 
 	self assert:
 		(debugInfo isArgumentNamed: #blockArgument at: context pc)
@@ -485,7 +453,7 @@ DebugInfoTest >> testOptimizedBlockTemporaryVariableIsNotArgument [
 		Thus, lexically we are inside the block and the variables of the block are visible"
 			           inOptimizedScope := thisContext copy ].
 
-	debugInfo := self newDebugInfoFor: context.
+	debugInfo := self newDebugInfoFor: context method.
 
 	self deny:
 		(debugInfo isArgumentNamed: #inOptimizedScope at: context pc)
@@ -497,14 +465,16 @@ DebugInfoTest >> testRangeForConstantBlockReturn [
 	| debugInfo methodToTest returnPC blockNode constantBlock |
 	methodToTest := self class >> #methodWithConstantBlockReturn.
 	constantBlock := methodToTest literalAt: 1.
-	debugInfo := OldDebugInfo for: constantBlock compiledBlock.
+	debugInfo := self newDebugInfoFor: constantBlock compiledBlock.
 
 	"Since the return does not exist in the AST, the block return bytecode is mapped to the block's sequence node (differently than methods)"
 	blockNode := methodToTest ast statements first.
 	"The return bytecode is the last bytecode of the block"
 	returnPC := (blockNode pcsForNode: blockNode body) last.
-	
-	self assert: (debugInfo rangeForPC: returnPC) equals: blockNode body debugHighlightRange
+
+	self
+		assert: (debugInfo rangeForPC: returnPC)
+		equals: blockNode body debugHighlightRange
 ]
 
 { #category : 'tests - rangeForPC' }
@@ -512,12 +482,14 @@ DebugInfoTest >> testRangeForExplicitReturn [
 
 	| debugInfo methodToTest return returnPC |
 	methodToTest := self class >> #methodWithReturn.
-	debugInfo := OldDebugInfo for: methodToTest.
+	debugInfo := self newDebugInfoFor: methodToTest.
 
 	return := methodToTest ast statements first.
 	returnPC := (return methodNode pcsForNode: return) first.
-	
-	self assert: (debugInfo rangeForPC: returnPC) equals: return debugHighlightRange.
+
+	self
+		assert: (debugInfo rangeForPC: returnPC)
+		equals: return debugHighlightRange
 ]
 
 { #category : 'tests - rangeForPC' }
@@ -525,14 +497,17 @@ DebugInfoTest >> testRangeForFirstBytecodeOfOptimizedSend [
 
 	| debugInfo methodToTest send sendPC |
 	methodToTest := self class >> #methodWithOptimizedSend.
-	debugInfo := OldDebugInfo for: methodToTest.
+	debugInfo := self newDebugInfoFor: methodToTest.
 
 	"a to:do: send should stop at the to:do: point"
 	send := methodToTest ast statements first.
 	sendPC := (send methodNode pcsForNode: send) first.
-	
+
 	"We highlight from the beginning of #to: up to the end of #do: without selecting the receiver or the block"
-	self assert: (debugInfo rangeForPC: sendPC) equals: (send keywordsPositions first to: send stopWithoutParentheses).
+	self
+		assert: (debugInfo rangeForPC: sendPC)
+		equals:
+		(send keywordsPositions first to: send stopWithoutParentheses)
 ]
 
 { #category : 'tests - rangeForPC' }
@@ -541,7 +516,7 @@ DebugInfoTest >> testRangeForFullBlockReturn [
 	| debugInfo methodToTest returnPC blockNode compiledBlock |
 	methodToTest := self class >> #methodWithFullBlockReturn.
 	compiledBlock := methodToTest literalAt: 1.
-	debugInfo := OldDebugInfo for: compiledBlock.
+	debugInfo := self newDebugInfoFor: compiledBlock.
 
 	"Since the return does not exist in the AST, the block return bytecode is mapped to the block's sequence node (differently than methods).
 	This happens because a block node is mapped to its creation!
@@ -549,8 +524,10 @@ DebugInfoTest >> testRangeForFullBlockReturn [
 	blockNode := methodToTest ast statements first.
 	"The return bytecode is the last bytecode of the block"
 	returnPC := (blockNode pcsForNode: blockNode body) last.
-	
-	self assert: (debugInfo rangeForPC: returnPC) equals: blockNode body debugHighlightRange.
+
+	self
+		assert: (debugInfo rangeForPC: returnPC)
+		equals: blockNode body debugHighlightRange
 ]
 
 { #category : 'tests - rangeForPC' }
@@ -558,12 +535,15 @@ DebugInfoTest >> testRangeForGlobalVariableAssignment [
 
 	| debugInfo methodToTest returnPC assignmentNode |
 	methodToTest := self class >> #methodWithGlobalVariableAssignment.
-	debugInfo := OldDebugInfo for: methodToTest.
+	debugInfo := self newDebugInfoFor: methodToTest.
 
 	assignmentNode := methodToTest ast statements first.
-	returnPC := (assignmentNode methodNode pcsForNode: assignmentNode) first.
-	
-	self assert: (debugInfo rangeForPC: returnPC) equals: assignmentNode debugHighlightRange.
+	returnPC := (assignmentNode methodNode pcsForNode: assignmentNode)
+		            first.
+
+	self
+		assert: (debugInfo rangeForPC: returnPC)
+		equals: assignmentNode debugHighlightRange
 ]
 
 { #category : 'tests - rangeForPC' }
@@ -571,15 +551,17 @@ DebugInfoTest >> testRangeForImplicitMethodReturn [
 
 	| debugInfo methodToTest returnPC methodNode |
 	methodToTest := self class >> #methodWithImplicitReturn.
-	debugInfo := OldDebugInfo for: methodToTest.
+	debugInfo := self newDebugInfoFor: methodToTest.
 
 	"Since the return does not exist in the AST, the return bytecode is mapped to the method node"
 	methodNode := methodToTest ast.
 	"The return bytecode is the last bytecode of the method"
 	returnPC := (methodNode pcsForNode: methodNode) last.
-	
+
 	"Why here the sequence node does not have a correct source mapping??"
-	self assert: (debugInfo rangeForPC: returnPC) equals: methodNode debugHighlightRange.
+	self
+		assert: (debugInfo rangeForPC: returnPC)
+		equals: methodNode debugHighlightRange
 ]
 
 { #category : 'tests - rangeForPC' }
@@ -587,7 +569,7 @@ DebugInfoTest >> testRangeForInstanceVariableAssignment [
 
 	| debugInfo methodToTest returnPC assignmentNode |
 	methodToTest := self class >> #methodWithInstanceVariableAssignment.
-	debugInfo := OldDebugInfo for: methodToTest.
+	debugInfo := self newDebugInfoFor: methodToTest.
 
 	assignmentNode := methodToTest ast statements first.
 	returnPC := (assignmentNode methodNode pcsForNode: assignmentNode) first.
@@ -600,7 +582,7 @@ DebugInfoTest >> testRangeForLocalVariableAssignment [
 
 	| debugInfo methodToTest returnPC assignmentNode |
 	methodToTest := self class >> #methodWithLocalVariableAssignment.
-	debugInfo := OldDebugInfo for: methodToTest.
+	debugInfo := self newDebugInfoFor: methodToTest.
 
 	assignmentNode := methodToTest ast statements first.
 	returnPC := (assignmentNode methodNode pcsForNode: assignmentNode) first.
@@ -613,7 +595,7 @@ DebugInfoTest >> testRangeForSend [
 
 	| debugInfo methodToTest send sendPC |
 	methodToTest := self class >> #methodWithSend.
-	debugInfo := OldDebugInfo for: methodToTest.
+	debugInfo := self newDebugInfoFor: methodToTest.
 
 	send := methodToTest ast statements first.
 	sendPC := (send methodNode pcsForNode: send) first.
@@ -626,7 +608,7 @@ DebugInfoTest >> testRangeForSendInDynamicArray [
 
 	| debugInfo methodToTest dynamicArrayNode sendInsideDynamicArrayNode sendPC |
 	methodToTest := self class >> #methodWithDynamicArrayCreation.
-	debugInfo := OldDebugInfo for: methodToTest.
+	debugInfo := self newDebugInfoFor: methodToTest.
 
 	dynamicArrayNode := methodToTest ast statements first.
 	sendInsideDynamicArrayNode := dynamicArrayNode statements first.
@@ -642,7 +624,7 @@ DebugInfoTest >> testRangeForSendInInlinedBlock [
 
 	| debugInfo methodToTest todoSend sendInsideToDoBlock sendPC |
 	methodToTest := self class >> #methodWithOptimizedSend.
-	debugInfo := OldDebugInfo for: methodToTest.
+	debugInfo := self newDebugInfoFor: methodToTest.
 
 	todoSend := methodToTest ast statements first.
 	sendInsideToDoBlock := todoSend arguments second body statements first.
@@ -658,7 +640,7 @@ DebugInfoTest >> testReadLocalBlockArgumentVariable [
 	| debugInfo context |
 	context := [ :blockArgument | thisContext copy ] value: 7.
 
-	debugInfo := self newDebugInfoFor: context.
+	debugInfo := self newDebugInfoFor: context method.
 
 	self
 		assert:
@@ -688,7 +670,7 @@ DebugInfoTest >> testReadLocalBlockTempVectorTemporaryVariableFromClosure [
 		[ tempInTempVector := 3 ] value.
 
 		context := thisContext.
-		debugInfo := self newDebugInfoFor: context.
+		debugInfo := self newDebugInfoFor: context method.
 
 		self
 			assert:
@@ -721,7 +703,7 @@ DebugInfoTest >> testReadLocalBlockTempVectorTemporaryVariableFromMethod [
 	[ tempInTempVector := 3 ] value.
 
 	context := thisContext.
-	debugInfo := self newDebugInfoFor: context.
+	debugInfo := self newDebugInfoFor: context method.
 
 	self
 		assert:
@@ -738,7 +720,7 @@ DebugInfoTest >> testReadLocalBlockTemporaryVariable [
 		           tempInBlock := 42.
 		           thisContext copy ] value: 7.
 
-	debugInfo := self newDebugInfoFor: context.
+	debugInfo := self newDebugInfoFor: context method.
 
 	self
 		assert:
@@ -751,7 +733,7 @@ DebugInfoTest >> testReadLocalMethodArgumentVariable [
 
 	| debugInfo contextWithArguments |
 	contextWithArguments := self methodWithArgumentCapturingContext: 17.
-	debugInfo := self newDebugInfoFor: contextWithArguments.
+	debugInfo := self newDebugInfoFor: contextWithArguments method.
 
 	self
 		assert: (debugInfo
@@ -765,7 +747,7 @@ DebugInfoTest >> testReadLocalMethodTemporaryVariable [
 
 	| debugInfo contextWithArguments |
 	contextWithArguments := thisContext copy.
-	debugInfo := self newDebugInfoFor: contextWithArguments.
+	debugInfo := self newDebugInfoFor: contextWithArguments method.
 
 	self
 		deny: (debugInfo
@@ -785,7 +767,7 @@ DebugInfoTest >> testReadLocalOptimizedBlockArgumentVariable [
 		Thus, lexically we are inside the block and the variables of the block are visible"
 			           inOptimizedScope := thisContext copy ].
 
-	debugInfo := self newDebugInfoFor: context.
+	debugInfo := self newDebugInfoFor: context method.
 
 	self
 		assert:
@@ -804,7 +786,7 @@ DebugInfoTest >> testReadLocalOptimizedBlockTemporaryVariable [
 		Thus, lexically we are inside the block and the variables of the block are visible"
 			           inOptimizedScope := thisContext copy ].
 
-	debugInfo := self newDebugInfoFor: context.
+	debugInfo := self newDebugInfoFor: context method.
 
 	self
 		deny:
@@ -817,7 +799,7 @@ DebugInfoTest >> testReadNonExistingVariableRaisesError [
 
 	| debugInfo context |
 	context := thisContext copy.
-	debugInfo := self newDebugInfoFor: context.
+	debugInfo := self newDebugInfoFor: context method.
 
 	[
 		debugInfo readVariableNamed: #notAVariable fromContext: context.
@@ -835,7 +817,7 @@ DebugInfoTest >> testReadOuterBlockArgumentVariableFromClosure [
 	| debugInfo context |
 	context := [ :blockArgument | [ thisContext copy ] value ] value: 7.
 
-	debugInfo := self newDebugInfoFor: context.
+	debugInfo := self newDebugInfoFor: context method.
 
 	self
 		assert:
@@ -850,7 +832,7 @@ DebugInfoTest >> testReadOuterBlockArgumentVariableFromOptimizedBlock [
 	context := [ :blockArgument | true ifTrue: [ thisContext copy ] ]
 		           value: 7.
 
-	debugInfo := self newDebugInfoFor: context.
+	debugInfo := self newDebugInfoFor: context method.
 
 	self
 		assert:
@@ -867,7 +849,7 @@ DebugInfoTest >> testReadOuterBlockCopiedArgumentVariableFromClosure [
 			           blockArgument.
 			           thisContext copy ] value ] value: 7.
 
-	debugInfo := self newDebugInfoFor: context.
+	debugInfo := self newDebugInfoFor: context method.
 
 	self
 		assert:
@@ -896,7 +878,7 @@ DebugInfoTest >> testReadOuterBlockCopiedTemporaryVariableFromClosure [
 			tempInBlock.
 
 			context := thisContext.
-			debugInfo := self newDebugInfoFor: context.
+			debugInfo := self newDebugInfoFor: context method.
 
 			self
 				assert:
@@ -929,7 +911,7 @@ DebugInfoTest >> testReadOuterBlockTempVectorTemporaryVariableFromClosure [
 			tempInTempVector := 3.
 
 			context := thisContext.
-			debugInfo := self newDebugInfoFor: context.
+			debugInfo := self newDebugInfoFor: context method.
 
 			self
 				assert:
@@ -960,7 +942,7 @@ DebugInfoTest >> testReadOuterBlockTemporaryVariableFromClosure [
 		[
 			| context |
 			context := thisContext.
-			debugInfo := self newDebugInfoFor: context.
+			debugInfo := self newDebugInfoFor: context method.
 
 			self
 				assert:
@@ -989,7 +971,7 @@ DebugInfoTest >> testReadOuterBlockTemporaryVariableFromOptimizedBlock [
 		true ifTrue: [
 				| context |
 				context := thisContext.
-				debugInfo := self newDebugInfoFor: context.
+				debugInfo := self newDebugInfoFor: context method.
 
 				self
 					assert:
@@ -1007,7 +989,7 @@ DebugInfoTest >> testReadOuterMethodArgumentVariableFromClosure [
 	contextWithArguments := self
 		                        methodWithArgumentCapturingFullBlockContext:
 		                        17.
-	debugInfo := self newDebugInfoFor: contextWithArguments.
+	debugInfo := self newDebugInfoFor: contextWithArguments method.
 
 	self
 		assert: (debugInfo
@@ -1023,7 +1005,7 @@ DebugInfoTest >> testReadOuterMethodArgumentVariableFromOptimizedBlock [
 	contextWithArguments := self
 		                        methodWithArgumentCapturingOptimizedBlockContext:
 		                        17.
-	debugInfo := self newDebugInfoFor: contextWithArguments.
+	debugInfo := self newDebugInfoFor: contextWithArguments method.
 
 	self
 		assert: (debugInfo
@@ -1037,7 +1019,7 @@ DebugInfoTest >> testReadOuterMethodTemporaryVariableFromClosure [
 
 	| debugInfo contextWithArguments |
 	contextWithArguments := [ thisContext copy ] value.
-	debugInfo := self newDebugInfoFor: contextWithArguments.
+	debugInfo := self newDebugInfoFor: contextWithArguments method.
 
 	self
 		assert: (debugInfo
@@ -1053,7 +1035,7 @@ DebugInfoTest >> testReadOuterMethodTemporaryVariableFromOptimizedBlock [
 	outerVariable := 17.
 
 	contextWithArguments := true ifTrue: [ thisContext copy ].
-	debugInfo := self newDebugInfoFor: contextWithArguments.
+	debugInfo := self newDebugInfoFor: contextWithArguments method.
 
 	self
 		assert: (debugInfo
@@ -1068,14 +1050,14 @@ DebugInfoTest >> testStopAtConstantBlockReturn [
 	| debugInfo methodToTest returnPC blockNode constantBlock |
 	methodToTest := self class >> #methodWithConstantBlockReturn.
 	constantBlock := methodToTest literalAt: 1.
-	debugInfo := OldDebugInfo for: constantBlock compiledBlock.
+	debugInfo := self newDebugInfoFor: constantBlock compiledBlock.
 
 	"Since the return does not exist in the AST, the block return bytecode is mapped to the block's sequence node (differently than methods)"
 	blockNode := methodToTest ast statements first.
 	"The return bytecode is the last bytecode of the block"
 	returnPC := (blockNode pcsForNode: blockNode body) last.
-	
-	self assert: (debugInfo shouldStopAt: returnPC).
+
+	self assert: (debugInfo shouldStopAt: returnPC)
 ]
 
 { #category : 'tests - shouldStopAt' }
@@ -1083,12 +1065,12 @@ DebugInfoTest >> testStopAtExplicitReturn [
 
 	| debugInfo methodToTest return returnPC |
 	methodToTest := self class >> #methodWithReturn.
-	debugInfo := OldDebugInfo for: methodToTest.
+	debugInfo := self newDebugInfoFor: methodToTest.
 
 	return := methodToTest ast statements first.
 	returnPC := (return methodNode pcsForNode: return) first.
-	
-	self assert: (debugInfo shouldStopAt: returnPC).
+
+	self assert: (debugInfo shouldStopAt: returnPC)
 ]
 
 { #category : 'tests - shouldStopAt' }
@@ -1096,13 +1078,13 @@ DebugInfoTest >> testStopAtFirstBytecodeOfOptimizedSend [
 
 	| debugInfo methodToTest send sendPC |
 	methodToTest := self class >> #methodWithOptimizedSend.
-	debugInfo := OldDebugInfo for: methodToTest.
+	debugInfo := self newDebugInfoFor: methodToTest.
 
 	"a to:do: send should stop at the to:do: point"
 	send := methodToTest ast statements first.
 	sendPC := (send methodNode pcsForNode: send) first.
-	
-	self assert: (debugInfo shouldStopAt: sendPC).
+
+	self assert: (debugInfo shouldStopAt: sendPC)
 ]
 
 { #category : 'tests - shouldStopAt' }
@@ -1111,7 +1093,7 @@ DebugInfoTest >> testStopAtFullBlockReturn [
 	| debugInfo methodToTest returnPC blockNode compiledBlock |
 	methodToTest := self class >> #methodWithFullBlockReturn.
 	compiledBlock := methodToTest literalAt: 1.
-	debugInfo := OldDebugInfo for: compiledBlock.
+	debugInfo := self newDebugInfoFor: compiledBlock.
 
 	"Since the return does not exist in the AST, the block return bytecode is mapped to the block's sequence node (differently than methods).
 	This happens because a block node is mapped to its creation!
@@ -1119,8 +1101,8 @@ DebugInfoTest >> testStopAtFullBlockReturn [
 	blockNode := methodToTest ast statements first.
 	"The return bytecode is the last bytecode of the block"
 	returnPC := (blockNode pcsForNode: blockNode body) last.
-	
-	self assert: (debugInfo shouldStopAt: returnPC).
+
+	self assert: (debugInfo shouldStopAt: returnPC)
 ]
 
 { #category : 'tests - shouldStopAt' }
@@ -1128,12 +1110,13 @@ DebugInfoTest >> testStopAtGlobalVariableAssignment [
 
 	| debugInfo methodToTest returnPC assignmentNode |
 	methodToTest := self class >> #methodWithGlobalVariableAssignment.
-	debugInfo := OldDebugInfo for: methodToTest.
+	debugInfo := self newDebugInfoFor: methodToTest.
 
 	assignmentNode := methodToTest ast statements first.
-	returnPC := (assignmentNode methodNode pcsForNode: assignmentNode) first.
-	
-	self assert: (debugInfo shouldStopAt: returnPC).
+	returnPC := (assignmentNode methodNode pcsForNode: assignmentNode)
+		            first.
+
+	self assert: (debugInfo shouldStopAt: returnPC)
 ]
 
 { #category : 'tests - shouldStopAt' }
@@ -1141,14 +1124,14 @@ DebugInfoTest >> testStopAtImplicitMethodReturn [
 
 	| debugInfo methodToTest returnPC methodNode |
 	methodToTest := self class >> #methodWithImplicitReturn.
-	debugInfo := OldDebugInfo for: methodToTest.
+	debugInfo := self newDebugInfoFor: methodToTest.
 
 	"Since the return does not exist in the AST, the return bytecode is mapped to the method node"
 	methodNode := methodToTest ast.
 	"The return bytecode is the last bytecode of the method"
 	returnPC := (methodNode pcsForNode: methodNode) last.
-	
-	self assert: (debugInfo shouldStopAt: returnPC).
+
+	self assert: (debugInfo shouldStopAt: returnPC)
 ]
 
 { #category : 'tests - shouldStopAt' }
@@ -1156,12 +1139,13 @@ DebugInfoTest >> testStopAtInstanceVariableAssignment [
 
 	| debugInfo methodToTest returnPC assignmentNode |
 	methodToTest := self class >> #methodWithInstanceVariableAssignment.
-	debugInfo := OldDebugInfo for: methodToTest.
+	debugInfo := self newDebugInfoFor: methodToTest.
 
 	assignmentNode := methodToTest ast statements first.
-	returnPC := (assignmentNode methodNode pcsForNode: assignmentNode) first.
-	
-	self assert: (debugInfo shouldStopAt: returnPC).
+	returnPC := (assignmentNode methodNode pcsForNode: assignmentNode)
+		            first.
+
+	self assert: (debugInfo shouldStopAt: returnPC)
 ]
 
 { #category : 'tests - shouldStopAt' }
@@ -1169,12 +1153,13 @@ DebugInfoTest >> testStopAtLocalVariableAssignment [
 
 	| debugInfo methodToTest returnPC assignmentNode |
 	methodToTest := self class >> #methodWithLocalVariableAssignment.
-	debugInfo := OldDebugInfo for: methodToTest.
+	debugInfo := self newDebugInfoFor: methodToTest.
 
 	assignmentNode := methodToTest ast statements first.
-	returnPC := (assignmentNode methodNode pcsForNode: assignmentNode) first.
-	
-	self assert: (debugInfo shouldStopAt: returnPC).
+	returnPC := (assignmentNode methodNode pcsForNode: assignmentNode)
+		            first.
+
+	self assert: (debugInfo shouldStopAt: returnPC)
 ]
 
 { #category : 'tests - shouldStopAt' }
@@ -1182,12 +1167,12 @@ DebugInfoTest >> testStopAtSend [
 
 	| debugInfo methodToTest send sendPC |
 	methodToTest := self class >> #methodWithSend.
-	debugInfo := OldDebugInfo for: methodToTest.
+	debugInfo := self newDebugInfoFor: methodToTest.
 
 	send := methodToTest ast statements first.
 	sendPC := (send methodNode pcsForNode: send) first.
-	
-	self assert: (debugInfo shouldStopAt: sendPC).
+
+	self assert: (debugInfo shouldStopAt: sendPC)
 ]
 
 { #category : 'tests - shouldStopAt' }
@@ -1195,14 +1180,15 @@ DebugInfoTest >> testStopAtSendInDynamicArray [
 
 	| debugInfo methodToTest dynamicArrayNode sendInsideDynamicArrayNode sendPC |
 	methodToTest := self class >> #methodWithDynamicArrayCreation.
-	debugInfo := OldDebugInfo for: methodToTest.
+	debugInfo := self newDebugInfoFor: methodToTest.
 
 	dynamicArrayNode := methodToTest ast statements first.
 	sendInsideDynamicArrayNode := dynamicArrayNode statements first.
 	self assert: sendInsideDynamicArrayNode isMessage.
 
-	sendPC := (sendInsideDynamicArrayNode methodNode pcsForNode: sendInsideDynamicArrayNode) first.
-	
+	sendPC := (sendInsideDynamicArrayNode methodNode pcsForNode:
+		           sendInsideDynamicArrayNode) first.
+
 	self assert: (debugInfo shouldStopAt: sendPC)
 ]
 
@@ -1211,12 +1197,14 @@ DebugInfoTest >> testStopAtSendInInlinedBlock [
 
 	| debugInfo methodToTest todoSend sendInsideToDoBlock sendPC |
 	methodToTest := self class >> #methodWithOptimizedSend.
-	debugInfo := OldDebugInfo for: methodToTest.
+	debugInfo := self newDebugInfoFor: methodToTest.
 
 	todoSend := methodToTest ast statements first.
-	sendInsideToDoBlock := todoSend arguments second body statements first.
+	sendInsideToDoBlock := todoSend arguments second body statements
+		                       first.
 	self assert: sendInsideToDoBlock isMessage.
-	sendPC := (sendInsideToDoBlock methodNode pcsForNode: sendInsideToDoBlock) first.
-	
+	sendPC := (sendInsideToDoBlock methodNode pcsForNode:
+		           sendInsideToDoBlock) first.
+
 	self assert: (debugInfo shouldStopAt: sendPC)
 ]

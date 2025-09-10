@@ -3,5 +3,5 @@ Extension { #name : 'CompiledCode' }
 { #category : '*DebugInfo' }
 CompiledCode >> debugInfo [
 
-	^ OldDebugInfo for: self
+	^ (DebugInfoBuilder for: self) build
 ]

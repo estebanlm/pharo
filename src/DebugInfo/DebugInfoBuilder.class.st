@@ -1,5 +1,5 @@
 Class {
-	#name : 'OldDebugInfo',
+	#name : 'DebugInfoBuilder',
 	#superclass : 'Object',
 	#instVars : [
 		'compiledCode'
@@ -9,32 +9,32 @@ Class {
 }
 
 { #category : 'instance creation' }
-OldDebugInfo class >> for: code [
+DebugInfoBuilder class >> for: code [
 
 	^ self new
 		  compiledCode: code;
 		  yourself
 ]
 
-{ #category : 'converting' }
-OldDebugInfo >> asCachedDebugInfo [
+{ #category : 'building' }
+DebugInfoBuilder >> build [
 
-	| cachedInfo stopTable astScopes scopes |
-	cachedInfo := CachedDebugInfo new.
-	cachedInfo sourceCode: self sourceCode.
+	| debugInfo stopTable astScopes scopes |
+	debugInfo := DebugInfo new.
+	debugInfo sourceCode: self sourceCode.
 
 	stopTable := compiledCode symbolicBytecodes
 		             collect: [ :e |
 				             | data |
 				             data := {
-					                     (self shouldStopAt: e offset).
-					                     (self isSourceStore: e offset).
-					                     (self isSourceReturn: e offset).
-					                     (self isSourceSend: e offset).
-					                     (self rangeForPC: e offset) }.
+					                     (self computeShouldStopAt: e offset).
+					                     (self computeIsSourceStore: e offset).
+					                     (self computeIsSourceReturn: e offset).
+					                     (self computeIsSourceSend: e offset).
+					                     (self computeRangeForPC: e offset) }.
 				             e offset -> data ]
 		             as: Dictionary.
-	cachedInfo stopTable: stopTable.
+	debugInfo stopTable: stopTable.
 
 	astScopes := (OCScopesCollector new visitNode: compiledCode ast)
 		             scopes.
@@ -42,7 +42,7 @@ OldDebugInfo >> asCachedDebugInfo [
 	scopes := Dictionary new.
 	astScopes do: [ :astScope |
 			| cachedScope tempDescriptions |
-			cachedScope := CachedDebugScope new.
+			cachedScope := DebugScope new.
 			tempDescriptions := astScope allTemps collect: [ :temp |
 				                    temp descriptionArrayForScope: astScope ].
 			(astScope isBlockScope and: [ astScope isOptimized ])
@@ -76,48 +76,66 @@ OldDebugInfo >> asCachedDebugInfo [
 			scopes
 				at: each outerScope
 				ifPresent: [ :parent | parent addChild: (scopes at: each) ] ].
-	cachedInfo rootScope: (scopes at: compiledCode ast scope).
+	debugInfo rootScope: (scopes at: compiledCode ast scope).
 
-	^ cachedInfo
+	^ debugInfo
 ]
 
 { #category : 'accessing' }
-OldDebugInfo >> compiledCode [
+DebugInfoBuilder >> compiledCode [
 
 	^ compiledCode
 ]
 
 { #category : 'accessing' }
-OldDebugInfo >> compiledCode: anObject [
+DebugInfoBuilder >> compiledCode: anObject [
 
 	compiledCode := anObject
 ]
 
+{ #category : 'building' }
+DebugInfoBuilder >> computeIsSourceReturn: aBytecodePC [
+
+	"We should stop at all returns inserted by the compiler in the bytecode.
+	This includes:
+	 - explicit returns with ^ -- these are in the AST
+	 - implicit block local returns -- not in AST
+	 - implicit method returns -- not in AST"
+	^ compiledCode encoderClass isReturnAt: aBytecodePC in: compiledCode
+]
+
+{ #category : 'building' }
+DebugInfoBuilder >> computeIsSourceSend: aBytecodePC [
+
+	"Deal with inlined messages using isFirstPCOfMessagePC:"
+	(self privateSourceNodeForPC: aBytecodePC) ifNil: [ ^ false ].
+	^ (self privateSourceNodeForPC: aBytecodePC) isMessage and: [
+		  self isFirstPCOfMessage: aBytecodePC ]
+]
+
+{ #category : 'building' }
+DebugInfoBuilder >> computeIsSourceStore: aBytecodePC [
+	
+	(self privateSourceNodeForPC: aBytecodePC) ifNil: [ ^ false ].
+	^ (self privateSourceNodeForPC: aBytecodePC) isAssignment 
+]
+
+{ #category : 'building' }
+DebugInfoBuilder >> computeRangeForPC: aPC [
+
+	^ (self privateSourceNodeForPC: aPC) debugHighlightRange
+]
+
+{ #category : 'building' }
+DebugInfoBuilder >> computeShouldStopAt: aBytecodePC [
+
+	^ (self computeIsSourceSend: aBytecodePC) or: [
+			  (self computeIsSourceReturn: aBytecodePC) or: [
+				  self computeIsSourceStore: aBytecodePC ] ]
+]
+
 { #category : 'private' }
-OldDebugInfo >> debugScopeAt: aBytecodePC [
-
-	| node scope |
-	node := self privateSourceNodeForPC: aBytecodePC.
-	scope := node isBlock
-		         ifTrue: [ node parent methodOrBlockNode scope ]
-		         ifFalse: [ node methodOrBlockNode scope ].
-	^ OldDebugScope on: scope
-]
-
-{ #category : 'api' }
-OldDebugInfo >> initialPC [
-
-	^ compiledCode initialPC
-]
-
-{ #category : 'api' }
-OldDebugInfo >> isArgumentNamed: aName at: aBytecodePC [
-
-	^ (self debugScopeAt: aBytecodePC) isArgumentNamed: aName
-]
-
-{ #category : 'private' }
-OldDebugInfo >> isFirstPCOfMessage: aBytecodePC [
+DebugInfoBuilder >> isFirstPCOfMessage: aBytecodePC [
 
 	"Check if the given bytecode PC is the first bytecode PC of its mapped node.
 	
@@ -137,34 +155,7 @@ OldDebugInfo >> isFirstPCOfMessage: aBytecodePC [
 ]
 
 { #category : 'private' }
-OldDebugInfo >> isSourceReturn: aBytecodePC [
-
-	"We should stop at all returns inserted by the compiler in the bytecode.
-	This includes:
-	 - explicit returns with ^ -- these are in the AST
-	 - implicit block local returns -- not in AST
-	 - implicit method returns -- not in AST"
-	^ compiledCode encoderClass isReturnAt: aBytecodePC in: compiledCode
-]
-
-{ #category : 'private' }
-OldDebugInfo >> isSourceSend: aBytecodePC [
-
-	"Deal with inlined messages using isFirstPCOfMessagePC:"
-	(self privateSourceNodeForPC: aBytecodePC) ifNil: [ ^ false ].
-	^ (self privateSourceNodeForPC: aBytecodePC) isMessage and: [
-		  self isFirstPCOfMessage: aBytecodePC ]
-]
-
-{ #category : 'private' }
-OldDebugInfo >> isSourceStore: aBytecodePC [
-	
-	(self privateSourceNodeForPC: aBytecodePC) ifNil: [ ^ false ].
-	^ (self privateSourceNodeForPC: aBytecodePC) isAssignment 
-]
-
-{ #category : 'private' }
-OldDebugInfo >> privateSourceNodeForPC: aBytecodePC [
+DebugInfoBuilder >> privateSourceNodeForPC: aBytecodePC [
 
 	| sourceNode bytecodeToASTCache |
 	sourceNode := compiledCode sourceNode.
@@ -173,35 +164,7 @@ OldDebugInfo >> privateSourceNodeForPC: aBytecodePC [
 ]
 
 { #category : 'accessing' }
-OldDebugInfo >> rangeForPC: aPC [
-
-	^ (self privateSourceNodeForPC: aPC) debugHighlightRange
-]
-
-{ #category : 'api' }
-OldDebugInfo >> readVariableNamed: aName fromContext: aContext [
-
-	^ (self debugScopeAt: aContext pc)
-		  readVariableNamed: aName
-		  fromContext: aContext
-]
-
-{ #category : 'api' }
-OldDebugInfo >> shouldStopAt: aBytecodePC [
-
-	^ (self isSourceSend: aBytecodePC) or: [
-			  (self isSourceReturn: aBytecodePC) or: [
-				  self isSourceStore: aBytecodePC ] ]
-]
-
-{ #category : 'accessing' }
-OldDebugInfo >> sourceCode [
+DebugInfoBuilder >> sourceCode [
 	
 	^ compiledCode sourceCode
-]
-
-{ #category : 'api' }
-OldDebugInfo >> variableNamesAt: aBytecodePC [
-
-	^ (self debugScopeAt: aBytecodePC) variableNames
 ]

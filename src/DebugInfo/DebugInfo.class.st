@@ -1,5 +1,5 @@
 Class {
-	#name : 'CachedDebugInfo',
+	#name : 'DebugInfo',
 	#superclass : 'Object',
 	#instVars : [
 		'stopTable',
@@ -11,37 +11,37 @@ Class {
 }
 
 { #category : 'accessing' }
-CachedDebugInfo >> debugScopeAt: aBytecodePC [ 
+DebugInfo >> debugScopeAt: aBytecodePC [ 
 	
 	^ rootScope debugScopeAt: aBytecodePC
 ]
 
 { #category : 'testing' }
-CachedDebugInfo >> isArgumentNamed: aName at: aBytecodePC [
+DebugInfo >> isArgumentNamed: aName at: aBytecodePC [
 
 	^ (self debugScopeAt: aBytecodePC) isArgumentNamed: aName
 ]
 
 { #category : 'testing' }
-CachedDebugInfo >> isSourceReturn: aBytecodePC [ 
+DebugInfo >> isSourceReturn: aBytecodePC [ 
 	
 	^ (stopTable at: aBytecodePC) third
 ]
 
 { #category : 'testing' }
-CachedDebugInfo >> isSourceSend: aBytecodePC [ 
+DebugInfo >> isSourceSend: aBytecodePC [ 
 	
 	^ (stopTable at: aBytecodePC) fourth
 ]
 
 { #category : 'testing' }
-CachedDebugInfo >> isSourceStore: aBytecodePC [ 
+DebugInfo >> isSourceStore: aBytecodePC [ 
 	
 	^ (stopTable at: aBytecodePC) second
 ]
 
 { #category : 'as yet unclassified' }
-CachedDebugInfo >> precedingBytecodePC: aBytecodePC [
+DebugInfo >> precedingBytecodePC: aBytecodePC [
 	
 	| found |
 	stopTable keys sorted do: [ :each |
@@ -55,7 +55,7 @@ CachedDebugInfo >> precedingBytecodePC: aBytecodePC [
 ]
 
 { #category : 'testing' }
-CachedDebugInfo >> rangeForPC: aBytecodePC [
+DebugInfo >> rangeForPC: aBytecodePC [
 
 	^ (stopTable
 		   at: aBytecodePC
@@ -67,7 +67,7 @@ CachedDebugInfo >> rangeForPC: aBytecodePC [
 ]
 
 { #category : 'testing' }
-CachedDebugInfo >> readVariableNamed: aName fromContext: aContext [
+DebugInfo >> readVariableNamed: aName fromContext: aContext [
 
 	^ (self debugScopeAt: aContext pc)
 		  readVariableNamed: aName
@@ -75,39 +75,39 @@ CachedDebugInfo >> readVariableNamed: aName fromContext: aContext [
 ]
 
 { #category : 'accessing' }
-CachedDebugInfo >> rootScope: aCachedDebugScope [ 
+DebugInfo >> rootScope: aCachedDebugScope [ 
 	rootScope := aCachedDebugScope
 ]
 
 { #category : 'accessing' }
-CachedDebugInfo >> shouldStopAt: aBytecodePC [ 
+DebugInfo >> shouldStopAt: aBytecodePC [ 
 	
 	^ (stopTable at: aBytecodePC) first
 ]
 
 { #category : 'accessing' }
-CachedDebugInfo >> sourceCode [
+DebugInfo >> sourceCode [
 	^ sourceCode
 ]
 
 { #category : 'accessing' }
-CachedDebugInfo >> sourceCode: aString [ 
+DebugInfo >> sourceCode: aString [ 
 	sourceCode := aString
 ]
 
 { #category : 'accessing' }
-CachedDebugInfo >> stopTable: aCollection [ 
+DebugInfo >> stopTable: aCollection [ 
 	stopTable := aCollection
 ]
 
 { #category : 'accessing' }
-CachedDebugInfo >> variableNamesAt: aBytecodePC [
+DebugInfo >> variableNamesAt: aBytecodePC [
 
 	^ (self debugScopeAt: aBytecodePC) variableNames
 ]
 
 { #category : 'accessing' }
-CachedDebugInfo >> variablesAt: aBytecodePC [
+DebugInfo >> variablesAt: aBytecodePC [
 
 	^ (self debugScopeAt: aBytecodePC) variables
 ]
