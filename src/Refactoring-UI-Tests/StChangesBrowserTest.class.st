@@ -2,29 +2,29 @@
 A ChangesBrowserTest is a test class for testing the behavior of ChangesBrowser
 "
 Class {
-	#name : 'ChangesBrowserTest',
+	#name : 'StChangesBrowserTest',
 	#superclass : 'TestCase',
 	#instVars : [
 		'browser'
 	],
-	#category : 'NautilusRefactoring-Tests-Utilities',
-	#package : 'NautilusRefactoring-Tests',
-	#tag : 'Utilities'
+	#category : 'Refactoring-UI-Tests-UI',
+	#package : 'Refactoring-UI-Tests',
+	#tag : 'UI'
 }
 
 { #category : 'running' }
-ChangesBrowserTest >> setUp [
+StChangesBrowserTest >> setUp [
 	super setUp.
 	browser := StChangesBrowserPresenter new
 ]
 
 { #category : 'tests' }
-ChangesBrowserTest >> testBuildDiffFor [
+StChangesBrowserTest >> testBuildDiffFor [
 	self assert: (browser buildDiffFor: nil) equals: ''
 ]
 
 { #category : 'tests' }
-ChangesBrowserTest >> testChanges [
+StChangesBrowserTest >> testChanges [
 	| aCollection |
 	aCollection := {ReChange new}.
 	browser changes: aCollection.
@@ -32,7 +32,7 @@ ChangesBrowserTest >> testChanges [
 ]
 
 { #category : 'tests' }
-ChangesBrowserTest >> testInitializeWidgets [
+StChangesBrowserTest >> testInitializeWidgets [
 	self assert: browser changesTree isNotNil.
 	self assert: browser textArea isNotNil.
 	self
@@ -43,6 +43,6 @@ ChangesBrowserTest >> testInitializeWidgets [
 ]
 
 { #category : 'tests' }
-ChangesBrowserTest >> testPickedChanges [
+StChangesBrowserTest >> testPickedChanges [
 	self assertEmpty: browser pickedChanges
 ]
