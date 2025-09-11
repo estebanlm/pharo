@@ -14,7 +14,7 @@ ClapTestRunner class >> commandSpecification [
 	| spec |
 	spec := (ClapCommandSpec id: #test)
 		commandClass: self;
-		add: ClapFlag forHelp;
+		addHelp;
 		description: 'A Test runner to run test suites from a shell';
 		addFlag: #'junit-xml-output' description: 'Output results in JUnit-compatible XML format';
 		addFlagWithPositional: #'shuffle-seed' description: 'an integer specifying the seed used to shuffle the tests';
