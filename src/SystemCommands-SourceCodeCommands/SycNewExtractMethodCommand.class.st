@@ -26,18 +26,6 @@ SycNewExtractMethodCommand class >> methodEditorShortcutActivation [
 	^CmdShortcutActivation by: $e meta, $m meta, $t meta for: ClySourceCodeContext
 ]
 
-{ #category : 'converting' }
-SycNewExtractMethodCommand >> asRefactorings [
-
-	^{self createRefactoring}
-]
-
-{ #category : 'converting' }
-SycNewExtractMethodCommand >> createRefactoring [
-	"not used"
-	^ self
-]
-
 { #category : 'accessing' }
 SycNewExtractMethodCommand >> defaultMenuIconName [
 	^ #restart

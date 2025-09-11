@@ -29,7 +29,7 @@ SycExtractMethodCommand class >> methodEditorShortcutActivation [
 SycExtractMethodCommand >> asRefactorings [
 
 	| selectedInterval refactoring |
-	selectedInterval := selectedTextInterval ifEmpty: [
+	selectedInterval := (selectedTextInterval ifNil: [(1 to: 0)]) ifEmpty: [
 		                    sourceNode sourceInterval ].
 	refactoring := RBExtractMethodRefactoring
 		               extract: selectedInterval
