@@ -1,11 +1,8 @@
 | mcPackages |
 mcPackages := #(
  'ScriptingExtensions'
- 'System-FileRegistry'
  'FileSystem-Memory'
  'StartupPreferences'
- 'PragmaCollector'
- 'System-FileRegistry'
  'MonticelloFileTree-Core'
  'MonticelloFileTree-FileSystem-Utilities'
  'Metacello-Base'
@@ -15,7 +12,7 @@ mcPackages := #(
  'Metacello-Gitlab'
  'Metacello-GitHub'
  'Metacello-Bitbucket'
- 'MetacelloCommandLineHandler-Core'
+ 'Metacello-CommandLine'
  ).
 
 MCMethodDefinition initializersEnabled: false.

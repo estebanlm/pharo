@@ -131,7 +131,7 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		
 		spec package: 'CodeImport'.
 		
-		spec package: 'CodeImportCommandLineHandlers'.
+		spec package: 'CodeImport-Commands'.
 		
 		spec package: 'Debugging-Utils'.
 		spec package: 'OpalCompiler-Core'.
@@ -144,7 +144,6 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		spec package: 'SUnit-Tests'.
 		spec package: 'Kernel-Tests'.
 		spec package: 'JenkinsTools-Core'.
-		spec package: 'System-Model'.
 		spec package: 'InitializePackagesCommandLineHandler'.
 		
 
@@ -207,7 +206,7 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			'Collections-Arithmetic'.
 			'Collections-Atomic'.
 			'CodeImport'.
-			'CodeImportCommandLineHandlers'.
+			'CodeImport-Commands'.
 			'Debugging-Utils'.
 			'OpalCompiler-Core'}.
 		
@@ -228,7 +227,6 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		}.
 
 		spec group: 'SUnitGroup' with: {
-			'System-Model'.
 			'SUnit-Core'.
 			'SUnit-Tests'.
 			'Kernel-Tests'.

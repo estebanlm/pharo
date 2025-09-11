@@ -36,8 +36,14 @@ run_with_timeout() {
   run timeout "$seconds" "$@"
 }
 
+run_pharo_with_timeout() {
+  local seconds="$1"
+  shift
+  run_with_timeout "$seconds" "$PHARO" --headless "$IMAGE" "$@"
+}
+
 run_pharo() {
-  run_with_timeout 2 "$PHARO" --headless "$IMAGE" "$@"
+  run_pharo_with_timeout 2 "$@"
 }
 
 # Run Pharo as a standalone process. Keeps it pid and pgid to have the ability to kill it. 
@@ -87,5 +93,14 @@ assert_is_running() {
   else
     # fail with a nice error message
     fail "Expected process with PID $pid to be running, but it is not."
+  fi
+}
+
+assert_file_exists() {
+  local file="$1"
+
+  if [[ ! -e "$file" ]]; then
+    echo "Expected file to exist, but it does not: $file" >&2
+    return 1
   fi
 }

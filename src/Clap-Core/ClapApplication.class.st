@@ -68,6 +68,11 @@ ClapApplication >> executeOrPrintHelp [
 ]
 
 { #category : 'execution' }
+ClapApplication >> exitFailure: message [
+	^ self context exitFailure: message
+]
+
+{ #category : 'execution' }
 ClapApplication >> exitSuccess [
 	^ self context exitSuccess
 ]
