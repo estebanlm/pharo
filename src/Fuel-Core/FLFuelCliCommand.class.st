@@ -13,7 +13,7 @@ pharo Pharo.image --save --keepAlive path/to/foo.fuel
 pharo Pharo.image --keepAlive path/to/foo.fuel
 "
 Class {
-	#name : 'FLFuelClapCommand',
+	#name : 'FLFuelCliCommand',
 	#superclass : 'ClapPharoApplication',
 	#category : 'Fuel-Core-Command',
 	#package : 'Fuel-Core',
@@ -21,7 +21,7 @@ Class {
 }
 
 { #category : 'command line' }
-FLFuelClapCommand class >> commandSpecification [
+FLFuelCliCommand class >> commandSpecification [
 
 	<commandline>
 	| spec |
@@ -42,14 +42,14 @@ FLFuelClapCommand class >> commandSpecification [
 ]
 
 { #category : 'accessing' }
-FLFuelClapCommand >> allFuelFiles [
+FLFuelCliCommand >> allFuelFiles [
 
 	^ (self positional: #FILE ifAbsent: [ #() ]) 
 		select: [ :arg | arg endsWith: '.fuel' ]
 ]
 
 { #category : 'execution' }
-FLFuelClapCommand >> execute [ 
+FLFuelCliCommand >> execute [ 
 
 	super execute.
 	
@@ -61,7 +61,7 @@ FLFuelClapCommand >> execute [
 ]
 
 { #category : 'execution' }
-FLFuelClapCommand >> processFile: aFileReference [
+FLFuelCliCommand >> processFile: aFileReference [
 
 	self context stdout
 		nextPutAll: 'Materializing from file: ';
@@ -76,14 +76,14 @@ FLFuelClapCommand >> processFile: aFileReference [
 ]
 
 { #category : 'execution' }
-FLFuelClapCommand >> processFiles [
+FLFuelCliCommand >> processFiles [
 
 	self allFuelFiles do: [ :name |
 		self processFile: (FileSystem disk resolve: name) asFileReference ]
 ]
 
 { #category : 'validating' }
-FLFuelClapCommand >> validateParameters [
+FLFuelCliCommand >> validateParameters [
 
 	self allFuelFiles ifEmpty: [ ^ self context exitFailure: 'Missing Fuel file as argument' ]
 ]
