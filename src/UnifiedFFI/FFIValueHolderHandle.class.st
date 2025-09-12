@@ -36,6 +36,14 @@ FFIValueHolderHandle class >> new [
 	^ self new: FFIExternalType pointerSize
 ]
 
+{ #category : 'private' }
+FFIValueHolderHandle >> adoptAddress: anExternalAddress [
+
+	anExternalAddress = 0 ifTrue: [ ^ self atAllPut: 0 ].
+	1 to: self size do: [ :index |
+		self basicAt: index put: (anExternalAddress at: index) ]
+]
+
 { #category : 'converting' }
 FFIValueHolderHandle >> packToArity: aNumber [
 ]

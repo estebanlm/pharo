@@ -30,17 +30,10 @@ FFIReferenceValueHolder class >> newType: aType size: aNumber [
 
 { #category : 'accessing' }
 FFIReferenceValueHolder >> arrayOfSize: aNumber [
-	| next |
-
-	next := ExternalAddress new 
-		adoptAddress: self getHandle;
-		yourself.
-	^ Array streamContents: [ :stream |
-		aNumber timesRepeat: [
-			| value |
-			value := self typeClass fromHandle: next.
-			stream nextPut: value.
-			next := next + self typeSize ] ]
+			
+	^ self
+		arrayOf: self typeClass 
+		size: aNumber
 ]
 
 { #category : 'private' }

@@ -97,6 +97,19 @@ FFIValueHolder >> arrayOfSize: aNumber [
 ]
 
 { #category : 'private' }
+FFIValueHolder >> basicArrayOfType: aType size: aNumber [
+	| next |
+
+	next := self firstHandle.
+	^ Array streamContents: [ :stream |
+		0 to: aNumber - 1 do: [ :index |
+			| value |
+			next := next + (index * aType externalTypeSize).
+			value := aType handle: next at: 1.
+			stream nextPut: value ] ]
+]
+
+{ #category : 'private' }
 FFIValueHolder >> firstHandle [
 
 	^ self getHandle pointerAt: 1
