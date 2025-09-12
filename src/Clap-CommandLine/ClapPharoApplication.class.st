@@ -32,10 +32,16 @@ ClapPharoApplication class >> addSaveFlagTo: aCommandSpec [
 ]
 
 { #category : 'execution' }
+ClapPharoApplication >> doNotQuitImage [ 
+
+	self context doNotObeyExits
+]
+
+{ #category : 'execution' }
 ClapPharoApplication >> execute [
 
 	self prepareImage.
-	self shouldQuit ifFalse: [ self context doNotObeyExits ]
+	self shouldQuit ifFalse: [ self doNotQuitImage ]
 ]
 
 { #category : 'execution' }
