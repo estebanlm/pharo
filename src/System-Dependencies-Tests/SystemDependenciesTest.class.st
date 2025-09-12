@@ -367,7 +367,7 @@ SystemDependenciesTest >> testExternalSpec2Dependencies [
 		BaselineOfMorphicCore allPackageNames,
 		BaselineOfMorphic allPackageNames,
 		BaselineOfMenuRegistration allPackageNames,
-		(BaselineOfFuel deepPackagesOfGroupNamed: #Tests),
+		(BaselineOfFuel deepPackagesOfGroupNamed: #Core),
 
 		(BaselineOfCommander2 deepPackagesOfGroupNamed: #default),
 
