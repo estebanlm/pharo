@@ -442,5 +442,8 @@ DTDefaultPluginPresenter >> whenPackagesSelectionChanged: packagesSelected [
 		expandAll.
 	itemsList roots: itemsList items.
 	itemsList selectAll.
-	self updatePackagesListLabel 
+	self updatePackagesListLabel.
+
+
+
 ]
