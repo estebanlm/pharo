@@ -255,8 +255,3 @@ ChunkFileFormatParser >> reorganizeSelector [
 ChunkFileFormatParser >> reorganizeSelector: anObject [
 	reorganizeSelector := anObject
 ]
-
-{ #category : 'class factory' }
-ChunkFileFormatParser >> styleChunkClass [
-	^ StyleChunk
-]
