@@ -9,7 +9,7 @@ Class {
 { #category : 'tests' }
 PerformMessageCommandLineHandlerTest >> performCommandWithArguments: aCollection [
 
-	^PerformMessageCommandLineHandler new 
+	^ PerformMessageCommandLineHandler new 
 		commandLine: (CommandLineArguments withArguments: aCollection);
 		yourself
 ]
@@ -20,10 +20,10 @@ PerformMessageCommandLineHandlerTest >> testCanGetTargetAndSelector [
 	| command |
 	command := self performCommandWithArguments: #('Object' 'foo').
 	
-	command validate.
+	command parseArguments.
 	
 	self assert: command targetClass equals: Object.
-	self assert: command targetMessage equals: #foo.
+	self assert: command message equals: #foo.
 ]
 
 { #category : 'tests' }
@@ -32,7 +32,7 @@ PerformMessageCommandLineHandlerTest >> testCanGetTargetAndSelectorWithArguments
 	| command |
 	command := self performCommandWithArguments: #('Object' 'foo' '1' 'bar').
 	
-	command validate.
+	command parseArguments.
 	
 	self assert: command targetClass equals: Object.
 	self assert: command message equals: #foo.
