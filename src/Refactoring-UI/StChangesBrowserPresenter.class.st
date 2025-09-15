@@ -9,9 +9,9 @@ Class {
 		'selectedItems',
 		'diffView'
 	],
-	#category : 'NautilusRefactoring-Utilities',
-	#package : 'NautilusRefactoring',
-	#tag : 'Utilities'
+	#category : 'Refactoring-UI-UI',
+	#package : 'Refactoring-UI',
+	#tag : 'UI'
 }
 
 { #category : 'instance creation' }
