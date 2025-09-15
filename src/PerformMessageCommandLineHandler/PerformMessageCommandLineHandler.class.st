@@ -43,7 +43,7 @@ PerformMessageCommandLineHandler >> activate [
 PerformMessageCommandLineHandler >> execute [
 	| result |
 
-	self validate.
+	self parseArguments.
 
 	result := targetClass perform: message withArguments: messageArguments.
 	
@@ -62,6 +62,22 @@ PerformMessageCommandLineHandler >> message [
 PerformMessageCommandLineHandler >> messageArguments [
 
 	^ messageArguments
+]
+
+{ #category : 'parsing' }
+PerformMessageCommandLineHandler >> parseArguments [
+	| arguments |
+
+	arguments := self arguments reject: [ :argument | argument beginsWith: '-']. "ignore options"
+
+	(arguments size < 2)
+		ifTrue: [ ^ self exitFailure: 'Not enough arguments' ].
+
+	targetClass := Smalltalk globals at: arguments first asSymbol ifAbsent: [
+		  ^ self exitFailure: 'Unknown class' ].
+	
+	message := arguments second asSymbol.
+	messageArguments := (arguments allButFirst: 2) asArray
 ]
 
 { #category : 'actions' }
@@ -86,20 +102,4 @@ PerformMessageCommandLineHandler >> shouldSave [
 { #category : 'accessing' }
 PerformMessageCommandLineHandler >> targetClass [
 	^ targetClass
-]
-
-{ #category : 'validation' }
-PerformMessageCommandLineHandler >> validate [
-	| arguments |
-
-	arguments := self arguments reject: [ :argument | argument beginsWith: '-']. "ignore options"
-
-	(arguments size < 2)
-		ifTrue: [ ^ self exitFailure: 'Not enough arguments' ].
-
-	targetClass := Smalltalk globals at: arguments first asSymbol ifAbsent: [
-		  ^ self exitFailure: 'Unknown class' ].
-	
-	message := arguments second asSymbol.
-	messageArguments := (arguments allButFirst: 2) asArray
 ]
