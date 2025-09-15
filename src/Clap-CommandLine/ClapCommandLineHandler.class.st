@@ -13,6 +13,19 @@ ClapCommandLineHandler class >> commandName [
 	^ 'clap'
 ]
 
+{ #category : 'handler selection' }
+ClapCommandLineHandler class >> isResponsibleFor: aCommandLineArguments [
+
+	| subcommand |
+	aCommandLineArguments arguments ifEmpty: [ ^ false ].
+	
+	subcommand := aCommandLineArguments arguments first.
+	^ ClapContext pragmaCommandsAndBootstrapCommands 
+		detect: [ :commandSpec | commandSpec identifier = subcommand ]
+		ifFound: [ true ] 
+		ifNone: [ false ]
+]
+
 { #category : 'activation' }
 ClapCommandLineHandler >> activate [
 	[
@@ -29,7 +42,7 @@ ClapCommandLineHandler >> activate [
 { #category : 'activation' }
 ClapCommandLineHandler >> handleExit: exit [
 
-	self flag: 'TOREMOVE ance clap is used as default command handler'.
+	self flag: 'TOREMOVE once clap is used as default command handler'.
 	Smalltalk isInteractive ifFalse: [ ^ exit pass ].
 
 	exit isSuccess ifFalse: [ ^ exit resignalAs: (Error new messageText: exit messageText) ]

@@ -72,6 +72,12 @@ ClapContext class >> pragmaCommands [
 ]
 
 { #category : 'instance creation' }
+ClapContext class >> pragmaCommandsAndBootstrapCommands [ 
+
+	^ self ensureBoostrapCommandsIn: self pragmaCommands asOrderedCollection
+]
+
+{ #category : 'instance creation' }
 ClapContext class >> withAll: commandCandidates [
 	^ self specification: (self defaultRoot addAll: commandCandidates; yourself)
 ]
@@ -79,7 +85,7 @@ ClapContext class >> withAll: commandCandidates [
 { #category : 'instance creation' }
 ClapContext class >> withPragmaCommands [ 
 
-	^ self withAll: (self ensureBoostrapCommandsIn: self pragmaCommands asOrderedCollection)
+	^ self withAll: self pragmaCommandsAndBootstrapCommands
 ]
 
 { #category : 'validation' }
