@@ -35,7 +35,8 @@ BasicHermesCommandLineHandler class >> isResponsibleFor: aCommandLineArguments [
 { #category : 'activation' }
 BasicHermesCommandLineHandler >> activate [
 
-	self allHermesFiles do: [ :name | self processFile: name ]
+	self allHermesFiles do: [ :name | self processFile: name ].
+	Exit signalSuccess
 ]
 
 { #category : 'accessing' }
