@@ -7,9 +7,6 @@ It loads the hermes files passed as parameter.
 They are loaded in the order of the parameters.
 
 Usage: loadHermes [--save] [extendedOptions] [<hermesFiles> ...]
---save                		save after loading the packages if there is no error
-<hermesFiles>      	a list of .hermes files to load in the image.
-extendedOptions 	read the extension section.
 
 Examples:
 #Load the package Test-Package
@@ -22,7 +19,6 @@ pharo Pharo.image loadHermes --save Test-Package.hermes
 Extensions
 =========
 
-When Hermes-Extensions is loaded additional options are present:
 no-fail-on-undeclared		It does not fail the loading if there are new undeclared variables. By default it fails.
 on-duplication=action	When there is a duplication in the loading package what is the action to take:
 fail		(default) Fail on a duplication
@@ -40,9 +36,9 @@ pharo Pharo.image loadHermes --save --on-duplication replace Test-Package.hermes
 Class {
 	#name : 'HermesClapCommand',
 	#superclass : 'ClapPharoApplication',
-	#category : 'Hermes-CommandLineHandler',
-	#package : 'Hermes',
-	#tag : 'CommandLineHandler'
+	#category : 'Hermes-Extensions-Command',
+	#package : 'Hermes-Extensions',
+	#tag : 'Command'
 }
 
 { #category : 'command line' }
@@ -76,21 +72,6 @@ HermesClapCommand >> allHermesFiles [
 		select: [ :arg | arg endsWith: '.hermes' ]
 ]
 
-{ #category : 'execution' }
-HermesClapCommand >> createInstaller [
-	"In the basic installation, the bootstraped version of Hermes,
-	there is only one Installer, the HEInstaller.
-	When the extensions are installed the new installer to use is the HEExtendedInstaller."
-
-	^ self class environment
-		at: #HEExtendedInstaller
-		ifPresent: [ :extendedInstallerClass |
-			extendedInstallerClass new
-				forOptions: self;
-				yourself ]
-		ifAbsent: [ HEInstaller new ]
-]
-
 { #category : 'accessing' }
 HermesClapCommand >> duplicationMode [
 
@@ -117,8 +98,7 @@ HermesClapCommand >> execute [
 HermesClapCommand >> processFile: aFileName [
 
 	"It loads the package and installs it in the image"
-	| installer reader readPackage |
-	installer := self createInstaller.
+	| reader readPackage |
 	SystemNotification signal: ('[Hermes] Reading ' , aFileName).
 
 	reader := HEBinaryReader new
@@ -128,7 +108,9 @@ HermesClapCommand >> processFile: aFileName [
 	readPackage := HEPackage readFrom: reader.
 
 	SystemNotification signal: ('[Hermes] Installing ' , aFileName).
-	installer installPackage: readPackage
+	HEExtendedInstaller new
+		forOptions: self;
+		installPackage: readPackage
 ]
 
 { #category : 'execution' }
@@ -145,5 +127,6 @@ HermesClapCommand >> shouldFailOnUndeclared [
 
 { #category : 'validating' }
 HermesClapCommand >> validateParameters [
+
 	self allHermesFiles ifEmpty: [ ^ self context exitFailure: 'Missing Hermes file as argument' ]
 ]

@@ -26,6 +26,12 @@ ClapCommandLineHandler class >> isResponsibleFor: aCommandLineArguments [
 		ifNone: [ false ]
 ]
 
+{ #category : 'handler selection' }
+ClapCommandLineHandler class >> priority [ 
+	"Take priority on basic command line handlers"
+	^ 10
+]
+
 { #category : 'activation' }
 ClapCommandLineHandler >> activate [
 	[
