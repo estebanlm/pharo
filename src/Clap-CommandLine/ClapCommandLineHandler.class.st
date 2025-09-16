@@ -21,7 +21,7 @@ ClapCommandLineHandler class >> isResponsibleFor: aCommandLineArguments [
 	
 	subcommand := aCommandLineArguments arguments first.
 	^ ClapContext pragmaCommandsAndBootstrapCommands 
-		detect: [ :commandSpec | commandSpec identifier = subcommand ]
+		detect: [ :commandSpec | commandSpec hasAlias: subcommand ]
 		ifFound: [ true ] 
 		ifNone: [ false ]
 ]
