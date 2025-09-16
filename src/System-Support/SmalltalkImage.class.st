@@ -871,9 +871,9 @@ SmalltalkImage >> lastQuitLogPosition: aNumber [
 SmalltalkImage >> lastUpdateString [
 	"SmalltalkImage current lastUpdateString"
 
-	^ 'Build information: ' , SystemVersion current
-		  ifNil: [ 'No version set yet' ]
-		  ifNotNil: [ :version | version asString ]
+	^ 'Build information: ' , (SystemVersion current
+		   ifNil: [ 'No version set yet' ]
+		   ifNotNil: [ :version | version asString ])
 ]
 
 { #category : 'sources, change log' }
