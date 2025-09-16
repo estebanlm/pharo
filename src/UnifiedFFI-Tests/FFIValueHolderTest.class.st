@@ -15,6 +15,24 @@ FFIValueHolderTest >> ffiMethodCharPointerPointer: value [
 ]
 
 { #category : 'accessing' }
+FFIValueHolderTest >> ffiMethodExternalObject: value [
+
+	^ self 
+		ffiCall: #(int TestExternalObjectValueHolder(FFITestExternalObject *value))
+		module: 'to-test'
+		options: #(+optCallbackCall)
+]
+
+{ #category : 'accessing' }
+FFIValueHolderTest >> ffiMethodExternalObjectPointerPointer: value [
+
+	^ self 
+		ffiCall: #(int TestExternalObjectPointerPointerValueHolder(FFITestExternalObject **value))
+		module: 'to-test'
+		options: #(+optCallbackCall)
+]
+
+{ #category : 'accessing' }
 FFIValueHolderTest >> ffiMethodInt: value [
 
 	^ self 
@@ -131,6 +149,82 @@ FFIValueHolderTest >> testCallCharPointerPointerWithValueHolder [
 ]
 
 { #category : 'tests' }
+FFIValueHolderTest >> testCallExternalObjectArrayWithValueHolder [
+	"testing I can use an external object as value holder to answer an array of them.
+	 since an external object has already an arity of 1 (because they are 
+	 pointers), calling ExternalObject* should be equivallent to OpaqueObject**"
+	| holder result resultArray |
+	
+	holder :=  FFITestExternalObject newValueHolder.
+	"Install callback as function TestExternalObjectValueHolder.
+	 The callback simulates this C behavior: 
+	
+	 int TestStructPointerPointerValueHolder(FFITestExternalObject **aValue) {
+     	array = malloc(3, sizeof(FFITestExternalObject));
+     	array[0] = some_function_that_creates_a_FFITestExternalObject(42);
+     	array[1] = some_function_that_creates_a_FFITestExternalObject(43);
+     	array[2] = some_function_that_creates_a_FFITestExternalObject(44);
+     	*aValue = array;
+    	return 3;
+	 }"
+	FFICallbackFunctionResolution 
+		registerCallback: (FFICallback 
+			signature: #(int (FFITestExternalObject **aValue)) 
+			block: [ :aValue |
+				| allocated |
+				
+				allocated := ExternalAddress allocate: 3 * FFIExternalType pointerSize.
+				0 to: 2 do: [ :i |  
+					allocated 
+						pointerAt: 1 + (FFIExternalType pointerSize * i)
+						put: (ExternalAddress fromAddress: 42 + i) ].
+				aValue pointerAt: 1 put: allocated.
+				3 ])
+		as: #TestExternalObjectPointerPointerValueHolder.
+		
+	result := self ffiMethodExternalObjectPointerPointer: holder.
+
+	self assert: result equals: 3.
+	resultArray := holder arrayOfSize: 3.
+	self assert: (resultArray 
+		collect: [ :each | each getHandle asInteger ] as: Array) 
+		equals: #(42 43 44).
+	
+	(holder getHandle pointerAt: 1) free.
+]
+
+{ #category : 'tests' }
+FFIValueHolderTest >> testCallExternalObjectWithValueHolder [
+	"testing I can use an external object as value holder.
+	 since an external object has already an arity of 1 (because they are 
+	 pointers), calling ExternalObject* should be equivallent to OpaqueObject**"
+	| holder result resultObject |
+	
+	holder :=  FFITestExternalObject newValueHolder.
+	"Install callback as function TestExternalObjectValueHolder.
+	 The callback simulates this C behavior: 
+	
+	 int TestStructPointerPointerValueHolder(FFITestExternalObject *aValue) {
+     	*aValue = some_function_that_creates_a_FFITestExternalObject();
+    	return 1;
+	 }"
+	FFICallbackFunctionResolution 
+		registerCallback: (FFICallback 
+			signature: #(int (FFITestExternalObject *aValue)) 
+			block: [ :aValue |
+				aValue pointerAt: 1 put: (ExternalAddress fromAddress: 42).
+				1 ])
+		as: #TestExternalObjectValueHolder.
+		
+	result := self ffiMethodExternalObject: holder.
+
+	self assert: result equals: 1.
+	resultObject := holder value.
+	self assert: resultObject class equals: FFITestExternalObject.
+	self assert: resultObject getHandle asInteger equals: 42
+]
+
+{ #category : 'tests' }
 FFIValueHolderTest >> testCallIntPointerWithValueHolder [
 	| holder result resultIntegers |
 	
@@ -150,13 +244,13 @@ FFIValueHolderTest >> testCallIntPointerWithValueHolder [
 				integers signedLongAt: 13 put: 4.
 				integers signedLongAt: 17 put: 42.
 				aValue pointerAt: 1 put: integers.
-				1 ])
+				5 ])
 		as: #TestIntPointerValueHolder.
 
 	result := self ffiMethodIntPointer: holder.
 
-	self assert: result equals: 1.
-	resultIntegers := holder arrayOf: #int size: 5.
+	self assert: result equals: 5.
+	resultIntegers := holder arrayOf: #int size: result.
 	self 
 		assert: resultIntegers
 		equals: #(1 2 3 4 42).
