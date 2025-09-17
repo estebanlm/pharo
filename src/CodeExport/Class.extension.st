@@ -6,7 +6,7 @@ Class >> fileOut [
 
 	| internalStream |
 	internalStream := (String new: 100) writeStream.
-	internalStream header; timeStamp.
+	internalStream timeStamp.
 	self fileOutOn: internalStream.
 
 	CodeExporter writeSourceCodeFrom: internalStream baseName: self name isSt: true
