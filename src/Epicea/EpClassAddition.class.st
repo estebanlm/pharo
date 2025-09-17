@@ -50,14 +50,15 @@ EpClassAddition >> fileOutEntryOn: aWriteStream [
 
 	self behaviorAffected realClass
 		ifNotNil: [ : realClass | 
-			aWriteStream
-				nextChunkPut: realClass definitionString;
+			(ChunkWriteStream on: aWriteStream)
+				nextPut:  realClass definitionString;
 				cr.
-				"If veryDeepCopy weakly copies some inst vars in this class, warn author when new ones are added."
-				DeepCopier new checkClass: realClass.
 
-				realClass instanceSide putCommentOnFile: aWriteStream.
-				aWriteStream cr ].
+			"If veryDeepCopy weakly copies some inst vars in this class, warn author when new ones are added."
+			DeepCopier new checkClass: realClass.
+
+			realClass instanceSide putCommentOnFile: aWriteStream.
+			aWriteStream cr ].
 
 ]
 

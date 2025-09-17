@@ -1,6 +1,18 @@
 Extension { #name : 'ClassDescription' }
 
 { #category : '*CodeExport' }
+ClassDescription >> comment [
+
+	self subclassResponsibility
+]
+
+{ #category : '*CodeExport' }
+ClassDescription >> commentStamp [
+	
+	self subclassResponsibility
+]
+
+{ #category : '*CodeExport' }
 ClassDescription >> fileOutChangedMessages: aSet on: aFileStream [
 	"File a description of the messages of this class that have been
 	changed (i.e., are entered into the argument, aSet) onto aFileStream."
@@ -44,7 +56,7 @@ ClassDescription >> fileOutOn: aFileStream [
 
 	"we for now file out old style class definitions"
 
-	aFileStream nextChunkPut: self oldPharoDefinition.
+	(ChunkWriteStream on: aFileStream) nextPut: self oldPharoDefinition.
 	self putCommentOnFile: aFileStream.
 	self protocols do: [ :protocol | self fileOutLocalMethodsInProtocol: protocol on: aFileStream ]
 ]
@@ -53,17 +65,17 @@ ClassDescription >> fileOutOn: aFileStream [
 ClassDescription >> fileOutProtocol: protocolName on: aFileStream [
 	"File a description of the receiver's protocolName on aFileStream."
 
-	aFileStream
+	(ChunkWriteStream on: aFileStream)
 		cr;
 		nextPut: $!;
-		nextChunkPut: self name , ' reorganize';
+		nextPut: self name , ' reorganize';
 		cr;
-		nextChunkPut: (String streamContents: [ :aStream |
-							 aStream
-								 nextPut: $(;
-								 nextPutAll: protocolName printString;
-								 nextPut: $);
-								 cr ]);
+		nextPut: (String streamContents: [ :aStream |
+						 aStream
+							 nextPut: $(;
+							 nextPutAll: protocolName printString;
+							 nextPut: $);
+							 cr ]);
 		cr
 ]
 
@@ -71,12 +83,12 @@ ClassDescription >> fileOutProtocol: protocolName on: aFileStream [
 ClassDescription >> fileOutProtocolsOn: aFileStream [
 	"File a description of the receiver's organization on aFileStream."
 
-	aFileStream
+	(ChunkWriteStream on: aFileStream)
 		cr;
-		nextPut: $!;
-		nextChunkPut: self name , ' reorganize';
+		bang;
+		nextPut: self name , ' reorganize';
 		cr;
-		nextChunkPut: (String streamContents: [ :aStream |
+		nextPut: (String streamContents: [ :aStream |
 					 self protocols do: [ :protocol |
 							 aStream
 								 nextPut: $(;
@@ -112,19 +124,19 @@ ClassDescription >> printMethodChunk: selector on: outStream [
 			^ outStream ].
 
 	"Print the preamble"
-	outStream cr; nextChunkPut: ''.
-	outStream nextChunkPut: (String streamContents: [ :strm |
-		strm nextPutAll: preamble.
-		method stamp ifNotEmpty: [ :stamp |
-			strm
-				nextPutAll: ' stamp: ';
-				print: stamp ] ]).
-	outStream cr.
-
-	"Print the source code"
-	outStream
-		nextChunkPut: method sourceCode;
-		nextChunkPut: ' '; cr.
+	(ChunkWriteStream on: outStream)
+		cr;
+		nextPut: '';
+		nextPut: (String streamContents: [ :strm |
+			strm nextPutAll: preamble.
+			method stamp ifNotEmpty: [ :stamp |
+				strm
+					nextPutAll: ' stamp: ';
+					print: stamp ] ]);
+		cr;
+		"Print the source code"
+		nextPut: method sourceCode;
+		nextPut: ' '; cr.
 
 	^ outStream
 ]
@@ -147,10 +159,11 @@ ClassDescription >> putCommentOnFile: aFileStream [
 		          strm
 			          nextPutAll: ' prior: ';
 			          nextPutAll: '0' ].
-	aFileStream nextChunkPut: header.
+	(ChunkWriteStream on: aFileStream)
+		nextPut: header.
 	self comment ifNotNil: [ :comment |
-		aFileStream
+		(ChunkWriteStream on: aFileStream)
 			cr;
-			nextChunkPut: comment string ].
+			nextPut: comment string ].
 	aFileStream cr
 ]

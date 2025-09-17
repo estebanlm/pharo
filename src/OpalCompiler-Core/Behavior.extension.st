@@ -24,14 +24,18 @@ Behavior >> compile: code notifying: requestor [
 	a PositionableStream. This method also saves the source code."
 
 	| method |
-	method  := self compiler
-		source: code;
-		requestor: requestor;
-		failBlock: (requestor ifNotNil: [ [ ^ nil ] ]); "no failblock if no requestor"
-		compile.
+	method := self compiler
+		          source: code;
+		          requestor: requestor;
+		          failBlock: (requestor ifNotNil: [ [ ^ nil ] ]);
+		          "no failblock if no requestor"compile.
 
-	method putSource: code
-			withPreamble: [:f | f cr; nextPut: $!; nextChunkPut: 'Behavior method'; cr].
+	method putSource: code withPreamble: [ :f |
+			(ChunkWriteStream on: f)
+				cr;
+				bang;
+				nextPut: 'Behavior method';
+				cr ].
 	self addSelector: method selector withMethod: method.
 	^ method selector
 ]

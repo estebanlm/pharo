@@ -395,7 +395,12 @@ TaAbstractComposition >> saveSourceCode: sourceCode ofMethod: newMethod [
 	(sourceCode isNotNil and: [((Smalltalk globals includesKey: #SourceFiles)
 		and: [ (Smalltalk globals at: #SourceFiles) isNotNil])]) ifTrue: [
 			newMethod putSource: sourceCode
-					withPreamble: [:f | f cr; nextPut: $!; nextChunkPut: 'Trait method'; cr]].
+					withPreamble: [:f | 
+						f cr.
+						(ChunkWriteStream on: f)
+							bang;
+							nextPut: 'Trait method'.
+						f cr]].
 ]
 
 { #category : 'accessing' }

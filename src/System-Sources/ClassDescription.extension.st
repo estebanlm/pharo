@@ -11,7 +11,8 @@ ClassDescription >> printProtocolChunk: protocol on: aFileStream withStamp: chan
 	aFileStream
 		cr;
 		nextPut: $!.
-	aFileStream nextChunkPut: (String streamContents: [ :strm |
+	(ChunkWriteStream on: aFileStream)
+		nextPut: (String streamContents: [ :strm |
 			 strm
 				 nextPutAll: self name;
 				 nextPutAll: ' methodsFor: ';

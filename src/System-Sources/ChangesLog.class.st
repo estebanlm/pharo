@@ -56,11 +56,12 @@ ChangesLog >> assureStartupStampLogged [
 	startupStamp ifNil: [ ^ self ].
 
 	SourceFiles changesWriteStreamDo: [ :changesFile |
-		changesFile
-			cr; cr;
-			nextChunkPut: startupStamp asString;
-			cr.
-		startupStamp := nil ].
+			(ChunkWriteStream on: changesFile)
+				cr;
+				cr;
+				nextPut: startupStamp asString;
+				cr.
+			startupStamp := nil ].
 
 	SourceFiles forceChangesToDisk
 ]

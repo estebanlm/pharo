@@ -395,15 +395,16 @@ Class >> comment: aString stamp: aStamp [
 	pointer := self commentSourcePointer ifNil: [0].
 
 
-	preamble := String streamContents: [ :file |
-		file cr; nextPut: $!.
+	preamble := String streamContents: [ :tempStream | | chunkStream |
+		chunkStream := ChunkWriteStream on: tempStream.
+		chunkStream cr; bang.
 		header := String streamContents: [:strm |
 			strm
 				nextPutAll: self name;
 				nextPutAll: ' commentStamp: '.
 			aStamp storeOn: strm.
 			strm nextPutAll: ' prior: '; nextPutAll: pointer printString ].
-		file nextChunkPut: header; cr ].
+		chunkStream nextPut: header; cr ].
 
 	SourceFiles
 		writeSource: aString

@@ -44,8 +44,8 @@ EpTraitAddition >> fileOutEntryOn: aWriteStream [
 	| realClass |
 	
 	realClass := self traitAdded realClass.
-	aWriteStream
-		nextChunkPut: realClass definitionString;
+	(ChunkWriteStream on: aWriteStream)
+		nextPut:  realClass definitionString;
 		cr.
 	realClass instanceSide putCommentOnFile: aWriteStream.
 	aWriteStream cr

@@ -302,24 +302,19 @@ SourceFileArrayTest >> testWriteToBufferedStream [
 
 { #category : 'tests' }
 SourceFileArrayTest >> testWriteToChangesFileInGivenSourceFileArray [
+
 	| fs array |
 	fs := FileSystem memory.
 	array := SourceFileArray new.
-	array
-		changesFileStream: (SourceFile on: 'changes.chunk' potentialLocations: {fs root}) tryOpen.
-	array
-		sourcesFileStream: (SourceFile on: 'sources.chunk' potentialLocations: {fs root}) tryOpen.
-	array
-		changesWriteStreamDo: [ :changesFile |
+	array changesFileStream: (SourceFile on: 'changes.chunk' potentialLocations: { fs root }) tryOpen.
+	array sourcesFileStream: (SourceFile on: 'sources.chunk' potentialLocations: { fs root }) tryOpen.
+	array changesWriteStreamDo: [ :changesFile |
 			changesFile
 				cr;
-				cr;
-				nextChunkPut: 'test';
-				cr ].
-	self
-		assert: (fs / 'changes.chunk') contents
-		equals:
-			'
+				cr.
+			(ChunkWriteStream on: changesFile) nextPut: 'test'.
+			changesFile cr ].
+	self assert: (fs / 'changes.chunk') contents equals: '
 
 test!'
 ]

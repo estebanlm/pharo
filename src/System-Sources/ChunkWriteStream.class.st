@@ -69,12 +69,6 @@ ChunkWriteStream >> duplicateTerminatorMarkOn: aString [
 ]
 
 { #category : 'accessing' }
-ChunkWriteStream >> nextChunkPut: aString [
-
-	^ self nextPut: aString
-]
-
-{ #category : 'accessing' }
 ChunkWriteStream >> nextPut: aString [
 	"Append the argument, aString, to the receiver, doubling embedded ! terminators and adding a extra one"
 

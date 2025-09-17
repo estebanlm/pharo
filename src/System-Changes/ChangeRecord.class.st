@@ -92,30 +92,31 @@ ChangeRecord >> fileName [
 ChangeRecord >> fileOutOn: aFileStream [
 	"File the receiver out on the given file stream"
 
-	| aString |
-	type == #method
-		ifTrue:
-			[aFileStream nextPut: $!.
-			aString :=  class asString
-							, (meta ifTrue: [' class methodsFor: ']
-									ifFalse: [' methodsFor: '])
-							, protocol asString printString.
-			stamp ifNotNil:
-				[aString := aString, ' stamp: ''', stamp, ''''].
-			aFileStream nextChunkPut: aString.
-			aFileStream cr].
+	| aString chunkWriteStream |
+	chunkWriteStream := ChunkWriteStream on: aFileStream.
 
-	type == #preamble ifTrue: [aFileStream nextPut: $!].
+	type == #method ifTrue: [
+			chunkWriteStream bang.
+			aString := class asString , (meta
+				            ifTrue: [ ' class methodsFor: ' ]
+				            ifFalse: [ ' methodsFor: ' ]) , protocol asString printString.
+			stamp ifNotNil: [ aString := aString , ' stamp: ''' , stamp , '''' ].
 
-	type == #classComment
-		ifTrue:
-			[aFileStream nextPut: $!.
-			aFileStream nextChunkPut: class asString, ' commentStamp: ', stamp storeString.
-			aFileStream cr].
+			chunkWriteStream
+				nextPut: aString;
+				cr ].
 
-	aFileStream nextChunkPut: self string.
-	type == #method ifTrue: [aFileStream nextChunkPut: ' '].
-	aFileStream cr
+	type == #preamble ifTrue: [ chunkWriteStream bang ].
+
+	type == #classComment ifTrue: [
+			chunkWriteStream
+				bang;
+				nextPut: class asString , ' commentStamp: ' , stamp storeString;
+				cr ].
+
+	chunkWriteStream nextPut: self string.
+	type == #method ifTrue: [ chunkWriteStream nextPut: ' ' ].
+	chunkWriteStream cr
 ]
 
 { #category : 'testing' }

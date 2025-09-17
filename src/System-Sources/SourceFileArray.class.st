@@ -471,7 +471,7 @@ SourceFileArray >> writeSource: aString preamble: preamble onSuccess: successBlo
 	file setToEnd.
 	file nextPutAll: preamble.
 	position := file position.
-	(SourceChunkWriteStream on: file) nextChunkPut: aString.
+	(SourceChunkWriteStream on: file) nextPut: aString.
 
 	successBlock cull: (self sourcePointerFromFileIndex: 2 andPosition: position) cull: file.
 
