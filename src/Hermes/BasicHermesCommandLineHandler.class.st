@@ -36,7 +36,8 @@ BasicHermesCommandLineHandler class >> isResponsibleFor: aCommandLineArguments [
 BasicHermesCommandLineHandler >> activate [
 
 	self allHermesFiles do: [ :name | self processFile: name ].
-	Exit signalSuccess
+	Smalltalk saveSession.
+	self exitSuccess
 ]
 
 { #category : 'accessing' }
@@ -51,7 +52,7 @@ BasicHermesCommandLineHandler >> processFile: aFileName [
 
 	"It loads the package and installs it in the image"
 	| reader readPackage |
-	SystemNotification signal: ('[Hermes] Reading ' , aFileName).
+	SystemNotification signal: ('[Basic Hermes] Reading ' , aFileName).
 
 	reader := HEBinaryReader new
 		stream: (File named: aFileName) readStream;
@@ -59,6 +60,6 @@ BasicHermesCommandLineHandler >> processFile: aFileName [
 
 	readPackage := HEPackage readFrom: reader.
 
-	SystemNotification signal: ('[Hermes] Installing ' , aFileName).
+	SystemNotification signal: ('[Basic Hermes] Installing ' , aFileName).
 	HEInstaller new installPackage: readPackage
 ]
