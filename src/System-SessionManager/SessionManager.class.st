@@ -250,7 +250,6 @@ SessionManager >> installSession: aWorkingSession [
 { #category : 'snapshot and quit' }
 SessionManager >> launchSnapshot: save andQuit: quit [
 	| snapshotOperation |
-	ChangesLog default logSnapshot: save andQuit: quit.
 	snapshotOperation := SnapshotOperation save: save andQuit: quit withSessionManager: self.
 
 	snapshotOperation performSnapshot.

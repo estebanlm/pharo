@@ -31,11 +31,11 @@ PharoChangesCondenser >> backupOldChanges [
 
 { #category : 'private' }
 PharoChangesCondenser >> basicCondense [
+
 	self
 		condenseClassesAndTraits;
-		swapSourcePointers;
-    updateQuitPosition.
-  stream flush
+		swapSourcePointers.
+	stream flush
 ]
 
 { #category : 'private' }
@@ -180,12 +180,6 @@ PharoChangesCondenser >> swapSourcePointers [
 { #category : 'accessing' }
 PharoChangesCondenser >> temporaryFile [
 	^ (Smalltalk changesFile, 'new') nextVersion
-]
-
-{ #category : 'private - 3 installing' }
-PharoChangesCondenser >> updateQuitPosition [
-
-	Smalltalk lastQuitLogPosition: stream position
 ]
 
 { #category : 'private - 1 writing' }

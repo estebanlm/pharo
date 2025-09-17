@@ -79,14 +79,6 @@ PharoSourcesCondenser >> temporaryFile [
 	^ 'new.sources' asFileReference nextVersion
 ]
 
-{ #category : 'private - 3 installing' }
-PharoSourcesCondenser >> updateQuitPosition [
-
-	"We use an empty .changes file, hence the last quit position is 0"
-
-	Smalltalk lastQuitLogPosition: 0
-]
-
 { #category : 'writing' }
 PharoSourcesCondenser >> writeClassComment: aClass [
 
