@@ -263,12 +263,6 @@ SmalltalkImage >> bindingOf: varName [
 	^globals bindingOf: varName
 ]
 
-{ #category : 'sources - date' }
-SmalltalkImage >> buildDateString [
-
-	^ 'Build date: ' , SystemVersion current date asString
-]
-
 { #category : 'memory space' }
 SmalltalkImage >> bytesLeft [
 	"Answer the number of bytes of space available. Does a full garbage collection."
