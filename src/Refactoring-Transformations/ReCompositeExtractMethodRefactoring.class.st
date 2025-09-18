@@ -114,8 +114,7 @@ ReCompositeExtractMethodRefactoring >> applicabilityPreconditions [
 		  self preconditionTemporariesAreNotReadBeforeWritten.
 		  self preconditionOneAssignmentMaximum.
 		  self preconditionAssignmentsNotReadBeforeWritten.
-		  self preconditionSubtreeDoesNotContainsReturn.
-		  self preconditionHasSameExitPoint }
+		  self preconditionSubtreeDoesNotContainsReturn }
 ]
 
 { #category : 'accessing' }
@@ -126,7 +125,8 @@ ReCompositeExtractMethodRefactoring >> arguments [
 { #category : 'preconditions' }
 ReCompositeExtractMethodRefactoring >> breakingChangePreconditions [
 
-	^ { self preconditionNoOverrides }
+	^ { self preconditionNoOverrides.
+		 self preconditionHasSameExitPoint }
 ]
 
 { #category : 'executing' }
@@ -401,15 +401,15 @@ ReCompositeExtractMethodRefactoring >> preconditionAssignmentsNotReadBeforeWritt
 { #category : 'preconditions' }
 ReCompositeExtractMethodRefactoring >> preconditionHasSameExitPoint [
 
-	^ RBCondition
-		withBlock: [ subtree hasSameExitPoint ]
-		errorString: 'You cannot extract guard clauses and other expressions that directly impact the methods execution flow.'
+	^ ReHasSameExitPointAsItsMethodCondition new subtree: subtree
 ]
 
 { #category : 'preconditions' }
 ReCompositeExtractMethodRefactoring >> preconditionNoOverrides [
 
-	^ ReDefinesSelectorInHierarchyCondition new definesSelector: newSelector in: class 
+	^ ReUpToRootDoesNotDefinesMethod new
+		  class: class;
+		  selector: newSelector
 ]
 
 { #category : 'preconditions' }

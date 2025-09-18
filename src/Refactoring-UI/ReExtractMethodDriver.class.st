@@ -4,10 +4,11 @@ Class {
 	#instVars : [
 		'class',
 		'newMessage',
-		'shouldEscape',
 		'methodNameEditorPresenterClass',
 		'body',
-		'sourceMethod'
+		'sourceMethod',
+		'notOverride',
+		'sameExitPoint'
 	],
 	#category : 'Refactoring-UI-Drivers',
 	#package : 'Refactoring-UI',
@@ -25,18 +26,23 @@ ReExtractMethodDriver >> breakingChoices [
 
 	| items |
 	items := OrderedCollection new.
-	items add: (ReRenameMethodChoice new
-			 driver: self;
-			 description: 'Extract method';
-			 yourself).
-	items add: (ReRenameAndBrowseMethodOverridesChoice new
-			 driver: self;
-			 description: 'Extract method and browse existing methods that will then be overriden';
-			 yourself).
-	items add: (ReBrowseMethodOverridesChoice new
-			 driver: self;
-			 description: 'Browse existing methods that will be overriden BUT don''t extract';
-			 yourself).
+	
+	(notOverride check and: sameExitPoint check) ifFalse: [
+			items add: (ReRenameMethodChoice new
+					 driver: self;
+					 description: 'Extract method';
+					 yourself) ].
+
+	notOverride check ifFalse: [ "These choices are exclusive to notOverride"
+			items add: (ReRenameAndBrowseMethodOverridesChoice new
+					 driver: self;
+					 description: 'Extract method and browse existing methods that will then be overriden';
+					 yourself).
+			items add: (ReBrowseMethodOverridesChoice new
+					 driver: self;
+					 description: 'Browse existing methods that will be overriden BUT don''t extract';
+					 yourself) ].
+
 	^ items
 ]
 
@@ -120,18 +126,13 @@ ReExtractMethodDriver >> handleBreakingChanges [
 	select ifNotNil: [ select action ]
 ]
 
-{ #category : 'initialization' }
-ReExtractMethodDriver >> initialize [ 
-	
-	super initialize.
-	shouldEscape := false.
-]
-
 { #category : 'configuration' }
 ReExtractMethodDriver >> labelBasedOnBreakingChanges [
 
 	^ String streamContents: [ :stream |
-			  refactoring failedBreakingChangePreconditions do: [ :cond | cond violationMessageOn: stream ].
+			  refactoring failedBreakingChangePreconditions do: [ :cond |
+					  cond violationMessageOn: stream.
+					  stream cr ].
 			  stream cr.
 			  stream nextPutAll: 'Select a strategy' ]
 ]
@@ -192,21 +193,24 @@ ReExtractMethodDriver >> requestNewMessage [
 
 { #category : 'execution' }
 ReExtractMethodDriver >> runRefactoring [
-	"Instantiate the new refactoring"
+
 	self configureRefactoring.
 	
-	"Abort if any applicability precondition is not satisfied"
 	refactoring failedApplicabilityPreconditions 
 		ifNotEmpty: [ ^ self inform: self failedPreconditionsErrorString ].
-	
-	"Ask the user for the new method's name"
 	newMessage := self requestNewMessage.
 	newMessage ifNil: [ "The user has cancelled the dialog" ^ self ].
 	refactoring newSelector: newMessage selector.
 	
-	"Apply changes only if there are no broken preconditions produced by changes associated to the refactoring.
-	Otherwise handle broken preconditions."
-	refactoring failedBreakingChangePreconditions 
+	self setBreakingChangesPreconditions. 
+	refactoring failedBreakingChangePreconditions
 		ifEmpty: [ self applyChanges ]
 		ifNotEmpty: [ self handleBreakingChanges ]
+]
+
+{ #category : 'configuration' }
+ReExtractMethodDriver >> setBreakingChangesPreconditions [
+
+	notOverride := refactoring preconditionNoOverrides.
+	sameExitPoint := refactoring preconditionHasSameExitPoint
 ]
