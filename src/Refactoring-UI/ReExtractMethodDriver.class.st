@@ -14,6 +14,34 @@ Class {
 	#tag : 'Drivers'
 }
 
+{ #category : 'displaying' }
+ReExtractMethodDriver class >> refactoringClass [
+
+	^ ReCompositeExtractMethodRefactoring
+]
+
+{ #category : 'execution' }
+ReExtractMethodDriver >> breakingChoices [
+
+	| items |
+	items := OrderedCollection new.
+	"
+	The following choices will be commited in short...
+	items add: (ReRenameMethodChoice new driver: self).
+	items add: (ReRenameAndBrowseMethodOverridesChoice new driver: self)."
+	items add: (ReBrowseMethodOverridesChoice new driver: self).
+	^ items
+]
+
+{ #category : 'actions' }
+ReExtractMethodDriver >> browseOverrides [
+
+	| conditions overrides |
+	conditions := refactoring failedBreakingChangePreconditions.
+	overrides := conditions flatCollect: [ :cond | cond violators collect: [ :cls | cls realClass methodNamed: newMessage methodName asSymbol ] ].
+	overrides do: [ :method | method browse ]
+]
+
 { #category : 'testing' }
 ReExtractMethodDriver >> canAddArgs [
 	^ false
@@ -49,11 +77,23 @@ ReExtractMethodDriver >> configureRefactoring [
 	"here we do not fully configure the refactoring because we are missing information such as the signature.
 	Since we want to let the refactoring validate input we need to create it upfront then configure later."
 	
-	refactoring := ReCompositeExtractMethodRefactoring new
+	refactoring := self class refactoringClass new
 		               extract: body
 		               from: sourceMethod selector
 		               in: class name.
 	refactoring prepareForExecution 
+]
+
+{ #category : 'configuration' }
+ReExtractMethodDriver >> defaultSelectDialog [
+
+	^ self class defaultSelectDialog
+		  title: 'There are potential breaking changes!';
+		  label: self labelBasedOnBreakingChanges;
+		  items: self breakingChoices;
+		  display: [ :each | each description ];
+		  displayIcon: [ :each | self iconNamed: each systemIconName ];
+		  openModal
 ]
 
 { #category : 'instance creation' }
@@ -77,6 +117,15 @@ ReExtractMethodDriver >> initialize [
 	
 	super initialize.
 	shouldEscape := false.
+]
+
+{ #category : 'configuration' }
+ReExtractMethodDriver >> labelBasedOnBreakingChanges [
+
+	^ String streamContents: [ :stream |
+			  refactoring failedBreakingChangePreconditions do: [ :cond | cond violationMessageOn: stream ].
+			  stream cr.
+			  stream nextPutAll: 'Select a strategy' ]
 ]
 
 { #category : 'accessing' }
@@ -112,21 +161,36 @@ ReExtractMethodDriver >> requestDialogWith: methodName [
 { #category : 'interaction' }
 ReExtractMethodDriver >> requestNewMessage [
 
-	| methodName dialog  |
+	| methodName dialog |
+	dialog := nil.
 	methodName := RBMethodName
 		              selector: (refactoring selectorStartingFrom: 'f' argumentsSize: refactoring arguments size)
 		              arguments: refactoring arguments.
-	dialog := self requestDialogWith: methodName.
-	dialog ifNil: [ shouldEscape := true. 
-						^ self ].
+	"Retry until the methodName is valid or the user cancels the dialog"
+	[ dialog isNil or: [ dialog methodName isValid not ] ] whileTrue: [
+			requestDialog := nil.
+			dialog := self requestDialogWith: methodName.
+			dialog cancelled ifTrue: [ ^ nil ] ].
 	^ dialog methodName
 ]
 
-{ #category : 'interaction' }
+{ #category : 'execution' }
 ReExtractMethodDriver >> runRefactoring [
-
+	"Instantiate the new refactoring"
 	self configureRefactoring.
+	
+	"Abort if any applicability precondition is not satisfied"
+	refactoring failedApplicabilityPreconditions 
+		ifNotEmpty: [ ^ self inform: self failedPreconditionsErrorString ].
+	
+	"Ask the user for the new method's name"
 	newMessage := self requestNewMessage.
+	newMessage ifNil: [ "The user has cancelled the dialog" ^ self ].
 	refactoring newSelector: newMessage selector.
-	self applyChanges 
+	
+	"Apply changes only if there are no broken preconditions produced by changes associated to the refactoring.
+	Otherwise handle broken preconditions."
+	refactoring failedBreakingChangePreconditions 
+		ifEmpty: [ self applyChanges ]
+		ifNotEmpty: [ self handleBreakingChanges ]
 ]

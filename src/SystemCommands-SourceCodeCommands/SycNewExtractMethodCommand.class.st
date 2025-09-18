@@ -34,7 +34,7 @@ SycNewExtractMethodCommand >> defaultMenuIconName [
 { #category : 'accessing' }
 SycNewExtractMethodCommand >> defaultMenuItemName [
 
-	^ '(NewImplementation) Extract method'
+	^ '(R) Extract method (no occurrences)'
 ]
 
 { #category : 'accessing' }
