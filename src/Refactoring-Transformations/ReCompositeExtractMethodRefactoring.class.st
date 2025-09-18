@@ -114,7 +114,8 @@ ReCompositeExtractMethodRefactoring >> applicabilityPreconditions [
 		  self preconditionTemporariesAreNotReadBeforeWritten.
 		  self preconditionOneAssignmentMaximum.
 		  self preconditionAssignmentsNotReadBeforeWritten.
-		  self preconditionSubtreeDoesNotContainsReturn }
+		  self preconditionSubtreeDoesNotContainsReturn.
+		  self preconditionHasSameExitPoint }
 ]
 
 { #category : 'accessing' }
@@ -123,9 +124,9 @@ ReCompositeExtractMethodRefactoring >> arguments [
 ]
 
 { #category : 'preconditions' }
-ReCompositeExtractMethodRefactoring >> breakingChangePreconditions [ 
+ReCompositeExtractMethodRefactoring >> breakingChangePreconditions [
 
-	^ { self preconditionHasSameExitPoint }
+	^ { self preconditionNoOverrides }
 ]
 
 { #category : 'executing' }
@@ -288,6 +289,13 @@ ReCompositeExtractMethodRefactoring >> extractSource: aString from: aSelector to
 	
 ]
 
+{ #category : 'preconditions' }
+ReCompositeExtractMethodRefactoring >> failedBreakingChangePreconditions [
+	"Return the failed preconditions without raising error. It should only be called by drivers."
+	
+	^ self breakingChangePreconditions reject: [ :cond | cond check ]
+]
+
 { #category : 'executing' }
 ReCompositeExtractMethodRefactoring >> generateNewMethodWith: aMethodName [
 
@@ -396,6 +404,12 @@ ReCompositeExtractMethodRefactoring >> preconditionHasSameExitPoint [
 	^ RBCondition
 		withBlock: [ subtree hasSameExitPoint ]
 		errorString: 'You cannot extract guard clauses and other expressions that directly impact the methods execution flow.'
+]
+
+{ #category : 'preconditions' }
+ReCompositeExtractMethodRefactoring >> preconditionNoOverrides [
+
+	^ ReDefinesSelectorInHierarchyCondition new definesSelector: newSelector in: class 
 ]
 
 { #category : 'preconditions' }
