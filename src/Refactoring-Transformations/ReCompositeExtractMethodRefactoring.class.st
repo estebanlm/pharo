@@ -119,7 +119,7 @@ ReCompositeExtractMethodRefactoring >> applicabilityPreconditions [
 
 { #category : 'accessing' }
 ReCompositeExtractMethodRefactoring >> arguments [
-	^ arguments
+	^ arguments ifNil: [ arguments:=#(  ) ]
 ]
 
 { #category : 'preconditions' }
