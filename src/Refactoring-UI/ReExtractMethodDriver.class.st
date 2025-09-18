@@ -25,11 +25,18 @@ ReExtractMethodDriver >> breakingChoices [
 
 	| items |
 	items := OrderedCollection new.
-	"
-	The following choices will be commited in short...
-	items add: (ReRenameMethodChoice new driver: self).
-	items add: (ReRenameAndBrowseMethodOverridesChoice new driver: self)."
-	items add: (ReBrowseMethodOverridesChoice new driver: self).
+	items add: (ReRenameMethodChoice new
+			 driver: self;
+			 description: 'Extract method';
+			 yourself).
+	items add: (ReRenameAndBrowseMethodOverridesChoice new
+			 driver: self;
+			 description: 'Extract method and browse existing methods that will then be overriden';
+			 yourself).
+	items add: (ReBrowseMethodOverridesChoice new
+			 driver: self;
+			 description: 'Browse existing methods that will be overriden BUT don''t extract';
+			 yourself).
 	^ items
 ]
 
@@ -38,7 +45,8 @@ ReExtractMethodDriver >> browseOverrides [
 
 	| conditions overrides |
 	conditions := refactoring failedBreakingChangePreconditions.
-	overrides := conditions flatCollect: [ :cond | cond violators collect: [ :cls | cls realClass methodNamed: newMessage methodName asSymbol ] ].
+	overrides := conditions flatCollect: [ :cond |
+		             cond violators collect: [ :cls | cls realClass methodNamed: newMessage methodName asSymbol ] ].
 	overrides do: [ :method | method browse ]
 ]
 
@@ -138,6 +146,14 @@ ReExtractMethodDriver >> methodNameEditorPresenterClass [
 ReExtractMethodDriver >> methodNameEditorPresenterClass: aClass [
 
 	methodNameEditorPresenterClass := aClass
+]
+
+{ #category : 'actions' }
+ReExtractMethodDriver >> renameMethod [
+	"Eventhough we are not renaming methods, but extracting them, we implement this action to reuse both
+	ReRenameAndBrowseMethodOverridesChoice and ReRenameMethodChoice"
+
+	^ self applyChanges
 ]
 
 { #category : 'accessing' }
