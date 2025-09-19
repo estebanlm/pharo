@@ -53,7 +53,7 @@ ClapContext class >> ensureBoostrapCommandsIn: aCommandList [
 	| foundCommands |
 	foundCommands := aCommandList collect: [ :commandSpec | commandSpec identifier ].
 
-	{ HermesClapCommand . ClapPharoBootstrapCommand . SaveCliCommand } 
+	{ ClapPharoBootstrapCommand . SaveCliCommand } 
 		select: [ :class | class isNotNil ] 
 		thenDo: [ :class |
 					(foundCommands includes: class commandSpecification identifier) 
