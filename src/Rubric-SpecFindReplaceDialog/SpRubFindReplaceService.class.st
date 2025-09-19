@@ -95,11 +95,12 @@ SpRubFindReplaceService >> initialize [
 { #category : 'events handling' }
 SpRubFindReplaceService >> openDialog [
 
-	dialogWindow ifNotNil: [ dialogWindow close ].
-
+	| text |
+	text := findText asString.
 	dialog := SpRubFindReplaceDialog on: self.
 	dialog updateFromModel.
-
+	(text isNotEmpty and: [ text ~= dialog findInput text ]) ifTrue: [
+		dialog findInput text: text ].
 	dialogWindow := dialog openDialog
 ]
 
