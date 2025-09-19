@@ -473,7 +473,7 @@ MCGitBasedNetworkRepository >> localRepository [
 
 { #category : 'accessing' }
 MCGitBasedNetworkRepository >> metacelloProjectClassFor: aScriptEngine [
-    ^ MetacelloMCBaselineProject
+    ^ MetacelloBaselineProject
 ]
 
 { #category : 'private' }
