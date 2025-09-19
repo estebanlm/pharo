@@ -53,9 +53,11 @@ ClapContext class >> ensureBoostrapCommandsIn: aCommandList [
 	| foundCommands |
 	foundCommands := aCommandList collect: [ :commandSpec | commandSpec identifier ].
 
-	{ HermesClapCommand . ClapPharoBootstrapCommand . SaveCliCommand } do: [ :class |
-		(foundCommands includes: class commandSpecification identifier) 
-			ifFalse: [ aCommandList add: class commandSpecification ] ].
+	{ ClapPharoBootstrapCommand . SaveCliCommand } 
+		select: [ :class | class isNotNil ] 
+		thenDo: [ :class |
+					(foundCommands includes: class commandSpecification identifier) 
+						ifFalse: [ aCommandList add: class commandSpecification ] ].
 	^ aCommandList
 ]
 
@@ -72,6 +74,12 @@ ClapContext class >> pragmaCommands [
 ]
 
 { #category : 'instance creation' }
+ClapContext class >> pragmaCommandsAndBootstrapCommands [ 
+
+	^ self ensureBoostrapCommandsIn: self pragmaCommands asOrderedCollection
+]
+
+{ #category : 'instance creation' }
 ClapContext class >> withAll: commandCandidates [
 	^ self specification: (self defaultRoot addAll: commandCandidates; yourself)
 ]
@@ -79,7 +87,7 @@ ClapContext class >> withAll: commandCandidates [
 { #category : 'instance creation' }
 ClapContext class >> withPragmaCommands [ 
 
-	^ self withAll: (self ensureBoostrapCommandsIn: self pragmaCommands asOrderedCollection)
+	^ self withAll: self pragmaCommandsAndBootstrapCommands
 ]
 
 { #category : 'validation' }
