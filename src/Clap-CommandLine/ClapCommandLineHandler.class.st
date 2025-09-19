@@ -20,7 +20,7 @@ ClapCommandLineHandler class >> isResponsibleFor: aCommandLineArguments [
 	aCommandLineArguments arguments ifEmpty: [ ^ false ].
 	
 	subcommand := aCommandLineArguments arguments first.
-	^ ClapContext pragmaCommandsAndBootstrapCommands 
+	^ ClapContext pragmaCommands
 		detect: [ :commandSpec | commandSpec hasAlias: subcommand ]
 		ifFound: [ true ] 
 		ifNone: [ false ]

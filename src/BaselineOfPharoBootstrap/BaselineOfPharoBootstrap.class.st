@@ -148,8 +148,6 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		spec group: 'KernelGroup' with: {
 			'FFI-Kernel'.
 			'Announcements-Core'.
-			'Clap-Core'.
-			'Clap-CommandLine'.
 			'Collections-Abstract'.
 			'Collections-DoubleLinkedList'.
 			'Collections-Native'.
@@ -188,6 +186,8 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		"These packages are added using hermes after bootstrap"
 
 		spec group: 'AdditionalPackages' with: {
+			'Clap-Core'.
+			'Clap-CommandLine'.
 			'ReflectionMirrors-Primitives'.
 			'System-Time'.
 			'Math-Operations-Extensions'.
