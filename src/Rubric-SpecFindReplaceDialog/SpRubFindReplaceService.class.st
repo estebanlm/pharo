@@ -101,7 +101,7 @@ SpRubFindReplaceService >> openDialog [
 	dialog updateFromModel.
 	(text isNotEmpty and: [ text ~= dialog findInput text ]) ifTrue: [
 		dialog findInput text: text ].
-	dialogWindow := dialog openDialog
+	dialogWindow := dialog openDialog 
 ]
 
 { #category : 'services' }
