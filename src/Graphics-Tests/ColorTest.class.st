@@ -182,7 +182,7 @@ ColorTest >> testFromString [
 		assert: ((Color fromString: nil) asHexString sameAs: 'ffffff');
 		assert: ((Color fromString: 'inexistent color') asHexString sameAs: 'ffffff'); "should return white"
 		assert: ((Color fromString: 'XXXXXX') asHexString sameAs: 'ffffff'); "not alphanumeric"
-		assert: ((Color fromString: '00000000') asHexString sameAs: 'ffffff'). "too many digits"
+		assert: ((Color fromString: '000000000') asHexString sameAs: 'ffffff'). "too many digits"
 
 	self
 		assert: (Color fromString: 'DARKGRAY') = Color darkGray description: 'Color can be specified with a case insensitive color name';

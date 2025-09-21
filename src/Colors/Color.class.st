@@ -366,20 +366,22 @@ Color class >> fromString: aString [
 	"Return a color for HTML color spec: #FFCCAA or white/black passed as string."
 
 	"(Color fromString: '#FFCCAA')>>> (Color r: 1.0 g: 0.8 b: 0.667 alpha: 1.0) "
+
 	"(Color fromString: 'orange') >>> Color orange"
 
 	| aColorHex |
-	aString isEmptyOrNil
-		ifTrue: [ ^ self white ].
+	aString isEmptyOrNil ifTrue: [ ^ self white ].
 	aColorHex := aString first = $#
-		ifTrue: [ aString allButFirst ]
-		ifFalse: [ aString ].	"Try to match aColorHex with known named colors, case insensitive."
+		             ifTrue: [ aString allButFirst ]
+		             ifFalse: [ aString ]. "Try to match aColorHex with known named colors, case insensitive."
 	^ self registeredColorNames
-		detect: [ :each | each sameAs: aColorHex ]
-		ifFound: [ :namedColor | self named: namedColor ]
-		ifNone: [ (aColorHex size = 6 and: [ aColorHex allSatisfy: [ :character | '0123456789ABCDEFabcdef' includes: character ] ])
-				ifTrue: [ self fromHexString: aColorHex ]
-				ifFalse: [ self white ] ]
+		  detect: [ :each | each sameAs: aColorHex ]
+		  ifFound: [ :namedColor | self named: namedColor ]
+		  ifNone: [
+				  (({ 3. 4. 6. 8 } includes: aColorHex size) and: [
+					   aColorHex allSatisfy: [ :character | '0123456789ABCDEFabcdef' includes: character ] ])
+					  ifTrue: [ self fromHexString: aColorHex ]
+					  ifFalse: [ self white ] ]
 ]
 
 { #category : 'accessing - defaults' }
