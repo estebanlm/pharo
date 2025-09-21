@@ -151,7 +151,6 @@ ColorTest >> testContrastingColorAdjustment [
 ColorTest >> testFromHexString [
 
 	| color |
-
 	color := Color fromHexString: 'FFFFFF'.
 	self assert: color equals: Color white.
 
@@ -165,7 +164,13 @@ ColorTest >> testFromHexString [
 	self assert: color equals: Color magenta.
 
 	color := Color fromHexString: '#FF00FF55'.
-	self assert: (color alpha > 0.3 and: [color alpha < 0.4])
+	self assert: (color alpha > 0.3 and: [ color alpha < 0.4 ]).
+
+	color := Color fromHexString: '#000'.
+	self assert: color equals: Color black.
+
+	color := Color fromHexString: '#f0f5'.
+	self assert: (color alpha > 0.3 and: [ color alpha < 0.4 ])
 ]
 
 { #category : 'tests' }

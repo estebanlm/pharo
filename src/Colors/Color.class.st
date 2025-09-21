@@ -312,17 +312,45 @@ Color class >> fromHexString: aColorHex [
 
 	"(Color fromHexString: 'FFFFFF')>>> (Color white) "
 
-	| green red blue alpha hexString |
+	"(Color fromHexString: '000')>>> (Color black)"
+
+	| hexString |
 	hexString := aColorHex withoutPrefix: '#'.
-	red := (Integer readFrom: (hexString first: 2) base: 16) / 255.
-	green := (Integer readFrom: (hexString copyFrom: 3 to: 4) base: 16) / 255.
-	blue := (Integer readFrom: (hexString copyFrom: 5 to: 6) base: 16) / 255.
-
-	alpha := hexString size = 8
-		ifFalse: [ 1.0 ]
-		ifTrue: [ (Integer readFrom: (hexString copyFrom: 7 to: 8) base: 16) / 255 ].
-
-	^ self r: red g: green b: blue alpha: alpha
+	hexString size = 3 ifTrue: [
+			| r g b |
+			r := Integer readFrom: hexString first asString base: 16.
+			g := Integer readFrom: hexString second asString base: 16.
+			b := Integer readFrom: hexString third asString base: 16.
+			^ self r: r * 16 + r / 255 g: g * 16 + g / 255 b: b * 16 + b / 255 ].
+	hexString size = 4 ifTrue: [
+			| r g b a |
+			r := Integer readFrom: hexString first asString base: 16.
+			g := Integer readFrom: hexString second asString base: 16.
+			b := Integer readFrom: hexString third asString base: 16.
+			a := Integer readFrom: hexString fourth asString base: 16.
+			^ self
+				  r: r * 16 + r / 255
+				  g: g * 16 + g / 255
+				  b: b * 16 + b / 255
+				  alpha: a * 16 + a / 255 ].
+	hexString size = 6 ifTrue: [
+			| r g b |
+			r := (Integer readFrom: (hexString first: 2) base: 16) / 255.
+			g := (Integer readFrom: (hexString copyFrom: 3 to: 4) base: 16) / 255.
+			b := (Integer readFrom: (hexString copyFrom: 5 to: 6) base: 16) / 255.
+			^ self r: r g: g b: b ].
+	hexString size = 8 ifTrue: [
+			| r g b a |
+			r := (Integer readFrom: (hexString first: 2) base: 16) / 255.
+			g := (Integer readFrom: (hexString copyFrom: 3 to: 4) base: 16) / 255.
+			b := (Integer readFrom: (hexString copyFrom: 5 to: 6) base: 16) / 255.
+			a := (Integer readFrom: (hexString copyFrom: 7 to: 8) base: 16) / 255.
+			^ self
+				  r: r
+				  g: g
+				  b: b
+				  alpha: a ].
+	self error: 'Color hex string must be 3, 4, 6 or characters long.'
 ]
 
 { #category : 'instance creation' }
