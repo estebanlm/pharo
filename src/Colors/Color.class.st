@@ -350,7 +350,7 @@ Color class >> fromHexString: aColorHex [
 				  g: g
 				  b: b
 				  alpha: a ].
-	self error: 'Color hex string must be 3, 4, 6 or characters long.'
+	self error: 'Color hex string must be 3, 4, 6 or 8 characters long.'
 ]
 
 { #category : 'instance creation' }
