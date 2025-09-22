@@ -89,7 +89,7 @@ OCCodeSnippet class >> badAnnotations [
 			         isParseFaulty: false;
 			         notices:
 				         #( #( 6 6 6 'Unexpected token' )
-				            #( 1 1 1 'Undeclared variable' ) )).
+				            #( 1 1 1 'Undeclared variable named a in DoIt' ) )).
 		        (self new
 			         source: '^ @';
 			         nodeAt: '001';
@@ -713,7 +713,7 @@ OCCodeSnippet class >> badExpressions [
 			         isParseFaulty: false;
 			         isFaultyMinusUndeclared: false;
 			         raise: UndeclaredVariableRead;
-			         notices: #( #( 5 5 5 'Undeclared variable' ) )). "This one is legal, it is an empty list of temporaries, the | are dismissed"
+			         notices: #( #( 5 5 5 'Undeclared variable named a in DoIt' ) )). "This one is legal, it is an empty list of temporaries, the | are dismissed"
 		        (self new
 			         source: '|| a';
 			         nodeAt: '   0';
@@ -722,7 +722,7 @@ OCCodeSnippet class >> badExpressions [
 			         isParseFaulty: false;
 			         isFaultyMinusUndeclared: false;
 			         raise: UndeclaredVariableRead;
-			         notices: #( #( 4 4 4 'Undeclared variable' ) )). "Same, but are messing with the Scanner"
+			         notices: #( #( 4 4 4 'Undeclared variable named a in DoIt' ) )). "Same, but are messing with the Scanner"
 		        (self new
 			         source: ' ||| a';
 			         nodeAt: '   002';
@@ -979,7 +979,7 @@ OCCodeSnippet class >> badExpressions [
 			         isParseFaulty: false;
 			         isFaultyMinusUndeclared: false;
 			         raise: UndeclaredVariableRead;
-			         notices: #( #( 9 9 9 'Undeclared variable' ) )). "Explicit empty list of temporaries"
+			         notices: #( #( 9 9 9 'Undeclared variable named b in DoIt' ) )). "Explicit empty list of temporaries"
 		        (self new
 			         source: '[:a| ||a]';
 			         nodeAt: '001002230';
@@ -1570,8 +1570,8 @@ OCCodeSnippet class >> badSemantic [
 			         isFaultyMinusUndeclared: false;
 			         raise: UndeclaredVariableWrite;
 			         notices:
-				         #( #( 1 1 1 'Undeclared variable' )
-				            #( 12 12 12 'Undeclared variable' ) )).
+				         #( #( 1 1 1 'Undeclared variable named a in DoIt' )
+				            #( 12 12 12 'Undeclared variable named a in DoIt' ) )).
 		        (self new
 			         source: '^ a';
 			         nodeAt: '001';
@@ -1579,7 +1579,7 @@ OCCodeSnippet class >> badSemantic [
 			         isFaulty: true;
 			         isFaultyMinusUndeclared: false;
 			         raise: UndeclaredVariableRead;
-			         notices: #( #( 3 3 3 'Undeclared variable' ) )).
+			         notices: #( #( 3 3 3 'Undeclared variable named a in DoIt' ) )).
 
 		        "Uninitialized variable"
 		        (self new
@@ -2491,7 +2491,7 @@ OCCodeSnippet class >> badTokens [
 			         isParseFaulty: false;
 			         isFaultyMinusUndeclared: false;
 			         raise: UndeclaredVariableRead;
-			         notices: #( #( 1 2 1 'Undeclared variable' ) )). "valid identifier"
+			         notices: #( #( 1 2 1 'Undeclared variable named Δə in DoIt' ) )). "valid identifier"
 		        (self new
 			         source: '| Δə | Δə := 1. Δə + 1';
 			         nodeAt: '0011000442222300665557';
