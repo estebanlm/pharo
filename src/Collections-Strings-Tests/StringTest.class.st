@@ -1984,11 +1984,6 @@ StringTest >> testTrimRight [
 	self assert: ('bbaabb' trimRight: [ :each | each = $a ]) equals: 'bbaabb'
 ]
 
-{ #category : 'tests - copying' }
-StringTest >> testTrimmed [
-	self assert: '  a  ' trimmed equals: 'a'
-]
-
 { #category : 'tests - converting' }
 StringTest >> testUncapitalized [
 	| uc lc empty |
