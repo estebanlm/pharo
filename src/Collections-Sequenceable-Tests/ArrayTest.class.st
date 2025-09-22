@@ -733,7 +733,7 @@ ArrayTest >> testMax [
 ]
 
 { #category : 'tests' }
-ArrayTest >> testMax2 [
+ArrayTest >> testMaxWithArgument [
 
 	self assert: (example1 max: [ :each | each + 1 ]) equals: 6
 ]
@@ -745,7 +745,7 @@ ArrayTest >> testMin [
 ]
 
 { #category : 'tests' }
-ArrayTest >> testMin2 [
+ArrayTest >> testMinWithArgument [
 
 	self assert: (example1 min: [ :each | each + 1 ]) equals: 2
 ]
