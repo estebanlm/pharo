@@ -727,6 +727,30 @@ ArrayTest >> testLiteralEqual [
 ]
 
 { #category : 'tests' }
+ArrayTest >> testMax [
+
+	self assert: example1 max equals: 5
+]
+
+{ #category : 'tests' }
+ArrayTest >> testMax2 [
+
+	self assert: (example1 max: [ :each | each + 1 ]) equals: 6
+]
+
+{ #category : 'tests' }
+ArrayTest >> testMin [
+
+	self assert: example1 min equals: 1
+]
+
+{ #category : 'tests' }
+ArrayTest >> testMin2 [
+
+	self assert: (example1 min: [ :each | each + 1 ]) equals: 2
+]
+
+{ #category : 'tests' }
 ArrayTest >> testNewWithSize [
 	| array |
 	array := Array new: 5.
