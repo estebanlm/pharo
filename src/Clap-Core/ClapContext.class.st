@@ -25,13 +25,6 @@ Class {
 }
 
 { #category : 'accessing' }
-ClapContext class >> boostrapCommands [
-	"In early stages of the bootsrap, pragmas cannot be used.
-	We cannot fetch available commands. We provide commands we need."
-	^ { HermesClapCommand commandSpecification . ClapPharoBootstrapCommand commandSpecification }
-]
-
-{ #category : 'accessing' }
 ClapContext class >> defaultRoot [
 	^ (ClapRoot id: #clap)
 		description: 'Entry point for commands implemented with Clap';
@@ -53,6 +46,22 @@ ClapContext class >> defaultRoot [
 ]
 
 { #category : 'accessing' }
+ClapContext class >> ensureBoostrapCommandsIn: aCommandList [
+	"In early stages of the bootsrap, pragmas cannot be used.
+	We cannot fetch available commands. We provide commands we need."
+
+	| foundCommands |
+	foundCommands := aCommandList collect: [ :commandSpec | commandSpec identifier ].
+
+	{ ClapPharoBootstrapCommand . SaveCliCommand } 
+		select: [ :class | class isNotNil ] 
+		thenDo: [ :class |
+					(foundCommands includes: class commandSpecification identifier) 
+						ifFalse: [ aCommandList add: class commandSpecification ] ].
+	^ aCommandList
+]
+
+{ #category : 'accessing' }
 ClapContext class >> pragmaCommands [
 	^ (Pragma allNamed: #commandline) collect: [ :pragma |
 			| theClass theSelector |
@@ -65,6 +74,12 @@ ClapContext class >> pragmaCommands [
 ]
 
 { #category : 'instance creation' }
+ClapContext class >> pragmaCommandsAndBootstrapCommands [ 
+
+	^ self ensureBoostrapCommandsIn: self pragmaCommands asOrderedCollection
+]
+
+{ #category : 'instance creation' }
 ClapContext class >> withAll: commandCandidates [
 	^ self specification: (self defaultRoot addAll: commandCandidates; yourself)
 ]
@@ -72,7 +87,7 @@ ClapContext class >> withAll: commandCandidates [
 { #category : 'instance creation' }
 ClapContext class >> withPragmaCommands [ 
 
-	^ self withAll: (self pragmaCommands ifEmpty: [ self boostrapCommands ])
+	^ self withAll: self pragmaCommandsAndBootstrapCommands
 ]
 
 { #category : 'validation' }
