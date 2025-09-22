@@ -111,6 +111,7 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		spec package: 'System-BasicCommandLineHandler'.
 		spec package: 'Clap-Core'.
 		spec package: 'Clap-CommandLine'.
+		spec package: 'Clap-Commands-Pharo' .
 		spec package: 'System-CommandLine'.
 		spec package: 'System-CommandLineHandler'.
 		spec package: 'System-Finalization'.
@@ -188,6 +189,7 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		spec group: 'AdditionalPackages' with: {
 			'Clap-Core'.
 			'Clap-CommandLine'.
+			'Clap-Commands-Pharo'.
 			'ReflectionMirrors-Primitives'.
 			'System-Time'.
 			'Math-Operations-Extensions'.
