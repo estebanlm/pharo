@@ -34,8 +34,14 @@ ClapCommandLineHandler class >> priority [
 
 { #category : 'activation' }
 ClapCommandLineHandler >> activate [
+	
+	self activateWith: ClapContext pragmaCommands
+]
+
+{ #category : 'activation' }
+ClapCommandLineHandler >> activateWith: clapCommandSpecifications [
 	[
-		ClapContext withPragmaCommands
+		(ClapContext withAll: clapCommandSpecifications)
 			beObeyingExits;
 			setStdio: Stdio;
 			arguments: self arguments;
