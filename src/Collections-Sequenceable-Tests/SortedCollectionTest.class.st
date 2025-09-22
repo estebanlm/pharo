@@ -11,7 +11,6 @@ Class {
 		'elementExistsTwice',
 		'empty',
 		'collectResult',
-		'nonEmpty1Element',
 		'collectionOfFloat',
 		'accessCollection',
 		'elementNoteIn',
