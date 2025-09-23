@@ -43,10 +43,10 @@ ReRemoveInstanceVariablesDriver >> configureRefactoring [
 	refactoring prepareForInteractiveMode
 ]
 
-{ #category : 'execution' }
+{ #category : 'configuration' }
 ReRemoveInstanceVariablesDriver >> defaultSelectDialog [
 
-	^ SpSelectDialog new
+	^ self class defaultSelectDialog
 		  title: 'There are references to variables!';
 		  items: self breakingChoices;
 		  display: [ :each | each description ];
@@ -70,7 +70,14 @@ ReRemoveInstanceVariablesDriver >> runRefactoring [
 	"Normally from the IDE we should not get bogus variables."
 	"we could call the violatorMessages here to let the applicability preconditions do the job."
 	refactoring failedApplicabilityPreconditions 
-		ifNotEmpty: [ ^ self inform: 'The variable ', refactoring variable,  ' does not exist' ].
+		ifNotEmpty: [ 
+			| str |
+			str := String streamContents: [ :s | 
+				s << 'The variable '.
+				refactoring refactorings do: [:r | s <<  r variableName]
+					separatedBy: [ str space ].
+				s <<  ' do(es) not exist' ].
+			^ self inform: str contents ].
 	
 	(refactoring breakingChangePreconditions allSatisfy: [:each | each check])
 		ifTrue: [ self applyChanges ]

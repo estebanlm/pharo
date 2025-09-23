@@ -64,16 +64,14 @@ ReRemoveClassDriver >> configureRefactoring [
 { #category : 'configuration' }
 ReRemoveClassDriver >> defaultSelectDialog [
 
-	^ SpSelectDialog new
-			 extent: 400@700;
-		    title: 'There are potential breaking changes!';
-		          label: self labelBasedOnBreakingChanges;
-		          items: self breakingChoices;
-		          display: [ :each | each description ];
-					 extent: 400@1200;
-		          displayIcon: [ :each | self iconNamed: each systemIconName ];
-		          openModal
-	
+	^ self class defaultSelectDialog
+		  extent: 400@1200;
+		  title: 'There are potential breaking changes!';
+		  label: self labelBasedOnBreakingChanges;
+		  items: self breakingChoices;
+		  display: [ :each | each description ];
+		  displayIcon: [ :each | self iconNamed: each systemIconName ];
+		  openModal
 ]
 
 { #category : 'execution' }

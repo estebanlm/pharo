@@ -437,6 +437,11 @@ RubTextEditor >> changeLfToCr: aKeyboardEvent [
 ]
 
 { #category : 'accessing' }
+RubTextEditor >> characterAt: anOffset [ 
+	^ self paragraph text asString at: anOffset.
+]
+
+{ #category : 'accessing' }
 RubTextEditor >> characterGroupAt: index in: aString [
 
 	| character |
@@ -651,7 +656,10 @@ RubTextEditor >> cursorDown: aKeyboardEvent [
 				newLine:[:line | line + 1]
 				forward: true]
 		forward: true
-		specialBlock:[:dummy | dummy]
+		specialBlock:[:position | self
+				sameColumn: position
+				newLine:[:line | line + 1]
+				forward: true]
 		event: aKeyboardEvent.
 	^true
 ]
@@ -778,7 +786,10 @@ prior line. If prior line too short, put at end"
 				newLine:[:line | line - 1]
 				forward: false]
 		forward: false
-		specialBlock:[:dummy | dummy]
+		specialBlock:[:position | self
+				sameColumn: position
+				newLine:[:line | line - 1]
+				forward: false]
 		event: aKeyboardEvent.
 	^true
 ]
@@ -1503,6 +1514,16 @@ RubTextEditor >> lf: aKeyboardEvent [
 	^false
 ]
 
+{ #category : 'accessing' }
+RubTextEditor >> lineAtCursorPosition [
+	| string |
+	
+	string := self text asString ifEmpty: [ ^ '' ].
+	^ self lineIntervalAtCursorPosition
+		ifNotNil: [ :anInterval | string copyFrom: anInterval first to: anInterval last ]
+		ifNil: [ '' ]
+]
+
 { #category : 'private' }
 RubTextEditor >> lineIndentationStart: aPosition [
 	"The offset of the start of the line of `aPostion`, but skip leading spaces and tabs"
@@ -1516,6 +1537,25 @@ RubTextEditor >> lineIndentationStart: aPosition [
 		position := position + 1 ].
 
 	^ position
+]
+
+{ #category : 'accessing' }
+RubTextEditor >> lineIntervalAtCursorPosition [
+	| string lastEnd index lastStart |
+	
+	index := self pointIndex.
+	string := self text asString ifEmpty: [ ^ nil ].
+	string lineIndicesDo: [ :start :endWithoutDelimiters :end | 
+		index <= end ifTrue: [ 
+			^ start to: endWithoutDelimiters ].
+		lastStart := start.
+		lastEnd := end ].
+	
+	"evaluate the case where the cursor is placed at the end of the text (there will not 
+	 be delimiter, but there will be a line to answer anyway (maybe empty)"
+	^ lastEnd + 1 <= index 
+		ifTrue: [ lastStart to: lastEnd ]
+		ifFalse: [ nil ]
 ]
 
 { #category : 'menu messages' }
@@ -1776,6 +1816,17 @@ RubTextEditor >> offerFontMenu: aKeyboardEvent [
 	^ true
 ]
 
+{ #category : 'cursor' }
+RubTextEditor >> offsetToVisualColumn: line ofColumn: columnIndex [
+
+	^ (line first to: line first + columnIndex - 1)
+		  inject: 0
+		  into: [ :visualColumn :index |
+				  visualColumn + (self
+					   visualCharacterSize: (self characterAt: index)
+					   atOffset: visualColumn) ]
+]
+
 { #category : 'typing support' }
 RubTextEditor >> openTypeIn [
 	"Set up startOfTyping to keep track of the leftmost backspace.
@@ -1894,14 +1945,14 @@ RubTextEditor >> previousWord: position stopOnUpperCase: stopOnUpperCase [
 	size := string size + 1.
 	index := initialPosition := size min: position.
 
-	position <= 2 ifTrue: [ ^ 1 ].
-
 	[ "Skip blanks"
-	index > 1 and: [
-		{
-			Character space.
-			Character tab } includes: (string at: index - 1) ] ] whileTrue: [
+		index > 1 and: [
+				{
+					Character space.
+					Character tab } includes: (string at: index - 1) ] ] whileTrue: [
 		index := index - 1 ].
+
+	index <= 2 ifTrue: [ ^ 1 ].
 
 	groupAtStart := self characterGroupAt: index - 1 in: string.
 
@@ -1910,22 +1961,22 @@ RubTextEditor >> previousWord: position stopOnUpperCase: stopOnUpperCase [
 
 	"Stop if we are in a lowercase->uppercase transition"
 	groupAtStart = #upper ifTrue: [
-		stopOnUpperCase
-			ifFalse: [ groupAtStart := #lower ]
-			ifTrue: [
-				(index < string size and: [
-					 (self characterGroupAt: index + 1 in: string) = #lower ])
-					ifTrue: [ ^ index ] ] ].
+			stopOnUpperCase
+				ifFalse: [ groupAtStart := #lower ]
+				ifTrue: [
+						(index < string size and: [
+							 (self characterGroupAt: index + 1 in: string) = #lower ])
+							ifTrue: [ ^ index ] ] ].
 
 	[ "Stop when we reach the end, a new line, or a different character group"
-	index <= 1 ifTrue: [ ^ 1 ].
-	(string at: index - 1) = Character cr ifTrue: [ ^ index ].
+		index <= 1 ifTrue: [ ^ 1 ].
+		(string at: index - 1) = Character cr ifTrue: [ ^ index ].
 
-	currentGroup := self characterGroupAt: index - 1 in: string.
-	(stopOnUpperCase not and: [ currentGroup = #upper ]) ifTrue: [
-		currentGroup := #lower ].
+		currentGroup := self characterGroupAt: index - 1 in: string.
+		(stopOnUpperCase not and: [ currentGroup = #upper ]) ifTrue: [
+			currentGroup := #lower ].
 
-	currentGroup = groupAtStart ] whileTrue: [ index := index - 1 ].
+		currentGroup = groupAtStart ] whileTrue: [ index := index - 1 ].
 
 	"Moving to the left from lower to upper, we want to stop left of the upper"
 	(stopOnUpperCase and: [
@@ -2087,7 +2138,7 @@ RubTextEditor >> sameColumn: start newLine: lineBlock forward: isForward [
 	The position inside the line will be preserved as good as possible"
 	"The boolean isForward is used in the border case to determine if
 	we should move to the beginning or the end of the line."
-	| column currentLine offsetAtTargetLine targetEOL lines numberOfLines currentLineNumber targetLineNumber |
+	| offset currentLine offsetAtTargetLine targetEOL lines numberOfLines currentLineNumber targetLineNumber targetLine column |
 	self walkAlongDisplayedLine
 		ifTrue: [lines := self paragraph lines.
 			numberOfLines := self paragraph numberOfLines.
@@ -2099,16 +2150,18 @@ RubTextEditor >> sameColumn: start newLine: lineBlock forward: isForward [
 				detect:[:lineInterval | lineInterval last >= start]
 				ifNone:[lines last].
 			currentLineNumber := currentLine second].
-	column := start - currentLine first.
+	offset := start - currentLine first.
+	column := self offsetToVisualColumn: currentLine ofColumn: offset.
 	targetLineNumber := ((lineBlock value: currentLineNumber) max: 1) min: numberOfLines.
-	offsetAtTargetLine := (lines at: targetLineNumber) first.
-	targetEOL := (lines at: targetLineNumber) last + (targetLineNumber = numberOfLines ifTrue:[1]ifFalse:[0]).
+	targetLine := lines at: targetLineNumber.
+	offsetAtTargetLine := targetLine first.
+	targetEOL := targetLine last + (targetLineNumber = numberOfLines ifTrue:[1]ifFalse:[0]).
 	targetLineNumber = currentLineNumber
 	"No movement or movement failed. Move to beginning or end of line."
 		ifTrue:[^isForward
 			ifTrue:[targetEOL]
 			ifFalse:[offsetAtTargetLine]].
-	^offsetAtTargetLine + column min: targetEOL
+	^ offsetAtTargetLine + (self visualToOffsetColumn: targetLine ofColumn: column) min: targetEOL
 ]
 
 { #category : 'menu messages' }
@@ -2751,6 +2804,42 @@ RubTextEditor >> unselect [
 RubTextEditor >> visibleHeight [
 
 	^textArea owner bounds height
+]
+
+{ #category : 'cursor' }
+RubTextEditor >> visualCharacterSize: aCharacter atOffset: anOffset [ 
+	
+	| tabSize |
+	aCharacter = Character tab ifFalse: [ ^1 ].
+	
+	tabSize := EFFormatter numberOfSpacesInIndent.
+	
+	^ tabSize - (anOffset rem: tabSize)
+]
+
+{ #category : 'cursor' }
+RubTextEditor >> visualToOffsetColumn: line ofColumn: columnIndex [
+
+	| visualIndex offset |
+	offset := 0.
+	visualIndex := 0.
+
+	[
+	visualIndex < columnIndex and: [ offset < (line last - line first) ] ]
+		whileTrue: [
+				| currentChar |
+				currentChar := self characterAt: line first + offset.
+				visualIndex := visualIndex
+				               +
+				               (self
+					                visualCharacterSize: currentChar
+					                atOffset: visualIndex).
+				offset := offset + 1 ].
+
+
+	^ visualIndex > columnIndex
+		  ifTrue: [ offset - 1 ]
+		  ifFalse: [ offset ]
 ]
 
 { #category : 'settings' }

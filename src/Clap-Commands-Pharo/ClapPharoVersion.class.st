@@ -9,23 +9,20 @@ Class {
 }
 
 { #category : 'command line' }
-ClapPharoVersion class >> version [
-	<commandline>
-	^ (ClapCommand id: #version)
-		description: 'Displays version information, in various formats';
-		add: ClapFlag forHelp;
-		add: ((ClapFlag id: #full) description: 'Full image version (default format)');
-		add: ((ClapFlag id: #release) description: 'Major.minor alpha/stable');
-		add: ((ClapFlag id: #numeric) description: '5-digit sequential integration number');
-		add: ((ClapFlag id: #hash) description: 'Integration commit hash');
-		add: ((ClapFlag id: #vm) description: 'VM build and version');
-		add: ((ClapFlag id: #license) description: 'Licensing and copyright');
-		meaning: [ :args |
-			args at: #helpFlag ifPresent: [ :help |
-				help value; exitSuccess ].
-			args validateAll.
+ClapPharoVersion class >> commandSpecification [
 
-			(self with: args) execute ]
+	<commandline>
+	^ (ClapCommandSpec id: #printVersion)
+		  description: 'Displays version information, in various formats';
+		  commandClass: self;
+		  addHelp;
+		  addFlag: #full description: 'Full image version (default format)';
+		  addFlag: #release description: 'Major.minor alpha/stable';
+		  addFlag: #numeric description: '5-digit sequential integration number';
+		  addFlag: #hash description: 'Integration commit hash';
+		  addFlag: #vm description: 'VM build and version';
+		  addFlag: #license description: 'Licensing and copyright';
+		  yourself
 ]
 
 { #category : 'execution' }
@@ -45,14 +42,18 @@ ClapPharoVersion >> formatStringFor: formatName [
 
 { #category : 'accessing' }
 ClapPharoVersion >> formats [
-	^ (arguments flags
-		collect: [ :each | each specification canonicalName asSymbol ])
-		ifEmpty: [ #(full) ]
+	^ self flags ifEmpty: [ #(full) ]
 ]
 
 { #category : 'version strings' }
 ClapPharoVersion >> fullVersionString [
-	^ SystemVersion current imageVersionString
+
+	^ String streamContents: [ :stream |
+			  stream
+				  nextPutAll: '[version] ';
+				  print: SystemVersion current majorMinorVersion;
+				  nextPutAll: ' ';
+				  print: SystemVersion current asString ]
 ]
 
 { #category : 'version strings' }
@@ -72,14 +73,18 @@ ClapPharoVersion >> numericVersionString [
 
 { #category : 'version strings' }
 ClapPharoVersion >> releaseVersionString [
-	^ SystemVersion current shortVersionString
+	^ 	String streamContents: [ :stream |
+			stream
+				print: SystemVersion current major;
+				nextPutAll: '.';
+				print: SystemVersion current minor ]
 ]
 
 { #category : 'printing' }
 ClapPharoVersion >> showVersionsNamed: formatNames [
 	| out |
 	out := self context stdout.
-	formatNames do: [ :each |
+	formatNames do: [ :each | 
 		out nextPutAll: (self formatStringFor: each); lf ].
 	out flush
 ]

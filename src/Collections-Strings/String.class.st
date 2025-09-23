@@ -788,6 +788,12 @@ String >> asUnsignedInteger [
 String >> asUppercase [
 	"Answer a String made up from the receiver whose characters are all uppercase."
 
+	"'pharo' asUppercase >>> 'PHARO'"
+
+	"'' asUppercase >>> ''"
+
+	"' ' asUppercase >>> ' '"
+
 	^self copy asString translateToUppercase
 ]
 
@@ -1073,6 +1079,13 @@ String >> copyReplaceTokens: oldSubstring with: newSubstring [
 
 { #category : 'copying' }
 String >> copyUpToSubstring: aSubstring [
+   "Answer a copy of the receiver up to the given substring"
+
+	"('abcdef' copyUpToSubstring: 'de') >>> 'abc'"
+	"('abcdef' copyUpToSubstring: 'f') >>> 'abcde'"
+	"('' copyUpToSubstring: 'abc') >>> ''"
+	"('abcdef' copyUpToSubstring: 'gh') >>> 'abcdef'"
+	"('abcdef' copyUpToSubstring: 'ab') >>> ''"
 
 	| index |
 	aSubstring ifEmpty: [
@@ -2630,6 +2643,12 @@ String >> trim [
 String >> trimBoth [
 	"Trim separators from both sides of the receiving string."
 
+	"'  hello  ' trimBoth >>> 'hello'"
+
+	"'hello' trimBoth >>> 'hello'"
+
+	"'' trimBoth >>> ''"
+
 	^ self trimBoth: [ :char | char isSeparator ]
 ]
 
@@ -2643,6 +2662,12 @@ String >> trimBoth: aBlock [
 { #category : 'copying' }
 String >> trimLeft [
 	"Trim separators from the left side of the receiving string."
+
+	"'  hello  ' trimLeft >>> 'hello  '"
+
+	"'hello' trimLeft >>> 'hello'"
+
+	"'' trimLeft >>> ''"
 
 	^ self trimLeft: [ :char | char isSeparator ]
 ]
@@ -2684,6 +2709,9 @@ String >> trimLineSpaces [
 { #category : 'copying' }
 String >> trimRight [
 	"Trim separators from the right side of the receiving string."
+	"'  hello  ' trimRight >>> '  hello'"
+	"'hello' trimRight >>> 'hello'"
+	"'' trimRight >>> ''"
 
 	^ self trimRight: [ :char | char isSeparator ]
 ]
@@ -2693,11 +2721,6 @@ String >> trimRight: aBlock [
 	"Trim characters satisfying the condition given in aBlock from the right side of the receiving string."
 
 	^ self trimLeft: [ :char | false ] right: aBlock
-]
-
-{ #category : 'copying' }
-String >> trimmed [
-	^ self trimBoth
 ]
 
 { #category : 'converting' }
@@ -2731,6 +2754,12 @@ String >> typeTable [
 { #category : 'converting' }
 String >> uncapitalized [
 	"Return a copy with the first letter downShifted (in lower case)"
+
+	"'Pharo' uncapitalized >>> 'pharo'"
+
+	"'PHARO' uncapitalized >>> 'pHARO'"
+
+	"'' uncapitalized >>> ''"
 
 	| answer |
 	self ifEmpty: [ ^ self copy ].
@@ -2905,18 +2934,30 @@ String >> withoutLeadingDigits [
 String >> withoutPeriodSuffix [
 	"Return a copy of the receiver up to, but not including, the first period.  If the receiver's *first* character is a period, then just return the entire receiver. "
 
+	"'foo.' withoutPeriodSuffix >>> 'foo'"
+
+	"'foo.bar' withoutPeriodSuffix >>> 'foo'"
+
+	"'foo.bar.txt' withoutPeriodSuffix >>> 'foo'"
+
 	| likely |
 	likely := self copyUpTo: $..
 	^ likely size = 0
-		ifTrue: [ self ]
-		ifFalse: [ likely ]
+		  ifTrue: [ self ]
+		  ifFalse: [ likely ]
 ]
 
 { #category : 'converting' }
 String >> withoutPrefix: prefix [
 	"Remove the given prefix, if present."
 
-	^(self beginsWith: prefix) ifTrue: [ self copyFrom: 1 + prefix size to: self size ] ifFalse: [ self ]
+	"('UMLClass' withoutPrefix: 'UML') >>> 'Class'"
+
+	"('UMLClass' withoutPrefix: 'ML') >>> 'UMLClass'"
+
+	^ (self beginsWith: prefix)
+		  ifTrue: [ self copyFrom: 1 + prefix size to: self size ]
+		  ifFalse: [ self ]
 ]
 
 { #category : 'platform conventions' }
@@ -2939,7 +2980,13 @@ String >> withoutQuoting [
 String >> withoutSuffix: suffix [
 	"Remove the given suffix, if present."
 
-	^(self endsWith: suffix) ifTrue: [ self copyFrom: 1 to: self size - suffix size ] ifFalse: [ self ]
+	"('UMLClass' withoutSuffix: 'Class') >>> 'UML'"
+
+	"('UMLClass' withoutSuffix: 'Cass') >>> 'UMLClass'"
+
+	^ (self endsWith: suffix)
+		  ifTrue: [ self copyFrom: 1 to: self size - suffix size ]
+		  ifFalse: [ self ]
 ]
 
 { #category : 'converting' }

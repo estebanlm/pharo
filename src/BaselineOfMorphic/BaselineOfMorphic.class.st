@@ -68,18 +68,14 @@ BaselineOfMorphic >> baseline: spec [
 				repository: repository;
 				loads: 'core' ].
 
-		spec package: 'Transcript-Core'.
-
 		spec package: 'Native-Browser'.
 
 		spec package: 'Regex-Core'.
 
 		spec package: 'Morphic-Base'.
-		spec package: 'Morphic-Examples'.
 		spec package: 'Morphic-Widgets-Basic'.
 		spec package: 'Morphic-Widgets-ColorPicker'.
 		spec package: 'Morphic-Widgets-Extra'.
-		spec package: 'Morphic-Widgets-List'.
 		spec package: 'Morphic-Widgets-Pluggable'.
 		spec package: 'Morphic-Widgets-PolyTabs'.
 		spec package: 'Morphic-Widgets-Scrolling'.
@@ -100,7 +96,6 @@ BaselineOfMorphic >> baseline: spec [
 				repository: repository;
 				loads: 'core' ].
 
-		spec package: 'Polymorph-Widgets'.
 		spec package: 'DarkBlueTheme'.
 
 		spec package: 'Images-Animated'.
@@ -112,7 +107,9 @@ BaselineOfMorphic >> baseline: spec [
 		spec package: 'System-History'.
 		spec package: 'System-Installers'.
 		spec package: 'System-Settings-Core'.
-		spec package: 'System-Settings-Browser'.
+		spec package: 'PragmaCollector'.
+		spec package: 'System-Settings-Browser'
+			with: [ spec requires: #( 'PragmaCollector' ) ].
 		"the following package is listed here to be after Setting core 
 		however conceptually it could be placed somewhere else."
 		spec package: 'Formatter-Settings'.
@@ -120,8 +117,6 @@ BaselineOfMorphic >> baseline: spec [
 		spec package: 'Text-Diff'.
 		spec package: 'Text-Edition'.
 		spec package: 'Text-Scanning'.
-
-		spec package: 'Morphic-Widgets-TickList'.
 
 		spec package: 'System-Identification'.
 
