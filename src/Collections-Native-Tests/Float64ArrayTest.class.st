@@ -9,7 +9,6 @@ Class {
 		'elementNotIn',
 		'elementTwiceIn',
 		'collectionWithEqualElements',
-		'nonEmpty1Element',
 		'collectionWithSameAtEndAndBegining',
 		'collectionWith1TimeSubcollection',
 		'collectionWith2TimeSubcollection',
