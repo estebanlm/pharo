@@ -52,30 +52,3 @@ ClassDescription >> printMethodChunk: selector on: outStream [
 	exporter := CodeExporter onStream: outStream.
 	exporter writeMethod: (self >> selector)
 ]
-
-{ #category : '*CodeExport' }
-ClassDescription >> putCommentOnFile: aFileStream [ 
-	"Store the comment about the class onto file, aFileStream."
-
-	| header |
-	self comment isEmptyOrNil ifTrue: [ ^ self ].
-
-	aFileStream
-		cr;
-		nextPut: $!.
-	header := String streamContents: [ :strm |
-		          strm
-			          nextPutAll: self name;
-			          nextPutAll: ' commentStamp: '.
-		          self commentStamp storeOn: strm.
-		          strm
-			          nextPutAll: ' prior: ';
-			          nextPutAll: '0' ].
-	(ChunkWriteStream on: aFileStream)
-		nextPut: header.
-	self comment ifNotNil: [ :comment |
-		(ChunkWriteStream on: aFileStream)
-			cr;
-			nextPut: comment string ].
-	aFileStream cr
-]
