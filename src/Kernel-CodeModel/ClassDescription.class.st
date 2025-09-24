@@ -288,6 +288,18 @@ ClassDescription >> classify: selector under: aProtocol [
 	oldProtocol ifNotNil: [ self notifyOfRecategorizedSelector: selector from: oldProtocol to: newProtocol ]
 ]
 
+{ #category : 'accessing - comment' }
+ClassDescription >> comment [
+
+	self subclassResponsibility
+]
+
+{ #category : 'accessing - comment' }
+ClassDescription >> commentStamp [
+	
+	self subclassResponsibility
+]
+
 { #category : 'compiling' }
 ClassDescription >> compile: sourceCode classified: protocol [
 	"Compile the source code in the context of the receiver and install the result in the receiver's method dictionary under the given protocol (this can be a protocol or a protocol name).
