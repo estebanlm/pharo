@@ -59,22 +59,22 @@ export PHARO_CI_TESTING_ENVIRONMENT=1
 #Initializing the Image
 ./pharo bootstrap.image
 #Adding packages removed from the bootstrap
-./pharo bootstrap.image perform --save --pass-arguments-as-array BasicHermesTool load: Clap-Core.hermes Clap-CommandLine.hermes Hermes-Extensions.hermes
-./pharo bootstrap.image perform --save Pragma buildCache
+./pharo bootstrap.image perform --save --pass-arguments-as-array -- BasicHermesTool load: Clap-Core.hermes Clap-CommandLine.hermes Hermes-Extensions.hermes
+./pharo bootstrap.image perform --save -- Pragma buildCache
 ./pharo bootstrap.image loadHermes System-Time.hermes AST-Core.hermes Random-Core.hermes System-NumberPrinting.hermes --save --no-fail-on-undeclared --on-duplication ignore
-./pharo bootstrap.image perform --save ChronologyConstants initialize
-./pharo bootstrap.image perform --save DateAndTime initialize
+./pharo bootstrap.image perform --save -- ChronologyConstants initialize
+./pharo bootstrap.image perform --save -- DateAndTime initialize
 
 #Initializing the package manager
-./pharo bootstrap.image perform --save PharoBootstrapFixMethodsTool fixExtensionMethods
-./pharo bootstrap.image perform --save PharoBootstrapFixMethodsTool fixMethodsIn: protocolsKernel.txt
+./pharo bootstrap.image perform --save -- PharoBootstrapFixMethodsTool fixExtensionMethods
+./pharo bootstrap.image perform --save -- PharoBootstrapFixMethodsTool fixMethodsIn: protocolsKernel.txt
 
 #Load traits
 ./pharo bootstrap.image loadHermes Traits.hermes --save
 
 #Loading Tests
 ./pharo bootstrap.image loadHermes Debugging-Utils.hermes SUnit-Core.hermes JenkinsTools-Core.hermes JenkinsTools-Core.hermes SUnit-Tests.hermes --save --no-fail-on-undeclared --on-duplication ignore
-./pharo bootstrap.image perform --save Pragma buildCache
+./pharo bootstrap.image perform --save -- Pragma buildCache
 
 #Running tests
 ./pharo bootstrap.image test --junit-xml-output --stage-name ${2} SUnit-Core SUnit-Tests

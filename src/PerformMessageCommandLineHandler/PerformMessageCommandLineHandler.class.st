@@ -15,7 +15,9 @@ Class {
 	#instVars : [
 		'targetClass',
 		'messageArguments',
-		'message'
+		'message',
+		'arguments',
+		'commandOptions'
 	],
 	#category : 'PerformMessageCommandLineHandler',
 	#package : 'PerformMessageCommandLineHandler'
@@ -37,6 +39,24 @@ PerformMessageCommandLineHandler >> activate [
 
 	self shouldSave ifTrue: [ Smalltalk saveSession ].
 	self exitSuccess
+]
+
+{ #category : 'accessing' }
+PerformMessageCommandLineHandler >> commandArguments [
+
+	^ arguments ifNil: [ #() ]
+]
+
+{ #category : 'accessing' }
+PerformMessageCommandLineHandler >> commandOptions [
+
+	^ commandOptions ifNil: [ #() ]
+]
+
+{ #category : 'accessing' }
+PerformMessageCommandLineHandler >> commandOptionsEndMarker [
+
+	^ '--'
 ]
 
 { #category : 'actions' }
@@ -68,18 +88,34 @@ PerformMessageCommandLineHandler >> messageArguments [
 
 { #category : 'parsing' }
 PerformMessageCommandLineHandler >> parseArguments [
-	| arguments |
+	
+	self parseCommandOptions.
 
-	arguments := self arguments reject: [ :argument | argument beginsWith: '-']. "ignore options"
-
-	(arguments size < 2)
+	(self commandArguments size < 2)
 		ifTrue: [ ^ self exitFailure: 'Not enough arguments' ].
 
-	targetClass := Smalltalk globals at: arguments first asSymbol ifAbsent: [
-		  ^ self exitFailure: 'Unknown class' ].
+	targetClass := Smalltalk globals 
+		at: self commandArguments first asSymbol 
+		ifAbsent: [ ^ self exitFailure: 'Unknown class' ].
 	
-	message := arguments second asSymbol.
-	messageArguments := (arguments allButFirst: 2) asArray
+	message := self commandArguments second asSymbol.
+	messageArguments := (self commandArguments allButFirst: 2) asArray
+]
+
+{ #category : 'parsing' }
+PerformMessageCommandLineHandler >> parseCommandOptions [
+	| splittedArguments |
+
+	"All options passed to the perform command after the -- argument are considered as arguments to the message to be called.
+	It is useful, for example, to pass flags to the called message."
+
+	splittedArguments := { self commandOptionsEndMarker } split: self arguments.
+	(splittedArguments size = 1) 
+		ifTrue: [ arguments := splittedArguments first ]
+		ifFalse: [ commandOptions := splittedArguments first. 
+					arguments := splittedArguments second ]
+
+	
 ]
 
 { #category : 'actions' }
@@ -92,19 +128,19 @@ PerformMessageCommandLineHandler >> printHelp [
 { #category : 'testing' }
 PerformMessageCommandLineHandler >> shouldActivateHelp [
 	
-	^ self arguments includes: ('--help')
+	^ self commandOptions includes: ('--help')
 ]
 
 { #category : 'testing' }
 PerformMessageCommandLineHandler >> shouldPassArgumentsAsArray [
 	
-	^ self arguments includes: ('--pass-arguments-as-array')
+	^ self commandOptions includes: ('--pass-arguments-as-array')
 ]
 
 { #category : 'testing' }
 PerformMessageCommandLineHandler >> shouldSave [
 	
-	^ self arguments includes: ('--save')
+	^ self commandOptions includes: ('--save')
 ]
 
 { #category : 'accessing' }
