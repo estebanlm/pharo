@@ -45,7 +45,7 @@ PerformMessageCommandLineHandler >> execute [
 
 	self parseArguments.
 
-	result := targetClass perform: message withArguments: messageArguments.
+	result := self targetClass perform: self message withArguments: self messageArguments.
 	
 	self stdout
 		print: result;
@@ -61,7 +61,9 @@ PerformMessageCommandLineHandler >> message [
 { #category : 'accessing' }
 PerformMessageCommandLineHandler >> messageArguments [
 
-	^ messageArguments
+	^ (self targetClass name = #BasicHermesTool)
+		ifTrue: [ Array with: messageArguments ]
+		ifFalse: [ messageArguments ]
 ]
 
 { #category : 'parsing' }
