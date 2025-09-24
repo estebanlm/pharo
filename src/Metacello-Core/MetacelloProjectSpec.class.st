@@ -43,12 +43,12 @@ MetacelloProjectSpec >> addToMetacelloPackages: aMetacelloPackagesSpec [
 
 { #category : 'scripting' }
 MetacelloProjectSpec >> asBaselineProjectSpec [
-    ^ self copyForScriptingInto: (MetacelloMCBaselineOfProjectSpec for: self project asBaselineProject)
+    ^ self copyForScriptingInto: (MetacelloBaselineOfProjectSpec for: self project asBaselineProject)
 ]
 
 { #category : 'scripting' }
 MetacelloProjectSpec >> asConfigurationProjectSpec [
-    ^ self copyForScriptingInto: (MetacelloMCConfigurationOfProjectSpec for: self project asConfigurationProject)
+    ^ self copyForScriptingInto: (MetacelloConfigurationOfProjectSpec for: self project asConfigurationProject)
 ]
 
 { #category : 'scripting' }
@@ -340,14 +340,6 @@ MetacelloProjectSpec >> copyForScriptingInto: aProjectSpec [
         postLoadDoIt: postLoadDoIt;
         repositories: repositories copy;
         file: file
-]
-
-{ #category : 'enumerating' }
-MetacelloProjectSpec >> currentlyLoadedClassesInVersion [
-
-	self versionOrNil ifNotNil: [ :vrsn |
-		^ vrsn spec currentlyLoadedClassesInVersion ].
-	^ #(  )
 ]
 
 { #category : 'loading' }
