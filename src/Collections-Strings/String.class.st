@@ -2723,19 +2723,6 @@ String >> trimRight: aBlock [
 	^ self trimLeft: [ :char | false ] right: aBlock
 ]
 
-{ #category : 'copying' }
-String >> trimmed [
-	"Trim separators from both sides of the receiving string."
-
-	"'  hello  ' trimmed >>> 'hello'"
-
-	"'hello' trimmed >>> 'hello'"
-
-	"'' trimmed >>> ''"
-	
-	^ self trimBoth
-]
-
 { #category : 'converting' }
 String >> truncateTo: smallSize [
 	"return myself or a copy shortened to smallSize."
