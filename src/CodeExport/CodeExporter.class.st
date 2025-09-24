@@ -62,6 +62,8 @@ CodeExporter class >> writeSourceCodeFrom: aStream toFileReference: aFileReferen
 CodeExporter >> writeClassCommentOf: aClass [
 
 	| header |
+	aClass comment ifNil: [ ^ self ].
+
 	header := String streamContents: [ :strm |
 			          strm
 				          nextPutAll: aClass name;
@@ -69,19 +71,27 @@ CodeExporter >> writeClassCommentOf: aClass [
 			          aClass commentStamp storeOn: strm.
 			          strm
 				          nextPutAll: ' prior: ';
-				          nextPutAll: '0' ].
+				          nextPutAll: '0' ]. "Print header"
+	writeStream
+		cr;
+		bang.
 	writeStream nextPut: header.
-	aClass comment ifNotNil: [ :comment |
-			writeStream
-				cr;
-				nextPut: comment string ].
-	writeStream cr
+
+	"Print comment. If empty, we need to put an empty line anyways to avoid breaking the parser"
+	writeStream
+		cr;
+		nextPut: (aClass comment string ifEmpty: [ String cr ]).
+	"Print metadata"
+	writeStream
+		cr;
+		nextPut: ''
 ]
 
 { #category : 'writing' }
 CodeExporter >> writeClassDefinition: aClass [ 
-	
-	writeStream nextPut: aClass oldDefinition
+
+	writeStream cr.
+	writeStream nextPut: aClass oldPharoDefinition
 ]
 
 { #category : 'writing' }
@@ -100,19 +110,19 @@ CodeExporter >> writeMethod: aMethod [
 
 	preamble := methodClass name , ' methodsFor: ' , (methodClass protocolOfSelector: methodSelector) name asString printString.
 	writeStream
-		cr;
-		nextPut: '';
+		cr; cr; bang;
 		nextPut: (String streamContents: [ :strm |
 						 strm nextPutAll: preamble.
 						 aMethod stamp ifNotEmpty: [ :stamp |
 									 strm
 										 nextPutAll: ' stamp: ';
 										 print: stamp ] ]);
-		cr;
+
 		"Print the source code"
+		cr;
 		nextPut: aMethod sourceCode;
-		nextPut: ' ';
-		cr
+		"Print the metadata"
+		nextPut: ' '
 ]
 
 { #category : 'accessing' }

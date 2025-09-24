@@ -28,7 +28,15 @@ SycCmFileOutClassCommand >> description [
 { #category : 'executing' }
 SycCmFileOutClassCommand >> executeRefactoring [
 
-	codeObjects do: [ :each | each fileOut ]
+	StSaveFilePresenter new
+		defaultFolder: FileLocator workingDirectory;
+		nameText: 'fileout.st';
+		okAction: [ :fileReference |
+				| fileouter |
+				fileouter := Fileouter new.
+				codeObjects do: [ :each | fileouter addFullClass: each ].
+				fileouter fileoutOnFileReference: fileReference ];
+		openModal
 ]
 
 { #category : 'accessing' }

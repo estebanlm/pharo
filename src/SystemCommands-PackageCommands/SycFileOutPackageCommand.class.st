@@ -32,5 +32,13 @@ SycFileOutPackageCommand >> defaultMenuItemName [
 { #category : 'execution' }
 SycFileOutPackageCommand >> execute [
 
-	packages do: [ :each | each fileOut ]
+	StSaveFilePresenter new
+		defaultFolder: FileLocator workingDirectory;
+		nameText: 'fileout.st';
+		okAction: [ :fileReference |
+				| fileouter |
+				fileouter := Fileouter new.
+				packages do: [ :each | fileouter addFullPackage: each ].
+				fileouter fileoutOnFileReference: fileReference ];
+		openModal
 ]

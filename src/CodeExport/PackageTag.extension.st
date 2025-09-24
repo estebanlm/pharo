@@ -22,7 +22,8 @@ PackageTag >> fileOutOn: aFileStream [
 
 	toExport := traits asArray , (Class superclassOrder: (self classes reject: [ :class | class isTrait ])) asArray.
 
-	toExport do: [ :each | each fileOutOn: aFileStream initializing: false ] separatedBy: [
+	toExport do: [ :each | 
+		each fileOutOn: aFileStream initializing: false ] separatedBy: [
 		aFileStream
 			cr;
 			nextPut: Character newPage;

@@ -120,7 +120,8 @@ CodeImporter >> codeDeclarations [
 CodeImporter >> evaluate [
 	" stripped down version of evaluateDeclarations"
 	| value |
-	self codeDeclarations do: [ :declaration |
+	self codeDeclarations doWithIndex: [ :declaration :i |
+		self haltIf: [ i == 95 ].TA.
 		value := declaration importFor: nil logSource: logSource  ].
 	self flushChangesFile.
 

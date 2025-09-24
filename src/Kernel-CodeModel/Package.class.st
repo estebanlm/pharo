@@ -654,13 +654,17 @@ Package >> removeProperty: propName ifAbsent: aBlock [
 { #category : 'tags' }
 Package >> removeTag: aTag [
 
-	| tag |
+	| tag traits sortedTraits sortedClasses sorted |
 	tag := aTag isString
 		       ifTrue: [ self tagNamed: aTag ifAbsent: [ ^ self ] ]
 		       ifFalse: [ aTag ].
 
-	"The #asArray is there to not remove elements from the #classes inst var while iterating it."
-	tag classes asArray do: [ :class | class removeFromSystem ].
+	"Make a topo sort of traits and classes"	
+	traits := self classes select: [ :class | class isTrait ].
+	sortedTraits := Trait traitDependencyOrder: traits.
+	sortedClasses := Class superclassOrder: (self classes reject: [ :class | class isTrait ]).		
+	sorted := sortedClasses reversed, sortedTraits reversed.
+	sorted do: [ :class | class removeFromSystem ].
 
 	tags remove: tag ifAbsent: [ ^ self ].
 

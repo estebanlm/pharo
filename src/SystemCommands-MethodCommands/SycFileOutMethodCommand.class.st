@@ -11,7 +11,15 @@ Class {
 { #category : 'executing' }
 SycFileOutMethodCommand >> applyCommandResult [
 
-	self methods do: [ :each | each fileOut ]
+	StSaveFilePresenter new
+		defaultFolder: FileLocator workingDirectory;
+		nameText: 'fileout.st';
+		okAction: [ :fileReference |
+				| fileouter |
+				fileouter := Fileouter new.
+				self methods do: [ :each | fileouter addMethod: each ].
+				fileouter fileoutOnFileReference: fileReference ];
+		openModal
 ]
 
 { #category : 'accessing' }
