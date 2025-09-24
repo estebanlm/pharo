@@ -1,15 +1,14 @@
 Extension { #name : 'CompiledMethod' }
 
 { #category : '*System-Sources' }
-CompiledMethod >> putSource: source withPreamble: preambleBlock [
+CompiledMethod >> putSource: source withPreamble: aPreamble [
 	"Store the source code for the receiver on an external file."
 
 	SourceFiles
 		writeSource: source
-		preamble: (String streamContents: preambleBlock)
+		preamble: aPreamble
+		footer: 'toto'
 		onSuccess: [ :newSourcePointer :theChangesFileStream |
-			"Method chunk needs a final ! !"
-			(SourceChunkWriteStream on: theChangesFileStream) nextPut: ' '.
 			"Update with new source pointer"
 			self sourcePointer: newSourcePointer ]
 		onFail: [

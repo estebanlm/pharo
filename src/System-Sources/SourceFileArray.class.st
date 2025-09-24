@@ -159,7 +159,10 @@ SourceFileArray >> fileIndexFromSourcePointer: anInteger [
 
 { #category : 'private - sourcepointer conversion' }
 SourceFileArray >> filePositionFromSourcePointer: anInteger [
-	"Return the position of the source chunk addressed by anInteger, just shift by one"
+	
+	"Return the position of the source chunk addressed by anInteger"
+	"The source pointer is composed of 63 bits offset + 1 bit of file identifier in the least significant bit.
+	Thus, shift by one to remove the file identifier"
 
 	^ anInteger >> 1
 ]
@@ -204,6 +207,19 @@ SourceFileArray >> initialize [
 
 	readOnlyQueue := SharedQueue new.
 	flushChanges := true
+]
+
+{ #category : 'public - string reading' }
+SourceFileArray >> metadataAt: sourcePointer [
+	"Retrieves the source code for the pointer received as argument"
+
+	^ self
+		  readStreamAt: sourcePointer
+		  ifPresent: [ :stream |
+				  (ChunkReadStream on: stream)
+					  next;
+					  next ]
+		  ifAbsent: [ nil ]
 ]
 
 { #category : 'public - string reading' }
@@ -460,7 +476,7 @@ SourceFileArray >> timeStampFromPreamble: preamble for: sourceDataPointers [
 ]
 
 { #category : 'public - string writing' }
-SourceFileArray >> writeSource: aString preamble: preamble onSuccess: successBlock onFail: failBlock [
+SourceFileArray >> writeSource: contents preamble: preamble footer: aFooter onSuccess: successBlock onFail: failBlock [
 
 	| file position |
 	file := self changesFileStream.
@@ -469,11 +485,30 @@ SourceFileArray >> writeSource: aString preamble: preamble onSuccess: successBlo
 	ChangesLog default assureStartupStampLogged.
 
 	file setToEnd.
-	file nextPutAll: preamble.
+	(SourceChunkWriteStream on: file)
+		cr;
+		bang;
+		nextPut: preamble;
+		cr.
+
 	position := file position.
-	(SourceChunkWriteStream on: file) nextPut: aString.
+	(SourceChunkWriteStream on: file)
+		nextPut: contents;
+		cr;
+		nextPut: aFooter.
 
 	successBlock cull: (self sourcePointerFromFileIndex: 2 andPosition: position) cull: file.
 
 	self flushChangesFile
+]
+
+{ #category : 'public - string writing' }
+SourceFileArray >> writeSource: aString preamble: preamble onSuccess: successBlock onFail: failBlock [
+
+	^ self
+		  writeSource: aString
+		  preamble: preamble
+		  footer: ' '
+		  onSuccess: successBlock
+		  onFail: failBlock
 ]

@@ -143,14 +143,6 @@ ChangeRecord >> isMethodNotDefinedInImage [
 				[(aClass includesSelector: self methodSelector) not]]
 ]
 
-{ #category : 'testing' }
-ChangeRecord >> isUnchangedMethod [
-
-	^ self isMethodDefinedInImage
-		and: [self string withBlanksCondensed
-				= (self methodClass sourceCodeAt: self methodSelector) asString withBlanksCondensed ]
-]
-
 { #category : 'accessing' }
 ChangeRecord >> methodClass [
 	| methodClass |

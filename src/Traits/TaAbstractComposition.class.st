@@ -61,6 +61,12 @@ TaAbstractComposition >> = anotherTrait [
 	^ self shouldBeImplemented
 ]
 
+{ #category : 'accessing' }
+TaAbstractComposition >> >> aSelector [
+	
+	^ self compiledMethodAt: aSelector
+]
+
 { #category : 'operations' }
 TaAbstractComposition >> @ anArrayOfAssociations [
 	"I return a new trait composition with the aliases passed as parameters. It is an array of associations, the keys are the new selectors and the values are the original selectors"
@@ -390,17 +396,14 @@ TaAbstractComposition >> reverseAlias: aSelector [
 
 { #category : 'compiling' }
 TaAbstractComposition >> saveSourceCode: sourceCode ofMethod: newMethod [
-
 	"I have to check because during bootstrap there is no SouceFiles"
-	(sourceCode isNotNil and: [((Smalltalk globals includesKey: #SourceFiles)
-		and: [ (Smalltalk globals at: #SourceFiles) isNotNil])]) ifTrue: [
-			newMethod putSource: sourceCode
-					withPreamble: [:f | 
-						f cr.
-						(ChunkWriteStream on: f)
-							bang;
-							nextPut: 'Trait method'.
-						f cr]].
+
+	(sourceCode isNotNil and: [ 
+			(Smalltalk globals includesKey: #SourceFiles) and: [ 
+				(Smalltalk globals at: #SourceFiles) isNotNil ] ])
+		ifFalse: [ ^ self ].
+
+	newMethod putSource: sourceCode withPreamble: 'Trait method'
 ]
 
 { #category : 'accessing' }

@@ -254,7 +254,11 @@ SourceFileArrayTest >> testWriteSourceWritesInGivenSourceFileArray [
 		preamble: 'some preamble'
 		onSuccess: [ :sourcePointer | "continue with assertions" ]
 		onFail: [ "fail the test" self fail ].
-	self assert: (fs / 'changes.chunk') contents equals: 'some preamblesome source!'
+	self assert: (fs / 'changes.chunk') contents equals: 
+'
+!some preamble!
+some source!
+ !'
 ]
 
 { #category : 'tests' }
@@ -277,7 +281,11 @@ SourceFileArrayTest >> testWriteSourceWritesInGivenSourceFileArrayWithFlushDefer
 				onFail: [ self fail ] ].
 	self
 		assert: (fs / 'changes.chunk') contents
-		equals: 'some preamblesome source!'
+		equals:
+'
+!some preamble!
+some source!
+ !'
 ]
 
 { #category : 'tests' }
@@ -297,7 +305,11 @@ SourceFileArrayTest >> testWriteToBufferedStream [
 		preamble: 'some preamble'
 		onSuccess: [ :sourcePointer | "continue with assertions" ]
 		onFail: [ "fail the test" self fail ].
-	self assert: (fs / 'changes.chunk') contents equals: 'some preamblesome source!'
+	self assert: (fs / 'changes.chunk') contents equals: 
+'
+!some preamble!
+some source!
+ !'
 ]
 
 { #category : 'tests' }

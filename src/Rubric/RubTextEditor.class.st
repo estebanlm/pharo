@@ -1469,16 +1469,6 @@ RubTextEditor >> lf: aKeyboardEvent [
 	^false
 ]
 
-{ #category : 'accessing' }
-RubTextEditor >> lineAtCursorPosition [
-	| string |
-	
-	string := self text asString ifEmpty: [ ^ '' ].
-	^ self lineIntervalAtCursorPosition
-		ifNotNil: [ :anInterval | string copyFrom: anInterval first to: anInterval last ]
-		ifNil: [ '' ]
-]
-
 { #category : 'private' }
 RubTextEditor >> lineIndentationStart: aPosition [
 	"The offset of the start of the line of `aPostion`, but skip leading spaces and tabs"
@@ -1492,25 +1482,6 @@ RubTextEditor >> lineIndentationStart: aPosition [
 		position := position + 1 ].
 
 	^ position
-]
-
-{ #category : 'accessing' }
-RubTextEditor >> lineIntervalAtCursorPosition [
-	| string lastEnd index lastStart |
-	
-	index := self pointIndex.
-	string := self text asString ifEmpty: [ ^ nil ].
-	string lineIndicesDo: [ :start :endWithoutDelimiters :end | 
-		index <= end ifTrue: [ 
-			^ start to: endWithoutDelimiters ].
-		lastStart := start.
-		lastEnd := end ].
-	
-	"evaluate the case where the cursor is placed at the end of the text (there will not 
-	 be delimiter, but there will be a line to answer anyway (maybe empty)"
-	^ lastEnd + 1 <= index 
-		ifTrue: [ lastStart to: lastEnd ]
-		ifFalse: [ nil ]
 ]
 
 { #category : 'menu messages' }

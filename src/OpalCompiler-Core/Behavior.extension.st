@@ -30,12 +30,7 @@ Behavior >> compile: code notifying: requestor [
 		          failBlock: (requestor ifNotNil: [ [ ^ nil ] ]);
 		          "no failblock if no requestor"compile.
 
-	method putSource: code withPreamble: [ :f |
-			(ChunkWriteStream on: f)
-				cr;
-				bang;
-				nextPut: 'Behavior method';
-				cr ].
+	method putSource: code withPreamble: 'Behavior method'.
 	self addSelector: method selector withMethod: method.
 	^ method selector
 ]
@@ -95,7 +90,7 @@ Behavior >> recompile: selector from: oldClass [
 	self codeChangeAnnouncer suspendAllWhile: [
 		method := oldClass compiledMethodAt: selector.
 		newMethod := oldClass compiler
-			             source: (oldClass sourceCodeAt: selector);
+			             source: (oldClass >> selector) sourceCode;
 			             priorMethod: method;
 			             class: self;
 			             permitFaulty: true;

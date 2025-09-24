@@ -369,20 +369,6 @@ ClassDescription >> compileSilently: sourceCode classified: protocolName notifyi
 	^ self codeChangeAnnouncer suspendAllWhile: [ self compile: sourceCode classified: protocolName notifying: requestor ]
 ]
 
-{ #category : 'copying' }
-ClassDescription >> copyAllMethodsFrom: originClass [
-	"Install a copy of each methods of originClass in myself under the same protocol."
-
-	originClass methods do: [ :aMethod |
-		(self includesLocalSelector: aMethod selector) ifTrue: [
-			aMethod sourceCode asString = (self sourceCodeAt: aMethod selector) asString ifFalse: [
-				self error: ('{1}>>{2} will be redefined if you proceed.' format: {
-							 self name.
-							 aMethod selector }) ] ].
-
-		self compile: aMethod sourceCode classified: aMethod protocol ]
-]
-
 { #category : 'slots' }
 ClassDescription >> definesSlot: aSlot [
 	"Return true whether the receiver defines an instance variable named aString"
