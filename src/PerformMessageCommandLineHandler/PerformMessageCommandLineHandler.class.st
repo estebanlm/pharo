@@ -61,7 +61,7 @@ PerformMessageCommandLineHandler >> message [
 { #category : 'accessing' }
 PerformMessageCommandLineHandler >> messageArguments [
 
-	^ (self targetClass name = #BasicHermesTool)
+	^ self shouldPassArgumentsAsArray
 		ifTrue: [ Array with: messageArguments ]
 		ifFalse: [ messageArguments ]
 ]
@@ -93,6 +93,12 @@ PerformMessageCommandLineHandler >> printHelp [
 PerformMessageCommandLineHandler >> shouldActivateHelp [
 	
 	^ self arguments includes: ('--help')
+]
+
+{ #category : 'testing' }
+PerformMessageCommandLineHandler >> shouldPassArgumentsAsArray [
+	
+	^ self arguments includes: ('--pass-arguments-as-array')
 ]
 
 { #category : 'testing' }

@@ -137,7 +137,7 @@ echo $(date -u) "[Compiler] Initializing Bootstraped Image"
 ${VM} "${COMPILER_IMAGE_NAME}.image" # I have to run once the image so the next time it starts the CommandLineHandler.
 
 echo $(date -u) "[Compiler] Adding more Kernel packages"
-${VM} "${COMPILER_IMAGE_NAME}.image" "${IMAGE_FLAGS}" perform --save BasicHermesTool load: Clap-Core.hermes Clap-CommandLine.hermes Hermes-Extensions.hermes
+${VM} "${COMPILER_IMAGE_NAME}.image" "${IMAGE_FLAGS}" perform --save --pass-arguments-as-array BasicHermesTool load: Clap-Core.hermes Clap-CommandLine.hermes Hermes-Extensions.hermes
 ${VM} "${COMPILER_IMAGE_NAME}.image" "${IMAGE_FLAGS}" loadHermes Math-Operations-Extensions.hermes Debugging-Core.hermes System-Time.hermes Multilingual-Encodings.hermes ReflectionMirrors-Primitives.hermes --save --no-fail-on-undeclared
 
 # Now that System-Time is loaded, we can initialize the version
