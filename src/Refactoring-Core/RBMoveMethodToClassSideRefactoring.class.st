@@ -154,8 +154,8 @@ RBMoveMethodToClassSideRefactoring >> privateTransform [
 	targetClass := self model classNamed: class name, ' class'.
 	newSource2 := self getNewSource.
 
-	rbMethod := RBMethod for: newClass source: newSource2 selector: method selector.
-	rbMethod2 := RBMethod for: oldClass source: newSource selector: method selector.
+	rbMethod := RBMethod for: targetClass source: newSource2 selector: method selector.
+	rbMethod2 := RBMethod for: sourceClass source: newSource selector: method selector.
 	self removeMethod: method selector from: oldClass.
 	self addMethod: rbMethod to: newClass toProtocol: originalProtocol.
 	self addMethod: rbMethod2 to: oldClass toProtocol: originalProtocol
