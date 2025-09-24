@@ -5,6 +5,7 @@ I add a number of facilities to those in ClassDescription:
 	A classPool for class variables shared between this class and its metaclass
 	A list of sharedPools which probably should be supplanted by some better mechanism.
 
+
 My instances describe the representation and behavior of objects. I add more comprehensive programming support facilities to the basic attributes of Behavior and the descriptive facilities of ClassDescription.
 
 The slot 'subclasses' is a redundant structure.  It is never used during execution, but is used by the development system to simplify or speed certain operations.
@@ -386,34 +387,32 @@ Class >> comment: aString [
 Class >> comment: aString stamp: aStamp [
 	"Store the comment, aString or Text or RemoteString, associated with the class we are organizing.  Empty string gets stored only if had a non-empty one before."
 
-	| pointer header oldComment oldStamp preamble |
+	| pointer oldComment oldStamp preamble |
 	oldComment := self comment.
 	oldStamp := self commentStamp.
 
 	aString string = oldComment string ifTrue: [ ^ self ].
 
-	pointer := self commentSourcePointer ifNil: [0].
+	pointer := self commentSourcePointer ifNil: [ 0 ].
 
 
-	preamble := String streamContents: [ :tempStream | | chunkStream |
-		chunkStream := ChunkWriteStream on: tempStream.
-		chunkStream cr; bang.
-		header := String streamContents: [:strm |
-			strm
-				nextPutAll: self name;
-				nextPutAll: ' commentStamp: '.
-			aStamp storeOn: strm.
-			strm nextPutAll: ' prior: '; nextPutAll: pointer printString ].
-		chunkStream nextPut: header; cr ].
+	preamble := String streamContents: [ :strm |
+			            strm
+				            nextPutAll: self name;
+				            nextPutAll: ' commentStamp: '.
+			            aStamp storeOn: strm.
+			            strm
+				            nextPutAll: ' prior: ';
+				            nextPutAll: pointer printString ].
 
 	SourceFiles
 		writeSource: aString
 		preamble: preamble
-		onSuccess: [ :newSourcePointer |
-			self commentSourcePointer: newSourcePointer]
+		footer: ' '
+		onSuccess: [ :newSourcePointer | self commentSourcePointer: newSourcePointer ]
 		onFail: [ "ignore" ].
 
-	self codeChangeAnnouncer 
+	self codeChangeAnnouncer
 		class: self
 		oldComment: oldComment
 		newComment: aString
