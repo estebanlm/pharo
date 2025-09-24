@@ -301,15 +301,6 @@ ExternalStructure class >> fields [
 	^#()
 ]
 
-{ #category : 'class management' }
-ExternalStructure class >> fileOutInitializerOn: aFileStream [
-	super fileOutInitializerOn: aFileStream.
-	aFileStream cr.
-	aFileStream cr.
-	(ChunkWriteStream on: aFileStream) nextPut: self name , ' compileFields'.
-	aFileStream cr
-]
-
 { #category : 'instance creation' }
 ExternalStructure class >> fromHandle: aHandle [
 	^self basicNew setHandle: aHandle

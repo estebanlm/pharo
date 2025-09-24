@@ -86,7 +86,8 @@ CodeExporter >> writeClassDefinition: aClass [
 
 { #category : 'writing' }
 CodeExporter >> writeClassInitializer: aClass [ 
-	
+
+	writeStream cr.
 	writeStream nextPut: aClass name, ' initialize'
 ]
 

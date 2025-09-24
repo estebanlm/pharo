@@ -7,7 +7,8 @@ Package >> fileOut [
 	internalStream := (String new: 1000) writeStream.
 
 	self tags do: [ :tag | tag fileOutOn: internalStream ].
-	extensionSelectors keysAndValuesDo: [ :class :selectors | selectors do: [ :selector | class fileOutMethod: selector on: internalStream ] ].
+	extensionSelectors keysAndValuesDo: [ :class :selectors | selectors do: [ :selector | 
+			class printMethodChunk: selector on: internalStream ] ].
 
 	^ CodeExporter writeSourceCodeFrom: internalStream baseName: self name isSt: true
 ]

@@ -13,17 +13,6 @@ ClassDescription >> commentStamp [
 ]
 
 { #category : '*CodeExport' }
-ClassDescription >> fileOutChangedMessages: aSet on: aFileStream [
-	"File a description of the messages of this class that have been
-	changed (i.e., are entered into the argument, aSet) onto aFileStream."
-
-	self protocols do: [ :protocol |
-		protocol methodSelectors
-			select: [ :selector | aSet includes: selector ]
-			thenDo: [ :selector | self printMethodChunk: selector on: aFileStream ] ]
-]
-
-{ #category : '*CodeExport' }
 ClassDescription >> fileOutLocalMethodsInProtocol: protocol on: aFileStream [
 	"File out methods for this protocol."
 
@@ -38,16 +27,8 @@ ClassDescription >> fileOutMethod: selector [
 
 	| internalStream |
 	internalStream := (String new: 1000) writeStream.
-	self fileOutMethod: selector on: internalStream.
+	self printMethodChunk: selector on: internalStream.
 	CodeExporter writeSourceCodeFrom: internalStream baseName: (self name , '-' , (selector copyReplaceAll: ':' with: '..')) isSt: true
-]
-
-{ #category : '*CodeExport' }
-ClassDescription >> fileOutMethod: selector on: aStream [
-
-	selector == #Comment ifTrue: [ ^ self inform: 'Sorry, cannot file out class comment in isolation.' ].
-	(self includesSelector: selector) ifFalse: [ ^ self error: 'Selector ' , selector asString , ' not found' ].
-	self printMethodChunk: selector on: aStream
 ]
 
 { #category : '*CodeExport' }
@@ -61,48 +42,6 @@ ClassDescription >> fileOutOn: aFileStream [
 	exporter writeClassDefinition: self.
 	exporter writeClassCommentOf: self.
 	self protocols do: [ :protocol | self fileOutLocalMethodsInProtocol: protocol on: aFileStream ]
-]
-
-{ #category : '*CodeExport' }
-ClassDescription >> fileOutProtocol: protocolName on: aFileStream [
-	"File a description of the receiver's protocolName on aFileStream."
-
-	(ChunkWriteStream on: aFileStream)
-		cr;
-		nextPut: $!;
-		nextPut: self name , ' reorganize';
-		cr;
-		nextPut: (String streamContents: [ :aStream |
-						 aStream
-							 nextPut: $(;
-							 nextPutAll: protocolName printString;
-							 nextPut: $);
-							 cr ]);
-		cr
-]
-
-{ #category : '*CodeExport' }
-ClassDescription >> fileOutProtocolsOn: aFileStream [
-	"File a description of the receiver's organization on aFileStream."
-
-	(ChunkWriteStream on: aFileStream)
-		cr;
-		bang;
-		nextPut: self name , ' reorganize';
-		cr;
-		nextPut: (String streamContents: [ :aStream |
-					 self protocols do: [ :protocol |
-							 aStream
-								 nextPut: $(;
-								 nextPutAll: protocol name printString.
-							 protocol methodSelectors do: [ :selector |
-								 aStream
-									 space;
-									 nextPutAll: selector ].
-							 aStream
-								 nextPut: $);
-								 cr ] ]);
-		cr
 ]
 
 { #category : '*CodeExport' }

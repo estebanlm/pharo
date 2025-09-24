@@ -150,27 +150,6 @@ ChunkImportTestCase >> testImportAClass [
 ]
 
 { #category : 'tests' }
-ChunkImportTestCase >> testImportAClassCategory [
-
-	| class classOrganizationString chunk |
-	classOrganizationString := '(#testing testImportAMethod testImportAClass)
-(#auxiliar importAClass)'.
-	chunk := '!{1} reorganize!'.
-
-	class := self importAClass.
-
-	"we write the methods we will categorize"
-	class compileSilently: 'testImportAClass'.
-	class compileSilently: 'testImportAMethod'.
-	class compileSilently: 'importAClass'.
-
-	CodeImporter evaluateString: (chunk format: { class name asString }) , classOrganizationString.
-	"we do not care about the order of the output just that all the elements are present"
-	self assert: (((String streamContents: [ :s | class fileOutProtocolsOn: s ]) findTokens: String cr , ' ()') includesAll:
-			 (classOrganizationString trimBoth findTokens: String cr , ' ()'))
-]
-
-{ #category : 'tests' }
 ChunkImportTestCase >> testImportAClassComment [
 
 	| class comment |
