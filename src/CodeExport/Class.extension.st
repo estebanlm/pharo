@@ -26,12 +26,13 @@ Class >> fileOutOn: aFileStream [
 Class >> fileOutOn: aFileStream initializing: aBool [
 	"File a description of the receiver on aFileStream."
 
-	SystemNotification signal: self name.
 	super fileOutOn: aFileStream.
-	self class nonTrivial
-		ifTrue: [
-			aFileStream cr; nextPutAll: '"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!'; cr; cr.
-			self class
-				fileOutOn: aFileStream
-				initializing: aBool ]
+	self class nonTrivial ifFalse: [ ^ self ].
+
+	aFileStream
+		cr;
+		nextPutAll: '"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!';
+		cr;
+		cr.
+	self class fileOutOn: aFileStream initializing: aBool
 ]

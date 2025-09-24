@@ -4,10 +4,27 @@ An utility class for exporting code to changesets (*.cs) or Smalltalk source (*.
 Class {
 	#name : 'CodeExporter',
 	#superclass : 'Object',
+	#instVars : [
+		'writeStream'
+	],
 	#category : 'CodeExport-Base',
 	#package : 'CodeExport',
 	#tag : 'Base'
 }
+
+{ #category : 'as yet unclassified' }
+CodeExporter class >> onMemory [
+
+	^ self onStream: (String new: 100) writeStream
+]
+
+{ #category : 'as yet unclassified' }
+CodeExporter class >> onStream: aStream [
+
+	^ self new
+		  writeStream: aStream;
+		  yourself
+]
 
 { #category : 'file-out' }
 CodeExporter class >> writeSourceCodeFrom: aStream baseName: baseName isSt: stOrCsFlag [
@@ -39,4 +56,71 @@ CodeExporter class >> writeSourceCodeFrom: aStream toFileReference: aFileReferen
 						cr;
 						nextPutAll: 'Click to open location' ])
 		actionOnClick: [ aFileReference openInOSFileBrowser ]
+]
+
+{ #category : 'writing' }
+CodeExporter >> writeClassCommentOf: aClass [
+
+	| header |
+	header := String streamContents: [ :strm |
+			          strm
+				          nextPutAll: aClass name;
+				          nextPutAll: ' commentStamp: '.
+			          aClass commentStamp storeOn: strm.
+			          strm
+				          nextPutAll: ' prior: ';
+				          nextPutAll: '0' ].
+	writeStream nextPut: header.
+	aClass comment ifNotNil: [ :comment |
+			writeStream
+				cr;
+				nextPut: comment string ].
+	writeStream cr
+]
+
+{ #category : 'writing' }
+CodeExporter >> writeClassDefinition: aClass [ 
+	
+	writeStream nextPut: aClass oldDefinition
+]
+
+{ #category : 'writing' }
+CodeExporter >> writeClassInitializer: aClass [ 
+	
+	writeStream nextPut: aClass name, ' initialize'
+]
+
+{ #category : 'writing' }
+CodeExporter >> writeMethod: aMethod [
+
+	| preamble methodClass methodSelector |
+	methodClass := aMethod methodClass.
+	methodSelector := aMethod selector.
+
+	preamble := methodClass name , ' methodsFor: ' , (methodClass protocolOfSelector: methodSelector) name asString printString.
+	writeStream
+		cr;
+		nextPut: '';
+		nextPut: (String streamContents: [ :strm |
+						 strm nextPutAll: preamble.
+						 aMethod stamp ifNotEmpty: [ :stamp |
+									 strm
+										 nextPutAll: ' stamp: ';
+										 print: stamp ] ]);
+		cr;
+		"Print the source code"
+		nextPut: aMethod sourceCode;
+		nextPut: ' ';
+		cr
+]
+
+{ #category : 'accessing' }
+CodeExporter >> writeStream [
+	^ writeStream
+]
+
+{ #category : 'writing' }
+CodeExporter >> writeStream: aWriteStream [ 
+	
+	writeStream := ChunkWriteStream on: aWriteStream
 ]

@@ -16,14 +16,12 @@ Metaclass >> fileOutOn: aFileStream [
 { #category : '*CodeExport' }
 Metaclass >> fileOutOn: aFileStream initializing: aBool [
 
+	| exporter |
 	super fileOutOn: aFileStream.
 	(aBool and: [ self includesSelector: #initialize ]) ifFalse: [ ^ self ].
 
-	(ChunkWriteStream on: aFileStream)
-		cr;
-		cr;
-		nextPut: thisClass name , ' initialize';
-		cr
+	exporter := CodeExporter onStream: aFileStream.
+	exporter writeClassInitializer: thisClass
 ]
 
 { #category : '*CodeExport' }
