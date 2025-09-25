@@ -81,9 +81,9 @@ PerformMessageCommandLineHandler >> message [
 { #category : 'accessing' }
 PerformMessageCommandLineHandler >> messageArguments [
 
-	^ self shouldPassArgumentsAsArray
-		ifTrue: [ Array with: messageArguments ]
-		ifFalse: [ messageArguments ]
+	^ self shouldNotPassArgumentsAsArray
+		ifTrue: [ messageArguments ]
+		ifFalse: [ Array with: messageArguments ]
 ]
 
 { #category : 'parsing' }
@@ -132,9 +132,9 @@ PerformMessageCommandLineHandler >> shouldActivateHelp [
 ]
 
 { #category : 'testing' }
-PerformMessageCommandLineHandler >> shouldPassArgumentsAsArray [
+PerformMessageCommandLineHandler >> shouldNotPassArgumentsAsArray [
 	
-	^ self commandOptions includes: ('--pass-arguments-as-array')
+	^ self commandOptions includes: ('--pass-raw-arguments')
 ]
 
 { #category : 'testing' }
