@@ -15,6 +15,30 @@ PerformMessageCommandLineHandlerTest >> performCommandWithArguments: aCollection
 ]
 
 { #category : 'tests' }
+PerformMessageCommandLineHandlerTest >> testCanGetCommandOptionsWhenCommandOptionSpecified [
+
+	| command |
+	command := self performCommandWithArguments: #('--pass-raw-arguments' '--' 'Object' 'foo' '1' 'bar').
+	
+	command parseCommandOptions.
+	
+	self assert: command commandOptions equals: #('--pass-raw-arguments').
+	self assert: command commandArguments equals: #('Object' 'foo' '1' 'bar').
+]
+
+{ #category : 'tests' }
+PerformMessageCommandLineHandlerTest >> testCanGetCommandOptionsWhenNoCommandOptionSpecified [
+
+	| command |
+	command := self performCommandWithArguments: #('Object' 'foo' '1' 'bar').
+	
+	command parseCommandOptions.
+	
+	self assert: command commandOptions isEmpty.
+	self assert: command commandArguments equals: #('Object' 'foo' '1' 'bar').
+]
+
+{ #category : 'tests' }
 PerformMessageCommandLineHandlerTest >> testCanGetTargetAndSelector [
 
 	| command |
@@ -30,7 +54,7 @@ PerformMessageCommandLineHandlerTest >> testCanGetTargetAndSelector [
 PerformMessageCommandLineHandlerTest >> testCanGetTargetAndSelectorWithArguments [
 
 	| command |
-	command := self performCommandWithArguments: #('Object' 'foo' '1' 'bar').
+	command := self performCommandWithArguments: #('--pass-raw-arguments' '--' 'Object' 'foo' '1' 'bar').
 	
 	command parseArguments.
 	
@@ -40,10 +64,69 @@ PerformMessageCommandLineHandlerTest >> testCanGetTargetAndSelectorWithArguments
 ]
 
 { #category : 'tests' }
+PerformMessageCommandLineHandlerTest >> testCanGetTargetAndSelectorWithArrayOfArguments [
+
+	| command |
+	command := self performCommandWithArguments: #('Object' 'foo' '1' 'bar').
+	
+	command parseArguments.
+	
+	self assert: command targetClass equals: Object.
+	self assert: command message equals: #foo.
+	self assert: command messageArguments equals: #( #('1' 'bar') ).
+]
+
+{ #category : 'tests' }
+PerformMessageCommandLineHandlerTest >> testMessageArgumentsIsAnArrayOfProvidedArgumentsWhenRawArgumentsFlagPresent [
+
+	| command |
+	command := self performCommandWithArguments: #('--pass-raw-arguments' '--' 'Object' 'foo' '1' 'bar').
+	
+	command parseArguments.
+	
+	self assert: command messageArguments equals: #('1' 'bar').
+]
+
+{ #category : 'tests' }
+PerformMessageCommandLineHandlerTest >> testMessageArgumentsIsAnArrayWithOneElementBeingAnArrayOfProvidedArguments [
+
+	| command |
+	command := self performCommandWithArguments: #('Object' 'foo' '1' 'bar').
+	
+	command parseArguments.
+	
+	self assert: command messageArguments equals: #( #('1' 'bar') ).
+]
+
+{ #category : 'tests' }
+PerformMessageCommandLineHandlerTest >> testMessageArgumentsIsAnEmptyArrayWhenNoArgumentProvided [
+
+	| command |
+	command := self performCommandWithArguments: #('--bar' '--' 'Object' 'foo').
+	
+	command parseArguments.
+	
+	self assert: command messageArguments equals: #( #() ).
+]
+
+{ #category : 'tests' }
+PerformMessageCommandLineHandlerTest >> testMessageArgumentsIsAnEmptyArrayWhenNoArgumentProvidedAndRawArgumentsFlagPresent [
+
+	| command |
+	command := self performCommandWithArguments: #('--pass-raw-arguments' '--' 'Object' 'foo').
+	
+	command parseArguments.
+	
+	self assert: command messageArguments equals: #()
+]
+
+{ #category : 'tests' }
 PerformMessageCommandLineHandlerTest >> testShouldActivateHelpWhenHelpFlagPresent [
 
 	| command |
-	command := self performCommandWithArguments: #('--help').
+	command := self performCommandWithArguments: #('--help' '--').
+	
+	command parseCommandOptions.
 	
 	self assert: command shouldActivateHelp
 	
@@ -53,7 +136,9 @@ PerformMessageCommandLineHandlerTest >> testShouldActivateHelpWhenHelpFlagPresen
 PerformMessageCommandLineHandlerTest >> testShouldNotActivateHelpWhenHelpFlagAbsent [
 
 	| command |
-	command := self performCommandWithArguments: #('fFoo' 'bar' '--save').
+	command := self performCommandWithArguments: #( '--save' '--' 'Foo' 'bar').
+	
+	command parseCommandOptions.
 	
 	self deny: command shouldActivateHelp
 	
@@ -63,7 +148,9 @@ PerformMessageCommandLineHandlerTest >> testShouldNotActivateHelpWhenHelpFlagAbs
 PerformMessageCommandLineHandlerTest >> testShouldNotSaveWhenSaveFlagAbsent [
 
 	| command |
-	command := self performCommandWithArguments: #('fFoo' 'bar').
+	command := self performCommandWithArguments: #('Foo' 'bar').
+	
+	command parseCommandOptions.
 	
 	self deny: command shouldSave
 	
@@ -73,7 +160,9 @@ PerformMessageCommandLineHandlerTest >> testShouldNotSaveWhenSaveFlagAbsent [
 PerformMessageCommandLineHandlerTest >> testShouldSaveWhenSaveFlagPresent [
 
 	| command |
-	command := self performCommandWithArguments: #('--save').
+	command := self performCommandWithArguments: #('--save' '--').
+	
+	command parseCommandOptions.
 	
 	self assert: command shouldSave
 	
