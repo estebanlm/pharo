@@ -128,7 +128,7 @@ PerformMessageCommandLineHandler >> printHelp [
 { #category : 'testing' }
 PerformMessageCommandLineHandler >> shouldActivateHelp [
 	
-	^ self commandOptions includes: ('--help')
+	^ self arguments first = '--help'
 ]
 
 { #category : 'testing' }
