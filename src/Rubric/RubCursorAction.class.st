@@ -2,7 +2,7 @@ Class {
 	#name : 'RubCursorAction',
 	#superclass : 'Object',
 	#instVars : [
-		'ctrlPressed',
+		'cmdPressed',
 		'optionPressed'
 	],
 	#category : 'Rubric-Editing-Core',
@@ -11,15 +11,15 @@ Class {
 }
 
 { #category : 'as yet unclassified' }
-RubCursorAction class >> ctrlPressed: ctrlPressed optPressed: optPressed [
+RubCursorAction class >> cmdPressed: cmdPressed optPressed: optPressed [
 
-	^ self new ctrl: ctrlPressed; opt: optPressed
+	^ self new cmd: cmdPressed; opt: optPressed
 ]
 
 { #category : 'as yet unclassified' }
-RubCursorAction >> ctrl: pressed [
+RubCursorAction >> cmd: pressed [
 
-	ctrlPressed := pressed 
+	cmdPressed := pressed 
 ]
 
 { #category : 'initialization' }

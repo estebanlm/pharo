@@ -16,7 +16,7 @@ RubMoveLeftAction >> isForward [
 RubMoveLeftAction >> moveFromPosition: position inEditor: editor [
 
 	editor invalidateVisualColumn.
-	^ ctrlPressed
+	^ cmdPressed 
 		  ifTrue: [ self previousWordPosition: position editor: editor ]
 		  ifFalse: [ self previousCharacterPosition: position editor: editor ]
 ]

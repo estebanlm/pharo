@@ -665,7 +665,7 @@ RubTextEditor >> cursorDown: aKeyboardEvent [
 	ctrl := aKeyboardEvent commandKeyPressed or: [ aKeyboardEvent controlKeyPressed ].
 	opt := aKeyboardEvent optionKeyPressed.
 
-	self moveCursor: (RubMoveDownAction ctrlPressed: ctrl optPressed: opt) shiftPressed: shift.
+	self moveCursor: (RubMoveDownAction cmdPressed: ctrl optPressed: opt) shiftPressed: shift.
 	^ true
 ]
 
@@ -714,7 +714,7 @@ RubTextEditor >> cursorLeft: aKeyboardEvent [
 	ctrl := aKeyboardEvent commandKeyPressed or: [ aKeyboardEvent controlKeyPressed ].
 	opt := aKeyboardEvent optionKeyPressed.
 
-	self moveCursor: (RubMoveLeftAction ctrlPressed: ctrl optPressed: opt) shiftPressed: shift.
+	self moveCursor: (RubMoveLeftAction cmdPressed: ctrl optPressed: opt) shiftPressed: shift.
 
 	^ true
 ]
@@ -765,7 +765,7 @@ RubTextEditor >> cursorRight: aKeyboardEvent [
 	ctrl := aKeyboardEvent commandKeyPressed or: [ aKeyboardEvent controlKeyPressed ].
 	opt := aKeyboardEvent optionKeyPressed.
 
-	self moveCursor: (RubMoveRightAction ctrlPressed: ctrl optPressed: opt) shiftPressed: shift.
+	self moveCursor: (RubMoveRightAction cmdPressed: ctrl optPressed: opt) shiftPressed: shift.
 
 	^ true
 ]
@@ -790,7 +790,7 @@ prior line. If prior line too short, put at end"
 	ctrl := aKeyboardEvent commandKeyPressed or: [ aKeyboardEvent controlKeyPressed ].
 	opt := aKeyboardEvent optionKeyPressed.
 
-	self moveCursor: (RubMoveUpAction ctrlPressed: ctrl optPressed: opt) shiftPressed: shift.
+	self moveCursor: (RubMoveUpAction cmdPressed: ctrl optPressed: opt) shiftPressed: shift.
 	^ true
 ]
 
