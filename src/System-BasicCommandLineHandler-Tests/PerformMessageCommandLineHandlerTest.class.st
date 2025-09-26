@@ -14,28 +14,23 @@ PerformMessageCommandLineHandlerTest >> performCommandWithArguments: aCollection
 		yourself
 ]
 
-{ #category : 'tests' }
-PerformMessageCommandLineHandlerTest >> testCanGetCommandOptionsWhenCommandOptionSpecified [
+{ #category : 'message performing' }
+PerformMessageCommandLineHandlerTest >> performTest [
 
-	| command |
-	command := self performCommandWithArguments: #('--pass-raw-arguments' '--' 'Object' 'foo' '1' 'bar').
-	
-	command parseCommandOptions.
-	
-	self assert: command commandOptions equals: #('--pass-raw-arguments').
-	self assert: command commandArguments equals: #('Object' 'foo' '1' 'bar').
+	[ super performTest ]
+	on: Exit do: [ :exit | self fail: 'Exit with message: ', exit messageText ]
 ]
 
 { #category : 'tests' }
-PerformMessageCommandLineHandlerTest >> testCanGetCommandOptionsWhenNoCommandOptionSpecified [
+PerformMessageCommandLineHandlerTest >> testCanGetEmptyCommandOptionsWhenNoCommandOptionSpecified [
 
 	| command |
 	command := self performCommandWithArguments: #('Object' 'foo' '1' 'bar').
 	
-	command parseCommandOptions.
+	command parseArguments.
 	
 	self assert: command commandOptions isEmpty.
-	self assert: command commandArguments equals: #('Object' 'foo' '1' 'bar').
+	self assert: command messageArguments equals: #('1' 'bar').
 ]
 
 { #category : 'tests' }
@@ -54,7 +49,7 @@ PerformMessageCommandLineHandlerTest >> testCanGetTargetAndSelector [
 PerformMessageCommandLineHandlerTest >> testCanGetTargetAndSelectorWithArguments [
 
 	| command |
-	command := self performCommandWithArguments: #('--pass-raw-arguments' '--' 'Object' 'foo' '1' 'bar').
+	command := self performCommandWithArguments: #('Object' 'foo' '1' 'bar').
 	
 	command parseArguments.
 	
@@ -67,7 +62,7 @@ PerformMessageCommandLineHandlerTest >> testCanGetTargetAndSelectorWithArguments
 PerformMessageCommandLineHandlerTest >> testCanGetTargetAndSelectorWithArrayOfArguments [
 
 	| command |
-	command := self performCommandWithArguments: #('Object' 'foo' '1' 'bar').
+	command := self performCommandWithArguments: #('Object' 'foo' '--' '1' 'bar').
 	
 	command parseArguments.
 	
@@ -77,10 +72,21 @@ PerformMessageCommandLineHandlerTest >> testCanGetTargetAndSelectorWithArrayOfAr
 ]
 
 { #category : 'tests' }
-PerformMessageCommandLineHandlerTest >> testMessageArgumentsIsAnArrayOfProvidedArgumentsWhenRawArgumentsFlagPresent [
+PerformMessageCommandLineHandlerTest >> testMessageArgumentsFollowingArrayWrappingFlagAreWrappedInAnArray [
 
 	| command |
-	command := self performCommandWithArguments: #('--pass-raw-arguments' '--' 'Object' 'foo' '1' 'bar').
+	command := self performCommandWithArguments: #('Object' 'foo' '1' '--' '2' 'bar').
+	
+	command parseArguments.
+	
+	self assert: command messageArguments equals: #( '1' #('2' 'bar') ).
+]
+
+{ #category : 'tests' }
+PerformMessageCommandLineHandlerTest >> testMessageArgumentsIsAnArrayOfProvidedArgumentsWhenNoArrayWrappingFlag [
+
+	| command |
+	command := self performCommandWithArguments: #('Object' 'foo' '1' 'bar').
 	
 	command parseArguments.
 	
@@ -88,32 +94,10 @@ PerformMessageCommandLineHandlerTest >> testMessageArgumentsIsAnArrayOfProvidedA
 ]
 
 { #category : 'tests' }
-PerformMessageCommandLineHandlerTest >> testMessageArgumentsIsAnArrayWithOneElementBeingAnArrayOfProvidedArguments [
-
-	| command |
-	command := self performCommandWithArguments: #('Object' 'foo' '1' 'bar').
-	
-	command parseArguments.
-	
-	self assert: command messageArguments equals: #( #('1' 'bar') ).
-]
-
-{ #category : 'tests' }
 PerformMessageCommandLineHandlerTest >> testMessageArgumentsIsAnEmptyArrayWhenNoArgumentProvided [
 
 	| command |
-	command := self performCommandWithArguments: #('--bar' '--' 'Object' 'foo').
-	
-	command parseArguments.
-	
-	self assert: command messageArguments equals: #( #() ).
-]
-
-{ #category : 'tests' }
-PerformMessageCommandLineHandlerTest >> testMessageArgumentsIsAnEmptyArrayWhenNoArgumentProvidedAndRawArgumentsFlagPresent [
-
-	| command |
-	command := self performCommandWithArguments: #('--pass-raw-arguments' '--' 'Object' 'foo').
+	command := self performCommandWithArguments: #('Object' 'foo').
 	
 	command parseArguments.
 	
@@ -121,12 +105,21 @@ PerformMessageCommandLineHandlerTest >> testMessageArgumentsIsAnEmptyArrayWhenNo
 ]
 
 { #category : 'tests' }
+PerformMessageCommandLineHandlerTest >> testMessageArgumentsIsAnEmptyArrayWhenNoArgumentProvidedAndArrayWrappingFlagPresent [
+
+	| command |
+	command := self performCommandWithArguments: #('--bar' 'Object' 'foo' '--').
+	
+	command parseArguments.
+	
+	self assert: command messageArguments equals: #( #() ).
+]
+
+{ #category : 'tests' }
 PerformMessageCommandLineHandlerTest >> testShouldActivateHelpWhenHelpFlagPresent [
 
 	| command |
 	command := self performCommandWithArguments: #('--help' '--').
-	
-	command parseCommandOptions.
 	
 	self assert: command shouldActivateHelp
 	
@@ -136,9 +129,9 @@ PerformMessageCommandLineHandlerTest >> testShouldActivateHelpWhenHelpFlagPresen
 PerformMessageCommandLineHandlerTest >> testShouldNotActivateHelpWhenHelpFlagAbsent [
 
 	| command |
-	command := self performCommandWithArguments: #( '--save' '--' 'Foo' 'bar').
+	command := self performCommandWithArguments: #( '--save' 'Object' 'bar').
 	
-	command parseCommandOptions.
+	command parseArguments.
 	
 	self deny: command shouldActivateHelp
 	
@@ -148,9 +141,9 @@ PerformMessageCommandLineHandlerTest >> testShouldNotActivateHelpWhenHelpFlagAbs
 PerformMessageCommandLineHandlerTest >> testShouldNotSaveWhenSaveFlagAbsent [
 
 	| command |
-	command := self performCommandWithArguments: #('Foo' 'bar').
+	command := self performCommandWithArguments: #('Object' 'bar').
 	
-	command parseCommandOptions.
+	command parseArguments.
 	
 	self deny: command shouldSave
 	
@@ -160,9 +153,9 @@ PerformMessageCommandLineHandlerTest >> testShouldNotSaveWhenSaveFlagAbsent [
 PerformMessageCommandLineHandlerTest >> testShouldSaveWhenSaveFlagPresent [
 
 	| command |
-	command := self performCommandWithArguments: #('--save' '--').
+	command := self performCommandWithArguments: #('--save' 'Object' 'foo').
 	
-	command parseCommandOptions.
+	command parseArguments.
 	
 	self assert: command shouldSave
 	

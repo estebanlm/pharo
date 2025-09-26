@@ -14,9 +14,8 @@ Class {
 	#superclass : 'CommandLineHandler',
 	#instVars : [
 		'targetClass',
-		'messageArguments',
 		'message',
-		'arguments',
+		'messageArguments',
 		'commandOptions'
 	],
 	#category : 'PerformMessageCommandLineHandler',
@@ -38,13 +37,7 @@ PerformMessageCommandLineHandler >> activate [
 	self execute.
 
 	self shouldSave ifTrue: [ Smalltalk saveSession ].
-	self exitSuccess
-]
-
-{ #category : 'accessing' }
-PerformMessageCommandLineHandler >> commandArguments [
-
-	^ arguments ifNil: [ #() ]
+	self shouldQuit ifTrue: [ self exitSuccess ]
 ]
 
 { #category : 'accessing' }
@@ -65,6 +58,11 @@ PerformMessageCommandLineHandler >> execute [
 
 	self parseArguments.
 
+	self stderr
+		nextPutAll: 'self targetClass: '; nextPutAll: self targetClass asString; lf;
+		nextPutAll: 'self message: '; nextPutAll: self message asString; lf;
+		nextPutAll: 'self messageArguments: '; nextPutAll: self messageArguments asString; lf.
+
 	result := self targetClass perform: self message withArguments: self messageArguments.
 	
 	self stdout
@@ -81,39 +79,36 @@ PerformMessageCommandLineHandler >> message [
 { #category : 'accessing' }
 PerformMessageCommandLineHandler >> messageArguments [
 
-	^ self shouldNotPassArgumentsAsArray
-		ifTrue: [ messageArguments ]
-		ifFalse: [ Array with: messageArguments ]
+	^ messageArguments asArray
 ]
 
 { #category : 'parsing' }
 PerformMessageCommandLineHandler >> parseArguments [
 	
-	self parseCommandOptions.
+	| str |
+	commandOptions := OrderedCollection new.
+	str := self arguments readStream.
+	[ str atEnd not and: [ str peek beginsWith: '--' ] ] whileTrue: [ commandOptions add: str next ].
 
-	(self commandArguments size < 2)
-		ifTrue: [ ^ self exitFailure: 'Not enough arguments' ].
-
-	targetClass := Smalltalk globals 
-		at: self commandArguments first asSymbol 
+	targetClass :=  Smalltalk globals 
+		at: str next asSymbol
 		ifAbsent: [ ^ self exitFailure: 'Unknown class' ].
+	message := str next asSymbol.
 	
-	message := self commandArguments second asSymbol.
-	messageArguments := (self commandArguments allButFirst: 2) asArray
+	self parseMessageArguments: str upToEnd
 ]
 
 { #category : 'parsing' }
-PerformMessageCommandLineHandler >> parseCommandOptions [
+PerformMessageCommandLineHandler >> parseMessageArguments: remainingArguments [
 	| splittedArguments |
 
 	"All options passed to the perform command after the -- argument are considered as arguments to the message to be called.
 	It is useful, for example, to pass flags to the called message."
 
-	splittedArguments := { self commandOptionsEndMarker } split: self arguments.
-	(splittedArguments size = 1) 
-		ifTrue: [ arguments := splittedArguments first ]
-		ifFalse: [ commandOptions := splittedArguments first. 
-					arguments := splittedArguments second ]
+	splittedArguments := { self commandOptionsEndMarker } split: remainingArguments.
+	messageArguments := (splittedArguments size = 1) 
+		ifTrue: [ splittedArguments first ]
+		ifFalse: [ splittedArguments first copyWith: splittedArguments second ]
 
 	
 ]
@@ -132,9 +127,9 @@ PerformMessageCommandLineHandler >> shouldActivateHelp [
 ]
 
 { #category : 'testing' }
-PerformMessageCommandLineHandler >> shouldNotPassArgumentsAsArray [
+PerformMessageCommandLineHandler >> shouldQuit [
 	
-	^ self commandOptions includes: ('--pass-raw-arguments')
+	^ (self commandOptions includes: ('--no-quit')) not
 ]
 
 { #category : 'testing' }
