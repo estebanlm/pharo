@@ -6,13 +6,13 @@ Class {
 	#tag : 'Editing-Core'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'movement' }
 RubMovePageDownAction >> isForward [
 	
 	^ true 
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'movement' }
 RubMovePageDownAction >> moveFromPosition: position inEditor: editor [
 
 	editor invalidateVirtualColumn.

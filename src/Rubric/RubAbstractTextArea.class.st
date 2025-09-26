@@ -99,8 +99,7 @@ Class {
 		'grow',
 		'findReplaceService',
 		'editing',
-		'hasDragDoubleClick',
-		'currentVirtualColumn'
+		'hasDragDoubleClick'
 	],
 	#classVars : [
 		'BackgroundColor',
@@ -1206,7 +1205,7 @@ RubAbstractTextArea >> initializeShortcuts: aKMDispatcher [
 	self editor initializeShortcuts: aKMDispatcher
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing - cursor' }
 RubAbstractTextArea >> invalidateVirtualColumn [ 
 
 	editingState invalidateVirtualColumn
@@ -2207,13 +2206,13 @@ RubAbstractTextArea >> veryDeepInner: deepCopier [
 	editor := editor veryDeepCopyWith: deepCopier
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing - cursor' }
 RubAbstractTextArea >> visualColumn [
 
 	^ editingState visualColumn 
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing - cursor' }
 RubAbstractTextArea >> visualColumn: virtualColumn [
 
 	editingState visualColumn: virtualColumn 

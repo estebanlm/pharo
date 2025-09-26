@@ -6,19 +6,19 @@ Class {
 	#tag : 'Editing-Core'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'movement' }
 RubMoveHomeAction >> beginningOfLine: position editor: editor [
 
 	^ (editor string lastIndexOf: Character cr startingAt: position - 1 ifAbsent: [ 0 ]) + 1
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'movement' }
 RubMoveHomeAction >> isForward [
 	
 	^ false 
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'movement' }
 RubMoveHomeAction >> moveFromPosition: position inEditor: editor [
 
 	editor invalidateVirtualColumn.

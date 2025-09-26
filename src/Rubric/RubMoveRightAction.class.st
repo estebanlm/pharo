@@ -6,13 +6,13 @@ Class {
 	#tag : 'Editing-Core'
 }
 
-{ #category : 'testing' }
+{ #category : 'movement' }
 RubMoveRightAction >> isForward [
 	
 	^ true.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'movement' }
 RubMoveRightAction >> moveFromPosition: position inEditor: editor [
 
 	editor invalidateVirtualColumn.
@@ -21,13 +21,13 @@ RubMoveRightAction >> moveFromPosition: position inEditor: editor [
 		  ifFalse: [ self nextCharacterPosition: position editor: editor ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'movement' }
 RubMoveRightAction >> nextCharacterPosition: position editor: editor [
 
 	^ position + 1 min: editor bufferSize + 1
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'movement' }
 RubMoveRightAction >> nextWordPosition: position editor: editor [
 
 	^ editor nextWord: position stopOnUpperCase: optionPressed 

@@ -6,13 +6,13 @@ Class {
 	#tag : 'Editing-Core'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'movement' }
 RubMoveEndAction >> endOfBuffer: editor [
 
 	^ editor string size + 1
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'movement' }
 RubMoveEndAction >> endOfLine: position editor: editor [
 
 	| string |
@@ -21,13 +21,13 @@ RubMoveEndAction >> endOfLine: position editor: editor [
 	^ string indexOf: Character cr startingAt: position ifAbsent: [ string size + 1 ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'movement' }
 RubMoveEndAction >> isForward [
 	
 	^ true
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'movement' }
 RubMoveEndAction >> moveFromPosition: position inEditor: editor [
 
 	editor invalidateVirtualColumn.

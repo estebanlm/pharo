@@ -53,7 +53,7 @@ RubEditingState >> hasFocus: aBoolean [
 	hasFocus := aBoolean
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 RubEditingState >> invalidateVirtualColumn [ 
 
 	currentVirtualColumn := nil
@@ -204,13 +204,13 @@ RubEditingState >> unselect [
 	self markBlock: self pointBlock copy
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 RubEditingState >> visualColumn [
 
 	^ currentVirtualColumn 
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 RubEditingState >> visualColumn: visualColumn [
 
 	currentVirtualColumn := visualColumn

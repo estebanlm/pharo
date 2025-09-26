@@ -650,11 +650,6 @@ RubTextEditor >> crlf: aKeyboardEvent [
 	^false
 ]
 
-{ #category : 'as yet unclassified' }
-RubTextEditor >> currentColumn [
-	self shouldBeImplemented.
-]
-
 { #category : 'nonediting/nontyping keys' }
 RubTextEditor >> cursorDown: aKeyboardEvent [
 	"Private - Move cursor from position in current line to same position in
@@ -1375,7 +1370,7 @@ RubTextEditor >> insertAndSelectAfterCurrentSelection: aString [
 	self insertAndSelect: aString at: selectionInterval last + 1
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'cursor' }
 RubTextEditor >> invalidateVirtualColumn [
 
 	textArea invalidateVirtualColumn

@@ -206,7 +206,7 @@ RubTextEditorTest >> assertPreviousWordOf: fromString equals: expected [
 		self describe: actualIndex from: fromIndex comparedTo: expected ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'cursor' }
 RubTextEditorTest >> currentEditorIndex [
 	
 	^ editor pointIndex.
@@ -230,52 +230,52 @@ RubTextEditorTest >> describe: actualIndex from: fromIndex comparedTo: expected 
 			  nextPutAll: '''.' ]
 ]
 
-{ #category : 'asserting' }
+{ #category : 'cursor' }
 RubTextEditorTest >> moveDown [
 
 	^ editor moveCursor: (RubMoveDownAction cmdPressed: false optPressed: false) shiftPressed: false
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'cursor' }
 RubTextEditorTest >> moveEndCmd: cmd [
 
 	^ editor moveCursor: (RubMoveEndAction cmdPressed: cmd optPressed: false) shiftPressed: false
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'cursor' }
 RubTextEditorTest >> moveHomeCmd: cmd [
 
 	^ editor moveCursor: (RubMoveHomeAction cmdPressed: cmd optPressed: false) shiftPressed: false
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'cursor' }
 RubTextEditorTest >> moveLeft [
 
 	^ self moveLeftCmd: false opt: false
 	
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'cursor' }
 RubTextEditorTest >> moveLeftCmd: cmd opt: opt [
 
 	^ editor moveCursor: (RubMoveLeftAction cmdPressed: cmd optPressed: opt) shiftPressed: false	
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'cursor' }
 RubTextEditorTest >> moveRight [
 
 	^ self moveRightCmd: false opt: false
 	
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'cursor' }
 RubTextEditorTest >> moveRightCmd: cmd opt: opt [
 
 	^ editor moveCursor: (RubMoveRightAction cmdPressed: cmd optPressed: opt) shiftPressed: false
 	
 ]
 
-{ #category : 'asserting' }
+{ #category : 'cursor' }
 RubTextEditorTest >> moveUp [
 
 	^ editor moveCursor: (RubMoveUpAction cmdPressed: false optPressed: false) shiftPressed: false

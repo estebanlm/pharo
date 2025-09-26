@@ -10,13 +10,13 @@ Class {
 	#tag : 'Editing-Core'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'constructor' }
 RubCursorAction class >> cmdPressed: cmdPressed optPressed: optPressed [
 
 	^ self new cmd: cmdPressed; opt: optPressed
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'initialization' }
 RubCursorAction >> cmd: pressed [
 
 	cmdPressed := pressed 
@@ -29,13 +29,13 @@ RubCursorAction >> initialize [
 
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'movement' }
 RubCursorAction >> isForward [
 	
 	^ self subclassResponsibility 
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'movement' }
 RubCursorAction >> moveFromPosition: position inEditor: editor [
 	self subclassResponsibility.
 ]

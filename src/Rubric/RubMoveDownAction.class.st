@@ -6,13 +6,13 @@ Class {
 	#tag : 'Editing-Core'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'movement' }
 RubMoveDownAction >> isForward [
 	
 	^ true.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'movement' }
 RubMoveDownAction >> moveFromPosition: position inEditor: editor [
 
 	^ editor sameColumn: position newLine: [ :line | line + 1 ] forward: self isForward
