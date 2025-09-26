@@ -1207,9 +1207,9 @@ RubAbstractTextArea >> initializeShortcuts: aKMDispatcher [
 ]
 
 { #category : 'as yet unclassified' }
-RubAbstractTextArea >> invalidateVisualColumn [ 
+RubAbstractTextArea >> invalidateVirtualColumn [ 
 
-	editingState invalidateVisualColumn
+	editingState invalidateVirtualColumn
 ]
 
 { #category : 'testing' }

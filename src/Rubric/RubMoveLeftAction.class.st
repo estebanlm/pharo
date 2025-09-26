@@ -15,7 +15,7 @@ RubMoveLeftAction >> isForward [
 { #category : 'as yet unclassified' }
 RubMoveLeftAction >> moveFromPosition: position inEditor: editor [
 
-	editor invalidateVisualColumn.
+	editor invalidateVirtualColumn.
 	^ cmdPressed 
 		  ifTrue: [ self previousWordPosition: position editor: editor ]
 		  ifFalse: [ self previousCharacterPosition: position editor: editor ]

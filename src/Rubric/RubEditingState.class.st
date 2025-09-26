@@ -14,7 +14,7 @@ Class {
 		'previousInterval',
 		'scrollPivot',
 		'textArea',
-		'currentVisualColumn'
+		'currentVirtualColumn'
 	],
 	#category : 'Rubric-Editing-Core',
 	#package : 'Rubric',
@@ -54,9 +54,9 @@ RubEditingState >> hasFocus: aBoolean [
 ]
 
 { #category : 'as yet unclassified' }
-RubEditingState >> invalidateVisualColumn [ 
+RubEditingState >> invalidateVirtualColumn [ 
 
-	currentVisualColumn := nil
+	currentVirtualColumn := nil
 ]
 
 { #category : 'accessing' }
@@ -207,11 +207,11 @@ RubEditingState >> unselect [
 { #category : 'as yet unclassified' }
 RubEditingState >> visualColumn [
 
-	^ currentVisualColumn 
+	^ currentVirtualColumn 
 ]
 
 { #category : 'as yet unclassified' }
 RubEditingState >> visualColumn: visualColumn [
 
-	currentVisualColumn := visualColumn
+	currentVirtualColumn := visualColumn
 ]

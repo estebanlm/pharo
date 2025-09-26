@@ -144,6 +144,7 @@ RubTextEditor >> addDeleteSelectionUndoRecord [
 { #category : 'typing support' }
 RubTextEditor >> addString: aString [
 	"Think of a better name"
+	self invalidateVirtualColumn.
 	self hasSelection
 		ifTrue: [self addDeleteSelectionUndoRecord].
 	self openTypeIn.
@@ -267,6 +268,7 @@ RubTextEditor >> backWord: aKeyboardEvent [
 { #category : 'typing/selecting keys' }
 RubTextEditor >> backspace: aKeyboardEvent [
 	| result startIndex |
+	self invalidateVirtualColumn.
 	self closeTypeIn.
 	result := aKeyboardEvent controlKeyPressed
 		ifTrue: [ self backWord: aKeyboardEvent keyCharacter ]
@@ -508,6 +510,7 @@ RubTextEditor >> clearUndoManager: aKeyboardEvent [
 { #category : 'events' }
 RubTextEditor >> click: event [
 	| p |
+	self invalidateVirtualColumn.
 	self closeTypeIn.
 	p := self paragraph characterBlockAtPoint: event cursorPoint.
 	textArea markBlock: p pointBlock: p.
@@ -885,6 +888,7 @@ RubTextEditor >> doneTyping [
 { #category : 'events' }
 RubTextEditor >> doubleClick: evt [
 	| here |
+	self invalidateVirtualColumn.
 	self closeTypeIn.	"no matter what, if shift is pressed extend the selection"
 	here := self pointIndex.
 	(here between: 2 and: self string size)
@@ -1210,7 +1214,7 @@ RubTextEditor >> fontToUse [
 { #category : 'typing/selecting keys' }
 RubTextEditor >> forwardDelete: aKeyboardEvent [
 	"Delete forward over the next character"
-
+	self invalidateVirtualColumn.
 	self closeTypeIn.
 	self hasSelection
 		ifFalse: [
@@ -1424,9 +1428,9 @@ RubTextEditor >> insertAndSelectAfterCurrentSelection: aString [
 ]
 
 { #category : 'as yet unclassified' }
-RubTextEditor >> invalidateVisualColumn [
+RubTextEditor >> invalidateVirtualColumn [
 
-	textArea invalidateVisualColumn
+	textArea invalidateVirtualColumn
 ]
 
 { #category : 'testing' }
@@ -1483,6 +1487,7 @@ RubTextEditor >> isWordCharacterAt: index in: aString except: aBlock [
 
 { #category : 'typing support' }
 RubTextEditor >> keyDown: aKeyboardEvent [
+
 	textArea announce: ((RubKeystroke with: aKeyboardEvent) morph: self).
 	(self dispatch: aKeyboardEvent) ifTrue: [
 		self doneTyping.
@@ -1492,6 +1497,7 @@ RubTextEditor >> keyDown: aKeyboardEvent [
 
 { #category : 'typing support' }
 RubTextEditor >> keystroke: aKeyboardEvent [
+
 	textArea announce: ((RubKeystroke with: aKeyboardEvent) morph: self).
 	self normalCharacter: aKeyboardEvent.
 	"normal character"
@@ -2781,6 +2787,7 @@ RubTextEditor >> transformFrom: owner [
 
 { #category : 'events' }
 RubTextEditor >> tripleClick: evt [
+	self invalidateVirtualColumn.
 	self closeTypeIn.	"no matter what, if shift is pressed extend the selection"
 	self selectLine.
 	self setEmphasisHereFromText.
