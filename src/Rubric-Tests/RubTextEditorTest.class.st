@@ -27,7 +27,7 @@ RubTextEditorTest >> assertFrom: fromString applying: actions equals: expected [
 	expectedIndex := expected expandMacros indexOf: $¶.
 
 	editor selectAt: fromIndex.
-	actions do: [ :action | self perform: action ].
+	actions do: [ :action | action value: self ].
 
 	self
 		assert: self currentEditorIndex = expectedIndex
@@ -239,13 +239,28 @@ RubTextEditorTest >> moveDown [
 { #category : 'as yet unclassified' }
 RubTextEditorTest >> moveLeft [
 
-	^ editor moveCursor: (RubMoveLeftAction ctrlPressed: false optPressed: false) shiftPressed: false
+	^ self moveLeftCmd: false opt: false
+	
+]
+
+{ #category : 'as yet unclassified' }
+RubTextEditorTest >> moveLeftCmd: cmd opt: opt [
+
+	^ editor moveCursor: (RubMoveLeftAction ctrlPressed: cmd optPressed: opt) shiftPressed: false	
 ]
 
 { #category : 'as yet unclassified' }
 RubTextEditorTest >> moveRight [
 
-	^ editor moveCursor: (RubMoveRightAction ctrlPressed: false optPressed: false) shiftPressed: false
+	^ self moveRightCmd: false opt: false
+	
+]
+
+{ #category : 'as yet unclassified' }
+RubTextEditorTest >> moveRightCmd: cmd opt: opt [
+
+	^ editor moveCursor: (RubMoveRightAction ctrlPressed: cmd optPressed: opt) shiftPressed: false
+	
 ]
 
 { #category : 'asserting' }
@@ -403,6 +418,40 @@ RubTextEditorTest >> testLineStart [
 		assert: starts
 		equals:
 		#( 1 1 1 1 5 5 5 5 5 5 11 11 11 11 11 11 17 18 19 19 19 22 22 )
+]
+
+{ #category : 'tests' }
+RubTextEditorTest >> testMoveCursorBetweenWordsToLeft [
+
+	self assertFrom: 'word1 ¶ word2 word3' applying: { [:t | t moveLeftCmd: true opt: false ]  }
+		equals: '¶word1  word2 word3'
+]
+
+{ #category : 'tests' }
+RubTextEditorTest >> testMoveCursorBetweenWordsToLeftWithOpt [
+
+	| cmd |
+	cmd := [:t | t moveLeftCmd: true opt: true ].
+	
+	self assertFrom: 'woArd1 ads¶ word2 word3' applying: { cmd . cmd }
+		equals: 'wo¶Ard1 ads word2 word3'
+]
+
+{ #category : 'tests' }
+RubTextEditorTest >> testMoveCursorBetweenWordsToRight [
+
+	self assertFrom: 'word1 ¶ word2 word3' applying: { [:t | t moveRightCmd: true opt: false ]  }
+		equals: 'word1  word2¶ word3'
+]
+
+{ #category : 'tests' }
+RubTextEditorTest >> testMoveCursorBetweenWordsToRightWithOpt [
+
+	| cmd |
+	cmd := [:t | t moveRightCmd: true opt: true ].
+	
+	self assertFrom: 'word1 ads¶ woArdA2 word3' applying: { cmd . cmd }
+		equals: 'word1 ads woArd¶A2 word3'
 ]
 
 { #category : 'tests' }
