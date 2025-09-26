@@ -751,6 +751,22 @@ ProcessTest >> testSchedulingSamePriorityFirstComeFirstServed [
 	self assert: whichRan=2 description: 'Second scheduled process should run after'
 ]
 
+{ #category : 'tests' }
+ProcessTest >> testStackOverflow [
+
+	| p interceptedError |
+	p := [ Smalltalk createStackOverflow ] newProcess.
+	p shouldOverflow: true.
+	p
+		on: Error
+		do: [ :err | interceptedError := err ].
+	p resume.
+	[ p isTerminated ] whileFalse: [ Processor yield ].
+
+	self assert: interceptedError messageText equals: 'Stack overflow'.
+
+]
+
 { #category : 'tests - termination' }
 ProcessTest >> testTerminateActive [
 
