@@ -26,7 +26,7 @@ RubCursorAction >> cmd: pressed [
 RubCursorAction >> initialize [ 
 
 	super initialize.
-	optionPressed := false
+
 ]
 
 { #category : 'as yet unclassified' }

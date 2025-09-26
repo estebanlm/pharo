@@ -237,6 +237,18 @@ RubTextEditorTest >> moveDown [
 ]
 
 { #category : 'as yet unclassified' }
+RubTextEditorTest >> moveEndCmd: cmd [
+
+	^ editor moveCursor: (RubMoveEndAction cmdPressed: cmd optPressed: false) shiftPressed: false
+]
+
+{ #category : 'as yet unclassified' }
+RubTextEditorTest >> moveHomeCmd: cmd [
+
+	^ editor moveCursor: (RubMoveHomeAction cmdPressed: cmd optPressed: false) shiftPressed: false
+]
+
+{ #category : 'as yet unclassified' }
 RubTextEditorTest >> moveLeft [
 
 	^ self moveLeftCmd: false opt: false
@@ -322,6 +334,34 @@ RubTextEditorTest >> testCursorDownWithTabInOriginLine [
 
 	self assertFrom: 'self aaaasaasaa<r><t>tes¶t<r><t><t>anotherTest' applying: { down }
 		equals: 'self aaaasaasaa<r><t>test<r><t><t>¶anotherTest'
+]
+
+{ #category : 'tests' }
+RubTextEditorTest >> testCursorEnd [
+
+	self assertFrom: 'self aaaasaasaa<r><t>te¶st<r>anotherTest' applying: { [:t | t moveEndCmd: false] }
+		equals: 'self aaaasaasaa<r><t>test¶<r>anotherTest'
+]
+
+{ #category : 'tests' }
+RubTextEditorTest >> testCursorEndWithCmd [
+
+	self assertFrom: 'self aaaasaasaa<r><t>te¶st<r>anotherTest' applying: { [:t | t moveEndCmd: true] }
+		equals: 'self aaaasaasaa<r><t>test<r>anotherTest¶'
+]
+
+{ #category : 'tests' }
+RubTextEditorTest >> testCursorHome [
+
+	self assertFrom: 'self aaaasaasaa<r><t>te¶st<r>anotherTest' applying: { [:t | t moveHomeCmd: false] }
+		equals: 'self aaaasaasaa<r>¶<t>test<r>anotherTest'
+]
+
+{ #category : 'tests' }
+RubTextEditorTest >> testCursorHomeWithCmd [
+
+	self assertFrom: 'self aaaasaasaa<r><t>te¶st<r>anotherTest' applying: { [:t | t moveHomeCmd: true] }
+		equals: '¶self aaaasaasaa<r><t>test<r>anotherTest'
 ]
 
 { #category : 'tests' }

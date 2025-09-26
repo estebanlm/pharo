@@ -661,30 +661,19 @@ RubTextEditor >> cursorDown: aKeyboardEvent [
 	next line. If next line too short, put at end. If shift key down,
 	select."
 
-	| shift ctrl opt |
 	self closeTypeIn.
 
-	shift := aKeyboardEvent shiftPressed.
-	ctrl := aKeyboardEvent commandKeyPressed or: [ aKeyboardEvent controlKeyPressed ].
-	opt := aKeyboardEvent optionKeyPressed.
-
-	self moveCursor: (RubMoveDownAction cmdPressed: ctrl optPressed: opt) shiftPressed: shift.
-	^ true
+	^ self performAction: RubMoveDownAction forEvent: aKeyboardEvent
 ]
 
 { #category : 'nonediting/nontyping keys' }
 RubTextEditor >> cursorEnd: aKeyboardEvent [
 	"Private - Move cursor end of current line."
 
-	| string |
 	self closeTypeIn.
-	string := self string.
-	self
-		moveCursor: [ :position | string indexOf: Character cr startingAt: position ifAbsent: [ string size + 1 ] ]
-		forward: true
-		specialBlock: [ :dummy | string size + 1 ]
-		event: aKeyboardEvent.
-	^ true
+
+	^ self performAction: RubMoveEndAction forEvent: aKeyboardEvent.
+
 ]
 
 { #category : 'nonediting/nontyping keys' }
@@ -692,14 +681,8 @@ RubTextEditor >> cursorHome: aKeyboardEvent [
 	"Private - Move cursor from position in current line to beginning of
 	current line. If control key is pressed put cursor at beginning of text"
 
-	| string |
-	string := self string.
-	self
-		moveCursor: [ :position | (string lastIndexOf: Character cr startingAt: position - 1 ifAbsent: [ 0 ]) + 1 ]
-		forward: false
-		specialBlock: [ :dummy | 1 ]
-		event: aKeyboardEvent.
-	^ true
+	^ self performAction: RubMoveHomeAction forEvent: aKeyboardEvent.
+
 ]
 
 { #category : 'nonediting/nontyping keys' }
@@ -709,49 +692,25 @@ RubTextEditor >> cursorLeft: aKeyboardEvent [
     selecting or extending current selection. Don't allow cursor past
     beginning of text"
 
-	| shift ctrl opt |
 	textArea editing ifTrue: [ ^ false ].
 	self closeTypeIn.
 	
-	shift := aKeyboardEvent shiftPressed.
-	ctrl := aKeyboardEvent commandKeyPressed or: [ aKeyboardEvent controlKeyPressed ].
-	opt := aKeyboardEvent optionKeyPressed.
+	^ self performAction: RubMoveLeftAction forEvent: aKeyboardEvent.
 
-	self moveCursor: (RubMoveLeftAction cmdPressed: ctrl optPressed: opt) shiftPressed: shift.
-
-	^ true
 ]
 
 { #category : 'nonediting/nontyping keys' }
 RubTextEditor >> cursorPageDown: aKeyboardEvent [
 
 	self closeTypeIn.
-	self
-		moveCursor: [:position |
-			self
-				sameColumn: position
-				newLine: [:lineNo | lineNo + self pageHeight]
-				forward: true]
-		forward: true
-		specialBlock:[:dummy | dummy]
-		event: aKeyboardEvent.
-	^true
+	^ self performAction: RubMovePageDownAction forEvent: aKeyboardEvent
 ]
 
 { #category : 'nonediting/nontyping keys' }
 RubTextEditor >> cursorPageUp: aKeyboardEvent [
 
 	self closeTypeIn.
-	self
-		moveCursor: [:position |
-			self
-				sameColumn: position
-				newLine: [:lineNo | lineNo - self pageHeight]
-				forward: false]
-		forward: false
-		specialBlock:[:dummy | dummy]
-		event: aKeyboardEvent.
-	^true
+	^ self performAction: RubMovePageUpAction forEvent: aKeyboardEvent
 ]
 
 { #category : 'nonediting/nontyping keys' }
@@ -761,16 +720,11 @@ RubTextEditor >> cursorRight: aKeyboardEvent [
     start selecting characters or extending already selected characters.
     Don't allow cursor past end of text"
 
-	| shift ctrl opt |
 	textArea editing ifTrue: [ ^ false ].
 	self closeTypeIn.
-	shift := aKeyboardEvent shiftPressed.
-	ctrl := aKeyboardEvent commandKeyPressed or: [ aKeyboardEvent controlKeyPressed ].
-	opt := aKeyboardEvent optionKeyPressed.
+	
+	^ self performAction: RubMoveRightAction forEvent: aKeyboardEvent.
 
-	self moveCursor: (RubMoveRightAction cmdPressed: ctrl optPressed: opt) shiftPressed: shift.
-
-	^ true
 ]
 
 { #category : 'typing/selecting keys' }
@@ -786,15 +740,9 @@ RubTextEditor >> cursorUp: aKeyboardEvent [
 	"Private - Move cursor from position in current line to same position in
 prior line. If prior line too short, put at end"
 
-	| shift ctrl opt |
 	self closeTypeIn.
 
-	shift := aKeyboardEvent shiftPressed.
-	ctrl := aKeyboardEvent commandKeyPressed or: [ aKeyboardEvent controlKeyPressed ].
-	opt := aKeyboardEvent optionKeyPressed.
-
-	self moveCursor: (RubMoveUpAction cmdPressed: ctrl optPressed: opt) shiftPressed: shift.
-	^ true
+	^ self performAction: RubMoveUpAction forEvent: aKeyboardEvent.
 ]
 
 { #category : 'private' }
@@ -1682,51 +1630,6 @@ RubTextEditor >> morphicUIManager [
 ]
 
 { #category : 'private' }
-RubTextEditor >> moveCursor: directionBlock forward: forward specialBlock: specialBlock ctrlPressed: ctrlPressed shiftPressed: shiftPressed [
-	"Private - Move cursor.
-	directionBlock is a one argument Block that computes the new Position from a given one.
-	specialBlock is a one argumentBlock that computes the new position from a given one under the alternate semantics.
-	Note that directionBlock always is evaluated first."
-
-	| indices caretPosition newPosition |
-	indices := self setIndices: shiftPressed forward: forward.
-	caretPosition := indices at: #moving.
-
-	newPosition := ctrlPressed
-		               ifTrue: [ specialBlock value: caretPosition ]
-		               ifFalse: [ directionBlock value: caretPosition ].
-
-	shiftPressed
-		ifTrue: [
-		self selectMark: (indices at: #fixed) point: newPosition - 1 ]
-		ifFalse: [ self selectAt: newPosition ].
-	self setEmphasisHereFromTextForward: forward.
-
-	textArea requestTextEditingAt:
-		(textArea cursor positionInWorld corner:
-			 textArea cursor positionInWorld)
-]
-
-{ #category : 'private' }
-RubTextEditor >> moveCursor: directionBlock forward: forward specialBlock: specialBlock event: aKeyboardEvent [
-	"Private - Move cursor.
-	directionBlock is a one argument Block that computes the new Position from a given one.
-	specialBlock is a one argumentBlock that computes the new position from a given one under the alternate semantics.
-	Note that directionBlock always is evaluated first."
-
-	| shift ctrl |
-	shift := aKeyboardEvent shiftPressed.
-	ctrl := aKeyboardEvent commandKeyPressed or: [ aKeyboardEvent controlKeyPressed ].
-	
-	^ self
-		  moveCursor: directionBlock
-		  forward: forward
-		  specialBlock: specialBlock
-		  ctrlPressed: ctrl
-		  shiftPressed: shift
-]
-
-{ #category : 'private' }
 RubTextEditor >> moveCursor: aRubCursorAction shiftPressed: shiftPressed [
 
 	| indices caretPosition newPosition |
@@ -1947,6 +1850,19 @@ RubTextEditor >> pasteRecent [
 	(clipping := self chooseRecentClipping) ifNil: [^ self].
 	Clipboard clipboardText: clipping.
 	^ self paste
+]
+
+{ #category : 'nonediting/nontyping keys' }
+RubTextEditor >> performAction: aRubAction forEvent: aKeyboardEvent [
+
+	| shift ctrl opt |
+
+	shift := aKeyboardEvent shiftPressed.
+	ctrl := aKeyboardEvent commandKeyPressed or: [ aKeyboardEvent controlKeyPressed ].
+	opt := aKeyboardEvent optionKeyPressed.
+	self moveCursor: (aRubAction cmdPressed: ctrl optPressed: opt) shiftPressed: shift.
+
+	^ true
 ]
 
 { #category : 'typing support' }
