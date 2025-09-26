@@ -9,12 +9,26 @@ Class {
 { #category : 'testing' }
 RubMoveLeftAction >> isForward [
 	
-	^ true.
+	^ false.
 ]
 
 { #category : 'as yet unclassified' }
 RubMoveLeftAction >> moveFromPosition: position inEditor: editor [
 
 	editor invalidateVisualColumn.
-	^ position - 1
+	^ ctrlPressed
+		  ifTrue: [ self previousWordPosition: position editor: editor ]
+		  ifFalse: [ self previousCharacterPosition: position editor: editor ]
+]
+
+{ #category : 'as yet unclassified' }
+RubMoveLeftAction >> previousCharacterPosition: position editor: editor [
+	
+	^ position - 1 max: 1
+]
+
+{ #category : 'as yet unclassified' }
+RubMoveLeftAction >> previousWordPosition: position editor: editor [
+	
+	^ editor previousWord: position stopOnUpperCase: optionPressed
 ]

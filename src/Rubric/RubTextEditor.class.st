@@ -292,6 +292,11 @@ RubTextEditor >> blinkPrevParen: aCharacter [
 	"kept because NECController is sending it to me"
 ]
 
+{ #category : 'accessing' }
+RubTextEditor >> bufferSize [
+	^ textArea paragraph text size
+]
+
 { #category : 'testing' }
 RubTextEditor >> canChangeText [
 	^ textArea canChangeText
@@ -653,13 +658,14 @@ RubTextEditor >> cursorDown: aKeyboardEvent [
 	next line. If next line too short, put at end. If shift key down,
 	select."
 
-	| shift ctrl |
+	| shift ctrl opt |
 	self closeTypeIn.
 
 	shift := aKeyboardEvent shiftPressed.
 	ctrl := aKeyboardEvent commandKeyPressed or: [ aKeyboardEvent controlKeyPressed ].
+	opt := aKeyboardEvent optionKeyPressed.
 
-	self moveCursor: (RubMoveDownAction ctrlPressed: ctrl) shiftPressed: shift.
+	self moveCursor: (RubMoveDownAction ctrlPressed: ctrl optPressed: opt) shiftPressed: shift.
 	^ true
 ]
 
@@ -700,14 +706,15 @@ RubTextEditor >> cursorLeft: aKeyboardEvent [
     selecting or extending current selection. Don't allow cursor past
     beginning of text"
 
-	| shift ctrl |
+	| shift ctrl opt |
 	textArea editing ifTrue: [ ^ false ].
 	self closeTypeIn.
 	
 	shift := aKeyboardEvent shiftPressed.
 	ctrl := aKeyboardEvent commandKeyPressed or: [ aKeyboardEvent controlKeyPressed ].
+	opt := aKeyboardEvent optionKeyPressed.
 
-	self moveCursor: (RubMoveLeftAction ctrlPressed: ctrl) shiftPressed: shift.
+	self moveCursor: (RubMoveLeftAction ctrlPressed: ctrl optPressed: opt) shiftPressed: shift.
 
 	^ true
 ]
@@ -751,13 +758,14 @@ RubTextEditor >> cursorRight: aKeyboardEvent [
     start selecting characters or extending already selected characters.
     Don't allow cursor past end of text"
 
-	| shift ctrl |
+	| shift ctrl opt |
 	textArea editing ifTrue: [ ^ false ].
 	self closeTypeIn.
 	shift := aKeyboardEvent shiftPressed.
 	ctrl := aKeyboardEvent commandKeyPressed or: [ aKeyboardEvent controlKeyPressed ].
+	opt := aKeyboardEvent optionKeyPressed.
 
-	self moveCursor: (RubMoveRightAction ctrlPressed: ctrl) shiftPressed: shift.
+	self moveCursor: (RubMoveRightAction ctrlPressed: ctrl optPressed: opt) shiftPressed: shift.
 
 	^ true
 ]
@@ -775,13 +783,14 @@ RubTextEditor >> cursorUp: aKeyboardEvent [
 	"Private - Move cursor from position in current line to same position in
 prior line. If prior line too short, put at end"
 
-	| shift ctrl |
+	| shift ctrl opt |
 	self closeTypeIn.
 
 	shift := aKeyboardEvent shiftPressed.
 	ctrl := aKeyboardEvent commandKeyPressed or: [ aKeyboardEvent controlKeyPressed ].
+	opt := aKeyboardEvent optionKeyPressed.
 
-	self moveCursor: (RubMoveUpAction ctrlPressed: ctrl) shiftPressed: shift.
+	self moveCursor: (RubMoveUpAction ctrlPressed: ctrl optPressed: opt) shiftPressed: shift.
 	^ true
 ]
 

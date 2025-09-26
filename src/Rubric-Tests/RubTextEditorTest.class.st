@@ -233,25 +233,25 @@ RubTextEditorTest >> describe: actualIndex from: fromIndex comparedTo: expected 
 { #category : 'asserting' }
 RubTextEditorTest >> moveDown [
 
-	^ editor moveCursor: (RubMoveDownAction ctrlPressed: false) shiftPressed: false
+	^ editor moveCursor: (RubMoveDownAction ctrlPressed: false optPressed: false) shiftPressed: false
 ]
 
 { #category : 'as yet unclassified' }
 RubTextEditorTest >> moveLeft [
 
-	^ editor moveCursor: (RubMoveLeftAction ctrlPressed: false) shiftPressed: false
+	^ editor moveCursor: (RubMoveLeftAction ctrlPressed: false optPressed: false) shiftPressed: false
 ]
 
 { #category : 'as yet unclassified' }
 RubTextEditorTest >> moveRight [
 
-	^ editor moveCursor: (RubMoveRightAction ctrlPressed: false) shiftPressed: false
+	^ editor moveCursor: (RubMoveRightAction ctrlPressed: false optPressed: false) shiftPressed: false
 ]
 
 { #category : 'asserting' }
 RubTextEditorTest >> moveUp [
 
-	^ editor moveCursor: (RubMoveUpAction ctrlPressed: false) shiftPressed: false
+	^ editor moveCursor: (RubMoveUpAction ctrlPressed: false optPressed: false) shiftPressed: false
 ]
 
 { #category : 'initialization' }

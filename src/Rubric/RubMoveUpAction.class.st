@@ -9,7 +9,7 @@ Class {
 { #category : 'testing' }
 RubMoveUpAction >> isForward [
 	
-	^ true.
+	^ false.
 ]
 
 { #category : 'as yet unclassified' }
