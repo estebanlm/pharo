@@ -58,11 +58,6 @@ PerformMessageCommandLineHandler >> execute [
 
 	self parseArguments.
 
-	self stderr
-		nextPutAll: 'self targetClass: '; nextPutAll: self targetClass asString; lf;
-		nextPutAll: 'self message: '; nextPutAll: self message asString; lf;
-		nextPutAll: 'self messageArguments: '; nextPutAll: self messageArguments asString; lf.
-
 	result := self targetClass perform: self message withArguments: self messageArguments.
 	
 	self stdout
