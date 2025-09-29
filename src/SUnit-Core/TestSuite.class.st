@@ -133,12 +133,19 @@ TestSuite >> run: aResult [
 
 { #category : 'running' }
 TestSuite >> runWith: aBlock [
+
 	self setUp.
-	[ self shuffledTests
-		do: [ :each |
+	[ 
+		self shuffledTests do: [ :each |
+			each class announcer
+				when: TestCaseAnnouncement 
+				send: #announce: 
+				to: self testSuiteAnnouncer.
 			aBlock value: each.
+			each class removeSubscription: self testSuiteAnnouncer.
 			self announceTest: each ] ]
-		ensure: [ self tearDown ]
+	ensure: [ 
+		self tearDown ]
 ]
 
 { #category : 'running' }
