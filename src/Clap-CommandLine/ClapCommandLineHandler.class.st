@@ -8,54 +8,31 @@ Class {
 	#package : 'Clap-CommandLine'
 }
 
-{ #category : 'accessing' }
-ClapCommandLineHandler class >> commandName [
-	^ 'clap'
-]
-
-{ #category : 'handler selection' }
-ClapCommandLineHandler class >> isResponsibleFor: aCommandLineArguments [
-
-	| subcommand |
-	aCommandLineArguments arguments ifEmpty: [ ^ false ].
+{ #category : 'class initialization' }
+ClapCommandLineHandler class >> initialize [
 	
-	subcommand := aCommandLineArguments arguments first.
-	^ ClapContext pragmaCommands
-		detect: [ :commandSpec | commandSpec hasAlias: subcommand ]
-		ifFound: [ true ] 
-		ifNone: [ false ]
+	self registerAsCommandLinehandler
 ]
 
-{ #category : 'handler selection' }
-ClapCommandLineHandler class >> priority [ 
-	"Take priority on basic command line handlers"
-	^ 10
+{ #category : 'registration' }
+ClapCommandLineHandler class >> registerAsCommandLinehandler [
+	SessionManager default in: [ :manager |
+		manager
+			register: (NamedSessionHandler forClassNamed: self name id: #commandLineHandler)
+			inCategory: manager systemCategory ]
+]
+
+{ #category : 'system startup' }
+ClapCommandLineHandler class >> startUp: isImageStarting [
+	"only handle when launching a new image"
+	isImageStarting ifFalse: [ ^ self ].
+
+	Smalltalk session
+		addDeferredStartupAction: [ self new activate ]
 ]
 
 { #category : 'activation' }
 ClapCommandLineHandler >> activate [
 	
-	self activateWith: ClapContext pragmaCommands
-]
-
-{ #category : 'activation' }
-ClapCommandLineHandler >> activateWith: clapCommandSpecifications [
-	[
-		(ClapContext withAll: clapCommandSpecifications)
-			beObeyingExits;
-			setStdio: Stdio;
-			arguments: self arguments;
-			execute
-	]
-	forkAt: Processor userSchedulingPriority
-	named: 'Clap commandline handler process'
-]
-
-{ #category : 'activation' }
-ClapCommandLineHandler >> handleExit: exit [
-
-	self flag: 'TOREMOVE once clap is used as default command handler'.
-	Smalltalk isInteractive ifFalse: [ ^ exit pass ].
-
-	exit isSuccess ifFalse: [ ^ exit resignalAs: (Error new messageText: exit messageText) ]
+	ClapContext executeWithPragmaCommandsAndArguments: self arguments
 ]
