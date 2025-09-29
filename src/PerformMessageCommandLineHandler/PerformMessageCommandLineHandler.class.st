@@ -16,7 +16,8 @@ Class {
 		'targetClass',
 		'message',
 		'messageArguments',
-		'commandOptions'
+		'commandOptions',
+		'arguments'
 	],
 	#category : 'PerformMessageCommandLineHandler',
 	#package : 'PerformMessageCommandLineHandler'
@@ -27,9 +28,32 @@ PerformMessageCommandLineHandler class >> commandName [
 	^ 'perform'
 ]
 
+{ #category : 'class initialization' }
+PerformMessageCommandLineHandler class >> initialize [
+	
+	self registerAsCommandLinehandler
+]
+
+{ #category : 'registration' }
+PerformMessageCommandLineHandler class >> registerAsCommandLinehandler [
+	SessionManager default in: [ :manager |
+		manager
+			register: (NamedSessionHandler forClassNamed: self name id: #commandLineHandler)
+			inCategory: manager systemCategory ]
+]
+
+{ #category : 'system startup' }
+PerformMessageCommandLineHandler class >> startUp: isImageStarting [
+	"only handle when launching a new image"
+	isImageStarting ifFalse: [ ^ self ].
+
+	Smalltalk session
+		addDeferredStartupAction: [ self new activate ]
+]
+
 { #category : 'activation' }
 PerformMessageCommandLineHandler >> activate [
-
+	arguments := PharoOptionsHandler handle: self commandLine arguments.
 	self shouldActivateHelp ifTrue: [
 			self printHelp.
 			self exitSuccess ].
@@ -38,6 +62,12 @@ PerformMessageCommandLineHandler >> activate [
 
 	self shouldSave ifTrue: [ Smalltalk saveSession ].
 	self shouldQuit ifTrue: [ self exitSuccess ]
+]
+
+{ #category : 'accessing' }
+PerformMessageCommandLineHandler >> arguments [ 
+
+	^ arguments
 ]
 
 { #category : 'accessing' }
