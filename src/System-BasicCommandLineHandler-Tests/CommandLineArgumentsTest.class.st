@@ -29,12 +29,6 @@ CommandLineArgumentsTest >> setUp [
 ]
 
 { #category : 'tests' }
-CommandLineArgumentsTest >> testAllFileTyped [
-	self assert: (self commandLine allFilesWithExtension: #txt) equals: #('noOpt2.txt' 'opt12.txt').
-	self assertEmpty: (self commandLine allFilesWithExtension: #foo)
-]
-
-{ #category : 'tests' }
 CommandLineArgumentsTest >> testAllParameters [
 	self assertCollection: self commandLine arguments equals: self parameters
 ]

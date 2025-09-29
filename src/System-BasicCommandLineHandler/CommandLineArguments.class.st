@@ -25,12 +25,6 @@ CommandLineArguments class >> withArguments: aCollection [
 ]
 
 { #category : 'accessing' }
-CommandLineArguments >> allFilesWithExtension: anExtension [
-	^ self arguments select: [ :arg|
-		arg endsWith: anExtension ]
-]
-
-{ #category : 'accessing' }
 CommandLineArguments >> argumentAt: index [
 	^ arguments at: index
 ]
