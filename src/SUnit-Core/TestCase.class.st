@@ -642,12 +642,11 @@ TestCase >> announce: anAnnouncementClass withResult: result [
 	| event |
 
 	self shouldAnnounce ifFalse: [ ^ self ].
-
+	
 	event := anAnnouncementClass asAnnouncement.
 	event testCase: self.
 	event testSelector: testSelector.
 	event testResult: result.
-
 	self announcer announce: event
 ]
 
@@ -669,13 +668,23 @@ TestCase >> debug [
 	"During the execution, if the receiver fails
 	due to an error or an assertion failure,
 	I open the debuger so user can see the context of failure"
-
 	| result |
+
 	result := self classForTestResult new.
-	[ result runCaseForDebug: self ] ensure: [
-		self classForTestResource resetResources: self resources.
+	^ [ self debug: result ] 
+	ensure: [ 
 		result updateResultsInHistory ].
-	^ result
+]
+
+{ #category : 'running' }
+TestCase >> debug: aResult [
+	"During the execution, if the receiver fails
+	due to an error or an assertion failure,
+	I open the debuger so user can see the context of failure"
+
+	^ [ aResult runCaseForDebug: self ] 
+	ensure: [
+		self classForTestResource resetResources: self resources ]
 ]
 
 { #category : 'running' }
