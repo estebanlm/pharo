@@ -23,16 +23,7 @@ Behavior >> compile: code notifying: requestor [
 	argument code is either a string or an object that converts to a string or
 	a PositionableStream. This method also saves the source code."
 
-	| method |
-	method := self compiler
-		          source: code;
-		          requestor: requestor;
-		          failBlock: (requestor ifNotNil: [ [ ^ nil ] ]);
-		          "no failblock if no requestor"compile.
-
-	method putSource: code withPreamble: 'Behavior method'.
-	self addSelector: method selector withMethod: method.
-	^ method selector
+	^ self compile: code classified: nil notifying: requestor
 ]
 
 { #category : '*OpalCompiler-Core' }

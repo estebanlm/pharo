@@ -34,13 +34,13 @@ ClassDescription >> addAndClassifySelector: selector withMethod: compiledMethod 
 			priorMethod := method.
 			priorOrigin := method origin ].
 
+	super addSelectorSilently: selector withMethod: compiledMethod.
+
+	self isAnonymous ifTrue: [ ^ self ].
+
 	oldProtocol := self protocolOfSelector: selector.
 	self codeChangeAnnouncer prevent: MethodRecategorized during: [ self classify: selector under: protocol ].
 	newProtocol := self protocolOfSelector: selector.
-
-	self addSelectorSilently: selector withMethod: compiledMethod.
-
-	self isAnonymous ifTrue: [ ^ self ].
 
 	"The old protocol should never be nil. But we are not in an ideal world sadly :( We got reported some cases where some code was loaded but had an error during the loading preventing a method that got added to the method dictionary to have an associated protocol. If this happens, we consider that we categorize it for the first time to avoid announcing a MethodRecategorized with an old protocol that is nil."
 	(priorMethod isNil or: [ priorOrigin ~= compiledMethod origin or: [ oldProtocol isNil ] ])
@@ -298,87 +298,6 @@ ClassDescription >> comment [
 ClassDescription >> commentStamp [
 	
 	self subclassResponsibility
-]
-
-{ #category : 'compiling' }
-ClassDescription >> compile: sourceCode classified: protocol [
-	"Compile the source code in the context of the receiver and install the result in the receiver's method dictionary under the given protocol (this can be a protocol or a protocol name).
-	Return the selector of the compiled method. 
-	
-	The argument sourceCode is either a string or an object that converts to a string or a PositionableStream on an object that converts to a string."
-
-	^ self compile: sourceCode classified: protocol notifying: nil
-]
-
-{ #category : 'compiling' }
-ClassDescription >> compile: sourceCode classified: protcol notifying: requestor [
-	"Return the selector of the compiled method"
-	
-	^ self
-		  compile: sourceCode
-		  classified: protcol
-		  withStamp: nil
-		  notifying: requestor
-]
-
-{ #category : 'compiling' }
-ClassDescription >> compile: sourceCode classified: protocol withStamp: changeStamp notifying: requestor [
-	"Return the selector of the compiled method."
-	
-	^ self
-		  compile: sourceCode
-		  classified: protocol
-		  withStamp: changeStamp
-		  notifying: requestor
-		  logSource: true
-]
-
-{ #category : 'compiling' }
-ClassDescription >> compile: sourceCode classified: protocol 
-	withStamp: changeStamp notifying: requestor 
-	logSource: logSource [
-	
-	"Return the selector of the compiled method."
-	
-	| method |
-	method := self compiler
-		source: sourceCode;
-		requestor: requestor;
-		failBlock: (requestor ifNotNil: [ [ ^ nil ] ]); "no failblock if no requestor"
-		permitUndeclared: (requestor isNil); "compatibility: permit undeclared if no requestor"
-		protocol: protocol;
-		changeStamp: changeStamp;
-		logged: logSource;
-		install.
-	^ method selector
-]
-
-{ #category : 'compiling' }
-ClassDescription >> compile: sourceCode notifying: requestor [
-	"Refer to the comment in Behavior|compile:notifying:."
-
-	^ self compile: sourceCode classified: nil notifying: requestor
-]
-
-{ #category : 'compiling' }
-ClassDescription >> compileSilently: sourceCode [
-	"Compile the code and classify the resulting method in the given protocol, leaving no trail in the system log, nor in any change set, nor in the 'recent submissions' list. This should only be used when you know for sure that the compilation will succeed."
-
-	^ self compileSilently: sourceCode classified: 'not defined protocol' notifying: nil
-]
-
-{ #category : 'compiling' }
-ClassDescription >> compileSilently: sourceCode classified: protocolName [
-	"Compile the code and classify the resulting method in the given protocol, leaving no trail in the system log, nor in any change set, nor in the 'recent submissions' list. This should only be used when you know for sure that the compilation will succeed."
-
-	^ self compileSilently: sourceCode classified: protocolName notifying: nil
-]
-
-{ #category : 'compiling' }
-ClassDescription >> compileSilently: sourceCode classified: protocolName notifying: requestor [
-	"Compile the code and classify the resulting method in the given protocol, leaving no trail in the system log, nor in any change set, nor in the 'recent submissions' list."
-
-	^ self codeChangeAnnouncer suspendAllWhile: [ self compile: sourceCode classified: protocolName notifying: requestor ]
 ]
 
 { #category : 'slots' }
@@ -749,6 +668,13 @@ ClassDescription >> newInstanceFrom: oldInstance variable: variable size: instSi
 { #category : 'accessing - method dictionary' }
 ClassDescription >> noteAddedSelector: aSelector meta: isMeta [
 	"A hook allowing some classes to react to adding of certain selectors"
+]
+
+{ #category : 'as yet unclassified' }
+ClassDescription >> noteCompilationOf: aSelector [
+	"A hook allowing some classes to react to recompilation of certain selectors"
+	
+	^ self instanceSide noteCompilationOf: aSelector meta: self isMeta
 ]
 
 { #category : 'compiling' }
