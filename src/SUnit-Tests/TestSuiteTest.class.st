@@ -8,7 +8,7 @@ Class {
 
 { #category : 'tests' }
 TestSuiteTest >> testAnnouncement [
-	| announcements oldCollection unitTest suiteTest result |
+	| announcements unitTest suiteTest result |
 	
 	unitTest := ClassFactoryForTestCaseTest.
 	unitTest resetAnnouncer.
