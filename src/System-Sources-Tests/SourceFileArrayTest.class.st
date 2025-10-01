@@ -15,15 +15,22 @@ Class {
 	#package : 'System-Sources-Tests'
 }
 
-{ #category : 'running' }
+{ #category : 'tests' }
 SourceFileArrayTest >> ensureChangesFileOpenedInProcess [
 	"Ensure the changes file is open"
 
-	| remoteString |
-	remoteString := SourceFiles remoteStringAt: thisContext method sourcePointer.
+	| sourcePointer fileIndex filePosition string |
+	sourcePointer :=  thisContext method sourcePointer.
+	fileIndex := SourceFiles fileIndexFromSourcePointer: sourcePointer.
+	filePosition := SourceFiles filePositionFromSourcePointer: sourcePointer.
+	
+	string := SourceFiles
+		readStreamAtFileIndex: fileIndex
+		atPosition: filePosition
+		ifPresent: [ :readStream | (ChunkReadStream on: readStream) next ]
+		ifAbsent: [ nil ].
 
-	self deny: remoteString string isNil.
-	"self deny: ProcessAndSessionLocalSourcesFileArray value isNil."
+	self deny: string isNil.
 ]
 
 { #category : 'tests' }
@@ -74,7 +81,7 @@ SourceFileArrayTest >> testFilePositionFromSourcePointer [
 { #category : 'tests' }
 SourceFileArrayTest >> testForkedRead [
 
-	| originalString remoteString readSemaphore readString testSemaphore |
+	| originalString remoteString readSemaphore readString testSemaphore position |
 	originalString := '"test"'.
 	remoteString := nil.
 	readSemaphore := Semaphore new.
@@ -87,12 +94,20 @@ SourceFileArrayTest >> testForkedRead [
 		readSemaphore wait.
 
 		"Read the string that was written in other process."
-		readString := remoteString string.
+		readString := SourceFiles
+			readStreamAtFileIndex: 2 "changes"
+			atPosition: position
+			ifPresent: [ :readStream | (ChunkReadStream on: readStream) next ]
+			ifAbsent: [ nil ].
 		testSemaphore signal
 		] fork.
 
 	"Write the string, that will be read in other process."
-	remoteString := SourceFiles remoteStringForNewString: originalString.
+	SourceFiles changesWriteStreamDo: [ :theFile |
+		theFile cr.
+		position := theFile position.
+		(ChunkWriteStream on: theFile) nextPut: originalString.
+	].
 
 	readSemaphore signal.
 	testSemaphore wait.
@@ -103,7 +118,7 @@ SourceFileArrayTest >> testForkedRead [
 { #category : 'tests' }
 SourceFileArrayTest >> testForkedWrite [
 
-	| originalString remoteString readSemaphore readString testSemaphore |
+	| originalString remoteString readSemaphore readString testSemaphore position |
 	originalString := '"test"'.
 	remoteString := nil.
 	readSemaphore := Semaphore new.
@@ -116,7 +131,11 @@ SourceFileArrayTest >> testForkedWrite [
 		readSemaphore wait.
 
 		"Write the string, that will be read in other process."
-		remoteString := SourceFiles remoteStringForNewString: originalString.
+		SourceFiles changesWriteStreamDo: [ :theFile |
+			theFile cr.
+			position := theFile position.
+			(ChunkWriteStream on: theFile) nextPut: originalString.
+		].
 
 		testSemaphore signal
 		] fork.
@@ -125,7 +144,11 @@ SourceFileArrayTest >> testForkedWrite [
 	testSemaphore wait.
 
 	"Read the string that was written in other process."
-	readString := remoteString string.
+	readString := SourceFiles
+		readStreamAtFileIndex: 2 "changes"
+		atPosition: position
+		ifPresent: [ :readStream | (ChunkReadStream on: readStream) next ]
+		ifAbsent: [ nil ].
 
 	self assert: readString equals: originalString
 ]
@@ -183,38 +206,6 @@ SourceFileArrayTest >> testProtocol [
 
 	notOkCm := Behavior >> #superclass.
 	self assert: (SourceFiles protocolAt: notOkCm sourcePointer) equals: 'accessing - class hierarchy'
-]
-
-{ #category : 'tests' }
-SourceFileArrayTest >> testRemoteStringReadsInGivenSourceFileArray [
-	| fs array remoteString readStream |
-	fs := FileSystem memory.
-	array := SourceFileArray new.
-	array changesFileStream: (SourceFile on: 'changes.chunk' potentialLocations: {fs root}) tryOpen.
-	array sourcesFileStream: (SourceFile on: 'sources.chunk' potentialLocations: {fs root}) tryOpen.
-	remoteString := array remoteStringForNewString: 'test'.
-	self assert: remoteString string equals: 'test'.
-	self assert: (array fileAt: remoteString sourceFileNumber) equals: array changesFileStream.
-	readStream := (fs / 'changes.chunk') readStream.
-	readStream position: remoteString position.
-	self assert: (ChunkReadStream on: readStream) next equals: 'test'
-]
-
-{ #category : 'tests' }
-SourceFileArrayTest >> testRemoteStringWritesInGivenSourceFileArray [
-	| fs array |
-	fs := FileSystem memory.
-	array := SourceFileArray new.
-	array
-		changesFileStream: (SourceFile on: 'changes.chunk' potentialLocations: {fs root}) tryOpen.
-	array
-		sourcesFileStream: (SourceFile on: 'sources.chunk' potentialLocations: {fs root}) tryOpen.
-	array remoteStringForNewString: 'test'.
-	self
-		assert: (fs / 'changes.chunk') contents
-		equals:
-			'
-test!'
 ]
 
 { #category : 'tests' }

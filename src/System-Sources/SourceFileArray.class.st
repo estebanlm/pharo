@@ -7,6 +7,7 @@ This implementation extends the source pointer address space using bit 25 of the
 
 The use of bit 25 of the source pointer for file references permits backward compatibility with StandardSourceFileArray, with essentially unlimited address space expansion for the sources and changes files.
 
+
 "
 Class {
 	#name : 'SourceFileArray',
@@ -339,25 +340,6 @@ SourceFileArray >> readStreamAtFileIndex: index atPosition: position ifPresent: 
 	self finishedReading: rofa from: queue.
 
     ^ result
-]
-
-{ #category : 'public - string reading' }
-SourceFileArray >> remoteStringAt: sourcePointer [
-
-	| filePosition fileIndex |
-	fileIndex := self fileIndexFromSourcePointer: sourcePointer.
-	filePosition := self filePositionFromSourcePointer: sourcePointer.
-
-	^ RemoteString newFileNumber: fileIndex position: filePosition
-]
-
-{ #category : 'public - string writing' }
-SourceFileArray >> remoteStringForNewString: aString [
-
-	^ RemoteString new
-		sourceFileArray: self;
-		string: aString;
-		yourself
 ]
 
 { #category : 'printing' }

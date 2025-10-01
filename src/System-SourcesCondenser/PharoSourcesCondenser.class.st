@@ -74,28 +74,13 @@ PharoSourcesCondenser >> shouldCondenseMethod: aCompiledMethod [
 	^ aCompiledMethod hasSourcePointer
 ]
 
+{ #category : 'writing' }
+PharoSourcesCondenser >> shouldWriteClassComment: commentRemoteString [
+
+	^ commentRemoteString notNil
+]
+
 { #category : 'accessing' }
 PharoSourcesCondenser >> temporaryFile [
 	^ 'new.sources' asFileReference nextVersion
-]
-
-{ #category : 'writing' }
-PharoSourcesCondenser >> writeClassComment: aClass [
-
-	| commentRemoteString stamp |
-
-	commentRemoteString := self commentRemoteStringFor: aClass.
-
-	commentRemoteString ifNil: [ ^ self ].
-
-	self
-		nextCommentChunkDo: [ :strm |
-			strm
-				nextPutAll: aClass name;
-				nextPutAll: ' commentStamp: '.
-			stamp := aClass commentStamp ifNil: [ '<historical>' ].
-			stamp storeOn: strm
-			].
-
-	self writeRemoteString: aClass comment for: aClass
 ]
