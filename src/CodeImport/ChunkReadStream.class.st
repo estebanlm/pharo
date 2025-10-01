@@ -11,9 +11,8 @@ Class {
 	#instVars : [
 		'nextChar'
 	],
-	#category : 'System-Sources-Utilities',
-	#package : 'System-Sources',
-	#tag : 'Utilities'
+	#category : 'CodeImport',
+	#package : 'CodeImport'
 }
 
 { #category : 'decorated' }

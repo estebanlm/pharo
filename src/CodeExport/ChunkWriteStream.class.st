@@ -8,9 +8,8 @@ symbols
 Class {
 	#name : 'ChunkWriteStream',
 	#superclass : 'DecoratorStream',
-	#category : 'System-Sources-Utilities',
-	#package : 'System-Sources',
-	#tag : 'Utilities'
+	#category : 'CodeExport',
+	#package : 'CodeExport'
 }
 
 { #category : 'writing' }
