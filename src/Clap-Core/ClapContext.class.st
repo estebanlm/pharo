@@ -48,16 +48,11 @@ ClapContext class >> defaultRoot [
 { #category : 'instance creation' }
 ClapContext class >> executeWithPragmaCommandsAndArguments: arguments [
 
-	[ | filteredArguments |
-		filteredArguments := PharoOptionsHandler handle: arguments.
-		(self withPragmaCommands)
+	(self withPragmaCommands)
 			beObeyingExits;
 			setStdio: Stdio;
-			arguments: filteredArguments;
+			arguments: arguments;
 			execute
-	]
-	forkAt: Processor userSchedulingPriority
-	named: 'Clap commandline handler process'
 ]
 
 { #category : 'accessing' }

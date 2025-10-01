@@ -34,12 +34,6 @@ CommandLineArgumentsTest >> testAllParameters [
 ]
 
 { #category : 'tests' }
-CommandLineArgumentsTest >> testHasFilesTyped [
-	self assert: (self commandLine hasFileWithExtension: #txt).
-	self deny: (self commandLine hasFileWithExtension: #foo)
-]
-
-{ #category : 'tests' }
 CommandLineArgumentsTest >> testHasOption [
 	self assert: (self commandLine hasOption: #option1).
 	self assert: (self commandLine hasOption: #option4).

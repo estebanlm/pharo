@@ -11,7 +11,7 @@ Examples:
 "
 Class {
 	#name : 'PerformMessageCommandLineHandler',
-	#superclass : 'CommandLineHandler',
+	#superclass : 'NewCommandLineHandler',
 	#instVars : [
 		'targetClass',
 		'message',
@@ -34,26 +34,11 @@ PerformMessageCommandLineHandler class >> initialize [
 	self registerAsCommandLinehandler
 ]
 
-{ #category : 'registration' }
-PerformMessageCommandLineHandler class >> registerAsCommandLinehandler [
-	SessionManager default in: [ :manager |
-		manager
-			register: (NamedSessionHandler forClassNamed: self name id: #commandLineHandler)
-			inCategory: manager systemCategory ]
-]
-
-{ #category : 'system startup' }
-PerformMessageCommandLineHandler class >> startUp: isImageStarting [
-	"only handle when launching a new image"
-	isImageStarting ifFalse: [ ^ self ].
-
-	Smalltalk session
-		addDeferredStartupAction: [ self new activate ]
-]
-
 { #category : 'activation' }
-PerformMessageCommandLineHandler >> activate [
-	arguments := PharoOptionsHandler handle: self commandLine arguments.
+PerformMessageCommandLineHandler >> activateCommand [
+	
+	self isInteractiveAndNoArguments ifTrue: [ ^ self ].
+	
 	self shouldActivateHelp ifTrue: [
 			self printHelp.
 			self exitSuccess ].
@@ -115,6 +100,9 @@ PerformMessageCommandLineHandler >> parseArguments [
 	str := self arguments readStream.
 	[ str atEnd not and: [ str peek beginsWith: '--' ] ] whileTrue: [ commandOptions add: str next ].
 
+	(self arguments size - commandOptions size < 2)
+		ifTrue: [ ^ self exitFailure: 'Not enough arguments' ].
+
 	targetClass :=  Smalltalk globals 
 		at: str next asSymbol
 		ifAbsent: [ ^ self exitFailure: 'Unknown class' ].
@@ -148,11 +136,15 @@ PerformMessageCommandLineHandler >> printHelp [
 { #category : 'testing' }
 PerformMessageCommandLineHandler >> shouldActivateHelp [
 	
-	^ self arguments first = '--help'
+	self commandLine withFirstArgument: [ :first | ^ first = '--help' ].
+	^ false 
+	
 ]
 
 { #category : 'testing' }
 PerformMessageCommandLineHandler >> shouldQuit [
+	
+	Smalltalk isInteractive ifTrue: [ ^ false ].
 	
 	^ (self commandOptions includes: ('--no-quit')) not
 ]

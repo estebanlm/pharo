@@ -31,7 +31,12 @@ CommandLineArguments >> argumentAt: index [
 
 { #category : 'accessing' }
 CommandLineArguments >> arguments [
-	^ arguments
+	^ arguments asArray
+]
+
+{ #category : 'accessing' }
+CommandLineArguments >> arguments: anArray [
+	arguments := anArray
 ]
 
 { #category : 'testing' }
