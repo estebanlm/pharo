@@ -61,30 +61,14 @@ CodeExporter class >> writeSourceCodeFrom: aStream toFileReference: aFileReferen
 { #category : 'writing' }
 CodeExporter >> writeClassCommentOf: aClass [
 
-	| header |
+	"Print header""Print comment. If empty, we need to put an empty line anyways to avoid breaking the parser""Print metadata"
 	aClass comment ifNil: [ ^ self ].
-
-	header := String streamContents: [ :strm |
-			          strm
-				          nextPutAll: aClass name;
-				          nextPutAll: ' commentStamp: '.
-			          aClass commentStamp storeOn: strm.
-			          strm
-				          nextPutAll: ' prior: ';
-				          nextPutAll: '0' ]. "Print header"
-	writeStream
-		cr;
-		bang.
-	writeStream nextPut: header.
-
-	"Print comment. If empty, we need to put an empty line anyways to avoid breaking the parser"
-	writeStream
-		cr;
-		nextPut: (aClass comment string ifEmpty: [ String cr ]).
-	"Print metadata"
-	writeStream
-		cr;
-		nextPut: ''
+	self
+		writeComment: aClass comment string
+		ofClass: aClass
+		stamp: aClass commentStamp
+		withMetadata: ' '
+		priorSourcePointer: '0'
 ]
 
 { #category : 'writing' }
@@ -102,27 +86,72 @@ CodeExporter >> writeClassInitializer: aClass [
 ]
 
 { #category : 'writing' }
+CodeExporter >> writeComment: commentString ofClass: aClass stamp: commentStamp withMetadata: commentMetadata priorSourcePointer: priorSourcePointer [
+
+	| header |
+	header := String streamContents: [ :strm |
+			          strm
+				          nextPutAll: aClass name;
+				          nextPutAll: ' commentStamp: '.
+			          commentStamp storeOn: strm.
+			          strm
+				          nextPutAll: ' prior: ';
+				          nextPutAll: priorSourcePointer printString ]. "Print header"
+
+	writeStream
+		cr;
+		bang;
+		nextPut: header;
+		cr. "Print comment. If empty, we need to put an empty line anyways to avoid breaking the parser"
+	writeStream
+		nextPut: (commentString ifEmpty: [ String cr ]);
+		cr. "Print metadata"
+	writeStream nextPut: commentMetadata
+]
+
+{ #category : 'writing' }
 CodeExporter >> writeMethod: aMethod [
 
-	| preamble methodClass methodSelector |
-	methodClass := aMethod methodClass.
-	methodSelector := aMethod selector.
+	^ self writeMethod: aMethod metadata: '' prior: 0
+]
 
+{ #category : 'writing' }
+CodeExporter >> writeMethod: aMethod metadata: metadata prior: priorSourcePointer [
+
+	^ self
+		  writeMethodWithClass: aMethod methodClass
+		  selector: aMethod selector
+		  source: aMethod sourceCode
+		  stamp: DateAndTime now asString
+		  withMetadata: metadata
+		  priorSourcePointer: priorSourcePointer
+]
+
+{ #category : 'writing' }
+CodeExporter >> writeMethodWithClass: methodClass selector: methodSelector source: methodSourceCode stamp: methodStamp withMetadata: metadata priorSourcePointer: priorSourcePointer [
+
+	| preamble sourceCodePosition |
 	preamble := methodClass name , ' methodsFor: ' , (methodClass protocolOfSelector: methodSelector) name asString printString.
+	methodStamp ifNotEmpty: [
+		preamble := preamble, ' stamp: ', methodStamp printString ].
+	preamble := preamble, ' prior: ', priorSourcePointer printString.
 	writeStream
-		cr; cr; bang;
-		nextPut: (String streamContents: [ :strm |
-						 strm nextPutAll: preamble.
-						 aMethod stamp ifNotEmpty: [ :stamp |
-									 strm
-										 nextPutAll: ' stamp: ';
-										 print: stamp ] ]);
-
-		"Print the source code"
 		cr;
-		nextPut: aMethod sourceCode;
+		cr;
+		bang;
+		nextPut: preamble;
+		cr.
+		
+
+	sourceCodePosition := writeStream position.
+	
+	"Print the source code"
+	writeStream		
+		nextPut: methodSourceCode;
 		"Print the metadata"
-		nextPut: ' '
+		nextPut: ' '.
+		
+	^ sourceCodePosition
 ]
 
 { #category : 'accessing' }
