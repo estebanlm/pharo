@@ -12,7 +12,7 @@ Class {
 	#tag : 'Base'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'instance creation' }
 CodeExporter class >> onMemory [
 
 	^ self onStream: (String new: 100) writeStream
