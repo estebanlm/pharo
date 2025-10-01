@@ -558,34 +558,24 @@ OpalCompiler >> install [
 	class := self methodClass.
 	self assert: class isNotNil.
 
-	method := self compile ifNil: [ ^ nil ].
-
-	"If the prior method was not set explicitly, we set it because we will need it if we are not in the first compilation"
+	method := self compile ifNil: [ ^ nil ]. "If the prior method was not set explicitly, we set it because we will need it if we are not in the first compilation"
 	self priorMethod ifNil: [ "In case the method comes from a trait, we ignore it because it means we are overriding the trait method in the class"
-		class compiledMethodAt: method selector ifPresent: [ :aMethod |
-			aMethod isFromTrait ifFalse: [ self priorMethod: aMethod ] ] ].
-
-	"In case we are not compiling the method for the first time, we want to ensure that some properties are kept."
-	self priorMethod ifNotNil: [
-		priorMethod migratePersistingPropertiesIn: method ].
+		class compiledMethodAt: method selector ifPresent: [ :aMethod | aMethod isFromTrait ifFalse: [ self priorMethod: aMethod ] ] ]. "In case we are not compiling the method for the first time, we want to ensure that some properties are kept."
+	self priorMethod ifNotNil: [ priorMethod migratePersistingPropertiesIn: method ].
 
 	changeStamp ifNil: [ changeStamp := DateAndTime now printString ].
 	logSource := self logged ifNil: [ true ].
-	protocol := protocol ifNil: [
-		            self priorMethod ifNotNil: [ self priorMethod protocol ] ].
+	protocol := protocol ifNil: [ self priorMethod ifNotNil: [ self priorMethod protocol ] ].
+
+	class addAndClassifySelector: method selector withMethod: method inProtocol: protocol.
 
 	logSource ifTrue: [
-		method
-			putSource: source
-			withPreamble: (class protocolPreambleFor: protocol withStamp: changeStamp priorMethod: priorMethod).
-	].
-
-	class
-		addAndClassifySelector: method selector
-		withMethod: method
-		inProtocol: protocol.
-
-	class instanceSide noteCompilationOf: method meta: class isClassSide.
+			method
+				putSource: source
+				withFooter: ''
+				timestamp: changeStamp
+				priorSourcePointer: (self priorMethod ifNil: [ 0 ] ifNotNil: [ self priorMethod sourcePointer ]) ].
+	class noteCompilationOf: method.
 
 	^ method
 ]

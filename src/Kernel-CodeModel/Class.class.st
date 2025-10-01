@@ -387,7 +387,7 @@ Class >> comment: aString [
 Class >> comment: aString stamp: aStamp [
 	"Store the comment, aString or Text or RemoteString, associated with the class we are organizing.  Empty string gets stored only if had a non-empty one before."
 
-	| pointer oldComment oldStamp preamble |
+	| pointer oldComment oldStamp |
 	oldComment := self comment.
 	oldStamp := self commentStamp.
 
@@ -395,20 +395,12 @@ Class >> comment: aString stamp: aStamp [
 
 	pointer := self commentSourcePointer ifNil: [ 0 ].
 
-
-	preamble := String streamContents: [ :strm |
-			            strm
-				            nextPutAll: self name;
-				            nextPutAll: ' commentStamp: '.
-			            aStamp storeOn: strm.
-			            strm
-				            nextPutAll: ' prior: ';
-				            nextPutAll: pointer printString ].
-
 	SourceFiles
-		writeSource: aString
-		preamble: preamble
-		footer: ' '
+		writeComment: aString
+		ofClass: self
+		metadata: ' '
+		timestamp: aStamp
+		priorSourcePointer: pointer
 		onSuccess: [ :newSourcePointer | self commentSourcePointer: newSourcePointer ]
 		onFail: [ "ignore" ].
 
@@ -417,7 +409,7 @@ Class >> comment: aString stamp: aStamp [
 		oldComment: oldComment
 		newComment: aString
 		oldStamp: oldStamp
-		newStamp: aStamp
+		newStamp: self commentStamp
 ]
 
 { #category : 'accessing - comment' }

@@ -458,39 +458,61 @@ SourceFileArray >> timeStampFromPreamble: preamble for: sourceDataPointers [
 ]
 
 { #category : 'public - string writing' }
-SourceFileArray >> writeSource: contents preamble: preamble footer: aFooter onSuccess: successBlock onFail: failBlock [
+SourceFileArray >> writeChangesDuring: aBlock onSuccess: successBlock onFail: failBlock [
 
-	| file position |
+	| file sourceCodePosition |
 	file := self changesFileStream.
-	(file isNil or: [file closed or: [ file isReadOnly ] ]) ifTrue: [ ^ failBlock value ].
+	(file isNil or: [ file closed or: [ file isReadOnly ] ]) ifTrue: [ ^ failBlock value ].
 
 	ChangesLog default assureStartupStampLogged.
 
 	file setToEnd.
-	(SourceChunkWriteStream on: file)
-		cr;
-		bang;
-		nextPut: preamble;
-		cr.
-
-	position := file position.
-	(SourceChunkWriteStream on: file)
-		nextPut: contents;
-		cr;
-		nextPut: aFooter.
-
-	successBlock cull: (self sourcePointerFromFileIndex: 2 andPosition: position) cull: file.
+	sourceCodePosition := aBlock value: file.
+	successBlock value: (self sourcePointerFromFileIndex: 2 andPosition: sourceCodePosition).
 
 	self flushChangesFile
 ]
 
 { #category : 'public - string writing' }
-SourceFileArray >> writeSource: aString preamble: preamble onSuccess: successBlock onFail: failBlock [
+SourceFileArray >> writeComment: aComment ofClass: aClass metadata: metadata timestamp: aTimeStamp priorSourcePointer: priorSourcePointer onSuccess: successBlock onFail: failBlock [
+
+	self
+		writeChangesDuring: [ :file |
+				(CodeExporter onStream: file)
+					writeComment: aComment
+					ofClass: aClass
+					stamp: aTimeStamp
+					withMetadata: metadata
+					priorSourcePointer: priorSourcePointer ]
+		onSuccess: successBlock
+		onFail: failBlock
+]
+
+{ #category : 'public - string writing' }
+SourceFileArray >> writeSource: source ofMethod: method metadata: metadata priorSourcePointer: priorSourcePointer onSuccess: successBlock onFail: failBlock [
 
 	^ self
-		  writeSource: aString
-		  preamble: preamble
-		  footer: ' '
+		  writeSource: source
+		  ofMethod: method
+		  metadata: metadata
+		  timestamp: DateAndTime now asString
+		  priorSourcePointer: priorSourcePointer
 		  onSuccess: successBlock
 		  onFail: failBlock
+]
+
+{ #category : 'public - string writing' }
+SourceFileArray >> writeSource: source ofMethod: method metadata: metadata timestamp: timestamp priorSourcePointer: priorSourcePointer onSuccess: successBlock onFail: failBlock [
+
+	self
+		writeChangesDuring: [ :file |
+				(CodeExporter onStream: file)
+					writeMethodWithClass: method methodClass
+					selector: method selector
+					source: source
+					stamp: timestamp
+					withMetadata: metadata
+					priorSourcePointer: priorSourcePointer ]
+		onSuccess: successBlock
+		onFail: failBlock
 ]

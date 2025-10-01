@@ -150,13 +150,13 @@ TaAbstractComposition >> compile: selector into: aClass [
 		
 	selector == newMethod selector ifFalse: [ self error: 'selector changed!' ].
 
+	aClass addSelectorSilently: selector withMethod: newMethod.
+
 	(selector ~= method selector or: [ self changesSourceCode: selector ])
 		ifTrue: [ self saveSourceCode: sourceCode ofMethod: newMethod ]
 		ifFalse: [ newMethod sourcePointer: method sourcePointer ].
 
 	aClass classify: selector under: (self protocolForMethod: method).
-
-	aClass addSelectorSilently: selector withMethod: newMethod.
 
 	aClass >> selector propertyAt: #traitSource put: traitDefining.
 	^ true
@@ -398,12 +398,12 @@ TaAbstractComposition >> reverseAlias: aSelector [
 TaAbstractComposition >> saveSourceCode: sourceCode ofMethod: newMethod [
 	"I have to check because during bootstrap there is no SouceFiles"
 
-	(sourceCode isNotNil and: [ 
-			(Smalltalk globals includesKey: #SourceFiles) and: [ 
-				(Smalltalk globals at: #SourceFiles) isNotNil ] ])
+	(sourceCode isNotNil and: [ (Smalltalk globals includesKey: #SourceFiles) and: [ (Smalltalk globals at: #SourceFiles) isNotNil ] ])
 		ifFalse: [ ^ self ].
 
-	newMethod putSource: sourceCode withPreamble: 'Trait method'
+	"Preamble was 'Trait method'.
+	But that looks like it breaks everything!"
+	newMethod putSource: sourceCode withFooter: '' priorSourcePointer: 0
 ]
 
 { #category : 'accessing' }

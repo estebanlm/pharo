@@ -233,20 +233,24 @@ SourceFileArrayTest >> testSourcesFileStream [
 
 { #category : 'tests' }
 SourceFileArrayTest >> testWriteSourceWritesInGivenSourceFileArray [
+
 	| fs array |
 	fs := FileSystem memory.
 	array := SourceFileArray new.
+	array changesFileStream: (SourceFile on: 'changes.chunk' potentialLocations: { fs root }) tryOpen.
+	array sourcesFileStream: (SourceFile on: 'sources.chunk' potentialLocations: { fs root }) tryOpen.
+
 	array
-		changesFileStream: (SourceFile on: 'changes.chunk' potentialLocations: {fs root}) tryOpen.
-	array
-		sourcesFileStream: (SourceFile on: 'sources.chunk' potentialLocations: {fs root}) tryOpen.
-	array
-		writeSource: 'some source'
-		preamble: 'some preamble'
+		writeChangesDuring: [ :file |
+				file nextPutAll: '
+!some preamble!
+some source!
+ !'.
+				file position ]
 		onSuccess: [ :sourcePointer | "continue with assertions" ]
 		onFail: [ "fail the test" self fail ].
-	self assert: (fs / 'changes.chunk') contents equals: 
-'
+
+	self assert: (fs / 'changes.chunk') contents equals: '
 !some preamble!
 some source!
  !'
@@ -254,26 +258,24 @@ some source!
 
 { #category : 'tests' }
 SourceFileArrayTest >> testWriteSourceWritesInGivenSourceFileArrayWithFlushDefering [
+
 	| fs array |
 	fs := FileSystem memory.
 	array := SourceFileArray new.
 	array
-		changesFileStream:
-			(SourceFile on: 'changes.chunk' potentialLocations: { fs root })
-				tryOpen;
-		sourcesFileStream:
-			(SourceFile on: 'sources.chunk' potentialLocations: { fs root })
-				tryOpen;
+		changesFileStream: (SourceFile on: 'changes.chunk' potentialLocations: { fs root }) tryOpen;
+		sourcesFileStream: (SourceFile on: 'sources.chunk' potentialLocations: { fs root }) tryOpen;
 		deferFlushDuring: [
-			array
-				writeSource: 'some source'
-				preamble: 'some preamble'
-				onSuccess: [ :arg1 |  ]
-				onFail: [ self fail ] ].
-	self
-		assert: (fs / 'changes.chunk') contents
-		equals:
-'
+				array
+					writeChangesDuring: [ :file |
+							file nextPutAll: '
+!some preamble!
+some source!
+ !'.
+							file position ]
+					onSuccess: [ :sourcePointer | "continue with assertions" ]
+					onFail: [ "fail the test" self fail ] ].
+	self assert: (fs / 'changes.chunk') contents equals: '
 !some preamble!
 some source!
  !'
@@ -281,23 +283,29 @@ some source!
 
 { #category : 'tests' }
 SourceFileArrayTest >> testWriteToBufferedStream [
+
 	| fs array |
 	fs := FileSystem memory.
 	array := SourceFileArray new.
 
-	array changesFileStream:
-		(SourceFileCharacterReadWriteStream on: (SourceFileBufferedReadWriteStream on: (fs binaryWriteStreamOn: (fs / 'changes.chunk') path)) encoding: #utf8).
+	array changesFileStream: (SourceFileCharacterReadWriteStream
+			 on: (SourceFileBufferedReadWriteStream on: (fs binaryWriteStreamOn: (fs / 'changes.chunk') path))
+			 encoding: #utf8).
 
-	array sourcesFileStream:
-		(SourceFileCharacterReadWriteStream on: (SourceFileBufferedReadWriteStream on: (fs binaryWriteStreamOn: (fs / 'sources.chunk') path)) encoding: #utf8).
-
+	array sourcesFileStream: (SourceFileCharacterReadWriteStream
+			 on: (SourceFileBufferedReadWriteStream on: (fs binaryWriteStreamOn: (fs / 'sources.chunk') path))
+			 encoding: #utf8).
 	array
-		writeSource: 'some source'
-		preamble: 'some preamble'
+		writeChangesDuring: [ :file |
+				file nextPutAll: '
+!some preamble!
+some source!
+ !'.
+				file position ]
 		onSuccess: [ :sourcePointer | "continue with assertions" ]
 		onFail: [ "fail the test" self fail ].
-	self assert: (fs / 'changes.chunk') contents equals: 
-'
+
+	self assert: (fs / 'changes.chunk') contents equals: '
 !some preamble!
 some source!
  !'
