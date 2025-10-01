@@ -264,7 +264,37 @@ DebugInfoTest >> testListShadowedVariablesAreNotDuplicated [
 ]
 
 { #category : 'tests - listing variables' }
-DebugInfoTest >> testListVariablesWithinOptimizedContext [
+DebugInfoTest >> testListVariablesAtFirstPCOfOptimizedContext [
+
+	| debugInfo context |
+	context := true ifTrue: [
+			           | inOptimizedScope |
+			           "Put an assignment just after the context capture.
+		Like this, the captured context PC will be inside the block (at the assignment point).
+		Thus, lexically we are inside the block and the variables of the block are visible"
+			           inOptimizedScope := thisContext copy ].
+
+	debugInfo := self newDebugInfoFor: context method.
+
+	"We expect the following instruction sequence:
+	
+	        pushThisContext (1 byte)
+	        send copy (1 byte)
+	  pc -> storeAndPopInto inOptimizedScope (2 bytes)
+	
+	Thus, we expect that the variable `inOptimizedScope` is visible in the two previous PCs too, because they are lexically in the block.
+	"
+	
+	self
+		assert: (debugInfo variableNamesAt: context pc - 1)
+		equals: #( debugInfo context inOptimizedScope ).
+	self
+		assert: (debugInfo variableNamesAt: context pc - 2)
+		equals: #( debugInfo context inOptimizedScope )
+]
+
+{ #category : 'tests - listing variables' }
+DebugInfoTest >> testListVariablesAtLastPCOfOptimizedContext [
 
 	| debugInfo context |
 	context := true ifTrue: [

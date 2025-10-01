@@ -78,12 +78,12 @@ DebugInfoBuilder >> build [
 							                      bcToASTCache.
 						blockStatements
 							ifEmpty: [
-							mappedPCs := bytecodeToASTCache pcsForNode: blockBody ]
+								mappedPCs := bytecodeToASTCache pcsForNode: blockBody ]
 							ifNotEmpty: [
-									mappedPCs := (bytecodeToASTCache pcsForNode:
-										              blockStatements first) first to:
-									             (bytecodeToASTCache pcsForNode:
-										              blockStatements last) last ].
+								mappedPCs := ((blockStatements flatCollect: [ :e | { e }, e allChildren ])
+									flatCollect: [ :e | bytecodeToASTCache pcsForNode: e ] as: Set)
+										sorted.
+								mappedPCs := mappedPCs first to: mappedPCs last ].
 						cachedScope bytecodeRange: (mappedPCs first to: mappedPCs last) ]
 				ifFalse: [
 						| bytecodeCache |
