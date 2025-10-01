@@ -102,9 +102,7 @@ CodeExporter >> writeComment: commentString ofClass: aClass stamp: commentStamp 
 		"Print the metadata"
 		nextPut: commentMetadata.
 
-	^ sourceCodePosition!
-
-
+	^ sourceCodePosition
 ]
 
 { #category : 'writing' }
