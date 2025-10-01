@@ -99,8 +99,7 @@ CodeExporter >> writeComment: commentString ofClass: aClass stamp: commentStamp 
 	"Print the source code"
 	writeStream
 		nextPut: (commentString ifEmpty: [ String cr ]);
-		"Print the metadata"
-		nextPut: commentMetadata.
+		cr.
 
 	^ sourceCodePosition
 ]

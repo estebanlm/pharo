@@ -174,7 +174,7 @@ ChunkFileFormatParser >> parseCommentDeclaration: commentPreamble [
 		         ifFalse: [ commentPreamble at: 3 ].
 
 	commentContents := readStream next.
-	metadata := readStream next.
+	metadata := ' '.
 	self addDeclaration: ((self classCommentChunkClass
 			  contents: commentContents
 			  behaviorName: behaviorName
