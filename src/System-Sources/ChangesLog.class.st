@@ -67,6 +67,12 @@ ChangesLog >> assureStartupStampLogged [
 ]
 
 { #category : 'logging' }
+ChangesLog >> forceChangesToDisk [
+
+	SourceFiles forceChangesToDisk
+]
+
+{ #category : 'logging' }
 ChangesLog >> logChange: aStringOrText [
 	"Write the argument, aString, onto the changes file."
 
@@ -113,6 +119,18 @@ ChangesLog >> logMethodRemoved: announcement [
 	self logChange: announcement methodClass name , ' removeSelector: #' , announcement selector
 ]
 
+{ #category : 'event-listening' }
+ChangesLog >> logRemovedClassAnnouncement: announcement [
+
+	self logRemovedClassNamed: announcement classRemoved name
+]
+
+{ #category : 'event-listening' }
+ChangesLog >> logRemovedClassNamed: removedClassName [
+
+	self logChange: 'Smalltalk globals removeClassNamed: #' , removedClassName
+]
+
 { #category : 'accessing' }
 ChangesLog >> recordStartupStamp [
 
@@ -123,7 +141,7 @@ ChangesLog >> recordStartupStamp [
 ChangesLog >> registerToAnnouncements [
 
 	self class codeChangeAnnouncer weak
-		when: ClassRemoved send: #logClassRemoved: to: self;
+		when: ClassRemoved send: #logRemovedClassAnnouncement: to: self;
 		when: ClassRenamed send: #logClassRenamed: to: self;
 		when: MethodRemoved send: #logMethodRemoved: to: self.
 	self class codeSupportAnnouncer weak 
