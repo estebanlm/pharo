@@ -86,7 +86,6 @@ Class {
 		'expectedFails'
 	],
 	#classVars : [
-		'Announcers',
 		'DefaultTimeLimit',
 		'HistoryAnnouncer'
 	],
