@@ -120,11 +120,9 @@ CodeImporter >> codeDeclarations [
 CodeImporter >> evaluate [
 	" stripped down version of evaluateDeclarations"
 	| value |
-	self codeDeclarations doWithIndex: [ :declaration :i |
-		self haltIf: [ i == 95 ].TA.
+	self codeDeclarations do: [ :declaration |
 		value := declaration importFor: nil logSource: logSource  ].
 	self flushChangesFile.
-
 	^value
 ]
 
@@ -143,9 +141,8 @@ CodeImporter >> file: aFileStream [
 
 { #category : 'evaluating' }
 CodeImporter >> flushChangesFile [
-	"Yes, we need to do this in order to flush the file, puaj"
-	logSource ifTrue: [
-		ChangesLog default logChange: '----End fileIn----']
+
+	logSource ifTrue: [ ChangesLog default forceChangesToDisk ]
 ]
 
 { #category : 'initialization' }
