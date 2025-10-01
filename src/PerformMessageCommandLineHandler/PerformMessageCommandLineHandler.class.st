@@ -39,9 +39,14 @@ PerformMessageCommandLineHandler >> activateCommand [
 	
 	self isInteractiveAndNoArguments ifTrue: [ ^ self ].
 	
-	self shouldActivateHelp ifTrue: [
-			self printHelp.
-			self exitSuccess ].
+	self isPerformCommand 
+		ifTrue: [ self commandLine removeFirst ]
+		ifFalse: [ self printHelp.
+					self exitFailure: 'perform keyword missing!' ].
+	
+	self shouldActivateHelp 
+		ifTrue: [ self printHelp.
+					self exitSuccess ].
 
 	self execute.
 
@@ -52,7 +57,7 @@ PerformMessageCommandLineHandler >> activateCommand [
 { #category : 'accessing' }
 PerformMessageCommandLineHandler >> arguments [ 
 
-	^ arguments
+	^ self commandLine arguments
 ]
 
 { #category : 'accessing' }
@@ -80,6 +85,15 @@ PerformMessageCommandLineHandler >> execute [
 		lf
 ]
 
+{ #category : 'testing' }
+PerformMessageCommandLineHandler >> isPerformCommand [
+
+	self commandLine withFirstArgument: [ :arg |
+			^ arg = self class commandName ].
+
+	^ false
+]
+
 { #category : 'accessing' }
 PerformMessageCommandLineHandler >> message [
 
@@ -95,7 +109,7 @@ PerformMessageCommandLineHandler >> messageArguments [
 { #category : 'parsing' }
 PerformMessageCommandLineHandler >> parseArguments [
 	
-	| str |
+	| str targetClassName |
 	commandOptions := OrderedCollection new.
 	str := self arguments readStream.
 	[ str atEnd not and: [ str peek beginsWith: '--' ] ] whileTrue: [ commandOptions add: str next ].
@@ -103,9 +117,10 @@ PerformMessageCommandLineHandler >> parseArguments [
 	(self arguments size - commandOptions size < 2)
 		ifTrue: [ ^ self exitFailure: 'Not enough arguments' ].
 
+	targetClassName := str next.
 	targetClass :=  Smalltalk globals 
-		at: str next asSymbol
-		ifAbsent: [ ^ self exitFailure: 'Unknown class' ].
+		at: targetClassName asSymbol
+		ifAbsent: [ ^ self exitFailure: 'Unknown class ', targetClassName ].
 	message := str next asSymbol.
 	
 	self parseMessageArguments: str upToEnd

@@ -155,6 +155,12 @@ CommandLineArguments >> optionAt: aString ifPresent: presentBlock ifAbsent: abse
 ]
 
 { #category : 'testing' }
+CommandLineArguments >> removeFirst [
+
+	arguments := arguments copyWithoutFirst
+]
+
+{ #category : 'testing' }
 CommandLineArguments >> shortOptionAt: aString [
 	^ self shortOptionAt: aString ifAbsent: [
 		Error signal: 'Could not find short-form option: ', aString  ]
