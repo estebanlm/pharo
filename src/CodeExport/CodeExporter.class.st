@@ -78,7 +78,7 @@ CodeExporter >> writeClassInitializer: aClass [
 { #category : 'writing' }
 CodeExporter >> writeComment: commentString ofClass: aClass stamp: commentStamp withMetadata: commentMetadata priorSourcePointer: priorSourcePointer [
 
-	| header |
+	| header sourceCodePosition |
 	header := String streamContents: [ :strm |
 			          strm
 				          nextPutAll: aClass name;
@@ -93,10 +93,18 @@ CodeExporter >> writeComment: commentString ofClass: aClass stamp: commentStamp 
 		bang;
 		nextPut: header;
 		cr. "Print comment. If empty, we need to put an empty line anyways to avoid breaking the parser"
+	
+	sourceCodePosition := writeStream position.
+		
+	"Print the source code"
 	writeStream
 		nextPut: (commentString ifEmpty: [ String cr ]);
-		cr. "Print metadata"
-	writeStream nextPut: commentMetadata
+		"Print the metadata"
+		nextPut: commentMetadata.
+
+	^ sourceCodePosition!
+
+
 ]
 
 { #category : 'writing' }
@@ -130,8 +138,7 @@ CodeExporter >> writeMethodWithClass: methodClass selector: methodSelector sourc
 		cr;
 		bang;
 		nextPut: preamble;
-		cr.
-		
+		cr.	
 
 	sourceCodePosition := writeStream position.
 	
@@ -139,7 +146,7 @@ CodeExporter >> writeMethodWithClass: methodClass selector: methodSelector sourc
 	writeStream		
 		nextPut: methodSourceCode;
 		"Print the metadata"
-		nextPut: ' '.
+		nextPut: (metadata ifEmpty: [ ' ' ]).
 		
 	^ sourceCodePosition
 ]
