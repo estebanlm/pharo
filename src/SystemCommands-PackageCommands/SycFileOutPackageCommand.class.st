@@ -39,6 +39,17 @@ SycFileOutPackageCommand >> execute [
 				| fileouter |
 				fileouter := Fileouter new.
 				packages do: [ :each | fileouter addFullPackage: each ].
-				fileouter fileoutOnFileReference: fileReference ];
+				fileouter fileoutOnFileReference: fileReference.
+				
+				UIManager default
+					inform: (String streamContents: [ :s |
+									 s
+										 nextPutAll: 'Filed out to: ';
+										 cr;
+										 nextPutAll: fileReference pathString;
+										 cr;
+										 cr;
+										 nextPutAll: 'Click to open location' ])
+					actionOnClick: [ fileReference openInOSFileBrowser ] ];
 		openModal
 ]
