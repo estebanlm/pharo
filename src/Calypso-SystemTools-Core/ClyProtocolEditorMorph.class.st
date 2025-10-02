@@ -67,7 +67,7 @@ ClyProtocolEditorMorph >> buildExtensionCheckBoxButton [
 		                     getEnabled: nil
 		                     label: 'Extension'
 		                     help:
-		                     'toggle check box to choose/reset package or protocol of method'.
+		                     'Toggle check box to choose/reset package of current method'.
 	extensionCheckbox
 		changeTableLayout;
 		vResizing: #shrinkWrap;

@@ -38,15 +38,13 @@ ClyTextLineNumbersSwitchMorph class >> showLineNumbers [
 
 { #category : 'settings' }
 ClyTextLineNumbersSwitchMorph class >> showLineNumbers: aBoolean [
+
 	showLineNumbers := aBoolean.
 	self allInstancesDo: [ :inst |
-		| textMorph |
-		textMorph := inst textMorph.
-		(showLineNumbers and: [textMorph lineNumbersRuler isNil])
-			ifTrue: [ textMorph withLineNumbers ].
-		(showLineNumbers not and: [ textMorph lineNumbersRuler isNotNil ])
-			ifTrue: [ textMorph withoutLineNumbers ].
-		inst updateLabel ]
+			| textMorph |
+			textMorph := inst textMorph.
+			(showLineNumbers and: [ textMorph lineNumbersRuler isNil ]) ifTrue: [ textMorph withLineNumbers ].
+			(showLineNumbers not and: [ textMorph lineNumbersRuler isNotNil ]) ifTrue: [ textMorph withoutLineNumbers ] ]
 ]
 
 { #category : 'controlling' }
@@ -62,7 +60,7 @@ ClyTextLineNumbersSwitchMorph >> attachToTextMorph [
 		         getEnabled: nil
 		         label: 'Line numbers'
 		         help:
-		         'Let you decide if the code pane should show the line numbers at the left of the code pane or not. +L: Click to add the lines number/L: Click to hide them.'.
+		         'Let you decide if the code pane should show the line numbers at the left of the code pane or not. Toggle the check box to add line numbers/hide them.'.
 
 	label
 		changeTableLayout;
