@@ -17,6 +17,14 @@ Class {
 	#tag : 'Base'
 }
 
+{ #category : 'instance creation' }
+NewCommandLineHandler class >> commandLine: aCommandLine [
+
+	^ self new
+		commandLine: aCommandLine;
+		yourself
+]
+
 { #category : 'registration' }
 NewCommandLineHandler class >> registerAsCommandLinehandler [
 
@@ -64,6 +72,12 @@ NewCommandLineHandler >> activateCommand [
 NewCommandLineHandler >> commandLine [ 
 
 	^ commandLine ifNil: [ commandLine := CommandLineArguments new ]
+]
+
+{ #category : 'accessing' }
+NewCommandLineHandler >> commandLine: aCommandLineArguments [
+
+	commandLine := aCommandLineArguments
 ]
 
 { #category : 'exiting' }
