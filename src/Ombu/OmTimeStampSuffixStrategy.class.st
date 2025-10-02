@@ -5,7 +5,7 @@ Class {
 	#name : 'OmTimeStampSuffixStrategy',
 	#superclass : 'OmSuffixAfterDotStrategy',
 	#instVars : [
-		'lastNanos'
+		'lastSuffix'
 	],
 	#category : 'Ombu-Strategies',
 	#package : 'Ombu',
@@ -22,13 +22,10 @@ OmTimeStampSuffixStrategy >> nextSuffix [
 	Maybe this will get fixed in the  future? Check https://github.com/pharo-project/pharo/issues/13447 and if it's the case, remove the hack :)
 	OmSessionStoreTest>>#testNextStoreName is here to make sure we have no regression while running it on Windows, so if the hack is still needed you will know it."
 
-	| currentNanos |
-	
-	currentNanos := DateAndTime now asNanoSeconds.
-	
-	lastNanos :=  (lastNanos isNotNil and: [currentNanos <= lastNanos]) 
-		ifTrue: [ lastNanos + 1 ]
-		ifFalse: [ currentNanos ].
-	
-	^ lastNanos printStringHex
+	| stamp |
+	stamp := DateAndTime now asNanoSeconds printStringHex.
+	"We continue until we have a new stamp because we changed of millisecond"
+	^ (Smalltalk os isWindows and: [ lastSuffix = stamp ])
+		  ifTrue: [ self nextSuffix ]
+		  ifFalse: [ lastSuffix := stamp ]
 ]
