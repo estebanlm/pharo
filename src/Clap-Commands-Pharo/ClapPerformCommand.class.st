@@ -15,7 +15,8 @@ ClapPerformCommand class >> commandSpecification [
 	| spec |
 	spec := (ClapCommandSpec id: #perform)
 		        description:
-			        'Performs a message on a given class or global object. This command can be used to execute some code if a compiler is not loaded in the image. All message arguments are strings.';
+			        'Performs a message on a given class or global object. This command can be used to execute some code if a compiler is not loaded in the image. All message arguments are strings.' , String lf, 
+						'Example: pharo Pharo.image perform Smalltalk garbageCollect --save';
 		        commandClass: self;
 		        addHelp;
 		        addPositional: #global description: 'A class name or a global name. Receiver of the message (e.g. Smalltalk)';
@@ -25,14 +26,15 @@ ClapPerformCommand class >> commandSpecification [
 					        description:
 						        'arguments to be passes to the message selector. All arguments after the special argument -- will be wrapped into an array and passed as a single argument.';
 					        multiple: true ];
-		        addFlag: #'as-array'
-		     			description: 'Following arguments will be wrapped into an array and passed as a single argument'
-		        		positionalSpec: [ :positional | positional identifier: #'array-argument'; multiple: true ];
 		        yourself.
 
 	self
 		addSaveFlagTo: spec;
 		addNoQuitOptionTo: spec.
+	spec
+      addFlag: #'as-array'
+   			description: 'Following arguments will be wrapped into an array and passed as a single argument. Should be used after <arguments>'
+      		positionalSpec: [ :positional | positional identifier: #'array-argument'; multiple: true ].
 	^ spec
 ]
 

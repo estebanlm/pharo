@@ -1,13 +1,22 @@
 "
-Usage: perform <global> <messageSelector>  [ <arguments> ] [ --save ]
-	global	            A class name or a global name. Receiver of the message (e.g. Smalltalk)
-	messageSelector   The message selector to be perfomed
-	
-Documentation:
-Performs a message on a given class or global object. This command-line handler can be used to execute some code if a compiler is not loaded in the image. All message arguments are strings.
-
-Examples:
-	pharo Pharo.image perform Smalltalk garbageCollect --save
+Performs a message on a given class or global object. This command can be used to execute some code if a compiler is not loaded in the image. All message arguments are strings.
+Example: pharo Pharo.image perform Smalltalk garbageCollect --save
+   
+Usage: perform [--help] [--save] [--no-quit] [--as-array <array-argument>] [<global>] [<messageSelector>] [<arguments>]
+   
+Parameters:
+     <global>    A class name or a global name. Receiver of the message (e.g. Smalltalk)
+     <messageSelector>
+                     The message selector to be perfomed
+     <arguments>
+                     arguments to be passes to the message selector. All arguments after the special argument -- will be wrapped into an array and passed as a single argument.
+   
+Options:
+     --help      Prints this documentation
+     --save      Save the image after the command terminates
+     --no-quit   [deprecated] keep the image running without activating any other command line handler
+     --as-array <array-argument>
+                     Following arguments will be wrapped into an array and passed as a single argument. Should be used after <arguments>
 "
 Class {
 	#name : 'PerformMessageCommandLineHandler',
@@ -16,8 +25,7 @@ Class {
 		'targetClass',
 		'message',
 		'messageArguments',
-		'commandOptions',
-		'arguments'
+		'commandOptions'
 	],
 	#category : 'PerformMessageCommandLineHandler',
 	#package : 'PerformMessageCommandLineHandler'
