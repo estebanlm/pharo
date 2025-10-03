@@ -152,11 +152,10 @@ TaAbstractComposition >> compile: selector into: aClass [
 
 	aClass addSelectorSilently: selector withMethod: newMethod.
 
+	aClass classify: selector under: (self protocolForMethod: method).
 	(selector ~= method selector or: [ self changesSourceCode: selector ])
 		ifTrue: [ self saveSourceCode: sourceCode ofMethod: newMethod ]
 		ifFalse: [ newMethod sourcePointer: method sourcePointer ].
-
-	aClass classify: selector under: (self protocolForMethod: method).
 
 	aClass >> selector propertyAt: #traitSource put: traitDefining.
 	^ true
