@@ -593,7 +593,8 @@ Behavior >> codeSupportAnnouncer [
 { #category : 'compiling' }
 Behavior >> compile: sourceCode classified: protocol [
 	"Compile the source code in the context of the receiver and install the result in the receiver's method dictionary under the given protocol (this can be a protocol or a protocol name).
-	
+	Return the selector of the compiled method.
+		
 	The argument sourceCode is either a string or an object that converts to a string or a PositionableStream on an object that converts to a string."
 
 	^ self compile: sourceCode classified: protocol notifying: nil
@@ -601,6 +602,7 @@ Behavior >> compile: sourceCode classified: protocol [
 
 { #category : 'compiling' }
 Behavior >> compile: sourceCode classified: protcol notifying: requestor [
+	 "Return the selector of the compiled method"
 
 	^ self
 		  compile: sourceCode
@@ -611,6 +613,7 @@ Behavior >> compile: sourceCode classified: protcol notifying: requestor [
 
 { #category : 'compiling' }
 Behavior >> compile: sourceCode classified: protocol withStamp: changeStamp notifying: requestor [
+	"Return the selector of the compiled method"
 
 	^ self
 		  compile: sourceCode
@@ -622,6 +625,7 @@ Behavior >> compile: sourceCode classified: protocol withStamp: changeStamp noti
 
 { #category : 'compiling' }
 Behavior >> compile: sourceCode classified: protocol withStamp: changeStamp notifying: requestor logSource: logSource [
+	"Return the selector of the compiled method"
 
 	| method |
 
