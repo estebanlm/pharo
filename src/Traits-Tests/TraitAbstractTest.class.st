@@ -85,7 +85,6 @@ TraitAbstractTest >> packageNameForTests [
 { #category : 'running' }
 TraitAbstractTest >> tearDown [
 
-	"self packageOrganizer removePackage: self packageNameForTests."
-
+	self packageOrganizer removePackage: self packageNameForTests.
 	super tearDown
 ]
