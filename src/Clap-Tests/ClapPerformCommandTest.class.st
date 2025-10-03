@@ -20,7 +20,12 @@ ClapPerformCommandTest >> activationWith: arguments [
 { #category : 'tests' }
 ClapPerformCommandTest >> testAllArguments [
 	context := ClapPerformCommand commandSpecification activationWith: #( 'perform' '--save' 'Foo' 'Bar' '--as-array' '1' 'bar' ).
-
+	
+	[ context match; validateAll ]
+		on: Exit 
+		do: [ :exit | self fail: 'Validation failed' ].
+		
+	self assert: context isMatch.
 	self assert: context command allArguments equals: #( '--save' 'Foo' 'Bar' '--as-array' '1' 'bar' ).
 ]
 
