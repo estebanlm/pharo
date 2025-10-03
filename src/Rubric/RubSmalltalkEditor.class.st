@@ -866,6 +866,25 @@ RubSmalltalkEditor >> keystroke: aKeyboardEvent [
 	self completionAround: [super keystroke: aKeyboardEvent ] keyStroke: aKeyboardEvent
 ]
 
+{ #category : 'as yet unclassified' }
+RubSmalltalkEditor >> lineIntervalAtCursorPosition [
+	| string lastEnd index lastStart |
+	
+	index := self pointIndex.
+	string := self text asString ifEmpty: [ ^ nil ].
+	string lineIndicesDo: [ :start :endWithoutDelimiters :end | 
+		index <= end ifTrue: [ 
+			^ start to: endWithoutDelimiters ].
+		lastStart := start.
+		lastEnd := end ].
+	
+	"evaluate the case where the cursor is placed at the end of the text (there will not 
+	 be delimiter, but there will be a line to answer anyway (maybe empty)"
+	^ lastEnd + 1 <= index 
+		ifTrue: [ lastStart to: lastEnd ]
+		ifFalse: [ nil ]
+]
+
 { #category : 'menu messages' }
 RubSmalltalkEditor >> methodCaseSensitiveStringsContainingIt [
 	"Open a browser on methods which contain the current selection as part of a string constant."
