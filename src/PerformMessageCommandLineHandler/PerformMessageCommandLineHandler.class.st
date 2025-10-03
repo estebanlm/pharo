@@ -69,15 +69,15 @@ PerformMessageCommandLineHandler >> arguments [
 ]
 
 { #category : 'accessing' }
-PerformMessageCommandLineHandler >> commandOptions [
+PerformMessageCommandLineHandler >> arrayArgumentMarker [
 
-	^ commandOptions ifNil: [ #() ]
+	^ '--as-array'
 ]
 
 { #category : 'accessing' }
-PerformMessageCommandLineHandler >> commandOptionsEndMarker [
+PerformMessageCommandLineHandler >> commandOptions [
 
-	^ '--'
+	^ commandOptions ifNil: [ #() ]
 ]
 
 { #category : 'actions' }
@@ -141,7 +141,7 @@ PerformMessageCommandLineHandler >> parseMessageArguments: remainingArguments [
 	"All options passed to the perform command after the -- argument are considered as arguments to the message to be called.
 	It is useful, for example, to pass flags to the called message."
 
-	splittedArguments := { self commandOptionsEndMarker } split: remainingArguments.
+	splittedArguments := { self arrayArgumentMarker } split: remainingArguments.
 	messageArguments := (splittedArguments size = 1) 
 		ifTrue: [ splittedArguments first ]
 		ifFalse: [ splittedArguments first copyWith: splittedArguments second ]
