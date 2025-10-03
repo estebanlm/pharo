@@ -286,7 +286,7 @@ ClapContext >> lastSubcommand [
 
 	^ self
 		ifMatch: [ :aMatch | aMatch subcommands last ]
-		ifMismatch: [ self ]
+		ifMismatch: [ ClapUnmatchCommand signalClapContext: self ]
 ]
 
 { #category : 'accessing' }

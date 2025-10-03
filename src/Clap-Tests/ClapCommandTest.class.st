@@ -85,6 +85,23 @@ ClapCommandTest >> testShouldGetDefaultValueWhenAskingForAMissingNestedPositiona
 ]
 
 { #category : 'tests' }
+ClapCommandTest >> testShouldGetErrorWhenAskingCommandAndMismatch [
+
+	| spec command |
+	spec := ClapCommandSpec id: #hello.
+	context := spec activationWith: #( 'hi' '--foo' '--bar' ).
+
+	self assert: context match isMismatch.
+	self 
+		should: [ command := context command ] 
+		raise: ClapUnmatchCommand
+		withExceptionDo: [ :error | 
+			self assert: (error description includesSubstring: 'foo') description: 'missing context arguments'.
+			self assert: (error description includesSubstring: 'bar') description: 'missing availabel commands'.
+			]
+]
+
+{ #category : 'tests' }
 ClapCommandTest >> testShouldGetFlagPositionalValueWhenAskingForAFlagHavingPositional [
 	| command |
 	context := ClapContext specification: ClapCommandLineExamples hello.
