@@ -397,6 +397,17 @@ BagTest >> testCopyNonEmptyWithoutAllNotIncluded [
 ]
 
 { #category : 'tests' }
+BagTest >> testCounts [
+	| bag  |
+	bag := Bag new.
+	bag add: '1' withOccurrences: 50.
+	bag add: '2' withOccurrences: 40.
+	bag add: '3' withOccurrences: 10.
+
+	self assert: bag counts equals: #(50 40 10)
+]
+
+{ #category : 'tests' }
 BagTest >> testCreation [
 	| bag |
 	bag := Bag new.
