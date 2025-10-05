@@ -268,6 +268,8 @@ Bag >> size [
 Bag >> sortedCounts [
 	"Answer with a collection of counts with elements, sorted by decreasing
 	count."
+	
+	"#(111 22 33 111 33 111 111 111 22) asBag sortedCounts >>> {5->111. 2->22. 2->33}"
 
 	^(Array new: contents size streamContents: [ :stream |
  			contents associationsDo: [ :each |
@@ -282,7 +284,7 @@ Bag >> sortedElements [
 
 	"#(1 2 2 3 1 1 1) asBag sortedElements >>> {1->4. 2->2. 3->1}"
 
-	^contents associations
+	^ contents associations
  		sort;
  		yourself
 ]
