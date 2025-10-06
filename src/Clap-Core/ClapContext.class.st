@@ -45,6 +45,17 @@ ClapContext class >> defaultRoot [
 		yourself
 ]
 
+{ #category : 'private' }
+ClapContext class >> ensureBoostrapCommandsIn: aCommandList [
+	"In early stages of the bootsrap, pragmas cannot be used.
+	Perform command should always be usable, so ensure it is present in the list."
+	
+	aCommandList 
+		detect: [ :commandSpec | commandSpec identifier = ClapPerformCommand commandSpecification identifier ]
+		ifNone: [ aCommandList add: ClapPerformCommand commandSpecification ].
+	^ aCommandList
+]
+
 { #category : 'instance creation' }
 ClapContext class >> executeWithPragmaCommandsAndArguments: arguments [
 
@@ -75,7 +86,7 @@ ClapContext class >> withAll: commandCandidates [
 { #category : 'instance creation' }
 ClapContext class >> withPragmaCommands [ 
 
-	^ self withAll: self pragmaCommands
+	^ self withAll: (self ensureBoostrapCommandsIn: self pragmaCommands asOrderedCollection)
 ]
 
 { #category : 'validation' }
