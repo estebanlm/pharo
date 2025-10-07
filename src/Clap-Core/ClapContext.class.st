@@ -50,9 +50,12 @@ ClapContext class >> ensureBoostrapCommandsIn: aCommandList [
 	"In early stages of the bootsrap, pragmas cannot be used.
 	Perform command should always be usable, so ensure it is present in the list."
 	
+	| class |
+	class := Smalltalk globals at: #ClapPerformCommand ifAbsent: [ ^ aCommandList ].
+	
 	aCommandList 
-		detect: [ :commandSpec | commandSpec identifier = ClapPerformCommand commandSpecification identifier ]
-		ifNone: [ aCommandList add: ClapPerformCommand commandSpecification ].
+		detect: [ :commandSpec | commandSpec identifier =  class commandSpecification identifier ]
+		ifNone: [ aCommandList add: class commandSpecification ].
 	^ aCommandList
 ]
 
