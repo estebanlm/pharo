@@ -670,7 +670,7 @@ ClassDescription >> noteAddedSelector: aSelector meta: isMeta [
 	"A hook allowing some classes to react to adding of certain selectors"
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'compiling' }
 ClassDescription >> noteCompilationOf: aSelector [
 	"A hook allowing some classes to react to recompilation of certain selectors"
 	

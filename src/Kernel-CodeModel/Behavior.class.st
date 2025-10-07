@@ -1531,7 +1531,7 @@ Behavior >> nonObsoleteClass [
 	^ self environment at: self originalName
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'compiling' }
 Behavior >> noteCompilationOf: aSelector [
 	"A hook allowing some classes to react to recompilation of certain selectors"
 ]
@@ -1615,12 +1615,6 @@ Behavior >> propertyAt: propName put: propValue [
 	^ self ensureProperties
 		at: propName
 		put: propValue
-]
-
-{ #category : 'as yet unclassified' }
-Behavior >> protocolPreambleFor: anUndefinedObject withStamp: aString priorMethod: anUndefinedObject3 [ 
-	
-	^ 'Behavior method'
 ]
 
 { #category : 'accessing' }
