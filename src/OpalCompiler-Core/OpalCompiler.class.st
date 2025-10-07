@@ -573,7 +573,7 @@ OpalCompiler >> install [
 			method
 				putSource: source
 				withFooter: ''
-				protocol: protocol name asString
+				protocol: method protocol name asString
 				timestamp: changeStamp
 				priorSourcePointer: (self priorMethod ifNil: [ 0 ] ifNotNil: [ self priorMethod sourcePointer ]) ].
 	class noteCompilationOf: method.

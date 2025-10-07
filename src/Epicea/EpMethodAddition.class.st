@@ -38,7 +38,7 @@ EpMethodAddition >> fileOutEntryOn: aWriteStream [
 
 	self methodAffected origin ifNotNil: [ :methodDefinition |
 		(CodeExporter onStream: aWriteStream)
-			writeMethod: self methodAffected origin ]
+			writeMethod: self methodAffected originMethod ]
 ]
 
 { #category : 'initialization' }

@@ -620,7 +620,7 @@ Behavior >> compile: sourceCode classified: protocol withStamp: changeStamp noti
 		  classified: protocol
 		  withStamp: changeStamp
 		  notifying: requestor
-		  logSource: true
+		  logSource: self shouldLogSource
 ]
 
 { #category : 'compiling' }
@@ -1750,6 +1750,13 @@ Behavior >> setFormat: aFormatInstanceDescription [
      compact, variable sized"
 
 	format := aFormatInstanceDescription
+]
+
+{ #category : 'compiling' }
+Behavior >> shouldLogSource [
+
+	"By default anonymous behaviors do not log source"
+	^ self isAnonymous not
 ]
 
 { #category : 'testing' }

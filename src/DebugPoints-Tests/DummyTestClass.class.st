@@ -35,7 +35,6 @@ DummyTestClass >> classVarWrite [
 { #category : 'accessing' }
 DummyTestClass >> id [
 
-	'<an unprintable nonliteral value>' hitWithContext: thisContext.
 	^ id
 ]
 

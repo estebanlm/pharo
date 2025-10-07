@@ -660,9 +660,9 @@ Package >> removeTag: aTag [
 		       ifFalse: [ aTag ].
 
 	"Make a topo sort of traits and classes"	
-	traits := aTag classes select: [ :class | class isTrait ].
+	traits := tag classes select: [ :class | class isTrait ].
 	sortedTraits := (Trait traitDependencyOrder: traits) select: [:t | traits includes: t].
-	sortedClasses := Class superclassOrder: (aTag classes reject: [ :class | class isTrait ]).		
+	sortedClasses := Class superclassOrder: (tag classes reject: [ :class | class isTrait ]).		
 	sorted := sortedClasses reversed, sortedTraits reversed.
 	sorted do: [ :class | class removeFromSystem ].
 

@@ -117,7 +117,7 @@ CodeExporter >> writeMethod: aMethod metadata: metadata prior: priorSourcePointe
 		  writeMethodWithClass: aMethod methodClass
 		  selector: aMethod selector
 		  source: aMethod sourceCode
-		  protocol: (aMethod methodClass protocolOfSelector: aMethod selector)
+		  protocol: (aMethod methodClass protocolOfSelector: aMethod selector) name asString 
 		  stamp: DateAndTime now asString
 		  withMetadata: metadata
 		  priorSourcePointer: priorSourcePointer

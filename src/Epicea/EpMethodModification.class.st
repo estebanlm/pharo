@@ -40,7 +40,7 @@ EpMethodModification >> fileOutEntryOn: aWriteStream [
 
 	self methodAffected realParent ifNotNil: [ 
 		(CodeExporter onStream: aWriteStream)
-			writeMethod: self methodAffected origin ]
+			writeMethod: self methodAffected originMethod ]
 ]
 
 { #category : 'initialization' }
