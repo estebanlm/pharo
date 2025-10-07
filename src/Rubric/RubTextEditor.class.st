@@ -1484,6 +1484,25 @@ RubTextEditor >> lineIndentationStart: aPosition [
 	^ position
 ]
 
+{ #category : 'accessing' }
+RubTextEditor >> lineIntervalAtCursorPosition [
+	| string lastEnd index lastStart |
+	
+	index := self pointIndex.
+	string := self text asString ifEmpty: [ ^ nil ].
+	string lineIndicesDo: [ :start :endWithoutDelimiters :end | 
+		index <= end ifTrue: [ 
+			^ start to: endWithoutDelimiters ].
+		lastStart := start.
+		lastEnd := end ].
+	
+	"evaluate the case where the cursor is placed at the end of the text (there will not 
+	 be delimiter, but there will be a line to answer anyway (maybe empty)"
+	^ lastEnd + 1 <= index 
+		ifTrue: [ lastStart to: lastEnd ]
+		ifFalse: [ nil ]
+]
+
 { #category : 'menu messages' }
 RubTextEditor >> lineSelectAndEmptyCheck: returnBlock [
 	"If the current selection is an insertion point, expand it to be the entire current line; if after that's done the selection is still empty, then evaluate the returnBlock, which will typically consist of '[^ self]' in the caller -- check senders of this method to understand this."
