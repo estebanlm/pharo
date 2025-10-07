@@ -117,16 +117,17 @@ CodeExporter >> writeMethod: aMethod metadata: metadata prior: priorSourcePointe
 		  writeMethodWithClass: aMethod methodClass
 		  selector: aMethod selector
 		  source: aMethod sourceCode
+		  protocol: (aMethod methodClass protocolOfSelector: aMethod selector)
 		  stamp: DateAndTime now asString
 		  withMetadata: metadata
 		  priorSourcePointer: priorSourcePointer
 ]
 
 { #category : 'writing' }
-CodeExporter >> writeMethodWithClass: methodClass selector: methodSelector source: methodSourceCode stamp: methodStamp withMetadata: metadata priorSourcePointer: priorSourcePointer [
+CodeExporter >> writeMethodWithClass: methodClass selector: methodSelector source: methodSourceCode protocol: protocol stamp: methodStamp withMetadata: metadata priorSourcePointer: priorSourcePointer [
 
 	| preamble sourceCodePosition |
-	preamble := methodClass name , ' methodsFor: ' , (methodClass protocolOfSelector: methodSelector) name asString printString.
+	preamble := methodClass name , ' methodsFor: ' , protocol printString.
 	methodStamp ifNotEmpty: [
 		preamble := preamble, ' stamp: ', methodStamp printString ].
 	preamble := preamble, ' prior: ', priorSourcePointer printString.

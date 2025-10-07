@@ -494,6 +494,7 @@ SourceFileArray >> writeSource: source ofMethod: method metadata: metadata prior
 	^ self
 		  writeSource: source
 		  ofMethod: method
+		  protocol: nil
 		  metadata: metadata
 		  timestamp: DateAndTime now asString
 		  priorSourcePointer: priorSourcePointer
@@ -502,7 +503,7 @@ SourceFileArray >> writeSource: source ofMethod: method metadata: metadata prior
 ]
 
 { #category : 'public - string writing' }
-SourceFileArray >> writeSource: source ofMethod: method metadata: metadata timestamp: timestamp priorSourcePointer: priorSourcePointer onSuccess: successBlock onFail: failBlock [
+SourceFileArray >> writeSource: source ofMethod: method protocol: protocol metadata: metadata timestamp: timestamp priorSourcePointer: priorSourcePointer onSuccess: successBlock onFail: failBlock [
 
 	self
 		writeChangesDuring: [ :file |
@@ -510,6 +511,7 @@ SourceFileArray >> writeSource: source ofMethod: method metadata: metadata times
 					writeMethodWithClass: method methodClass
 					selector: method selector
 					source: source
+					protocol: protocol
 					stamp: timestamp
 					withMetadata: metadata
 					priorSourcePointer: priorSourcePointer ]

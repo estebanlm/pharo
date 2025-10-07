@@ -402,7 +402,12 @@ TaAbstractComposition >> saveSourceCode: sourceCode ofMethod: newMethod [
 
 	"Preamble was 'Trait method'.
 	But that looks like it breaks everything!"
-	newMethod putSource: sourceCode withFooter: '' priorSourcePointer: 0
+	newMethod
+		putSource: sourceCode
+		withFooter: ''
+		protocol: newMethod protocol name asString
+		timestamp: DateAndTime new
+		priorSourcePointer: 0
 ]
 
 { #category : 'accessing' }
