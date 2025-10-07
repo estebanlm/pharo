@@ -132,7 +132,12 @@ ClapContext >> command [
 	| commandClass |
 	self match. "ensure command is matched"
 	
-	commandClass := self lastSubcommand specification commandClass ifNil: [ ClapApplication ].
+	commandClass := [ self lastSubcommand specification commandClass ]
+							on: ClapUnmatchCommand do: [ self match specification commandClass ].
+							
+	"In case no command class was specified"
+	commandClass := commandClass ifNil: [ ClapApplication ].							
+							
 	^ commandClass with: self
 ]
 

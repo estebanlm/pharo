@@ -2,7 +2,6 @@ Class {
 	#name : 'ClapPerformCommandTest',
 	#superclass : 'ClapPharoCommandsTest',
 	#instVars : [
-		'systemVersion',
 		'command'
 	],
 	#category : 'Clap-Tests-Commands',
@@ -13,7 +12,7 @@ Class {
 { #category : 'tests' }
 ClapPerformCommandTest >> activationWith: arguments [
 	
-	context := ClapPerformCommand commandSpecification activateWith: arguments.
+	context := ClapPerformCommand commandSpecification activationWith: arguments.
 	command := context command
 ]
 
