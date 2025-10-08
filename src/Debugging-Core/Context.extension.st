@@ -191,16 +191,6 @@ Context >> send: selector super: superFlag numArgs: numArgs [
 ]
 
 { #category : '*Debugging-Core' }
-Context class >> simulatePrimitive: primName module: moduleName with: simulator [
-	^ self specialPrimitiveSimulators at: {primName. moduleName} put: simulator
-]
-
-{ #category : '*Debugging-Core' }
-Context class >> simulatePrimitiveNumber: num with: simulator [
-	^ self specialPrimitiveSimulators at: num put: simulator
-]
-
-{ #category : '*Debugging-Core' }
 Context >> stepIntoQuickMethod [
 	^self compiledCode stepIntoQuickMethods
 ]

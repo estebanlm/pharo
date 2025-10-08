@@ -134,6 +134,12 @@ InstructionStream >> willJumpIfFalse [
 ]
 
 { #category : '*Debugging-Core' }
+InstructionStream >> willJustPop [
+
+	^ self method encoderClass isJustPopAt: pc in: self method
+]
+
+{ #category : '*Debugging-Core' }
 InstructionStream >> willReturn [
 	"Answer whether the next bytecode is a return."
 
@@ -145,12 +151,6 @@ InstructionStream >> willSend [
 	"Answer whether the next bytecode is a message-send."
 
 	^ self method encoderClass isSendAt: pc in: self method
-]
-
-{ #category : '*Debugging-Core' }
-InstructionStream >> willJustPop [
-
-	^ self method encoderClass isJustPopAt: pc in: self method
 ]
 
 { #category : '*Debugging-Core' }

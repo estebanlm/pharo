@@ -28,9 +28,7 @@ Class {
 		'receiver'
 	],
 	#classVars : [
-		'PrimitiveFailToken',
-		'SpecialPrimitiveSimulators',
-		'TryNamedPrimitiveTemplateMethod'
+		'PrimitiveFailToken'
 	],
 	#category : 'Kernel-CodeModel-Methods',
 	#package : 'Kernel-CodeModel',
@@ -139,23 +137,7 @@ Context class >> contextOn: exceptionClass do: block [
 Context class >> initialize [
 
 	"A unique object to be returned when a primitive fails during simulation"
-	PrimitiveFailToken := Object new.
-	SpecialPrimitiveSimulators := nil
-]
-
-{ #category : 'simulation' }
-Context class >> initializePrimitiveSimulators [
-	"extra primitive simulators can be registered by implementing
-	#registerPrimitiveSimulators method in class side of your class."
-	<ignoreNotImplementedSelectors: #(#registerPrimitiveSimulators)>
-
-	SpecialPrimitiveSimulators := Dictionary new.
-
-	Class allSubclassesDo: [:metaclass |
-		(metaclass includesSelector: #registerPrimitiveSimulators) ifTrue: [
-			metaclass instanceSide registerPrimitiveSimulators.
-			]
-		]
+	PrimitiveFailToken := Object new
 ]
 
 { #category : 'instance creation' }
@@ -199,12 +181,6 @@ Context class >> sender: s receiver: r method: m arguments: args [
 	"Answer an instance of me with attributes set to the arguments."
 
 	^(self newForMethod: m) setSender: s receiver: r method: m arguments: args
-]
-
-{ #category : 'accessing' }
-Context class >> specialPrimitiveSimulators [
-	SpecialPrimitiveSimulators ifNil: [ self initializePrimitiveSimulators ].
-	^ SpecialPrimitiveSimulators
 ]
 
 { #category : 'special context creation' }
