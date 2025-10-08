@@ -740,7 +740,7 @@ Package >> selectorsForClass: aClass [
 		ifTrue: [self definedSelectorsForClass: aClass]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'private' }
 Package >> sortTopologically: allBehaviors [
 
 	| toSort sorted changed |
