@@ -177,6 +177,7 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			'System-Finalization'.
 			'System-Platforms'.
 			'System-SessionManager'.
+
 			'CodeExport'.
 			'System-Sources'.
 			

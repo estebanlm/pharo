@@ -513,6 +513,14 @@ Class >> definesClassVariableNamed: aString [
 	^ self classVarNames includes: aString
 ]
 
+{ #category : 'meta-data' }
+Class >> dependencies [
+	"Return the (transitive) set of behaviors that I depend on"
+	
+	superclass ifNil: [ ^ #() ].
+	^ superclass dependencies copyWith: superclass
+]
+
 { #category : 'copying' }
 Class >> duplicateClassWithNewName: aSymbol [
 

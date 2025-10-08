@@ -654,20 +654,16 @@ Package >> removeProperty: propName ifAbsent: aBlock [
 { #category : 'tags' }
 Package >> removeTag: aTag [
 
-	| tag traits sortedTraits sortedClasses sorted |
+	| tag |
 	tag := aTag isString
 		       ifTrue: [ self tagNamed: aTag ifAbsent: [ ^ self ] ]
 		       ifFalse: [ aTag ].
 
-	"Make a topo sort of traits and classes"	
-	traits := tag classes select: [ :class | class isTrait ].
-	sortedTraits := (Trait traitDependencyOrder: traits) select: [:t | traits includes: t].
-	sortedClasses := Class superclassOrder: (tag classes reject: [ :class | class isTrait ]).		
-	sorted := sortedClasses reversed, sortedTraits reversed.
-	sorted do: [ :class | class removeFromSystem ].
+	"Make a topo sort of traits and classes"
+	(self sortTopologically: tag classes)
+		do: [ :class | class removeFromSystem ].
 
 	tags remove: tag ifAbsent: [ ^ self ].
-
 	self codeChangeAnnouncer announce: (PackageTagRemoved to: tag)
 ]
 
@@ -742,6 +738,30 @@ Package >> selectorsForClass: aClass [
 	^ (self includesClass: aClass)
 		ifFalse: [self extensionSelectorsForClass: aClass]
 		ifTrue: [self definedSelectorsForClass: aClass]
+]
+
+{ #category : 'as yet unclassified' }
+Package >> sortTopologically: allBehaviors [
+
+	| toSort sorted changed |
+	toSort := allBehaviors copy asOrderedCollection.
+	sorted := OrderedCollection new.
+	changed := true.
+
+	[ changed ] whileTrue: [
+		| behaviorsWithoutInternalDependencies |
+		behaviorsWithoutInternalDependencies := toSort select: [ :e |
+			e dependencies noneSatisfy: [ :d | toSort includes: d ] ].
+		sorted addAllFirst: behaviorsWithoutInternalDependencies.
+		toSort removeAll: behaviorsWithoutInternalDependencies.
+
+		behaviorsWithoutInternalDependencies ifEmpty: [ changed := false ].
+	].
+
+	"If the final set is not empty, this means we have cycles"
+	self assert: toSort isEmpty.
+
+	^ sorted
 ]
 
 { #category : 'tags' }

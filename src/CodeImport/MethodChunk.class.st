@@ -72,12 +72,6 @@ MethodChunk >> isMethodDeclaration [
 ]
 
 { #category : 'accessing' }
-MethodChunk >> methodSelector [
-
-	^ OCParser parseMethodPattern: self contents
-]
-
-{ #category : 'accessing' }
 MethodChunk >> protocol [
 	^ protocol
 ]

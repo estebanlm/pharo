@@ -123,11 +123,6 @@ Fileouter >> methods: anObject [
 
 { #category : 'accessing' }
 Fileouter >> sortBehaviors [
-	
-	| traits sortedTraits sortedClasses |
-	traits := self behaviors select: [ :class | class isTrait ].
-	sortedTraits := Trait traitDependencyOrder: traits.
-	sortedClasses := Class superclassOrder: (self behaviors reject: [ :class | class isTrait ]).		
 
-	^ sortedTraits, sortedClasses
+	^ Package new sortTopologically: self behaviors
 ]
