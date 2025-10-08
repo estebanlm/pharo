@@ -20,7 +20,7 @@ Options:
 "
 Class {
 	#name : 'PerformMessageCommandLineHandler',
-	#superclass : 'NewCommandLineHandler',
+	#superclass : 'CommandLineHandler',
 	#instVars : [
 		'targetClass',
 		'message',

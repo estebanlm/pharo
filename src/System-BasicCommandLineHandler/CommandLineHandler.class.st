@@ -4,7 +4,7 @@ I then run the appropriate actions if any.
 I provide core functionalities to implement a command line handler that can replace the current one.
 "
 Class {
-	#name : 'NewCommandLineHandler',
+	#name : 'CommandLineHandler',
 	#superclass : 'Object',
 	#instVars : [
 		'commandLine',
@@ -18,7 +18,7 @@ Class {
 }
 
 { #category : 'instance creation' }
-NewCommandLineHandler class >> commandLine: aCommandLine [
+CommandLineHandler class >> commandLine: aCommandLine [
 
 	^ self new
 		commandLine: aCommandLine;
@@ -26,7 +26,7 @@ NewCommandLineHandler class >> commandLine: aCommandLine [
 ]
 
 { #category : 'registration' }
-NewCommandLineHandler class >> registerAsCommandLinehandler [
+CommandLineHandler class >> registerAsCommandLinehandler [
 
 	SessionManager default in: [ :manager |
 		manager
@@ -35,7 +35,7 @@ NewCommandLineHandler class >> registerAsCommandLinehandler [
 ]
 
 { #category : 'system startup' }
-NewCommandLineHandler class >> startUp: isImageStarting [
+CommandLineHandler class >> startUp: isImageStarting [
 	"only handle when launching a new image"
 	isImageStarting ifFalse: [ ^ self ].
 
@@ -44,7 +44,7 @@ NewCommandLineHandler class >> startUp: isImageStarting [
 ]
 
 { #category : 'activation' }
-NewCommandLineHandler >> activate [
+CommandLineHandler >> activate [
 
 	"Do not redefine this method in subclasses. Use #activateCommand for command specific code"
 	self parseGeneralOptions.
@@ -55,7 +55,7 @@ NewCommandLineHandler >> activate [
 ]
 
 { #category : 'activation' }
-NewCommandLineHandler >> activateAndHandleExit [
+CommandLineHandler >> activateAndHandleExit [
 
 	[ self activateCommand ]
 	on: Exit do: [ :exit | self handleExit: exit ]
@@ -63,39 +63,39 @@ NewCommandLineHandler >> activateAndHandleExit [
 ]
 
 { #category : 'activation' }
-NewCommandLineHandler >> activateCommand [
+CommandLineHandler >> activateCommand [
 
 	self subclassResponsibility 
 ]
 
 { #category : 'accessing' }
-NewCommandLineHandler >> commandLine [ 
+CommandLineHandler >> commandLine [ 
 
 	^ commandLine ifNil: [ commandLine := CommandLineArguments new ]
 ]
 
 { #category : 'accessing' }
-NewCommandLineHandler >> commandLine: aCommandLineArguments [
+CommandLineHandler >> commandLine: aCommandLineArguments [
 
 	commandLine := aCommandLineArguments
 ]
 
 { #category : 'exiting' }
-NewCommandLineHandler >> exitFailure: aMessage [
+CommandLineHandler >> exitFailure: aMessage [
 	self hasSessionChanged
 		ifTrue: [ ^ self ].
 	Exit signalFailure: aMessage
 ]
 
 { #category : 'exiting' }
-NewCommandLineHandler >> exitSuccess [
+CommandLineHandler >> exitSuccess [
 	self hasSessionChanged
 		ifTrue: [ ^ self ].
 	Exit signalSuccess
 ]
 
 { #category : 'activation' }
-NewCommandLineHandler >> handleExit: exit [
+CommandLineHandler >> handleExit: exit [
 
 	Smalltalk isInteractive ifFalse: [ ^ exit pass ].
 	
@@ -107,27 +107,27 @@ NewCommandLineHandler >> handleExit: exit [
 ]
 
 { #category : 'testing' }
-NewCommandLineHandler >> hasSessionChanged [
+CommandLineHandler >> hasSessionChanged [
 	"check whether the session has changed since the commandline handler as been created"
 
 	^ session ~~ Smalltalk session
 ]
 
 { #category : 'initialization' }
-NewCommandLineHandler >> initialize [
+CommandLineHandler >> initialize [
 	super initialize.
 	session := Smalltalk session.
 ]
 
 { #category : 'testing' }
-NewCommandLineHandler >> isInteractiveAndNoArguments [
+CommandLineHandler >> isInteractiveAndNoArguments [
 	"WARNING: should be used after general options are parsed"
 
 	^ Smalltalk isInteractive and: [ self commandLine hasArguments not ]
 ]
 
 { #category : 'parsing' }
-NewCommandLineHandler >> parseGeneralOptions [
+CommandLineHandler >> parseGeneralOptions [
 
 	| filteredArguments |
 	filteredArguments := PharoOptionsHandler handle: self commandLine arguments.
@@ -135,14 +135,14 @@ NewCommandLineHandler >> parseGeneralOptions [
 ]
 
 { #category : 'accessing' }
-NewCommandLineHandler >> stderr [
+CommandLineHandler >> stderr [
 
 	"install the line end conversion and initialize the converter"
 	^ stderr ifNil: [ stderr := VTermOutputDriver stderr ]
 ]
 
 { #category : 'accessing' }
-NewCommandLineHandler >> stdout [ 
+CommandLineHandler >> stdout [ 
 
 	"install the line end conversion and initialize the converter"
 	^ stdout ifNil: [ stdout := VTermOutputDriver stdout ]
