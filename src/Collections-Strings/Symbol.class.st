@@ -325,7 +325,8 @@ Symbol >> = aSymbol [
 
 { #category : 'accessing' }
 Symbol >> argumentCount [
-
+    "This method refers to block arguments [:acc :x | ...] has two arguments so argumentCount of a selector that could be used in place of a block
+	should return the same amount of argument than the block."
 	^ self numArgs + 1
 ]
 
