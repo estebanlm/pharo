@@ -27,8 +27,9 @@ Class {
 		'messageArguments',
 		'commandOptions'
 	],
-	#category : 'PerformMessageCommandLineHandler',
-	#package : 'PerformMessageCommandLineHandler'
+	#category : 'System-BasicCommandLineHandler-Base',
+	#package : 'System-BasicCommandLineHandler',
+	#tag : 'Base'
 }
 
 { #category : 'accessing' }
