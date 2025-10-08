@@ -12,9 +12,9 @@ Class {
 	#instVars : [
 		'arguments'
 	],
-	#category : 'System-BasicCommandLineHandler-Utilities',
+	#category : 'System-BasicCommandLineHandler-Base',
 	#package : 'System-BasicCommandLineHandler',
-	#tag : 'Utilities'
+	#tag : 'Base'
 }
 
 { #category : 'instance creation' }
@@ -39,7 +39,7 @@ CommandLineArguments >> arguments: anArray [
 	arguments := anArray
 ]
 
-{ #category : 'testing' }
+{ #category : 'initialization' }
 CommandLineArguments >> commandLineArguments [
 	"self commandLineArguments"
 
@@ -52,27 +52,9 @@ CommandLineArguments >> commandLineArguments [
  	^ args
 ]
 
-{ #category : 'copying' }
-CommandLineArguments >> copySubcommand [
-	"return a new copy of this CommandLine without the first arguments"
-	^ self class withArguments: arguments allButFirst
-]
-
-{ #category : 'copying' }
-CommandLineArguments >> copyWithoutPassword [
-	^ self class withArguments: (arguments reject: [ :each | each beginsWith: '--deploymentPassword' ])
-]
-
 { #category : 'testing' }
 CommandLineArguments >> hasArguments [
-	^ arguments size > 0
-]
-
-{ #category : 'testing' }
-CommandLineArguments >> hasFileWithExtension: aFileExtension [
-	"return true if the first argument has the given file extension"
-	^ self arguments anySatisfy: [ :arg|
-		arg endsWith: aFileExtension]
+	^ arguments isNotEmpty 
 ]
 
 { #category : 'testing' }
@@ -84,13 +66,6 @@ CommandLineArguments >> hasOption: aString [
 	(self arguments includes: option) ifTrue: [ ^ true ].
 	option := option,'='.
 	^ self arguments anySatisfy: [ :arg| arg beginsWith: option ]
-]
-
-{ #category : 'testing' }
-CommandLineArguments >> includesSubCommand: aName [
-	self withFirstArgument: [ :arg|
-		arg = aName ifTrue: [ ^ true ]].
-	^ false
 ]
 
 { #category : 'initialization' }
@@ -110,13 +85,7 @@ CommandLineArguments >> initializeWithArguments: aCollection [
 	arguments := aCollection
 ]
 
-{ #category : 'testing' }
-CommandLineArguments >> longOptionAt: aString [
-	^ self longOptionAt: aString ifAbsent: [
-		Error signal: 'Could not find long-form option: ', aString  ]
-]
-
-{ #category : 'testing' }
+{ #category : 'accessing' }
 CommandLineArguments >> longOptionAt: aString ifAbsent: absentBlock [
 	| optionStart |
 	optionStart := '--' , aString , '='.
@@ -139,34 +108,13 @@ CommandLineArguments >> optionAt: aString ifAbsent: absentBlock [
 		ifFalse: [ self longOptionAt: aString ifAbsent: absentBlock ]
 ]
 
-{ #category : 'accessing' }
-CommandLineArguments >> optionAt: aString ifPresent: presentBlock [
-	| option |
-
-	option := self optionAt: aString ifAbsent: [ ^ self ].
-	^ presentBlock value: option
-]
-
-{ #category : 'accessing' }
-CommandLineArguments >> optionAt: aString ifPresent: presentBlock ifAbsent: absentBlock [
-	| option |
-	option := self optionAt: aString ifAbsent: [ ^ absentBlock value ].
-	^ presentBlock value: option
-]
-
-{ #category : 'testing' }
+{ #category : 'removing' }
 CommandLineArguments >> removeFirst [
 
 	arguments := arguments copyWithoutFirst
 ]
 
-{ #category : 'testing' }
-CommandLineArguments >> shortOptionAt: aString [
-	^ self shortOptionAt: aString ifAbsent: [
-		Error signal: 'Could not find short-form option: ', aString  ]
-]
-
-{ #category : 'testing' }
+{ #category : 'accessing' }
 CommandLineArguments >> shortOptionAt: aString ifAbsent: absentBlock [
 	| index |
 	index := (arguments indexOf: '-', aString) + 1.
@@ -175,7 +123,7 @@ CommandLineArguments >> shortOptionAt: aString ifAbsent: absentBlock [
 		ifTrue: absentBlock
 ]
 
-{ #category : 'testing' }
+{ #category : 'accessing' }
 CommandLineArguments >> withFirstArgument: aBlock [
 	self arguments ifEmpty: [ ^ self ].
 	^ aBlock value: self arguments first
