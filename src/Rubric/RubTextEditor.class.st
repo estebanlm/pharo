@@ -1469,6 +1469,16 @@ RubTextEditor >> lf: aKeyboardEvent [
 	^false
 ]
 
+{ #category : 'accessing' }
+RubTextEditor >> lineAtCursorPosition [
+	| string |
+	
+	string := self text asString ifEmpty: [ ^ '' ].
+	^ self lineIntervalAtCursorPosition
+		ifNotNil: [ :anInterval | string copyFrom: anInterval first to: anInterval last ]
+		ifNil: [ '' ]
+]
+
 { #category : 'private' }
 RubTextEditor >> lineIndentationStart: aPosition [
 	"The offset of the start of the line of `aPostion`, but skip leading spaces and tabs"
