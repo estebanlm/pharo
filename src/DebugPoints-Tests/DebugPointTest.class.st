@@ -119,7 +119,7 @@ DebugPointTest >> testAddRemoveBreakpointKeepTimestamp [
 	| method |
 	DummyTestClass compile: 'dummy ^42'.
 	method := DummyTestClass >> #dummy.
-	self assertEmpty: Breakpoint all.
+	self assertEmpty: DebugPoint all.
 	dp := DebugPointManager
 		      installNew: BreakDebugPoint
 		      on: (DummyTestClass >> #dummy) ast.
@@ -829,13 +829,13 @@ DebugPointTest >> testRemoveBehavior [
 DebugPointTest >> testRemoveClassWithBreakpoint [
 
 	cls compile: 'dummy ^42'.
-	self assertEmpty: Breakpoint all.
+	self assertEmpty: DebugPoint all.
 	dp := DebugPointManager
 		      installNew: BreakDebugPoint
 		      on: (cls >> #dummy) ast.
 	self assertCollection: DebugPoint all includesAll: { dp }.
 	cls removeFromSystem.
-	self assertEmpty: Breakpoint all
+	self assertEmpty: DebugPoint all
 ]
 
 { #category : 'tests' }
@@ -858,7 +858,7 @@ DebugPointTest >> testRemoveMethodWithBreakpoint [
 DebugPointTest >> testRemovePackageWithBreakpoint [
 
 	cls compile: 'dummy ^42'.
-	self assertEmpty: Breakpoint all.
+	self assertEmpty: DebugPoint all.
 	dp := DebugPointManager
 		      installNew: BreakDebugPoint
 		      on: (cls >> #dummy) ast.
