@@ -11,7 +11,7 @@ Class {
 	#tag : 'Base'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'API' }
 Fileouter class >> fileoutPackage: aPackage [
 
 	^ self new
