@@ -123,7 +123,7 @@ NewCommandLineHandler >> initialize [
 NewCommandLineHandler >> isInteractiveAndNoArguments [
 	"WARNING: should be used after general options are parsed"
 
-	^ Smalltalk isInteractive and: [ self commandLine hasArguments ]
+	^ Smalltalk isInteractive and: [ self commandLine hasArguments not ]
 ]
 
 { #category : 'parsing' }
