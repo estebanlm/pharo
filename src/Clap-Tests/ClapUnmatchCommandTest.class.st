@@ -19,7 +19,7 @@ ClapUnmatchCommandTest >> testCanGetAvailableCommands [
 				context
 					arguments: #( 'foo' 'bar' );
 					match;
-					command ]
+					lastSubcommand ]
 		raise: ClapUnmatchCommand
 		withExceptionDo: [ :error | 
 			self assert: error availableCommands equals: 'Available commands: helpCommand, add, branch, clone, commit, init, remote, status' ]
@@ -35,7 +35,7 @@ ClapUnmatchCommandTest >> testCanGetContextArguments [
 				context
 					arguments: #( 'foo' 'bar' );
 					match;
-					command ]
+					lastSubcommand ]
 		raise: ClapUnmatchCommand
 		withExceptionDo: [ :error | self assert: error contextArguments equals: 'Context arguments: #(''foo'' ''bar'')' ]
 ]

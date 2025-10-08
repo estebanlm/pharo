@@ -21,6 +21,20 @@ ClapCommandTest >> testShouldArgumentsBeOkWhenMatched [
 ]
 
 { #category : 'tests' }
+ClapCommandTest >> testShouldGetClapApplicationWhenAskingCommandAndMismatch [
+
+	| spec command |
+	spec := ClapCommandSpec id: #hello.
+	context := spec activationWith: #( 'hi' '--foo' '--bar' ).
+
+	self assert: context match isMismatch.
+	
+	command := context command.
+	
+	self assert: command class equals: ClapApplication
+]
+
+{ #category : 'tests' }
 ClapCommandTest >> testShouldGetCollectionWhenAskingForAMultiplePositional [
 	| command |
 	context := ClapContext specification: ClapCommandLineExamples hello.
@@ -85,7 +99,7 @@ ClapCommandTest >> testShouldGetDefaultValueWhenAskingForAMissingNestedPositiona
 ]
 
 { #category : 'tests' }
-ClapCommandTest >> testShouldGetErrorWhenAskingCommandAndMismatch [
+ClapCommandTest >> testShouldGetErrorWhenAskingLastSubcommandAndMismatch [
 
 	| spec command |
 	spec := ClapCommandSpec id: #hello.
@@ -93,7 +107,7 @@ ClapCommandTest >> testShouldGetErrorWhenAskingCommandAndMismatch [
 
 	self assert: context match isMismatch.
 	self 
-		should: [ command := context command ] 
+		should: [ command := context lastSubcommand ] 
 		raise: ClapUnmatchCommand
 		withExceptionDo: [ :error | 
 			self assert: (error description includesSubstring: 'foo') description: 'missing context arguments'.
