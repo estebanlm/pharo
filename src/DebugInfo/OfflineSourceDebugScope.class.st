@@ -1,3 +1,9 @@
+"
+I represent a lexical scope in a method.
+
+I provide information about variables available in the scope and how to read them.
+I'm implemented as a simple array of mappings.
+"
 Class {
 	#name : 'OfflineSourceDebugScope',
 	#superclass : 'Object',

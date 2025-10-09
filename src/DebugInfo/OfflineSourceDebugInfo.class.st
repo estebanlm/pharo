@@ -1,3 +1,13 @@
+"
+I represent the Debug API of methods/closures, providing offline access to the data.
+For my main API, check `OnlineSourceDebugInfo`.
+
+I'm an offline implementation: I contain the debug information previously computed.
+In other words, I work even if the compiler is not available.
+
+Internally, I contain a stop table representing the metadata at each interesting bytecode (suspension points) and a tree of (optimized) scopes.
+For a better description of scopes, see `OnlineSourceDebugInfo` and the related scope classes.
+"
 Class {
 	#name : 'OfflineSourceDebugInfo',
 	#superclass : 'Object',

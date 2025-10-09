@@ -1,3 +1,25 @@
+"
+I represent the Debug API of methods/closures.
+My main methods, in the `api` protocol, allow the user (debugger, inspector) to read variables from a context, and to obtain bytecode to source code mappings:
+  - is the current PC a send?
+  - is the current PC a store?
+  ...
+
+I'm an online implementation: I compute the debug information on the fly using the compiler.
+In other words, I only work if the compiler is available.
+
+Using `asOfflineDebugInfo` I transform myself into an `OfflineSourceDebugInfo` that does not require a compiler.
+Check the comment of `OfflineSourceDebugInfo` for more information.
+
+## Implementation details
+
+Internally I compute scope objects for optimized lexical scopes.
+Optimized scopes appear when the compiler inlines a closure inside a method.
+In that case, I know how to give users ""the impression"" of being in a non-optimized world.
+For this purpose, scopes know:
+ - what variables are accessible at a certain scope (bytecode range)
+ - how should they be accessed (how many contexts should be looked up in the sender chain, and how to read the variable from the context -- considering temp vectors)
+"
 Class {
 	#name : 'OnlineSourceDebugInfo',
 	#superclass : 'Object',

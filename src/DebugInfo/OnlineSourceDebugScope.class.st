@@ -1,3 +1,8 @@
+"
+I represent a scope wrapping a compiler scope.
+
+I provide information about variables available in the scope and how to read them.
+"
 Class {
 	#name : 'OnlineSourceDebugScope',
 	#superclass : 'Object',
