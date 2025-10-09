@@ -79,6 +79,15 @@ RBInsertNewClassRefactoring >> packageName: anObject [
 ]
 
 { #category : 'transforming' }
+RBInsertNewClassRefactoring >> prepareForExecution [ 
+	
+	((model includesClassNamed: superclass name) and: [ 
+		(model includesClassNamed: superclass superclass name) and: [ 
+			model includesPackageNamed: packageName ] ]) 
+	ifFalse: [ RBRefactoringError signal: 'The model is missing objects required by the refactoring' ]
+]
+
+{ #category : 'transforming' }
 RBInsertNewClassRefactoring >> privateTransform [
 
 	self model

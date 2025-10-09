@@ -52,14 +52,16 @@ ReInsertSubclassDriver >> comment: aString [
 { #category : 'accessing' }
 ReInsertSubclassDriver >> configureRefactoring [
 
-	refactoring := (RBInsertNewClassRefactoring className: self subclass)
+	^ refactoring := (RBInsertNewClassRefactoring className: self subclass)
 		model: model;
 		superclass: self superclass;
 		subclasses: self subclasses; 
 		packageName: self packageName;
 		tagName: self tagName;
 		comment: self comment;
-		yourself
+		prepareForExecution;
+		yourself.
+	
 ]
 
 { #category : 'initialization' }
@@ -111,7 +113,7 @@ ReInsertSubclassDriver >> runRefactoring [
 ReInsertSubclassDriver >> scopes: refactoringScopes [
 
 	scopes := refactoringScopes.
-	model := self refactoringScopeOn: scopes last.
+	model := self refactoringScopeOn: scopes first.
 	superclass := model classObjectFor: superclass
 
 ]
