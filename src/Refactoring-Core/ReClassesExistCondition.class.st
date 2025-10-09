@@ -7,11 +7,11 @@ Class {
 }
 
 { #category : 'accessing' }
-ReClassesExistCondition >> subjects [
-	
-	"I must override subjects because violators are symbols instead of classes.
+ReClassesExistCondition >> classes: aCollection [
+	"I must override `classes:` because violators are symbols instead of classes.
 	To correctly compute `nonViolators`, subjects and violators must have matching types."
-	^ classes keys
+	classes := aCollection.
+	subjects := classes keys 
 ]
 
 { #category : 'displaying' }
