@@ -3,7 +3,7 @@ I hook Clap into the existing command-line handlers system.
 "
 Class {
 	#name : 'ClapCommandLineHandler',
-	#superclass : 'NewCommandLineHandler',
+	#superclass : 'CommandLineHandler',
 	#category : 'Clap-CommandLine',
 	#package : 'Clap-CommandLine'
 }

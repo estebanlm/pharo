@@ -83,6 +83,8 @@ PharoOptionsHandler >> changePreferences [
 { #category : 'accessing' }
 PharoOptionsHandler >> filteredArguments [
 	
+	arguments ifEmpty: [ ^ arguments ].
+	
 	arguments first = self noDefaultPreferencesArgument 
 		ifTrue: [ ^ arguments copyWithoutFirst ].
 		
@@ -118,12 +120,16 @@ PharoOptionsHandler >> isChangingPreferences [
 
 { #category : 'private - preferences' }
 PharoOptionsHandler >> isOmittingPreferences [
+	
+	self arguments ifEmpty: [ ^ false ].
 
 	^ self arguments first = self noDefaultPreferencesArgument
 ]
 
 { #category : 'private - preferences' }
 PharoOptionsHandler >> isOverridingPreferences [
+
+	self arguments ifEmpty: [ ^ false ].
 
 	^ self arguments first beginsWith: self preferencesFileArgument
 ]
