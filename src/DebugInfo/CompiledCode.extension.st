@@ -3,5 +3,5 @@ Extension { #name : 'CompiledCode' }
 { #category : '*DebugInfo' }
 CompiledCode >> debugInfo [
 
-	^ (DebugInfoBuilder for: self) build
+	^ (OnlineSourceDebugInfo for: self) asOfflineDebugInfo
 ]

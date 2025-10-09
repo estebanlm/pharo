@@ -1,5 +1,5 @@
 Class {
-	#name : 'DebugInfo',
+	#name : 'OfflineSourceDebugInfo',
 	#superclass : 'Object',
 	#instVars : [
 		'stopTable',
@@ -12,13 +12,13 @@ Class {
 }
 
 { #category : 'accessing' }
-DebugInfo >> debugScopeAt: aBytecodePC [ 
+OfflineSourceDebugInfo >> debugScopeAt: aBytecodePC [ 
 	
 	^ rootScope debugScopeAt: aBytecodePC
 ]
 
-{ #category : 'accessing' }
-DebugInfo >> inflatedStopTableInfoFromFlags: flags [
+{ #category : 'private' }
+OfflineSourceDebugInfo >> inflatedStopTableInfoFromFlags: flags [
 
 	| stopTableInfo |
 	stopTableInfo := OrderedCollection new.
@@ -27,32 +27,32 @@ DebugInfo >> inflatedStopTableInfoFromFlags: flags [
 	^ stopTableInfo
 ]
 
-{ #category : 'testing' }
-DebugInfo >> isArgumentNamed: aName at: aBytecodePC [
+{ #category : 'api' }
+OfflineSourceDebugInfo >> isArgumentNamed: aName at: aBytecodePC [
 
 	^ (self debugScopeAt: aBytecodePC) isArgumentNamed: aName
 ]
 
-{ #category : 'testing' }
-DebugInfo >> isSourceReturn: aBytecodePC [
+{ #category : 'api' }
+OfflineSourceDebugInfo >> isSourceReturn: aBytecodePC [
 
 	^ (self stopTableDictionary at: aBytecodePC ifAbsent: [ ^ false ]) second
 ]
 
-{ #category : 'testing' }
-DebugInfo >> isSourceSend: aBytecodePC [ 
+{ #category : 'api' }
+OfflineSourceDebugInfo >> isSourceSend: aBytecodePC [ 
 	
 	^ (self stopTableDictionary at: aBytecodePC ifAbsent: [ ^ false ]) third
 ]
 
-{ #category : 'testing' }
-DebugInfo >> isSourceStore: aBytecodePC [ 
+{ #category : 'api' }
+OfflineSourceDebugInfo >> isSourceStore: aBytecodePC [ 
 	
 	^ (self stopTableDictionary at: aBytecodePC ifAbsent: [ ^ false ]) first
 ]
 
-{ #category : 'as yet unclassified' }
-DebugInfo >> precedingBytecodePC: aBytecodePC [
+{ #category : 'private' }
+OfflineSourceDebugInfo >> precedingBytecodePC: aBytecodePC [
 	
 	| found |
 	self stopTableDictionary keys sorted do: [ :each |
@@ -65,8 +65,8 @@ DebugInfo >> precedingBytecodePC: aBytecodePC [
 	].
 ]
 
-{ #category : 'testing' }
-DebugInfo >> rangeForPC: aBytecodePC [
+{ #category : 'api' }
+OfflineSourceDebugInfo >> rangeForPC: aBytecodePC [
 
 	^ (self stopTableDictionary
 		   at: aBytecodePC
@@ -77,8 +77,8 @@ DebugInfo >> rangeForPC: aBytecodePC [
 		  fourth
 ]
 
-{ #category : 'testing' }
-DebugInfo >> readVariableNamed: aName fromContext: aContext [
+{ #category : 'api' }
+OfflineSourceDebugInfo >> readVariableNamed: aName fromContext: aContext [
 
 	^ (self debugScopeAt: aContext pc)
 		  readVariableNamed: aName
@@ -86,39 +86,39 @@ DebugInfo >> readVariableNamed: aName fromContext: aContext [
 ]
 
 { #category : 'accessing' }
-DebugInfo >> rootScope: aCachedDebugScope [ 
+OfflineSourceDebugInfo >> rootScope: aCachedDebugScope [ 
 	rootScope := aCachedDebugScope
 ]
 
 { #category : 'accessing' }
-DebugInfo >> shouldStopAt: aBytecodePC [
+OfflineSourceDebugInfo >> shouldStopAt: aBytecodePC [
 
 	^ self stopTableDictionary includesKey: aBytecodePC
 ]
 
 { #category : 'accessing' }
-DebugInfo >> sourceCode [
+OfflineSourceDebugInfo >> sourceCode [
 	^ sourceCode
 ]
 
 { #category : 'accessing' }
-DebugInfo >> sourceCode: aString [ 
+OfflineSourceDebugInfo >> sourceCode: aString [ 
 	sourceCode := aString
 ]
 
 { #category : 'accessing' }
-DebugInfo >> stopTable [
+OfflineSourceDebugInfo >> stopTable [
 	
 	^ stopTable
 ]
 
 { #category : 'accessing' }
-DebugInfo >> stopTable: aCollection [ 
+OfflineSourceDebugInfo >> stopTable: aCollection [ 
 	stopTable := aCollection
 ]
 
-{ #category : 'accessing' }
-DebugInfo >> stopTableDictionary [
+{ #category : 'private' }
+OfflineSourceDebugInfo >> stopTableDictionary [
 
 	stopTableDictionary ifNotNil: [ ^ stopTableDictionary ].
 
@@ -139,13 +139,13 @@ DebugInfo >> stopTableDictionary [
 ]
 
 { #category : 'accessing' }
-DebugInfo >> variableNamesAt: aBytecodePC [
+OfflineSourceDebugInfo >> variableNamesAt: aBytecodePC [
 
 	^ (self debugScopeAt: aBytecodePC) variableNames
 ]
 
 { #category : 'accessing' }
-DebugInfo >> variablesAt: aBytecodePC [
+OfflineSourceDebugInfo >> variablesAt: aBytecodePC [
 
 	^ (self debugScopeAt: aBytecodePC) variables
 ]

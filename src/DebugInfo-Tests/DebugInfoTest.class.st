@@ -1,6 +1,6 @@
 Class {
 	#name : 'DebugInfoTest',
-	#superclass : 'TestCase',
+	#superclass : 'ParametrizedTestCase',
 	#instVars : [
 		'cached'
 	],
@@ -10,6 +10,24 @@ Class {
 	#category : 'DebugInfo-Tests',
 	#package : 'DebugInfo-Tests'
 }
+
+{ #category : 'building suites' }
+DebugInfoTest class >> testParameters [
+
+	^ ParametrizedTestMatrix new forSelector: #cached addOptions: { false. true }
+]
+
+{ #category : 'accessing' }
+DebugInfoTest >> cached [
+
+	^ cached
+]
+
+{ #category : 'accessing' }
+DebugInfoTest >> cached: anObject [
+
+	cached := anObject
+]
 
 { #category : 'helpers' }
 DebugInfoTest >> methodWithArgumentCapturingContext: anArgument [
@@ -115,7 +133,10 @@ DebugInfoTest >> methodWithVariableReads [
 { #category : 'helpers' }
 DebugInfoTest >> newDebugInfoFor: methodToTest [
 
-	^ (DebugInfoBuilder for: methodToTest) build
+	| debugInfo |
+	debugInfo := OnlineSourceDebugInfo for: methodToTest.
+	cached ifTrue: [ debugInfo := debugInfo asOfflineDebugInfo ].
+	^ debugInfo
 ]
 
 { #category : 'tests - arguments' }

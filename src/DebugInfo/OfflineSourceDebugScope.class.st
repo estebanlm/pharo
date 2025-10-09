@@ -1,5 +1,5 @@
 Class {
-	#name : 'DebugScope',
+	#name : 'OfflineSourceDebugScope',
 	#superclass : 'Object',
 	#instVars : [
 		'variables',
@@ -12,41 +12,41 @@ Class {
 }
 
 { #category : 'instance creation' }
-DebugScope class >> on: anOCMethodScope [
+OfflineSourceDebugScope class >> on: anOCMethodScope [
 
 	^ self new
 		  astScope: anOCMethodScope;
 		  yourself
 ]
 
-{ #category : 'adding' }
-DebugScope >> addChild: aCachedDebugScope [ 
+{ #category : 'accessing' }
+OfflineSourceDebugScope >> addChild: aCachedDebugScope [ 
 	
 	children ifNil: [ children := #() ].
 	children := children copyWith: aCachedDebugScope
 ]
 
 { #category : 'accessing' }
-DebugScope >> bytecodeRange [
+OfflineSourceDebugScope >> bytecodeRange [
 
 	^ rangeStart to: rangeStop
 ]
 
 { #category : 'accessing' }
-DebugScope >> bytecodeRange: aRange [
+OfflineSourceDebugScope >> bytecodeRange: aRange [
 
 	rangeStart := aRange first.
 	rangeStop := aRange last
 ]
 
-{ #category : 'adding' }
-DebugScope >> children [
+{ #category : 'accessing' }
+OfflineSourceDebugScope >> children [
 
 	^ children ifNil: [ #() ]
 ]
 
-{ #category : 'accessing' }
-DebugScope >> debugScopeAt: aBytecodePC [
+{ #category : 'api' }
+OfflineSourceDebugScope >> debugScopeAt: aBytecodePC [
 
 	"Precondition: this method is only valid if I match the argument PC"
 
@@ -58,8 +58,8 @@ DebugScope >> debugScopeAt: aBytecodePC [
 	^ self
 ]
 
-{ #category : 'as yet unclassified' }
-DebugScope >> isArgumentNamed: aName [
+{ #category : 'api' }
+OfflineSourceDebugScope >> isArgumentNamed: aName [
 
 	| variableDescriptor |
 	variableDescriptor := self variables
@@ -68,14 +68,14 @@ DebugScope >> isArgumentNamed: aName [
 	^ variableDescriptor second
 ]
 
-{ #category : 'accessing' }
-DebugScope >> matchesBytecodePC: aPC [
+{ #category : 'api' }
+OfflineSourceDebugScope >> matchesBytecodePC: aPC [
 
 	^ self bytecodeRange includes: aPC
 ]
 
-{ #category : 'as yet unclassified' }
-DebugScope >> readVariableNamed: aName fromContext: aContext [
+{ #category : 'api' }
+OfflineSourceDebugScope >> readVariableNamed: aName fromContext: aContext [
 
 	| variableDescriptor definingContext tempValue |
 	variableDescriptor := self variables
@@ -92,19 +92,19 @@ DebugScope >> readVariableNamed: aName fromContext: aContext [
 	^ tempValue
 ]
 
-{ #category : 'as yet unclassified' }
-DebugScope >> variableNames [
+{ #category : 'accessing' }
+OfflineSourceDebugScope >> variableNames [
 	
 	^ self variables collect: [ :each | each first ]
 ]
 
-{ #category : 'as yet unclassified' }
-DebugScope >> variables [
+{ #category : 'accessing' }
+OfflineSourceDebugScope >> variables [
 	
 	^ variables ifNil: [ #() ]
 ]
 
 { #category : 'accessing' }
-DebugScope >> variables: aCollection [ 
+OfflineSourceDebugScope >> variables: aCollection [ 
 	variables := aCollection
 ]

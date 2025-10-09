@@ -1,5 +1,5 @@
 Class {
-	#name : 'DebugInfoBuilder',
+	#name : 'OnlineSourceDebugInfo',
 	#superclass : 'Object',
 	#instVars : [
 		'compiledCode',
@@ -10,15 +10,15 @@ Class {
 }
 
 { #category : 'instance creation' }
-DebugInfoBuilder class >> for: code [
+OnlineSourceDebugInfo class >> for: code [
 
 	^ self new
 		  compiledCode: code;
 		  yourself
 ]
 
-{ #category : 'building' }
-DebugInfoBuilder >> asBitMask: aCollectionOfFlags [
+{ #category : 'private' }
+OnlineSourceDebugInfo >> asBitMask: aCollectionOfFlags [
 
 	| flags |
 	self assert: aCollectionOfFlags size < SmallInteger maxVal highBit.
@@ -29,26 +29,26 @@ DebugInfoBuilder >> asBitMask: aCollectionOfFlags [
 	^ flags
 ]
 
-{ #category : 'building' }
-DebugInfoBuilder >> build [
+{ #category : 'converting' }
+OnlineSourceDebugInfo >> asOfflineDebugInfo [
 
 	| debugInfo stopTable astScopes scopes |
-	debugInfo := DebugInfo new.
+	debugInfo := OfflineSourceDebugInfo new.
 	debugInfo sourceCode: nil. "self sourceCode"
 
 	stopTable := compiledCode symbolicBytecodes asArray
-		             select: [ :e | self computeShouldStopAt: e offset ]
+		             select: [ :e | self shouldStopAt: e offset ]
 		             thenCollect: [ :e |
 				             | range stopTableInfo |
-				             range := self computeRangeForPC: e offset.
+				             range := self rangeForPC: e offset.
 				             stopTableInfo := {
 					                              e offset.
 					                              (self asBitMask: {
-							                               (self computeIsSourceStore:
+							                               (self isSourceStore:
 								                                e offset).
-							                               (self computeIsSourceReturn:
+							                               (self isSourceReturn:
 								                                e offset).
-							                               (self computeIsSourceSend:
+							                               (self isSourceSend:
 								                                e offset) }).
 					                              range first.
 					                              range last }.
@@ -66,22 +66,22 @@ DebugInfoBuilder >> build [
 	scopes := Dictionary new.
 	astScopes do: [ :astScope |
 			| cachedScope tempDescriptions |
-			cachedScope := DebugScope new.
+			cachedScope := OfflineSourceDebugScope new.
 			tempDescriptions := astScope allTemps collect: [ :temp |
 				                    temp descriptionArrayForScope: astScope ].
 			(astScope isBlockScope and: [ astScope isOptimized ])
 				ifTrue: [
-						| mappedPCs bytecodeToASTCache blockBody blockStatements |
+						| mappedPCs currentScopeBytecodeToASTCache blockBody blockStatements |
 						blockBody := astScope node body.
 						blockStatements := blockBody statements.
-						bytecodeToASTCache := astScope outerNotOptimizedScope node
+						currentScopeBytecodeToASTCache := astScope outerNotOptimizedScope node
 							                      bcToASTCache.
 						blockStatements
 							ifEmpty: [
-								mappedPCs := bytecodeToASTCache pcsForNode: blockBody ]
+								mappedPCs := currentScopeBytecodeToASTCache pcsForNode: blockBody ]
 							ifNotEmpty: [
 								mappedPCs := ((blockStatements flatCollect: [ :e | { e }, e allChildren ])
-									flatCollect: [ :e | bytecodeToASTCache pcsForNode: e ] as: Set)
+									flatCollect: [ :e | currentScopeBytecodeToASTCache pcsForNode: e ] as: Set)
 										sorted.
 								mappedPCs := mappedPCs first to: mappedPCs last ].
 						cachedScope bytecodeRange: (mappedPCs first to: mappedPCs last) ]
@@ -108,60 +108,38 @@ DebugInfoBuilder >> build [
 ]
 
 { #category : 'accessing' }
-DebugInfoBuilder >> compiledCode [
+OnlineSourceDebugInfo >> compiledCode [
 
 	^ compiledCode
 ]
 
 { #category : 'accessing' }
-DebugInfoBuilder >> compiledCode: anObject [
+OnlineSourceDebugInfo >> compiledCode: anObject [
 
 	compiledCode := anObject
 ]
 
-{ #category : 'building' }
-DebugInfoBuilder >> computeIsSourceReturn: aBytecodePC [
+{ #category : 'accessing' }
+OnlineSourceDebugInfo >> debugScopeAt: aBytecodePC [
 
-	"We should stop at all returns inserted by the compiler in the bytecode.
-	This includes:
-	 - explicit returns with ^ -- these are in the AST
-	 - implicit block local returns -- not in AST
-	 - implicit method returns -- not in AST"
-	^ compiledCode encoderClass isReturnAt: aBytecodePC in: compiledCode
+	| node scope |
+	node := self privateSourceNodeForPC: aBytecodePC.
+
+	scope := node isBlock
+		         ifTrue: [ node parent methodOrBlockNode scope ]
+		         ifFalse: [ node methodOrBlockNode scope ].
+
+	^ OnlineSourceDebugScope on: scope
 ]
 
-{ #category : 'building' }
-DebugInfoBuilder >> computeIsSourceSend: aBytecodePC [
+{ #category : 'testing' }
+OnlineSourceDebugInfo >> isArgumentNamed: aName at: aBytecodePC [
 
-	"Deal with inlined messages using isFirstPCOfMessagePC:"
-	(self privateSourceNodeForPC: aBytecodePC) ifNil: [ ^ false ].
-	^ (self privateSourceNodeForPC: aBytecodePC) isMessage and: [
-		  self isFirstPCOfMessage: aBytecodePC ]
-]
-
-{ #category : 'building' }
-DebugInfoBuilder >> computeIsSourceStore: aBytecodePC [
-	
-	(self privateSourceNodeForPC: aBytecodePC) ifNil: [ ^ false ].
-	^ (self privateSourceNodeForPC: aBytecodePC) isAssignment 
-]
-
-{ #category : 'building' }
-DebugInfoBuilder >> computeRangeForPC: aPC [
-
-	^ (self privateSourceNodeForPC: aPC) debugHighlightRange
-]
-
-{ #category : 'building' }
-DebugInfoBuilder >> computeShouldStopAt: aBytecodePC [
-
-	^ (self computeIsSourceSend: aBytecodePC) or: [
-			  (self computeIsSourceReturn: aBytecodePC) or: [
-				  self computeIsSourceStore: aBytecodePC ] ]
+	^ (self debugScopeAt: aBytecodePC) isArgumentNamed: aName
 ]
 
 { #category : 'private' }
-DebugInfoBuilder >> isFirstPCOfMessage: aBytecodePC [
+OnlineSourceDebugInfo >> isFirstPCOfMessage: aBytecodePC [
 
 	"Check if the given bytecode PC is the first bytecode PC of its mapped node.
 	
@@ -180,8 +158,35 @@ DebugInfoBuilder >> isFirstPCOfMessage: aBytecodePC [
 	^ (mappedNode methodOrBlockNode scope outerNotOptimizedScope node firstPcForNode: mappedNode) = aBytecodePC
 ]
 
+{ #category : 'api' }
+OnlineSourceDebugInfo >> isSourceReturn: aBytecodePC [
+
+	"We should stop at all returns inserted by the compiler in the bytecode.
+	This includes:
+	 - explicit returns with ^ -- these are in the AST
+	 - implicit block local returns -- not in AST
+	 - implicit method returns -- not in AST"
+	^ compiledCode encoderClass isReturnAt: aBytecodePC in: compiledCode
+]
+
+{ #category : 'api' }
+OnlineSourceDebugInfo >> isSourceSend: aBytecodePC [
+
+	"Deal with inlined messages using isFirstPCOfMessagePC:"
+	(self privateSourceNodeForPC: aBytecodePC) ifNil: [ ^ false ].
+	^ (self privateSourceNodeForPC: aBytecodePC) isMessage and: [
+		  self isFirstPCOfMessage: aBytecodePC ]
+]
+
+{ #category : 'api' }
+OnlineSourceDebugInfo >> isSourceStore: aBytecodePC [
+	
+	(self privateSourceNodeForPC: aBytecodePC) ifNil: [ ^ false ].
+	^ (self privateSourceNodeForPC: aBytecodePC) isAssignment 
+]
+
 { #category : 'private' }
-DebugInfoBuilder >> privateSourceNodeForPC: aBytecodePC [
+OnlineSourceDebugInfo >> privateSourceNodeForPC: aBytecodePC [
 
 	| sourceNode |
 
@@ -195,8 +200,34 @@ DebugInfoBuilder >> privateSourceNodeForPC: aBytecodePC [
 	^ bytecodeToASTCache nodeForPC: aBytecodePC
 ]
 
+{ #category : 'api' }
+OnlineSourceDebugInfo >> rangeForPC: aPC [
+
+	^ (self privateSourceNodeForPC: aPC) debugHighlightRange
+]
+
+{ #category : 'api' }
+OnlineSourceDebugInfo >> readVariableNamed: aName fromContext: aContext [
+
+	^ (self debugScopeAt: aContext pc) readVariableNamed: aName fromContext: aContext
+]
+
+{ #category : 'api' }
+OnlineSourceDebugInfo >> shouldStopAt: aBytecodePC [
+
+	^ (self isSourceSend: aBytecodePC) or: [
+			  (self isSourceReturn: aBytecodePC) or: [
+				  self isSourceStore: aBytecodePC ] ]
+]
+
 { #category : 'accessing' }
-DebugInfoBuilder >> sourceCode [
+OnlineSourceDebugInfo >> sourceCode [
 	
 	^ compiledCode sourceCode
+]
+
+{ #category : 'accessing' }
+OnlineSourceDebugInfo >> variableNamesAt: aBytecodePC [
+
+	^ (self debugScopeAt: aBytecodePC) variableNames
 ]
