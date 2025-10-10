@@ -161,13 +161,14 @@ RBTemporaryToInstanceVariableTransformation >> removeTemporaryOfClass: aClass [
 
 { #category : 'removing' }
 RBTemporaryToInstanceVariableTransformation >> removeTemporaryOfMethod: aSelector in: aClass [
+
 	| parseTree matcher aMethod |
 	aMethod := aClass methodFor: aSelector.
 	parseTree := aMethod parseTree.
 	parseTree ifNil: [ self refactoringError: 'Could not parse method' ].
-	( matcher := self parseTreeRewriterClass removeTemporaryNamed: temporaryVariableName )
-		executeTree: parseTree.
-	aMethod compileTree: matcher tree
+	(parseTree temporaryNames includes: temporaryVariableName) ifFalse: [ ^ self ].
+	(matcher := self parseTreeRewriterClass removeTemporaryNamed: temporaryVariableName) executeTree: parseTree.
+	aMethod compileTree: matcher tree 
 ]
 
 { #category : 'storing' }
