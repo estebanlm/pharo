@@ -311,7 +311,7 @@ ClyBrowserMorph >> close [
 { #category : 'tools support' }
 ClyBrowserMorph >> confirmDiscardChanges [
 
-	^self confirm: 'Changes have not been saved.
+	^ (Smalltalk at: #StPharoApplication) current confirm: 'Changes have not been saved.
 Is it OK to discard changes?'
 ]
 
