@@ -30,23 +30,15 @@ SycCmFileOutClassCommand >> executeRefactoring [
 
 	StSaveFilePresenter new
 		defaultFolder: FileLocator workingDirectory;
-		nameText: 'fileout.st';
+		nameText: 'classfileout.st';
 		okAction: [ :fileReference |
-				| fileouter |
+				| fileouter fileref |
+				fileref := fileReference openInOSFileBrowser.
+				
 				fileouter := Fileouter new.
 				codeObjects do: [ :each | fileouter addFullClass: each ].
 				fileouter fileoutOnFileReference: fileReference.
-
-				UIManager default
-					inform: (String streamContents: [ :s |
-									 s
-										 nextPutAll: 'Filed out to: ';
-										 cr;
-										 nextPutAll: fileReference pathString;
-										 cr;
-										 cr;
-										 nextPutAll: 'Click to open location' ])
-					actionOnClick: [ fileReference openInOSFileBrowser ] ];
+				];
 		openModal
 ]
 
