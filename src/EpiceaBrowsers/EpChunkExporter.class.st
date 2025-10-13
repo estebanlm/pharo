@@ -5,7 +5,8 @@ Class {
 	#name : 'EpChunkExporter',
 	#superclass : 'Object',
 	#instVars : [
-		'outputFilename'
+		'outputFilename',
+		'application'
 	],
 	#category : 'EpiceaBrowsers-Exporter',
 	#package : 'EpiceaBrowsers',
@@ -26,6 +27,12 @@ EpChunkExporter class >> fileOut: entries in: aFileReference [
 	self new
 		fileOut: entries
 		in: aFileReference
+]
+
+{ #category : 'accessing' }
+EpChunkExporter >> application: anApp [
+
+	application := anApp
 ]
 
 { #category : 'defaults' }
@@ -49,17 +56,17 @@ EpChunkExporter >> fileOut: epiceaEntries [
 { #category : 'accessing' }
 EpChunkExporter >> fileOut: epiceaEntries in: aDirectory [
 
-	| internalStream |
-
-	internalStream := (String new: 1000) writeStream.
-	epiceaEntries do: [ : epEntryItem |
-		self 
-			fileOutSelectedEntry: epEntryItem 
-			on: internalStream ].
-
-	CodeExporter 
-		writeSourceCodeFrom: internalStream 
-		toFileReference: aDirectory / self outputFilename.
+			
+	StSaveFilePresenter new
+		defaultFolder: FileLocator workingDirectory;
+		nameText:  self outputFilename; 
+		okAction: [ :fileReference |
+				epiceaEntries do: [ :epEntryItem |
+					self 
+						fileOutSelectedEntry: epEntryItem 
+						on: fileReference writeStream ].
+			 ];
+		openModal
 ]
 
 { #category : 'private' }
