@@ -146,7 +146,7 @@ EpRevertTest >> testClassRemovalWithClassAlreadyAdded [
 	self setHeadAsInputEntry.
 
 	aClass := classFactory newClass.
-	self should: [ aClass rename: className ] raise: Warning.
+	aClass rename: className.
 
 	self assert: (inputEntry content isKindOf: EpClassRemoval).
 	self assert: (self class environment hasClassNamed: className).
@@ -371,7 +371,7 @@ EpRevertTest >> testTraitRemovalWithTraitAlreadyAdded [
 
 	"Restore trait"
 	aTrait := classFactory newTrait.
-	self should: [ aTrait rename: traitName ] raise: Warning.
+	aTrait rename: traitName.
 
 	self assert: (self class environment includesKey: traitName).
 	self revertInputEntry.

@@ -910,19 +910,7 @@ Class >> rename: aString [
 		ifTrue: [^ self error: newName , ' already exists'].
 	self setName: newName.
 	self environment renameClass: self from: oldName.
-	"No No No this is NOT the way to report things.
-	NO NO UI invocation from the core layer please educate yourself!!!!!
 	
-	(self undeclaredRegistry includesKey: newName)
-		ifTrue: [self inform: 'There are references to, ' , aString printString , '
-from the undeclared registry. Check them after this change.']"
-
-	(self undeclaredRegistry includesKey: newName)
-		ifTrue: [Warning signal: 'There are references to, ' , aString printString , '
-from the undeclared registry. Check them after this change.']
-
-
-
 ]
 
 { #category : 'private' }
