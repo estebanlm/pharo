@@ -74,19 +74,9 @@ EpChunkExporter >> fileOut: epiceaEntries in: aDirectory [
 ]
 
 { #category : 'private' }
-EpChunkExporter >> fileOutSelectedEntry: anOmEntry on: aWriteStream [ 
-	"Write the contents of the method modification to aWriteStream in chunk format"
-
-	anOmEntry fileOutEntryOn: aWriteStream
-]
-
-{ #category : 'as yet unclassified' }
 EpChunkExporter >> internalFileleOutOf: epiceaEntries in: aStream [
 
-	epiceaEntries do: [ :epEntryItem |
-					self 
-						fileOutSelectedEntry: epEntryItem 
-						on: aStream ] 
+	epiceaEntries do: [ :epEntryItem | epEntryItem fileOutEntryOn: aStream ] 
 ]
 
 { #category : 'accessing' }
