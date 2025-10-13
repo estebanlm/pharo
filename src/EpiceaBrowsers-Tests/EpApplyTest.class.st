@@ -154,7 +154,7 @@ EpApplyTest >> testClassRemovalWithClassAdded [
 	self setHeadAsInputEntry.
 
 	aClass := classFactory newClass.
-	aClass rename: className.
+	self should: [aClass rename: className] raise: Warning.
 
 	self assert: (inputEntry content isKindOf: EpClassRemoval).
 	self assert: (self class environment hasClassNamed: className).
@@ -469,7 +469,7 @@ EpApplyTest >> testTraitRemovalWithTraitAdded [
 	self setHeadAsInputEntry.
 
 	aTrait := classFactory newTrait.
-	aTrait rename: traitName.
+	self should: [aTrait rename: traitName] raise: Warning.
 
 	self assert: (inputEntry content isKindOf: EpTraitRemoval).
 	self assert: (self class environment includesKey: traitName).
