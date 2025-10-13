@@ -286,6 +286,7 @@ SessionManager >> register: aSessionHandler [
 
 { #category : 'registration' }
 SessionManager >> register: aSessionHandler inCategory: aCategory [
+	self unregisterHandler: aSessionHandler handledId.
 	aCategory
 		register: aSessionHandler
 		atPriority: aCategory defaultPriority

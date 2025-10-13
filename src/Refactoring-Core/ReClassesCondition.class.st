@@ -19,11 +19,6 @@ ReClassesCondition >> check [
 { #category : 'accessing' }
 ReClassesCondition >> classes: aRBClassCollection [
 
-	classes := aRBClassCollection 
-]
-
-{ #category : 'accessing' }
-ReClassesCondition >> subjects [
-
-	^ classes
+	classes := aRBClassCollection.
+	subjects := classes.
 ]
