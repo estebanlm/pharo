@@ -124,7 +124,7 @@ BaselineOfIDE >> baseline: spec [
 		self newTools: spec.
 		self drTests: spec.
 
-		self load: 'Clap' group: 'ui' spec: spec.
+		spec project: 'Clap-UI' copyFrom: 'Clap' with: [ spec loads: #('ui') ].
 
 		spec package: #'BeautifulComments'  with: [ spec requires:  #( 'Microdown') ].
 		
