@@ -55,8 +55,10 @@ EpChunkExporter >> fileOut: epiceaEntries [
 
 { #category : 'accessing' }
 EpChunkExporter >> fileOut: epiceaEntries in: aDirectory [
-
-			
+	
+	"(application newPresenter: StSaveFilePresenter) is probably the iconic way to create a presenter
+	but it did not work and I have no idea why."
+	self flag: #todo. 
 	StSaveFilePresenter new
 		defaultFolder: FileLocator workingDirectory;
 		nameText:  self outputFilename; 
