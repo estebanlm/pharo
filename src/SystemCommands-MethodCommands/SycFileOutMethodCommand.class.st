@@ -16,9 +16,7 @@ SycFileOutMethodCommand >> applyCommandResult [
 		defaultFolder: FileLocator workingDirectory;
 		nameText: 'methodsfileout.st';
 		okAction: [ :fileReference |
-				| fileouter fileref |
-				fileref := fileReference openInOSFileBrowser.
-				
+				| fileouter |
 				fileouter := Fileouter new.
 				self methods do: [ :each | fileouter addMethod: each ].
 				fileouter fileoutOnFileReference: fileReference.

@@ -32,9 +32,7 @@ SycCmFileOutClassCommand >> executeRefactoring [
 		defaultFolder: FileLocator workingDirectory;
 		nameText: 'classfileout.st';
 		okAction: [ :fileReference |
-				| fileouter fileref |
-				fileref := fileReference openInOSFileBrowser.
-				
+				| fileouter |
 				fileouter := Fileouter new.
 				codeObjects do: [ :each | fileouter addFullClass: each ].
 				fileouter fileoutOnFileReference: fileReference.

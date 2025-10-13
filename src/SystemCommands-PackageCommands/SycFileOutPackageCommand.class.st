@@ -36,9 +36,7 @@ SycFileOutPackageCommand >> execute [
 		defaultFolder: FileLocator workingDirectory;
 		nameText: 'packagefileout.st';
 		okAction: [ :fileReference |
-				| fileouter fileref |
-				fileref := fileReference openInOSFileBrowser.
-				
+				| fileouter |
 				fileouter := Fileouter new.
 				packages do: [ :each | fileouter addFullPackage: each ].
 				fileouter fileoutOnFileReference: fileReference.
