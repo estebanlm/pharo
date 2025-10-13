@@ -39,11 +39,16 @@ EpChunkExporter >> application: anApp [
 EpChunkExporter >> defaultOutputFilename [
 	"Answer a default <String> which will be the file name when a file out is requested"
 	
-	^ String streamContents: [ : stream |
+	^ String streamContents: [ :stream |
+		| dateAndTime |
+		dateAndTime := DateAndTime now.
 		stream 
-			nextPutAll: 'EpLog-';
-			nextPutAll: DateAndTime now asFileNameCompatibleString;
-			nextPutAll: '.st' ].
+			nextPutAll: 'EpLog-'.
+		dateAndTime printYMDOn: stream.
+		stream print: dateAndTime hours.
+		stream nextPut: $-.
+		stream print: dateAndTime minutes.
+		stream nextPutAll: '.st' ].
 ]
 
 { #category : 'accessing' }
@@ -60,14 +65,11 @@ EpChunkExporter >> fileOut: epiceaEntries in: aDirectory [
 	but it did not work and I have no idea why."
 	self flag: #todo. 
 	StSaveFilePresenter new
-		defaultFolder: FileLocator workingDirectory;
+		defaultFolder: aDirectory;
 		nameText:  self outputFilename; 
 		okAction: [ :fileReference |
-				epiceaEntries do: [ :epEntryItem |
-					self 
-						fileOutSelectedEntry: epEntryItem 
-						on: fileReference writeStream ].
-			 ];
+				self internalFileleOutOf: epiceaEntries in: fileReference writeStream 
+				];
 		openModal
 ]
 
@@ -76,6 +78,15 @@ EpChunkExporter >> fileOutSelectedEntry: anOmEntry on: aWriteStream [
 	"Write the contents of the method modification to aWriteStream in chunk format"
 
 	anOmEntry fileOutEntryOn: aWriteStream
+]
+
+{ #category : 'as yet unclassified' }
+EpChunkExporter >> internalFileleOutOf: epiceaEntries in: aStream [
+
+	epiceaEntries do: [ :epEntryItem |
+					self 
+						fileOutSelectedEntry: epEntryItem 
+						on: aStream ] 
 ]
 
 { #category : 'accessing' }
