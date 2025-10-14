@@ -100,26 +100,24 @@ HEInstaller >> doInstallPackage: aHEPackage [
 	self packageOrganizer ensurePackage: aHEPackage packageName.
 
 	"2. Install the traits"
-	newTraits := aHEPackage traits collect: [ :exportedTrait |
-		             self buildTrait: exportedTrait ].
+	newTraits := aHEPackage traits collect: [ :exportedTrait | self buildTrait: exportedTrait ].
 
 	"3. Install traits methods"
-	aHEPackage traits with: newTraits do: [ :exportedTrait :newTrait |
-		self installMethods: exportedTrait into: newTrait ].
+	aHEPackage traits with: newTraits do: [ :exportedTrait :newTrait | self installMethods: exportedTrait into: newTrait ].
 
 	"4. Install classes"
-	newClasses := aHEPackage classes collect: [ :exportedClass |
-		              self build: exportedClass ].
+	newClasses := aHEPackage classes collect: [ :exportedClass | self build: exportedClass ].
 
 	"5. Install class methods"
-	aHEPackage classes with: newClasses do: [ :exportedClass :newClass |
-		self installMethods: exportedClass into: newClass ].
+	aHEPackage classes with: newClasses do: [ :exportedClass :newClass | self installMethods: exportedClass into: newClass ].
 
 	"6. Install extension methods"
-	aHEPackage extensionMethods do: [ :e |
-		self installExtensionMethod: e ].
+	aHEPackage extensionMethods do: [ :method | self installExtensionMethod: method ].
+	
+	"7. Initialize classes"
+	newClasses do: [ :class | (class class methods anySatisfy: [ :method | method selector = 'initialize' ]) ifTrue: [ class initialize ] ]. .
 
-	"7. After all I validate if there are no new undeclared variables created in the environment.
+	"8. After all I validate if there are no new undeclared variables created in the environment.
 	A new undeclared is a sign of an improper modularization."
 	self validateNoNewUndeclared
 ]
