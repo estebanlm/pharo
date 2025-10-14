@@ -29,7 +29,8 @@ Class {
 	#instVars : [
 		'flags',
 		'subcommands',
-		'commandClass'
+		'commandClass',
+		'longDescription'
 	],
 	#category : 'Clap-Core-Specification',
 	#package : 'Clap-Core',
@@ -162,6 +163,18 @@ ClapCommandSpec >> initialize [
 ClapCommandSpec >> isCommand [
 
 	^ true
+]
+
+{ #category : 'accessing' }
+ClapCommandSpec >> longDescription [
+
+	^ longDescription
+]
+
+{ #category : 'accessing' }
+ClapCommandSpec >> longDescription: aString [
+
+	longDescription := aString
 ]
 
 { #category : 'accessing' }

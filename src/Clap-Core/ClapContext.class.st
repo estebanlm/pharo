@@ -304,8 +304,9 @@ ClapContext >> isValid: aValidation [
 ClapContext >> lastSubcommand [
 
 	^ self
-		ifMatch: [ :aMatch | aMatch subcommands last ]
-		ifMismatch: [ ClapUnmatchCommand signalClapContext: self ]
+		  ifMatch: [ :aMatch | 
+						aMatch subcommands ifEmpty: [ aMatch ] ifNotEmpty: [ :subcommands | subcommands last ] ]
+		  ifMismatch: [ ClapUnmatchCommand signalClapContext: self ]
 ]
 
 { #category : 'accessing' }

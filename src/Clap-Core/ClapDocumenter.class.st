@@ -74,6 +74,7 @@ ClapDocumenter >> explain: aCommand [
 { #category : 'documenting' }
 ClapDocumenter >> explain: aCommand canonicalName: aCanonicalName [
 	self descriptionSummary: aCommand.
+	self longDescription: aCommand.
 	formatter newLine.
 	self usage: aCommand canonicalName: aCanonicalName.
 	self parameterDescriptions: aCommand.
@@ -103,6 +104,16 @@ ClapDocumenter >> flagSynopsis: aFlag [
 ClapDocumenter >> initializeOn: aFormatter [
 	self initialize.
 	formatter := aFormatter
+]
+
+{ #category : 'documenting' }
+ClapDocumenter >> longDescription: aCommand [
+	aCommand longDescription ifNil: [ ^ self ].
+
+	formatter
+		newLine;
+		text: aCommand longDescription;
+		newLine
 ]
 
 { #category : 'documenting' }

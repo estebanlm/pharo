@@ -15,7 +15,8 @@ ClapPerformCommand class >> commandSpecification [
 	| spec |
 	spec := (ClapCommandSpec id: #perform)
 		        description:
-			        'Performs a message on a given class or global object. This command can be used to execute some code if a compiler is not loaded in the image. All message arguments are strings.' , String lf, 
+			        'Performs a message on a given class or global object.';
+		        longDescription: 'This command can be used to execute some code if a compiler is not loaded in the image. All message arguments are strings.' , String lf, 
 						'Example: pharo Pharo.image perform Smalltalk garbageCollect --save';
 		        commandClass: self;
 		        addHelp;
