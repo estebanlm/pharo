@@ -63,14 +63,25 @@ EpChunkExporter >> fileOut: epiceaEntries in: aDirectory [
 	
 	"(application newPresenter: StSaveFilePresenter) is probably the iconic way to create a presenter
 	but it did not work and I have no idea why."
+	
+	| fileRef dialog ok |
 	self flag: #todo. 
 	StSaveFilePresenter new
 		defaultFolder: aDirectory;
 		nameText:  self outputFilename; 
 		okAction: [ :fileReference |
+				fileRef := fileReference.
 				self internalFileleOutOf: epiceaEntries in: fileReference writeStream 
 				];
-		openModal
+		openModal.
+	dialog := SpConfirmDialog new.
+	ok := dialog
+		      title: 'Do you want to browse natively the fileout?';
+		      label: 'Are you sure?';
+		      acceptLabel: 'Sure!';
+		      cancelLabel: 'No, forget it';
+		      openModal.
+	ok ifTrue: [ fileRef openInOSFileBrowser ]
 ]
 
 { #category : 'private' }
