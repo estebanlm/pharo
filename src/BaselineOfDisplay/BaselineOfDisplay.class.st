@@ -13,6 +13,9 @@ Installs:
 Class {
 	#name : 'BaselineOfDisplay',
 	#superclass : 'BaselineOf',
+	#instVars : [
+		'initializersEnabled'
+	],
 	#classVars : [
 		'Initialized'
 	],
@@ -22,18 +25,17 @@ Class {
 
 { #category : 'baseline' }
 BaselineOfDisplay >> baseline: spec [
-	<baseline>
 
+	<baseline>
 	spec for: #common do: [
-		spec postLoadDoIt: #'postload:package:'.
-		
-		spec 
-			package: 'Colors';
-			package: 'Graphics-Display Objects';
-			package: 'Graphics-Primitives' with: [ spec requires: 'Graphics-Display Objects' ];
-			package: 'Graphics-Transformations'
-		
-		 ].
+			spec preLoadDoIt: #preload:package:.
+			spec postLoadDoIt: #postload:package:.
+
+			spec
+				package: 'Colors';
+				package: 'Graphics-Display Objects';
+				package: 'Graphics-Primitives' with: [ spec requires: 'Graphics-Display Objects' ];
+				package: 'Graphics-Transformations' ]
 ]
 
 { #category : 'actions' }
@@ -56,6 +58,18 @@ BaselineOfDisplay >> postload: loader package: packageSpec [
 	Initialized = true ifTrue: [ ^ self ].
 
 	self installBitmap.
+	
+	MCMethodDefinition initializersEnabled: initializersEnabled.
 
 	Initialized := true
+]
+
+{ #category : 'actions' }
+BaselineOfDisplay >> preload: loader package: packageSpec [
+	"Ignore pre and post loads if already executed"
+
+	Initialized = true ifTrue: [ ^ self ].
+
+	initializersEnabled := MCMethodDefinition initializersEnabled.
+	MCMethodDefinition initializersEnabled: true
 ]
