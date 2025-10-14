@@ -13,9 +13,6 @@ Installs:
 Class {
 	#name : 'BaselineOfDisplay',
 	#superclass : 'BaselineOf',
-	#instVars : [
-		'initializersEnabled'
-	],
 	#classVars : [
 		'Initialized'
 	],
@@ -55,30 +52,11 @@ BaselineOfDisplay >> installBitmap [
 
 { #category : 'actions' }
 BaselineOfDisplay >> postload: loader package: packageSpec [
-
 	"Ignore pre and post loads if already executed"
+
 	Initialized = true ifTrue: [ ^ self ].
-	
+
 	self installBitmap.
 
-	Cursor webLink. "set the webLink cursor shape"
-					
-	Cursor initialize.
-	BitBlt initialize.
-	Form initialize.
-	Color initialize.
-	
-	MCMethodDefinition initializersEnabled: initializersEnabled.
-
-	Initialized := true.
-]
-
-{ #category : 'actions' }
-BaselineOfDisplay >> preload: loader package: packageSpec [
-	"Ignore pre and post loads if already executed"
-
-	Initialized = true ifTrue: [ ^ self ].
-
-	initializersEnabled := MCMethodDefinition initializersEnabled.
-	MCMethodDefinition initializersEnabled: false
+	Initialized := true
 ]
