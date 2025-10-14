@@ -2524,23 +2524,6 @@ UITheme >> newBalloonHelpIn: aThemedMorph contents: aTextStringOrMorph for: aMor
 ]
 
 { #category : 'morph creation' }
-UITheme >> newBracketSliderIn: aThemedMorph for: aModel getValue: getSel setValue: setSel min: minValue max: maxValue quantum: quantum getEnabled: enabledSel help: helpText [
-	"Answer a bracket slider."
-
-	^(BracketSliderMorph
-			on: aModel
-			getValue: getSel
-			setValue: setSel
-			min: minValue
-			max: maxValue
-			quantum: quantum)
-		getEnabledSelector: enabledSel;
-		hResizing: #spaceFill;
-		vResizing: #spaceFill;
-		setBalloonText: helpText
-]
-
-{ #category : 'morph creation' }
 UITheme >> newButtonIn: aThemedMorph for: aModel getState: stateSel action: actionSel arguments: args getEnabled: enabledSel getLabel: labelSel help: helpText [
 	"Answer a new button."
 
@@ -2941,23 +2924,6 @@ UITheme >> newImageIn: aThemedMorph form: aForm size: aPoint [
 	^AlphaImageMorph new
 		borderStyle: (BorderStyle inset width: 0);
 		image: aForm size: aPoint
-]
-
-{ #category : 'morph creation' }
-UITheme >> newIncrementalSliderIn: aThemedMorph for: aModel getValue: getSel setValue: setSel min: min max: max quantum: quantum getEnabled: enabledSel help: helpText [
-	"Answer a slider inrement/decrement buttons."
-
-	^(IncrementalSliderMorph
-			on: aModel
-			getValue: getSel
-			setValue: setSel
-			min: min
-			max: max
-			quantum: quantum)
-		getEnabledSelector: enabledSel;
-		hResizing: #spaceFill;
-		vResizing: #spaceFill;
-		setBalloonText: helpText
 ]
 
 { #category : 'morph creation' }
