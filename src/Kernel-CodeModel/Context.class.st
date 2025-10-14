@@ -703,7 +703,7 @@ Context >> executedPC [
 
 	"Return the PC of the previous instruction.
 	Heuristic (maybe wrong) we just go back one byte"
-	^ self currentPC - 1
+	^ self currentPC - 1 max: method initialPC
 ]
 
 { #category : 'system simulation' }

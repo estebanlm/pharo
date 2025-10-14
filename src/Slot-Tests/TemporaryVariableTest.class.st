@@ -28,7 +28,7 @@ TemporaryVariableTest >> testDefiningNode [
 
 { #category : 'tests' }
 TemporaryVariableTest >> testIsReferenced [
-	| method |
+	| method notReferenced |
 	"The temp notReferenced is not used as we test exactly that here"
 	method := self class >> #testIsReferenced.
 	self assert: method temporaryVariables first isReferenced.

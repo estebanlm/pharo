@@ -181,6 +181,15 @@ OnlineSourceDebugInfo >> isFirstPCOfMessage: aBytecodePC [
 ]
 
 { #category : 'api' }
+OnlineSourceDebugInfo >> isSourceBlockCreation: aBytecodePC [
+	
+	(self privateSourceNodeForPC: aBytecodePC) ifNil: [ ^ false ].
+	"For many reasons we need for now to consider that the block creation is the block creation bytecode, and not the first bytecode mapped to it -- which correctly considers the pushing of copied vars and temp vectors"
+	^ (InstructionStream on: compiledCode pc: aBytecodePC) willCreateBlock
+	"^ (self privateSourceNodeForPC: aBytecodePC) isBlock"
+]
+
+{ #category : 'api' }
 OnlineSourceDebugInfo >> isSourceReturn: aBytecodePC [
 
 	"We should stop at all returns inserted by the compiler in the bytecode.
@@ -204,7 +213,10 @@ OnlineSourceDebugInfo >> isSourceSend: aBytecodePC [
 OnlineSourceDebugInfo >> isSourceStore: aBytecodePC [
 	
 	(self privateSourceNodeForPC: aBytecodePC) ifNil: [ ^ false ].
-	^ (self privateSourceNodeForPC: aBytecodePC) isAssignment 
+	"For many reasons we need for now to consider that the stores are the store bytecodes.
+	However, this takes into account stores inserted by the compiler and not written by users!"
+	^ (InstructionStream on: compiledCode pc: aBytecodePC) willStore
+	"^ (self privateSourceNodeForPC: aBytecodePC) isAssignment"
 ]
 
 { #category : 'private' }
@@ -239,7 +251,8 @@ OnlineSourceDebugInfo >> shouldStopAt: aBytecodePC [
 
 	^ (self isSourceSend: aBytecodePC) or: [
 			  (self isSourceReturn: aBytecodePC) or: [
-				  self isSourceStore: aBytecodePC ] ]
+				  (self isSourceStore: aBytecodePC)
+						or: [ self isSourceBlockCreation: aBytecodePC ] ] ]
 ]
 
 { #category : 'accessing' }
