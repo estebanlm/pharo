@@ -258,7 +258,7 @@ Context >> stepToSendOrReturn [
 
 	| stream context |
 	stream := InstructionStream on: method pc: pc.	
-	[ self isDead or: [ stream willSend or: [ stream willReturn or: [ stream willStore or: [ stream willCreateBlock ] ] ] ] ]
+	[ self isDead or: [ stream willSend or: [ stream willReturn or: [ stream willStore ] ] ] ]
 		whileFalse: [
 			context := stream interpretNextInstructionFor: self.
 			context == self ifFalse: [
