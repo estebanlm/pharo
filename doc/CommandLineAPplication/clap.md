@@ -1,7 +1,7 @@
 # CLAP — Command line argument parser for Pharo
 
-Named after and inspired by [clap-rs](https://github.com/kbknapp/clap-rs), but this is an independent implementation.
 Clap is a library for implementing command line applications.
+Named after and inspired by [clap-rs](https://github.com/kbknapp/clap-rs), but this is an independent implementation.
 
 
 Clap is a framework for adding rich command line interfaces to Pharo code; it sits at the frontier of the image, between application code and the shell environment. There are two main families of objects in Clap:
@@ -176,7 +176,7 @@ In this example, when calling `command`, these previous steps are called to ensu
 ## Command line design
 
 Here are some advide to design your command line:
-- Split command-line logic from business logic to eaase maintenance, reusability
+- Split command-line logic from business logic to ease maintenance, reusability
 - Offer a clear help
 - Clear explanation when an error occurs
 - Well thought API (like a web service).
