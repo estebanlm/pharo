@@ -128,10 +128,6 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		
 		spec package: 'FFI-Kernel'.
 		
-		"Minimal command line handler for bootstrap.
-		Only using perform and environment #at:"
-		spec package: 'PerformMessageCommandLineHandler'.
-		
 		spec package: 'CodeImport'.
 		
 		spec package: 'CodeImport-Commands'.
@@ -181,7 +177,6 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			'CodeExport'.
 			'System-Sources'.
 			
-			'PerformMessageCommandLineHandler'.
 			'System-Support'.
 			'NumberParser'.
 
