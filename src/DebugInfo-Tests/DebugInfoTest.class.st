@@ -376,6 +376,12 @@ DebugInfoTest >> testNonExistingVariableIsArgumentRaisesError [
 DebugInfoTest >> testNotStopAtAllButFirstBytecodeOfOptimizedSend [
 
 	| debugInfo methodToTest send todoPCs |
+	
+	"This test is only valid when shouldStopAt: does not stop at
+	  - compiler only inserted stores
+	  - closure creations"
+	self skip.
+	
 	methodToTest := self class >> #methodWithOptimizedSend.
 	debugInfo := self newDebugInfoFor: methodToTest.
 
@@ -392,6 +398,12 @@ DebugInfoTest >> testNotStopAtAllButFirstBytecodeOfOptimizedSend [
 DebugInfoTest >> testNotStopAtConstantBlockCreation [
 
 	| debugInfo methodToTest blockNode blockCreationPC |
+	
+	"This test is only valid when shouldStopAt: does not stop at
+	  - compiler only inserted stores
+	  - closure creations"
+	self skip.
+	
 	methodToTest := self class >> #methodWithConstantBlockReturn.
 	debugInfo := self newDebugInfoFor: methodToTest.
 
@@ -420,6 +432,12 @@ DebugInfoTest >> testNotStopAtDynamicArrayCreation [
 DebugInfoTest >> testNotStopAtFullBlockCreation [
 
 	| debugInfo methodToTest blockNode blockCreationPCs |
+	
+	"This test is only valid when shouldStopAt: does not stop at
+	  - compiler only inserted stores
+	  - closure creations"
+	self skip.
+	
 	methodToTest := self class >> #methodWithFullBlockReturn.
 	debugInfo := self newDebugInfoFor: methodToTest.
 
