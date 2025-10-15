@@ -183,10 +183,11 @@ OnlineSourceDebugInfo >> isFirstPCOfMessage: aBytecodePC [
 { #category : 'api' }
 OnlineSourceDebugInfo >> isSourceBlockCreation: aBytecodePC [
 	
-	(self privateSourceNodeForPC: aBytecodePC) ifNil: [ ^ false ].
 	"For many reasons we need for now to consider that the block creation is the block creation bytecode, and not the first bytecode mapped to it -- which correctly considers the pushing of copied vars and temp vectors"
 	^ (InstructionStream on: compiledCode pc: aBytecodePC) willCreateBlock
-	"^ (self privateSourceNodeForPC: aBytecodePC) isBlock"
+
+	"(self privateSourceNodeForPC: aBytecodePC) ifNil: [ ^ false ].
+	^ (self privateSourceNodeForPC: aBytecodePC) isBlock"
 ]
 
 { #category : 'api' }
