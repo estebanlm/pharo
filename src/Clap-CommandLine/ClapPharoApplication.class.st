@@ -31,6 +31,28 @@ ClapPharoApplication class >> addSaveFlagTo: aCommandSpec [
 	aCommandSpec addFlag: #save description: 'Save the image after the command terminates'
 ]
 
+{ #category : 'command line' }
+ClapPharoApplication class >> commandSpecification [
+	^ (ClapRoot id: #clap)
+		description: 'Pharo command line entry point.';
+		commandClass: self;
+		canonicalName: '<subcommand>';
+		addHelp;
+		add: ClapCommandSpec forHelp;
+		addFlag: #'no-default-preferences' description: 'do not load any preferences from the default locations';
+		addFlag: #'preferences-file' withPositional: #'FILE' description: 'load the preferences from the given <FILE>';
+		addFlag: #version description: 'print the version for the image and the vm';
+
+		" for now, flags are defined in subcommands
+		addFlag: #save description: 'Save the image after the command terminates';
+		addFlag: #noSave description: 'Do not save the image even if the command is stateful';
+		addFlag: #rename 
+			description: 'Rename the image as <NAME> before running the command' 
+			positionalSpec: [ :spec | spec identifier: #NAME];
+		addFlag: #keepAlive description: 'Keep the image running after the command terminates';"
+		yourself
+]
+
 { #category : 'execution' }
 ClapPharoApplication >> doNotQuitImage [ 
 

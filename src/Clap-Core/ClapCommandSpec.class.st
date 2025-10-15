@@ -87,6 +87,12 @@ ClapCommandSpec >> addFlag: anIdentifier description: aString positionalSpec: aP
 ]
 
 { #category : 'api' }
+ClapCommandSpec >> addFlag: flagIdentifier withPositional: positiionalIdentifier description: aString [
+	
+	^ self addFlag: flagIdentifier description: aString positionalSpec: [ :positional | positional identifier: positiionalIdentifier ]
+]
+
+{ #category : 'api' }
 ClapCommandSpec >> addFlagWithPositional: anIdentifier description: aString [
 	
 	^ self addFlag: anIdentifier description: aString positionalSpec: [ "nothing to do" ]
