@@ -205,20 +205,25 @@ OnlineSourceDebugInfo >> isSourceReturn: aBytecodePC [
 { #category : 'api' }
 OnlineSourceDebugInfo >> isSourceSend: aBytecodePC [
 
+	"For many reasons we need for now to consider that the sends are the send bytecodes.
+	However, this takes into account sends inserted by the compiler and not written by users!"
+	^ (InstructionStream on: compiledCode pc: aBytecodePC) willSend
+
 	"Deal with inlined messages using isFirstPCOfMessagePC:"
-	(self privateSourceNodeForPC: aBytecodePC) ifNil: [ ^ false ].
+	"(self privateSourceNodeForPC: aBytecodePC) ifNil: [ ^ false ].
 	^ (self privateSourceNodeForPC: aBytecodePC) isMessage and: [
-		  self isFirstPCOfMessage: aBytecodePC ]
+		  self isFirstPCOfMessage: aBytecodePC ]"
 ]
 
 { #category : 'api' }
 OnlineSourceDebugInfo >> isSourceStore: aBytecodePC [
 	
-	(self privateSourceNodeForPC: aBytecodePC) ifNil: [ ^ false ].
 	"For many reasons we need for now to consider that the stores are the store bytecodes.
 	However, this takes into account stores inserted by the compiler and not written by users!"
 	^ (InstructionStream on: compiledCode pc: aBytecodePC) willStore
-	"^ (self privateSourceNodeForPC: aBytecodePC) isAssignment"
+
+	"(self privateSourceNodeForPC: aBytecodePC) ifNil: [ ^ false ].
+	^ (self privateSourceNodeForPC: aBytecodePC) isAssignment"
 ]
 
 { #category : 'private' }
