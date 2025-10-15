@@ -201,6 +201,7 @@ StepThroughTest >> testStepThrough [
 	self settingUpSessionAndProcessAndContextForBlock: [ self stepA1 ].
 	session stepInto.
 	session stepInto.
+
 	"Reached node 'self evalBlockThenReturnOne: [self stepA2]' of method stepA1"
 	"Checking that the execution is indeed at this node"
 	self assert: (session interruptedContext method) equals: (self class lookupSelector: #stepA1).
