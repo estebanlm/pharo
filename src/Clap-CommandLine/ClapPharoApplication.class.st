@@ -40,8 +40,8 @@ ClapPharoApplication >> doNotQuitImage [
 { #category : 'execution' }
 ClapPharoApplication >> execute [
 
-	self prepareImage.
-	self shouldQuit ifFalse: [ self doNotQuitImage ]
+	(self hasFlag: #version) 
+		ifTrue: [ (ClapPharoVersion with: context) showVersionsNamed: #( full ) ]
 ]
 
 { #category : 'private - printing' }
@@ -60,6 +60,13 @@ ClapPharoApplication >> prepareImage [
 				changeImagePathTo: imageFile;
 				closeSourceFiles;
 				openSourceFiles ]
+]
+
+{ #category : 'execution' }
+ClapPharoApplication >> prepareImageAndExit [
+
+	self prepareImage.
+	self shouldQuit ifFalse: [ self doNotQuitImage ]
 ]
 
 { #category : 'execution' }

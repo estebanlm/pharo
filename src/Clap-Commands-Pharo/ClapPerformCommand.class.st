@@ -50,7 +50,7 @@ ClapPerformCommand >> execute [
 
 	| command |
 	
-	super execute.
+	self prepareImageAndExit.
 	command := PerformMessageCommandLineHandler commandLine: (CommandLineArguments withArguments: self allArguments).
 	command execute.
 	self saveSessionIfAsked.

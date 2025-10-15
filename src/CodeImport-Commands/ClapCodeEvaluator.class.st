@@ -109,7 +109,7 @@ ClapCodeEvaluator >> execute [
 	| result |
 	
 	self validateParameters.
-	super execute.
+	self prepareImageAndExit.
 	
 	result := self evaluate.
 	self saveSessionIfAsked.
