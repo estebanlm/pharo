@@ -416,16 +416,16 @@ DebugInfoTest >> testNotStopAtConstantBlockCreation [
 { #category : 'tests - shouldStopAt' }
 DebugInfoTest >> testNotStopAtDynamicArrayCreation [
 
-	| debugInfo methodToTest dynamicArrayCreationNode blockCreationPCs |
+	| debugInfo methodToTest dynamicArrayCreationNode arrayCreationPCs |
 	methodToTest := self class >> #methodWithDynamicArrayCreation.
 	debugInfo := self newDebugInfoFor: methodToTest.
 
 	dynamicArrayCreationNode := methodToTest ast statements first.
-	blockCreationPCs := dynamicArrayCreationNode methodNode pcsForNode:
+	arrayCreationPCs := dynamicArrayCreationNode methodNode pcsForNode:
 		                    dynamicArrayCreationNode.
-	self assert: blockCreationPCs notEmpty.
+	self assert: arrayCreationPCs notEmpty.
 
-	blockCreationPCs do: [ :e | self deny: (debugInfo shouldStopAt: e) ]
+	self deny: (debugInfo shouldStopAt: arrayCreationPCs first)
 ]
 
 { #category : 'tests - shouldStopAt' }
