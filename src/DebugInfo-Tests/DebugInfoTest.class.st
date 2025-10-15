@@ -959,6 +959,27 @@ DebugInfoTest >> testReadOuterBlockCopiedTemporaryVariableFromClosure [
 ]
 
 { #category : 'tests - read variables' }
+DebugInfoTest >> testReadOuterBlockCopiedTemporaryVariableFromClosureWithDeadOuter [
+	"This test is tricky.
+	
+	This is a variation of testReadOuterBlockCopiedTemporaryVariableFromClosure where the outer context is dead.
+	The value was copied into the current context so, we should be able to read it!
+	"
+
+	| debugInfo context |
+	context := [ :blockArgument |
+		           | tempInBlock |
+		           tempInBlock := 42.
+		           [ "tempInBlock is candidate to be copied in the block activation"
+			           tempInBlock.
+
+			           thisContext copy ] value ] value: 7.
+
+	debugInfo := self newDebugInfoFor: context method.
+	self assert: (debugInfo readVariableNamed: #tempInBlock fromContext: context) equals: 42
+]
+
+{ #category : 'tests - read variables' }
 DebugInfoTest >> testReadOuterBlockTempVectorTemporaryVariableFromClosure [
 	"This test is tricky.
 	

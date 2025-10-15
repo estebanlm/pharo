@@ -61,5 +61,12 @@ OnlineSourceDebugScope >> variableNames [
 { #category : 'accessing' }
 OnlineSourceDebugScope >> variables [
 	
-	^ astScope allTemps
+	"Consider copied vars first.
+	They override variables from the scope"
+	| vars |
+	vars := astScope copiedVars copy.
+	astScope allTemps do: [ :e |
+		vars at: e name ifAbsentPut: e.
+	].
+	^ vars values
 ]

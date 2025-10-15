@@ -87,9 +87,10 @@ OnlineSourceDebugInfo >> asOfflineDebugInfo [
 
 	scopes := Dictionary new.
 	astScopes do: [ :astScope |
-			| cachedScope tempDescriptions |
+			| onlineScope cachedScope tempDescriptions |
+			onlineScope := OnlineSourceDebugScope on: astScope.
 			cachedScope := OfflineSourceDebugScope new.
-			tempDescriptions := astScope allTemps collect: [ :temp |
+			tempDescriptions := onlineScope variables collect: [ :temp |
 				                    temp descriptionArrayForScope: astScope ].
 			(astScope isBlockScope and: [ astScope isOptimized ])
 				ifTrue: [
