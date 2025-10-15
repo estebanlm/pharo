@@ -39,26 +39,10 @@ BaselineOfDisplay >> baseline: spec [
 ]
 
 { #category : 'actions' }
-BaselineOfDisplay >> installBitmap [
-
-	"install new Bitmap class to special objects array"
-
-	| array |
-	
-	array := Smalltalk specialObjectsArray copy.
-	array at: 5 put: Bitmap.
-
-	Smalltalk specialObjectsArray becomeForward: array.
-]
-
-{ #category : 'actions' }
 BaselineOfDisplay >> postload: loader package: packageSpec [
 	"Ignore pre and post loads if already executed"
-
 	Initialized = true ifTrue: [ ^ self ].
 
-	self installBitmap.
-	
 	MCMethodDefinition initializersEnabled: initializersEnabled.
 
 	Initialized := true
@@ -70,6 +54,7 @@ BaselineOfDisplay >> preload: loader package: packageSpec [
 
 	Initialized = true ifTrue: [ ^ self ].
 
+	"For now we ensure the class initialization but in the future it should be true by default"
 	initializersEnabled := MCMethodDefinition initializersEnabled.
 	MCMethodDefinition initializersEnabled: true
 ]
