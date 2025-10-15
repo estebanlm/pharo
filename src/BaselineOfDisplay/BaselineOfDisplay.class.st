@@ -73,3 +73,12 @@ BaselineOfDisplay >> preload: loader package: packageSpec [
 	initializersEnabled := MCMethodDefinition initializersEnabled.
 	MCMethodDefinition initializersEnabled: true
 ]
+
+{ #category : 'accessing' }
+BaselineOfDisplay >> project [
+	"We currently have cyclic dependencies so we are loading this project atomically."
+
+	^ super project
+		  loadType: #atomic;
+		  yourself
+]
