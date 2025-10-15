@@ -325,10 +325,6 @@ BaselineOfMorphic >> postload: loader package: packageSpec [
 	LogicalFontManager current addFontProvider:
 		FreeTypeFontProvider current.
 
-	array := Smalltalk specialObjectsArray copy.
-	array at: 5 put: Bitmap.
-	Smalltalk specialObjectsArray becomeForward: array.
-
 	MCMethodDefinition initializersEnabled: initializersEnabled.
 
 	Initialized := true
