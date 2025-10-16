@@ -28,10 +28,26 @@ Class {
 		'originalUndeclareds',
 		'hasTraits'
 	],
+	#classVars : [
+		'EnableClassInitialization'
+	],
 	#category : 'Hermes-ClassInstaller',
 	#package : 'Hermes',
 	#tag : 'ClassInstaller'
 }
+
+{ #category : 'accessing' }
+HEInstaller class >> enableClassInitialization [
+	"When true, Hermes will call the class side initialize methods after loading"
+
+	^ EnableClassInitialization ifNil: [ EnableClassInitialization := true ]
+]
+
+{ #category : 'accessing' }
+HEInstaller class >> enableClassInitialization: anObject [
+
+	EnableClassInitialization := anObject
+]
 
 { #category : 'creating classes' }
 HEInstaller >> build: aHEClass [
@@ -114,8 +130,9 @@ HEInstaller >> doInstallPackage: aHEPackage [
 	"6. Install extension methods"
 	aHEPackage extensionMethods do: [ :method | self installExtensionMethod: method ].
 	
-	"7. Initialize classes"
-	newClasses do: [ :class | (class class methods anySatisfy: [ :method | method selector = 'initialize' ]) ifTrue: [ class initialize ] ]. .
+	"7. Initialize classes if the option is enabled"
+	self class enableClassInitialization ifTrue: [
+		newClasses do: [ :newClass | (newClass class methods anySatisfy: [ :method | method selector = 'initialize' ]) ifTrue: [ newClass initialize ] ] ].
 
 	"8. After all I validate if there are no new undeclared variables created in the environment.
 	A new undeclared is a sign of an improper modularization."
