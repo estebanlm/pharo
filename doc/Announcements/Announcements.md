@@ -15,18 +15,15 @@ To signal the actual occurrence of an event, the "announcer" creates and configu
 To define an announcement you just have to subclass the `Announcement` class:
 
 ```st
-Announcement subclass: #MyInterestingAnnouncement
-   	   instanceVariableNames: ''
-	   classVariableNames: ''
+Announcement << #MyInterestingAnnouncement
 	   package: 'MyApp-Core'
 ```
 
 If required you can add instance variables to hold data that should be transferred when an announcement is made:
 
 ```st
-Announcement subclass: #GameLostAnnouncement
-	   instanceVariableNames: 'score'
-	   classVariableNames: ''
+Announcement << #GameLostAnnouncement
+	   slots: { #score} ;
 	   package: 'MyGame-Core'
 ```
 
