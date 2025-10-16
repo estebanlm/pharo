@@ -329,7 +329,6 @@ EpFileOutModificationsTest >> testFileOutSingleMethodRemoval [
 EpFileOutModificationsTest >> testFileOutSingleProtocolRemoval [
 
 	| aClass outputFileReference chunks methodNode |
-	self skip.
 	"I have no idea why the protocol removal is not logged. I checked and the codechange announce it."
 	
 	aClass := classFactory newClass.

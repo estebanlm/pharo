@@ -71,7 +71,8 @@ EpChunkExporter >> fileOut: epiceaEntries in: aDirectory [
 		nameText:  self outputFilename; 
 		okAction: [ :fileReference |
 				fileRef := fileReference.
-				self internalFileleOutOf: epiceaEntries in: fileReference writeStream 
+				fileRef writeStreamDo: [ :s | 
+					self internalFileOutOf: epiceaEntries in: s ] 
 				];
 		openModal.
 	dialog := SpConfirmDialog new.
@@ -85,7 +86,7 @@ EpChunkExporter >> fileOut: epiceaEntries in: aDirectory [
 ]
 
 { #category : 'private' }
-EpChunkExporter >> internalFileleOutOf: epiceaEntries in: aStream [
+EpChunkExporter >> internalFileOutOf: epiceaEntries in: aStream [
 
 	epiceaEntries do: [ :epEntryItem | epEntryItem fileOutEntryOn: aStream ] 
 ]
