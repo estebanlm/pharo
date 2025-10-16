@@ -71,7 +71,7 @@ For example, if we want to show some text in the transcript when any interested 
 Transcript open.
 
 announcer := Announcer new.
-announcer when: MyInterestingAnnouncement do: [ Transcript show: 'Interesting announcement appeared!' ] for: anObject.
+announcer when: MyInterestingAnnouncement do: [ 'Interesting announcement appeared!' traceCr] for: anObject.
 announcer announce: MyInterestingAnnouncement new
 ```
 
@@ -89,6 +89,6 @@ Transcript open.
 
 World announcer 
 	when: WindowOpened 
-	do: [ Transcript show: 'A new window was opened';cr]
+	do: [ 'A new window was opened' traceCr ]
 	for: self.
 ```
