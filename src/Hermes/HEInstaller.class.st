@@ -132,7 +132,7 @@ HEInstaller >> doInstallPackage: aHEPackage [
 	
 	"7. Initialize classes if the option is enabled"
 	self class enableClassInitialization ifTrue: [
-		newClasses do: [ :newClass | (newClass class methods anySatisfy: [ :method | method selector = 'initialize' ]) ifTrue: [ newClass initialize ] ] ].
+		newClasses do: [ :newClass | (newClass class isLocalSelector: #initialize) ifTrue: [ newClass initialize ] ] ].
 
 	"8. After all I validate if there are no new undeclared variables created in the environment.
 	A new undeclared is a sign of an improper modularization."
