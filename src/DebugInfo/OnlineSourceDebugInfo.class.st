@@ -250,7 +250,7 @@ OnlineSourceDebugInfo >> rangeForPC: aPC [
 { #category : 'api' }
 OnlineSourceDebugInfo >> readVariableNamed: aName fromContext: aContext [
 
-	^ (self debugScopeAt: aContext pc) readVariableNamed: aName fromContext: aContext
+	^ (self debugScopeAt: aContext currentPC) readVariableNamed: aName fromContext: aContext
 ]
 
 { #category : 'api' }
