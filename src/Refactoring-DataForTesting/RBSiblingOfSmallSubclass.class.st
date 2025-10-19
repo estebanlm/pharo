@@ -6,7 +6,7 @@ Class {
 	#tag : 'MiniHierarchy'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 RBSiblingOfSmallSubclass >> use2 [
 
 	self rewriteRule1: 13
