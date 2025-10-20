@@ -64,13 +64,27 @@ ClapPharoApplication >> doNotQuitImage [
 ClapPharoApplication >> execute [
 
 	(self hasFlag: #version) 
-		ifTrue: [ (ClapPharoVersion with: context) showVersionsNamed: #( full ) ]
+		ifTrue: [ self runPharoVersionCommand ]
 ]
 
 { #category : 'private - printing' }
 ClapPharoApplication >> inform: aString [
 
 	self outputStreamDo: [ :out | out << aString << OSPlatform current lineEnding ]
+]
+
+{ #category : 'private' }
+ClapPharoApplication >> pharoVersionContext [
+	
+	"To avoid a hard dependency on ClapPharoVersion, we instead re-run the matching with arguments 
+	that should end in the ClapPharoVersion subcommand"
+	
+	^ (ClapContext specification: context specification)
+		arguments: #('printVersion' '--full');
+		setStdio: context stdio;
+		match;
+		validateAll;
+		yourself
 ]
 
 { #category : 'execution' }
@@ -90,6 +104,12 @@ ClapPharoApplication >> prepareImageAndExit [
 
 	self prepareImage.
 	self shouldQuit ifFalse: [ self doNotQuitImage ]
+]
+
+{ #category : 'execution' }
+ClapPharoApplication >> runPharoVersionCommand [
+	
+	self pharoVersionContext command executeOrPrintHelp
 ]
 
 { #category : 'execution' }
