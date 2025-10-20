@@ -36,6 +36,7 @@ BaselineOfGeneralTests >> baseline: spec [
 			package: 'FileSystem-Memory-Tests';
 			package: 'Fonts-Infrastructure-Tests';
 			package: 'Graphics-Tests';
+			package: 'Text-Tests';
 			package: 'Morphic-Tests';
 			package: 'Morphic-Widgets-FastTable-Tests';
 			package: 'NECompletion-Tests';
