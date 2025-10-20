@@ -262,17 +262,14 @@ BaselineOfMorphic >> postload: loader package: packageSpec [
 		nextPutAll: 'bitmap fonts loaded' asString;
 		lf.
 
-	#( #ProgressBarMorph #BalloonEngineConstants #BalloonEngine
-	   #CornerRounder #DigitalSignatureAlgorithm
-	   #FT2Types #FT2FFILibrary #FreeTypeCacheConstants
+	#( #ProgressBarMorph #FT2Types #FT2FFILibrary #FreeTypeCacheConstants
 	   #FreeTypeCache #FreeTypeSettings #FreeTypeSubPixelAntiAliasedGlyphRenderer
 	   #FT2Constants #GIFReadWriter #GlobalIdentifier #HaloMorph
 	   #CharacterScanner #ImageMorph #JPEGHuffmanTable #JPEGReadStream
 	   #Locale #MczInstaller #MD5NonPrimitive #MenuItemMorph
-	   #MenuMorph #RxMatcher #RxParser #RxsPredicate #SHA1 #ShortIntegerArray
-	   #SystemProgressMorph #SystemWindow #TestCase #TextContainer
-	   #TextDiffBuilder #ThumbnailMorph #TransferMorph #UITheme #ZnByteEncoder
-	   #ZnConstants #ZnMimeType #ZnNetworkingUtils #ZnServer #ZnSingleThreadedServer )
+	   #MenuMorph #RxMatcher #RxParser #RxsPredicate #SHA1
+	   #SystemProgressMorph #SystemWindow #TextContainer
+	   #TextDiffBuilder #ThumbnailMorph #TransferMorph #UITheme )
 		do: [ :each | (Smalltalk globals at: each) initialize ].
 
 	UIManager default terminateUIProcess.
