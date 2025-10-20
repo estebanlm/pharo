@@ -128,16 +128,9 @@ BaselineOfMorphic >> baseline: spec [
 BaselineOfMorphic >> cleanUpAfterMorphicInitialization [
 
 	MCDataStream initialize.
-	GradientFillStyle initPixelRampCache.
 	FreeTypeCache clearCurrent.
-	ImageMorph
-		writeClassVariableNamed: #DefaultForm
-		value: (Form extent: 1 @ 1 depth: 1).
 	World cleanseOtherworldlySteppers.
-	MCFileBasedRepository flushAllCaches.
-	MCMethodDefinition shutDown.
-	ExternalDropHandler resetRegisteredHandlers.
-	ScrollBarMorph initializeImagesCache
+	MCFileBasedRepository flushAllCaches
 ]
 
 { #category : 'fonts' }
@@ -265,8 +258,6 @@ BaselineOfMorphic >> postload: loader package: packageSpec [
 	self loadBitmapDejaVuSans.
 	self loadBitmapSourcePro.
 
-	(Smalltalk globals at: #TextStyle) initialize.
-
 	Stdio stdout
 		nextPutAll: 'bitmap fonts loaded' asString;
 		lf.
@@ -284,8 +275,6 @@ BaselineOfMorphic >> postload: loader package: packageSpec [
 	   #ZnConstants #ZnMimeType #ZnNetworkingUtils #ZnServer #ZnSingleThreadedServer )
 		do: [ :each | (Smalltalk globals at: each) initialize ].
 
-	BalloonMorph setBalloonColorTo: Color yellow.
-
 	UIManager default terminateUIProcess.
 	MorphicUIManager new spawnNewProcess.
 
@@ -294,7 +283,6 @@ BaselineOfMorphic >> postload: loader package: packageSpec [
 
 	ErrorHandler defaultErrorHandler: UIManager default.
 
-	PharoLightTheme beCurrent.
 	ScalingCanvas initialize.
 	self cleanUpAfterMorphicInitialization.
 
@@ -317,7 +305,7 @@ BaselineOfMorphic >> postload: loader package: packageSpec [
 	#( #AbstractFont #BalloonMorph #Clipboard #EmbeddedFreeTypeFontInstaller
 	   #FLCompiledMethodCluster #FreeTypeFontProvider
 	   #GradientFillStyle #IconicButtonMorph #KMLog #LogicalFont
-	   #LucidaGrandeRegular #OSEnvironment #ScrollBarMorph
+	   #LucidaGrandeRegular #ScrollBarMorph
 	   #StrikeFont #SystemSettingsPersistence #TabMorph #TaskbarMorph
 	   #TextAction #TextConstants #TextStyle ) do: [ :each |
 		(Smalltalk globals at: each) initialize ].
