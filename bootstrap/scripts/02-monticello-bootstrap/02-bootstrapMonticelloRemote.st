@@ -4,9 +4,10 @@ mcPackages := #(
  'Network-MIME'
  'Network-Protocols'
 
+ 'Zinc-HTTP'
+ 
  'MonticelloRemoteRepositories'
 
- 'Zinc-HTTP'
  'Zodiac-Core'
  ).
 
