@@ -85,13 +85,13 @@ ReRenameMethodDriver >> configureRefactoring [
 { #category : 'configuration' }
 ReRenameMethodDriver >> defaultSelectDialog [ 
 
-	^ self class defaultSelectDialog
-		    title: 'There are potential breaking changes!';
-		          label: 'Watchout potential override detected!';
-		          items: self breakingChoices;
-		          display: [ :each | each description ];
-		          displayIcon: [ :each | self iconNamed: each systemIconName ];
-		          openModal
+	^ super defaultSelectDialog
+		title: 'There are potential breaking changes!';
+		label: 'Watchout potential override detected!';
+		items: self breakingChoices;
+		display: [ :each | each description ];
+		displayIcon: [ :each | self iconNamed: each systemIconName ];
+		openModal
 ]
 
 { #category : 'execution' }
@@ -141,16 +141,19 @@ ReRenameMethodDriver >> requestDialogWith: methodName [
 	"This is lazy loaded and tests expect lazy loading, because they set `requestDialog`
 	and thus side-step methodNameEditorPresenter"
 
-	^ requestDialog := (self methodNameEditorPresenterClass
-		                    openOn: methodName
-		                    withInvalidArgs: (RBCondition
-				                     invalidArgumentNamesForSelector:
-				                     originalMessage selector
-				                     in: model)
-		                    canRenameArgs: self canRenameArgs
-		                    canRemoveArgs: self canRemoveArgs
-		                    canAddArgs: self canAddArgs
-		                    canEditName: self canEditName) presenter
+	requestDialog := (self methodNameEditorPresenterClass newApplication: self application model: methodName)
+		invalidArgNames: (RBCondition
+			invalidArgumentNamesForSelector:
+			originalMessage selector
+			in: model);
+		canRenameArgs: self canRenameArgs;
+		canRemoveArgs: self canRemoveArgs;
+		canAddArgs: self canAddArgs;
+		canEditName: self canEditName.
+		
+	requestDialog openModal.
+	
+	^ requestDialog
 ]
 
 { #category : 'interaction' }
