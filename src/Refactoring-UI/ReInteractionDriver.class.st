@@ -183,7 +183,7 @@ ReInteractionDriver >> inform: aString [
 ReInteractionDriver >> informConditions: conditions [ 
 	"The receiver has multiple failed applicability conditions and more than one could fail, inform all failures"
 
-	conditions do: [ : cond | self inform: cond errorString ].
+	conditions do: [ :cond | self inform: cond errorString ].
 ]
 
 { #category : 'private' }
