@@ -10,6 +10,12 @@ Class {
 }
 
 { #category : 'instance creation' }
+StRefactoringPreviewPresenterMock class >> newApplication: anApplication [
+	
+	^ self new
+]
+
+{ #category : 'instance creation' }
 StRefactoringPreviewPresenterMock class >> withChanges: changes scopes: aCollection [ 
 	^ self new withChanges: changes scopes: aCollection 
 ]
