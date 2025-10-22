@@ -297,12 +297,11 @@ BaselineOfMorphic >> postload: loader package: packageSpec [
 	PolymorphSystemSettings showDesktopLogo: true.
 	PolymorphSystemSettings desktopColor: Color white.
 
-	#( #AbstractFont #BalloonMorph #Clipboard #EmbeddedFreeTypeFontInstaller
+	#( #BalloonMorph #EmbeddedFreeTypeFontInstaller
 	   #FLCompiledMethodCluster #FreeTypeFontProvider
-	   #GradientFillStyle #IconicButtonMorph #KMLog #LogicalFont
+	   #IconicButtonMorph #KMLog #LogicalFont
 	   #LucidaGrandeRegular #ScrollBarMorph
-	   #StrikeFont #SystemSettingsPersistence #TabMorph #TaskbarMorph
-	   #TextAction #TextConstants #TextStyle ) do: [ :each |
+	   #StrikeFont #SystemSettingsPersistence #TabMorph #TaskbarMorph ) do: [ :each |
 		(Smalltalk globals at: each) initialize ].
 
 	LogicalFontManager current addFontProvider:

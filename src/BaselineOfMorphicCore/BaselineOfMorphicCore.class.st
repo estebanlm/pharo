@@ -62,12 +62,25 @@ BaselineOfMorphicCore >> postload: loader package: packageSpec [
 	WorldState initialize.
 	Morph initialize.
 	HandMorph initialize.
-	
 	AbstractWorldRenderer initialize.	
-
-	Cursor initTarget.
 	EventManager initialize.
 	UserInputEvent initialize.
+	WorldMorph initialize.
+	PasteUpMorph initialize.
+	DefaultExternalDropHandler initialize.
+	BalloonEngineConstants initialize.
+	BalloonEngine initialize.
+	CornerRounder initialize.
+	ShortIntegerArray initialize.
+	AbstractFont initialize.
+	Clipboard initialize.
+	GradientFillStyle initialize.
+	TextAction initialize.
+	TextConstants initialize.
+	TextStyle initialize.
+	PharoCommonTools initialize.
+	
+	Cursor initTarget.
 
 	world := WorldMorph new.
 	world instVarNamed: #worldState put: WorldState new.
@@ -91,14 +104,6 @@ BaselineOfMorphicCore >> postload: loader package: packageSpec [
 	(world instVarNamed: #worldState) invalidate.
 
 	hand instVarNamed: #targetOffset put: 0@0.
-
-	WorldMorph initialize.
-	PasteUpMorph initialize.
-	DefaultExternalDropHandler initialize.
-	BalloonEngineConstants initialize.
-	BalloonEngine initialize.
-	CornerRounder initialize.
-	ShortIntegerArray initialize.
 
 	Initialized := true.
 ]
