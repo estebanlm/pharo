@@ -19,6 +19,22 @@ Class {
 }
 
 { #category : 'examples' }
+ScalingCanvas class >> example [
+
+	| morph |
+
+	(morph := MenuMorph new)
+		addTitle: 'Lorem ipsum'.
+	(morph add: 'Dolor sit amet' target: nil selector: #yourself) keyText: 'x';
+		icon: (self iconNamed: #smallConfiguration).
+	(morph add: 'Consectetur adipiscing elit' target: nil selector: #yourself) keyText: 'y'.
+	morph addLine.
+	(morph add: 'Sed do eiusmod' target: nil selector: #yourself) keyText: 'z'.
+	
+	^ self privateExampleWithMorph: morph
+]
+
+{ #category : 'examples' }
 ScalingCanvas class >> exampleDrawPolygon [
 
 	^ self privateExampleWithExtent: 37@44 fillColor: Color white scale: 7 drawBlock: [ :canvas |
@@ -142,6 +158,49 @@ ScalingCanvas class >> exampleFrameAndFillRectangle2 [
 ]
 
 { #category : 'examples' }
+ScalingCanvas class >> exampleImageMorph1 [
+
+	^ self privateExampleWithMorph: (Morph new
+		color: Color veryVeryLightGray;
+		addMorph: ((ImageMorph withForm: (self iconNamed: #search))
+			position: 4@4;
+			yourself);
+		addMorph: ((ImageMorph withForm: (self iconNamed: #search) copy)
+			position: 24@4;
+			yourself);
+		extent: 44@24;
+		yourself)
+]
+
+{ #category : 'examples' }
+ScalingCanvas class >> exampleImageMorph2 [
+
+	| forms imageMorph |
+	
+	forms := (1 to: 2) collect: [ :scale |
+		(FormCanvas extent: 100 asPoint * scale depth: 1)
+			fillOval: ((0 asPoint extent: 100 asPoint * scale) insetBy: 5 * scale) fillStyle: Color green;
+			form ].
+	(imageMorph := ImageMorph withFormSet: (FormSet forms: forms))
+		color: Color blue.
+	^ self privateExampleWithMorph: imageMorph
+]
+
+{ #category : 'examples' }
+ScalingCanvas class >> exampleImageMorph3 [
+
+	| forms imageMorph |
+	
+	forms := (1 to: 2) collect: [ :scale |
+		(FormCanvas extent: 10 asPoint * scale)
+			fillOval: ((0 asPoint extent: 10 asPoint * scale) insetBy: 1 * scale) fillStyle: Color black;
+			form ].
+	(imageMorph := ImageMorph withFormSet: (FormSet forms: forms))
+		resize: 200@100.
+	^ self privateExampleWithMorph: imageMorph
+]
+
+{ #category : 'examples' }
 ScalingCanvas class >> exampleLine1 [
 
 	^ self privateExampleWithExtent: 101@101 fillColor: Color white scale: 4 drawBlock: [ :canvas |
@@ -188,6 +247,25 @@ ScalingCanvas class >> exampleLine2 [
 						line: pointAssociation key transposed + (30@9)
 							to: pointAssociation value transposed + (30@9)
 							width: width color: Color blue translucent ] ] ]
+]
+
+{ #category : 'examples' }
+ScalingCanvas class >> exampleRubScrolledTextMorph [
+
+	| source |
+
+	source := String streamContents: [ :stream |
+		stream nextPutAll: 'OrderedCollection new'; cr.
+		(1 to: 100) groupsOf: 5 atATimeDo: [ :numbers |
+			stream tab; nextPutAll: ('addAll: {1};' format: { numbers printString }); cr ].
+		stream tab; nextPutAll: 'yourself'; cr ].
+	^ self privateExampleWithMorph:
+		(RubScrolledTextMorph new
+			model: (RubScrolledTextModel new text: source; yourself);
+			beForSmalltalkCode;
+			withCodeSizeFeedback;
+			extent: 320@200;
+			yourself)
 ]
 
 { #category : 'instance creation' }
