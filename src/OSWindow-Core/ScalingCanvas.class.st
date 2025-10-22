@@ -13,9 +13,9 @@ Class {
 	#classVars : [
 		'FormMapping'
 	],
-	#category : 'Graphics-Canvas-Canvases',
-	#package : 'Graphics-Canvas',
-	#tag : 'Canvases'
+	#category : 'OSWindow-Core-Utilities',
+	#package : 'OSWindow-Core',
+	#tag : 'Utilities'
 }
 
 { #category : 'examples' }
