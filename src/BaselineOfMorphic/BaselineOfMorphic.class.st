@@ -283,7 +283,6 @@ BaselineOfMorphic >> postload: loader package: packageSpec [
 
 	ErrorHandler defaultErrorHandler: UIManager default.
 
-	ScalingCanvas initialize.
 	self cleanUpAfterMorphicInitialization.
 
 	GraphicFontSettings setFontsToStyleNamed: #small.
