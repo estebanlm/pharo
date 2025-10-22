@@ -33,12 +33,6 @@ AbstractFont class >> emphasisStringFor: emphasisCode [
 		s position isZero ifFalse: [ s skip: -1 ]]
 ]
 
-{ #category : 'class initialization' }
-AbstractFont class >> initialize [
-
-	TextStyle addDependent: self
-]
-
 { #category : 'testing' }
 AbstractFont class >> isAbstract [
 
