@@ -155,7 +155,7 @@ ReRenameMethodDriver >> requestDialogWith: methodName [
 	"This is lazy loaded and tests expect lazy loading, because they set `requestDialog`
 	and thus side-step methodNameEditorPresenter"
 
-	requestDialog ifNil: [ requestDialog := self newRequestMethodDialog ].
+	requestDialog ifNil: [ requestDialog := self newRequestMethodDialogOn: methodName ].
 	requestDialog openModal.
 	^ requestDialog
 ]
