@@ -317,12 +317,6 @@ BaselineOfMorphic >> preload: loader package: packageSpec [
 
 	"Ignore pre and post loads if already executed"
 	Initialized = true ifTrue: [ ^ self ].
-
-	SystemNotification signal: 'Starting preload action'.
-
-	"Declare global variables"
-	Smalltalk globals at: #World put: nil.
-	Smalltalk globals at: #ActiveWorld put: nil.
 	
 	initializersEnabled := MCMethodDefinition initializersEnabled.
 	MCMethodDefinition initializersEnabled: false.
