@@ -51,8 +51,6 @@ BaselineOfMorphicCore >> baseline: spec [
 { #category : 'actions' }
 BaselineOfMorphicCore >> postload: loader package: packageSpec [
 
-	| world hand |
-
 	"Ignore pre and post loads if already executed"
 	Initialized = true ifTrue: [ ^ self ].
 	
@@ -65,8 +63,8 @@ BaselineOfMorphicCore >> postload: loader package: packageSpec [
 	AbstractWorldRenderer initialize.	
 	EventManager initialize.
 	UserInputEvent initialize.
-	WorldMorph initialize.
 	PasteUpMorph initialize.
+	WorldMorph initialize.
 	DefaultExternalDropHandler initialize.
 	BalloonEngineConstants initialize.
 	BalloonEngine initialize.
@@ -80,29 +78,6 @@ BaselineOfMorphicCore >> postload: loader package: packageSpec [
 	PharoCommonTools initialize.
 	
 	Cursor initTarget.
-
-	world := WorldMorph new.
-	world instVarNamed: #worldState put: WorldState new.
-	hand := HandMorph new.
-	world addHand: hand.
-	world activeHand: hand.
-
-	Smalltalk at: #World put: world.
-	Smalltalk at: #ActiveWorld put: world.
-
-	world viewBox: world bounds.
-	
-	world handsDo: [:h | h initForEvents].
-	world borderWidth: 0.
-	
-	world displayWorldSafely.
-	MorphicCoreUIManager new spawnNewProcess.
-	
-	world cleanseOtherworldlySteppers.
-
-	(world instVarNamed: #worldState) invalidate.
-
-	hand instVarNamed: #targetOffset put: 0@0.
 
 	Initialized := true.
 ]
