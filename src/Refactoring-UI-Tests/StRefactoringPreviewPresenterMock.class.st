@@ -22,7 +22,14 @@ StRefactoringPreviewPresenterMock class >> withChanges: changes scopes: aCollect
 
 { #category : 'accessing' }
 StRefactoringPreviewPresenterMock >> application: aStPharoApplication [ 
+
 	application := aStPharoApplication
+]
+
+{ #category : 'initialization' }
+StRefactoringPreviewPresenterMock >> changesFrom: aRefactoring scopes: aCollection [ 
+	
+	^ self withChanges: aRefactoring scopes: aCollection
 ]
 
 { #category : 'instance creation' }
