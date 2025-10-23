@@ -116,7 +116,7 @@ ReDuplicateClassDriver >> newRequestClassDialog [
 { #category : 'private' }
 ReDuplicateClassDriver >> requestNewClass [
 
-	requestDialog := self newRequestClassDialog.
+	requestDialog ifNil: [ requestDialog := self newRequestClassDialog ].
 	requestDialog selectAll.
 	^ requestDialog
 		openModal;
