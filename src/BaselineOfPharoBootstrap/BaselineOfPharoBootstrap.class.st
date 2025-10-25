@@ -190,6 +190,7 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			'Clap-Core'.
 			'Clap-CommandLine'.
 			'Clap-Commands-Pharo'.
+			'FileSystem-Path'.
 			'ReflectionMirrors-Primitives'.
 			'System-Time'.
 			'Math-Operations-Extensions'.
@@ -214,7 +215,6 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			'Random-Core'.
 			'System-Hashing'.
 			'Network-UUID'.
-			'FileSystem-Path'.
 			'FileSystem-Core'.
 			'FileSystem-Disk'}.
 
