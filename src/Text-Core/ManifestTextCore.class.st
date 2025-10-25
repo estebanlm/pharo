@@ -9,7 +9,7 @@ Class {
 	#tag : 'Manifest'
 }
 
-{ #category : 'meta-data - dependency analyser' }
+{ #category : 'Protocol (meta-data - dependency analyser) - 1 selector(s)' }
 ManifestTextCore class >> manuallyResolvedDependencies [
-	^ #(#'Fonts-Abstract' #'AST-Core')
+	^ #(#'Fonts-Infrastructure' #'AST-Core' #'Collections-Abstract' #'System-Support')
 ]
