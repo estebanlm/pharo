@@ -160,7 +160,6 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			'Collections-Unordered'.
 			'Collections-Weak'.
 			'Files'.
-			'FileSystem-Path'.
 			'Hermes'.
 			'Kernel'.
 			'Kernel-CodeModel'.
@@ -215,6 +214,7 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			'Random-Core'.
 			'System-Hashing'.
 			'Network-UUID'.
+			'FileSystem-Path'.
 			'FileSystem-Core'.
 			'FileSystem-Disk'}.
 
