@@ -13,9 +13,9 @@ Class {
 		'tagName',
 		'environment'
 	],
-	#category : 'Shift-ClassBuilder-Builder',
-	#package : 'Shift-ClassBuilder',
-	#tag : 'Builder'
+	#category : 'CodeImport-Utilities',
+	#package : 'CodeImport',
+	#tag : 'Utilities'
 }
 
 { #category : 'class initialization' }

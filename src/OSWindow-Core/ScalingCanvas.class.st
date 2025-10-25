@@ -13,9 +13,9 @@ Class {
 	#classVars : [
 		'FormMapping'
 	],
-	#category : 'Graphics-Canvas-Canvases',
-	#package : 'Graphics-Canvas',
-	#tag : 'Canvases'
+	#category : 'OSWindow-Core-Utilities',
+	#package : 'OSWindow-Core',
+	#tag : 'Utilities'
 }
 
 { #category : 'examples' }
@@ -325,9 +325,23 @@ ScalingCanvas class >> privateExampleWithMorph: morph [
 ]
 
 { #category : 'private' }
+ScalingCanvas >> allocateCanvas: extent [
+
+	^ self class formCanvas: (formCanvas allocateCanvas: extent * scale) scale: scale
+]
+
+{ #category : 'private' }
 ScalingCanvas >> allocateForm: extentPoint [
 
 	^ formCanvas allocateForm: extentPoint
+]
+
+{ #category : 'private' }
+ScalingCanvas >> allocateSavedPatch: extent [
+
+	^ ScalingCanvasSavedPatch
+		form: (formCanvas allocateForm: extent * scale)
+		scale: scale
 ]
 
 { #category : 'private' }
@@ -382,6 +396,12 @@ ScalingCanvas >> contentsOfArea: aRectangle into: aForm [
 	^ aForm
 ]
 
+{ #category : 'accessing' }
+ScalingCanvas >> contentsOfArea: aRectangle intoSavedPatch: savedPatch [
+
+	formCanvas contentsOfArea: (aRectangle scaleBy: scale) intoSavedPatch: savedPatch form
+]
+
 { #category : 'copying' }
 ScalingCanvas >> copyClipRect: newClipRect [
 
@@ -398,6 +418,14 @@ ScalingCanvas >> depth [
 ScalingCanvas >> drawFormSet: formSet at: point [
 
 	formCanvas drawImage: (self scaledFormForFormSet: formSet) at: point * scale
+]
+
+{ #category : 'drawing - images' }
+ScalingCanvas >> drawImageOn: aCanvas at: aPoint [
+
+	aCanvas formCanvas drawImage: self form
+		at: aPoint * scale
+		sourceRect: (self form boundingBox scaleBy: scale)
 ]
 
 { #category : 'drawing - polygons' }
@@ -572,6 +600,12 @@ ScalingCanvas >> line: pt1 to: pt2 width: w color: c [
 ]
 
 { #category : 'accessing' }
+ScalingCanvas >> numberOfTransparentPixelsForRoundedCorners [
+
+	^ formCanvas numberOfTransparentPixelsForRoundedCorners * scale * scale
+]
+
+{ #category : 'accessing' }
 ScalingCanvas >> origin [
 
 	^ formCanvas origin / scale
@@ -594,10 +628,42 @@ ScalingCanvas >> paintImage: aForm at: aPoint sourceRect: sourceRect [
 		rule: Form paint
 ]
 
+{ #category : 'drawing - images' }
+ScalingCanvas >> paintImageFromScalingCanvas: aScalingCanvas at: aPoint [
+
+	formCanvas paintImage: aScalingCanvas form at: aPoint * scale
+]
+
+{ #category : 'drawing - images' }
+ScalingCanvas >> paintImageOn: aCanvas at: aPoint [
+
+	aCanvas paintImageFromScalingCanvas: self at: aPoint
+]
+
 { #category : 'drawing' }
 ScalingCanvas >> paragraph: paragraph bounds: bounds color: c [
 
 	formCanvas paragraph: paragraph bounds: (bounds scaleBy: scale) color: c scale: scale
+]
+
+{ #category : 'private' }
+ScalingCanvas >> restoreSavedPatch: savedPatch at: aPoint [
+
+	formCanvas restoreSavedPatch: savedPatch form at: aPoint * scale
+]
+
+{ #category : 'private' }
+ScalingCanvas >> rubParagraph: paragraph bounds: bounds color: c [
+
+	| clippedCanvas currentParagraph |
+	
+	clippedCanvas := self copyClipRect: bounds.
+	currentParagraph := paragraph.
+	[ currentParagraph next isNil ] whileFalse: [
+		(currentParagraph canDrawDecoratorsOn: clippedCanvas) ifFalse: [ ^ self ].
+		currentParagraph drawOn: clippedCanvas.
+		currentParagraph := currentParagraph next ].
+	formCanvas rubParagraph: currentParagraph bounds: (bounds scaleBy: scale) color: c scale: scale
 ]
 
 { #category : 'accessing' }
@@ -638,6 +704,13 @@ ScalingCanvas >> shadowColor [
 ScalingCanvas >> shadowColor: aColor [
 
 	formCanvas shadowColor: aColor
+]
+
+{ #category : 'private' }
+ScalingCanvas >> shadowDrawingCanvasWithExtent: extent shadowColor: shadowColor [
+
+	^ (self class formCanvas: (FormCanvas on: (Form extent: extent * scale depth: 1)) scale: scale)
+		asShadowDrawingCanvas: shadowColor
 ]
 
 { #category : 'drawing - images' }
