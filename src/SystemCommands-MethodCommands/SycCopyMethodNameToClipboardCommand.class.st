@@ -14,7 +14,7 @@ SycCopyMethodNameToClipboardCommand >> applyCommandResult [
 	| text |
 	text := (self methods collect: #displayString) joinUsing: String cr.
 	Clipboard clipboardText: text.
-	self inform: 'Copied methods:' , String cr , text
+	StPharoApplication current inform: 'Copied methods:' , String cr , text
 ]
 
 { #category : 'accessing' }
