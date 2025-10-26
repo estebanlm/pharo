@@ -159,7 +159,6 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			'Collections-Unordered'.
 			'Collections-Weak'.
 			'Files'.
-			'FileSystem-Path'.
 			'Hermes'.
 			'Kernel'.
 			'Kernel-CodeModel'.
@@ -190,6 +189,7 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			'Clap-Core'.
 			'Clap-CommandLine'.
 			'Clap-Commands-Pharo'.
+			'FileSystem-Path'.
 			'ReflectionMirrors-Primitives'.
 			'System-Time'.
 			'Math-Operations-Extensions'.
