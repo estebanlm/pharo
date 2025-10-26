@@ -153,7 +153,6 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			'Collections-DoubleLinkedList'.
 			'Collections-Native'.
 			'Collections-Sequenceable'.
-			'Collections-Stack'.
 			'Collections-Streams'.
 			'Collections-Strings'.
 			'Collections-Support'.
@@ -205,6 +204,7 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			'AST-Core'.
 			'Collections-Arithmetic'.
 			'Collections-Atomic'.
+			'Collections-Stack'.
 			'CodeImport'.
 			'CodeImport-Commands'.
 			'Debugging-Utils'.
