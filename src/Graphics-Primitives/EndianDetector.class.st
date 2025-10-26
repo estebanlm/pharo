@@ -18,8 +18,8 @@ Class {
 	#classVars : [
 		'EndianCache'
 	],
-	#category : 'System-Support-Utilities',
-	#package : 'System-Support',
+	#category : 'Graphics-Primitives-Utilities',
+	#package : 'Graphics-Primitives',
 	#tag : 'Utilities'
 }
 
@@ -41,6 +41,12 @@ EndianDetector class >> calcEndianness [
 EndianDetector class >> endianness [
 
 	^ EndianCache ifNil: [ EndianCache := self calcEndianness ]
+]
+
+{ #category : 'class initialization' }
+EndianDetector class >> initialize [
+
+	SessionManager default registerSystemClassNamed: #EndianDetector
 ]
 
 { #category : 'testing' }
