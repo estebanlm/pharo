@@ -113,7 +113,6 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		spec package: 'Clap-CommandLine'.
 		spec package: 'Clap-Commands-Pharo' .
 		spec package: 'System-CommandLine'.
-		spec package: 'System-CommandLineHandler'.
 		spec package: 'System-Finalization'.
 		spec package: 'System-Hashing'.
 		spec package: 'System-Platforms'.
@@ -169,7 +168,6 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			'System-Announcements'.
 			'System-BasicCommandLineHandler'.
 			'System-CommandLine'.
-			'System-CommandLineHandler'.
 			'System-Finalization'.
 			'System-Platforms'.
 			'System-SessionManager'.

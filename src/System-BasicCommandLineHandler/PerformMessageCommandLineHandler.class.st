@@ -127,7 +127,7 @@ PerformMessageCommandLineHandler >> parseArguments [
 		ifTrue: [ ^ self exitFailure: 'Not enough arguments' ].
 
 	targetClassName := str next.
-	targetClass :=  Smalltalk globals 
+	targetClass :=  self class environment
 		at: targetClassName asSymbol
 		ifAbsent: [ ^ self exitFailure: 'Unknown class ', targetClassName ].
 	message := str next asSymbol.
