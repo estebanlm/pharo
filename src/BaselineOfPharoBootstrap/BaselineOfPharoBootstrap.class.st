@@ -153,14 +153,12 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			'Collections-DoubleLinkedList'.
 			'Collections-Native'.
 			'Collections-Sequenceable'.
-			'Collections-Stack'.
 			'Collections-Streams'.
 			'Collections-Strings'.
 			'Collections-Support'.
 			'Collections-Unordered'.
 			'Collections-Weak'.
 			'Files'.
-			'FileSystem-Path'.
 			'Hermes'.
 			'Kernel'.
 			'Kernel-CodeModel'.
@@ -191,6 +189,7 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			'Clap-Core'.
 			'Clap-CommandLine'.
 			'Clap-Commands-Pharo'.
+			'FileSystem-Path'.
 			'ReflectionMirrors-Primitives'.
 			'System-Time'.
 			'Math-Operations-Extensions'.
@@ -205,6 +204,7 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			'AST-Core'.
 			'Collections-Arithmetic'.
 			'Collections-Atomic'.
+			'Collections-Stack'.
 			'CodeImport'.
 			'CodeImport-Commands'.
 			'Debugging-Utils'.
