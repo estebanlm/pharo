@@ -176,7 +176,6 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			'System-Sources'.
 			
 			'System-Support'.
-			'NumberParser'.
 
 			'UIManager'.
 			'Zinc-Character-Encoding-Core' }.
@@ -207,6 +206,7 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			'CodeImport-Commands'.
 			'Debugging-Utils'.
 			'DebugInfo'.
+			'NumberParser'.
 			'OpalCompiler-Core'}.
 		
 		spec group: 'FileSystemGroup' with: {
