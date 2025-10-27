@@ -1,8 +1,8 @@
 Class {
 	#name : 'CommandLineHandlerTest',
 	#superclass : 'TestCase',
-	#category : 'System-BasicCommandLineHandler-Tests-Base',
-	#package : 'System-BasicCommandLineHandler-Tests',
+	#category : 'System-CommandLineHandler-Tests-Base',
+	#package : 'System-CommandLineHandler-Tests',
 	#tag : 'Base'
 }
 

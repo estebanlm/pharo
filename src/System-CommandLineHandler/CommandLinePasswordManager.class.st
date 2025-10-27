@@ -30,8 +30,8 @@ Class {
 	#classVars : [
 		'Instance'
 	],
-	#category : 'System-BasicCommandLineHandler-Utilities',
-	#package : 'System-BasicCommandLineHandler',
+	#category : 'System-CommandLineHandler-Utilities',
+	#package : 'System-CommandLineHandler',
 	#tag : 'Utilities'
 }
 

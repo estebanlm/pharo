@@ -2,19 +2,19 @@
 Package to provide basic command line handling.
 "
 Class {
-	#name : 'ManifestSystemBasicCommandLineHandler',
+	#name : 'ManifestSystemCommandLineHandler',
 	#superclass : 'PackageManifest',
-	#category : 'System-BasicCommandLineHandler-Manifest',
-	#package : 'System-BasicCommandLineHandler',
+	#category : 'System-CommandLineHandler-Manifest',
+	#package : 'System-CommandLineHandler',
 	#tag : 'Manifest'
 }
 
 { #category : 'meta-data - dependency analyser' }
-ManifestSystemBasicCommandLineHandler class >> ignoredDependencies [
+ManifestSystemCommandLineHandler class >> ignoredDependencies [
 	^ #(#'System-Settings-Core' #StartupPreferences #'System-Hashing')
 ]
 
 { #category : 'meta-data - dependency analyser' }
-ManifestSystemBasicCommandLineHandler class >> manuallyResolvedDependencies [
+ManifestSystemCommandLineHandler class >> manuallyResolvedDependencies [
 	^ #( #'Collections-Abstract' #'FileSystem-Core' #'System-Support' #'Kernel-CodeModel' #'System-Settings-Core' #'Collections-Streams' #'System-Hashing')
 ]
