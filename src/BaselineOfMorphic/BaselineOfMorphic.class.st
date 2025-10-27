@@ -58,7 +58,6 @@ BaselineOfMorphic >> baseline: spec [
 		spec package: 'FileSystem-Zip'.
 		spec package: 'Fonts-Infrastructure'.
 
-		spec package: 'Graphics-Files'.
 		spec package: 'Graphics-Fonts'.
 		spec package: 'Graphics-Shapes'.
 		spec package: 'Growl'.
@@ -253,7 +252,6 @@ BaselineOfMorphic >> postload: loader package: packageSpec [
 		nextPutAll: Smalltalk ui asString;
 		lf.
 
-	PNGReadWriter initialize.
 	self loadBitmapDejaVuSans.
 	self loadBitmapSourcePro.
 
@@ -263,8 +261,8 @@ BaselineOfMorphic >> postload: loader package: packageSpec [
 
 	#( #ProgressBarMorph #FT2Types #FT2FFILibrary #FreeTypeCacheConstants
 	   #FreeTypeCache #FreeTypeSettings #FreeTypeSubPixelAntiAliasedGlyphRenderer
-	   #FT2Constants #GIFReadWriter #GlobalIdentifier #HaloMorph
-	   #CharacterScanner #ImageMorph #JPEGHuffmanTable #JPEGReadStream
+	   #FT2Constants #GlobalIdentifier #HaloMorph
+	   #CharacterScanner #ImageMorph
 	   #Locale #MczInstaller #MD5NonPrimitive #MenuItemMorph
 	   #MenuMorph #RxMatcher #RxParser #RxsPredicate #SHA1
 	   #SystemProgressMorph #SystemWindow #TextContainer
