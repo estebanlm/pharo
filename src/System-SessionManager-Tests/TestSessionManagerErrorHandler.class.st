@@ -1,12 +1,16 @@
+"
+I'm an startup error manager used for test purposes.
+I provide a way to not use the default session manager.
+
+"
 Class {
 	#name : 'TestSessionManagerErrorHandler',
 	#superclass : 'SessionManagerErrorHandler',
 	#instVars : [
 		'sessionManager'
 	],
-	#category : 'Kernel-Exceptions',
-	#package : 'Kernel',
-	#tag : 'Exceptions'
+	#category : 'System-SessionManager-Tests',
+	#package : 'System-SessionManager-Tests'
 }
 
 { #category : 'accessing' }
