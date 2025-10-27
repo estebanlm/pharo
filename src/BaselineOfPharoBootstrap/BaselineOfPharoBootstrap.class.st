@@ -108,9 +108,8 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		spec package: 'ReflectionMirrors-Primitives'.
 		spec package: 'Shift-ClassBuilder'.
 		spec package: 'System-Announcements'.
-		spec package: 'System-BasicCommandLineHandler'.
+		spec package: 'System-CommandLineHandler'.
 		spec package: 'Clap-Core'.
-		spec package: 'Clap-CommandLine'.
 		spec package: 'Clap-Commands-Pharo' .
 		spec package: 'System-CommandLine'.
 		spec package: 'System-Finalization'.
@@ -166,7 +165,7 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			'PharoBootstrap-Initialization'.
 			'Shift-ClassBuilder'.
 			'System-Announcements'.
-			'System-BasicCommandLineHandler'.
+			'System-CommandLineHandler'.
 			'System-CommandLine'.
 			'System-Finalization'.
 			'System-Platforms'.
@@ -184,7 +183,6 @@ BaselineOfPharoBootstrap >> baseline: spec [
 
 		spec group: 'AdditionalPackages' with: {
 			'Clap-Core'.
-			'Clap-CommandLine'.
 			'Clap-Commands-Pharo'.
 			'FileSystem-Path'.
 			'ReflectionMirrors-Primitives'.
