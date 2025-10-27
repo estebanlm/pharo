@@ -16,5 +16,5 @@ Class {
 { #category : 'meta-data - dependency analyser' }
 ManifestFileSystemCore class >> manuallyResolvedDependencies [
 
-	^ #( #'Zinc-Resource-Meta-Core' #'FileSystem-Disk' )
+	^ #(#'FileSystem-Disk' )
 ]
