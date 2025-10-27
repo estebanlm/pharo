@@ -456,27 +456,6 @@ MorphicUIManager >> onFontsChanged [
 	self currentWorld ifNotNil: [ :w | w changed ]
 ]
 
-{ #category : 'events' }
-MorphicUIManager >> onPrimitiveError: aString [
-
-	| message |
-	message := String streamContents: [ :s |
-		           | context |
-		           s nextPutAll: '*** System error handling failed ***'.
-		           s
-			           cr;
-			           nextPutAll: aString.
-		           context := thisContext sender sender.
-		           20 timesRepeat: [
-			           context ifNotNil: [
-				           s
-					           cr;
-					           print: (context := context sender) ] ] ].
-	Stdio stderr << message.
-	"init hands and redisplay"
-	self currentWorld install
-]
-
 { #category : 'accessing' }
 MorphicUIManager >> preferredCornerStyle [
 	^ self theme preferredCornerStyle

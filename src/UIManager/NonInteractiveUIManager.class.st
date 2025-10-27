@@ -311,13 +311,6 @@ NonInteractiveUIManager >> nonInteractiveWarning: aWarnMessage [
 	^ self
 ]
 
-{ #category : 'events' }
-NonInteractiveUIManager >> onPrimitiveError: aString [
-
-	" log error and quit "
-	^ self quitFrom: thisContext sender withMessage: aString
-]
-
 { #category : 'ui TEasilyThemed' }
 NonInteractiveUIManager >> proceed: aStringOrText [
 	"Open a proceed dialog."

@@ -498,10 +498,6 @@ UIManager >> nonInteractiveManager [
 UIManager >> onFontsChanged [
 ]
 
-{ #category : 'events' }
-UIManager >> onPrimitiveError: aString [
-]
-
 { #category : 'ui TEasilyThemed' }
 UIManager >> proceed: aStringOrText [
 	"Open a proceed dialog."
