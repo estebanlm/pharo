@@ -97,8 +97,6 @@ BaselineOfMorphic >> baseline: spec [
 
 		spec package: 'DarkBlueTheme'.
 
-		spec package: 'Images-Animated'.
-
 		spec package: 'Settings-Graphics'.
 		spec package: 'Settings-Polymorph'.
 		spec package: 'Settings-System'.
