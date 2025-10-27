@@ -12,8 +12,8 @@ Class {
 		'stdout',
 		'stderr'
 	],
-	#category : 'System-BasicCommandLineHandler-Base',
-	#package : 'System-BasicCommandLineHandler',
+	#category : 'System-CommandLineHandler-Base',
+	#package : 'System-CommandLineHandler',
 	#tag : 'Base'
 }
 
