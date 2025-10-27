@@ -99,6 +99,13 @@ OpalCompiler class >> evaluate: textOrString [
 		evaluate
 ]
 
+{ #category : 'class initialization' }
+OpalCompiler class >> initialize [
+	"If no compiler is register when I'm loaded, I'll set myself as the compiler of the image."
+
+	SmalltalkImage current compilerClass ifNil: [ self register ]
+]
+
 { #category : 'public' }
 OpalCompiler class >> isActive [
 	^Smalltalk compilerClass == self
@@ -370,11 +377,14 @@ OpalCompiler >> compile [
 	"Policy: compiling is non-faulty by default"
 	self permitFaulty ifNil: [ self permitFaulty: false ].
 
-	ast
-		ifNil: [
-			result := self parse.
-			ast ifNil: [ "some failBlock" ^ result ] ]
-		ifNotNil: [ ast scope ifNil: [ self doSemanticAnalysis ] ].
+	ast ifNil: [
+		result := self parse.
+		ast ifNil: [ "some failBlock" ^ result ] ].
+
+	self callPlugins.
+	(compilationContext isSemanticAnalysisNeeded or: [ ast scope isNil ]) 
+		ifTrue: [ 
+			self doSemanticAnalysis ].
 
 	^ self generateMethod
 ]
@@ -444,6 +454,9 @@ OpalCompiler >> doSemanticAnalysis [
 		compilationContext: self compilationContext;
 		outerScope: self buildOuterScope;
 		analyze: ast.
+		
+	self  compilationContext semanticAnalysisDone.
+	
 	^ ast
 ]
 
@@ -533,9 +546,8 @@ OpalCompiler >> generateIR [
 
 { #category : 'private' }
 OpalCompiler >> generateMethod [
-
 	| method ir |
-	self callPlugins.
+	
 	ast scope registerVariables.
 
 	ast bcToASTCache: nil.

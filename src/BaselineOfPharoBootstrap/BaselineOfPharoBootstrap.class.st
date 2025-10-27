@@ -113,7 +113,6 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		spec package: 'Clap-CommandLine'.
 		spec package: 'Clap-Commands-Pharo' .
 		spec package: 'System-CommandLine'.
-		spec package: 'System-CommandLineHandler'.
 		spec package: 'System-Finalization'.
 		spec package: 'System-Hashing'.
 		spec package: 'System-Platforms'.
@@ -134,6 +133,8 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		
 		spec package: 'Debugging-Utils'.
 		spec package: 'OpalCompiler-Core'.
+		spec package: 'DebugInfo'
+			with: [ spec requires: #( 'OpalCompiler-Core' ) ].
 		
 		spec package: 'FileSystem-Core'.
 		spec package: 'FileSystem-Disk'.
@@ -151,14 +152,12 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			'Collections-DoubleLinkedList'.
 			'Collections-Native'.
 			'Collections-Sequenceable'.
-			'Collections-Stack'.
 			'Collections-Streams'.
 			'Collections-Strings'.
 			'Collections-Support'.
 			'Collections-Unordered'.
 			'Collections-Weak'.
 			'Files'.
-			'FileSystem-Path'.
 			'Hermes'.
 			'Kernel'.
 			'Kernel-CodeModel'.
@@ -169,7 +168,6 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			'System-Announcements'.
 			'System-BasicCommandLineHandler'.
 			'System-CommandLine'.
-			'System-CommandLineHandler'.
 			'System-Finalization'.
 			'System-Platforms'.
 			'System-SessionManager'.
@@ -178,7 +176,6 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			'System-Sources'.
 			
 			'System-Support'.
-			'NumberParser'.
 
 			'UIManager'.
 			'Zinc-Character-Encoding-Core' }.
@@ -189,6 +186,7 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			'Clap-Core'.
 			'Clap-CommandLine'.
 			'Clap-Commands-Pharo'.
+			'FileSystem-Path'.
 			'ReflectionMirrors-Primitives'.
 			'System-Time'.
 			'Math-Operations-Extensions'.
@@ -203,9 +201,12 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			'AST-Core'.
 			'Collections-Arithmetic'.
 			'Collections-Atomic'.
+			'Collections-Stack'.
 			'CodeImport'.
 			'CodeImport-Commands'.
 			'Debugging-Utils'.
+			'DebugInfo'.
+			'NumberParser'.
 			'OpalCompiler-Core'}.
 		
 		spec group: 'FileSystemGroup' with: {

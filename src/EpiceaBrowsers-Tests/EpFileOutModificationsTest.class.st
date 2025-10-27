@@ -57,7 +57,7 @@ EpFileOutModificationsTest >> testFileOutMultipleClassAddition [
 	aClass1 := classFactory newClass.
 	aClass2 := classFactory newClass.
 
-	chunkExporter fileOut: (self allLogEntriesWith: EpClassAddition).
+	self triggerOkActionDuring: [ chunkExporter fileOut: (self allLogEntriesWith: EpClassAddition) ].
 	outputFileReference := chunkExporter outputFileReference.
 
 	chunks := chunkImporter chunksFromFileNamed: outputFileReference fullName.
@@ -83,7 +83,7 @@ EpFileOutModificationsTest >> testFileOutMultipleMethodAddition [
 	aClass compile: 'fortyTwo ^ 42'.
 	aClass compile: 'thirtyTwo ^ 32'.
 
-	chunkExporter fileOut: (self allLogEntriesWith: EpMethodAddition).
+		self triggerOkActionDuring: [ chunkExporter fileOut: (self allLogEntriesWith: EpMethodAddition) ].
 	outputFileReference := chunkExporter outputFileReference.
 
 	chunks := chunkImporter chunksFromFileNamed: outputFileReference fullName.
@@ -115,7 +115,7 @@ EpFileOutModificationsTest >> testFileOutMultipleMethodModification [
 	aClass compile: 'fortyTwo ^ 0.42'.
 	aClass compile: 'fortyTwo ^ 0.042'.	
 
-	chunkExporter fileOut: (self allLogEntriesWith: EpMethodModification).
+	self triggerOkActionDuring: [ chunkExporter fileOut: (self allLogEntriesWith: EpMethodModification) ].
 	outputFileReference := chunkExporter outputFileReference.
 
 	chunks := chunkImporter chunksFromFileNamed: outputFileReference fullName.
@@ -144,7 +144,7 @@ EpFileOutModificationsTest >> testFileOutMultipleMethodRemoval [
 	aClass removeSelector: #fortyTwo.
 	aClass removeSelector: #thirtyTwo.
 
-	chunkExporter fileOut: (self allLogEntriesWith: EpMethodRemoval).
+	self triggerOkActionDuring: [ chunkExporter fileOut: (self allLogEntriesWith: EpMethodRemoval) ].
 	outputFileReference := chunkExporter outputFileReference.
 
 	chunks := chunkImporter chunksFromFileNamed: outputFileReference fullName.
@@ -173,7 +173,7 @@ EpFileOutModificationsTest >> testFileOutSingleClassAddition [
 	| aClass outputFileReference chunks literalNodes |
 	aClass := classFactory newClass.
 
-	chunkExporter fileOut: (self allLogEntriesWith: EpClassAddition).
+	self triggerOkActionDuring: [ chunkExporter fileOut: (self allLogEntriesWith: EpClassAddition) ].
 	outputFileReference := chunkExporter outputFileReference.
 
 	chunks := chunkImporter chunksFromFileNamed: outputFileReference fullName.
@@ -195,7 +195,7 @@ EpFileOutModificationsTest >> testFileOutSingleClassModification [
 	aClass := classFactory newClass.
 	aClass addInstVarNamed: #x.
 
-	chunkExporter fileOut: (self allLogEntriesWith: EpClassModification).
+	self triggerOkActionDuring: [ chunkExporter fileOut: (self allLogEntriesWith: EpClassModification) ].
 	outputFileReference := chunkExporter outputFileReference.
 
 	chunks := chunkImporter chunksFromFileNamed: outputFileReference fullName.
@@ -215,7 +215,7 @@ EpFileOutModificationsTest >> testFileOutSingleClassRemoval [
 	aClass := classFactory newClass.
 	classFactory delete: aClass.
 	
-	chunkExporter fileOut: (self allLogEntriesWith: EpClassRemoval).
+	self triggerOkActionDuring: [ chunkExporter fileOut: (self allLogEntriesWith: EpClassRemoval) ].
 	outputFileReference := chunkExporter outputFileReference.
 
 	chunks := chunkImporter chunksFromFileNamed: outputFileReference fullName.
@@ -235,7 +235,7 @@ EpFileOutModificationsTest >> testFileOutSingleMethodAddition [
 	aClass := classFactory newClass.
 	aClass compile: 'fortyTwo ^ 42'.
 
-	chunkExporter fileOut: (self allLogEntriesWith: EpMethodAddition).
+	self triggerOkActionDuring: [ chunkExporter fileOut: (self allLogEntriesWith: EpMethodAddition) ].
 	outputFileReference := chunkExporter outputFileReference.
 
 	chunks := chunkImporter chunksFromFileNamed: outputFileReference fullName.
@@ -259,10 +259,11 @@ EpFileOutModificationsTest >> testFileOutSingleMethodModificationOfProtocol [
 	aClass compile: 'fortyTwo ^ 42' classified: 'old'.
 	aClass >> #fortyTwo protocol: 'new'.
 
-	chunkExporter fileOut: (self allLogEntriesWith: EpMethodModification).
+	self triggerOkActionDuring: 
+		[ chunkExporter fileOut: (self allLogEntriesWith: EpMethodModification)].
+		
 	outputFileReference := chunkExporter outputFileReference.
-	chunks := chunkImporter chunksFromFileNamed:
-		          outputFileReference fullName.
+	chunks := chunkImporter chunksFromFileNamed: outputFileReference fullName.
 
 	self assert: outputFileReference exists.
 	self assert: chunks size equals: 1.
@@ -280,7 +281,8 @@ EpFileOutModificationsTest >> testFileOutSingleMethodModificationOfSourceCode [
 	aClass compile: 'fortyTwo ^ 42'.
 	aClass compile: 'fortyTwo ^ 0.42'.
 
-	chunkExporter fileOut: (self allLogEntriesWith: EpMethodModification).
+	self triggerOkActionDuring: 
+		[ chunkExporter fileOut: (self allLogEntriesWith: EpMethodModification) ].
 	outputFileReference := chunkExporter outputFileReference.
 
 	chunks := chunkImporter chunksFromFileNamed: outputFileReference fullName.
@@ -306,7 +308,8 @@ EpFileOutModificationsTest >> testFileOutSingleMethodRemoval [
 	aClass compile: 'fortyTwo ^ 42'.
 	aClass removeSelector: #fortyTwo.
 	
-	chunkExporter fileOut: (self allLogEntriesWith: EpMethodRemoval).
+	self triggerOkActionDuring: 
+		[ chunkExporter fileOut: (self allLogEntriesWith: EpMethodRemoval)].
 	outputFileReference := chunkExporter outputFileReference.
 
 	chunks := chunkImporter chunksFromFileNamed: outputFileReference fullName.
@@ -326,12 +329,14 @@ EpFileOutModificationsTest >> testFileOutSingleMethodRemoval [
 EpFileOutModificationsTest >> testFileOutSingleProtocolRemoval [
 
 	| aClass outputFileReference chunks methodNode |
-
+	"I have no idea why the protocol removal is not logged. I checked and the codechange announce it."
+	
 	aClass := classFactory newClass.
 	aClass addProtocol: 'protocol'.
 	aClass removeProtocol: 'protocol'.
 
-	chunkExporter fileOut: (self allLogEntriesWith: EpProtocolRemoval).
+	self triggerOkActionDuring: 
+		[ chunkExporter fileOut: (self allLogEntriesWith: EpProtocolRemoval)] .
 	outputFileReference := chunkExporter outputFileReference.
 
 	chunks := chunkImporter chunksFromFileNamed: outputFileReference fullName.
@@ -351,7 +356,8 @@ EpFileOutModificationsTest >> testFileOutSingleTraitAddition [
 	| aTrait outputFileReference chunks literalNodes |
 	aTrait := classFactory newTrait.
 
-	chunkExporter fileOut: (self allLogEntriesWith: EpTraitAddition).
+	self triggerOkActionDuring: 
+		[ chunkExporter fileOut: (self allLogEntriesWith: EpTraitAddition) ].
 	outputFileReference := chunkExporter outputFileReference.
 
 	chunks := chunkImporter chunksFromFileNamed: outputFileReference fullName.
@@ -373,7 +379,8 @@ EpFileOutModificationsTest >> testFileOutSingleTraitModification [
 	aTrait := classFactory newTrait.
 	aTrait addInstVarNamed: #x.
 
-	chunkExporter fileOut: (self allLogEntriesWith: EpTraitModification).
+	self triggerOkActionDuring: 
+		[ chunkExporter fileOut: (self allLogEntriesWith: EpTraitModification)].
 	outputFileReference := chunkExporter outputFileReference.
 
 	chunks := chunkImporter chunksFromFileNamed: outputFileReference fullName.
@@ -393,7 +400,8 @@ EpFileOutModificationsTest >> testFileOutSingleTraitRemoval [
 	aTrait := classFactory newTrait.
 	classFactory delete: aTrait.
 
-	chunkExporter fileOut: (self allLogEntriesWith: EpTraitRemoval).
+	self triggerOkActionDuring: 
+		[ chunkExporter fileOut: (self allLogEntriesWith: EpTraitRemoval) ].
 	outputFileReference := chunkExporter outputFileReference.
 
 	chunks := chunkImporter chunksFromFileNamed: outputFileReference fullName.
@@ -415,7 +423,8 @@ EpFileOutModificationsTest >> testMethodModificationWithWideString [
 	aClass compile: self wideStringSourceCode.
 	aClass compile: self wideStringSourceCode, ' '.
 
-	chunkExporter fileOut: (self allLogEntriesWith: EpMethodModification).
+	self triggerOkActionDuring: 
+		[ chunkExporter fileOut: (self allLogEntriesWith: EpMethodModification) ].
 	outputFileReference := chunkExporter outputFileReference.
 
 	chunks := chunkImporter chunksFromFileNamed: outputFileReference fullName.
@@ -430,4 +439,12 @@ EpFileOutModificationsTest >> testMethodModificationWithWideString [
 	self 
 		assert: methodNode
 		equals: (OCParser parseMethod: self wideStringSourceCode).
+]
+
+{ #category : 'tests' }
+EpFileOutModificationsTest >> triggerOkActionDuring: aBlock [
+
+	SpWindowSimulateOpenModal 
+		value: [ :pres | pres triggerOkAction ]
+		during: aBlock
 ]

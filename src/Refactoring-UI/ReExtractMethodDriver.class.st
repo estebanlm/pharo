@@ -28,15 +28,13 @@ ReExtractMethodDriver >> breakingChoices [
 	items := OrderedCollection new.
 	
 	(notOverride check and: sameExitPoint check) ifFalse: [
-			items add: (ReRenameMethodChoice new
+			items add: (ReExtractMethodChoice new
 					 driver: self;
-					 description: 'Extract method';
 					 yourself) ].
 
 	notOverride check ifFalse: [ "These choices are exclusive to notOverride"
-			items add: (ReRenameAndBrowseMethodOverridesChoice new
+			items add: (ReExtractAndBrowseMethodOverridesChoice new
 					 driver: self;
-					 description: 'Extract method and browse existing methods that will then be overriden';
 					 yourself).
 			items add: (ReBrowseMethodOverridesChoice new
 					 driver: self;
@@ -49,10 +47,9 @@ ReExtractMethodDriver >> breakingChoices [
 { #category : 'actions' }
 ReExtractMethodDriver >> browseOverrides [
 
-	| conditions overrides |
-	conditions := refactoring failedBreakingChangePreconditions.
-	overrides := conditions flatCollect: [ :cond |
-		             cond violators collect: [ :cls | cls realClass methodNamed: newMessage methodName asSymbol ] ].
+	| overrides |
+	overrides := notOverride violators collect: [ :cls | cls realClass methodNamed: newMessage methodName asSymbol ].
+	
 	overrides do: [ :method | method browse ]
 ]
 
@@ -101,7 +98,7 @@ ReExtractMethodDriver >> configureRefactoring [
 { #category : 'configuration' }
 ReExtractMethodDriver >> defaultSelectDialog [
 
-	^ self class defaultSelectDialog
+	^ super defaultSelectDialog
 		  title: 'There are potential breaking changes!';
 		  label: self labelBasedOnBreakingChanges;
 		  items: self breakingChoices;
@@ -116,6 +113,12 @@ ReExtractMethodDriver >> extract: aString from: compiledMethod in: aClass [
 	class := aClass.
 	sourceMethod := compiledMethod.
 	body := aString
+]
+
+{ #category : 'actions' }
+ReExtractMethodDriver >> extractMethod [
+	
+	^ self applyChanges
 ]
 
 { #category : 'execution' }
@@ -147,14 +150,6 @@ ReExtractMethodDriver >> methodNameEditorPresenterClass [
 ReExtractMethodDriver >> methodNameEditorPresenterClass: aClass [
 
 	methodNameEditorPresenterClass := aClass
-]
-
-{ #category : 'actions' }
-ReExtractMethodDriver >> renameMethod [
-	"Eventhough we are not renaming methods, but extracting them, we implement this action to reuse both
-	ReRenameAndBrowseMethodOverridesChoice and ReRenameMethodChoice"
-
-	^ self applyChanges
 ]
 
 { #category : 'accessing' }
