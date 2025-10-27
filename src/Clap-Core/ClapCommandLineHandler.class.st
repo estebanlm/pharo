@@ -4,8 +4,9 @@ I hook Clap into the existing command-line handlers system.
 Class {
 	#name : 'ClapCommandLineHandler',
 	#superclass : 'CommandLineHandler',
-	#category : 'Clap-CommandLine',
-	#package : 'Clap-CommandLine'
+	#category : 'Clap-Core-Pharo-Integration',
+	#package : 'Clap-Core',
+	#tag : 'Pharo-Integration'
 }
 
 { #category : 'class initialization' }
