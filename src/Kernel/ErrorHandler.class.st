@@ -20,21 +20,3 @@ ErrorHandler class >> defaultErrorHandler: anErrorHandler [
 
 	DefaultErrorHandler := anErrorHandler
 ]
-
-{ #category : 'error handling' }
-ErrorHandler class >> handleError: anError [
-
-	Smalltalk exit: 1
-]
-
-{ #category : 'error handling' }
-ErrorHandler class >> handleNotification: aNotification [
-
-	aNotification resume
-]
-
-{ #category : 'error handling' }
-ErrorHandler class >> handleWarning: aWarning [
-
-	aWarning resume
-]
