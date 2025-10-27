@@ -491,10 +491,6 @@ UIManager >> nonInteractiveManager [
 	^NonInteractiveUIManager beDefault
 ]
 
-{ #category : 'default actions' }
-UIManager >> onFontsChanged [
-]
-
 { #category : 'events' }
 UIManager >> onPrimitiveError: aString [
 ]
