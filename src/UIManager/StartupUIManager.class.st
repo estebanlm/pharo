@@ -31,15 +31,3 @@ StartupUIManager >> handleError: anError log: shouldLog [
 			self sessionManager addDeferredStartupAction: [
 				self uiManager handleError: anError log: false ] ]
 ]
-
-{ #category : 'ui requests' }
-StartupUIManager >> inform: aString [
-
-	self sessionManager
-		addDeferredStartupAction: [ self traceCr: aString ]
-]
-
-{ #category : 'error handling' }
-StartupUIManager >> sessionManager [
-	^ SessionManager default
-]
