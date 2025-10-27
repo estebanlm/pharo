@@ -5,3 +5,9 @@ Class {
 	#package : 'Kernel',
 	#tag : 'Exceptions'
 }
+
+{ #category : 'testing' }
+InteractiveErrorHandler class >> isValidForCurrentSystemConfiguration [
+
+	^ Smalltalk isInteractive
+]

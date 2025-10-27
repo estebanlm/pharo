@@ -273,7 +273,7 @@ BaselineOfMorphic >> postload: loader package: packageSpec [
 	UIManager default: MorphicUIManager new.
 	MorphicUIManager uiProcess resume.
 
-	ErrorHandler defaultErrorHandler: UIManager default.
+	ErrorHandler default: ErrorHandler forCurrentSystemConfiguration.
 
 	self cleanUpAfterMorphicInitialization.
 
@@ -281,7 +281,6 @@ BaselineOfMorphic >> postload: loader package: packageSpec [
 
 	"Install the right UIManager"
 	UIManager default: UIManager forCurrentSystemConfiguration.
-	ErrorHandler defaultErrorHandler: UIManager default.
 	Stdio stdout
 		nextPutAll: 'UIManager changed:';
 		nextPutAll: UIManager default class name;

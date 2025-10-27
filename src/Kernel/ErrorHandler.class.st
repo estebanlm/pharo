@@ -42,6 +42,20 @@ ErrorHandler class >> defaultErrorHandler: anErrorHandler [
 	DefaultErrorHandler := anErrorHandler
 ]
 
+{ #category : 'initialization' }
+ErrorHandler class >> forCurrentSystemConfiguration [
+
+	^ (self allSubclasses
+		   detect: [ :any | any isValidForCurrentSystemConfiguration and: [ any subclasses noneSatisfy: #isValidForCurrentSystemConfiguration ] ]
+		   ifNone: [ NonInteractiveErrorHandler ]) new
+]
+
+{ #category : 'testing' }
+ErrorHandler class >> isValidForCurrentSystemConfiguration [
+
+	^ self subclassResponsibility
+]
+
 { #category : 'error handling' }
 ErrorHandler >> handleError: anError [
 

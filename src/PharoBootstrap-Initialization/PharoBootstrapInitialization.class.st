@@ -54,6 +54,7 @@ PharoBootstrapInitialization class >> initializeCommandLineHandlerAndErrorHandli
 
 	UIManager default: NonInteractiveUIManager new.
 	ErrorHandler defaultErrorHandler: UIManager default.
+	ErrorHandler default: NonInteractiveErrorHandler new.
 
 	InstructionStream initialize.
 
