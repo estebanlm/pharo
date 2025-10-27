@@ -41,3 +41,9 @@ ErrorHandler class >> defaultErrorHandler: anErrorHandler [
 
 	DefaultErrorHandler := anErrorHandler
 ]
+
+{ #category : 'error handling' }
+ErrorHandler >> handleError: anError [
+
+	self handleError: anError log: true
+]
