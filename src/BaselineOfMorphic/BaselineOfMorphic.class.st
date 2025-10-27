@@ -47,6 +47,9 @@ BaselineOfMorphic >> baseline: spec [
 			spec
 				repository: repository;
 				loads: #( 'Core' ) ].
+			
+		spec package: 'System-Identification'.
+		spec package: 'System-Settings-Core' with: [ spec requires: #( 'MorphicCore' 'System-Identification' ) ].
 
 		spec package: 'System-Localization'.
 
@@ -113,8 +116,6 @@ BaselineOfMorphic >> baseline: spec [
 		spec package: 'Text-Diff'.
 		spec package: 'Text-Edition'.
 		spec package: 'Text-Scanning'.
-
-		spec package: 'System-Identification'.
 
 		"Tool-Base extends and uses morphic, so it depends on it"
 		spec package: 'Tool-Base' ]
