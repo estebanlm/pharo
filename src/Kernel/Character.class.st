@@ -265,13 +265,6 @@ Character class >> specialCharacters [
 		   with: self times)
 ]
 
-{ #category : 'queries' }
-Character class >> supportsNonASCII [
-
-	^ (self environment includesKey: #Unicode) and: [
-		((self environment  at: #EncodedCharSet) charsetAt: 255) name = #Unicode ]
-]
-
 { #category : 'constants' }
 Character class >> syntaxCharacters [
 
@@ -865,13 +858,6 @@ Character >> shallowCopy [
 { #category : 'testing - kind' }
 Character >> shouldBePrintedAsLiteral [
 	^ self asInteger between: 33 and: 255
-]
-
-{ #category : 'printing' }
-Character >> storeBinaryOn: aStream [
-	self asInteger < 256
-		ifTrue: [ aStream nextPut: self asInteger ]
-		ifFalse: [ aStream nextInt32Put: self asInteger ]
 ]
 
 { #category : 'storing' }
