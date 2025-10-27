@@ -41,9 +41,68 @@ NonInteractiveErrorHandler >> exitFailure [
 	]
 ]
 
+{ #category : 'error handling' }
+NonInteractiveErrorHandler >> handleError: anError log: shouldLog [
+
+	self quitFrom: anError signalerContext withMessage: anError description
+]
+
+{ #category : 'error handling' }
+NonInteractiveErrorHandler >> handleNotification: aNotification [
+
+	Smalltalk logStdOutDuring: [:logger |
+		logger nextPutAll: aNotification class name;
+				 nextPutAll: ': ';
+				 nextPutAll: aNotification messageText;
+				 cr ].
+
+	aNotification resume
+]
+
+{ #category : 'error handling' }
+NonInteractiveErrorHandler >> handleWarning: aWarning [
+	| logBlock |
+	"Pass all warnings, but log them"
+
+	logBlock := [:logger |
+		logger
+			cr;
+			nextPutAll: '*** Warning: ';
+			nextPutAll: aWarning description;
+			cr ].
+
+	Smalltalk logDuring: logBlock.
+	self logYellowDuring: logBlock.
+
+	aWarning resume
+]
+
 { #category : 'initialization' }
 NonInteractiveErrorHandler >> initialize [
 	doNotQuitOnRestart := false
+]
+
+{ #category : 'error handling' }
+NonInteractiveErrorHandler >> logColored: anAnsiiColorCode during: aBlock [
+
+	Smalltalk logStdErrorDuring: [ :stderr |
+			stderr
+				nextPut: Character escape;
+				nextPut: $[;
+				nextPutAll: anAnsiiColorCode;
+				nextPut: $m.
+
+			aBlock value: stderr.
+
+			stderr
+				nextPut: Character escape;
+				nextPutAll: '[0m' ]
+]
+
+{ #category : 'error handling' }
+NonInteractiveErrorHandler >> logYellowDuring: aBlock [
+
+	^ self logColored: '33' during: aBlock
 ]
 
 { #category : 'events' }

@@ -61,3 +61,31 @@ ErrorHandler >> handleError: anError [
 
 	self handleError: anError log: true
 ]
+
+{ #category : 'error handling' }
+ErrorHandler >> handleError: anError log: shouldLog [
+	"Provide a default handling for unhandled error."
+
+	self subclassResponsibility
+]
+
+{ #category : 'error handling' }
+ErrorHandler >> handleNotification: aNotification [
+
+	"by default, do nothing"
+
+	aNotification resume
+]
+
+{ #category : 'error handling' }
+ErrorHandler >> handleWarning: aWarning [
+	"Handle warning notification. Should be overidden by subclass."
+
+	self subclassResponsibility
+]
+
+{ #category : 'error handling' }
+ErrorHandler >> logError: anError [
+
+	Smalltalk logError: anError messageText inContext: anError signalerContext
+]
