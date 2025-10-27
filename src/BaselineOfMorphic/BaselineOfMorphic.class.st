@@ -103,7 +103,6 @@ BaselineOfMorphic >> baseline: spec [
 
 		spec package: 'System-History'.
 		spec package: 'System-Installers'.
-		spec package: 'System-Settings-Core'.
 		spec package: 'PragmaCollector'.
 		spec package: 'System-Settings-Browser'
 			with: [ spec requires: #( 'PragmaCollector' ) ].

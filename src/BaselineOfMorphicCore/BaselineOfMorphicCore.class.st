@@ -45,6 +45,7 @@ BaselineOfMorphicCore >> baseline: spec [
 		spec package: 'Text-Core' with: [ spec requires: #( 'System-Model' 'Fonts-Abstract') ].
 		spec package: 'Morphic-Core'.
 		spec package: 'System-Model' with: [ spec requires: #( 'Morphic-Core' ) ].
+		spec package: 'System-Settings-Core' with: [ spec requires: #( 'System-Model' 'Display' 'Fonts-Abstract' ) ].
 		spec package: 'System-FileRegistry' with: [ spec requires: #( 'System-Model' ) ] ]
 ]
 
