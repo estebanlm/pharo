@@ -1,3 +1,6 @@
+"
+I am an error handler for non interactive image management
+"
 Class {
 	#name : 'NonInteractiveErrorHandler',
 	#superclass : 'ErrorHandler',

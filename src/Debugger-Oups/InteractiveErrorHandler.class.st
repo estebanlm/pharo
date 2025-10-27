@@ -1,9 +1,11 @@
+"
+I am an error handler calling the emergency debugger to handle unhandled errors.
+"
 Class {
 	#name : 'InteractiveErrorHandler',
 	#superclass : 'ErrorHandler',
-	#category : 'Kernel-Exceptions',
-	#package : 'Kernel',
-	#tag : 'Exceptions'
+	#category : 'Debugger-Oups',
+	#package : 'Debugger-Oups'
 }
 
 { #category : 'testing' }

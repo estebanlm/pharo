@@ -1,9 +1,11 @@
+"
+I am a non interactive error handler used during the startup when the transcript is not yet initialized.
+"
 Class {
 	#name : 'SessionManagerErrorHandler',
 	#superclass : 'NonInteractiveErrorHandler',
-	#category : 'Kernel-Exceptions',
-	#package : 'Kernel',
-	#tag : 'Exceptions'
+	#category : 'System-SessionManager',
+	#package : 'System-SessionManager'
 }
 
 { #category : 'testing' }

@@ -1,9 +1,11 @@
+"
+I am an abstract class delegating error management of unhandled errors to one of my subclass depending on the image state (starting, non interactive, interactive..)
+"
 Class {
 	#name : 'ErrorHandler',
 	#superclass : 'Object',
 	#classVars : [
-		'Default',
-		'DefaultErrorHandler'
+		'Default'
 	],
 	#category : 'Kernel-Exceptions',
 	#package : 'Kernel',
@@ -28,18 +30,6 @@ ErrorHandler class >> default: anErrorManager [
 		nextPutAll: 'New ErrorManager ' , anErrorManager printString , ' replacing ' , Default printString;
 		lf.
 	Default := anErrorManager
-]
-
-{ #category : 'accessing' }
-ErrorHandler class >> defaultErrorHandler [
-
-	^ DefaultErrorHandler ifNil: [ self ]
-]
-
-{ #category : 'accessing' }
-ErrorHandler class >> defaultErrorHandler: anErrorHandler [
-
-	DefaultErrorHandler := anErrorHandler
 ]
 
 { #category : 'initialization' }

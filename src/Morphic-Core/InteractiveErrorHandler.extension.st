@@ -16,7 +16,5 @@ InteractiveErrorHandler >> onPrimitiveError: aString [
 				           s
 					           cr;
 					           print: (context := context sender) ] ] ].
-	Stdio stderr << message.
-	"init hands and redisplay"
-	self currentWorld install
+	Stdio stderr << message
 ]
