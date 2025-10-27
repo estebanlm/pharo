@@ -57,7 +57,7 @@ RBCondition class >> checkInstanceVariableName: aName in: aClass [
 ]
 
 { #category : 'instance creation' }
-RBCondition class >> checkMultipleTemporaryDefinitionsOf: aString in: aClass [
+RBCondition class >> checkNotMultipleTemporaryDefinitionsOf: aString in: aClass [
 
 	| condition |
 	condition := self new.
@@ -65,10 +65,12 @@ RBCondition class >> checkMultipleTemporaryDefinitionsOf: aString in: aClass [
 		block: [
 				| methods |
 				methods := self multipleMethodsDefiningTemporary: aString in: aClass ignore: [ :class :selector | false ].
-				methods size > 1 ifTrue: [
-						condition errorMacro:
-							'More than one method defines temporary variable ' , aString , ': ' , (methods collect: [ :m | m selector ]) asString ].
-				methods size > 1 ]
+				methods size > 1
+					ifTrue: [
+							condition errorMacro:
+								'More than one method defines temporary variable ' , aString , ': ' , (methods collect: [ :m | m selector ]) asString.
+							false ]
+					ifFalse: [ true ] ]
 		errorString: aClass printString , ' <1?:does not >define<1?s:> temporary variable ' , aString.
 	^ condition
 ]
@@ -377,7 +379,7 @@ RBCondition class >> multipleMethodsDefiningTemporary: aString in: aClass ignore
 
 	| searcher methods method |
 	searcher := OCParseTreeSearcher new.
-	methods := OrderedCollection new.
+	methods := Set new.
 	method := nil.
 
 	searcher matches: aString do: [ :aNode :answer | methods add: method ].

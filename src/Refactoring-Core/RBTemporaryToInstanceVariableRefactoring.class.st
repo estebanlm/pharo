@@ -120,12 +120,11 @@ RBTemporaryToInstanceVariableRefactoring >> breakingChangePreconditions [
 							   ('One or more subclasses of <1p> already defines an<n>instance variable with the same name. Proceed anyway?'
 								    expandMacrosWith: class name) ].
 				   true ]).
-		  ((RBCondition checkMultipleTemporaryDefinitionsOf: temporaryVariableName in: class) check ifTrue: [
-				   self refactoringWarning:
-					   ('Two or more methods of <1p> already defines the temporary variable. Proceed anyway?' expandMacrosWith: class name) ]).
+		  (RBCondition checkNotMultipleTemporaryDefinitionsOf: temporaryVariableName in: class).
 		  (ReVariablesNotReadBeforeWrittenCondition new
 			   subtree: parseTree;
-			   variables: temporaryVariableName) }
+			   variables: temporaryVariableName;
+			   checkForTemporaryVariables: true) }
 ]
 
 { #category : 'initialization' }
