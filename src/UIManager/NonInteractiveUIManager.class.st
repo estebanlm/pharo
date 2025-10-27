@@ -41,21 +41,6 @@ NonInteractiveUIManager class >> snapshotErrorImage: aBoolean [
 	SnapshotErrorImage := aBoolean
 ]
 
-{ #category : 'settings' }
-NonInteractiveUIManager class >> uiSettingsOn: aBuilder [
-	<systemsettings>
-	(aBuilder group: #nonInteractive)
-		label: 'Headless mode';
-		parent: #pharoSystem;
-		description: 'Settings related to mode without UI';
-		with: [
-			(aBuilder setting: #snapshotErrorImage)
-				label: 'Snapshot before quitting' ;
-				default: false;
-				target: NonInteractiveUIManager;
-				description: 'On unhandled exception, save a new version of the image before quitting']
-]
-
 { #category : 'ui TEasilyThemed' }
 NonInteractiveUIManager >> abort: aStringOrText [
 
