@@ -17,9 +17,9 @@ Class {
 	#classVars : [
 		'NextImageFormatOptionToUse'
 	],
-	#category : 'System-Support-Image',
-	#package : 'System-Support',
-	#tag : 'Image'
+	#category : 'System-SessionManager-Utilities',
+	#package : 'System-SessionManager',
+	#tag : 'Utilities'
 }
 
 { #category : 'instance creation' }
