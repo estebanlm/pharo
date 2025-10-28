@@ -856,10 +856,3 @@ Float >> significandAsInteger [
 Float >> timesTwoPower: anInteger [
 	^ self subclassResponsibility
 ]
-
-{ #category : 'copying' }
-Float >> veryDeepCopyWith: deepCopier [
-	"Return self.  Do not record me."
-
-	^ self shallowCopy
-]
