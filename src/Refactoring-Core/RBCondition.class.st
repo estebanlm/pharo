@@ -45,6 +45,36 @@ RBCondition class >> checkClassVarName: aName in: aClass [
 ]
 
 { #category : 'utilities' }
+RBCondition class >> checkClassVarName: aName in: aClass validationContext: context [
+
+	| string |
+
+	aName isString ifFalse: [ 
+			context errorMacro: aName printString , ' is not a string'.
+			^ false ].
+
+	string := aName asString.
+
+	(Symbol reservedLiterals includes: string) ifTrue: [
+			context errorMacro: string , ' is a reserved keyword'.
+			^ false ].
+
+	string isEmpty ifTrue: [
+			context errorMacro: 'Class name cannot be empty'.
+			^ false ].
+
+	string first isUppercase ifFalse: [
+			context errorMacro: string , ' must start with an uppercase letter'.
+			^ false ].
+
+	(OCScanner isVariable: string) ifTrue: [
+			context errorMacro: string , ' class already exists !'.
+			^ false ].
+
+	^ true
+]
+
+{ #category : 'utilities' }
 RBCondition class >> checkInstanceVariableName: aName in: aClass [
 
 	| string |
@@ -54,6 +84,25 @@ RBCondition class >> checkInstanceVariableName: aName in: aClass [
 	(Symbol reservedLiterals includes: string) ifTrue: [ ^ false ].
 	string first isUppercase ifTrue: [ ^ false ].
 	^ OCScanner isVariable: string
+]
+
+{ #category : 'instance creation' }
+RBCondition class >> checkNotMultipleTemporaryDefinitionsOf: aString in: aClass [
+
+	| condition |
+	condition := self new.
+	condition
+		block: [
+				| methods |
+				methods := self multipleMethodsDefiningTemporary: aString in: aClass ignore: [ :class :selector | false ].
+				methods size > 1
+					ifTrue: [
+							condition errorMacro:
+								'More than one method defines temporary variable ' , aString , ': ' , (methods collect: [ :m | m selector ]) asString.
+							false ]
+					ifFalse: [ true ] ]
+		errorString: aClass printString , ' <1?:does not >define<1?s:> temporary variable ' , aString.
+	^ condition
 ]
 
 { #category : 'instance creation' }
@@ -302,9 +351,11 @@ RBCondition class >> isSymbol: aString [
 { #category : 'instance creation' }
 RBCondition class >> isValidClassName: aString [
 
-	^ self new
-		  block: [ self checkClassVarName: aString in: self ]
-		  errorString: aString , ' is <1?:not >a valid class name'
+	| validator |
+	validator := self new.
+	^ validator
+		  block: [ self checkClassVarName: aString in: self validationContext: validator ]
+		  errorString: validator errorString  
 ]
 
 { #category : 'instance creation' }
@@ -353,6 +404,25 @@ RBCondition class >> methodDefiningTemporary: aString in: aClass ignore: aBlock 
 				parseTree := class parseTreeForSelector: each.
 				parseTree ifNotNil: [ searcher executeTree: parseTree ] ] ] ].
 	^ nil
+]
+
+{ #category : 'utilities' }
+RBCondition class >> multipleMethodsDefiningTemporary: aString in: aClass ignore: aBlock [
+
+	| searcher methods method |
+	searcher := OCParseTreeSearcher new.
+	methods := Set new.
+	method := nil.
+
+	searcher matches: aString do: [ :aNode :answer | methods add: method ].
+	aClass withAllSubclasses do: [ :class |
+			class selectors do: [ :each |
+					(aBlock value: class value: each) ifFalse: [
+							| parseTree  |
+							method := class methodFor: each.
+							parseTree := class parseTreeForSelector: each.
+							parseTree ifNotNil: [ searcher executeTree: parseTree ] ] ] ].
+	^ methods
 ]
 
 { #category : 'instance creation' }
