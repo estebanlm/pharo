@@ -45,36 +45,6 @@ RBCondition class >> checkClassVarName: aName in: aClass [
 ]
 
 { #category : 'utilities' }
-RBCondition class >> checkClassVarName: aName in: aClass validationContext: context [
-
-	| string |
-
-	aName isString ifFalse: [ 
-			context errorMacro: aName printString , ' is not a string'.
-			^ false ].
-
-	string := aName asString.
-
-	(Symbol reservedLiterals includes: string) ifTrue: [
-			context errorMacro: string , ' is a reserved keyword'.
-			^ false ].
-
-	string isEmpty ifTrue: [
-			context errorMacro: 'Class name cannot be empty'.
-			^ false ].
-
-	string first isUppercase ifFalse: [
-			context errorMacro: string , ' must start with an uppercase letter'.
-			^ false ].
-
-	(OCScanner isVariable: string) ifTrue: [
-			context errorMacro: string , ' class already exists !'.
-			^ false ].
-
-	^ true
-]
-
-{ #category : 'utilities' }
 RBCondition class >> checkInstanceVariableName: aName in: aClass [
 
 	| string |
@@ -351,11 +321,9 @@ RBCondition class >> isSymbol: aString [
 { #category : 'instance creation' }
 RBCondition class >> isValidClassName: aString [
 
-	| validator |
-	validator := self new.
-	^ validator
-		  block: [ self checkClassVarName: aString in: self validationContext: validator ]
-		  errorString: validator errorString  
+	^ self new
+		  block: [ self checkClassVarName: aString in: self ]
+		  errorString: aString , ' is <1?:not >a valid class name'
 ]
 
 { #category : 'instance creation' }
