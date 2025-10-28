@@ -81,12 +81,6 @@ Object >> iconFormSetNamed: aSymbol [
 ]
 
 { #category : '*Morphic-Base' }
-Object >> iconNamed: aSymbol [
-
-	^ Smalltalk ui icons iconNamed: aSymbol
-]
-
-{ #category : '*Morphic-Base' }
 Object >> iconOrThumbnailOfSize: aNumberOrPoint [
 	"Answer an appropiate form to represent the receiver"
 

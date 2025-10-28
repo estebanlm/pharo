@@ -14,8 +14,8 @@ Class {
 		'disposal',
 		'offset'
 	],
-	#category : 'Images-Animated',
-	#package : 'Images-Animated'
+	#category : 'Graphics-Files',
+	#package : 'Graphics-Files'
 }
 
 { #category : 'defaults' }

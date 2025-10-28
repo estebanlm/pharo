@@ -13,9 +13,8 @@ Class {
 	#instVars : [
 		'token'
 	],
-	#category : 'System-Settings-Core-Filter',
-	#package : 'System-Settings-Core',
-	#tag : 'Filter'
+	#category : 'System-Settings-Browser',
+	#package : 'System-Settings-Browser'
 }
 
 { #category : 'filtering' }

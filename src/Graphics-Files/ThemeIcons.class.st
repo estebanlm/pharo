@@ -34,9 +34,8 @@ Class {
 	#classVars : [
 		'Current'
 	],
-	#category : 'Morphic-Base-Theme',
-	#package : 'Morphic-Base',
-	#tag : 'Theme'
+	#category : 'Graphics-Files',
+	#package : 'Graphics-Files'
 }
 
 { #category : 'accessing' }

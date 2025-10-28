@@ -35,7 +35,8 @@ BaselineOfDisplay >> baseline: spec [
 				package: 'Colors';
 				package: 'Graphics-Display Objects';
 				package: 'Graphics-Primitives' with: [ spec requires: 'Graphics-Display Objects' ];
-				package: 'Graphics-Transformations' ]
+				package: 'Graphics-Transformations';
+				package: 'Graphics-Files' ]
 ]
 
 { #category : 'actions' }
