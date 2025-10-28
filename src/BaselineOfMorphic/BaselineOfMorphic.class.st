@@ -47,6 +47,9 @@ BaselineOfMorphic >> baseline: spec [
 			spec
 				repository: repository;
 				loads: #( 'Core' ) ].
+			
+		spec package: 'System-Identification'.
+		spec package: 'System-Settings-Core' with: [ spec requires: #( 'MorphicCore' 'System-Identification' ) ].
 
 		spec package: 'System-Localization'.
 
@@ -57,7 +60,6 @@ BaselineOfMorphic >> baseline: spec [
 		spec package: 'EmbeddedFreeType' with: [ spec requires: 'FreeType' ].
 		spec package: 'FileSystem-Zip'.
 
-		spec package: 'Graphics-Files'.
 		spec package: 'Graphics-Shapes'.
 		spec package: 'Growl'.
 
@@ -96,15 +98,12 @@ BaselineOfMorphic >> baseline: spec [
 
 		spec package: 'DarkBlueTheme'.
 
-		spec package: 'Images-Animated'.
-
 		spec package: 'Settings-Graphics'.
 		spec package: 'Settings-Polymorph'.
 		spec package: 'Settings-System'.
 
 		spec package: 'System-History'.
 		spec package: 'System-Installers'.
-		spec package: 'System-Settings-Core'.
 		spec package: 'PragmaCollector'.
 		spec package: 'System-Settings-Browser'
 			with: [ spec requires: #( 'PragmaCollector' ) ].
@@ -115,8 +114,6 @@ BaselineOfMorphic >> baseline: spec [
 		spec package: 'Text-Diff'.
 		spec package: 'Text-Edition'.
 		spec package: 'Text-Scanning'.
-
-		spec package: 'System-Identification'.
 
 		"Tool-Base extends and uses morphic, so it depends on it"
 		spec package: 'Tool-Base' ]
@@ -149,12 +146,10 @@ BaselineOfMorphic >> postload: loader package: packageSpec [
 		nextPutAll: Smalltalk ui asString;
 		lf.
 
-	PNGReadWriter initialize.
-
 	#( #ProgressBarMorph #FT2Types #FT2FFILibrary #FreeTypeCacheConstants
 	   #FreeTypeCache #FreeTypeSettings #FreeTypeSubPixelAntiAliasedGlyphRenderer
-	   #FT2Constants #GIFReadWriter #GlobalIdentifier #HaloMorph
-	   #CharacterScanner #ImageMorph #JPEGHuffmanTable #JPEGReadStream
+	   #FT2Constants #GlobalIdentifier #HaloMorph
+	   #CharacterScanner #ImageMorph
 	   #Locale #MczInstaller #MD5NonPrimitive #MenuItemMorph
 	   #MenuMorph #RxMatcher #RxParser #RxsPredicate #SHA1
 	   #SystemProgressMorph #SystemWindow #TextContainer

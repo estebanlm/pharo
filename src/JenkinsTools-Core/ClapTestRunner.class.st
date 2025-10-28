@@ -61,7 +61,7 @@ ClapTestRunner >> addPackagesMatchingRegex: aString to: aSet [
 { #category : 'execution' }
 ClapTestRunner >> execute [
 	
-	super execute.
+	self prepareImageAndExit.
 	self runPackages
 ]
 
