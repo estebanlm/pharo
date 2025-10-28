@@ -153,14 +153,6 @@ NonInteractiveUIManager >> edit: aText label: labelString accept: aBlockOrNil [
 		s cr; nextPutAll: aText])
 ]
 
-{ #category : 'handle debug requests' }
-NonInteractiveUIManager >> handleWarningDebugRequest: aDebugRequest fromDebuggerSystem: anOupsDebuggerSystem [
-
-	anOupsDebuggerSystem
-		warningRequest: aDebugRequest
-		withUIManager: self
-]
-
 { #category : 'ui requests' }
 NonInteractiveUIManager >> inform: aString [
 

@@ -380,13 +380,6 @@ UIManager >> edit: aText label: labelString accept: aBlockOrNil [
 	^self subclassResponsibility
 ]
 
-{ #category : 'debug requests' }
-UIManager >> handleWarningDebugRequest: aWarningDebugRequest fromDebuggerSystem: anOupsDebuggerSystem [
-	"Handle warning notification. Should be overidden by subclass."
-
-	self subclassResponsibility
-]
-
 { #category : 'ui requests' }
 UIManager >> inform: aString [
 	"Display a message for the user to read and then dismiss."

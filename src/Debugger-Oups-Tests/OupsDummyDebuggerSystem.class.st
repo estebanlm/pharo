@@ -59,7 +59,7 @@ OupsDummyDebuggerSystem >> suspendDebuggedProcess: aDebugRequest [
 ]
 
 { #category : 'open debugger' }
-OupsDummyDebuggerSystem >> warningRequest: aDebugRequest withUIManager: aCommandLineUIManager [
+OupsDummyDebuggerSystem >> warningRequest: aDebugRequest withErrorHandler: errorHandler [
 
 	self openDebuggerOnRequest: aDebugRequest
 ]

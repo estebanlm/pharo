@@ -111,7 +111,7 @@ OupsDebuggerSystem >> suspendDebuggedProcess: aDebugRequest [
 ]
 
 { #category : 'open debugger' }
-OupsDebuggerSystem >> warningRequest: aDebugRequest withUIManager: aCommandLineUIManager [
+OupsDebuggerSystem >> warningRequest: aDebugRequest withErrorHandler: errorHandler [
 
-	aCommandLineUIManager handleWarning: aDebugRequest exception
+	errorHandler handleWarning: aDebugRequest exception
 ]

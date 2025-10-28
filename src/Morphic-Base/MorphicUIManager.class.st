@@ -324,12 +324,6 @@ MorphicUIManager >> enterOrRequestFrom: labelList values: valueList lines: lines
 		lines: linesArray
 ]
 
-{ #category : 'handle debug requests' }
-MorphicUIManager >> handleWarningDebugRequest: aWarningDebugRequest fromDebuggerSystem: anOupsDebuggerSystem [
-	<debuggerCompleteToSender>
-	anOupsDebuggerSystem openDebuggerOnRequest: aWarningDebugRequest
-]
-
 { #category : 'ui requests' }
 MorphicUIManager >> inform: aStringOrText [
 	"Display a message for the user to read and then dismiss."

@@ -34,3 +34,10 @@ InteractiveErrorHandler >> handleWarning: aWarning [
 
 	(OupsWarningRequest newForException: aWarning) submit
 ]
+
+{ #category : 'error handling' }
+InteractiveErrorHandler >> handleWarningDebugRequest: aWarningDebugRequest fromDebuggerSystem: anOupsDebuggerSystem [
+
+	<debuggerCompleteToSender>
+	anOupsDebuggerSystem openDebuggerOnRequest: aWarningDebugRequest
+]
