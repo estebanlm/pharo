@@ -226,6 +226,7 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		}.
 
 		spec group: 'SUnitGroup' with: {
+			'Deprecation'.
 			'SUnit-Core'.
 			'SUnit-Tests'.
 			'Kernel-Tests'.
