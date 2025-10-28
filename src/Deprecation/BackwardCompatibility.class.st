@@ -33,8 +33,8 @@ Check class side for posible configurations. You can ignore, raise warning, log 
 Class {
 	#name : 'BackwardCompatibility',
 	#superclass : 'AutomaticRewriting',
-	#category : 'Kernel-Exceptions',
-	#package : 'Kernel',
+	#category : 'Deprecation-Exceptions',
+	#package : 'Deprecation',
 	#tag : 'Exceptions'
 }
 

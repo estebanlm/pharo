@@ -32,8 +32,8 @@ Check the class side for configurations. You can raise, ignore, log and rewrite 
 Class {
 	#name : 'Deprecation',
 	#superclass : 'AutomaticRewriting',
-	#category : 'Kernel-Exceptions',
-	#package : 'Kernel',
+	#category : 'Deprecation-Exceptions',
+	#package : 'Deprecation',
 	#tag : 'Exceptions'
 }
 

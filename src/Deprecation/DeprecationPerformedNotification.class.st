@@ -4,7 +4,7 @@ I am a notificaton about an operation that was performed as reaction of a Deprec
 Class {
 	#name : 'DeprecationPerformedNotification',
 	#superclass : 'SystemNotification',
-	#category : 'Kernel-Exceptions',
-	#package : 'Kernel',
+	#category : 'Deprecation-Exceptions',
+	#package : 'Deprecation',
 	#tag : 'Exceptions'
 }

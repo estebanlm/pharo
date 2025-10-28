@@ -390,19 +390,6 @@ Object >> attemptToAssign: value withIndex: index [
 	"CAN'T REACH"
 ]
 
-{ #category : 'deprecation' }
-Object >> backwardCompatible: anExplanationString on: date in: version transformWith: aRule [
-	"Automatically transform the backward compatible calls to this method"
-
-	BackwardCompatibility new
-		context: thisContext sender;
-		explanation: anExplanationString;
-		date: date;
-		version: version;
-		rule: aRule;
-		signal
-]
-
 { #category : 'accessing' }
 Object >> basicAt: index [
 	"Primitive. Assumes receiver is indexable. Answer the value of an
@@ -623,85 +610,6 @@ It doesn't handle cycles, #veryDeepCopy does. In the future we will make it hand
 			[newObject instVarAt: index put: (self instVarAt: index) deepCopy.
 			index := index - 1].
 	^newObject
-]
-
-{ #category : 'deprecation' }
-Object >> deprecated: anExplanationString [
-	"Warn that the sending method has been deprecated."
-
-	Deprecation new
-		context: thisContext sender;
-		explanation: anExplanationString;
-		signal
-]
-
-{ #category : 'deprecation' }
-Object >> deprecated: anExplanationString on: date in: version [
-	"Warn that the sending method has been deprecated."
-
-	Deprecation new
-		context: thisContext sender;
-		explanation: anExplanationString;
-		date: date;
-		version: version;
-		signal
-]
-
-{ #category : 'deprecation' }
-Object >> deprecated: anExplanationString 
-	on: date 
-	in: version 
-	transformWith: aRule [
-	"Automatically transform the deprecated calls."
-
-	Deprecation new
-		context: thisContext sender;
-		explanation: anExplanationString;
-		date: date;
-		version: version;
-		rule: aRule;
-		signal
-]
-
-{ #category : 'deprecation' }
-Object >> deprecated: anExplanationString 
-	on: date 
-	in: version 
-	transformWith: aRule 
-	when: conditionBlock [
-	"Automatically transform the deprecated call if it matches the condition."
-
-	Deprecation new
-		context: thisContext sender;
-		explanation: anExplanationString;
-		date: date;
-		version: version;
-		rule: aRule;
-		condition: conditionBlock;
-		signal
-]
-
-{ #category : 'deprecation' }
-Object >> deprecated: anExplanationString transformWith: aRule [
-	"Automatically transform the deprecated call."
-
-	Deprecation new
-		context: thisContext sender;
-		explanation: anExplanationString;
-		rule: aRule;
-		signal
-]
-
-{ #category : 'deprecation' }
-Object >> deprecated: anExplanationString transformWith: aRule when: conditionBlock [
-	"Automatically transform the deprecated call if it matches the condition."
-
-	Deprecation new
-		context: thisContext sender;
-		explanation: anExplanationString;
-		rule: aRule;
-		condition: conditionBlock;
-		signal
 ]
 
 { #category : 'displaying' }
