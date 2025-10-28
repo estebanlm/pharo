@@ -267,9 +267,7 @@ BaselineOfMorphic >> postload: loader package: packageSpec [
 	   #TextDiffBuilder #ThumbnailMorph #TransferMorph #UITheme )
 		do: [ :each | (Smalltalk globals at: each) initialize ].
 
-	UIManager default terminateUIProcess.
 	MorphicUIManager new spawnNewProcess.
-
 	UIManager default: MorphicUIManager new.
 	MorphicUIManager uiProcess resume.
 
