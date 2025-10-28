@@ -42,6 +42,12 @@ UIManager class >> forCurrentSystemConfiguration [
 			new
 ]
 
+{ #category : 'class initialization' }
+UIManager class >> initialize [
+
+	SessionManager default registerSystemClassNamed: self name
+]
+
 { #category : 'initialization' }
 UIManager class >> isActiveManager [
 	"Answer whether I should act as the active UI manager."
@@ -62,6 +68,14 @@ UIManager class >> nonInteractiveDuring: aBlock [
 	currentManager nonInteractiveManager.
 
 	aBlock ensure: [ currentManager beDefault ]
+]
+
+{ #category : 'handlers' }
+UIManager class >> startUp: isImageStarting [
+	"Install the right UIManager"
+
+	isImageStarting ifFalse: [ ^ false ].
+	self default: self forCurrentSystemConfiguration
 ]
 
 { #category : 'ui TEasilyThemed' }
