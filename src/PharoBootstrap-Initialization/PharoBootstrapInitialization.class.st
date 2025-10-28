@@ -51,8 +51,6 @@ PharoBootstrapInitialization class >> initializeCommandLineHandlerAndErrorHandli
 		at: #Transcript
 		put: (NonInteractiveTranscript stdout install).
 
-
-	UIManager default: NonInteractiveUIManager new.
 	ErrorHandler default: NonInteractiveErrorHandler new.
 
 	InstructionStream initialize.
