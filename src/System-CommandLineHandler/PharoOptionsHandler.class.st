@@ -30,8 +30,8 @@ Class {
 	#classVars : [
 		'ShouldIgnorePreferences'
 	],
-	#category : 'System-BasicCommandLineHandler',
-	#package : 'System-BasicCommandLineHandler'
+	#category : 'System-CommandLineHandler',
+	#package : 'System-CommandLineHandler'
 }
 
 { #category : 'accessing' }

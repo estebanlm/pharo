@@ -67,7 +67,7 @@ BaselineOfGeneralTests >> baseline: spec [
 			"requires Zinc-Resource-Meta-Tests"package:
 			'System-Identification-Tests';
 			package: 'System-Dependencies-Tests';
-			package: 'System-BasicCommandLineHandler-Tests';
+			package: 'System-CommandLineHandler-Tests';
 			package: 'Transcript-NonInteractive-Tests';
 			package: 'PharoDocComment-Tests' "standalone" ]
 ]

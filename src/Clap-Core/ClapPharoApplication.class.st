@@ -4,8 +4,9 @@ I am an abstract class providing some support to Pharo commands available from c
 Class {
 	#name : 'ClapPharoApplication',
 	#superclass : 'ClapApplication',
-	#category : 'Clap-CommandLine',
-	#package : 'Clap-CommandLine'
+	#category : 'Clap-Core-Pharo-Integration',
+	#package : 'Clap-Core',
+	#tag : 'Pharo-Integration'
 }
 
 { #category : 'adding' }
@@ -31,6 +32,28 @@ ClapPharoApplication class >> addSaveFlagTo: aCommandSpec [
 	aCommandSpec addFlag: #save description: 'Save the image after the command terminates'
 ]
 
+{ #category : 'command line' }
+ClapPharoApplication class >> commandSpecification [
+	^ (ClapRoot id: #clap)
+		description: 'Pharo command line entry point.';
+		commandClass: self;
+		canonicalName: '<subcommand>';
+		addHelp;
+		add: ClapCommandSpec forHelp;
+		addFlag: #'no-default-preferences' description: 'do not load any preferences from the default locations';
+		addFlag: #'preferences-file' withPositional: #'FILE' description: 'load the preferences from the given <FILE>';
+		addFlag: #version description: 'print the version for the image and the vm';
+
+		" for now, flags are defined in subcommands
+		addFlag: #save description: 'Save the image after the command terminates';
+		addFlag: #noSave description: 'Do not save the image even if the command is stateful';
+		addFlag: #rename 
+			description: 'Rename the image as <NAME> before running the command' 
+			positionalSpec: [ :spec | spec identifier: #NAME];
+		addFlag: #keepAlive description: 'Keep the image running after the command terminates';"
+		yourself
+]
+
 { #category : 'execution' }
 ClapPharoApplication >> doNotQuitImage [ 
 
@@ -40,14 +63,28 @@ ClapPharoApplication >> doNotQuitImage [
 { #category : 'execution' }
 ClapPharoApplication >> execute [
 
-	self prepareImage.
-	self shouldQuit ifFalse: [ self doNotQuitImage ]
+	(self hasFlag: #version) 
+		ifTrue: [ self runPharoVersionCommand ]
 ]
 
 { #category : 'private - printing' }
 ClapPharoApplication >> inform: aString [
 
 	self outputStreamDo: [ :out | out << aString << OSPlatform current lineEnding ]
+]
+
+{ #category : 'private' }
+ClapPharoApplication >> pharoVersionContext [
+	
+	"To avoid a hard dependency on ClapPharoVersion, we instead re-run the matching with arguments 
+	that should end in the ClapPharoVersion subcommand"
+	
+	^ (ClapContext specification: context specification)
+		arguments: #('printVersion' '--full');
+		setStdio: context stdio;
+		match;
+		validateAll;
+		yourself
 ]
 
 { #category : 'execution' }
@@ -60,6 +97,19 @@ ClapPharoApplication >> prepareImage [
 				changeImagePathTo: imageFile;
 				closeSourceFiles;
 				openSourceFiles ]
+]
+
+{ #category : 'execution' }
+ClapPharoApplication >> prepareImageAndExit [
+
+	self prepareImage.
+	self shouldQuit ifFalse: [ self doNotQuitImage ]
+]
+
+{ #category : 'execution' }
+ClapPharoApplication >> runPharoVersionCommand [
+	
+	self pharoVersionContext command executeOrPrintHelp
 ]
 
 { #category : 'execution' }
