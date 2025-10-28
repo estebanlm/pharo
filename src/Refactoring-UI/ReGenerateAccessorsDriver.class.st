@@ -7,6 +7,9 @@ It uses the `RBGenerateEqualHashTransformation`.
 Class {
 	#name : 'ReGenerateAccessorsDriver',
 	#superclass : 'ReGenerateMethodDriver',
+	#instVars : [
+		'scopeInstanceSide'
+	],
 	#category : 'Refactoring-UI-Drivers',
 	#package : 'Refactoring-UI',
 	#tag : 'Drivers'
@@ -30,12 +33,9 @@ ReGenerateAccessorsDriver >> configureRefactoring [
 { #category : 'initialization' }
 ReGenerateAccessorsDriver >> refactoringForSlot: aSlot [
 
-	| isClassVariable |
-	isClassVariable := self targetClass realClass class slotNames includes: aSlot.
-
-	^ isClassVariable
-		  ifTrue: [ self refactoringClass model: model classVariable: aSlot class: self targetClass name ]
-		  ifFalse: [ self refactoringClass model: model instanceVariable: aSlot class: self targetClass name ] 
+	^ scopeInstanceSide
+		  ifFalse: [ self refactoringClass model: model classVariable: aSlot class: self targetClass name ]
+		  ifTrue: [ self refactoringClass model: model instanceVariable: aSlot class: self targetClass name ]
 ]
 
 { #category : 'configuration' }
@@ -43,6 +43,12 @@ ReGenerateAccessorsDriver >> runRefactoring [
 
 	self configureRefactoring.
 	self applyChanges
+]
+
+{ #category : 'accessing' }
+ReGenerateAccessorsDriver >> scopeInstanceSide: aBoolean [
+
+	scopeInstanceSide := aBoolean
 ]
 
 { #category : 'configuration' }

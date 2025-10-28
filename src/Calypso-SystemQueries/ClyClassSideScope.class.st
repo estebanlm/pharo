@@ -14,9 +14,20 @@ ClyClassSideScope class >> defaultName [
 	^'class side'
 ]
 
+{ #category : 'testing' }
+ClyClassSideScope class >> isInstanceSide [
+
+	^ false
+]
+
 { #category : 'class selection' }
 ClyClassSideScope class >> metaLevelOf: aClass [
 	^aClass classSide
+]
+
+{ #category : 'testing' }
+ClyClassSideScope >> isInstanceSide [
+	^ self class isInstanceSide
 ]
 
 { #category : 'queries' }

@@ -22,13 +22,14 @@ SycGenerateVariableAccessorCommand >> defaultMenuItemName [
 
 { #category : 'execution' }
 SycGenerateVariableAccessorCommand >> execute [
-	
-	(ReGenerateAccessorsDriver new 
-		targetClass: variables first definingClass;
-		scopes: toolContext refactoringScopes;
-		selectedVariables: (variables collect: [:each | each name ]) ) runRefactoring
-	
 
+	(ReGenerateAccessorsDriver new
+		 targetClass: variables first definingClass;
+		 scopes: toolContext refactoringScopes;
+		 scopeInstanceSide: ((toolContext respondsTo: #metaLevelScope)
+				  ifTrue: [ toolContext metaLevelScope isInstanceSide ]
+				  ifFalse: [ toolContext isInstanceSide ]);
+		 selectedVariables: (variables collect: [ :each | each name ])) runRefactoring
 ]
 
 { #category : 'factory method' }
