@@ -26,9 +26,6 @@ UIManager class >> default [
 { #category : 'initialization' }
 UIManager class >> default: aUIManager [
 
-	Stdio stdout
-		nextPutAll: 'New UIManager: ' , aUIManager printString , ' replacing ' , Default printString;
-		lf.
 	Default ifNotNil: [ :mgr | mgr deactivate ].
 	Default := aUIManager.
 	Default activate

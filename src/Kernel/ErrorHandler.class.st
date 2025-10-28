@@ -26,9 +26,6 @@ ErrorHandler class >> default [
 { #category : 'accessing' }
 ErrorHandler class >> default: anErrorManager [
 
-	Stdio stdout
-		nextPutAll: 'New ErrorManager ' , anErrorManager printString , ' replacing ' , Default printString;
-		lf.
 	Default := anErrorManager
 ]
 
