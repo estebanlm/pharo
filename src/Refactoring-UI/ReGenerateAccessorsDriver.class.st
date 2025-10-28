@@ -20,15 +20,22 @@ ReGenerateAccessorsDriver class >> refactoringClass [
 
 { #category : 'configuration' }
 ReGenerateAccessorsDriver >> configureRefactoring [
-		
+
 	refactoring := ReUpFrontPreconditionCheckingCompositeRefactoring new
-							model: model; 
-							refactorings: (selectedVariables collect: [:each | 
-									self refactoringClass 
-										model: model 
-										instanceVariable: each 
-										class: self targetClass name ]);
-								yourself.
+		               model: model;
+		               refactorings: (selectedVariables collect: [ :eachSlot | self refactoringForSlot: eachSlot ]);
+		               yourself
+]
+
+{ #category : 'initialization' }
+ReGenerateAccessorsDriver >> refactoringForSlot: aSlot [
+
+	| isClassVariable |
+	isClassVariable := self targetClass realClass class slotNames includes: aSlot.
+
+	^ isClassVariable
+		  ifTrue: [ self refactoringClass model: model classVariable: aSlot class: self targetClass name ]
+		  ifFalse: [ self refactoringClass model: model instanceVariable: aSlot class: self targetClass name ] 
 ]
 
 { #category : 'configuration' }
