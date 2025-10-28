@@ -61,14 +61,8 @@ ClapTestRunner >> addPackagesMatchingRegex: aString to: aSet [
 { #category : 'execution' }
 ClapTestRunner >> execute [
 	
-	super execute.
+	self prepareImageAndExit.
 	self runPackages
-]
-
-{ #category : 'private - printing' }
-ClapTestRunner >> inform: aString [
-
-	self outputStreamDo: [ :out | out << aString << OSPlatform current lineEnding ]
 ]
 
 { #category : 'private - printing' }
