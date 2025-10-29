@@ -663,8 +663,3 @@ Symbol >> valueWithArguments: aCollection [
 
 	^ aCollection first perform: self withArguments: aCollection allButFirst
 ]
-
-{ #category : 'copying' }
-Symbol >> veryDeepCopyWith: deepCopier [
-	"Return self.  I am immutable in the Morphic world.  Do not record me."
-]

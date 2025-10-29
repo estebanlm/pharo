@@ -899,9 +899,3 @@ Character >> tokenish [
 Character >> uppercase [
 	^ self asUppercase
 ]
-
-{ #category : 'copying' }
-Character >> veryDeepCopyWith: deepCopier [
-	"Answer the receiver, because Characters are unique."
-	^self
-]
