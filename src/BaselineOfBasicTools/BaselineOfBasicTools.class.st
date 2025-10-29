@@ -39,7 +39,10 @@ BaselineOfBasicTools >> baseline: spec [
 		spec postLoadDoIt: #postload:package:.
 
 		spec
-			baseline: 'SUnit' with: [ spec repository: repository ];
+				baseline: 'SUnit' with: [
+						spec
+							loads: 'Core';
+							repository: repository ];
 			baseline: 'UI' with: [ spec repository: repository ];
 			baseline: 'Reflectivity' with: [ spec repository: repository ];
 			baseline: 'DebugPoints' with: [ spec repository: repository ];

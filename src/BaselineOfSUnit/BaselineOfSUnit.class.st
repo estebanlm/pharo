@@ -18,9 +18,9 @@ Class {
 }
 
 { #category : 'accessing' }
-BaselineOfSUnit class >> defaultPackageNames [
+BaselineOfSUnit class >> corePackageNames [
 
-	^ self packagesOfGroupNamed: #default
+	^ self packagesOfGroupNamed: #Core
 ]
 
 { #category : 'baselines' }
@@ -50,14 +50,12 @@ BaselineOfSUnit >> baseline: spec [
 
 			"Custom groups"				
 			spec
-				group: 'Core' with: #('SUnit-Core' 'SUnit-Core-Traits' 'SUnit-Visitor');
-				group: 'MockObjects' with: #('SUnit-MockObjects');
+				group: 'Core' with: #('SUnit-Core' 'SUnit-Core-Traits' 'SUnit-Visitor' 'SUnit-MockObjects' 'JenkinsTools-Core' 'JenkinsTools-ExtraReports');
 				group: 'UI' with: #('SUnit-UI' 'Coverage');
-				group: 'Tests' with: #('SUnit-Tests' 'SUnit-Visitor-Tests' 'SUnit-MockObjects-Tests' 'Coverage-Tests' 'JenkinsTools-Tests');
-				group: 'JenkinsSupport' with: #('JenkinsTools-Core' 'JenkinsTools-ExtraReports').
+				group: 'Tests' with: #('SUnit-Tests' 'SUnit-Visitor-Tests' 'SUnit-MockObjects-Tests' 'Coverage-Tests' 'JenkinsTools-Tests').
 
 			"Virtual groups"	
 			spec
-				group: 'all' with: #('Core' 'MockObjects' 'UI' 'Tests' 'JenkinsSupport');
-				group: 'default' with: #('SUnit-Core' 'SUnit-Core-Traits' 'SUnit-Tests' 'JenkinsTools-Core' 'JenkinsTools-ExtraReports' 'SUnit-MockObjects') ]
+				group: 'all' with: #('Core' 'UI' 'Tests');
+				group: 'default' with: #('Core') ]
 ]

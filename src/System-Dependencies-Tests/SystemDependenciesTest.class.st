@@ -278,7 +278,7 @@ SystemDependenciesTest >> testExternalMorphicCoreDependencies [
 		self tonelCorePackageNames,
 		BaselineOfUI debuggerBaseUIPackageNames,
 		BaselineOfTraits corePackages,
-		BaselineOfSUnit defaultPackageNames,
+		BaselineOfSUnit corePackageNames,
 		BaselineOfDisplay allPackageNames,
 		BaselineOfUnifiedFFI allPackageNames,
 		BaselineOfFonts allPackageNames,
@@ -298,7 +298,7 @@ SystemDependenciesTest >> testExternalMorphicDependencies [
 		self tonelCorePackageNames,
 		BaselineOfUI debuggerBaseUIPackageNames,
 		BaselineOfTraits corePackages,
-		BaselineOfSUnit defaultPackageNames,
+		BaselineOfSUnit corePackageNames,
 		BaselineOfDisplay allPackageNames,
 		BaselineOfUnifiedFFI allPackageNames,
 		BaselineOfFonts allPackageNames,
@@ -323,7 +323,7 @@ SystemDependenciesTest >> testExternalSUnitDependencies [
 		BaselineOfTraits corePackages,
 		self metacelloPackageNames,
 		self tonelCorePackageNames,
-		BaselineOfSUnit defaultPackageNames).
+		BaselineOfSUnit corePackageNames).
 
 	self assertCollection: dependencies hasSameElements: self knownSUnitDependencies
 ]
@@ -375,8 +375,7 @@ SystemDependenciesTest >> testExternalSpec2Dependencies [
 		(BaselineOfSpec2 deepPackagesOfGroupNamed: #default),
 		BaselineOfThreadedFFI corePackageNames,
 
-		"Tests"
-		BaselineOfSUnit defaultPackageNames))
+		BaselineOfSUnit corePackageNames))
 			copyWithoutAll: self knownMorphicDependencies, self knownBasicToolsDependencies, self knownUIDependencies.
 
 	self assertEmpty: dependencies
@@ -391,7 +390,7 @@ SystemDependenciesTest >> testExternalUFFIDependencies [
 		self metacelloPackageNames,
 		self tonelCorePackageNames,
 		BaselineOfTraits corePackages,
-		BaselineOfSUnit defaultPackageNames,
+		BaselineOfSUnit corePackageNames,
 		BaselineOfUnifiedFFI allPackageNames,
 		BaselineOfThreadedFFI corePackageNames).
 
@@ -408,7 +407,7 @@ SystemDependenciesTest >> testExternalUIDependencies [
 		self tonelCorePackageNames,
 		BaselineOfUI allPackageNames,
 		BaselineOfTraits corePackages,
-		BaselineOfSUnit defaultPackageNames,
+		BaselineOfSUnit corePackageNames,
 		BaselineOfDisplay allPackageNames,
 		BaselineOfUnifiedFFI allPackageNames,
 		BaselineOfFonts allPackageNames,
