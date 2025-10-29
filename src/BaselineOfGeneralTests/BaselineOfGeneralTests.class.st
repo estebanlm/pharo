@@ -40,6 +40,7 @@ BaselineOfGeneralTests >> baseline: spec [
 					loads: #Tests ];
 			package: 'Graphics-Tests';
 			package: 'Text-Tests';
+			package: 'Morphic-Testing-Support';
 			package: 'Morphic-Tests';
 			package: 'Morphic-Widgets-FastTable-Tests';
 			package: 'NECompletion-Tests';
