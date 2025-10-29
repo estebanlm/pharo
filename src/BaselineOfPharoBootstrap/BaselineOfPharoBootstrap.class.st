@@ -176,12 +176,12 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			
 			'System-Support'.
 
-			'UIManager'.
 			'Zinc-Character-Encoding-Core' }.
 
 		"These packages are added using hermes after bootstrap"
 
 		spec group: 'AdditionalPackages' with: {
+			'UIManager'.
 			'Clap-Core'.
 			'Clap-Commands-Pharo'.
 			'FileSystem-Path'.

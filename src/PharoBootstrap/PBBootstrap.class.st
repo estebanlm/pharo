@@ -336,7 +336,7 @@ PBBootstrap >> monticelloNetworkPackageNames [
 { #category : 'package-names' }
 PBBootstrap >> monticelloPackageNames [
 
-	^ #('Ring-OldChunkImporter'  'System-Changes' 'Ring-Definitions-Core' 'Jobs' 'Compression' 'Monticello-Model' 'Monticello' 'Ring-Definitions-Monticello' )
+	^ #('System-Changes' 'Ring-Definitions-Core' 'Ring-OldChunkImporter' 'Jobs' 'Compression' 'Monticello-Model' 'Monticello' 'Ring-Definitions-Monticello' )
 ]
 
 { #category : 'accessing' }

@@ -24,6 +24,12 @@ Class {
 	#package : 'BaselineOfUI'
 }
 
+{ #category : 'loading' }
+BaselineOfUI class >> debuggerBaseUIPackageNames [
+
+	^ self packagesOfGroupNamed: #'Debugger-Base-UI'
+]
+
 { #category : 'baseline' }
 BaselineOfUI >> baseline: spec [
 
@@ -50,7 +56,9 @@ BaselineOfUI >> baseline: spec [
 			spec
 				repository: repository;
 				loads: 'ui' ].
-		spec package: 'WebBrowser-Core' ]
+		spec package: 'WebBrowser-Core'.
+		
+		spec group: 'Debugger-Base-UI' with: #( 'Debugger-Model' 'Debugger-Oups') ]
 ]
 
 { #category : 'actions' }

@@ -18,8 +18,8 @@ Class {
 		'prevFrame',
 		'currentDisposal'
 	],
-	#category : 'Images-Animated',
-	#package : 'Images-Animated'
+	#category : 'Morphic-Deprecated',
+	#package : 'Morphic-Deprecated'
 }
 
 { #category : 'instance creation' }

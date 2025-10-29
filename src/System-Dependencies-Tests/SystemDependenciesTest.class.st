@@ -75,7 +75,7 @@ SystemDependenciesTest >> knownMorphicCoreDependencies [
 SystemDependenciesTest >> knownMorphicDependencies [
 	"ideally this list should be empty"
 
-	^ #( #'Refactoring-Critics' #'Refactoring-Environment' #'NewTools-FileBrowser' #'Tools-CodeNavigation' 'Debugger-Oups' #EnlumineurFormatter ) "Rubric has a dependency on It"
+	^ #( #'Refactoring-Critics' #'Refactoring-Environment' #'NewTools-FileBrowser' #'Tools-CodeNavigation' #EnlumineurFormatter ) "Rubric has a dependency on It"
 
 ]
 
@@ -84,14 +84,6 @@ SystemDependenciesTest >> knownSUnitDependencies [
 	"ideally this list should be empty"
 
 	^ #( #'Refactoring-Critics' #'Refactoring-Environment' )
-]
-
-{ #category : 'known dependencies' }
-SystemDependenciesTest >> knownSpec2Dependencies [
-
-	^ #(
-		'WebBrowser-Core' "Spec's Link adapter"
-		)
 ]
 
 { #category : 'known dependencies' }
@@ -158,6 +150,7 @@ SystemDependenciesTest >> testExternalBasicToolsDependencies [
 		BaselineOfSUnit withAllPackageNames, "ALL"
 		BaselineOfDisplay withAllPackageNames,
 		BaselineOfUnifiedFFI withAllPackageNames,
+		BaselineOfFonts allPackageNames,
 		{ BaselineOfFreeType name }, (BaselineOfFreeType deepPackagesOfGroupNamed: #ui),
 		{ BaselineOfKeymapping name }, (BaselineOfKeymapping deepPackagesOfGroupNamed: #ui),
 		BaselineOfMorphicCore withAllPackageNames,
@@ -283,10 +276,12 @@ SystemDependenciesTest >> testExternalMorphicCoreDependencies [
 	dependencies := self externalDependendiesOf: (
 		self metacelloPackageNames,
 		self tonelCorePackageNames,
+		BaselineOfUI debuggerBaseUIPackageNames,
 		BaselineOfTraits corePackages,
 		BaselineOfSUnit defaultPackageNames,
 		BaselineOfDisplay allPackageNames,
 		BaselineOfUnifiedFFI allPackageNames,
+		BaselineOfFonts allPackageNames,
 		BaselineOfMorphicCore allPackageNames,
 		BaselineOfThreadedFFI corePackageNames ).
 
@@ -301,10 +296,12 @@ SystemDependenciesTest >> testExternalMorphicDependencies [
 	dependencies := self externalDependendiesOf: (
 		self metacelloPackageNames,
 		self tonelCorePackageNames,
+		BaselineOfUI debuggerBaseUIPackageNames,
 		BaselineOfTraits corePackages,
 		BaselineOfSUnit defaultPackageNames,
 		BaselineOfDisplay allPackageNames,
 		BaselineOfUnifiedFFI allPackageNames,
+		BaselineOfFonts allPackageNames,
 		(BaselineOfKeymapping deepPackagesOfGroupNamed: #morphic),
 		(BaselineOfFreeType deepPackagesOfGroupNamed: #ui),
 		BaselineOfMorphicCore allPackageNames,
@@ -357,8 +354,10 @@ SystemDependenciesTest >> testExternalSpec2Dependencies [
 		"Language"
 		self metacelloPackageNames,
 		self tonelCorePackageNames,
+		BaselineOfUI allPackageNames,
 		BaselineOfTraits corePackages,
 		BaselineOfUnifiedFFI allPackageNames,
+		BaselineOfFonts allPackageNames,
 
 		"Morphic - for Morphic backend"
 		BaselineOfDisplay allPackageNames,
@@ -380,7 +379,7 @@ SystemDependenciesTest >> testExternalSpec2Dependencies [
 		BaselineOfSUnit defaultPackageNames))
 			copyWithoutAll: self knownMorphicDependencies, self knownBasicToolsDependencies, self knownUIDependencies.
 
-	self assertCollection: dependencies hasSameElements: self knownSpec2Dependencies
+	self assertEmpty: dependencies
 ]
 
 { #category : 'tests' }
@@ -407,10 +406,12 @@ SystemDependenciesTest >> testExternalUIDependencies [
 	dependencies := (self externalDependendiesOf: (
 		self metacelloPackageNames,
 		self tonelCorePackageNames,
+		BaselineOfUI allPackageNames,
 		BaselineOfTraits corePackages,
 		BaselineOfSUnit defaultPackageNames,
 		BaselineOfDisplay allPackageNames,
 		BaselineOfUnifiedFFI allPackageNames,
+		BaselineOfFonts allPackageNames,
 		(BaselineOfKeymapping deepPackagesOfGroupNamed: #ui),
 		(BaselineOfFreeType deepPackagesOfGroupNamed: #ui),
 		BaselineOfMorphicCore allPackageNames,

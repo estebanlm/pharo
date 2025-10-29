@@ -4,8 +4,8 @@ JPEGReadWriter was replaced by more capable PluginBasedJPEGReadWriter so the old
 Class {
 	#name : 'PluginBasedJPEGReadWriter',
 	#superclass : 'JPEGReadWriter',
-	#category : 'Graphics-Files',
-	#package : 'Graphics-Files'
+	#category : 'Deprecated13',
+	#package : 'Deprecated13'
 }
 
 { #category : 'testing' }

@@ -164,20 +164,6 @@ Delay class >> stopTimerEventLoop [
 	^ self scheduler stopTimerEventLoop
 ]
 
-{ #category : 'settings' }
-Delay class >> systemSettingOn: aBuilder [
-	<systemsettings>
-
-	(aBuilder pickOne: #delaySchedulerClass)
-		parent: #pharoSystem ;
-		target: self;
-		label: 'Delay Scheduler' ;
-		domainValues: DelayNullScheduler allSubclasses ;
-		default: DelaySemaphoreScheduler;
-		description: 'Choose the class to use for Delay scheduling.' ,
-			String crlf, 'You can observe which is running from Tools > Process Browser.'
-]
-
 { #category : 'instance creation' }
 Delay class >> timeoutSemaphore: aSemaphore afterMSecs: anInteger [
 	"Create and schedule a Delay to signal the given semaphore when the given number of milliseconds has elapsed. Return the scheduled Delay. The timeout can be cancelled by sending 'unschedule' to this Delay."
