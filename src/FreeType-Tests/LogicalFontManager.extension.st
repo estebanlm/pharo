@@ -1,6 +1,6 @@
 Extension { #name : 'LogicalFontManager' }
 
-{ #category : '*Fonts-Infrastructure-Tests' }
+{ #category : '*FreeType-Tests' }
 LogicalFontManager >> identityIncludesFontProvider: aFreeTypeFontProvider [
 	^ fontProviders identityIncludes: aFreeTypeFontProvider
 ]
