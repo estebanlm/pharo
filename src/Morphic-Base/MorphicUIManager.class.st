@@ -420,15 +420,6 @@ MorphicUIManager >> newMenuIn: aThemedMorph for: aModel [
 		newMenuIn: aThemedMorph for: aModel
 ]
 
-{ #category : 'ui requests' }
-MorphicUIManager >> onFontsChanged [
-
-	StringMorph allSubInstancesDo: [ :s | s layoutChanged ].
-	TextMorph allSubInstancesDo: [ :s | s layoutChanged ].
-	SystemWindow allInstancesDo: [ :w | [ w update: #relabel ] on: Error do: [ :ex | ] ].
-	self currentWorld ifNotNil: [ :w | w changed ]
-]
-
 { #category : 'accessing' }
 MorphicUIManager >> preferredCornerStyle [
 	^ self theme preferredCornerStyle
