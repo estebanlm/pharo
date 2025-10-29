@@ -324,33 +324,6 @@ MorphicUIManager >> enterOrRequestFrom: labelList values: valueList lines: lines
 		lines: linesArray
 ]
 
-{ #category : 'error handling' }
-MorphicUIManager >> handleError: anError log: shouldLog [
-
-	shouldLog ifTrue: [ self logError: anError ].
-	(OupsDebugRequest newForException: anError) submit
-]
-
-{ #category : 'error handling' }
-MorphicUIManager >> handleNotification: aNotification [
-
-	aNotification messageText traceCr.
-	aNotification resume
-]
-
-{ #category : 'error handling' }
-MorphicUIManager >> handleWarning: aWarning [
-	"The user should be notified of the occurrence of an exceptional occurrence and given an option of continuing or aborting the computation. The description of the occurrence should include any text specified as the argument of the #signal: message."
-
-	(OupsWarningRequest newForException: aWarning) submit
-]
-
-{ #category : 'handle debug requests' }
-MorphicUIManager >> handleWarningDebugRequest: aWarningDebugRequest fromDebuggerSystem: anOupsDebuggerSystem [
-	<debuggerCompleteToSender>
-	anOupsDebuggerSystem openDebuggerOnRequest: aWarningDebugRequest
-]
-
 { #category : 'ui requests' }
 MorphicUIManager >> inform: aStringOrText [
 	"Display a message for the user to read and then dismiss."
@@ -454,27 +427,6 @@ MorphicUIManager >> onFontsChanged [
 	TextMorph allSubInstancesDo: [ :s | s layoutChanged ].
 	SystemWindow allInstancesDo: [ :w | [ w update: #relabel ] on: Error do: [ :ex | ] ].
 	self currentWorld ifNotNil: [ :w | w changed ]
-]
-
-{ #category : 'events' }
-MorphicUIManager >> onPrimitiveError: aString [
-
-	| message |
-	message := String streamContents: [ :s |
-		           | context |
-		           s nextPutAll: '*** System error handling failed ***'.
-		           s
-			           cr;
-			           nextPutAll: aString.
-		           context := thisContext sender sender.
-		           20 timesRepeat: [
-			           context ifNotNil: [
-				           s
-					           cr;
-					           print: (context := context sender) ] ] ].
-	Stdio stderr << message.
-	"init hands and redisplay"
-	self currentWorld install
 ]
 
 { #category : 'accessing' }

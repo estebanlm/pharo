@@ -215,7 +215,7 @@ Process >> endProcess [
 { #category : 'error handling' }
 Process >> errorHandler [
 
-	^ errorHandler ifNil: [ ErrorHandler defaultErrorHandler ]
+	^ errorHandler ifNil: [ ErrorHandler default ]
 ]
 
 { #category : 'accessing' }

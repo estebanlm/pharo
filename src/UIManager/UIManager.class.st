@@ -42,6 +42,12 @@ UIManager class >> forCurrentSystemConfiguration [
 			new
 ]
 
+{ #category : 'class initialization' }
+UIManager class >> initialize [
+
+	SessionManager default registerSystemClassNamed: self name
+]
+
 { #category : 'initialization' }
 UIManager class >> isActiveManager [
 	"Answer whether I should act as the active UI manager."
@@ -62,6 +68,14 @@ UIManager class >> nonInteractiveDuring: aBlock [
 	currentManager nonInteractiveManager.
 
 	aBlock ensure: [ currentManager beDefault ]
+]
+
+{ #category : 'handlers' }
+UIManager class >> startUp: isImageStarting [
+	"Install the right UIManager"
+
+	isImageStarting ifFalse: [ ^ false ].
+	self default: self forCurrentSystemConfiguration
 ]
 
 { #category : 'ui TEasilyThemed' }
@@ -380,45 +394,6 @@ UIManager >> edit: aText label: labelString accept: aBlockOrNil [
 	^self subclassResponsibility
 ]
 
-{ #category : 'error handling' }
-UIManager >> handleError: anError [
-
-	self handleError: anError log: true
-]
-
-{ #category : 'error handling' }
-UIManager >> handleError: anError log: shouldLog [
-	"Provide a default handling for unhandled error.
-	 We should never reach this code, because it should be overridden by subclasses.
-	 (but we can't put 'self subclassResponsibility' , because it will cause infinite loop,
-	 in case if current ui manager having no override of this method).
-	 This method is only for documentation purposes."
-
-	Smalltalk snapshot: false andQuit: true
-]
-
-{ #category : 'error handling' }
-UIManager >> handleNotification: aNotification [
-
-	"by default, do nothing"
-
-	aNotification resume
-]
-
-{ #category : 'error handling' }
-UIManager >> handleWarning: aWarning [
-	"Handle warning notification. Should be overidden by subclass."
-
-	self subclassResponsibility
-]
-
-{ #category : 'debug requests' }
-UIManager >> handleWarningDebugRequest: aWarningDebugRequest fromDebuggerSystem: anOupsDebuggerSystem [
-	"Handle warning notification. Should be overidden by subclass."
-
-	self subclassResponsibility
-]
-
 { #category : 'ui requests' }
 UIManager >> inform: aString [
 	"Display a message for the user to read and then dismiss."
@@ -493,10 +468,6 @@ UIManager >> nonInteractiveManager [
 
 { #category : 'default actions' }
 UIManager >> onFontsChanged [
-]
-
-{ #category : 'events' }
-UIManager >> onPrimitiveError: aString [
 ]
 
 { #category : 'ui TEasilyThemed' }

@@ -267,13 +267,11 @@ BaselineOfMorphic >> postload: loader package: packageSpec [
 	   #TextDiffBuilder #ThumbnailMorph #TransferMorph #UITheme )
 		do: [ :each | (Smalltalk globals at: each) initialize ].
 
-	UIManager default terminateUIProcess.
 	MorphicUIManager new spawnNewProcess.
-
 	UIManager default: MorphicUIManager new.
 	MorphicUIManager uiProcess resume.
 
-	ErrorHandler defaultErrorHandler: UIManager default.
+	ErrorHandler default: ErrorHandler forCurrentSystemConfiguration.
 
 	self cleanUpAfterMorphicInitialization.
 
@@ -281,7 +279,6 @@ BaselineOfMorphic >> postload: loader package: packageSpec [
 
 	"Install the right UIManager"
 	UIManager default: UIManager forCurrentSystemConfiguration.
-	ErrorHandler defaultErrorHandler: UIManager default.
 	Stdio stdout
 		nextPutAll: 'UIManager changed:';
 		nextPutAll: UIManager default class name;
