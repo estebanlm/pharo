@@ -466,10 +466,6 @@ UIManager >> nonInteractiveManager [
 	^NonInteractiveUIManager beDefault
 ]
 
-{ #category : 'default actions' }
-UIManager >> onFontsChanged [
-]
-
 { #category : 'ui TEasilyThemed' }
 UIManager >> proceed: aStringOrText [
 	"Open a proceed dialog."

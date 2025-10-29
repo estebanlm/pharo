@@ -1,10 +1,10 @@
 | mcPackages |
 mcPackages := #(
  'Network-Kernel'
- 'Network-MIME'
  'Network-Protocols'
 
  'Zinc-Resource-Meta-Core'
+ 'Network-MIME'
  'Zinc-HTTP'
  
  'MonticelloRemoteRepositories'

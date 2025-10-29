@@ -85,6 +85,7 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		spec package: 'Collections-Unordered'.
 		spec package: 'Collections-Weak'.
 		spec package: 'Debugging-Core'.
+		spec package: 'Deprecation'.
 		spec package: 'Files'.
 		spec package: 'FileSystem-Path'.
 		spec package: 'Hermes'.
@@ -205,7 +206,8 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			'Debugging-Utils'.
 			'DebugInfo'.
 			'NumberParser'.
-			'OpalCompiler-Core'}.
+			'OpalCompiler-Core'.
+			'Deprecation'}.
 		
 		spec group: 'FileSystemGroup' with: {
 			'Random-Core'.
@@ -224,6 +226,7 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		}.
 
 		spec group: 'SUnitGroup' with: {
+			'Deprecation'.
 			'SUnit-Core'.
 			'SUnit-Tests'.
 			'Kernel-Tests'.

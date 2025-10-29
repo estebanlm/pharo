@@ -16,13 +16,13 @@ ManifestKernel class >> dependencies [
 
 { #category : 'meta-data - dependency analyser' }
 ManifestKernel class >> ignoredDependencies [
-	^ #('Reflectivity' 'Regex-Core' 'FFI-Kernel')
+	^ #('FFI-Kernel')
 ]
 
 { #category : 'meta-data - dependency analyser' }
 ManifestKernel class >> manuallyResolvedDependencies [
 
-	^ #( #Reflectivity #'Shift-ClassBuilder' )
+	^ #( #'Shift-ClassBuilder' )
 ]
 
 { #category : 'meta-data' }

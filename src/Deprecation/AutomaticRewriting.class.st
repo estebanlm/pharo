@@ -15,8 +15,8 @@ Class {
 		'showWarning',
 		'active'
 	],
-	#category : 'Kernel-Exceptions',
-	#package : 'Kernel',
+	#category : 'Deprecation-Exceptions',
+	#package : 'Deprecation',
 	#tag : 'Exceptions'
 }
 
