@@ -41,18 +41,17 @@ BaselineOfSUnit >> baseline: spec [
 				package: 'SUnit-Visitor-Tests' with: [ spec requires: #('SUnit-Visitor') ];
 				package: 'SUnit-MockObjects' with: [ spec requires: #('SUnit-Core') ];
 				package: 'SUnit-MockObjects-Tests' with: [ spec requires: #('SUnit-MockObjects') ];
-				package: 'SUnit-UI' with: [ spec requires: #('Coverage') ];
+				package: 'SUnit-UI' with: [ spec requires: #('Coverage' 'SUnit-Basic-CLI') ];
 				package: 'Coverage';
 				package: 'Coverage-Tests' with: [ spec requires: #('Coverage') ];				
-				package: 'JenkinsTools-Core' with: [ spec requires: #('SUnit-UI') ];
-				package: 'JenkinsTools-ExtraReports';
-				package: 'JenkinsTools-Tests' with: [ spec requires: #('JenkinsTools-Core') ].
+				package: 'SUnit-Basic-CLI' with: [ spec requires: #('SUnit-Core') ];
+				package: 'SUnit-UI-Tests' with: [ spec requires: #('SUnit-UI') ].
 
 			"Custom groups"				
 			spec
-				group: 'Core' with: #('SUnit-Core' 'SUnit-Core-Traits' 'SUnit-Visitor' 'SUnit-MockObjects');
-				group: 'UI' with: #('SUnit-UI' 'Coverage' 'JenkinsTools-Core' 'JenkinsTools-ExtraReports');
-				group: 'Tests' with: #('SUnit-Tests' 'SUnit-Visitor-Tests' 'SUnit-MockObjects-Tests' 'Coverage-Tests' 'JenkinsTools-Tests').
+				group: 'Core' with: #('SUnit-Core' 'SUnit-Core-Traits' 'SUnit-Visitor' 'SUnit-MockObjects' SUnit-Basic-CLI);
+				group: 'UI' with: #('SUnit-UI' 'Coverage');
+				group: 'Tests' with: #('SUnit-Tests' 'SUnit-Visitor-Tests' 'SUnit-MockObjects-Tests' 'Coverage-Tests' 'SUnit-UI-Tests').
 
 			"Virtual groups"	
 			spec

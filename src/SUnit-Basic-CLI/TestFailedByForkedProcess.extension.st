@@ -1,6 +1,6 @@
 Extension { #name : 'TestFailedByForkedProcess' }
 
-{ #category : '*JenkinsTools-Core' }
+{ #category : '*SUnit-Basic-CLI' }
 TestFailedByForkedProcess >> recordResultOf: aTestCase inHDTestReport: aHDTestReport [
 	
 	executionEnvironment backgroundFailures do: [ :each | 

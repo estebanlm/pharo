@@ -4,8 +4,8 @@ I run unit tests found in specified packages, and display their results to stand
 Class {
 	#name : 'ClapTestRunner',
 	#superclass : 'ClapPharoApplication',
-	#category : 'JenkinsTools-Core',
-	#package : 'JenkinsTools-Core'
+	#category : 'SUnit-Basic-CLI',
+	#package : 'SUnit-Basic-CLI'
 }
 
 { #category : 'command line' }

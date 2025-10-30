@@ -21,8 +21,8 @@ Class {
 		'CurrentStageName',
 		'ShuffleSeed'
 	],
-	#category : 'JenkinsTools-Core',
-	#package : 'JenkinsTools-Core'
+	#category : 'SUnit-Basic-CLI',
+	#package : 'SUnit-Basic-CLI'
 }
 
 { #category : 'running' }

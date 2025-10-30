@@ -4,8 +4,8 @@ A Hudson report
 Class {
 	#name : 'HDReport',
 	#superclass : 'Object',
-	#category : 'JenkinsTools-Core',
-	#package : 'JenkinsTools-Core'
+	#category : 'SUnit-Basic-CLI',
+	#package : 'SUnit-Basic-CLI'
 }
 
 { #category : 'running' }

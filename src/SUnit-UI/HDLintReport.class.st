@@ -8,8 +8,8 @@ Class {
 		'environment',
 		'rules'
 	],
-	#category : 'JenkinsTools-ExtraReports',
-	#package : 'JenkinsTools-ExtraReports'
+	#category : 'SUnit-UI',
+	#package : 'SUnit-UI'
 }
 
 { #category : 'running' }

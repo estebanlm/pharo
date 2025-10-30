@@ -1,6 +1,6 @@
 Extension { #name : 'TestFailure' }
 
-{ #category : '*JenkinsTools-Core' }
+{ #category : '*SUnit-Basic-CLI' }
 TestFailure >> recordResultOf: aTestCase inHDTestReport: aHDTestReport [
 	
 	aHDTestReport recordFailure: self duringTest: aTestCase

@@ -14,7 +14,7 @@ ProjectManagerTest >> testPackagesInAProject [
 	self
 		assertCollection:
 			#( 'BaselineOfSUnit' 'SUnit-Core' 'SUnit-Core-Traits' 'SUnit-Tests' 'SUnit-Visitor' 'SUnit-Visitor-Tests' 'SUnit-MockObjects' 'SUnit-MockObjects-Tests'
-			   'SUnit-UI' 'Coverage' 'JenkinsTools-Core' 'JenkinsTools-Tests' 'JenkinsTools-ExtraReports' 'Coverage-Tests')
+			   'SUnit-UI' 'Coverage' 'SUnit-Basic-CLI' 'SUnit-UI-Tests'  'Coverage-Tests')
 		hasSameElements: (sUnitProject packages collect: [ :package | package name ])
 ]
 
