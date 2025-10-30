@@ -27,7 +27,7 @@ teardown() {
 @test "test can run tests on a regex" {
   run_pharo test SUnit-UI.*
   assert_success
-  assert_line "Running tests in 3 Packages"
+  assert_line "Running tests in 2 Packages"
   assert_line "Finished running 16 Tests"
   assert_line --partial "Finished to run tests of SUnit-UI-Tests in"
   assert_line "16 run, 16 passes, 0 failures, 0 errors."
