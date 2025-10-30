@@ -49,7 +49,7 @@ BaselineOfSUnit >> baseline: spec [
 
 			"Custom groups"				
 			spec
-				group: 'Core' with: #('SUnit-Core' 'SUnit-Core-Traits' 'SUnit-Visitor' 'SUnit-MockObjects' SUnit-Basic-CLI);
+				group: 'Core' with: #('SUnit-Core' 'SUnit-Core-Traits' 'SUnit-Visitor' 'SUnit-MockObjects' 'SUnit-Basic-CLI');
 				group: 'UI' with: #('SUnit-UI' 'Coverage');
 				group: 'Tests' with: #('SUnit-Tests' 'SUnit-Visitor-Tests' 'SUnit-MockObjects-Tests' 'Coverage-Tests' 'SUnit-UI-Tests').
 
