@@ -44,7 +44,7 @@ BaselineOfSUnit >> baseline: spec [
 				package: 'SUnit-UI' with: [ spec requires: #('Coverage') ];
 				package: 'Coverage';
 				package: 'Coverage-Tests' with: [ spec requires: #('Coverage') ];				
-				package: 'JenkinsTools-Core';
+				package: 'JenkinsTools-Core' with: [ spec requires: #('SUnit-UI') ];
 				package: 'JenkinsTools-ExtraReports';
 				package: 'JenkinsTools-Tests' with: [ spec requires: #('JenkinsTools-Core') ].
 
