@@ -71,14 +71,14 @@ SystemEnvironmentTest >> supportsNilKey [
 { #category : 'tests' }
 SystemEnvironmentTest >> testAddFlushesCaches [
 	"we add to the environemnt with #add: and the cache is reset"
-	| enviroment |
-	enviroment := SystemEnvironment new.
-	enviroment add: (GlobalVariable key: #Object value: Object).
-	enviroment allBehaviors.
-	enviroment add: (GlobalVariable key: #Class value: Class).
+	| environment |
+	environment := SystemEnvironment new.
+	environment add: (GlobalVariable key: #Object value: Object).
+	environment allBehaviors.
+	environment add: (GlobalVariable key: #Class value: Class).
 	"check that the cache was reset and we can find Class"
-	self assert: (enviroment instVarNamed: 'cachedBehaviors') isNil.
-	self assert:( enviroment allBehaviors includes: Class)
+	self assert: (environment instVarNamed: 'cachedBehaviors') isNil.
+	self assert:( environment allBehaviors includes: Class)
 ]
 
 { #category : 'tests - DictionaryIndexAccessing' }
