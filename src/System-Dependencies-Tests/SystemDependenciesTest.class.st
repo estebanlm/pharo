@@ -45,7 +45,7 @@ SystemDependenciesTest >> externalDependendiesOf: packagesCollection [
 SystemDependenciesTest >> knownBasicToolsDependencies [
 	"ideally this list should be empty"
 
-	^ #( 'Athens-Cairo' 'Athens-Core' #'Refactoring-Critics' #'Commander-Core' #Reflectivity #'Reflectivity-Tools' #Shout 'HeuristicCompletion-Model'
+	^ #( 'Athens-Cairo' 'Athens-Core' #'Commander-Core' #Reflectivity #'Reflectivity-Tools' #Shout 'HeuristicCompletion-Model'
 	     #VariablesLibrary #'Spec2-CommonWidgets' #'NewTools-Scopes' #'Traits-Tests' 'NewTools-Scopes' 'NewTools-Transcript' #'NewTools-FileBrowser' #EnlumineurFormatter )
 ]
 
@@ -67,37 +67,22 @@ SystemDependenciesTest >> knownKernelDependencies [
 SystemDependenciesTest >> knownMorphicCoreDependencies [
 	"ideally this list should be empty"
 
-	^ #(#'Keymapping-KeyCombinations' #'Morphic-Base' #'Refactoring-Critics' #'Refactoring-Environment'
-	  'Morphic-Widgets-ColorPicker')
+	^ #(#'Keymapping-KeyCombinations' #'Morphic-Base' 'Morphic-Widgets-ColorPicker')
 ]
 
 { #category : 'known dependencies' }
 SystemDependenciesTest >> knownMorphicDependencies [
 	"ideally this list should be empty"
 
-	^ #( #'Refactoring-Critics' #'Refactoring-Environment' #'NewTools-FileBrowser' #'Tools-CodeNavigation' #EnlumineurFormatter ) "Rubric has a dependency on It"
+	^ #(#'NewTools-FileBrowser' #'Tools-CodeNavigation' #EnlumineurFormatter ) "Rubric has a dependency on It"
 
-]
-
-{ #category : 'known dependencies' }
-SystemDependenciesTest >> knownSUnitDependencies [
-	"ideally this list should be empty"
-
-	^ #( #'Refactoring-Critics' #'Refactoring-Environment' )
-]
-
-{ #category : 'known dependencies' }
-SystemDependenciesTest >> knownUFFIDependencies [
-	"ideally this list should be empty"
-
-	^ #( #'Refactoring-Critics' #'Refactoring-Environment' )
 ]
 
 { #category : 'known dependencies' }
 SystemDependenciesTest >> knownUIDependencies [
 	"ideally this list should be empty"
 
-	^ #( 'Athens-Cairo' 'Athens-Core' #'Refactoring-Critics' #'Refactoring-Environment' 'Reflectivity-Tools' #Shout #'Tool-Diff' #'HeuristicCompletion-Model'
+	^ #( 'Athens-Cairo' 'Athens-Core' #'Refactoring-Environment' 'Reflectivity-Tools' #Shout #'Tool-Diff' #'HeuristicCompletion-Model'
 	     'NECompletion-Morphic' #VariablesLibrary #'Tools-CodeNavigation' #'Spec2-CommonWidgets' #'NewTools-Scopes' #'NewTools-FileBrowser' #EnlumineurFormatter )
 ]
 
@@ -325,7 +310,7 @@ SystemDependenciesTest >> testExternalSUnitDependencies [
 		self tonelCorePackageNames,
 		BaselineOfSUnit corePackageNames).
 
-	self assertCollection: dependencies hasSameElements: self knownSUnitDependencies
+	self assertEmpty: dependencies
 ]
 
 { #category : 'tests' }
@@ -394,7 +379,7 @@ SystemDependenciesTest >> testExternalUFFIDependencies [
 		BaselineOfUnifiedFFI allPackageNames,
 		BaselineOfThreadedFFI corePackageNames).
 
-	self assertCollection: dependencies hasSameElements: self knownUFFIDependencies
+	self assertEmpty: dependencies 
 ]
 
 { #category : 'tests' }
