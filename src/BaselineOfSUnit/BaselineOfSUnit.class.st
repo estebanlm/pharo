@@ -50,8 +50,8 @@ BaselineOfSUnit >> baseline: spec [
 
 			"Custom groups"				
 			spec
-				group: 'Core' with: #('SUnit-Core' 'SUnit-Core-Traits' 'SUnit-Visitor' 'SUnit-MockObjects' 'JenkinsTools-Core' 'JenkinsTools-ExtraReports');
-				group: 'UI' with: #('SUnit-UI' 'Coverage');
+				group: 'Core' with: #('SUnit-Core' 'SUnit-Core-Traits' 'SUnit-Visitor' 'SUnit-MockObjects');
+				group: 'UI' with: #('SUnit-UI' 'Coverage' 'JenkinsTools-Core' 'JenkinsTools-ExtraReports');
 				group: 'Tests' with: #('SUnit-Tests' 'SUnit-Visitor-Tests' 'SUnit-MockObjects-Tests' 'Coverage-Tests' 'JenkinsTools-Tests').
 
 			"Virtual groups"	
