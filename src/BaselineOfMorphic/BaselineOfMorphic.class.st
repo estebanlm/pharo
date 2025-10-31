@@ -48,7 +48,7 @@ BaselineOfMorphic >> baseline: spec [
 
 		spec package: 'System-Localization'.
 
-		spec package: 'EmbeddedFreeType' with: [ spec requires: 'FreeType' ].
+		spec package: 'EmbeddedFreeType'.
 		spec package: 'FileSystem-Zip'.
 
 		spec package: 'Graphics-Shapes'.
