@@ -16,7 +16,7 @@ OCIRPushDup >> accept: aVisitor [
 	^ aVisitor visitPushDup: self
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'stack' }
 OCIRPushDup >> deltaStack [
 
 	^ 1

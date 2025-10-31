@@ -14,7 +14,7 @@ OCIRPopIntoTemp >> accept: aVisitor [
 	^ aVisitor visitPopIntoTemp: self
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'stack' }
 OCIRPopIntoTemp >> deltaStack [
 
 	^ -1

@@ -14,7 +14,7 @@ OCIRPop >> accept: aVisitor [
 	^ aVisitor visitPop: self
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'stack' }
 OCIRPop >> deltaStack [
 
 	^ -1

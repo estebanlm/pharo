@@ -41,7 +41,7 @@ OCIRPushFullClosure >> copiedValues: anObject [
 	copiedValues := anObject
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'stack' }
 OCIRPushFullClosure >> deltaStack [
 
 	^( copiedValues size - 1) negated

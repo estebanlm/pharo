@@ -18,7 +18,7 @@ OCIRSend >> accept: aVisitor [
 	^ aVisitor visitSend: self
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'stack' }
 OCIRSend >> deltaStack [
 
 	^ (selector occurrencesOf: $:) negated

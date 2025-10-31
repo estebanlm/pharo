@@ -19,7 +19,7 @@ OCIRPushInstVar >> canBeQuickReturn [
 	^ true
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'stack' }
 OCIRPushInstVar >> deltaStack [
 
 	^ 1

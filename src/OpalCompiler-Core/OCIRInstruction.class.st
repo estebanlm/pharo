@@ -250,7 +250,7 @@ OCIRInstruction >> delete [
 	sequence remove: self
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'stack' }
 OCIRInstruction >> deltaStack [
 
 	^ 0

@@ -14,7 +14,7 @@ OCIRPushRemoteTemp >> accept: aVisitor [
 	^ aVisitor visitPushRemoteTemp: self
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'stack' }
 OCIRPushRemoteTemp >> deltaStack [
 
 	^ 1

@@ -36,7 +36,7 @@ OCIRPushArray >> cons: aBool [
 	cons := aBool
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'stack' }
 OCIRPushArray >> deltaStack [
 
 	^ cons

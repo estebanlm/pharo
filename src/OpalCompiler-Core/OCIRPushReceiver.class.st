@@ -19,7 +19,7 @@ OCIRPushReceiver >> canBeQuickReturn [
 	^ true
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'stack' }
 OCIRPushReceiver >> deltaStack [
 
 	^ 1

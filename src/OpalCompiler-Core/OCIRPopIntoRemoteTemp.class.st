@@ -14,7 +14,7 @@ OCIRPopIntoRemoteTemp >> accept: aVisitor [
 	^ aVisitor visitPopIntoRemoteTemp: self
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'stack' }
 OCIRPopIntoRemoteTemp >> deltaStack [
 
 	^ -1

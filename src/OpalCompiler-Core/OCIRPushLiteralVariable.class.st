@@ -14,7 +14,7 @@ OCIRPushLiteralVariable >> accept: aVisitor [
 	^ aVisitor visitPushLiteralVariable: self
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'stack' }
 OCIRPushLiteralVariable >> deltaStack [
 
 	^ 1

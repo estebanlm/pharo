@@ -14,7 +14,7 @@ OCIRPushTemp >> accept: aVisitor [
 	^ aVisitor visitPushTemp: self
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'stack' }
 OCIRPushTemp >> deltaStack [
 
 	^ 1

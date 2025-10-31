@@ -14,7 +14,7 @@ OCIRPushThisContext >> accept: aVisitor [
 	^ aVisitor visitPushThisContext: self
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'stack' }
 OCIRPushThisContext >> deltaStack [
 
 	^ 1

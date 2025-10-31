@@ -14,7 +14,7 @@ OCIRPushThisProcess >> accept: aVisitor [
 	^ aVisitor visitPushThisProcess: self
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'stack' }
 OCIRPushThisProcess >> deltaStack [
 
 	^ 1
