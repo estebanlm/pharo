@@ -374,17 +374,6 @@ SmallDictionary >> bindingOf: varName [
 	^self associationAt: varName ifAbsent:[nil]
 ]
 
-{ #category : 'enumerating' }
-SmallDictionary >> bindingsDo: aBlock [
-
-	self
-		deprecated:
-		'use classVariables do: instead'
-		transformWith: '`@receiver bindingsDo: `@arg1' -> '`@receiver associationsDo: `@arg1'.
-
-	self associationsDo: aBlock
-]
-
 { #category : 'accessing' }
 SmallDictionary >> capacity [
 	^keys size
@@ -470,16 +459,6 @@ SmallDictionary >> growTo: aSize [
 			newValues at: i put: (values at: i)].
 	keys := newKeys.
 	values := newValues
-]
-
-{ #category : 'testing' }
-SmallDictionary >> hasBindingThatBeginsWith: aString [
-	"Answer true if the receiver has a key that begins with aString, false otherwise"
-
-	self keysDo:[:each |
-		(each beginsWith: aString)
-			ifTrue:[^true]].
-	^false
 ]
 
 { #category : 'testing' }

@@ -553,16 +553,6 @@ Dictionary >> flatCollect: aBlock [
 ]
 
 { #category : 'testing' }
-Dictionary >> hasBindingThatBeginsWith: aString [
-	"Answer true if the receiver has a key that begins with aString, false otherwise"
-
-	self keysDo:[:each |
-		(each beginsWith: aString)
-			ifTrue:[^true]].
-	^false
-]
-
-{ #category : 'testing' }
 Dictionary >> includes: anObject [
 
 	"Check if anObject is one of the values in the dictionary"
@@ -860,16 +850,6 @@ Dictionary >> removeKey: key ifAbsent: aBlock [
 	tally := tally - 1.
 	self fixCollisionsFrom: index.
 	^ assoc value
-]
-
-{ #category : 'undeclared' }
-Dictionary >> removeUnreferencedKeys [
-	"This is private code for the Undeclared handling, not a general API."
-
-	self
-		deprecated: 'Use "Smalltalk image cleanOutUndeclared" instead'
-		transformWith: '`@rcv removeUnreferencedKeys' -> 'Smalltalk image cleanOutUndeclared'.
-	Smalltalk image cleanOutUndeclared
 ]
 
 { #category : 'private' }

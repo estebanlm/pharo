@@ -108,19 +108,6 @@ RBMethod >> literal: anObject containsReferenceTo: aSymbol [
 ]
 
 { #category : 'accessing' }
-RBMethod >> method [
-	self deprecated: 'Use compiledMethod' transformWith: '`@rec method' -> '`@rec compiledMethod'.
-	^compiledMethod
-]
-
-{ #category : 'accessing' }
-RBMethod >> method: aCompiledMethod [
-	self deprecated: 'Use compiledMethod' transformWith: '`@rec method: `@arg' -> '`@rec compiledMethod: `@arg'.
-	
-	self compiledMethod: aCompiledMethod
-]
-
-{ #category : 'accessing' }
 RBMethod >> methodClass [
 
 	^ class
@@ -249,7 +236,7 @@ RBMethod >> selector: aSymbol [
 RBMethod >> source [
 	"Returns the source code of the method receiver."
 	
-	^ source ifNil: [ source := (class realClass sourceCodeAt: selector) asString ]
+	^ source ifNil: [ source := (class realClass >> selector) sourceCode ]
 ]
 
 { #category : 'accessing' }
