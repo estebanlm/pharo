@@ -1,12 +1,12 @@
 Extension { #name : 'FFIExternalReference' }
 
-{ #category : '*UnifiedFFI-Legacy' }
+{ #category : '*Deprecated14' }
 FFIExternalReference >> handle [
 	self deprecated: 'Use #getHandle instead' transformWith: '`@receiver handle' -> '`@receiver getHandle'.
 	^ self getHandle
 ]
 
-{ #category : '*UnifiedFFI-Legacy' }
+{ #category : '*Deprecated14' }
 FFIExternalReference >> handle: anObject [
 
 	self

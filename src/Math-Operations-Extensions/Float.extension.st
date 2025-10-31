@@ -247,15 +247,6 @@ Float >> degreesToRadians [
 ]
 
 { #category : '*Math-Operations-Extensions' }
-Float class >> epsilon [
-
-	self
-		deprecated: 'Use machineEpsilon instead'
-		transformWith: '`@receiver epsilon' -> '`@receiver machineEpsilon'.
-	^ self machineEpsilon
-]
-
-{ #category : '*Math-Operations-Extensions' }
 Float >> floorLog: radix [
 	"Answer the floor of the log base radix of the receiver.
 	The result may be off by one due to rounding errors, except in base 2."

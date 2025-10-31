@@ -1,15 +1,15 @@
 Extension { #name : 'Semaphore' }
 
-{ #category : '*System-Time' }
+{ #category : '*Deprecated14' }
 Semaphore >> wait: aDuration [
 	"Wait on this semaphore for up to the given time duration, then timeout.
 	Return true if the deadline expired, false otherwise."
 
-	self deprecated: 'Use #waitTimeoutMilliseconds: instead'.
+	self deprecated: 'Use #waitTimeoutMilliseconds: instead' transformWith: '`@rcv wait: `@arg' -> '`@rcv waitTimeoutMilliseconds: `@arg asMilliSeconds'.
 	^ self waitTimeoutMilliseconds: aDuration asMilliSeconds
 ]
 
-{ #category : '*System-Time' }
+{ #category : '*Deprecated14' }
 Semaphore >> wait: aDuration onCompletion: completionBlock onTimeout: timeoutBlock [
 	"Wait on this semaphore for up to the given time duration, then timeout.
 	If the deadline expired execute timeoutBlock, otherwise execute completionBlock.
@@ -22,7 +22,7 @@ Semaphore >> wait: aDuration onCompletion: completionBlock onTimeout: timeoutBlo
 		  onTimeout: timeoutBlock
 ]
 
-{ #category : '*System-Time' }
+{ #category : '*Deprecated14' }
 Semaphore >> waitTimeoutMSecs: anInteger [
 
 	self
