@@ -50,8 +50,6 @@ BaselineOfMorphicCore >> postload: loader package: packageSpec [
 
 	"Ignore pre and post loads if already executed"
 	Initialized = true ifTrue: [ ^ self ].
-	
-	IdentityTransform initialize.
 
 	RealEstateAgent initialize.
 	WorldState initialize.
@@ -66,15 +64,12 @@ BaselineOfMorphicCore >> postload: loader package: packageSpec [
 	BalloonEngineConstants initialize.
 	BalloonEngine initialize.
 	CornerRounder initialize.
-	ShortIntegerArray initialize.
 	Clipboard initialize.
 	GradientFillStyle initialize.
 	TextAction initialize.
 	TextConstants initialize.
 	TextStyle initialize.
 	PharoCommonTools initialize.
-	
-	Cursor initTarget.
 
 	Initialized := true.
 ]
