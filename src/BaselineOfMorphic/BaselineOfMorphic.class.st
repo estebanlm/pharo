@@ -42,11 +42,6 @@ BaselineOfMorphic >> baseline: spec [
 		spec
 			baseline: 'MorphicCore' with: [ spec repository: repository ];
 			baseline: 'MenuRegistration' with: [ spec repository: repository ].
-
-		spec baseline: 'Fuel' with: [
-			spec
-				repository: repository;
-				loads: #( 'Core' ) ].
 			
 		spec package: 'System-Identification'.
 		spec package: 'System-Settings-Core' with: [ spec requires: #( 'MorphicCore' 'System-Identification' ) ].
@@ -180,7 +175,7 @@ BaselineOfMorphic >> postload: loader package: packageSpec [
 	PolymorphSystemSettings desktopColor: Color white.
 
 	#( #BalloonMorph #EmbeddedFreeTypeFontInstaller
-	   #FLCompiledMethodCluster #FreeTypeFontProvider
+	   #FreeTypeFontProvider
 	   #IconicButtonMorph #KMLog
 	   #LucidaGrandeRegular #ScrollBarMorph
 	   #SystemSettingsPersistence #TabMorph #TaskbarMorph ) do: [ :each |
