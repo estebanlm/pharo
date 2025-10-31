@@ -187,8 +187,7 @@ PBBootstrap >> exportMonticelloInStFile [
 		MCCacheRepository initialize.
 		MCWorkingCopy initialize.
 		MCLazyVersionInfo initialize.
-		MCMethodDefinition initialize.
-		MCDataStream initialize.'
+		MCMethodDefinition initialize.'
 		intoFile: 'Monticello.st'
 
 ]
