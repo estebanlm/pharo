@@ -43,15 +43,7 @@ BaselineOfUI >> baseline: spec [
 		spec package: 'Debugger-Model'.
 		spec package: 'Debugger-Oups'.
 
-		spec baseline: 'Display' with: [ spec repository: repository ].
-		spec baseline: 'Fonts' with: [
-				spec
-					repository: repository;
-					loads: #Core ].
-		spec baseline: 'FreeType' with: [
-			spec
-				repository: repository;
-				loads: 'ui' ].
+		spec baseline: 'UIInfrastructure' with: [ spec repository: repository ].
 		spec baseline: 'Fuel' with: [
 			spec
 				repository: repository;
