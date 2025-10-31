@@ -48,10 +48,6 @@ BaselineOfMorphic >> baseline: spec [
 
 		spec package: 'System-Localization'.
 
-		spec baseline: 'FreeType' with: [
-			spec
-				repository: repository;
-				loads: 'ui' ].
 		spec package: 'EmbeddedFreeType' with: [ spec requires: 'FreeType' ].
 		spec package: 'FileSystem-Zip'.
 

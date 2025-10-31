@@ -36,12 +36,16 @@ BaselineOfMorphicCore >> baseline: spec [
 		spec package: 'Graphics-Canvas'.
 		spec package: 'FormCanvas-Core'.
 		spec package: 'Tool-Registry'.
-		spec package: 'Morphic-Core'.
-		spec package: 'System-Model' with: [ spec requires: #( 'Morphic-Core' ) ].
+		spec package: 'System-Model'.
 		spec baseline: 'Fonts' with: [
 				spec
 					repository: repository;
 					loads: #Core ].
+		spec baseline: 'FreeType' with: [
+			spec
+				repository: repository;
+				loads: 'ui' ].
+		spec package: 'Morphic-Core' with: [ spec requires: #( 'System-Model' ) ].
 		spec package: 'System-FileRegistry' with: [ spec requires: #( 'System-Model' ) ] ]
 ]
 
