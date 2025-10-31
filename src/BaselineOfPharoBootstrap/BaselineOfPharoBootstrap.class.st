@@ -182,7 +182,6 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		"These packages are added using hermes after bootstrap"
 
 		spec group: 'AdditionalPackages' with: {
-			'UIManager'.
 			'Clap-Core'.
 			'Clap-Commands-Pharo'.
 			'FileSystem-Path'.
@@ -197,6 +196,7 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			'Multilingual-Encodings' }.
 
 		spec group: 'CompilerGroup' with: {
+			'UIManager'.
 			'AST-Core'.
 			'Collections-Arithmetic'.
 			'Collections-Atomic'.
