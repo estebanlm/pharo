@@ -14,6 +14,12 @@ OCIRPushThisContext >> accept: aVisitor [
 	^ aVisitor visitPushThisContext: self
 ]
 
+{ #category : 'as yet unclassified' }
+OCIRPushThisContext >> deltaStack [
+
+	^ 1
+]
+
 { #category : 'testing' }
 OCIRPushThisContext >> isRemovableByPop [
 

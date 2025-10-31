@@ -14,6 +14,12 @@ OCIRPushThisProcess >> accept: aVisitor [
 	^ aVisitor visitPushThisProcess: self
 ]
 
+{ #category : 'as yet unclassified' }
+OCIRPushThisProcess >> deltaStack [
+
+	^ 1
+]
+
 { #category : 'testing' }
 OCIRPushThisProcess >> isRemovableByPop [
 

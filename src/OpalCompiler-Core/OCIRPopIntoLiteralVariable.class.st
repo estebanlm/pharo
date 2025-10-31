@@ -13,3 +13,9 @@ Class {
 OCIRPopIntoLiteralVariable >> accept: aVisitor [
 	^ aVisitor visitPopIntoLiteralVariable: self
 ]
+
+{ #category : 'as yet unclassified' }
+OCIRPopIntoLiteralVariable >> deltaStack [
+
+	^ -1
+]
