@@ -23,7 +23,7 @@ SessionManagerErrorHandler >> handleError: anError log: shouldLog [
 		ifFalse: [
 			anError freeze.
 			self sessionManager addDeferredStartupAction: [
-				self uiManager handleError: anError log: false ] ]
+				super handleError: anError log: false ] ]
 ]
 
 { #category : 'accessing' }
