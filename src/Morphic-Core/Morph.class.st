@@ -4550,6 +4550,22 @@ Morph >> moveOrResizeFromKeystroke: anEvent [
 			ifFalse: [ self position: self position + dir ] ]
 ]
 
+{ #category : 'dependents-private' }
+Morph >> myDependents [
+	"Improved performance dependents."
+
+	^ (self valueOfProperty: #myDependents) ifNil: [ #() ]
+]
+
+{ #category : 'dependents-private' }
+Morph >> myDependents: aCollectionOrNil [
+	"Improved performance dependents."
+
+	aCollectionOrNil
+		ifNil: [self removeProperty: #myDependents]
+		ifNotNil: [self setProperty: #myDependents toValue: aCollectionOrNil]
+]
+
 { #category : 'naming' }
 Morph >> name: aName [
 	(aName isString) ifTrue: [self setNameTo: aName]

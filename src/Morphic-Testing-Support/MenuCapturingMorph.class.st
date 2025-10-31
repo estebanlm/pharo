@@ -9,8 +9,8 @@ Class {
 	#instVars : [
 		'menu'
 	],
-	#category : 'SUnit-Support-UITesting-Morphic',
-	#package : 'SUnit-Support-UITesting',
+	#category : 'Morphic-Testing-Support-Morphic',
+	#package : 'Morphic-Testing-Support',
 	#tag : 'Morphic'
 }
 

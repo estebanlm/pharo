@@ -8,9 +8,16 @@ Class {
 		'environment',
 		'rules'
 	],
-	#category : 'JenkinsTools-ExtraReports',
-	#package : 'JenkinsTools-ExtraReports'
+	#category : 'Deprecated14',
+	#package : 'Deprecated14'
 }
+
+{ #category : 'testing' }
+HDLintReport class >> isDeprecated [
+	"This class is based on the old rule system. We should develop a new one on the new rules"
+
+	^ true
+]
 
 { #category : 'running' }
 HDLintReport class >> runClasses: aCollectionOfClasses named: aString [

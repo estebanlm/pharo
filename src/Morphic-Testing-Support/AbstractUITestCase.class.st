@@ -4,8 +4,8 @@ This is an abstract superclass for all tests requiring a user interface (UI). Th
 Class {
 	#name : 'AbstractUITestCase',
 	#superclass : 'TestCase',
-	#category : 'SUnit-Support-UITesting-Base',
-	#package : 'SUnit-Support-UITesting',
+	#category : 'Morphic-Testing-Support-Base',
+	#package : 'Morphic-Testing-Support',
 	#tag : 'Base'
 }
 

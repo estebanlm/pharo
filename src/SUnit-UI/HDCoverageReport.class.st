@@ -9,8 +9,8 @@ Class {
 		'wrappers',
 		'covered'
 	],
-	#category : 'JenkinsTools-ExtraReports',
-	#package : 'JenkinsTools-ExtraReports'
+	#category : 'SUnit-UI',
+	#package : 'SUnit-UI'
 }
 
 { #category : 'private' }

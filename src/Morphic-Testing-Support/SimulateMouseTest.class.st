@@ -7,9 +7,8 @@ Class {
 	#instVars : [
 		'morph'
 	],
-	#category : 'SUnit-Support-UITesting-Tests-Base',
-	#package : 'SUnit-Support-UITesting-Tests',
-	#tag : 'Base'
+	#category : 'Morphic-Testing-Support',
+	#package : 'Morphic-Testing-Support'
 }
 
 { #category : 'helpers' }

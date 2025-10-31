@@ -4,8 +4,8 @@ Class {
 	#instVars : [
 		'context'
 	],
-	#category : 'JenkinsTools-Tests-Commands',
-	#package : 'JenkinsTools-Tests',
+	#category : 'SUnit-UI-Tests-Commands',
+	#package : 'SUnit-UI-Tests',
 	#tag : 'Commands'
 }
 

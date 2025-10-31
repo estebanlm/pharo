@@ -1,6 +1,6 @@
 Extension { #name : 'Halt' }
 
-{ #category : '*JenkinsTools-Core' }
+{ #category : '*SUnit-Basic-CLI' }
 Halt >> recordResultOf: aTestCase inHDTestReport: aHDTestReport [
 	
 	aHDTestReport recordError: self duringTest: aTestCase

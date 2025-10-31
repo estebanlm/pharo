@@ -25,8 +25,8 @@ Class {
 		'reference',
 		'method'
 	],
-	#category : 'JenkinsTools-ExtraReports',
-	#package : 'JenkinsTools-ExtraReports'
+	#category : 'SUnit-UI',
+	#package : 'SUnit-UI'
 }
 
 { #category : 'instance creation' }
