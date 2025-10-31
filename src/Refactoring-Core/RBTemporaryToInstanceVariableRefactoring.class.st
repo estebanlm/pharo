@@ -114,17 +114,9 @@ RBTemporaryToInstanceVariableRefactoring >> applicabilityPreconditions [
 RBTemporaryToInstanceVariableRefactoring >> breakingChangePreconditions [
 
 	^ {
-		  (RBCondition withBlock: [
-				   (class allSubclasses anySatisfy: [ :cls | cls definesInstanceVariable: temporaryVariableName asString ]) ifTrue: [
-						   self refactoringWarning:
-							   ('One or more subclasses of <1p> already defines an<n>instance variable with the same name. Proceed anyway?'
-								    expandMacrosWith: class name) ].
-				   true ]).
-		  (RBCondition checkNotMultipleTemporaryDefinitionsOf: temporaryVariableName in: class).
-		  (ReVariablesNotReadBeforeWrittenCondition new
-			   subtree: parseTree;
-			   variables: temporaryVariableName;
-			   checkForTemporaryVariables: true) }
+		  self preconditionNoSubclassDefinesVar.
+		  self preconditionNoMultipleTempOccurences.
+		  self preconditionNoReadBeforeWritten }
 ]
 
 { #category : 'initialization' }
@@ -143,6 +135,31 @@ RBTemporaryToInstanceVariableRefactoring >> isTemporaryVariableNameValid [
 		self refactoringError: temporaryVariableName , ' is a block parameter' ]
 ]
 
+{ #category : 'as yet unclassified' }
+RBTemporaryToInstanceVariableRefactoring >> preconditionNoMultipleTempOccurences [
+
+	^ ReMultipleMethodsDontReferToTempVarsCondition name: temporaryVariableName class: class selector: selector 
+]
+
+{ #category : 'as yet unclassified' }
+RBTemporaryToInstanceVariableRefactoring >> preconditionNoReadBeforeWritten [
+
+	^ ReVariablesNotReadBeforeWrittenCondition new
+		  subtree: parseTree;
+		  variables: temporaryVariableName;
+		  checkForTemporaryVariables: true 
+]
+
+{ #category : 'as yet unclassified' }
+RBTemporaryToInstanceVariableRefactoring >> preconditionNoSubclassDefinesVar [
+
+	^ RBCondition
+		  withBlock: [ (class allSubclasses anySatisfy: [ :cls | cls definesInstanceVariable: temporaryVariableName asString ]) not ]
+		  errorString:
+			  ('One or more subclasses of <1p> already defines an<n>instance variable with the same name. Proceed anyway?'
+				   expandMacrosWith: class name)
+]
+
 { #category : 'preconditions' }
 RBTemporaryToInstanceVariableRefactoring >> preconditions [
 
@@ -159,10 +176,6 @@ RBTemporaryToInstanceVariableRefactoring >> prepareForExecution [
 RBTemporaryToInstanceVariableRefactoring >> privateTransform [
 
 	self removeTemporaryOfClass: class.
-	class allSubclasses do: [ :cls |
-		(cls definesInstanceVariable: temporaryVariableName)
-			ifTrue: [ cls removeInstanceVariable: temporaryVariableName ]
-			ifFalse: [ self removeTemporaryOfClass: cls ] ].
 	class addInstanceVariable: temporaryVariableName
 ]
 
