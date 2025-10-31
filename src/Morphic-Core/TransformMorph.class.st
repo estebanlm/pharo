@@ -85,7 +85,7 @@ TransformMorph >> defaultColor [
 	^ Color lightGreen
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'drawing' }
 TransformMorph >> drawSubmorphsOn: aCanvas [
 
 	aCanvas transformBy: transform
