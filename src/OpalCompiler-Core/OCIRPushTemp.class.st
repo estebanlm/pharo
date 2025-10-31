@@ -14,6 +14,12 @@ OCIRPushTemp >> accept: aVisitor [
 	^ aVisitor visitPushTemp: self
 ]
 
+{ #category : 'as yet unclassified' }
+OCIRPushTemp >> deltaStack [
+
+	^ 1
+]
+
 { #category : 'testing' }
 OCIRPushTemp >> isRemovableByPop [
 

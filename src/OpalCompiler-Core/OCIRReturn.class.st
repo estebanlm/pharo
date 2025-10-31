@@ -14,6 +14,12 @@ OCIRReturn >> accept: aVisitor [
 	^ aVisitor visitReturn: self
 ]
 
+{ #category : 'as yet unclassified' }
+OCIRReturn >> deltaStack [
+
+	^ 0
+]
+
 { #category : 'testing' }
 OCIRReturn >> isReturn [
 

@@ -27,6 +27,12 @@ OCIRPushLiteral >> canBeQuickReturn [
 	^ #( nil true false -1 0 1 2 ) includes: literal
 ]
 
+{ #category : 'as yet unclassified' }
+OCIRPushLiteral >> deltaStack [
+
+	^ 1
+]
+
 { #category : 'testing' }
 OCIRPushLiteral >> isPushLiteral [
 

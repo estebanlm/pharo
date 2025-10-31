@@ -16,6 +16,12 @@ OCIRPushDup >> accept: aVisitor [
 	^ aVisitor visitPushDup: self
 ]
 
+{ #category : 'as yet unclassified' }
+OCIRPushDup >> deltaStack [
+
+	^ 1
+]
+
 { #category : 'testing' }
 OCIRPushDup >> isRemovableByPop [
 

@@ -250,6 +250,12 @@ OCIRInstruction >> delete [
 	sequence remove: self
 ]
 
+{ #category : 'as yet unclassified' }
+OCIRInstruction >> deltaStack [
+
+	^ 0
+]
+
 { #category : 'testing' }
 OCIRInstruction >> isBlockReturnTop [
 

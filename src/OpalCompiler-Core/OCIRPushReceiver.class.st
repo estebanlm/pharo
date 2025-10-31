@@ -19,6 +19,12 @@ OCIRPushReceiver >> canBeQuickReturn [
 	^ true
 ]
 
+{ #category : 'as yet unclassified' }
+OCIRPushReceiver >> deltaStack [
+
+	^ 1
+]
+
 { #category : 'testing' }
 OCIRPushReceiver >> isRemovableByPop [
 

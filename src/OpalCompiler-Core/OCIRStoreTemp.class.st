@@ -14,6 +14,12 @@ OCIRStoreTemp >> accept: aVisitor [
 	^ aVisitor visitStoreTemp: self
 ]
 
+{ #category : 'as yet unclassified' }
+OCIRStoreTemp >> deltaStack [
+
+	^ 0
+]
+
 { #category : 'testing' }
 OCIRStoreTemp >> isStore [
 	^ true

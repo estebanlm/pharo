@@ -19,6 +19,12 @@ OCIRPushInstVar >> canBeQuickReturn [
 	^ true
 ]
 
+{ #category : 'as yet unclassified' }
+OCIRPushInstVar >> deltaStack [
+
+	^ 1
+]
+
 { #category : 'testing' }
 OCIRPushInstVar >> isRemovableByPop [
 
