@@ -436,8 +436,7 @@ SystemEnvironment >> renameClass: aClass from: oldName [
 	oldref key: aClass name.
 	self add: oldref. "Old association preserves old refs"
 	self flushClassNameCache.
-	self class codeChangeAnnouncer classRenamed: aClass from: oldName to: aClass name.
-	aClass subclassesDo: [ :subclass | self class codeChangeAnnouncer classParentOf: subclass renamedFrom: oldName to: aClass name ]
+	self class codeChangeAnnouncer classRenamed: aClass from: oldName to: aClass name
 ]
 
 { #category : 'renaming' }
