@@ -122,7 +122,6 @@ BaselineOfMorphic >> baseline: spec [
 { #category : 'actions' }
 BaselineOfMorphic >> cleanUpAfterMorphicInitialization [
 
-	MCDataStream initialize.
 	FreeTypeCache clearCurrent.
 	World cleanseOtherworldlySteppers.
 	MCFileBasedRepository flushAllCaches

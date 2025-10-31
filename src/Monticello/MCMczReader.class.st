@@ -133,16 +133,6 @@ MCMczReader >> infoCache [
 { #category : 'loading' }
 MCMczReader >> loadDefinitions [
 
-	definitions := OrderedCollection new.
-	(self zip memberNamed: 'snapshot.bin') ifNotNil: [ :m |
-		[
-		definitions := (MCDataStream on: m contents readStream) next definitions.
-		self adaptDefinitions.
-		^ definitions ]
-			on: Error
-			do: [ :fallThrough |
-				('An error happened while reading MCZ. We will fallback to another format. Short error stack: ' , fallThrough signalerContext shortStack) traceCr ] ].
-	"otherwise"
 	(self zip membersMatching: 'snapshot/*') do: [ :m | self extractDefinitionsFrom: m ]
 ]
 
