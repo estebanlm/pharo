@@ -133,6 +133,7 @@ MCMczReader >> infoCache [
 { #category : 'loading' }
 MCMczReader >> loadDefinitions [
 
+	definitions := OrderedCollection new.
 	(self zip membersMatching: 'snapshot/*') do: [ :m | self extractDefinitionsFrom: m ]
 ]
 
