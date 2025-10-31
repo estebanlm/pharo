@@ -67,6 +67,18 @@ OCOpalExamples >> exampleAndValueWithShortcircuitEffect [
 	false and: [ result := 17 ]
 ]
 
+{ #category : 'as yet unclassified' }
+OCOpalExamples >> exampleArraySize32AndSize32 [
+
+	^ { 255 . 255 . 255 . 255 .255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . { 255 . 255 . 255 . 255 .255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 } }
+]
+
+{ #category : 'as yet unclassified' }
+OCOpalExamples >> exampleArraySize33AndSize33 [
+
+	^ { 255 . 255 . 255 . 255 .255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . { 255 . 255 . 255 . 255 .255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 . 255 } }
+]
+
 { #category : 'examples - blocks' }
 OCOpalExamples >> exampleBlockArgument [
 	| block block1 block2 |
