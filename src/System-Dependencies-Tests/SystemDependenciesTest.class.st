@@ -267,6 +267,7 @@ SystemDependenciesTest >> testExternalMorphicCoreDependencies [
 		BaselineOfDisplay allPackageNames,
 		BaselineOfUnifiedFFI allPackageNames,
 		BaselineOfFonts allPackageNames,
+		(BaselineOfFreeType deepPackagesOfGroupNamed: #ui),
 		BaselineOfMorphicCore allPackageNames,
 		BaselineOfThreadedFFI corePackageNames ).
 

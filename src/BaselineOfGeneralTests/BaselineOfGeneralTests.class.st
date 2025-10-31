@@ -28,7 +28,6 @@ BaselineOfGeneralTests >> baseline: spec [
 			package: 'Metacello-CommandLine-Tests';
 			package: 'Debugger-Model-Tests';
 			package: 'Debugger-Oups-Tests';
-			package: 'EmbeddedFreeType-Tests';
 			baseline: 'Epicea' with: [
 				spec
 					repository: repository;
