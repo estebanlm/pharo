@@ -1,12 +1,12 @@
 Extension { #name : 'ClassTestCase' }
 
-{ #category : '*Refactoring-Critics' }
+{ #category : '*General-Rules-Tests' }
 ClassTestCase >> testMethodsOfTheClassShouldNotBeRepeatedInItsSuperclasses [
 
 	self assertValidLintRule: ReEquivalentSuperclassMethodsRule new
 ]
 
-{ #category : '*Refactoring-Critics' }
+{ #category : '*General-Rules-Tests' }
 ClassTestCase >> testTraitExplicitRequirementMethodsMustBeImplementedInTheClassOrInASuperclass [
 
 	self assertValidLintRule: ReExplicitRequirementMethodsRule new
