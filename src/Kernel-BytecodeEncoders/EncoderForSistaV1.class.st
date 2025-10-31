@@ -1030,14 +1030,13 @@ EncoderForSistaV1 >> genPushCharacter: aCharacterOrCode [
 
 { #category : 'bytecode generation' }
 EncoderForSistaV1 >> genPushConsArray: size [
-	(size < 0 or: [size > 127]) ifTrue:
-		[^self outOfRangeError: 'size' index: size range: 0 to: 127].
 	"231		11100111	jkkkkkkk	Push (Array new: kkkkkkk) (j = 0)
 									&	Pop kkkkkkk elements into: (Array new: kkkkkkk) (j = 1)"
+	| limit |
+	limit := OCIRPushArray sizeLimit.
+	(size < 0 or: [size > limit]) ifTrue:
+		[^self outOfRangeError: 'size' index: size range: 0 to: limit].
 
-"	(stream stackFrameSize > CompiledCode LargeFrame )
-	ifTrue: [ 1halt ] ifFalse: [ 1halt ].
-"
 	stream
 		nextPut: 231;
 		nextPut: size + 128

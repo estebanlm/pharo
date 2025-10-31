@@ -15,6 +15,12 @@ Class {
 	#tag : 'IR-Nodes'
 }
 
+{ #category : 'accessing' }
+OCIRPushArray class >> sizeLimit [
+
+	^ 127
+]
+
 { #category : 'visiting' }
 OCIRPushArray >> accept: aVisitor [
 	^ aVisitor visitPushArray: self
