@@ -491,18 +491,6 @@ Symbol >> isOrientedFill [
 ]
 
 { #category : 'testing' }
-Symbol >> isSelectorSymbol [
-
-	self deprecated:  'Use isUsedAsSelectorSymbol'
-		on: '02/02/2025' 
-		in:  'pharo13'
-		transformWith: 
-			'`@rec isSelectorSymbol' -> '`@rec isUsedAsSelectorSymbol'.
-
-	^ self isUsedAsSelectorSymbol
-]
-
-{ #category : 'testing' }
 Symbol >> isSymbol [
 	^ true
 ]

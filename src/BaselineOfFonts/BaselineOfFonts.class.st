@@ -1,9 +1,6 @@
 Class {
 	#name : 'BaselineOfFonts',
 	#superclass : 'BaselineOf',
-	#instVars : [
-		'initializersEnabled'
-	],
 	#category : 'BaselineOfFonts',
 	#package : 'BaselineOfFonts'
 }
@@ -13,7 +10,6 @@ BaselineOfFonts >> baseline: spec [
 
 	<baseline>
 	spec for: #common do: [
-			spec preLoadDoIt: #preload:package:.
 			spec postLoadDoIt: #postload:package:.
 
 			spec
@@ -134,15 +130,5 @@ BaselineOfFonts >> loadBitmapSourcePro [
 BaselineOfFonts >> postload: loader package: packageSpec [
 
 	self loadBitmapDejaVuSans.
-	self loadBitmapSourcePro.
-
-	MCMethodDefinition initializersEnabled: initializersEnabled
-]
-
-{ #category : 'actions' }
-BaselineOfFonts >> preload: loader package: packageSpec [
-	"For now we ensure the class initialization but in the future it should be true by default"
-
-	initializersEnabled := MCMethodDefinition initializersEnabled.
-	MCMethodDefinition initializersEnabled: true
+	self loadBitmapSourcePro
 ]

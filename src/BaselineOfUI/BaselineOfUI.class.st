@@ -43,6 +43,25 @@ BaselineOfUI >> baseline: spec [
 		spec package: 'Debugger-Model'.
 		spec package: 'Debugger-Oups'.
 
+		spec baseline: 'Display' with: [ spec repository: repository ].
+		spec baseline: 'Fonts' with: [
+				spec
+					repository: repository;
+					loads: #Core ].
+		spec baseline: 'FreeType' with: [
+			spec
+				repository: repository;
+				loads: 'ui' ].
+		spec baseline: 'Fuel' with: [
+			spec
+				repository: repository;
+				loads: #( 'Core' ) ].
+		spec
+				baseline: 'SUnit' with: [
+						spec
+							loads: 'UI';
+							repository: repository ].
+		
 		"Load morphic before Spec"
 		spec baseline: 'Morphic' with: [ spec repository: repository ].
 		spec baseline: 'Commander2' with: [ spec repository: repository ].
