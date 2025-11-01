@@ -424,6 +424,15 @@ SystemDependenciesTest >> testExternalUIDependencies [
 ]
 
 { #category : 'tests' }
+SystemDependenciesTest >> testExternalUIInfrastructureDependencies [
+
+	| dependencies |
+	dependencies := self externalDependendiesOf: self uiInfrastructureCoreLayerPackages.
+
+	self assertEmpty: dependencies
+]
+
+{ #category : 'tests' }
 SystemDependenciesTest >> testFilesShouldNotDependOnRandom [
 	"In the past Files was depending on Random-Core only to print a random number in a file name.
 	Now, there is no dependency between Files and Random-Core and if possible we would like to keep it this way in order to extract Random-Core from the KernelGroup of the Bootstrap (and maybe of the bootstrap in itself generally)"
@@ -446,4 +455,11 @@ SystemDependenciesTest >> testNoDependencyToDeprecatedPackages [
 SystemDependenciesTest >> tonelCorePackageNames [
 
 	^ { BaselineOfTonel name }, (BaselineOfTonel packagesOfGroupNamed: #core)
+]
+
+{ #category : 'packages' }
+SystemDependenciesTest >> uiInfrastructureCoreLayerPackages [
+
+	^ self sunitCoreLayerPackages , BaselineOfUnifiedFFI allPackageNames , BaselineOfThreadedFFI allPackageNames , BaselineOfDisplay allPackageNames
+	  , BaselineOfFonts allPackageNames , BaselineOfFreeType allPackageNames , BaselineOfMenuRegistration allPackageNames
 ]
