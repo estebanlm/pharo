@@ -43,7 +43,6 @@ BaselineOfUI >> baseline: spec [
 		spec package: 'Debugger-Model'.
 		spec package: 'Debugger-Oups'.
 
-		spec baseline: 'UIInfrastructure' with: [ spec repository: repository ].
 		spec baseline: 'Fuel' with: [
 			spec
 				repository: repository;
