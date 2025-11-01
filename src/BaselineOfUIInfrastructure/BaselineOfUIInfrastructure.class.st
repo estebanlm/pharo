@@ -12,14 +12,9 @@ BaselineOfUIInfrastructure >> baseline: spec [
 	| repository |
 	repository := self packageRepositoryURLForSpec: spec.
 	spec for: #common do: [
-
-			spec baseline: 'Display' with: [ spec repository: repository ].
-			spec baseline: 'Fonts' with: [
-					spec
-						repository: repository;
-						loads: #Core ].
-			spec baseline: 'FreeType' with: [
-					spec
-						repository: repository;
-						loads: 'ui' ] ]
+			spec
+				baseline: 'Display' with: [ spec repository: repository ];
+				baseline: 'Fonts' with: [ spec loads: #Core from: repository ];
+				baseline: 'FreeType' with: [ spec loads: 'ui' from: repository ];
+				baseline: 'MenuRegistration' with: [ spec repository: repository ] ]
 ]
