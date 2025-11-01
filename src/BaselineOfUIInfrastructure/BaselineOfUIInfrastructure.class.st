@@ -12,7 +12,6 @@ BaselineOfUIInfrastructure >> baseline: spec [
 	| repository |
 	repository := self packageRepositoryURLForSpec: spec.
 	spec for: #common do: [
-			spec postLoadDoIt: #postload:package:.
 
 			spec baseline: 'Display' with: [ spec repository: repository ].
 			spec baseline: 'Fonts' with: [
