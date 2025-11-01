@@ -130,8 +130,6 @@ BaselineOfIDE >> baseline: spec [
 		
 		spec package: 'IconPacks'.
 
-		spec baseline: 'ThreadedFFI' with: [ spec repository: repository ].
-
 		spec package: 'Kernel-ExtraUtils' ]
 ]
 
