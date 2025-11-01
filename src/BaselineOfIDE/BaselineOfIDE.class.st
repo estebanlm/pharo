@@ -92,7 +92,6 @@ BaselineOfIDE >> baseline: spec [
 
 		self load: 'Fuel' group: 'Tests' spec: spec.
 
-		self load: 'FreeType' group: 'tests' spec: spec.
 		self load: 'Keymapping' group: 'tests' spec: spec.
 
 		spec baseline: 'Zodiac' with: [ spec repository: repository ].
