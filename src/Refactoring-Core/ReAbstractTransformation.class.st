@@ -406,15 +406,6 @@ ReAbstractTransformation >> privateTransform [
 ]
 
 { #category : 'exceptions' }
-ReAbstractTransformation >> refactoringConfirmWarning: aString [
-	| ret |
-	ret := self uiManager
-		confirm: aString
-		orCancel: [ ^ RBRefactoringError signal: 'aborted' ].
-	^ ret
-]
-
-{ #category : 'exceptions' }
 ReAbstractTransformation >> refactoringError: aString [
 	^ RBRefactoringError signal: aString
 ]
