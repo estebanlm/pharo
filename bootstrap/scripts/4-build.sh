@@ -158,7 +158,7 @@ ${VM} "${COMPILER_IMAGE_NAME}.image" "${IMAGE_FLAGS}" st ${BOOTSTRAP_REPOSITORY}
 echo $(date -u) "[Compiler] Initializing Unicode"
 ${VM} "${COMPILER_IMAGE_NAME}.image" "${IMAGE_FLAGS}" st ${BOOTSTRAP_REPOSITORY}/bootstrap/scripts/01-initialization/02-initUnicode.st --no-source --save --quit "${BOOTSTRAP_REPOSITORY}/resources/unicode/"
 
-${VM} "${COMPILER_IMAGE_NAME}.image" "${IMAGE_FLAGS}" loadHermes Random-Core.hermes System-Hashing.hermes Network-UUID.hermes FileSystem-Path.hermes FileSystem-Core.hermes FileSystem-Disk.hermes --save --no-fail-on-undeclared
+${VM} "${COMPILER_IMAGE_NAME}.image" "${IMAGE_FLAGS}" loadHermes Random-Core.hermes System-Hashing.hermes FileSystem-Path.hermes FileSystem-Core.hermes FileSystem-Disk.hermes --save --no-fail-on-undeclared
 zip "${COMPILER_IMAGE_NAME}.zip" "${COMPILER_IMAGE_NAME}.image"
 
 # Installing Traits through Hermes 
