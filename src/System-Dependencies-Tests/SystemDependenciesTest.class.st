@@ -211,6 +211,9 @@ SystemDependenciesTest >> testExternalDisplayDependencies [
 		self metacelloPackageNames,
 		self tonelCorePackageNames,
 		BaselineOfTraits corePackages,
+		BaselineOfSUnit corePackageNames,
+		BaselineOfUnifiedFFI allPackageNames,
+		BaselineOfThreadedFFI allPackageNames,
 		BaselineOfDisplay allPackageNames).
 
 	self assertEmpty: dependencies
