@@ -28,15 +28,16 @@ BaselineOfGeneralTests >> baseline: spec [
 			package: 'Metacello-CommandLine-Tests';
 			package: 'Debugger-Model-Tests';
 			package: 'Debugger-Oups-Tests';
-			package: 'EmbeddedFreeType-Tests';
 			baseline: 'Epicea' with: [
 				spec
 					repository: repository;
 					loads: #Tests ];
 			package: 'FileSystem-Memory-Tests';
-			package: 'Fonts-Infrastructure-Tests';
+			baseline: 'Fonts' with: [ spec loads: #Tests from: repository ];
+			baseline: 'FreeType' with: [ spec loads: #tests from: repository ];
 			package: 'Graphics-Tests';
 			package: 'Text-Tests';
+			package: 'Morphic-Testing-Support';
 			package: 'Morphic-Tests';
 			package: 'Morphic-Widgets-FastTable-Tests';
 			package: 'NECompletion-Tests';
