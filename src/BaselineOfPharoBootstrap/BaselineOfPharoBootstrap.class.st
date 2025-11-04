@@ -100,8 +100,6 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		spec package: 'Math-Operations-Extensions'.
 
 		spec package: 'Multilingual-Encodings'.
-
-		spec package: 'Network-UUID'.
 		
 		spec package: 'Transcript-NonInteractive'.
 		spec package: 'PharoBootstrap-Initialization'.
@@ -212,7 +210,6 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		spec group: 'FileSystemGroup' with: {
 			'Random-Core'.
 			'System-Hashing'.
-			'Network-UUID'.
 			'FileSystem-Core'.
 			'FileSystem-Disk'}.
 
