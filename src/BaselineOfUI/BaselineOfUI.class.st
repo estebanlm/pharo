@@ -54,6 +54,7 @@ BaselineOfUI >> baseline: spec [
 							repository: repository ].
 		
 		"Load morphic before Spec"
+		spec baseline: 'MorphicCore' with: [ spec repository: repository ].
 		spec baseline: 'Morphic' with: [ spec repository: repository ].
 		spec baseline: 'Commander2' with: [ spec repository: repository ].
 		"Spec 2 (base), using external configuration"
