@@ -123,12 +123,6 @@ Trait >> expandedDefinitionStringFor: aPrinter [
 ]
 
 { #category : 'testing' }
-Trait >> hasEmptyComposition [
-
-	^ self traitComposition isEmpty or: [ self traitComposition = TEmpty asTraitComposition ]
-]
-
-{ #category : 'testing' }
 Trait >> isBaseTrait [
 	<reflection: 'Class structural inspection - Class kind testing'>
 	^ true
