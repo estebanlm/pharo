@@ -55,24 +55,6 @@ ReInteractionDriver class >> refactoringClass [
 	self subclassResponsibility
 ]
 
-{ #category : 'configuration' }
-ReInteractionDriver class >> useRequestDialog: aRequestDialog during: aBlock [
-
-	| old |
-	old := DefaultRequestDialog.
-	DefaultRequestDialog := aRequestDialog.
-	^ aBlock ensure: [ DefaultRequestDialog := old ]
-]
-
-{ #category : 'configuration' }
-ReInteractionDriver class >> useSelectDialog: aSelectDialog during: aBlock [
-
-	| old |
-	old := DefaultSelectDialog.
-	DefaultSelectDialog := aSelectDialog.
-	^ aBlock ensure: [ DefaultSelectDialog := old ]
-]
-
 { #category : 'accessing' }
 ReInteractionDriver >> application [
 	"For now use the singleton. Normally the application should be passed from Calypso and the command"

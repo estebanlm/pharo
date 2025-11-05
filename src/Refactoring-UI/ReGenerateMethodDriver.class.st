@@ -33,6 +33,7 @@ ReGenerateMethodDriver >> defaultSelectDialog [
 		display: [ :each | each asString ];
 		displayIcon: [ :each | self iconNamed: each systemIconName ];
 	  	openModal.
+
 	^ dialog
 ]
 
