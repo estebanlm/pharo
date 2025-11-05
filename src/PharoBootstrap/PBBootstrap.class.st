@@ -190,6 +190,7 @@ PBBootstrap >> exportMonticelloInStFile [
 		MCLazyVersionInfo initialize.
 		MCMethodDefinition initialize.
 		MCDataStream initialize.
+		SharedRandom initialize.
 		DigitalSignatureAlgorithm initialize.
 		MD5NonPrimitive initialize.
 		SHA1 initialize.
