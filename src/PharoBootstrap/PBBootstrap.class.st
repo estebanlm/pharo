@@ -190,6 +190,9 @@ PBBootstrap >> exportMonticelloInStFile [
 		MCLazyVersionInfo initialize.
 		MCMethodDefinition initialize.
 		MCDataStream initialize.
+		DigitalSignatureAlgorithm initialize.
+		MD5NonPrimitive initialize.
+		SHA1 initialize.
 		UUIDGenerator initialize.'
 		intoFile: 'Monticello.st'
 
