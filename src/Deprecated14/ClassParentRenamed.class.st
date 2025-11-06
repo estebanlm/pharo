@@ -13,9 +13,8 @@ Class {
 		'parentOldName',
 		'parentNewName'
 	],
-	#category : 'System-Announcements-System-Classes',
-	#package : 'System-Announcements',
-	#tag : 'System-Classes'
+	#category : 'Deprecated14',
+	#package : 'Deprecated14'
 }
 
 { #category : 'instance creation' }
@@ -25,6 +24,13 @@ ClassParentRenamed class >> classParentOf: aClass renamedFrom: oldName to: newNa
 		parentNewName: newName;
 		classAffected: aClass;
 		yourself
+]
+
+{ #category : 'testing' }
+ClassParentRenamed class >> isDeprecated [
+	"You should register to ClassRenamed and iterate over the children instead"
+
+	^ true
 ]
 
 { #category : 'accessing' }

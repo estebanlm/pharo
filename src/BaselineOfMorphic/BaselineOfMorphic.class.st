@@ -38,13 +38,9 @@ BaselineOfMorphic >> baseline: spec [
 	spec for: #common do: [
 		spec preLoadDoIt: #preload:package:.
 		spec postLoadDoIt: #postload:package:.
-
-		spec
-			baseline: 'MorphicCore' with: [ spec repository: repository ];
-			baseline: 'MenuRegistration' with: [ spec repository: repository ].
 			
 		spec package: 'System-Identification'.
-		spec package: 'System-Settings-Core' with: [ spec requires: #( 'MorphicCore' 'System-Identification' ) ].
+		spec package: 'System-Settings-Core' with: [ spec requires: #( 'System-Identification' ) ].
 
 		spec package: 'System-Localization'.
 
@@ -126,19 +122,11 @@ BaselineOfMorphic >> postload: loader package: packageSpec [
 
 	SystemNotification signal: 'Starting postload action'.
 
-	TextConstants initialize.
-
-	Stdio stdout
-		nextPutAll: 'starting...';
-		lf.
-
 	Stdio stdout
 		nextPutAll: Smalltalk ui asString;
 		lf.
 
-	#( #ProgressBarMorph #FT2Types #FT2FFILibrary #FreeTypeCacheConstants
-	   #FreeTypeCache #FreeTypeSettings #FreeTypeSubPixelAntiAliasedGlyphRenderer
-	   #FT2Constants #GlobalIdentifier #HaloMorph
+	#( #ProgressBarMorph #GlobalIdentifier #HaloMorph
 	   #CharacterScanner #ImageMorph
 	   #Locale #MczInstaller #MD5NonPrimitive #MenuItemMorph
 	   #MenuMorph #RxMatcher #RxParser #RxsPredicate #SHA1
@@ -169,15 +157,9 @@ BaselineOfMorphic >> postload: loader package: packageSpec [
 	PolymorphSystemSettings showDesktopLogo: true.
 	PolymorphSystemSettings desktopColor: Color white.
 
-	#( #BalloonMorph #EmbeddedFreeTypeFontInstaller
-	   #FreeTypeFontProvider
-	   #IconicButtonMorph #KMLog
-	   #LucidaGrandeRegular #ScrollBarMorph
+	#( #BalloonMorph #IconicButtonMorph #KMLog #ScrollBarMorph
 	   #SystemSettingsPersistence #TabMorph #TaskbarMorph ) do: [ :each |
 		(Smalltalk globals at: each) initialize ].
-
-	LogicalFontManager current addFontProvider:
-		FreeTypeFontProvider current.
 
 	MCMethodDefinition initializersEnabled: initializersEnabled.
 

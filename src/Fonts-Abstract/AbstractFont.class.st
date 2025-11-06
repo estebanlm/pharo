@@ -39,13 +39,6 @@ AbstractFont class >> isAbstract [
 	^self == AbstractFont
 ]
 
-{ #category : 'updating' }
-AbstractFont class >> update: anAspect [
-
-	anAspect == #textDPIChanged ifTrue: [
-		AbstractFont allSubInstancesDo: [ :font | font pixelsPerInchChanged ]]
-]
-
 { #category : 'measuring' }
 AbstractFont >> approxWidthOfText: aText [
 	"Return the width of aText -- quickly, and a little bit dirty. Used by lists morphs containing Text objects to get a quick, fairly accurate measure of the width of a list item."
