@@ -138,7 +138,7 @@ ${VM} "${COMPILER_IMAGE_NAME}.image" # I have to run once the image so the next 
 
 echo $(date -u) "[Compiler] Adding more Kernel packages"
 ${VM} "${COMPILER_IMAGE_NAME}.image" "${IMAGE_FLAGS}" perform --save BasicHermesTool load: --as-array Clap-Core.hermes Clap-Commands-Pharo.hermes Hermes-Extensions.hermes
-${VM} "${COMPILER_IMAGE_NAME}.image" "${IMAGE_FLAGS}" loadHermes Math-Operations-Extensions.hermes Debugging-Core.hermes System-NumberPrinting.hermes System-Time.hermes Multilingual-Encodings.hermes ReflectionMirrors-Primitives.hermes NumberParser.hermes --save --no-fail-on-undeclared
+${VM} "${COMPILER_IMAGE_NAME}.image" "${IMAGE_FLAGS}" loadHermes Math-Operations-Extensions.hermes System-NumberPrinting.hermes System-Time.hermes Multilingual-Encodings.hermes ReflectionMirrors-Primitives.hermes NumberParser.hermes --save --no-fail-on-undeclared
 
 # Now that System-Time is loaded, we can initialize the version
 ${VM} "${COMPILER_IMAGE_NAME}.image" "${IMAGE_FLAGS}" perform  --save SystemVersion setMajor:minor:patch:suffix:build:commitHash: ${PHARO_MAJOR} ${PHARO_MINOR} ${PHARO_PATCH} ${PHARO_SUFFIX} ${BUILD_NUMBER} ${PHARO_COMMIT_HASH}
@@ -166,7 +166,6 @@ echo $(date -u) "[Compiler] Installing Traits through Hermes"
 
 ${VM} "${COMPILER_IMAGE_NAME}.image" "${IMAGE_FLAGS}" save ${TRAITS_IMAGE_NAME}
 ${VM} "${TRAITS_IMAGE_NAME}.image" "${IMAGE_FLAGS}" loadHermes Traits.hermes --save
-${VM} "${TRAITS_IMAGE_NAME}.image" "${IMAGE_FLAGS}" loadHermes Kernel-Traits.hermes Collections-Abstract-Traits.hermes CodeImport-Traits.hermes --save
 zip "${TRAITS_IMAGE_NAME}.zip" "${TRAITS_IMAGE_NAME}.image"
 
 #Bootstrap Initialization: Class and Package initialization
