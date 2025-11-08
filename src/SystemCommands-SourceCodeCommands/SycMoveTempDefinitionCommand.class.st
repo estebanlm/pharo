@@ -7,7 +7,7 @@ Internal Representation and Key Implementation Points.
 	newName:		<String>
 "
 Class {
-	#name : 'SycRenameArgOrTempCommand',
+	#name : 'SycMoveTempDefinitionCommand',
 	#superclass : 'SycSourceCodeRefactoringCommand',
 	#instVars : [
 		'newName',
@@ -18,39 +18,41 @@ Class {
 }
 
 { #category : 'testing' }
-SycRenameArgOrTempCommand class >> canBeExecutedInContext: aSourceCodeContext [
+SycMoveTempDefinitionCommand class >> canBeExecutedInContext: aSourceCodeContext [
 
 	^ (super canBeExecutedInContext: aSourceCodeContext) and: [
 		  aSourceCodeContext isArgOrTempVariableSelected ]
 ]
 
 { #category : 'execution' }
-SycRenameArgOrTempCommand >> applyResultInContext: aSourceCodeContext [
-	super applyResultInContext: aSourceCodeContext.
+SycMoveTempDefinitionCommand >> applyResultInContext: aSourceCodeContext [
 
+	super applyResultInContext: aSourceCodeContext.
 	aSourceCodeContext showVariableNamed: newName
 ]
 
 { #category : 'accessing' }
-SycRenameArgOrTempCommand >> defaultMenuIconName [
+SycMoveTempDefinitionCommand >> defaultMenuIconName [
+
 	^ #edit
 ]
 
 { #category : 'accessing' }
-SycRenameArgOrTempCommand >> defaultMenuItemName [
-	^'(R) Rename temp'
+SycMoveTempDefinitionCommand >> defaultMenuItemName [
+
+	^'Move temp. definition'
 ]
 
 { #category : 'accessing' }
-SycRenameArgOrTempCommand >> description [
+SycMoveTempDefinitionCommand >> description [
 
-	^ 'Renames temp variable in given method.'
+	^ 'Moves the definition of the temporary variable closed to its user.'
 ]
 
 { #category : 'execution' }
-SycRenameArgOrTempCommand >> execute [
+SycMoveTempDefinitionCommand >> execute [
 
-	^ (ReRenameArgumentOrTemporaryDriver new
+	^ (ReMoveTemporaryDefinitionDriver new
 		   sourceNode: sourceNode;
 		   method: method;
 		   scopes: toolContext refactoringScopes;
@@ -58,15 +60,14 @@ SycRenameArgOrTempCommand >> execute [
 ]
 
 { #category : 'testing' }
-SycRenameArgOrTempCommand >> isComplexRefactoring [
+SycMoveTempDefinitionCommand >> isComplexRefactoring [
 
 	^ false
 ]
 
 { #category : 'execution' }
-SycRenameArgOrTempCommand >> prepareFullExecutionInContext: aToolContext [
+SycMoveTempDefinitionCommand >> prepareFullExecutionInContext: aToolContext [
 
 	super prepareFullExecutionInContext: aToolContext.
-
 	toolContext := aToolContext
 ]

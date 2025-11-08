@@ -62,12 +62,12 @@ RBMoveTemporaryVariableDefinitionTransformation >> applicabilityPreconditions [
 		  (RBCondition definesSelector: selector in: self definingClass).
 		  (RBCondition
 			   withBlock: [
-			   self definingMethod allTemporaryVariables includes: variableName ]
+			   self definingMethodAST allTemporaryVariables includes: variableName ]
 			   errorString: 'Method named ' , selector
 				   , ' does not define a temporary variable named ' , variableName).
 		  (RBCondition
 			   withBlock: [
-				   (self definingMethod allArgumentVariables includes:
+				   (self definingMethodAST allArgumentVariables includes:
 					    variableName) not ]
 			   errorString: 'Variable named ' , variableName
 				   , ' cannot be removed because it is an argument in this method').
@@ -183,6 +183,12 @@ RBMoveTemporaryVariableDefinitionTransformation >> definingBlock [
 		ifFalse: [self refactoringError: 'Variable is an argument'].
 
 	^ definingNode
+]
+
+{ #category : 'as yet unclassified' }
+RBMoveTemporaryVariableDefinitionTransformation >> definingMethodAST [
+
+	^ self definingClass parseTreeForSelector: selector asSymbol
 ]
 
 { #category : 'storing' }
