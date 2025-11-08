@@ -61,7 +61,6 @@ BaselineOfUI >> baseline: spec [
 		"Spec 2 (base), using external configuration"
 		self specBase: spec.
 
-		spec package: 'StartupPreferences'.
 		spec package: 'Morphic-Widgets-Tree'.
 
 		spec baseline: 'Keymapping' with: [
