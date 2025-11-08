@@ -31,10 +31,10 @@ Class {
 	#package : 'StartupPreferences'
 }
 
-{ #category : 'accessing' }
-PharoOptionsHandler class >> priority [
+{ #category : 'class initialization' }
+PharoOptionsHandler class >> initialize [
 
-	^ 100
+	CurrentOptionsHandler := self
 ]
 
 { #category : 'accessing' }

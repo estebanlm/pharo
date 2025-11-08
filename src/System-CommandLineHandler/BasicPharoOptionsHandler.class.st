@@ -23,6 +23,9 @@ Class {
 	#instVars : [
 		'arguments'
 	],
+	#classVars : [
+		'CurrentOptionsHandler'
+	],
 	#category : 'System-CommandLineHandler',
 	#package : 'System-CommandLineHandler'
 }
@@ -30,7 +33,7 @@ Class {
 { #category : 'accessing' }
 BasicPharoOptionsHandler class >> currentOptionHandler [
 
-	^ ((self withAllSubclasses reject: [ :class | class isAbstract ]) sorted: [ :a :b | a priority > b priority ]) anyOne
+	^ CurrentOptionsHandler ifNil: [ CurrentOptionsHandler := self ]
 ]
 
 { #category : 'accessing' }
@@ -45,12 +48,6 @@ BasicPharoOptionsHandler class >> forArguments: arguments [
 BasicPharoOptionsHandler class >> handle: arguments [
 
 	^ (self forArguments: arguments) handlePharoArguments
-]
-
-{ #category : 'accessing' }
-BasicPharoOptionsHandler class >> priority [
-
-	^ 10
 ]
 
 { #category : 'accessing' }
