@@ -40,7 +40,7 @@ SycMoveTempDefinitionCommand >> defaultMenuIconName [
 { #category : 'accessing' }
 SycMoveTempDefinitionCommand >> defaultMenuItemName [
 
-	^'Move temp. definition'
+	^'(R) Move temp. definition'
 ]
 
 { #category : 'accessing' }

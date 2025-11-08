@@ -1,14 +1,13 @@
 "
-I am a driver to manage the interractions during a rename argument or temporary refactoring. 
+I am a driver to manage the interractions during a move temporary variable definition closer to its users.
 
-I'll check that the interval selected by the user is right. I'll ask a new name and check that it is valid. If it is not, I'll ask again to the user except if they cancel.
+I'll check that the interval selected by the user is right. 
 "
 Class {
 	#name : 'ReMoveTemporaryDefinitionDriver',
 	#superclass : 'ReInteractionDriver',
 	#instVars : [
 		'sourceNode',
-		'newName',
 		'method'
 	],
 	#category : 'Refactoring-UI-Drivers',
