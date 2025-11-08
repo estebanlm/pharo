@@ -13,6 +13,12 @@ Class {
 	#tag : 'Drivers'
 }
 
+{ #category : 'configuration' }
+ReGenerateMethodDriver class >> defaultSelectDialog [
+
+	^ DefaultSelectDialog ifNil: [ SpSelectMultipleDialog new ]
+]
+
 { #category : 'execution' }
 ReGenerateMethodDriver >> configureRefactoring [
 
@@ -23,9 +29,9 @@ ReGenerateMethodDriver >> configureRefactoring [
 
 { #category : 'configuration' }
 ReGenerateMethodDriver >> defaultSelectDialog [
+
 	| dialog |
-	
-	dialog := SpSelectMultipleDialog newApplication: self application.
+	dialog := super defaultSelectDialog.
 	dialog
 	  	title: self dialogTitle;
 	  	label: 'Please select the variable(s)';
@@ -33,7 +39,6 @@ ReGenerateMethodDriver >> defaultSelectDialog [
 		display: [ :each | each asString ];
 		displayIcon: [ :each | self iconNamed: each systemIconName ];
 	  	openModal.
-
 	^ dialog
 ]
 

@@ -23,10 +23,26 @@ Class {
 		'informDialog',
 		'stoppedBeforeApplyingRefactoring'
 	],
+	#classVars : [
+		'DefaultRequestDialog',
+		'DefaultSelectDialog'
+	],
 	#category : 'Refactoring-UI-Drivers',
 	#package : 'Refactoring-UI',
 	#tag : 'Drivers'
 }
+
+{ #category : 'configuration' }
+ReInteractionDriver class >> defaultRequestDialog [ 
+
+	^ DefaultRequestDialog ifNil: [ SpRequestDialog ]
+]
+
+{ #category : 'configuration' }
+ReInteractionDriver class >> defaultSelectDialog [ 
+
+	^ DefaultSelectDialog ifNil: [ SpSelectDialog ]
+]
 
 { #category : 'testing' }
 ReInteractionDriver class >> isAbstract [
@@ -53,6 +69,24 @@ ReInteractionDriver class >> newApplication: anApplication [
 ReInteractionDriver class >> refactoringClass [
 
 	self subclassResponsibility
+]
+
+{ #category : 'configuration' }
+ReInteractionDriver class >> useRequestDialog: aRequestDialog during: aBlock [
+
+	| old |
+	old := DefaultRequestDialog.
+	DefaultRequestDialog := aRequestDialog.
+	^ aBlock ensure: [ DefaultRequestDialog := old ]
+]
+
+{ #category : 'configuration' }
+ReInteractionDriver class >> useSelectDialog: aSelectDialog during: aBlock [
+
+	| old |
+	old := DefaultSelectDialog.
+	DefaultSelectDialog := aSelectDialog.
+	^ aBlock ensure: [ DefaultSelectDialog := old ]
 ]
 
 { #category : 'accessing' }
@@ -103,14 +137,14 @@ ReInteractionDriver >> defaultInformDialog [
 ReInteractionDriver >> defaultRequestDialog [
 	"We do not use a subclassResponsibility because all the drivers do not have to."
 
-	^ self application newRequest
+	^ self class defaultRequestDialog newApplication: self application
 ]
 
 { #category : 'configuration' }
 ReInteractionDriver >> defaultSelectDialog [
 	"We do not use a subclassResponsibility because all the drivers do not have to."
 	
-	^ self application newSelect
+	^ self class defaultSelectDialog newApplication: self application
 ]
 
 { #category : 'ui - dialogs' }
