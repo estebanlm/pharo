@@ -94,7 +94,10 @@ OCPragmaNode >> copyInContext: aDictionary [
 
 { #category : 'testing' }
 OCPragmaNode >> defines: aName [
-	^ self isPrimitive and: [ arguments anySatisfy: [ :each | each value = aName ] ]
+	"Returns true whether the receiver dedfines a name as arguments."
+	
+	^ self isPrimitive and: [ 
+		arguments anySatisfy: [ :each | each value = aName ] ]
 ]
 
 { #category : 'comparing' }

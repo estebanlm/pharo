@@ -284,6 +284,10 @@ OCMethodNode >> copyInContext: aDictionary [
 
 { #category : 'testing' }
 OCMethodNode >> defines: aName [
+	"Returns true whether the method node dedfines a name as arguments.
+	If you want to know whether the mpethod node has temps you should ask 
+	its body."
+
 	^ (arguments anySatisfy: [ :each | each name = aName ])
 		or: [ self pragmas anySatisfy: [ :pragma | pragma defines: aName ] ]
 ]

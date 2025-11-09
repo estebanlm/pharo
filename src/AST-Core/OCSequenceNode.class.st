@@ -259,6 +259,8 @@ OCSequenceNode >> copyInContext: aDictionary [
 
 { #category : 'testing' }
 OCSequenceNode >> defines: aName [
+	"Returns true whether the receiver dedfines a name as temporaries."
+	
 	^temporaries anySatisfy: [:each | each name = aName]
 ]
 

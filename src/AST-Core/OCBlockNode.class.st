@@ -188,7 +188,11 @@ OCBlockNode >> copyInContext: aDictionary [
 
 { #category : 'testing' }
 OCBlockNode >> defines: aName [
-	^arguments anySatisfy: [:each | each name = aName]
+	"Returns true whether the block dedfines a name as arguments.
+	If you want to know whether the block has temps you should ask 
+	its body."
+	
+	^arguments anySatisfy: [ :each | each name = aName ]
 ]
 
 { #category : 'comparing' }
