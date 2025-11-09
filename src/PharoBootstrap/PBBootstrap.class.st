@@ -189,7 +189,6 @@ PBBootstrap >> exportMonticelloInStFile [
 		MCWorkingCopy initialize.
 		MCLazyVersionInfo initialize.
 		MCMethodDefinition initialize.
-		MCDataStream initialize.
 		UUIDGenerator initialize.'
 		intoFile: 'Monticello.st'
 

@@ -74,8 +74,6 @@ BaselineOfBasicTools >> baseline: spec [
 			spec package: 'Network-Mail'.
 			spec package: 'Network-Mail-Tests'.
 
-			spec package: 'StartupPreferences'.
-
 
 
 			spec package: 'OpalCompiler-ToolFeatures'.

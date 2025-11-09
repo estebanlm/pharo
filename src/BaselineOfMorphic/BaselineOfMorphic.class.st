@@ -41,6 +41,7 @@ BaselineOfMorphic >> baseline: spec [
 			
 		spec package: 'System-Identification'.
 		spec package: 'System-Settings-Core' with: [ spec requires: #( 'System-Identification' ) ].
+		spec package: 'StartupPreferences'. "This should move out of Morphic but currently there is a cyclic dependency with System-Settings-Core..."
 
 		spec package: 'System-Localization'.
 
@@ -108,7 +109,6 @@ BaselineOfMorphic >> baseline: spec [
 { #category : 'actions' }
 BaselineOfMorphic >> cleanUpAfterMorphicInitialization [
 
-	MCDataStream initialize.
 	FreeTypeCache clearCurrent.
 	World cleanseOtherworldlySteppers.
 	MCFileBasedRepository flushAllCaches
