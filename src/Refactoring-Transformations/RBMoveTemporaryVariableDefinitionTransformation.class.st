@@ -185,7 +185,7 @@ RBMoveTemporaryVariableDefinitionTransformation >> definingBlock [
 	^ definingNode
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'private' }
 RBMoveTemporaryVariableDefinitionTransformation >> definingMethodAST [
 
 	^ self definingClass parseTreeForSelector: selector asSymbol
