@@ -158,7 +158,7 @@ BaselineOfMorphic >> postload: loader package: packageSpec [
 	PolymorphSystemSettings desktopColor: Color white.
 
 	#( #BalloonMorph #IconicButtonMorph #KMLog #ScrollBarMorph
-	   #SystemSettingsPersistence #TabMorph #TaskbarMorph ) do: [ :each |
+	   #SystemSettingsPersistence #TabMorph #TaskbarMorph PharoOptionsHandler) do: [ :each |
 		(Smalltalk globals at: each) initialize ].
 
 	MCMethodDefinition initializersEnabled: initializersEnabled.
