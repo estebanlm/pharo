@@ -1397,7 +1397,8 @@ OCProgramNode >> whichNodeIsContainedBy: anInterval [
 
 { #category : 'querying' }
 OCProgramNode >> whoDefines: aName [
-
+	"Returns the node that defines a variable. It can be either a method, a block."
+	
 	^ (self defines: aName)
 		  ifTrue: [ self ]
 		  ifFalse: [ parent ifNotNil: [ parent whoDefines: aName ] ]
