@@ -293,6 +293,7 @@ OCSequenceNode >> hasNonLocalReturn [
 { #category : 'testing' }
 OCSequenceNode >> hasSameExitPoint [
 
+	statements ifEmpty: [ ^ true ].
 	statements last isReturn ifTrue: [ ^ true ].
 	^ self hasSameExitPoint: false
 ]
