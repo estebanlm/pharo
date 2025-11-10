@@ -15,6 +15,12 @@ Class {
 	#tag : 'IR-Nodes'
 }
 
+{ #category : 'accessing' }
+OCIRPushArray class >> sizeLimit [
+
+	^ 127
+]
+
 { #category : 'visiting' }
 OCIRPushArray >> accept: aVisitor [
 	^ aVisitor visitPushArray: self
@@ -28,6 +34,14 @@ OCIRPushArray >> cons [
 { #category : 'accessing' }
 OCIRPushArray >> cons: aBool [
 	cons := aBool
+]
+
+{ #category : 'stack' }
+OCIRPushArray >> deltaStack [
+
+	^ cons
+		  ifTrue: [ (size - 1) negated ]
+		  ifFalse: [ 1 ]
 ]
 
 { #category : 'initialization' }
