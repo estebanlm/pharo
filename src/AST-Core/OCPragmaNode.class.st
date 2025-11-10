@@ -92,14 +92,6 @@ OCPragmaNode >> copyInContext: aDictionary [
 		arguments: (self arguments collect: [ :each | each copyInContext: aDictionary ])
 ]
 
-{ #category : 'testing' }
-OCPragmaNode >> defines: aName [
-	"Returns true whether the receiver dedfines a name as arguments."
-	
-	^ self isPrimitive and: [ 
-		arguments anySatisfy: [ :each | each value = aName ] ]
-]
-
 { #category : 'comparing' }
 OCPragmaNode >> equalTo: anObject withMapping: aDictionary [
 	self class = anObject class ifFalse: [ ^ false ].
@@ -109,6 +101,14 @@ OCPragmaNode >> equalTo: anObject withMapping: aDictionary [
 		(first equalTo: second withMapping: aDictionary)
 			ifFalse: [ ^ false ] ].
 	^ true
+]
+
+{ #category : 'testing' }
+OCPragmaNode >> exactNodeDefines: aName [
+	"Returns true whether the receiver dedfines a name as arguments."
+	
+	^ self isPrimitive and: [ 
+		arguments anySatisfy: [ :each | each value = aName ] ]
 ]
 
 { #category : 'comparing' }

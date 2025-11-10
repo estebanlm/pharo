@@ -10,7 +10,7 @@ Class {
 }
 
 { #category : 'tests - defines' }
-OCRengineTest >> testDefinesArg [
+OCRengineTest >> testExactNodeDefinesArg [
 
 	| ast |
 	ast := OCParser parseMethod: 'defines: tmp
@@ -20,12 +20,31 @@ OCRengineTest >> testDefinesArg [
 	^ each 
 	
 	'.
-	self assert: (ast defines: 'tmp')
+	self assert: (ast exactNodeDefines: 'tmp')
 ]
 
 { #category : 'tests - defines' }
-OCRengineTest >> testDefinesTemporary [
+OCRengineTest >> testExactNodeDefinesTemporaryInBlockViaBody [
+	"ExactNodeDefines does not look in children or body. Therefore users should use explicit body."
+	
+	| ast |
+	ast := OCParser parseMethod: 'defines
 
+	[  
+	| each |
+	each := 2.
+	^ each 
+	]
+	'.
+	
+	"why why the temporaries is not defining the variable?????"
+	self assert: (ast body children first body exactNodeDefines: 'each')
+]
+
+{ #category : 'tests - defines' }
+OCRengineTest >> testExactNodeDefinesTemporaryViaBody [
+	"ExactNodeDefines does not look in children or body. Therefore users should use explicit body."
+	
 	| ast |
 	ast := OCParser parseMethod: 'defines
 
@@ -34,9 +53,9 @@ OCRengineTest >> testDefinesTemporary [
 	^ each 
 	
 	'.
-	self flag: #comebackAndFix.
+	
 	"why why the temporaries is not defining the variable?????"
-	self deny: (ast defines: 'each')
+	self assert: (ast body exactNodeDefines: 'each')
 ]
 
 { #category : 'tests - references' }
@@ -200,7 +219,7 @@ OCRengineTest >> testReferencesToAnInstanceVariable [
 ]
 
 { #category : 'tests - whodefines' }
-OCRengineTest >> testWhoDefinesBlockArg [
+OCRengineTest >> testWhichUNodesDefinesBlockArg [
 
 	| ast |
 	self skip.
@@ -208,16 +227,15 @@ OCRengineTest >> testWhoDefinesBlockArg [
 
 [ :each | ^ each ]	
 	'.
-	self assert: (ast whoDefines: 'each') class equals: OCBlockNode
+	self assert: (ast body children first body children first value whichUpNodeDefines: 'each') class equals: OCBlockNode
 
 	
 ]
 
 { #category : 'tests - whodefines' }
-OCRengineTest >> testWhoDefinesTemporary [
+OCRengineTest >> testWhichUpNodeDefines [
 
 	| ast |
-	self skip.
 	ast := OCParser parseMethod: 'whoDefines
 
 	| each |
@@ -226,7 +244,24 @@ OCRengineTest >> testWhoDefinesTemporary [
 	
 	'.
 	
-	self assert: (ast whoDefines: 'each') class equals: OCMethodNode .
+	self assert: (ast children first children third value whichUpNodeDefines: 'each') class equals: OCSequenceNode
+
+	
+]
+
+{ #category : 'tests - whodefines' }
+OCRengineTest >> testWhoDefinesTemporary [
+
+	| ast |
+	ast := OCParser parseMethod: 'whoDefines
+
+	| each |
+	each := 2.
+	^ each 
+	
+	'.
+	
+	self assert: (ast children first children third value whichUpNodeDefines: 'each') class equals: OCSequenceNode
 
 	
 ]

@@ -257,13 +257,6 @@ OCSequenceNode >> copyInContext: aDictionary [
 		yourself
 ]
 
-{ #category : 'testing' }
-OCSequenceNode >> defines: aName [
-	"Returns true whether the receiver dedfines a name as temporaries."
-	
-	^temporaries anySatisfy: [:each | each name = aName]
-]
-
 { #category : 'comparing' }
 OCSequenceNode >> equalTo: anObject withMapping: aDictionary [
 	self class = anObject class ifFalse: [^false].
@@ -275,6 +268,13 @@ OCSequenceNode >> equalTo: anObject withMapping: aDictionary [
 	self temporaries
 		do: [:each | aDictionary removeKey: each name ifAbsent: []].
 	^true
+]
+
+{ #category : 'testing' }
+OCSequenceNode >> exactNodeDefines: aName [
+	"Returns true whether the receiver dedfines a name as temporaries."
+	
+	^temporaries anySatisfy: [:each | each name = aName]
 ]
 
 { #category : 'testing' }

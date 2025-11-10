@@ -31,7 +31,7 @@ RBMatchVisitor >> initialize [
 RBMatchVisitor >> replace: temp with: aString [
 
 	| definingNode |
-	definingNode := temp whoDefines: temp name.
+	definingNode := temp whichUpNodeDefines: temp name.
 	(OCParseTreeRewriter rename: temp name to: aString) executeTree: definingNode
 ]
 
