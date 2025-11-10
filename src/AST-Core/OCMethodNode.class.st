@@ -282,12 +282,6 @@ OCMethodNode >> copyInContext: aDictionary [
 		yourself
 ]
 
-{ #category : 'testing' }
-OCMethodNode >> defines: aName [
-	^ (arguments anySatisfy: [ :each | each name = aName ])
-		or: [ self pragmas anySatisfy: [ :pragma | pragma defines: aName ] ]
-]
-
 { #category : 'comparing' }
 OCMethodNode >> equalTo: anObject withMapping: aDictionary [
 	self class = anObject class ifFalse: [ ^ false ].
@@ -303,6 +297,16 @@ OCMethodNode >> equalTo: anObject withMapping: aDictionary [
 		(first equalTo: second	withMapping: aDictionary)
 			ifFalse: [ ^ false ] ].
 	^ true
+]
+
+{ #category : 'testing' }
+OCMethodNode >> exactNodeDefines: aName [
+	"Returns true whether the method node dedfines a name as arguments.
+	If you want to know whether the mpethod node has temps you should ask 
+	its body."
+
+	^ (arguments anySatisfy: [ :each | each name = aName ])
+		or: [ self pragmas anySatisfy: [ :pragma | pragma exactNodeDefines: aName ] ]
 ]
 
 { #category : 'accessing' }
