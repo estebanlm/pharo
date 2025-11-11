@@ -42,7 +42,7 @@ You can also have a look at the `ParseTreeRewriterTest` class.
 
 
 Instance Variables:
-	tree	<ASTProgramNode>	the parse tree we're transforming
+	tree	<OCProgramNode>	the parse tree we're transforming
 			
 	
 "
@@ -52,8 +52,8 @@ Class {
 	#instVars : [
 		'tree'
 	],
-	#category : 'AST-Core-Matching',
-	#package : 'AST-Core',
+	#category : 'ParseTreeRewriter-Matching',
+	#package : 'ParseTreeRewriter',
 	#tag : 'Matching'
 }
 
