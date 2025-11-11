@@ -577,20 +577,6 @@ OCMethodNode >> removePragmaNamed: aPragmaName [
 	self pragmaNamed: aPragmaName ifPresent: [ :pragma | self removePragma: pragma ]
 ]
 
-{ #category : 'adding-removing' }
-OCMethodNode >> removeSubtree: aTree [
-
-	^ aTree isReturn
-		ifTrue: [ OCParseTreeRewriter
-					 replace: aTree formattedCode
-					 with: '' in: self
-					 onInterval: aTree sourceInterval ]
-		ifFalse: [ OCParseTreeRewriter
-					  replaceStatements: aTree formattedCode
-		 			  with: '' in: self
-					  onInterval: aTree sourceInterval ]
-]
-
 { #category : 'accessing' }
 OCMethodNode >> renameSelector: newSelector andArguments: varNodeCollection [
 	| oldIntervals oldArguments oldSelector |

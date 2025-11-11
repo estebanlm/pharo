@@ -13,7 +13,7 @@ Class {
 ManifestASTCore class >> manuallyResolvedDependencies [
 
 	<ignoreForCoverage>
-	^ #( #'OpalCompiler-Core')
+	^ #( #'OpalCompiler-Core' #'System-Time')
 ]
 
 { #category : 'meta data' }
