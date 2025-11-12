@@ -224,7 +224,7 @@ BaselineOfPharoBootstrap >> baseline: spec [
 
 		spec group: 'SUnitGroup' with: {
 			'Deprecation'.
-			'ParseTreeRewriter'
+			'ParseTreeRewriter'.
 			'SUnit-Core'.
 			'SUnit-Tests'.
 			'Kernel-Tests'.
