@@ -1033,7 +1033,7 @@ EncoderForSistaV1 >> genPushConsArray: size [
 	"231		11100111	jkkkkkkk	Push (Array new: kkkkkkk) (j = 0)
 									&	Pop kkkkkkk elements into: (Array new: kkkkkkk) (j = 1)"
 	| limit |
-	limit := OCIRPushArray sizeLimit.
+	limit := self class arraySizeLimitForPushArrayInstruction.
 	(size < 0 or: [size > limit]) ifTrue:
 		[^self outOfRangeError: 'size' index: size range: 0 to: limit].
 

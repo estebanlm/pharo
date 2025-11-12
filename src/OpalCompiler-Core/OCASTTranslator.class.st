@@ -556,9 +556,8 @@ OCASTTranslator >> visitAnnotationMarkNode: aAnnotationValueNode [
 OCASTTranslator >> visitArrayNode: anArrayNode [
 
 	| elementNodes stackLimit |
-	stackLimit := CompiledCode LargeFrame min: OCIRPushArray sizeLimit.
-	methodBuilder stackSize + anArrayNode statements size > stackLimit ifTrue: [
-		^ self visitLargeArrayNode: anArrayNode ].
+	stackLimit := CompiledCode LargeFrame min: self compilationContext encoderClass arraySizeLimitForPushArrayInstruction.
+	methodBuilder stackSize + anArrayNode statements size > stackLimit ifTrue: [ ^ self visitLargeArrayNode: anArrayNode ].
 
 	elementNodes := anArrayNode children.
 	elementNodes do: [ :node | self visitNode: node ].
