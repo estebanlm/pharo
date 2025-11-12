@@ -128,7 +128,6 @@ BaselineOfIDE >> baseline: spec [
 		spec package: #'BeautifulComments'  with: [ spec requires:  #( 'Microdown') ].
 		
 		spec package: 'IconPacks'.
-		spec baseline: 'ThreadedFFI' with: [ spec repository: repository ].
 		spec package: 'Kernel-ExtraUtils' ]
 ]
 
