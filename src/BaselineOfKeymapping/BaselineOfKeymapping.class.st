@@ -24,5 +24,5 @@ BaselineOfKeymapping >> baseline: spec [
 
 			spec
 				group: 'Core' with: #( 'Keymapping-Core' 'Keymapping-KeyCombinations' 'Keymapping-Pragmas' );
-				group: 'tests' with: #( 'Core' 'Keymapping-Tests' ) ]
+				group: 'Tests' with: #( 'Core' 'Keymapping-Tests' ) ]
 ]

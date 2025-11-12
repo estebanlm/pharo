@@ -464,5 +464,5 @@ SystemDependenciesTest >> tonelCorePackageNames [
 SystemDependenciesTest >> uiInfrastructureCoreLayerPackages [
 
 	^ self sunitCoreLayerPackages , BaselineOfUnifiedFFI allPackageNames , BaselineOfThreadedFFI allPackageNames , BaselineOfDisplay allPackageNames
-	  , BaselineOfFonts allPackageNames , BaselineOfFreeType allPackageNames , BaselineOfMenuRegistration allPackageNames
+	  , BaselineOfFonts allPackageNames , BaselineOfFreeType allPackageNames , BaselineOfMenuRegistration allPackageNames , BaselineOfKeymapping corePackageNames
 ]
