@@ -42,22 +42,12 @@ BaselineOfMorphic >> baseline: spec [
 		spec
 			baseline: 'MorphicCore' with: [ spec repository: repository ];
 			baseline: 'MenuRegistration' with: [ spec repository: repository ].
-
-		spec baseline: 'Fuel' with: [
-			spec
-				repository: repository;
-				loads: #( 'Core' ) ].
 			
 		spec package: 'System-Identification'.
 		spec package: 'System-Settings-Core' with: [ spec requires: #( 'MorphicCore' 'System-Identification' ) ].
 
 		spec package: 'System-Localization'.
 
-		spec baseline: 'FreeType' with: [
-			spec
-				repository: repository;
-				loads: 'ui' ].
-		spec package: 'EmbeddedFreeType' with: [ spec requires: 'FreeType' ].
 		spec package: 'FileSystem-Zip'.
 
 		spec package: 'Graphics-Shapes'.
@@ -136,19 +126,11 @@ BaselineOfMorphic >> postload: loader package: packageSpec [
 
 	SystemNotification signal: 'Starting postload action'.
 
-	TextConstants initialize.
-
-	Stdio stdout
-		nextPutAll: 'starting...';
-		lf.
-
 	Stdio stdout
 		nextPutAll: Smalltalk ui asString;
 		lf.
 
-	#( #ProgressBarMorph #FT2Types #FT2FFILibrary #FreeTypeCacheConstants
-	   #FreeTypeCache #FreeTypeSettings #FreeTypeSubPixelAntiAliasedGlyphRenderer
-	   #FT2Constants #GlobalIdentifier #HaloMorph
+	#( #ProgressBarMorph #GlobalIdentifier #HaloMorph
 	   #CharacterScanner #ImageMorph
 	   #Locale #MczInstaller #MD5NonPrimitive #MenuItemMorph
 	   #MenuMorph #RxMatcher #RxParser #RxsPredicate #SHA1
@@ -179,15 +161,9 @@ BaselineOfMorphic >> postload: loader package: packageSpec [
 	PolymorphSystemSettings showDesktopLogo: true.
 	PolymorphSystemSettings desktopColor: Color white.
 
-	#( #BalloonMorph #EmbeddedFreeTypeFontInstaller
-	   #FLCompiledMethodCluster #FreeTypeFontProvider
-	   #IconicButtonMorph #KMLog
-	   #LucidaGrandeRegular #ScrollBarMorph
+	#( #BalloonMorph #IconicButtonMorph #KMLog #ScrollBarMorph
 	   #SystemSettingsPersistence #TabMorph #TaskbarMorph ) do: [ :each |
 		(Smalltalk globals at: each) initialize ].
-
-	LogicalFontManager current addFontProvider:
-		FreeTypeFontProvider current.
 
 	MCMethodDefinition initializersEnabled: initializersEnabled.
 
