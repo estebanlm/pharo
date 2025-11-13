@@ -218,6 +218,105 @@ OCRengineTest >> testReferencesToAnInstanceVariable [
 	
 ]
 
+{ #category : 'tests - variableWith' }
+OCRengineTest >> testVariableApparentlyRefersToTheLatestReference [
+
+	| ast resultingNode |
+	ast := OCParser parseMethod: 'whoDefines
+
+	| each y|
+	each := 2.
+	y := each 
+	
+	'.
+	resultingNode := ast variableWith: 'each'.
+	self assert: resultingNode class equals: OCVariableNode.
+	self assert: resultingNode parent class equals: OCAssignmentNode.
+
+	
+]
+
+{ #category : 'tests - variableWith' }
+OCRengineTest >> testVariableInABlock [
+
+	| ast resultingNode |
+	ast := OCParser parseMethod: 'whoDefines
+
+	[ 
+	| each |
+	each := 2.
+	] value.
+
+
+	'.
+	resultingNode := ast variableWith: 'each'.
+	self assert: resultingNode class equals: OCVariableNode.
+	self assert: resultingNode parent class equals: OCAssignmentNode.
+
+	
+]
+
+{ #category : 'tests - variableWith' }
+OCRengineTest >> testVariableInABlockWithATempOutside [
+
+	| ast resultingNode |
+	ast := OCParser parseMethod: 'whoDefines
+	| each | 
+
+	[ 
+		| each |
+		each := 2.
+	] value.
+
+	^ each + 1
+
+	'.
+	resultingNode := ast variableWith: 'each'.
+	self assert: resultingNode class equals: OCVariableNode.
+	self assert: resultingNode parent class equals: OCMessageNode.
+	self assert: resultingNode parent arguments first class equals: OCLiteralValueNode 
+
+	
+]
+
+{ #category : 'tests - variableWith' }
+OCRengineTest >> testVariableRefersToTheLastestUse2 [
+
+	| ast resultingNode |
+	ast := OCParser parseMethod: 'whoDefines
+
+	| each |
+	each := 2.
+	^ each 
+	
+	'.
+	resultingNode := ast variableWith: 'each'.
+	self assert: resultingNode class equals: OCVariableNode.
+	self assert: resultingNode parent class equals: OCReturnNode.
+
+	
+]
+
+{ #category : 'tests - variableWith' }
+OCRengineTest >> testVariableRefersToTheLastestUse3 [
+
+	| ast resultingNode |
+	ast := OCParser parseMethod: 'whoDefines
+
+	| each y |
+	each := 2.
+	y := each.
+	each := each + 1.
+	
+	'.
+	resultingNode := ast variableWith: 'each'.
+	self assert: resultingNode class equals: OCVariableNode.
+	self assert: resultingNode parent class equals: OCMessageNode.
+	self assert: resultingNode parent arguments first class equals: OCLiteralValueNode 
+
+	
+]
+
 { #category : 'tests - whodefines' }
 OCRengineTest >> testWhichUNodesDefinesBlockArg [
 
