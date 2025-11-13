@@ -13,6 +13,7 @@ Class {
 	#name : 'ReInteractionDriver',
 	#superclass : 'Object',
 	#instVars : [
+		'application',
 		'model',
 		'scopes',
 		'refactoring',
@@ -22,26 +23,10 @@ Class {
 		'informDialog',
 		'stoppedBeforeApplyingRefactoring'
 	],
-	#classVars : [
-		'DefaultRequestDialog',
-		'DefaultSelectDialog'
-	],
 	#category : 'Refactoring-UI-Drivers',
 	#package : 'Refactoring-UI',
 	#tag : 'Drivers'
 }
-
-{ #category : 'configuration' }
-ReInteractionDriver class >> defaultRequestDialog [ 
-
-	^ DefaultRequestDialog ifNil: [ SpRequestDialog new ]
-]
-
-{ #category : 'configuration' }
-ReInteractionDriver class >> defaultSelectDialog [ 
-
-	^ DefaultSelectDialog ifNil: [ SpSelectDialog new ]
-]
 
 { #category : 'testing' }
 ReInteractionDriver class >> isAbstract [
@@ -56,36 +41,30 @@ ReInteractionDriver class >> menuItemString [
 	^ self refactoringClass menuItemString
 ]
 
+{ #category : 'instance creation' }
+ReInteractionDriver class >> newApplication: anApplication [
+
+	^ self new 
+		application: anApplication;
+		yourself
+]
+
 { #category : 'displaying' }
 ReInteractionDriver class >> refactoringClass [
 
 	self subclassResponsibility
 ]
 
-{ #category : 'configuration' }
-ReInteractionDriver class >> useRequestDialog: aRequestDialog during: aBlock [
-
-	| old |
-	old := DefaultRequestDialog.
-	DefaultRequestDialog := aRequestDialog.
-	^ aBlock ensure: [ DefaultRequestDialog := old ]
-]
-
-{ #category : 'configuration' }
-ReInteractionDriver class >> useSelectDialog: aSelectDialog during: aBlock [
-
-	| old |
-	old := DefaultSelectDialog.
-	DefaultSelectDialog := aSelectDialog.
-	^ aBlock ensure: [ DefaultSelectDialog := old ]
-]
-
-{ #category : 'execution' }
+{ #category : 'accessing' }
 ReInteractionDriver >> application [
 	"For now use the singleton. Normally the application should be passed from Calypso and the command"
 	
-	^ StPharoApplication current
+	^ application ifNil: [ StPharoApplication current ]
+]
 
+{ #category : 'accessing' }
+ReInteractionDriver >> application: anApplication [
+	application := anApplication
 ]
 
 { #category : 'execution' }
@@ -113,6 +92,10 @@ ReInteractionDriver >> configureRefactoring [
 
 	refactoring := self instantiateRefactoring.
 	refactoring prepareForExecution
+{ #category : 'ui - requests' }
+ReInteractionDriver >> confirm: aString [
+
+	^ self application confirm: aString
 ]
 
 { #category : 'private' }
@@ -125,15 +108,14 @@ ReInteractionDriver >> defaultInformDialog [
 ReInteractionDriver >> defaultRequestDialog [
 	"We do not use a subclassResponsibility because all the drivers do not have to."
 
-	^ self class defaultRequestDialog
+	^ self application newRequest
 ]
 
 { #category : 'configuration' }
 ReInteractionDriver >> defaultSelectDialog [
 	"We do not use a subclassResponsibility because all the drivers do not have to."
 	
-	^ self
-	
+	^ self application newSelect
 ]
 
 { #category : 'ui - dialogs' }
@@ -160,11 +142,19 @@ ReInteractionDriver >> furtherActionFor: aReport [
 	aReport browse
 ]
 
+{ #category : 'ui - requests' }
+ReInteractionDriver >> inform: aString [
+	"Display a message for the user to read and then dismiss."
+
+	aString isEmptyOrNil ifTrue: [ ^ self ].
+	self application inform: aString
+]
+
 { #category : 'private' }
 ReInteractionDriver >> informConditions: conditions [ 
 	"The receiver has multiple failed applicability conditions and more than one could fail, inform all failures"
 
-	conditions do: [ : cond | self inform: cond errorString ].
+	conditions do: [ :cond | self inform: cond errorString ].
 ]
 
 { #category : 'private' }
@@ -209,10 +199,10 @@ ReInteractionDriver >> model: aRBBrowserEnvironment [
 { #category : 'execution' }
 ReInteractionDriver >> openPreviewWithChanges: changes [
 
-	^ (self previewPresenterClass withChanges: changes scopes: scopes)
-		  application: self application;
-		  refactoring: self refactoring;
-		  openModal
+	^ (self previewPresenterClass newApplication: self application)
+		changesFrom: changes scopes: scopes;
+		refactoring: self refactoring;
+		openModal
 ]
 
 { #category : 'configuration' }

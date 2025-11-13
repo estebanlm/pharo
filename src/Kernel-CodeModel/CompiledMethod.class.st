@@ -156,8 +156,9 @@ CompiledMethod >> classBinding [
 
 { #category : 'accessing' }
 CompiledMethod >> classBinding: aBinding [
-       "sets the association to the class that I am installed in"
-       ^self literalAt: self numLiterals put: aBinding
+	"sets the association to the class that I am installed in"
+
+	^ self literalAt: self numLiterals put: aBinding
 ]
 
 { #category : 'source code management' }
@@ -960,11 +961,6 @@ CompiledMethod >> valueWithReceiver: aReceiver [
 CompiledMethod >> valueWithReceiver: aReceiver arguments: anArray [
 	<reflection: 'Message sending and code execution - Arbitrary method/primitive execution'>
 	^self receiver: aReceiver withArguments: anArray executeMethod: self
-]
-
-{ #category : 'copying' }
-CompiledMethod >> veryDeepCopyWith: deepCopier [
-	"Return self.  I am always shared.  Do not record me.  Only use this for blocks.  Normally methodDictionaries should not be copied this way."
 ]
 
 { #category : 'runtime system' }

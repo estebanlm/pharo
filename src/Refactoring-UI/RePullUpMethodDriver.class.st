@@ -123,7 +123,7 @@ RePullUpMethodDriver >> configureAndRunRefactoring [
 { #category : 'execution' }
 RePullUpMethodDriver >> defaultSelectDialog [
 
-	^ self class defaultSelectDialog 
+	^ super defaultSelectDialog 
 		  title: 'There are potential breaking changes!';
 		  label: self labelBasedOnBreakingChanges;
 		  items: self breakingChoices;
