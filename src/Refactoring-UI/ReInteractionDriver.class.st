@@ -92,6 +92,7 @@ ReInteractionDriver >> configureRefactoring [
 
 	refactoring := self instantiateRefactoring.
 	refactoring prepareForExecution
+]
 { #category : 'ui - requests' }
 ReInteractionDriver >> confirm: aString [
 
