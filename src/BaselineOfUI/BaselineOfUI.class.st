@@ -61,13 +61,8 @@ BaselineOfUI >> baseline: spec [
 		"Spec 2 (base), using external configuration"
 		self specBase: spec.
 
-		spec package: 'StartupPreferences'.
 		spec package: 'Morphic-Widgets-Tree'.
 
-		spec baseline: 'Keymapping' with: [
-			spec
-				repository: repository;
-				loads: 'ui' ].
 		spec package: 'WebBrowser-Core'.
 		
 		spec group: 'Debugger-Base-UI' with: #('Debugging-Core' 'Debugger-Model' 'Debugger-Oups') ]
