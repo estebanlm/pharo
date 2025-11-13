@@ -237,6 +237,29 @@ OCRengineTest >> testVariableApparentlyRefersToTheLatestReference [
 ]
 
 { #category : 'tests - variableWith' }
+OCRengineTest >> testVariableDeeplyNested [
+
+	| ast resultingNode |
+	ast := OCParser parseMethod: 'whoDefines
+
+	 [ 
+		[ 
+		| each |
+			[ :each | 
+				| y | 
+				y := each + 2.
+				^ y ] value: 33 ] value ] value
+	
+	'.
+	resultingNode := ast variableWith: 'each'.
+	self assert: resultingNode class equals: OCVariableNode.
+	self assert: resultingNode parent class equals: OCMessageNode.
+	self assert: resultingNode parent arguments first class equals: OCLiteralValueNode.
+
+	
+]
+
+{ #category : 'tests - variableWith' }
 OCRengineTest >> testVariableInABlock [
 
 	| ast resultingNode |
