@@ -84,7 +84,6 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		spec package: 'Collections-Support'.
 		spec package: 'Collections-Unordered'.
 		spec package: 'Collections-Weak'.
-		spec package: 'Debugging-Core'.
 		spec package: 'Deprecation'.
 		spec package: 'Files'.
 		spec package: 'FileSystem-Path'.
@@ -102,6 +101,7 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		spec package: 'Multilingual-Encodings'.
 		
 		spec package: 'Transcript-NonInteractive'.
+		spec package: 'ParseTreeRewriter'.
 		spec package: 'PharoBootstrap-Initialization'.
 		spec package: 'ReflectionMirrors-Primitives'.
 		spec package: 'Shift-ClassBuilder'.
@@ -185,7 +185,6 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			'ReflectionMirrors-Primitives'.
 			'System-Time'.
 			'Math-Operations-Extensions'.
-			'Debugging-Core'.
 			'System-NumberPrinting'.
 		}.
 
@@ -204,6 +203,7 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			'DebugInfo'.
 			'NumberParser'.
 			'OpalCompiler-Core'.
+			'ParseTreeRewriter'.
 			'Deprecation'}.
 		
 		spec group: 'FileSystemGroup' with: {
@@ -223,6 +223,7 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		spec group: 'SUnitGroup' with: {
 			'Deprecation'.
 			'Random-Core'.
+			'ParseTreeRewriter'.
 			'SUnit-Core'.
 			'SUnit-Tests'.
 			'Kernel-Tests'.
