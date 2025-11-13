@@ -20,7 +20,16 @@ ReConvertTemporaryToInstanceVariableDriver >> breakingChoices [
 	| items |
 	items := OrderedCollection new.
 	subclassesNotDefiningVar check ifFalse: [ items add: (ReBrowseClassReferencesChoice new driver: self) ].
+	noReadBeforeWritten check ifFalse: [ items add: (ReBrowseMethodChoice new driver: self) ].
+	notMultipleTempOccurences check ifFalse: [ items add: (ReBrowseMethodsChoice new driver: self) ].
 	^ items
+]
+
+{ #category : 'actions' }
+ReConvertTemporaryToInstanceVariableDriver >> browseReferences [
+
+	(class allSubclasses select:[ :cls | cls hasInstVarNamed: variable ]) do: [ :violator  | "we should pass the application! "
+		violator browse ]
 ]
 
 { #category : 'instance creation' }
@@ -72,7 +81,7 @@ ReConvertTemporaryToInstanceVariableDriver >> labelBasedOnBreakingChanges [
 			  stream nextPutAll: 'Select a strategy' ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'actions' }
 ReConvertTemporaryToInstanceVariableDriver >> pushUpInstanceVariableAndRemoveTemp [
 
 	

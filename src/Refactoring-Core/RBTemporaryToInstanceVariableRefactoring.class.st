@@ -135,13 +135,13 @@ RBTemporaryToInstanceVariableRefactoring >> isTemporaryVariableNameValid [
 		self refactoringError: temporaryVariableName , ' is a block parameter' ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'preconditions' }
 RBTemporaryToInstanceVariableRefactoring >> preconditionNoMultipleTempOccurences [
 
 	^ ReMultipleMethodsDontReferToTempVarsCondition name: temporaryVariableName class: class selector: selector 
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'preconditions' }
 RBTemporaryToInstanceVariableRefactoring >> preconditionNoReadBeforeWritten [
 
 	^ ReVariablesNotReadBeforeWrittenCondition new
@@ -150,7 +150,7 @@ RBTemporaryToInstanceVariableRefactoring >> preconditionNoReadBeforeWritten [
 		  checkForTemporaryVariables: true 
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'preconditions' }
 RBTemporaryToInstanceVariableRefactoring >> preconditionNoSubclassDefinesVar [
 
 	^ RBCondition

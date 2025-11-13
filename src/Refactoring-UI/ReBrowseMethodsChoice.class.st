@@ -1,5 +1,5 @@
 Class {
-	#name : 'ReBrowseMethodChoice',
+	#name : 'ReBrowseMethodsChoice',
 	#superclass : 'ReMethodChoice',
 	#category : 'Refactoring-UI-Choices',
 	#package : 'Refactoring-UI',
@@ -7,15 +7,13 @@ Class {
 }
 
 { #category : 'accessing' }
-ReBrowseMethodChoice >> action [
+ReBrowseMethodsChoice >> action [
 	
-	driver browseMethod
-
-	
+	driver browseMethods 
 ]
 
 { #category : 'accessing' }
-ReBrowseMethodChoice >> description [ 
+ReBrowseMethodsChoice >> description [ 
 
-	^ 'Browse the method'
+	^ 'Browse the methods'
 ]

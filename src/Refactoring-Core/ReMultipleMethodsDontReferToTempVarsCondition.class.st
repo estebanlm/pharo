@@ -24,7 +24,7 @@ ReMultipleMethodsDontReferToTempVarsCondition >> check [
 	^ self violators isEmpty
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'setter' }
 ReMultipleMethodsDontReferToTempVarsCondition >> class: aRBClass [ 
 
 	class := aRBClass.
