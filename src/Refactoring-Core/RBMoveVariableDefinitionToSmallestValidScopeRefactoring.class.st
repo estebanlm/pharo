@@ -60,6 +60,7 @@ RBMoveVariableDefinitionToSmallestValidScopeRefactoring >> applicabilityPrecondi
 
 { #category : 'transforming' }
 RBMoveVariableDefinitionToSmallestValidScopeRefactoring >> checkNodes: sequenceNodes [
+
 	(sequenceNodes
 		anySatisfy: [:each | OCReadBeforeWrittenTester isVariable: name readBeforeWrittenIn: each])
 		ifTrue: [^false].
