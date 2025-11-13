@@ -435,13 +435,6 @@ OCSequenceNode >> postCopy [
 	self statements: (self statements collect: [ :each | each copy ])
 ]
 
-{ #category : 'testing' }
-OCSequenceNode >> references: aVariableName [
-	"Return wether the variable named aVariable is accessed in read or write with the receiver."
-	
-	^ statements anySatisfy: [:each | each references: aVariableName]
-]
-
 { #category : 'replacing' }
 OCSequenceNode >> removeDeadCode [
 	(self isUsedAsReturnValue ifTrue: [statements size - 1] ifFalse: [statements size])

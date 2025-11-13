@@ -425,19 +425,6 @@ OCMethodNode >> lastIsReturn [
 	^body lastIsReturn
 ]
 
-{ #category : 'tree accessing' }
-OCMethodNode >> latestUseOfVariableNamed: aSymbol [
-
-	| matcher block |
-	matcher := OCParseTreeSearcher new.
-	block := [ :aNode :answer | aNode ].
-
-	matcher
-		matches: aSymbol do: block;
-		matchesArgument: aSymbol do: block.
-	^ matcher executeTree: self initialAnswer: nil
-]
-
 { #category : 'replacing' }
 OCMethodNode >> map: oldNode to: newNode [
 	nodeReplacements at: oldNode put: newNode
@@ -546,13 +533,6 @@ OCMethodNode >> pragmas: aCollection [
 { #category : 'printing' }
 OCMethodNode >> printOn: aStream [
 	aStream nextPutAll: self formattedCode
-]
-
-{ #category : 'testing' }
-OCMethodNode >> references: aVariableName [
-	"Return wether the variable named aVariable is accessed in read or write with the receiver."
-	
-	^ body references: aVariableName
 ]
 
 { #category : 'private' }
