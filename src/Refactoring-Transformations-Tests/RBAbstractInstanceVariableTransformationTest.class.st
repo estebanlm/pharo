@@ -1,23 +1,29 @@
 Class {
-	#name : 'RBProtectVariableTransformationTest',
+	#name : 'RBAbstractInstanceVariableTransformationTest',
 	#superclass : 'RBAbstractTransformationTest',
 	#category : 'Refactoring-Transformations-Tests-Test',
 	#package : 'Refactoring-Transformations-Tests',
 	#tag : 'Test'
 }
 
+{ #category : 'accessing' }
+RBAbstractInstanceVariableTransformationTest >> actualClass [
+
+	^ RBAbstractInstanceVariableTransformation
+]
+
 { #category : 'running' }
-RBProtectVariableTransformationTest >> setUp [
+RBAbstractInstanceVariableTransformationTest >> setUp [
 
 	super setUp.
 	model := self rbModelForVariableTest
 ]
 
 { #category : 'tests' }
-RBProtectVariableTransformationTest >> testAccessorsAlreadyExist [
+RBAbstractInstanceVariableTransformationTest >> testAccessorsAlreadyExist [
 
 	| class |
-	(RBProtectVariableTransformation
+	(self actualClass
 		 model: model
 		 instanceVariable: 'instVarName1'
 		 class: #Foo) generateChanges.
@@ -43,10 +49,10 @@ RBProtectVariableTransformationTest >> testAccessorsAlreadyExist [
 ]
 
 { #category : 'tests' }
-RBProtectVariableTransformationTest >> testClassVariable [
+RBAbstractInstanceVariableTransformationTest >> testClassVariable [
 
 	| refactoring class |
-	refactoring := RBProtectVariableTransformation
+	refactoring := self actualClass
 		               classVariable: 'RecursiveSelfRule'
 		               class: #RBTransformationRuleTestData.
 	refactoring generateChanges.
@@ -86,10 +92,10 @@ RBProtectVariableTransformationTest >> testClassVariable [
 ]
 
 { #category : 'tests' }
-RBProtectVariableTransformationTest >> testClassVariableInModel [
+RBAbstractInstanceVariableTransformationTest >> testClassVariableInModel [
 
 	| class |
-	(RBProtectVariableTransformation
+	(self actualClass
 		 model: model
 		 classVariable: 'ClassVarName1'
 		 class: #Foo) generateChanges.
@@ -130,14 +136,14 @@ RBProtectVariableTransformationTest >> testClassVariableInModel [
 ]
 
 { #category : 'tests' }
-RBProtectVariableTransformationTest >> testMetaclass [
+RBAbstractInstanceVariableTransformationTest >> testMetaclass [
 
 	| class |
 	class := model metaclassNamed: #Foo.
 	class addInstanceVariable: 'foo'.
 	class compile: 'zzz ^foo := foo + foo * 2' classified: #( #testing ).
 
-	(RBProtectVariableTransformation
+	(self actualClass
 		 model: model
 		 instanceVariable: 'foo'
 		 class: class) generateChanges.
@@ -156,18 +162,18 @@ RBProtectVariableTransformationTest >> testMetaclass [
 ]
 
 { #category : 'tests' }
-RBProtectVariableTransformationTest >> testMetaclassFailure [
+RBAbstractInstanceVariableTransformationTest >> testMetaclassFailure [
 
-	self shouldFail: (RBProtectVariableTransformation
+	self shouldFail: (self actualClass
 			 classVariable: #RecursiveSelfRule
 			 class: RBTransformationRuleTestData class)
 ]
 
 { #category : 'tests' }
-RBProtectVariableTransformationTest >> testRefactoring [
+RBAbstractInstanceVariableTransformationTest >> testRefactoring [
 
 	| refactoring class |
-	refactoring := RBProtectVariableTransformation
+	refactoring := self actualClass
 		               instanceVariable: 'builder'
 		               class: #RBTransformationRuleTestData.
 	refactoring generateChanges.
@@ -200,10 +206,10 @@ RBProtectVariableTransformationTest >> testRefactoring [
 ]
 
 { #category : 'tests' }
-RBProtectVariableTransformationTest >> testTransform [
+RBAbstractInstanceVariableTransformationTest >> testTransform [
 
 	| transformation class |
-	transformation := RBProtectVariableTransformation
+	transformation := self actualClass
 		                  instanceVariable: 'class'
 		                  class: #RBTransformationRuleTestData.
 	transformation generateChanges.
@@ -240,22 +246,22 @@ RBProtectVariableTransformationTest >> testTransform [
 ]
 
 { #category : 'tests' }
-RBProtectVariableTransformationTest >> testVariableDoesNotExist [
+RBAbstractInstanceVariableTransformationTest >> testVariableDoesNotExist [
 
 	self
-		shouldFail: (RBProtectVariableTransformation
+		shouldFail: (self actualClass
 				 instanceVariable: 'foo'
 				 class: #RBBasicLintRuleTestData);
-		shouldFail: (RBProtectVariableTransformation
+		shouldFail: (self actualClass
 				 classVariable: #Foo
 				 class: #RBBasicLintRuleTestData)
 ]
 
 { #category : 'tests' }
-RBProtectVariableTransformationTest >> testVariableIsNotAccessed [
+RBAbstractInstanceVariableTransformationTest >> testVariableIsNotAccessed [
 
 	| transformation class |
-	transformation := RBProtectVariableTransformation
+	transformation := self actualClass
 		                  instanceVariable: 'instVar'
 		                  class: self changeMockClass name.
 
@@ -271,26 +277,26 @@ RBProtectVariableTransformationTest >> testVariableIsNotAccessed [
 ]
 
 { #category : 'tests' }
-RBProtectVariableTransformationTest >> testVariableNotDirectlyDefined [
+RBAbstractInstanceVariableTransformationTest >> testVariableNotDirectlyDefined [
 
 	self
-		shouldFail: (RBProtectVariableTransformation
+		shouldFail: (self actualClass
 				 instanceVariable: 'name'
 				 class: #RBBasicLintRuleTestData);
-		shouldFail: (RBProtectVariableTransformation
+		shouldFail: (self actualClass
 				 classVariable: #DependentsFields
 				 class: #RBBasicLintRuleTestData);
-		shouldFail: (RBProtectVariableTransformation
+		shouldFail: (self actualClass
 				 model: model
 				 classVariable: 'ClassVarName2'
 				 class: #Bar)
 ]
 
 { #category : 'tests' }
-RBProtectVariableTransformationTest >> testWithAssignment [
+RBAbstractInstanceVariableTransformationTest >> testWithAssignment [
 
 	| refactoring class |
-	refactoring := RBProtectVariableTransformation
+	refactoring := self actualClass
 		               model: model
 		               instanceVariable: 'instVarName2'
 		               class: #Foo.
