@@ -181,7 +181,7 @@ RBMoveTemporaryVariableDefinitionTransformation >> definingBlock [
 	| node definingNode |
 	node := self definingMethod
 		ifNil: [ self refactoringError: 'Method does not exist' ]
-		ifNotNil: [ :methodNode | methodNode variableWith: variableName ].
+		ifNotNil: [ :methodNode | methodNode latestUseOfVariableNamed: variableName ].
 	node ifNil: [self refactoringError: 'Unable to locate temporary variable in parse tree'].
 
 	definingNode := node whichUpNodeDefines: variableName.

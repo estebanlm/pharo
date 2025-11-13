@@ -425,6 +425,19 @@ OCMethodNode >> lastIsReturn [
 	^body lastIsReturn
 ]
 
+{ #category : 'tree accessing' }
+OCMethodNode >> latestUseOfVariableNamed: aSymbol [
+
+	| matcher block |
+	matcher := OCParseTreeSearcher new.
+	block := [ :aNode :answer | aNode ].
+
+	matcher
+		matches: aSymbol do: block;
+		matchesArgument: aSymbol do: block.
+	^ matcher executeTree: self initialAnswer: nil
+]
+
 { #category : 'replacing' }
 OCMethodNode >> map: oldNode to: newNode [
 	nodeReplacements at: oldNode put: newNode
@@ -693,17 +706,4 @@ OCMethodNode >> temporaries [
 { #category : 'accessing' }
 OCMethodNode >> temporaryNames [
 	^ self body temporaryNames
-]
-
-{ #category : 'tree accessing' }
-OCMethodNode >> variableWith: aSymbol [
-
-	| matcher block |
-	matcher := OCParseTreeSearcher new.
-	block := [ :aNode :answer | aNode ].
-
-	matcher
-		matches: aSymbol do: block;
-		matchesArgument: aSymbol do: block.
-	^ matcher executeTree: self initialAnswer: nil
 ]

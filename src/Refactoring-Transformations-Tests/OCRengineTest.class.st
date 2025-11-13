@@ -229,7 +229,7 @@ OCRengineTest >> testVariableApparentlyRefersToTheLatestReference [
 	y := each 
 	
 	'.
-	resultingNode := ast variableWith: 'each'.
+	resultingNode := ast latestUseOfVariableNamed: 'each'.
 	self assert: resultingNode class equals: OCVariableNode.
 	self assert: resultingNode parent class equals: OCAssignmentNode.
 
@@ -251,7 +251,29 @@ OCRengineTest >> testVariableDeeplyNested [
 				^ y ] value: 33 ] value ] value
 	
 	'.
-	resultingNode := ast variableWith: 'each'.
+	resultingNode := ast latestUseOfVariableNamed: 'each'.
+	self assert: resultingNode class equals: OCVariableNode.
+	self assert: resultingNode parent class equals: OCMessageNode.
+	self assert: resultingNode parent arguments first class equals: OCLiteralValueNode.
+
+	
+]
+
+{ #category : 'tests - variableWith' }
+OCRengineTest >> testVariableDeeplyNestedAsArgumentBlock [
+
+	| ast resultingNode |
+	ast := OCParser parseMethod: 'whoDefines
+
+	 [ 
+		[ 
+			[ :each | 
+				| y | 
+				y := each + 2.
+				^ y ] value: 33 ] value ] value
+	
+	'.
+	resultingNode := ast latestUseOfVariableNamed: 'each'.
 	self assert: resultingNode class equals: OCVariableNode.
 	self assert: resultingNode parent class equals: OCMessageNode.
 	self assert: resultingNode parent arguments first class equals: OCLiteralValueNode.
@@ -272,7 +294,7 @@ OCRengineTest >> testVariableInABlock [
 
 
 	'.
-	resultingNode := ast variableWith: 'each'.
+	resultingNode := ast latestUseOfVariableNamed: 'each'.
 	self assert: resultingNode class equals: OCVariableNode.
 	self assert: resultingNode parent class equals: OCAssignmentNode.
 
@@ -294,7 +316,7 @@ OCRengineTest >> testVariableInABlockWithATempOutside [
 	^ each + 1
 
 	'.
-	resultingNode := ast variableWith: 'each'.
+	resultingNode := ast latestUseOfVariableNamed: 'each'.
 	self assert: resultingNode class equals: OCVariableNode.
 	self assert: resultingNode parent class equals: OCMessageNode.
 	self assert: resultingNode parent arguments first class equals: OCLiteralValueNode 
@@ -313,7 +335,7 @@ OCRengineTest >> testVariableRefersToTheLastestUse2 [
 	^ each 
 	
 	'.
-	resultingNode := ast variableWith: 'each'.
+	resultingNode := ast latestUseOfVariableNamed: 'each'.
 	self assert: resultingNode class equals: OCVariableNode.
 	self assert: resultingNode parent class equals: OCReturnNode.
 
@@ -332,7 +354,7 @@ OCRengineTest >> testVariableRefersToTheLastestUse3 [
 	each := each + 1.
 	
 	'.
-	resultingNode := ast variableWith: 'each'.
+	resultingNode := ast latestUseOfVariableNamed: 'each'.
 	self assert: resultingNode class equals: OCVariableNode.
 	self assert: resultingNode parent class equals: OCMessageNode.
 	self assert: resultingNode parent arguments first class equals: OCLiteralValueNode 
