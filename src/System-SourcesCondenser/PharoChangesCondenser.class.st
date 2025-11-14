@@ -76,7 +76,7 @@ PharoChangesCondenser >> condenseClassesAndTraits [
 
 { #category : 'accessing' }
 PharoChangesCondenser >> fileIndex [
-	"Return the index into the SourceFiles:
+	"Return the index into the SourceFileArray:
 	1: the .sources file
 	2. the .changes file"
 	^ 2
