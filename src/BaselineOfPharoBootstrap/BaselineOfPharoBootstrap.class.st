@@ -103,7 +103,6 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		spec package: 'Transcript-NonInteractive'.
 		spec package: 'ParseTreeRewriter'.
 		spec package: 'PharoBootstrap-Initialization'.
-		spec package: 'Random-Core'.
 		spec package: 'ReflectionMirrors-Primitives'.
 		spec package: 'Shift-ClassBuilder'.
 		spec package: 'System-Announcements'.
@@ -112,7 +111,6 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		spec package: 'Clap-Commands-Pharo' .
 		spec package: 'System-CommandLine'.
 		spec package: 'System-Finalization'.
-		spec package: 'System-Hashing'.
 		spec package: 'System-Platforms'.
 		spec package: 'System-SessionManager'.
 		
@@ -138,6 +136,8 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		spec package: 'FileSystem-Disk'.
 
 		spec package: 'System-NumberPrinting'.
+
+		spec package: 'Random-Core'.
 		spec package: 'SUnit-Core'.
 		spec package: 'SUnit-Tests'.
 		spec package: 'Kernel-Tests'.
@@ -182,7 +182,6 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		spec group: 'AdditionalPackages' with: {
 			'Clap-Core'.
 			'Clap-Commands-Pharo'.
-			'FileSystem-Path'.
 			'ReflectionMirrors-Primitives'.
 			'System-Time'.
 			'Math-Operations-Extensions'.
@@ -208,8 +207,7 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			'Deprecation'}.
 		
 		spec group: 'FileSystemGroup' with: {
-			'Random-Core'.
-			'System-Hashing'.
+			'FileSystem-Path'.
 			'FileSystem-Core'.
 			'FileSystem-Disk'}.
 
@@ -224,6 +222,7 @@ BaselineOfPharoBootstrap >> baseline: spec [
 
 		spec group: 'SUnitGroup' with: {
 			'Deprecation'.
+			'Random-Core'.
 			'ParseTreeRewriter'.
 			'SUnit-Core'.
 			'SUnit-Tests'.
