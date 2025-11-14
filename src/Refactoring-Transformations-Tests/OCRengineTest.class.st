@@ -260,6 +260,28 @@ OCRengineTest >> testVariableDeeplyNested [
 ]
 
 { #category : 'tests - variableWith' }
+OCRengineTest >> testVariableDeeplyNested2 [
+
+	| ast resultingNode |
+	ast := OCParser parseMethod: 'whoDefines: each
+
+	 [ 
+		[ 
+		| each |
+			[ :each | 
+				| y | 
+				y := each + 2.
+				^ y ] value: 33 ] value ] value.
+	 ^ each
+	  
+	'.
+	resultingNode := ast latestUseOfVariableNamed: 'each'.
+	self assert: resultingNode class equals: OCVariableNode.
+	self assert: resultingNode parent class equals: OCReturnNode
+	
+]
+
+{ #category : 'tests - variableWith' }
 OCRengineTest >> testVariableDeeplyNestedAsArgumentBlock [
 
 	| ast resultingNode |
@@ -291,9 +313,8 @@ OCRengineTest >> testVariableInABlock [
 	| each |
 	each := 2.
 	] value.
-
-
 	'.
+	
 	resultingNode := ast latestUseOfVariableNamed: 'each'.
 	self assert: resultingNode class equals: OCVariableNode.
 	self assert: resultingNode parent class equals: OCAssignmentNode.
@@ -424,6 +445,21 @@ OCRengineTest >> testVariableRefersToTheLastestUse3 [
 	self assert: resultingNode parent arguments first class equals: OCLiteralValueNode 
 
 	
+]
+
+{ #category : 'tests - variableWith' }
+OCRengineTest >> testVariableUnknown [
+
+	| ast resultingNode |
+	ast := OCParser parseMethod: 'whoDefines
+
+	[ 
+	| each |
+	each := 2.
+	] value.
+	'.
+	resultingNode := ast latestUseOfVariableNamed: 'xxxx'.
+	self assert: resultingNode isNil
 ]
 
 { #category : 'tests - whodefines' }
