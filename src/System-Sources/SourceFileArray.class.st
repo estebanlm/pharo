@@ -40,6 +40,9 @@ SourceFileArray class >> default: anInstance [
 { #category : 'class initialization' }
 SourceFileArray class >> initialize [
 
+	"Guard since initializing twice would create bugs."
+	self default ifNotNil: [ ^ self ].
+	
 	self default: self new.
 	
 	"This next line is to add a deprecated global variable. The deprecation happened in Pharo 14 development. We can remove it completly in the future."
