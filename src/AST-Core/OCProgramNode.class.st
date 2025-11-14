@@ -14,7 +14,7 @@ The #start and #stop methods are used to find the source that corresponds to thi
 
 The #acceptVisitor: method is used by ASTProgramNodeVisitors (the visitor pattern). This will also require updating all the ASTProgramNodeVisitors so that they know of the new node.
 
-The #isFaulty method is used to distinguish between valid nodes and nodes created from an invalid source Smalltalk code. For example, code parsed with RBParsers #parseFaultyExpression: or #parseFaultyMethod:.
+The #isFaulty method is used to distinguish between valid nodes and nodes created from an invalid source Smalltalk code. For example, code parsed with OCParser #parseFaultyExpression: or #parseFaultyMethod:.
 
 Subclasses might also want to redefine match:inContext: and copyInContext: to do parse tree searching and replacing.
 
