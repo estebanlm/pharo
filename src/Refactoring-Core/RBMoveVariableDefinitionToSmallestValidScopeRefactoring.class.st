@@ -59,6 +59,13 @@ RBMoveVariableDefinitionToSmallestValidScopeRefactoring >> applicabilityPrecondi
 ]
 
 { #category : 'transforming' }
+RBMoveVariableDefinitionToSmallestValidScopeRefactoring >> blockPatternString [
+
+	^ '[:`@blockTemps | | `@temps | `@.Statements]'
+	
+]
+
+{ #category : 'transforming' }
 RBMoveVariableDefinitionToSmallestValidScopeRefactoring >> checkNodes: sequenceNodes [
 
 	(sequenceNodes
@@ -69,7 +76,7 @@ RBMoveVariableDefinitionToSmallestValidScopeRefactoring >> checkNodes: sequenceN
 			(self usesDirectly: each body)
 				ifTrue: [blockNodes add: each]
 				ifFalse:
-					[(self checkNodes: (self subblocksIn: each body))
+					[(self checkNodes: (self subBlocksIn: each body))
 						ifFalse: [blockNodes add: each]]].
 	^true
 ]
@@ -78,8 +85,6 @@ RBMoveVariableDefinitionToSmallestValidScopeRefactoring >> checkNodes: sequenceN
 RBMoveVariableDefinitionToSmallestValidScopeRefactoring >> checkParseTree [
 
 	| node |
-
-	blockNodes := OrderedCollection new.
 	node := self whichVariableNode: parseTree inInterval: interval name: name.
 	node ifNil: [ self refactoringError: 'Unable to locate node in parse tree' ].
 	definingNode := node whichUpNodeDefines: name.
@@ -88,7 +93,7 @@ RBMoveVariableDefinitionToSmallestValidScopeRefactoring >> checkParseTree [
 		ifFalse: [ self refactoringError: 'Variable is an argument' ].
 	( self usesDirectly: definingNode )
 		ifTrue: [ self refactoringError: 'Variable already bound tightly as possible' ].
-	( self checkNodes: ( self subblocksIn: definingNode ) )
+	( self checkNodes: ( self subBlocksIn: definingNode ) )
 		ifFalse: [ self refactoringError: 'Variable is possibly read before written' ]
 ]
 
@@ -100,15 +105,24 @@ RBMoveVariableDefinitionToSmallestValidScopeRefactoring >> checkPreconditions [
 
 { #category : 'initialization' }
 RBMoveVariableDefinitionToSmallestValidScopeRefactoring >> class: aClass selector: aSelector interval: anInterval [
+
 	interval := anInterval.
 	class := self classObjectFor: aClass.
 	selector := aSelector
 ]
 
+{ #category : 'initialization' }
+RBMoveVariableDefinitionToSmallestValidScopeRefactoring >> initialize [ 
+
+	super initialize.
+	blockNodes := OrderedCollection new.
+]
+
 { #category : 'transforming' }
 RBMoveVariableDefinitionToSmallestValidScopeRefactoring >> privateTransform [
+
 	definingNode removeTemporaryNamed: name.
-	blockNodes do: [:each | each body addTemporaryNamed: name].
+	blockNodes do: [ :each | each body addTemporaryNamed: name ].
 	class compileTree: parseTree
 ]
 
@@ -127,11 +141,11 @@ RBMoveVariableDefinitionToSmallestValidScopeRefactoring >> storeOn: aStream [
 ]
 
 { #category : 'transforming' }
-RBMoveVariableDefinitionToSmallestValidScopeRefactoring >> subblocksIn: aParseTree [
+RBMoveVariableDefinitionToSmallestValidScopeRefactoring >> subBlocksIn: aParseTree [
 	| searcher |
 	searcher := self parseTreeSearcher.
 	searcher
-		matches: '[:`@blockTemps | | `@temps | `@.Statements]'
+		matches: self blockPatternString 
 		do: [ :aNode :answer |
 			(aNode references: name)
 				ifTrue: [ answer add: aNode ].
@@ -143,11 +157,15 @@ RBMoveVariableDefinitionToSmallestValidScopeRefactoring >> subblocksIn: aParseTr
 
 { #category : 'transforming' }
 RBMoveVariableDefinitionToSmallestValidScopeRefactoring >> usesDirectly: aParseTree [
+	"Returns the block that directly use the variable."
+	
 	| searcher |
 	searcher := self parseTreeSearcher.
+	"we select the nodes that are a block node AND that match the variable name"
 	searcher
-		matches: '[:`@args | | `@temps | `@.Statements]'
-			do: [ :aNode :answer | answer ];
-		matches: name do: [ :aNode :answer | true ].
+		matches: self blockPatternString
+		do: [ :aNode :answer | answer ];
+		matches: name 
+		do: [ :aNode :answer | true ].
 	^ searcher executeTree: aParseTree initialAnswer: false
 ]

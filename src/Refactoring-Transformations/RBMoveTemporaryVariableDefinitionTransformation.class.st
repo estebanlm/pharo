@@ -84,6 +84,12 @@ RBMoveTemporaryVariableDefinitionTransformation >> applicabilityPreconditions [
 			   , ' is used in an outside block.') }
 ]
 
+{ #category : 'private' }
+RBMoveTemporaryVariableDefinitionTransformation >> blockPatternString [
+
+	^ '[:`@blockTemps | | `@temps | `@.Statements]'
+]
+
 { #category : 'executing' }
 RBMoveTemporaryVariableDefinitionTransformation >> buildTransformations [
 
@@ -108,10 +114,11 @@ RBMoveTemporaryVariableDefinitionTransformation >> buildTransformations [
 
 { #category : 'private' }
 RBMoveTemporaryVariableDefinitionTransformation >> checkAllBlocksIn: aParseTree [
+
 	| searcher |
 	searcher := self parseTreeSearcher.
 	searcher
-		matches: '[:`@blockTemps | | `@temps | `@.Statements]'
+		matches: self blockPatternString
 		do: [ :aNode :answer |
 			(aNode references: variableName)
 				ifTrue: [ answer add: aNode ].
@@ -123,10 +130,11 @@ RBMoveTemporaryVariableDefinitionTransformation >> checkAllBlocksIn: aParseTree 
 
 { #category : 'private' }
 RBMoveTemporaryVariableDefinitionTransformation >> checkBlocksIn: aParseTree [
+
 	| searcher |
 	searcher := self parseTreeSearcher.
 	searcher
-		matches: '[:`@args | | `@temps | `@.Statements]'
+		matches: self blockPatternString
 			do: [ :aNode :answer | answer ];
 		matches: variableName do: [ :aNode :answer | true ].
 	^ searcher executeTree: aParseTree initialAnswer: false
@@ -173,7 +181,7 @@ RBMoveTemporaryVariableDefinitionTransformation >> definingBlock [
 	| node definingNode |
 	node := self definingMethod
 		ifNil: [ self refactoringError: 'Method does not exist' ]
-		ifNotNil: [ :methodNode | methodNode variableWith: variableName ].
+		ifNotNil: [ :methodNode | methodNode latestUseOfVariableNamed: variableName ].
 	node ifNil: [self refactoringError: 'Unable to locate temporary variable in parse tree'].
 
 	definingNode := node whichUpNodeDefines: variableName.
