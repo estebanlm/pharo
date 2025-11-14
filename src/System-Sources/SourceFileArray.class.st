@@ -17,10 +17,31 @@ Class {
 		'readOnlyQueue',
 		'flushChanges'
 	],
+	#classVars : [
+		'Default'
+	],
 	#category : 'System-Sources-Sources',
 	#package : 'System-Sources',
 	#tag : 'Sources'
 }
+
+{ #category : 'accessing' }
+SourceFileArray class >> default [
+
+	^ Default
+]
+
+{ #category : 'accessing' }
+SourceFileArray class >> default: anInstance [
+
+	Default := anInstance
+]
+
+{ #category : 'class initialization' }
+SourceFileArray class >> initialize [
+
+	self default: self new
+]
 
 { #category : 'system startup' }
 SourceFileArray class >> startUp: resuming [

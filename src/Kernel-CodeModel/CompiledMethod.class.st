@@ -210,7 +210,7 @@ CompiledMethod >> flushCache [
 
 { #category : 'source code management' }
 CompiledMethod >> getPreambleFrom: aFileStream at: position [
-	^ SourceFiles getPreambleFrom: aFileStream at: position
+	^ SourceFileArray default getPreambleFrom: aFileStream at: position
 ]
 
 { #category : 'source code management' }
@@ -219,7 +219,7 @@ CompiledMethod >> getSourceFromFile [
 	"Read the source code from file, determining source file index and
 	file position from the last bytes of this method (size defined in #trailerSize)."
 
-	^ [ SourceFiles sourceCodeAt: self sourcePointer ] on: Error do: [ nil ]
+	^ [ SourceFileArray default sourceCodeAt: self sourcePointer ] on: Error do: [ nil ]
 ]
 
 { #category : 'source code management' }
