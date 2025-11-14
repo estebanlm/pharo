@@ -40,7 +40,11 @@ SourceFileArray class >> default: anInstance [
 { #category : 'class initialization' }
 SourceFileArray class >> initialize [
 
-	self default: self new
+	self default: self new.
+	
+	"This next line is to add a deprecated global variable. The deprecation happened in Pharo 14 development. We can remove it completly in the future."
+	self class environment at: #SourceFiles put: self default.
+	(self class environment bindingOf: #SourceFiles) isDeprecated: true
 ]
 
 { #category : 'system startup' }
