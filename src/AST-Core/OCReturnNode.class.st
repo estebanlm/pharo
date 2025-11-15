@@ -76,12 +76,6 @@ OCReturnNode >> hasBlock [
 ]
 
 { #category : 'testing' }
-OCReturnNode >> hasNoNonLocalReturns [
-
-	^ value hasNonLocalReturn not
-]
-
-{ #category : 'testing' }
 OCReturnNode >> hasSameExitPoint [
 
 	^ true

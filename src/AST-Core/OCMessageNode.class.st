@@ -151,12 +151,6 @@ OCMessageNode >> hasBlock [
 	^ receiver hasBlock | (arguments anySatisfy: [ :arg | arg hasBlock ])
 ]
 
-{ #category : 'testing' }
-OCMessageNode >> hasNoNonLocalReturns [
-
-	^ receiver hasNonLocalReturn not & (arguments allSatisfy: [ :arg | arg hasNonLocalReturn not ])
-]
-
 { #category : 'comparing' }
 OCMessageNode >> hash [
 	^ (self receiver hash bitXor: self selector hash) bitXor: (self hashForCollection: self arguments)

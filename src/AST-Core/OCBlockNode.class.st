@@ -222,12 +222,6 @@ OCBlockNode >> hasBlock [
 ]
 
 { #category : 'testing' }
-OCBlockNode >> hasNoNonLocalReturns [
-
-	^ body hasNonLocalReturn not
-]
-
-{ #category : 'testing' }
 OCBlockNode >> hasSameExitPoint [
 
 	^ body hasSameExitPoint 

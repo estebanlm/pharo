@@ -282,16 +282,6 @@ OCSequenceNode >> hasBlock [
 ]
 
 { #category : 'testing' }
-OCSequenceNode >> hasNoNonLocalReturns [
-	"Check if sequence has non-local returns OR if it does have them, it must have return statement as well."
-
-	| statementsWithBlocks |
-	statements ifEmpty: [ ^ true ].
-	statementsWithBlocks := statements select: [ :stm | stm hasBlock ].
-	^ statements last isReturn not and: [ statementsWithBlocks allSatisfy: [ :stm | stm hasNonLocalReturn not ] ]
-]
-
-{ #category : 'testing' }
 OCSequenceNode >> hasNonLocalReturn [
 	"check if there is a non-local return anywhere
 	Note: returns in a method itself are local returns"
