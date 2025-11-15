@@ -299,10 +299,11 @@ OCSequenceNode >> hasSameExitPoint [
 ]
 
 { #category : 'testing' }
-OCSequenceNode >> hasSameExitPoint: aBoolean [ 
+OCSequenceNode >> hasSameExitPoint: areNonLocalReturnsExpected [ 
+	"Check if sequence has non-local returns OR if it does have them, it must have return statement as well."
 
 	| statementsWithBlocks |
-	aBoolean ifTrue: [ ^ true ].
+	areNonLocalReturnsExpected ifTrue: [ ^ true ].
 	statements ifEmpty: [ ^ true ].
 	statementsWithBlocks := statements select: [ :stm | stm hasBlock ].
 	^ (statements last isReturn not and: [

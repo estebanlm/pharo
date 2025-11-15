@@ -82,9 +82,9 @@ OCReturnNode >> hasSameExitPoint [
 ]
 
 { #category : 'testing' }
-OCReturnNode >> hasSameExitPoint: aBoolean [
+OCReturnNode >> hasSameExitPoint: areNonLocalReturnsExpected [
 
-	^ value hasSameExitPoint: aBoolean 
+	^ value hasSameExitPoint: areNonLocalReturnsExpected 
 ]
 
 { #category : 'comparing' }

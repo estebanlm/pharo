@@ -228,9 +228,9 @@ OCBlockNode >> hasSameExitPoint [
 ]
 
 { #category : 'testing' }
-OCBlockNode >> hasSameExitPoint: aBoolean [ 
+OCBlockNode >> hasSameExitPoint: areNonLocalReturnsExpected [ 
 
-	^ body hasSameExitPoint: aBoolean 
+	^ body hasSameExitPoint: areNonLocalReturnsExpected 
 ]
 
 { #category : 'testing' }

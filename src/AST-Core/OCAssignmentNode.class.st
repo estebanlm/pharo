@@ -102,9 +102,9 @@ OCAssignmentNode >> hasBlock [
 ]
 
 { #category : 'testing' }
-OCAssignmentNode >> hasSameExitPoint: aBoolean [ 
+OCAssignmentNode >> hasSameExitPoint: areNonLocalReturnsExpected [ 
 
-	^ value hasSameExitPoint: aBoolean
+	^ value hasSameExitPoint: areNonLocalReturnsExpected
 ]
 
 { #category : 'comparing' }
