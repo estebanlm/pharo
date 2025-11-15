@@ -152,10 +152,9 @@ OCMessageNode >> hasBlock [
 ]
 
 { #category : 'testing' }
-OCMessageNode >> hasSameExitPoint: areNonLocalReturnsExpected [
+OCMessageNode >> hasNoNonLocalReturns [
 
-	^ (receiver hasSameExitPoint: areNonLocalReturnsExpected )
-	& (arguments allSatisfy: [ :arg | arg hasSameExitPoint: areNonLocalReturnsExpected ])
+	^ receiver hasNonLocalReturn not & (arguments allSatisfy: [ :arg | arg hasNonLocalReturn not ])
 ]
 
 { #category : 'comparing' }

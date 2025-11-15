@@ -76,15 +76,15 @@ OCReturnNode >> hasBlock [
 ]
 
 { #category : 'testing' }
-OCReturnNode >> hasSameExitPoint [
+OCReturnNode >> hasNoNonLocalReturns [
 
-	^ true
+	^ value hasNonLocalReturn not
 ]
 
 { #category : 'testing' }
-OCReturnNode >> hasSameExitPoint: areNonLocalReturnsExpected [
+OCReturnNode >> hasSameExitPoint [
 
-	^ value hasSameExitPoint: areNonLocalReturnsExpected 
+	^ true
 ]
 
 { #category : 'comparing' }

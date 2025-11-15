@@ -612,13 +612,8 @@ OCProgramNode >> hasSameExitPoint [
 	This means that the selected code should either always return something or
 	flow from the beginning to the end without non-local returning blocks.
 	Check https://inria.hal.science/hal-04670318/document subsection 3.2.1. for example and explanation"
-	^ self hasSameExitPoint: false
-]
 
-{ #category : 'testing' }
-OCProgramNode >> hasSameExitPoint: areNonLocalReturnsExpected [ 
-
-	^ true
+	^ self hasNonLocalReturn not
 ]
 
 { #category : 'comparing' }
