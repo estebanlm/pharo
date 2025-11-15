@@ -606,14 +606,14 @@ OCProgramNode >> hasProperty: aKey [
 
 { #category : 'testing' }
 OCProgramNode >> hasSameExitPoint [
+	"I'm checking node's execution flow.
+	I'm used by extract method refactoring to ensure behavior is preserved.
+	Subtree that is selected for extraction should preserve execution flow.
+	This means that the selected code should either always return something or
+	flow from the beginning to the end without non-local returning blocks.
+	Check https://inria.hal.science/hal-04670318/document subsection 3.2.1. for example and explanation"
 
-	^ self hasSameExitPoint: false
-]
-
-{ #category : 'testing' }
-OCProgramNode >> hasSameExitPoint: aBoolean [ 
-
-	^ true
+	^ self hasNonLocalReturn not
 ]
 
 { #category : 'comparing' }

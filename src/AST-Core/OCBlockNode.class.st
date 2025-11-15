@@ -232,12 +232,6 @@ OCBlockNode >> hasSameExitPoint [
 ]
 
 { #category : 'testing' }
-OCBlockNode >> hasSameExitPoint: aBoolean [ 
-
-	^ body hasSameExitPoint: aBoolean 
-]
-
-{ #category : 'testing' }
 OCBlockNode >> hasTemporaries [
 
 	^ self temporaries isNotEmpty
