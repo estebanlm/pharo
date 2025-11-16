@@ -8,9 +8,6 @@ symbols
 Class {
 	#name : 'ChunkReadStream',
 	#superclass : 'DecoratorStream',
-	#instVars : [
-		'nextChar'
-	],
 	#category : 'System-Sources-Streams',
 	#package : 'System-Sources',
 	#tag : 'Streams'
