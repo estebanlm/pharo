@@ -1357,12 +1357,6 @@ SmalltalkImage >> recompile [
 		displayingProgress: 'Recompiling all classes and traits'
 ]
 
-{ #category : 'snapshot and quit' }
-SmalltalkImage >> recordStartupStamp [
-
-	ChangesLog default recordStartupStamp
-]
-
 { #category : 'special objects' }
 SmalltalkImage >> recreateSpecialObjectsArray [
 	"Smalltalk recreateSpecialObjectsArray"
