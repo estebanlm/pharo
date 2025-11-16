@@ -75,7 +75,7 @@ SmalltalkImage class >> new [
 { #category : 'system startup' }
 SmalltalkImage class >> shutDown: isImageClosing [
 
-	isImageClosing ifTrue: [ SourceFiles close ]
+	isImageClosing ifTrue: [ SourceFileArray default close ]
 ]
 
 { #category : 'system startup' }
@@ -245,7 +245,7 @@ SmalltalkImage >> backupTo: newNameWithoutSuffix [
 	Results:
 		true  when continuing in the new session
 		false for the current session"
-	(SourceFiles changesFileStream isNil or: [ SourceFiles changesFileStream closed ])
+	(SourceFileArray default changesFileStream isNil or: [ SourceFileArray default changesFileStream closed ])
     ifFalse: [
 		self
 			closeSourceFiles; "so copying the changes file will always work"
@@ -413,7 +413,7 @@ SmalltalkImage >> closeLog: logger [
 SmalltalkImage >> closeSourceFiles [
 	"Shut down the source files if appropriate."
 
-	SourceFiles close
+	SourceFileArray default close
 ]
 
 { #category : 'system attribute' }
@@ -1210,7 +1210,7 @@ SmalltalkImage >> openSourceFiles [
 	self imagePath = LastImagePath ifFalse: [ "Reset the author full name to blank when the image gets moved"
 		LastImagePath := self imagePath ].
 
-	SourceFiles ensureOpen
+	SourceFileArray default ensureOpen
 ]
 
 { #category : 'system attribute' }
@@ -1458,7 +1458,7 @@ SmalltalkImage >> saveAs: newNameWithoutSuffix [
 		false for the current session "
 
 	newNameWithoutSuffix ifNil: [ ^ self ].
-  (SourceFiles changesFileStream isNil or: [ SourceFiles changesFileStream closed ])
+  (SourceFileArray default changesFileStream isNil or: [ SourceFileArray default changesFileStream closed ])
     ifFalse: [
 		self closeSourceFiles.
 		self saveChangesInFileNamed: (self fullNameForChangesNamed: newNameWithoutSuffix)
