@@ -1648,10 +1648,10 @@ SmalltalkImage >> stripImageExtensionFrom: aString [
 
 	| answer imageExtension delimitedImageExtension |
 	answer := aString.
-	imageExtension := Path extensionDelimiter asString, self imageSuffix.
-	delimitedImageExtension := imageExtension copyWith: Path extensionDelimiter.
+	imageExtension := File extensionDelimiter asString, self imageSuffix.
+	delimitedImageExtension := imageExtension copyWith: File extensionDelimiter.
 	[answer isNil not and: [(answer endsWith: imageExtension) or: [answer endsWith: delimitedImageExtension]]]
-		whileTrue: [answer := answer copyUpToLast: Path extensionDelimiter].
+		whileTrue: [answer := answer copyUpToLast: File extensionDelimiter].
 	^answer
 ]
 
