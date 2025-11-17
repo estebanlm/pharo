@@ -1055,17 +1055,6 @@ SmalltalkImage >> memoryHogs [
 	^ MemoryHogs ifNil: [MemoryHogs := OrderedCollection new]
 ]
 
-{ #category : 'miscellaneous' }
-SmalltalkImage >> metacelloPlatformAttributes [
-	"Returns the tags for the conditional platform loading in Metacello. Pay attention the order is important: from most  to least general."
-
-	^ {
-		  #squeakCommon.
-		  #pharo.
-		  ('pharo' , SystemVersion current major asString , '.x') asSymbol.
-		  ('pharo' , SystemVersion current major asString , '.0.x') asSymbol }
-]
-
 { #category : 'special objects' }
 SmalltalkImage >> newSpecialObjectsArray [
 	"Smalltalk recreateSpecialObjectsArray"
