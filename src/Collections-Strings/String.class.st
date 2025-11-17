@@ -630,13 +630,6 @@ String >> asComment [
 ]
 
 { #category : 'converting' }
-String >> asDateAndTime [
- 	"Convert from UTC format"
-
-	^ DateAndTime fromString: self
-]
-
-{ #category : 'converting' }
 String >> asDuration [
  	"Convert from [-]D:HH:MM:SS[.S] format. What is between [] implies optional elements"
 
