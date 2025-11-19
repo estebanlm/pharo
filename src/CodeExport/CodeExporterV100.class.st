@@ -39,11 +39,17 @@ CodeExporterV100 >> writeClassCommentOf: aClass [
 		priorSourcePointer: '0'
 ]
 
+{ #category : 'writing - low level' }
+CodeExporterV100 >> writeClassDefinition: aClassDefinition [
+
+	writeStream cr.
+	writeStream nextPut: aClassDefinition
+]
+
 { #category : 'writing' }
 CodeExporterV100 >> writeClassDefinitionOf: aClass [ 
 
-	writeStream cr.
-	writeStream nextPut: aClass oldPharoDefinition
+	self writeClassDefinition: aClass oldPharoDefinition
 ]
 
 { #category : 'writing' }

@@ -509,6 +509,17 @@ SourceFileArray >> writeChangesDuring: aBlock onSuccess: successBlock onFail: fa
 ]
 
 { #category : 'public - logging' }
+SourceFileArray >> writeClassDefinition: aClassDefinition onSuccess: successBlock onFail: failBlock [
+
+	self
+		writeChangesDuring: [ :file |
+				(CodeExporterV100 onStream: file)
+					writeClassDefinition: aClassDefinition ]
+		onSuccess: successBlock
+		onFail: failBlock
+]
+
+{ #category : 'public - logging' }
 SourceFileArray >> writeComment: aComment ofClass: aClass metadata: metadata timestamp: aTimeStamp priorSourcePointer: priorSourcePointer onSuccess: successBlock onFail: failBlock [
 
 	self

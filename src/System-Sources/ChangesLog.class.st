@@ -67,13 +67,7 @@ ChangesLog >> logChange: aStringOrText [
 { #category : 'event-listening' }
 ChangesLog >> logClassAdded: announcement [
 
-	self logChange: announcement classAdded definitionString
-]
-
-{ #category : 'event-listening' }
-ChangesLog >> logClassRemoved: announcement [
-
-	self logChange: 'Smalltalk globals removeClassNamed: #' , announcement classRemoved name
+	SourceFiles writeClassDefinition: announcement classAdded definitionString onSuccess: [ "Ignore" ] onFail: [ "Ignore" ]
 ]
 
 { #category : 'event-listening' }
@@ -96,13 +90,7 @@ ChangesLog >> logMethodRemoved: announcement [
 { #category : 'event-listening' }
 ChangesLog >> logRemovedClassAnnouncement: announcement [
 
-	self logRemovedClassNamed: announcement classRemoved name
-]
-
-{ #category : 'event-listening' }
-ChangesLog >> logRemovedClassNamed: removedClassName [
-
-	self logChange: 'Smalltalk globals removeClassNamed: #' , removedClassName
+	self logChange: 'Smalltalk globals removeClassNamed: #' , announcement classRemoved name
 ]
 
 { #category : 'accessing' }
