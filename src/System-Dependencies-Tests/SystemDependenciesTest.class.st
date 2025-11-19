@@ -66,14 +66,14 @@ SystemDependenciesTest >> knownBasicToolsDependencies [
 SystemDependenciesTest >> knownCompilerDependencies [
 	"ideally this list should be empty"
 
-	^ #( #'FileSystem-Core' #'FileSystem-Path')
+	^ #( #'FileSystem-Core' )
 ]
 
 { #category : 'known dependencies' }
 SystemDependenciesTest >> knownKernelDependencies [
 	"ideally this list should be empty"
 
-	^ #( #'FileSystem-Core' #'FileSystem-Path' )
+	^ #( #'FileSystem-Core' )
 ]
 
 { #category : 'known dependencies' }
