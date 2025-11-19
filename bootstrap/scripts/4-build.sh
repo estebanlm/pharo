@@ -138,9 +138,9 @@ ${VM} "${COMPILER_IMAGE_NAME}.image" # I have to run once the image so the next 
 
 echo $(date -u) "[Compiler] Adding more Kernel packages"
 ${VM} "${COMPILER_IMAGE_NAME}.image" perform --save BasicHermesTool load: --as-array Clap-Core.hermes Clap-Commands-Pharo.hermes Hermes-Extensions.hermes
-${VM} "${COMPILER_IMAGE_NAME}.image" loadHermes Math-Operations-Extensions.hermes System-NumberPrinting.hermes System-Time.hermes Multilingual-Encodings.hermes ReflectionMirrors-Primitives.hermes NumberParser.hermes --save --no-fail-on-undeclared
+${VM} "${COMPILER_IMAGE_NAME}.image" loadHermes Math-Operations-Extensions.hermes System-NumberPrinting.hermes System-Time.hermes Multilingual-Encodings.hermes ReflectionMirrors-Primitives.hermes NumberParser.hermes System-Version.hermes --save --no-fail-on-undeclared
 
-# Now that System-Time is loaded, we can initialize the version
+# Now that System-Version is loaded, we can initialize the version
 ${VM} "${COMPILER_IMAGE_NAME}.image" perform  --save SystemVersion setMajor:minor:patch:suffix:build:commitHash: ${PHARO_MAJOR} ${PHARO_MINOR} ${PHARO_PATCH} ${PHARO_SUFFIX} ${BUILD_NUMBER} ${PHARO_COMMIT_HASH}
 
 ${VM} "${COMPILER_IMAGE_NAME}.image" loadHermes Collections-Atomic.hermes Collections-Stack.hermes AST-Core.hermes Collections-Arithmetic.hermes  --save --no-fail-on-undeclared

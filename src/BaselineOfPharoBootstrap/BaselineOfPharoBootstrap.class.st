@@ -117,6 +117,7 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		spec package: 'CodeExport'.
 		spec package: 'System-Sources'.
 		spec package: 'System-Support'.
+		spec package: 'System-Version'.
 
 		spec package: 'UIManager'.
 		spec package: 'Zinc-Character-Encoding-Core'.
@@ -186,6 +187,7 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			'System-Time'.
 			'Math-Operations-Extensions'.
 			'System-NumberPrinting'.
+			'System-Version'
 		}.
 
 		spec group: 'MultilingualGroup' with: {
