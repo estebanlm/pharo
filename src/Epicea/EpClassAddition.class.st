@@ -50,7 +50,7 @@ EpClassAddition >> fileOutEntryOn: aWriteStream [
 
 	self behaviorAffected realClass ifNotNil: [ :realClass | 
 		| exporter |		
-		exporter := CodeExporter onStream: aWriteStream.
+		exporter := CodeExporterV100 onStream: aWriteStream.
 		exporter writeClassDefinition: realClass.
 		exporter writeClassCommentOf: realClass.
 		aWriteStream cr ]

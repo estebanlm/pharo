@@ -43,7 +43,7 @@ EpTraitAddition >> fileOutEntryOn: aWriteStream [
 
 	| realClass exporter |
 	realClass := self traitAdded realClass.
-	exporter := CodeExporter onStream: aWriteStream.
+	exporter := CodeExporterV100 onStream: aWriteStream.
 	exporter writeClassDefinition: realClass.
 	exporter writeClassCommentOf: realClass.
 	aWriteStream cr

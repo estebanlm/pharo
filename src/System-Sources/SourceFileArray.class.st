@@ -496,7 +496,7 @@ SourceFileArray >> writeComment: aComment ofClass: aClass metadata: metadata tim
 
 	self
 		writeChangesDuring: [ :file |
-				(CodeExporter onStream: file)
+				(CodeExporterV100 onStream: file)
 					writeComment: aComment
 					ofClass: aClass
 					stamp: aTimeStamp
@@ -511,7 +511,7 @@ SourceFileArray >> writeSource: source ofMethod: method protocol: protocol metad
 
 	self
 		writeChangesDuring: [ :file |
-				(CodeExporter onStream: file)
+				(CodeExporterV100 onStream: file)
 					writeMethodWithClass: method methodClass
 					selector: method selector
 					source: source
