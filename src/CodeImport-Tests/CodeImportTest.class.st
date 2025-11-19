@@ -93,6 +93,19 @@ CodeImportTest >> testVersion2FailsFilesWithIncorrectVersionTag [
 ]
 
 { #category : 'tests' }
+CodeImportTest >> testVersion2FailsFilesWithUnclosedVersionTag [
+
+	| importer |
+	importer := CodeImporter withParserClass: ChunkFileFormatParserV200.
+	
+	"Version 2.0.0 is accepted, but it's missing the closing comment quote"
+	importer readStream: '"VERSION:2.0.0!1+1!' readStream.
+	
+	[ importer parseChunks. self fail ]
+		on: CodeImportError do: [ :err | self assert: err messageText equals: 'Incorrect VERSION tag: Comment closer expected at the end of the chunk' ]
+]
+
+{ #category : 'tests' }
 CodeImportTest >> testVersion2FailsWhenLoadingFilesWithVersion1 [
 
 	| importer |

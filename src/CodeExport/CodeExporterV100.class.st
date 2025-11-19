@@ -93,7 +93,7 @@ CodeExporterV100 >> writeFileoutVersion [
 
 	"Write the current version as a doit chunk with a comment.
 	This ensures backwards compatibility, as any version should be able to read do-its with comments."
-	writeStream nextPut: '"VERSION: 1.0"'
+	writeStream nextPut: '"VERSION:1.0"'
 ]
 
 { #category : 'writing' }

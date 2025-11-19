@@ -6,6 +6,28 @@ Class {
 	#tag : 'Utilities'
 }
 
+{ #category : 'accessing' }
+ChunkFileFormatParserV200 class >> writer [
+	
+	^ CodeExporterV200
+]
+
+{ #category : 'parsing' }
+ChunkFileFormatParserV200 >> checkCompatibilityWith: versionNumber [
+
+	"There should be at least one component: the major version"
+	versionNumber isEmpty ifTrue: [ CodeImportError signal: 'Empty version number' ].
+
+	versionNumber first = self major ifFalse: [
+		CodeImportError signal: 'Parser VERSION ' , self versionString , ' cannot read file VERSION ' , ($. join: versionNumber) ]
+]
+
+{ #category : 'parsing' }
+ChunkFileFormatParserV200 >> parseAndValidateVersion [
+	
+	self checkCompatibilityWith: self parseVersion
+]
+
 { #category : 'as yet unclassified' }
 ChunkFileFormatParserV200 >> parseBehaviorDefinition: aMetadataChunk [
 	"The behavior preamble is:
@@ -42,10 +64,6 @@ ChunkFileFormatParserV200 >> parsePackageDefinition: aMetadataChunk [
 
 { #category : 'parsing' }
 ChunkFileFormatParserV200 >> parseVersion [
-	"Parse and validate the version.
-	If the file has a version tag as a doIt chunk, validate it.
-	From version 2 on, this is a strict validation using semantic versioning
-	"
 	
 	| firstChunk prefix versionNumber |
 	firstChunk := readStream next.
@@ -54,10 +72,15 @@ ChunkFileFormatParserV200 >> parseVersion [
 	
 		VERSION:x[.[y[.z]]]
 	
+
 	Where x is the major version, y is the minor version and z is the patch version."
+
+	"Check that it's a comment. It starts and ents with a double quote.
+	Also, it is prefixed with VERSION: "
 	prefix := '"VERSION:'.
 	(firstChunk beginsWith: prefix)
 		ifFalse: [ CodeImportError signal: 'Incorrect VERSION tag:', firstChunk ].
+	(firstChunk last = $") ifFalse: [ CodeImportError signal: 'Incorrect VERSION tag: Comment closer expected at the end of the chunk' ].
 
 	"All components in the version number should be integers separated by dots"
 	versionNumber := ((firstChunk allButFirst: prefix size)
@@ -72,10 +95,8 @@ ChunkFileFormatParserV200 >> parseVersion [
 					nextIntegerBase: 10.
 				stream atEnd ifFalse: [ CodeImportError signal: 'Incorrect VERSION tag:', firstChunk ].
 				version ] as: Array.
-	
-	"There should be at least one component: the major version"
-	versionNumber isEmpty ifTrue: [ CodeImportError signal: 'Incorrect VERSION tag:', firstChunk ].
-	versionNumber first = self major ifFalse: [ CodeImportError signal: 'Parser VERSION ', self versionString, ' cannot read file VERSION ', ($. join: versionNumber) ]
+
+	^ versionNumber
 ]
 
 { #category : 'versions' }

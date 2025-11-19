@@ -135,7 +135,7 @@ PharoFilesOpener >> lastImagePath [
 { #category : 'open changes' }
 PharoFilesOpener >> openChanges: changesPath readOnly: readOnly [
 
-	^ (SourceFile on: changesPath potentialLocations: {
+	^ (SourceFile lookupFileNamed: changesPath potentialLocations: {
 			FileLocator imageDirectory.
 			FileLocator workingDirectory.
 		}) tryOpenReadOnly: readOnly;
@@ -157,7 +157,7 @@ PharoFilesOpener >> openSources: fullSourcesName forImage: imagePath [
 		FileLocator workingDirectory
 	}.
 
-	^ (SourceFile on: fullSourcesName potentialLocations: locations)
+	^ (SourceFile lookupFileNamed: fullSourcesName potentialLocations: locations)
 		tryOpenReadOnly: true;
 		yourself
 ]

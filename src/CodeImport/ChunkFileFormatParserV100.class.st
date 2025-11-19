@@ -132,6 +132,54 @@ ChunkFileFormatParserV100 >> methodsForSelector: anObject [
 	methodsForSelector := anObject
 ]
 
+{ #category : 'parsing' }
+ChunkFileFormatParserV100 >> parseAndValidateVersion [
+	"Parse and validate the version.
+	If the file has a version tag as a doIt chunk, validate it.
+	"
+	
+	| firstChunk prefix versionNumber |
+	firstChunk := readStream next.
+	
+	"Cases for old files:
+	  - if the first chunk is not a do it, continue
+	  - if the first chunk is a doit, it must be a single comment with
+	
+		VERSION:x[.[y[.z]]]
+	
+	Where x is the major version, y is the minor version and z is the patch version.
+	In this version of the parser, if the format does not hold, we let it pass.
+	Otherwise, similar comments may match and break compatibility
+	"
+	prefix := '"VERSION:'.
+	(firstChunk beginsWith: prefix)
+		ifFalse: [ 
+			readStream reset.
+			^ self ].
+
+	versionNumber := ((firstChunk allButFirst: prefix size)
+		"skip the last double quote of the comment"
+		allButLast
+		splitOn: $.)
+			collect: [ :e | | stream version |
+				"If the version is not an integer, ignore and continue to parse an old file"
+				stream := e readStream.
+				version := (NumberParser on: stream)
+					failBlock: [ 
+						readStream reset.
+						^ self ];
+					nextIntegerBase: 10.
+				stream atEnd ifFalse: [ 
+					readStream reset.
+					^ self ].
+				version ] as: Array.
+	
+
+	
+	(#(#(1) #(1 0) #(1 0 0)) includes: versionNumber)
+		ifFalse: [ CodeImportError signal: 'Parser VERSION ', self versionString, ' cannot read file VERSION ', ($. join: versionNumber) ]
+]
+
 { #category : 'as yet unclassified' }
 ChunkFileFormatParserV100 >> parseChunkWithMetadata: nextChunk [
 
@@ -145,7 +193,7 @@ ChunkFileFormatParserV100 >> parseChunkWithMetadata: nextChunk [
 { #category : 'parsing' }
 ChunkFileFormatParserV100 >> parseChunks [
 
-	self parseVersion.
+	self parseAndValidateVersion.
 	[ readStream atEnd ] whileFalse: [ self parseNextDeclaration ].
 	^ parsedDeclarations
 ]
@@ -253,54 +301,6 @@ ChunkFileFormatParserV100 >> parseNextDeclaration [
 	isMetadata
 		ifFalse: [ self addDeclaration: (self doItChunkClass contents: nextChunk) ]
 		ifTrue: [ self parseChunkWithMetadata: nextChunk ]
-]
-
-{ #category : 'parsing' }
-ChunkFileFormatParserV100 >> parseVersion [
-	"Parse and validate the version.
-	If the file has a version tag as a doIt chunk, validate it.
-	"
-	
-	| firstChunk prefix versionNumber |
-	firstChunk := readStream next.
-	
-	"Cases for old files:
-	  - if the first chunk is not a do it, continue
-	  - if the first chunk is a doit, it must be a single comment with
-	
-		VERSION:x[.[y[.z]]]
-	
-	Where x is the major version, y is the minor version and z is the patch version.
-	In this version of the parser, if the format does not hold, we let it pass.
-	Otherwise, similar comments may match and break compatibility
-	"
-	prefix := '"VERSION:'.
-	(firstChunk beginsWith: prefix)
-		ifFalse: [ 
-			readStream reset.
-			^ self ].
-
-	versionNumber := ((firstChunk allButFirst: prefix size)
-		"skip the last double quote of the comment"
-		allButLast
-		splitOn: $.)
-			collect: [ :e | | stream version |
-				"If the version is not an integer, ignore and continue to parse an old file"
-				stream := e readStream.
-				version := (NumberParser on: stream)
-					failBlock: [ 
-						readStream reset.
-						^ self ];
-					nextIntegerBase: 10.
-				stream atEnd ifFalse: [ 
-					readStream reset.
-					^ self ].
-				version ] as: Array.
-	
-
-	
-	(#(#(1) #(1 0) #(1 0 0)) includes: versionNumber)
-		ifFalse: [ CodeImportError signal: 'Parser VERSION ', self versionString, ' cannot read file VERSION ', ($. join: versionNumber) ]
 ]
 
 { #category : 'accessing' }

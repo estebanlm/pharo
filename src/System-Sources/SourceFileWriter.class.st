@@ -15,6 +15,12 @@ Class {
 }
 
 { #category : 'accessing' }
+SourceFileWriter >> exporterClass [
+
+	^ sourceFile exporterClass
+]
+
+{ #category : 'accessing' }
 SourceFileWriter >> failBlock [
 
 	^ failBlock
@@ -91,7 +97,7 @@ SourceFileWriter >> writeClassDefinition: aClassDefinition [
 
 	sourceFile
 		writeChangesDuring: [ :file |
-				(CodeExporterV100 onStream: file)
+				(self exporterClass onStream: file)
 					writeClassDefinition: aClassDefinition ]
 		onSuccess: successBlock
 		onFail: failBlock
@@ -102,7 +108,7 @@ SourceFileWriter >> writeComment: aComment ofClass: aClass [
 
 	sourceFile
 		writeChangesDuring: [ :file |
-				(CodeExporterV100 onStream: file)
+				(self exporterClass onStream: file)
 					writeComment: aComment
 					ofClass: aClass
 					stamp: timestamp
@@ -117,7 +123,7 @@ SourceFileWriter >> writeSource: source ofMethod: method protocol: protocol [
 
 	sourceFile
 		writeChangesDuring: [ :file |
-				(CodeExporterV100 onStream: file)
+				(self exporterClass onStream: file)
 					writeMethodWithClass: method methodClass
 					selector: method selector
 					source: source
