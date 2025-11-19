@@ -1055,17 +1055,6 @@ SmalltalkImage >> memoryHogs [
 	^ MemoryHogs ifNil: [MemoryHogs := OrderedCollection new]
 ]
 
-{ #category : 'miscellaneous' }
-SmalltalkImage >> metacelloPlatformAttributes [
-	"Returns the tags for the conditional platform loading in Metacello. Pay attention the order is important: from most  to least general."
-
-	^ {
-		  #squeakCommon.
-		  #pharo.
-		  ('pharo' , SystemVersion current major asString , '.x') asSymbol.
-		  ('pharo' , SystemVersion current major asString , '.0.x') asSymbol }
-]
-
 { #category : 'special objects' }
 SmalltalkImage >> newSpecialObjectsArray [
 	"Smalltalk recreateSpecialObjectsArray"
@@ -1659,10 +1648,10 @@ SmalltalkImage >> stripImageExtensionFrom: aString [
 
 	| answer imageExtension delimitedImageExtension |
 	answer := aString.
-	imageExtension := Path extensionDelimiter asString, self imageSuffix.
-	delimitedImageExtension := imageExtension copyWith: Path extensionDelimiter.
+	imageExtension := File extensionDelimiter asString, self imageSuffix.
+	delimitedImageExtension := imageExtension copyWith: File extensionDelimiter.
 	[answer isNil not and: [(answer endsWith: imageExtension) or: [answer endsWith: delimitedImageExtension]]]
-		whileTrue: [answer := answer copyUpToLast: Path extensionDelimiter].
+		whileTrue: [answer := answer copyUpToLast: File extensionDelimiter].
 	^answer
 ]
 

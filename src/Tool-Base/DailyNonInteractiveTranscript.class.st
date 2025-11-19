@@ -10,9 +10,8 @@ Class {
 	#instVars : [
 		'date'
 	],
-	#category : 'Transcript-NonInteractive-Base',
-	#package : 'Transcript-NonInteractive',
-	#tag : 'Base'
+	#category : 'Tool-Base',
+	#package : 'Tool-Base'
 }
 
 { #category : 'constants' }
