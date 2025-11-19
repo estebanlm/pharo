@@ -40,7 +40,7 @@ CodeExporterV100 >> writeClassCommentOf: aClass [
 ]
 
 { #category : 'writing' }
-CodeExporterV100 >> writeClassDefinition: aClass [ 
+CodeExporterV100 >> writeClassDefinitionOf: aClass [ 
 
 	writeStream cr.
 	writeStream nextPut: aClass oldPharoDefinition
@@ -53,7 +53,7 @@ CodeExporterV100 >> writeClassInitializer: aClass [
 	writeStream nextPut: aClass name, ' initialize'
 ]
 
-{ #category : 'writing' }
+{ #category : 'writing - low level' }
 CodeExporterV100 >> writeComment: commentString ofClass: aClass stamp: commentStamp withMetadata: commentMetadata priorSourcePointer: priorSourcePointer [
 
 	| header sourceCodePosition |
@@ -109,7 +109,7 @@ CodeExporterV100 >> writeMethod: aMethod metadata: metadata prior: priorSourcePo
 		  priorSourcePointer: priorSourcePointer
 ]
 
-{ #category : 'writing' }
+{ #category : 'writing - low level' }
 CodeExporterV100 >> writeMethodWithClass: methodClass selector: methodSelector source: methodSourceCode protocol: protocol stamp: methodStamp withMetadata: metadata priorSourcePointer: priorSourcePointer [
 
 	| preamble sourceCodePosition |
@@ -140,7 +140,7 @@ CodeExporterV100 >> writeStream [
 	^ writeStream
 ]
 
-{ #category : 'writing' }
+{ #category : 'private' }
 CodeExporterV100 >> writeStream: aWriteStream [ 
 	
 	writeStream := ChunkWriteStream on: aWriteStream

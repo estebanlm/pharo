@@ -71,8 +71,8 @@ Fileouter >> fileOut [
 Fileouter >> fileoutBehavior: aBehavior [
 
 	| comment |
-	exporter writeClassDefinition: aBehavior.
-	exporter writeClassDefinition: aBehavior class.
+	exporter writeClassDefinitionOf: aBehavior.
+	exporter writeClassDefinitionOf: aBehavior class.
 	
 	comment := aBehavior comment.
 	(comment isNil or: [comment isEmpty])

@@ -494,7 +494,7 @@ SourceFileArray >> timeStampFromPreamble: preamble for: sourceDataPointers [
 	^ stamp
 ]
 
-{ #category : 'public - string writing' }
+{ #category : 'private' }
 SourceFileArray >> writeChangesDuring: aBlock onSuccess: successBlock onFail: failBlock [
 
 	| file sourceCodePosition |
@@ -508,7 +508,7 @@ SourceFileArray >> writeChangesDuring: aBlock onSuccess: successBlock onFail: fa
 	self flushChangesFile
 ]
 
-{ #category : 'public - string writing' }
+{ #category : 'public - logging' }
 SourceFileArray >> writeComment: aComment ofClass: aClass metadata: metadata timestamp: aTimeStamp priorSourcePointer: priorSourcePointer onSuccess: successBlock onFail: failBlock [
 
 	self
@@ -523,7 +523,7 @@ SourceFileArray >> writeComment: aComment ofClass: aClass metadata: metadata tim
 		onFail: failBlock
 ]
 
-{ #category : 'public - string writing' }
+{ #category : 'public - logging' }
 SourceFileArray >> writeSource: source ofMethod: method protocol: protocol metadata: metadata timestamp: timestamp priorSourcePointer: priorSourcePointer onSuccess: successBlock onFail: failBlock [
 
 	self
