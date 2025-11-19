@@ -62,23 +62,6 @@ SourceFileArray class >> startUp: resuming [
 	resuming ifTrue: [ Smalltalk openSourceFiles ]
 ]
 
-{ #category : 'public - string writing' }
-SourceFileArray >> assureStartupStampLogged [
-	"If there is a startup stamp not yet actually logged to disk, do it now."
-
-	ChangesLog default startupStamp ifNil: [ ^ self ].
-
-	self changesWriteStreamDo: [ :changesFile |
-			(ChunkWriteStream on: changesFile)
-				cr;
-				cr;
-				nextPut: ChangesLog default startupStamp asString;
-				cr.
-			ChangesLog default startupStamp: nil ].
-
-	self forceChangesToDisk
-]
-
 { #category : 'accessing' }
 SourceFileArray >> changesFileStream [
 	"Answer the master .changes FileStream, with writing permissions."
@@ -258,6 +241,36 @@ SourceFileArray >> initialize [
 
 	readOnlyQueue := SharedQueue new.
 	flushChanges := true
+]
+
+{ #category : 'public - file system operations' }
+SourceFileArray >> logChange: aStringOrText [
+	"Write the argument, aString, onto the changes file."
+
+	| aString |
+	(self changesFileStream isNil or: [ self changesFileStream closed ])
+    ifTrue: [ ^ self ].
+
+	aString := aStringOrText asString.
+	(aString findFirst: [ :char | char isSeparator not ]) = 0
+		ifTrue: [ ^ self ].	"null doits confuse replay"
+
+	self changesWriteStreamDo: [ :changesFile |
+		changesFile
+			cr; cr.
+
+		(ChunkWriteStream on: changesFile)
+			nextPut: aString ].
+
+	self forceChangesToDisk
+]
+
+{ #category : 'public - string writing' }
+SourceFileArray >> newWriter [
+
+	^ SourceFileWriter new
+		  sourceFile: self;
+		  yourself
 ]
 
 { #category : 'public - string reading' }
@@ -506,47 +519,4 @@ SourceFileArray >> writeChangesDuring: aBlock onSuccess: successBlock onFail: fa
 	successBlock value: (self sourcePointerFromFileIndex: 2 andPosition: sourceCodePosition).
 
 	self flushChangesFile
-]
-
-{ #category : 'public - logging' }
-SourceFileArray >> writeClassDefinition: aClassDefinition onSuccess: successBlock onFail: failBlock [
-
-	self
-		writeChangesDuring: [ :file |
-				(CodeExporterV100 onStream: file)
-					writeClassDefinition: aClassDefinition ]
-		onSuccess: successBlock
-		onFail: failBlock
-]
-
-{ #category : 'public - logging' }
-SourceFileArray >> writeComment: aComment ofClass: aClass metadata: metadata timestamp: aTimeStamp priorSourcePointer: priorSourcePointer onSuccess: successBlock onFail: failBlock [
-
-	self
-		writeChangesDuring: [ :file |
-				(CodeExporterV100 onStream: file)
-					writeComment: aComment
-					ofClass: aClass
-					stamp: aTimeStamp
-					withMetadata: metadata
-					priorSourcePointer: priorSourcePointer ]
-		onSuccess: successBlock
-		onFail: failBlock
-]
-
-{ #category : 'public - logging' }
-SourceFileArray >> writeSource: source ofMethod: method protocol: protocol metadata: metadata timestamp: timestamp priorSourcePointer: priorSourcePointer onSuccess: successBlock onFail: failBlock [
-
-	self
-		writeChangesDuring: [ :file |
-				(CodeExporterV100 onStream: file)
-					writeMethodWithClass: method methodClass
-					selector: method selector
-					source: source
-					protocol: protocol
-					stamp: timestamp
-					withMetadata: metadata
-					priorSourcePointer: priorSourcePointer ]
-		onSuccess: successBlock
-		onFail: failBlock
 ]

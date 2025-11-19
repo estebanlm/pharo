@@ -48,37 +48,23 @@ ChangesLog class >> unsubscribeAnnouncersOfDefaultInstance [
 
 { #category : 'logging' }
 ChangesLog >> logChange: aStringOrText [
-	"Write the argument, aString, onto the changes file."
 
-	| aString |
-	aString := aStringOrText asString.
-	(aString findFirst: [ :char | char isSeparator not ]) = 0 ifTrue: [ ^ self ]. "null doits confuse replay"
-
-	SourceFileArray default
-		changesWriteStreamDo: [ :changesFile |
-				changesFile
-					cr;
-					cr.
-
-				(ChunkWriteStream on: changesFile) nextPut: aString ];
-		forceChangesToDisk
+	SourceFileArray default logChange: aStringOrText
 ]
 
 { #category : 'event-listening' }
 ChangesLog >> logClassAdded: announcement [
 
-	SourceFiles writeClassDefinition: announcement classAdded definitionString onSuccess: [ "Ignore" ] onFail: [ "Ignore" ]
+	SourceFiles newWriter
+		successBlock: [ "Ignore" ];
+		failBlock: [ "Ignore" ];
+		writeClassDefinition: announcement classAdded definitionString
 ]
 
 { #category : 'event-listening' }
 ChangesLog >> logClassRenamed: announcement [
 
 	self logChange: '(Smalltalk globals at: #' , announcement oldName , ') rename: #' , announcement newName
-]
-
-{ #category : 'event-listening' }
-ChangesLog >> logExpressionEvaluated: announcement [
-	self logChange: announcement expressionEvaluated , 'toto'
 ]
 
 { #category : 'event-listening' }
@@ -93,12 +79,6 @@ ChangesLog >> logRemovedClassAnnouncement: announcement [
 	self logChange: 'Smalltalk globals removeClassNamed: #' , announcement classRemoved name
 ]
 
-{ #category : 'accessing' }
-ChangesLog >> recordStartupStamp [
-
-	startupStamp := '"----STARTUP----', DateAndTime now printString, ' as ', Smalltalk imagePath, '"'
-]
-
 { #category : 'event-listening' }
 ChangesLog >> registerToAnnouncements [
 
@@ -107,16 +87,4 @@ ChangesLog >> registerToAnnouncements [
 		when: ClassRemoved send: #logRemovedClassAnnouncement: to: self;
 		when: ClassRenamed send: #logClassRenamed: to: self;
 		when: MethodRemoved send: #logMethodRemoved: to: self
-]
-
-{ #category : 'accessing' }
-ChangesLog >> startupStamp [
-
-	^ startupStamp
-]
-
-{ #category : 'accessing' }
-ChangesLog >> startupStamp: anObject [
-
-	^ startupStamp := anObject
 ]
