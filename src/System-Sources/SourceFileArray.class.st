@@ -62,6 +62,23 @@ SourceFileArray class >> startUp: resuming [
 	resuming ifTrue: [ Smalltalk openSourceFiles ]
 ]
 
+{ #category : 'public - string writing' }
+SourceFileArray >> assureStartupStampLogged [
+	"If there is a startup stamp not yet actually logged to disk, do it now."
+
+	ChangesLog default startupStamp ifNil: [ ^ self ].
+
+	self changesWriteStreamDo: [ :changesFile |
+			(ChunkWriteStream on: changesFile)
+				cr;
+				cr;
+				nextPut: ChangesLog default startupStamp asString;
+				cr.
+			ChangesLog default startupStamp: nil ].
+
+	self forceChangesToDisk
+]
+
 { #category : 'accessing' }
 SourceFileArray >> changesFileStream [
 	"Answer the master .changes FileStream, with writing permissions."

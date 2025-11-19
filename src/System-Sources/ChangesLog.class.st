@@ -65,6 +65,12 @@ ChangesLog >> logChange: aStringOrText [
 ]
 
 { #category : 'event-listening' }
+ChangesLog >> logClassAdded: announcement [
+
+	self logChange: announcement classAdded definitionString
+]
+
+{ #category : 'event-listening' }
 ChangesLog >> logClassRemoved: announcement [
 
 	self logChange: 'Smalltalk globals removeClassNamed: #' , announcement classRemoved name
@@ -78,7 +84,7 @@ ChangesLog >> logClassRenamed: announcement [
 
 { #category : 'event-listening' }
 ChangesLog >> logExpressionEvaluated: announcement [
-	self logChange: announcement expressionEvaluated
+	self logChange: announcement expressionEvaluated , 'toto'
 ]
 
 { #category : 'event-listening' }
@@ -88,12 +94,41 @@ ChangesLog >> logMethodRemoved: announcement [
 ]
 
 { #category : 'event-listening' }
+ChangesLog >> logRemovedClassAnnouncement: announcement [
+
+	self logRemovedClassNamed: announcement classRemoved name
+]
+
+{ #category : 'event-listening' }
+ChangesLog >> logRemovedClassNamed: removedClassName [
+
+	self logChange: 'Smalltalk globals removeClassNamed: #' , removedClassName
+]
+
+{ #category : 'accessing' }
+ChangesLog >> recordStartupStamp [
+
+	startupStamp := '"----STARTUP----', DateAndTime now printString, ' as ', Smalltalk imagePath, '"'
+]
+
+{ #category : 'event-listening' }
 ChangesLog >> registerToAnnouncements [
 
 	self class codeChangeAnnouncer weak
-		when: ClassRemoved send: #logClassRemoved: to: self;
+		when: ClassAdded send: #logClassAdded: to: self;
+		when: ClassRemoved send: #logRemovedClassAnnouncement: to: self;
 		when: ClassRenamed send: #logClassRenamed: to: self;
-		when: MethodRemoved send: #logMethodRemoved: to: self.
-	self class codeSupportAnnouncer weak 
-		when: ExpressionEvaluated send: #logExpressionEvaluated: to: self
+		when: MethodRemoved send: #logMethodRemoved: to: self
+]
+
+{ #category : 'accessing' }
+ChangesLog >> startupStamp [
+
+	^ startupStamp
+]
+
+{ #category : 'accessing' }
+ChangesLog >> startupStamp: anObject [
+
+	^ startupStamp := anObject
 ]
