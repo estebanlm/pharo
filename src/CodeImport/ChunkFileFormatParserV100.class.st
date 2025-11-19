@@ -2,7 +2,7 @@
 I represent the chunk file format.  Right now I know how to parse chunks from a readStream, but not how to write them. 
 "
 Class {
-	#name : 'ChunkFileFormatParser',
+	#name : 'ChunkFileFormatParserV100',
 	#superclass : 'Object',
 	#instVars : [
 		'readStream',
@@ -19,89 +19,89 @@ Class {
 }
 
 { #category : 'instance creation' }
-ChunkFileFormatParser class >> for: aReadStream [
+ChunkFileFormatParserV100 class >> for: aReadStream [
 	^self new
 		readStream: aReadStream;
 		yourself
 ]
 
 { #category : 'accessing' }
-ChunkFileFormatParser >> addDeclaration: aDeclaration [
+ChunkFileFormatParserV100 >> addDeclaration: aDeclaration [
 	parsedDeclarations	 add: aDeclaration
 ]
 
 { #category : 'class factory' }
-ChunkFileFormatParser >> classCommentChunkClass [
+ChunkFileFormatParserV100 >> classCommentChunkClass [
 	^ ClassCommentChunk
 ]
 
 { #category : 'class factory' }
-ChunkFileFormatParser >> classOrganisationChunkClass [
+ChunkFileFormatParserV100 >> classOrganisationChunkClass [
 	^ ClassOrganizationChunk
 ]
 
 { #category : 'custom points' }
-ChunkFileFormatParser >> classSelector [
+ChunkFileFormatParserV100 >> classSelector [
 	^ classSelector
 ]
 
 { #category : 'custom points' }
-ChunkFileFormatParser >> classSelector: anObject [
+ChunkFileFormatParserV100 >> classSelector: anObject [
 	classSelector := anObject
 ]
 
 { #category : 'custom points' }
-ChunkFileFormatParser >> classTraitSelector [
+ChunkFileFormatParserV100 >> classTraitSelector [
 	^ classTraitSelector
 ]
 
 { #category : 'custom points' }
-ChunkFileFormatParser >> classTraitSelector: anObject [
+ChunkFileFormatParserV100 >> classTraitSelector: anObject [
 	classTraitSelector := anObject
 ]
 
 { #category : 'custom points' }
-ChunkFileFormatParser >> commentStampSelector [
+ChunkFileFormatParserV100 >> commentStampSelector [
 	^ commentStampSelector
 ]
 
 { #category : 'custom points' }
-ChunkFileFormatParser >> commentStampSelector: anObject [
+ChunkFileFormatParserV100 >> commentStampSelector: anObject [
 	commentStampSelector := anObject
 ]
 
 { #category : 'initialization' }
-ChunkFileFormatParser >> defaultClassSelector [
+ChunkFileFormatParserV100 >> defaultClassSelector [
 	^ #class
 ]
 
 { #category : 'initialization' }
-ChunkFileFormatParser >> defaultClassTraitSelector [
+ChunkFileFormatParserV100 >> defaultClassTraitSelector [
 	^ #classTrait
 ]
 
 { #category : 'initialization' }
-ChunkFileFormatParser >> defaultCommentStampSelector [
+ChunkFileFormatParserV100 >> defaultCommentStampSelector [
 	^ #commentStamp:
 ]
 
 { #category : 'initialization' }
-ChunkFileFormatParser >> defaultMethodsForSelector [
+ChunkFileFormatParserV100 >> defaultMethodsForSelector [
 	^ #methodsFor:
 ]
 
 { #category : 'initialization' }
-ChunkFileFormatParser >> defaultReorganizeSelector [
+ChunkFileFormatParserV100 >> defaultReorganizeSelector [
 	^ #reorganize
 ]
 
 { #category : 'class factory' }
-ChunkFileFormatParser >> doItChunkClass [
-	^ DoItChunk
+ChunkFileFormatParserV100 >> doItChunkClass [
+	^ DoItChunkV100
 ]
 
 { #category : 'initialization' }
-ChunkFileFormatParser >> initialize [
+ChunkFileFormatParserV100 >> initialize [
 	super initialize.
 	parsedDeclarations := OrderedCollection new.
 	classSelector := self defaultClassSelector.
@@ -111,29 +111,47 @@ ChunkFileFormatParser >> initialize [
 	reorganizeSelector := self defaultReorganizeSelector
 ]
 
+{ #category : 'versions' }
+ChunkFileFormatParserV100 >> major [
+
+	^ self version first
+]
+
 { #category : 'class factory' }
-ChunkFileFormatParser >> methodChunkClass [
+ChunkFileFormatParserV100 >> methodChunkClass [
 	^ MethodChunk
 ]
 
 { #category : 'custom points' }
-ChunkFileFormatParser >> methodsForSelector [
+ChunkFileFormatParserV100 >> methodsForSelector [
 	^ methodsForSelector
 ]
 
 { #category : 'custom points' }
-ChunkFileFormatParser >> methodsForSelector: anObject [
+ChunkFileFormatParserV100 >> methodsForSelector: anObject [
 	methodsForSelector := anObject
 ]
 
+{ #category : 'as yet unclassified' }
+ChunkFileFormatParserV100 >> parseChunkWithMetadata: nextChunk [
+
+	| substrings |
+	substrings := OCParser parseLiterals: nextChunk.
+	(substrings includes: self methodsForSelector asString) ifTrue: [ ^ self parseMethodDeclarations: substrings ].
+	(substrings includes: self commentStampSelector asString) ifTrue: [ ^ self parseCommentDeclaration: substrings ].
+	^ (substrings includes: self reorganizeSelector asString) ifTrue: [ ^ self parseClassOrganization: substrings ]
+]
+
 { #category : 'parsing' }
-ChunkFileFormatParser >> parseChunks [
+ChunkFileFormatParserV100 >> parseChunks [
+
+	self parseVersion.
 	[ readStream atEnd ] whileFalse: [ self parseNextDeclaration ].
 	^ parsedDeclarations
 ]
 
 { #category : 'parsing' }
-ChunkFileFormatParser >> parseClassOrganization: classOrganizationPreamble [
+ChunkFileFormatParserV100 >> parseClassOrganization: classOrganizationPreamble [
 	"The comment preable is an array with the following structure:
 	If instance side method:
 	#(#CodeImportTestCaseTestClass #reorganize)
@@ -155,7 +173,7 @@ ChunkFileFormatParser >> parseClassOrganization: classOrganizationPreamble [
 ]
 
 { #category : 'parsing' }
-ChunkFileFormatParser >> parseCommentDeclaration: commentPreamble [
+ChunkFileFormatParserV100 >> parseCommentDeclaration: commentPreamble [
 	"The comment preable is an array with the following structure:
 	If instance side method:
 	#(#CodeImportTestCaseTestClass #commentStamp: '<historical>' #prior: 0)
@@ -185,7 +203,7 @@ ChunkFileFormatParser >> parseCommentDeclaration: commentPreamble [
 ]
 
 { #category : 'parsing' }
-ChunkFileFormatParser >> parseMethodDeclarations: methodsPreamble [
+ChunkFileFormatParserV100 >> parseMethodDeclarations: methodsPreamble [
 
 	| behaviorName isMeta protocol stamp methodSource methodMetadata |
 	"The method preable is an array with the following structure:
@@ -226,37 +244,88 @@ ChunkFileFormatParser >> parseMethodDeclarations: methodsPreamble [
 ]
 
 { #category : 'parsing' }
-ChunkFileFormatParser >> parseNextDeclaration [
+ChunkFileFormatParserV100 >> parseNextDeclaration [
 
 	| isMetadata nextChunk |
 	readStream skipSeparators.
 	isMetadata := readStream isNextChunkMetaData.
 	nextChunk := readStream next.
 	isMetadata
-		ifFalse: [
-		self addDeclaration: (self doItChunkClass contents: nextChunk) ]
-		ifTrue: [
-			| substrings |
-			substrings := OCParser parseLiterals: nextChunk.
-			(substrings includes: self methodsForSelector asString) ifTrue: [
-				^ self parseMethodDeclarations: substrings ].
-			(substrings includes: self commentStampSelector asString) ifTrue: [
-				^ self parseCommentDeclaration: substrings ].
-			(substrings includes: self reorganizeSelector asString) ifTrue: [
-				^ self parseClassOrganization: substrings ] ]
+		ifFalse: [ self addDeclaration: (self doItChunkClass contents: nextChunk) ]
+		ifTrue: [ self parseChunkWithMetadata: nextChunk ]
+]
+
+{ #category : 'parsing' }
+ChunkFileFormatParserV100 >> parseVersion [
+	"Parse and validate the version.
+	If the file has a version tag as a doIt chunk, validate it.
+	"
+	
+	| firstChunk prefix versionNumber |
+	firstChunk := readStream next.
+	
+	"Cases for old files:
+	  - if the first chunk is not a do it, continue
+	  - if the first chunk is a doit, it must be a single comment with
+	
+		VERSION:x[.[y[.z]]]
+	
+	Where x is the major version, y is the minor version and z is the patch version.
+	In this version of the parser, if the format does not hold, we let it pass.
+	Otherwise, similar comments may match and break compatibility
+	"
+	prefix := '"VERSION:'.
+	(firstChunk beginsWith: prefix)
+		ifFalse: [ 
+			readStream reset.
+			^ self ].
+
+	versionNumber := ((firstChunk allButFirst: prefix size)
+		"skip the last double quote of the comment"
+		allButLast
+		splitOn: $.)
+			collect: [ :e | | stream version |
+				"If the version is not an integer, ignore and continue to parse an old file"
+				stream := e readStream.
+				version := (NumberParser on: stream)
+					failBlock: [ 
+						readStream reset.
+						^ self ];
+					nextIntegerBase: 10.
+				stream atEnd ifFalse: [ 
+					readStream reset.
+					^ self ].
+				version ] as: Array.
+	
+
+	
+	(#(#(1) #(1 0) #(1 0 0)) includes: versionNumber)
+		ifFalse: [ CodeImportError signal: 'Parser VERSION ', self versionString, ' cannot read file VERSION ', ($. join: versionNumber) ]
 ]
 
 { #category : 'accessing' }
-ChunkFileFormatParser >> readStream: aReadStream [
+ChunkFileFormatParserV100 >> readStream: aReadStream [
 	readStream := ChunkReadStream on: aReadStream
 ]
 
 { #category : 'custom points' }
-ChunkFileFormatParser >> reorganizeSelector [
+ChunkFileFormatParserV100 >> reorganizeSelector [
 	^ reorganizeSelector
 ]
 
 { #category : 'custom points' }
-ChunkFileFormatParser >> reorganizeSelector: anObject [
+ChunkFileFormatParserV100 >> reorganizeSelector: anObject [
 	reorganizeSelector := anObject
+]
+
+{ #category : 'versions' }
+ChunkFileFormatParserV100 >> version [
+	
+	^ #( 1 0 0 )
+]
+
+{ #category : 'versions' }
+ChunkFileFormatParserV100 >> versionString [
+
+	^ $. join: self version
 ]

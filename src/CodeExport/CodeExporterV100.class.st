@@ -2,7 +2,7 @@
 An utility class for exporting code to changesets (*.cs) or Smalltalk source (*.st) files
 "
 Class {
-	#name : 'CodeExporter',
+	#name : 'CodeExporterV100',
 	#superclass : 'Object',
 	#instVars : [
 		'writeStream'
@@ -13,13 +13,13 @@ Class {
 }
 
 { #category : 'instance creation' }
-CodeExporter class >> onMemory [
+CodeExporterV100 class >> onMemory [
 
 	^ self onStream: (String new: 100) writeStream
 ]
 
 { #category : 'instance creation' }
-CodeExporter class >> onStream: aStream [
+CodeExporterV100 class >> onStream: aStream [
 
 	^ self new
 		  writeStream: aStream;
@@ -27,7 +27,7 @@ CodeExporter class >> onStream: aStream [
 ]
 
 { #category : 'writing' }
-CodeExporter >> writeClassCommentOf: aClass [
+CodeExporterV100 >> writeClassCommentOf: aClass [
 
 	"Print header""Print comment. If empty, we need to put an empty line anyways to avoid breaking the parser""Print metadata"
 	aClass comment ifNil: [ ^ self ].
@@ -40,21 +40,21 @@ CodeExporter >> writeClassCommentOf: aClass [
 ]
 
 { #category : 'writing' }
-CodeExporter >> writeClassDefinition: aClass [ 
+CodeExporterV100 >> writeClassDefinition: aClass [ 
 
 	writeStream cr.
 	writeStream nextPut: aClass oldPharoDefinition
 ]
 
 { #category : 'writing' }
-CodeExporter >> writeClassInitializer: aClass [ 
+CodeExporterV100 >> writeClassInitializer: aClass [ 
 
 	writeStream cr.
 	writeStream nextPut: aClass name, ' initialize'
 ]
 
 { #category : 'writing' }
-CodeExporter >> writeComment: commentString ofClass: aClass stamp: commentStamp withMetadata: commentMetadata priorSourcePointer: priorSourcePointer [
+CodeExporterV100 >> writeComment: commentString ofClass: aClass stamp: commentStamp withMetadata: commentMetadata priorSourcePointer: priorSourcePointer [
 
 	| header sourceCodePosition |
 	header := String streamContents: [ :strm |
@@ -83,13 +83,21 @@ CodeExporter >> writeComment: commentString ofClass: aClass stamp: commentStamp 
 ]
 
 { #category : 'writing' }
-CodeExporter >> writeMethod: aMethod [
+CodeExporterV100 >> writeFileoutVersion [
+
+	"Write the current version as a doit chunk with a comment.
+	This ensures backwards compatibility, as any version should be able to read do-its with comments."
+	writeStream nextPut: '"VERSION: 1.0"'
+]
+
+{ #category : 'writing' }
+CodeExporterV100 >> writeMethod: aMethod [
 
 	^ self writeMethod: aMethod metadata: '' prior: 0
 ]
 
 { #category : 'writing' }
-CodeExporter >> writeMethod: aMethod metadata: metadata prior: priorSourcePointer [
+CodeExporterV100 >> writeMethod: aMethod metadata: metadata prior: priorSourcePointer [
 
 	^ self
 		  writeMethodWithClass: aMethod methodClass
@@ -102,7 +110,7 @@ CodeExporter >> writeMethod: aMethod metadata: metadata prior: priorSourcePointe
 ]
 
 { #category : 'writing' }
-CodeExporter >> writeMethodWithClass: methodClass selector: methodSelector source: methodSourceCode protocol: protocol stamp: methodStamp withMetadata: metadata priorSourcePointer: priorSourcePointer [
+CodeExporterV100 >> writeMethodWithClass: methodClass selector: methodSelector source: methodSourceCode protocol: protocol stamp: methodStamp withMetadata: metadata priorSourcePointer: priorSourcePointer [
 
 	| preamble sourceCodePosition |
 	preamble := methodClass name , ' methodsFor: ' , protocol printString.
@@ -128,12 +136,12 @@ CodeExporter >> writeMethodWithClass: methodClass selector: methodSelector sourc
 ]
 
 { #category : 'accessing' }
-CodeExporter >> writeStream [
+CodeExporterV100 >> writeStream [
 	^ writeStream
 ]
 
 { #category : 'writing' }
-CodeExporter >> writeStream: aWriteStream [ 
+CodeExporterV100 >> writeStream: aWriteStream [ 
 	
 	writeStream := ChunkWriteStream on: aWriteStream
 ]

@@ -6,7 +6,7 @@ Sending me the message #import makes me evaluate the code and return the result 
 Be careful, my #import method also handles ChangeSet interaction so far, handling Changeset preambles and Postscripts.
 "
 Class {
-	#name : 'DoItChunk',
+	#name : 'DoItChunkV100',
 	#superclass : 'CodeChunk',
 	#category : 'CodeImport-Chunks',
 	#package : 'CodeImport',
@@ -14,19 +14,19 @@ Class {
 }
 
 { #category : 'visiting' }
-DoItChunk >> accept: aVisitor [
+DoItChunkV100 >> accept: aVisitor [
 
 	^ aVisitor visitDoItChunk: self
 ]
 
 { #category : 'accessing' }
-DoItChunk >> description [
+DoItChunkV100 >> description [
 
 	^ 'DoIt (', (contents first: (40 min: contents size)), ')'
 ]
 
 { #category : 'importing' }
-DoItChunk >> importFor: requestor logSource: logSource [
+DoItChunkV100 >> importFor: requestor logSource: logSource [
 
 	| ast |
 	(contents beginsWith: '----') ifTrue: [ ^ self ].
@@ -49,13 +49,13 @@ DoItChunk >> importFor: requestor logSource: logSource [
 ]
 
 { #category : 'testing' }
-DoItChunk >> isDoItDeclaration [
+DoItChunkV100 >> isDoItDeclaration [
 
 	^ true
 ]
 
 { #category : 'testing' }
-DoItChunk >> isPackageAddition: ast [
+DoItChunkV100 >> isPackageAddition: ast [
 	"This is for backward compatibility to be able to import code with old way of creating a package."
 
 	^ ast isMessage and: [ ast receiver isVariable and: [ ast receiver name = #SystemOrganization and: [ ast selector = #addCategory: ] ] ]

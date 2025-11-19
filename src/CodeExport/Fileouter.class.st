@@ -1,3 +1,6 @@
+"
+I drive the file out of packages, classes and methods.
+"
 Class {
 	#name : 'Fileouter',
 	#superclass : 'Object',
@@ -58,6 +61,7 @@ Fileouter >> fileOut [
 	sortedBehaviors := self sortBehaviors.
 	sortedMethods := self methods sorted: [ :a :b | a name < b name ].
 
+	self writeFileoutVersion.
 	sortedBehaviors do: [ :c | self fileoutBehavior: c ].
 	sortedMethods do: [ :m | self fileoutMethod: m ].
 	sortedBehaviors do: [ :c | self fileoutBehaviorInitializer: c ].
@@ -97,7 +101,7 @@ Fileouter >> fileoutOnFileReference: aFileReference [
 { #category : 'API' }
 Fileouter >> fileoutOnStream: aStream [
 
-	exporter := CodeExporter onStream: aStream.
+	exporter := CodeExporterV100 onStream: aStream.
 	self fileOut
 ]
 
@@ -125,4 +129,10 @@ Fileouter >> methods: anObject [
 Fileouter >> sortBehaviors [
 
 	^ Package new sortTopologically: self behaviors
+]
+
+{ #category : 'private - writing' }
+Fileouter >> writeFileoutVersion [
+
+	exporter writeFileoutVersion
 ]
