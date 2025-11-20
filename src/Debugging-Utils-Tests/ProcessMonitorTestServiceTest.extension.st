@@ -3,8 +3,6 @@ Extension { #name : 'ProcessMonitorTestServiceTest' }
 { #category : '*Debugging-Utils-Tests' }
 ProcessMonitorTestServiceTest >> testAlwaysPassBackgroundHalt [
 	| process haltWasPassed halt |
-	self flag: 'it fails runKernelTests on bootstrap image due to Process bug #6745'.
-	self skip.
 
 	haltWasPassed := false.
 	halt := Halt new.
