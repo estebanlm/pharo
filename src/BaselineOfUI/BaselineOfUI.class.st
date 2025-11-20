@@ -66,7 +66,7 @@ BaselineOfUI >> baseline: spec [
 
 		spec package: 'WebBrowser-Core'.
 		
-		spec group: 'Debugger-Base-UI' with: #('Debugging-Core' 'Debugger-Model' 'Debugger-Oups') ]
+		spec group: 'Debugger-Base-UI' with: #('Debugging-Utils' 'Debugging-Core' 'Debugger-Model' 'Debugger-Oups') ]
 ]
 
 { #category : 'actions' }
