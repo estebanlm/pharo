@@ -335,14 +335,6 @@ VirtualMachine >> hasSmallFloats [
 ]
 
 { #category : 'accessing' }
-VirtualMachine >> headlessOption [
-	"Return the default name for the headless option for this VM"
-	^ self optionDash, (Smalltalk os isUnix
-		ifTrue: [ 'vm-display-null' ]
-		ifFalse: [ 'headless' ])
-]
-
-{ #category : 'accessing' }
 VirtualMachine >> imageFile [
 	"Image file "
 	^ Smalltalk image imageFile
@@ -388,31 +380,6 @@ VirtualMachine >> incrementalGCCount [
 VirtualMachine >> interpreterClass [
 	"Return the interpreter class that is currently executing the system (Cog VM only)"
 	^ self getSystemAttribute: 1007
-]
-
-{ #category : 'accessing' }
-VirtualMachine >> interpreterSourceDate [
-	"Return the date of changes given by `self interpreterSourceVersion`"
-	| dateString parts |
-
-	dateString := (self interpreterSourceVersion splitOn: 'Date: ') second.
-
-	dateString first isDigit
-		ifTrue: [
-			"most probably the date is in ISO 8601 Format"
-			^ dateString asDateAndTime ].
-
-	"Otherwise assume the old format: DDD MMM DD HH:MM:SS YYYY +TTTT ..."
-	parts := dateString substrings first: 6.
-	"create a more reasonable string.."
-	dateString := String streamContents: [ :s |
-		s
-			nextPutAll: (parts at: 5 ); space; "year"
-			nextPutAll: (parts at: 2 ); space; "month name"
-			nextPutAll: (parts at: 3 ); space; "day of month"
-			nextPutAll: (parts at: 4 ); space; "time"
-			nextPutAll: (parts last); space    "timezone"].
-	^ dateString asDateAndTime
 ]
 
 { #category : 'accessing' }
@@ -677,14 +644,6 @@ VirtualMachine >> optionAt: i [
 	"Answer the i-th option of the command line, or nil if not so many options."
 
 	^self getSystemAttribute: i negated
-]
-
-{ #category : 'accessing' }
-VirtualMachine >> optionDash [
-	"VMs release in Mai 2013 use -- instead of - for VM command line options"
-	^ (Smalltalk vm interpreterSourceDate > (Date readFrom: '17-5-2013' pattern: 'd-m-y'))
-		ifTrue: [ '--' ]
-		ifFalse: [ '-' ]
 ]
 
 { #category : 'accessing' }

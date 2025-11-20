@@ -23,26 +23,10 @@ Class {
 		'informDialog',
 		'stoppedBeforeApplyingRefactoring'
 	],
-	#classVars : [
-		'DefaultRequestDialog',
-		'DefaultSelectDialog'
-	],
 	#category : 'Refactoring-UI-Drivers',
 	#package : 'Refactoring-UI',
 	#tag : 'Drivers'
 }
-
-{ #category : 'configuration' }
-ReInteractionDriver class >> defaultRequestDialog [ 
-
-	^ DefaultRequestDialog ifNil: [ SpRequestDialog ]
-]
-
-{ #category : 'configuration' }
-ReInteractionDriver class >> defaultSelectDialog [ 
-
-	^ DefaultSelectDialog ifNil: [ SpSelectDialog ]
-]
 
 { #category : 'testing' }
 ReInteractionDriver class >> isAbstract [
@@ -69,24 +53,6 @@ ReInteractionDriver class >> newApplication: anApplication [
 ReInteractionDriver class >> refactoringClass [
 
 	self subclassResponsibility
-]
-
-{ #category : 'configuration' }
-ReInteractionDriver class >> useRequestDialog: aRequestDialog during: aBlock [
-
-	| old |
-	old := DefaultRequestDialog.
-	DefaultRequestDialog := aRequestDialog.
-	^ aBlock ensure: [ DefaultRequestDialog := old ]
-]
-
-{ #category : 'configuration' }
-ReInteractionDriver class >> useSelectDialog: aSelectDialog during: aBlock [
-
-	| old |
-	old := DefaultSelectDialog.
-	DefaultSelectDialog := aSelectDialog.
-	^ aBlock ensure: [ DefaultSelectDialog := old ]
 ]
 
 { #category : 'accessing' }
@@ -121,6 +87,13 @@ ReInteractionDriver >> changes [
 
 ]
 
+{ #category : 'configuration' }
+ReInteractionDriver >> configureRefactoring [
+
+	refactoring := self instantiateRefactoring.
+	refactoring prepareForExecution
+]
+
 { #category : 'ui - requests' }
 ReInteractionDriver >> confirm: aString [
 
@@ -137,14 +110,14 @@ ReInteractionDriver >> defaultInformDialog [
 ReInteractionDriver >> defaultRequestDialog [
 	"We do not use a subclassResponsibility because all the drivers do not have to."
 
-	^ self class defaultRequestDialog newApplication: self application
+	^ self application newRequest
 ]
 
 { #category : 'configuration' }
 ReInteractionDriver >> defaultSelectDialog [
 	"We do not use a subclassResponsibility because all the drivers do not have to."
 	
-	^ self class defaultSelectDialog newApplication: self application
+	^ self application newSelect
 ]
 
 { #category : 'ui - dialogs' }
@@ -205,6 +178,12 @@ ReInteractionDriver >> initialize [
 	super initialize.
 	stoppedBeforeApplyingRefactoring := false.
 	"for now unused but we should soon use it. Check applyChanges"
+]
+
+{ #category : 'configuration' }
+ReInteractionDriver >> instantiateRefactoring [
+	"I return a new refactoring instance, ready to run."
+	self subclassResponsibility
 ]
 
 { #category : 'accessing' }

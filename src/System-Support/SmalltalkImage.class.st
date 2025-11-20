@@ -75,7 +75,7 @@ SmalltalkImage class >> new [
 { #category : 'system startup' }
 SmalltalkImage class >> shutDown: isImageClosing [
 
-	isImageClosing ifTrue: [ SourceFiles close ]
+	isImageClosing ifTrue: [ SourceFileArray default close ]
 ]
 
 { #category : 'system startup' }
@@ -245,7 +245,7 @@ SmalltalkImage >> backupTo: newNameWithoutSuffix [
 	Results:
 		true  when continuing in the new session
 		false for the current session"
-	(SourceFiles changesFileStream isNil or: [ SourceFiles changesFileStream closed ])
+	(SourceFileArray default changesFileStream isNil or: [ SourceFileArray default changesFileStream closed ])
     ifFalse: [
 		self
 			closeSourceFiles; "so copying the changes file will always work"
@@ -413,7 +413,7 @@ SmalltalkImage >> closeLog: logger [
 SmalltalkImage >> closeSourceFiles [
 	"Shut down the source files if appropriate."
 
-	SourceFiles close
+	SourceFileArray default close
 ]
 
 { #category : 'system attribute' }
@@ -781,7 +781,7 @@ SmalltalkImage >> informSpaceLeftAfterGarbageCollection [
 
 	"SmalltalkImage current informSpaceLeftAfterGarbageCollection"
 
-	self inform: self spaceLeftAfterGarbageCollection
+	InformativeNotification signal: self spaceLeftAfterGarbageCollection
 ]
 
 { #category : 'memory space' }
@@ -998,7 +998,7 @@ SmalltalkImage >> lowSpaceWatcher [
 		ifTrue: [self garbageCollect <= self lowSpaceThreshold
 				ifTrue: ["free space must be above threshold before
 					starting low space watcher"
-					^ self inform: 'Not enough memory to launch the lowSpaceWatcher.']].
+					^ InformativeNotification signal:  'Not enough memory to launch the lowSpaceWatcher.']].
 	self specialObjectsArray at: 23 put: nil.
 	"process causing low space will be saved here"
 	LowSpaceSemaphore := Semaphore new.
@@ -1053,17 +1053,6 @@ SmalltalkImage >> memoryHogs [
 	"Answer the list of objects to notify with #freeSomeSpace if memory gets full."
 
 	^ MemoryHogs ifNil: [MemoryHogs := OrderedCollection new]
-]
-
-{ #category : 'miscellaneous' }
-SmalltalkImage >> metacelloPlatformAttributes [
-	"Returns the tags for the conditional platform loading in Metacello. Pay attention the order is important: from most  to least general."
-
-	^ {
-		  #squeakCommon.
-		  #pharo.
-		  ('pharo' , SystemVersion current major asString , '.x') asSymbol.
-		  ('pharo' , SystemVersion current major asString , '.0.x') asSymbol }
 ]
 
 { #category : 'special objects' }
@@ -1210,7 +1199,7 @@ SmalltalkImage >> openSourceFiles [
 	self imagePath = LastImagePath ifFalse: [ "Reset the author full name to blank when the image gets moved"
 		LastImagePath := self imagePath ].
 
-	SourceFiles ensureOpen
+	SourceFileArray default ensureOpen
 ]
 
 { #category : 'system attribute' }
@@ -1458,7 +1447,7 @@ SmalltalkImage >> saveAs: newNameWithoutSuffix [
 		false for the current session "
 
 	newNameWithoutSuffix ifNil: [ ^ self ].
-  (SourceFiles changesFileStream isNil or: [ SourceFiles changesFileStream closed ])
+  (SourceFileArray default changesFileStream isNil or: [ SourceFileArray default changesFileStream closed ])
     ifFalse: [
 		self closeSourceFiles.
 		self saveChangesInFileNamed: (self fullNameForChangesNamed: newNameWithoutSuffix)
@@ -1475,11 +1464,8 @@ SmalltalkImage >> saveAsNewVersion [
 
 	| newImageFile strippedName |
 	newImageFile := self imageFile nextVersion.
-	(newImageFile withExtension: self changesSuffix)
-		ifExists: [ :newChangesFile |
-			^ self
-				inform:
-					'There is already .changes file of the desired name,
+	(newImageFile withExtension: self changesSuffix) ifExists: [ :newChangesFile |
+			^ InformativeNotification signal: 'There is already .changes file of the desired name,
 ' , newChangesFile fullName , '
 curiously already present, even though there is
 no corresponding .' , self imageSuffix , ' file.   Please remedy
@@ -1662,10 +1648,10 @@ SmalltalkImage >> stripImageExtensionFrom: aString [
 
 	| answer imageExtension delimitedImageExtension |
 	answer := aString.
-	imageExtension := Path extensionDelimiter asString, self imageSuffix.
-	delimitedImageExtension := imageExtension copyWith: Path extensionDelimiter.
+	imageExtension := File extensionDelimiter asString, self imageSuffix.
+	delimitedImageExtension := imageExtension copyWith: File extensionDelimiter.
 	[answer isNil not and: [(answer endsWith: imageExtension) or: [answer endsWith: delimitedImageExtension]]]
-		whileTrue: [answer := answer copyUpToLast: Path extensionDelimiter].
+		whileTrue: [answer := answer copyUpToLast: File extensionDelimiter].
 	^answer
 ]
 
