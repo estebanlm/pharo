@@ -25,6 +25,22 @@ ReConvertTemporaryToInstanceVariableDriver >> breakingChoices [
 	^ items
 ]
 
+{ #category : 'execution' }
+ReConvertTemporaryToInstanceVariableDriver >> browseMethod [
+
+	(class realClass methodDict at: selector) browse 
+]
+
+{ #category : 'actions' }
+ReConvertTemporaryToInstanceVariableDriver >> browseMethods [
+
+	| violators |
+	violators := notMultipleTempOccurences violators.
+	StMessageBrowser
+		browse: (violators collect: [ :each | each value methodClass realClass >> each value selector ])
+		asSendersOf: (violators collect: [ :v | v selector ])
+]
+
 { #category : 'actions' }
 ReConvertTemporaryToInstanceVariableDriver >> browseReferences [
 
