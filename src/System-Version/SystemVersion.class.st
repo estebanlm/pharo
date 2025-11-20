@@ -26,9 +26,8 @@ Class {
 	#classVars : [
 		'Current'
 	],
-	#category : 'System-Support-Image',
-	#package : 'System-Support',
-	#tag : 'Image'
+	#category : 'System-Version',
+	#package : 'System-Version'
 }
 
 { #category : 'accessing' }
