@@ -40,6 +40,7 @@ BaselineOfUI >> baseline: spec [
 		spec postLoadDoIt: #postload:package:.
 
 		"Loading the debugger model and infrastructure before the UI"
+		spec package: 'Debugging-Utils'.
 		spec package: 'Debugging-Core'.
 		spec package: 'Debugger-Model'.
 		spec package: 'Debugger-Oups'.
