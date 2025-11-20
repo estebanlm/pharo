@@ -8,7 +8,8 @@ Class {
 	#instVars : [
 		'superclass',
 		'subclass',
-		'comment'
+		'comment',
+		'superclassParent'
 	],
 	#category : 'Refactoring-UI-Drivers',
 	#package : 'Refactoring-UI',
@@ -36,6 +37,18 @@ ReInsertSuperclassDriver class >> superclass: aClass packageNames: packages [
 		yourself
 ]
 
+{ #category : 'instance creation' }
+ReInsertSuperclassDriver class >> superclass: aClass superclassParent: aSuperclass packageNames: packages [
+	"Answer a new instance using aClass as the superclass of the receiver's subclass, and packages as a <Collection> of <String> specifying the package names where the new subclass will be created"
+
+	^ self basicNew
+		  superclass: aClass;
+		  superclassParent: aSuperclass;
+		  packageNames: packages;
+		  initialize;
+		  yourself
+]
+
 { #category : 'accessing' }
 ReInsertSuperclassDriver >> comment [
 
@@ -58,10 +71,9 @@ ReInsertSuperclassDriver >> dialogTitleForClassSelection [
 ReInsertSuperclassDriver >> instantiateRefactoring [
 
 	^ (RBInsertNewClassRefactoring className: self subclass asString)
-		  model: model;
-		  superclass: self superclass superclass name;
-		  subclasses: (self superclass superclass subclasses collect: [ :each | each name ]);
-		  packageName: self packageName;
+		  superclass: superclassParent;
+		  subclasses: (superclassParent subclasses collect: [ :each | each name ]);
+		  packageName: self packageName; 
 		  tagName: self tagName;
 		  comment: self comment;
 		  prepareForExecution;
@@ -134,4 +146,16 @@ ReInsertSuperclassDriver >> superclass [
 ReInsertSuperclassDriver >> superclass: anObject [
 
 	superclass := anObject
+]
+
+{ #category : 'accessing' }
+ReInsertSuperclassDriver >> superclassParent [
+
+	^ superclassParent
+]
+
+{ #category : 'accessing' }
+ReInsertSuperclassDriver >> superclassParent: aClass [
+
+	superclassParent := aClass
 ]
