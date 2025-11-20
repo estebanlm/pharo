@@ -4,8 +4,8 @@ I report release and version information about the image and VM, in various form
 Class {
 	#name : 'ClapPharoVersion',
 	#superclass : 'ClapPharoApplication',
-	#category : 'Clap-Commands-Pharo',
-	#package : 'Clap-Commands-Pharo'
+	#category : 'System-Version',
+	#package : 'System-Version'
 }
 
 { #category : 'command line' }
