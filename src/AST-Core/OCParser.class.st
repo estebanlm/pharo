@@ -1,4 +1,4 @@
-" 
+"
 OCParser takes a source code string and generates an AST for it. This is a hand-written, recursive descent parser and has been optimized for speed. The simplest way to call this is either 'OCParser parseExpression: aString' if you want the AST for an expression, or 'OCParser parseMethod: aString' if you want to parse an entire method.
 
 Instance Variables:
