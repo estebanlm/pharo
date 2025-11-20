@@ -84,7 +84,6 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		spec package: 'Collections-Support'.
 		spec package: 'Collections-Unordered'.
 		spec package: 'Collections-Weak'.
-		spec package: 'Debugging-Core'.
 		spec package: 'Deprecation'.
 		spec package: 'Files'.
 		spec package: 'FileSystem-Path'.
@@ -100,12 +99,10 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		spec package: 'Math-Operations-Extensions'.
 
 		spec package: 'Multilingual-Encodings'.
-
-		spec package: 'Network-UUID'.
 		
 		spec package: 'Transcript-NonInteractive'.
+		spec package: 'ParseTreeRewriter'.
 		spec package: 'PharoBootstrap-Initialization'.
-		spec package: 'Random-Core'.
 		spec package: 'ReflectionMirrors-Primitives'.
 		spec package: 'Shift-ClassBuilder'.
 		spec package: 'System-Announcements'.
@@ -114,13 +111,13 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		spec package: 'Clap-Commands-Pharo' .
 		spec package: 'System-CommandLine'.
 		spec package: 'System-Finalization'.
-		spec package: 'System-Hashing'.
 		spec package: 'System-Platforms'.
 		spec package: 'System-SessionManager'.
 		
 		spec package: 'CodeExport'.
 		spec package: 'System-Sources'.
 		spec package: 'System-Support'.
+		spec package: 'System-Version'.
 
 		spec package: 'UIManager'.
 		spec package: 'Zinc-Character-Encoding-Core'.
@@ -140,6 +137,8 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		spec package: 'FileSystem-Disk'.
 
 		spec package: 'System-NumberPrinting'.
+
+		spec package: 'Random-Core'.
 		spec package: 'SUnit-Core'.
 		spec package: 'SUnit-Tests'.
 		spec package: 'Kernel-Tests'.
@@ -184,12 +183,11 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		spec group: 'AdditionalPackages' with: {
 			'Clap-Core'.
 			'Clap-Commands-Pharo'.
-			'FileSystem-Path'.
 			'ReflectionMirrors-Primitives'.
 			'System-Time'.
 			'Math-Operations-Extensions'.
-			'Debugging-Core'.
 			'System-NumberPrinting'.
+			'System-Version'
 		}.
 
 		spec group: 'MultilingualGroup' with: {
@@ -207,12 +205,11 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			'DebugInfo'.
 			'NumberParser'.
 			'OpalCompiler-Core'.
+			'ParseTreeRewriter'.
 			'Deprecation'}.
 		
 		spec group: 'FileSystemGroup' with: {
-			'Random-Core'.
-			'System-Hashing'.
-			'Network-UUID'.
+			'FileSystem-Path'.
 			'FileSystem-Core'.
 			'FileSystem-Disk'}.
 
@@ -227,6 +224,8 @@ BaselineOfPharoBootstrap >> baseline: spec [
 
 		spec group: 'SUnitGroup' with: {
 			'Deprecation'.
+			'Random-Core'.
+			'ParseTreeRewriter'.
 			'SUnit-Core'.
 			'SUnit-Tests'.
 			'Kernel-Tests'.
