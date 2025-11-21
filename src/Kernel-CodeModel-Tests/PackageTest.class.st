@@ -471,6 +471,30 @@ PackageTest >> testMoveClassToTagName [
 	self assert: class packageTag package equals: yPackage
 ]
 
+{ #category : 'tests' }
+PackageTest >> testPackageCanNotContainSpaceAtBegining [
+
+	self assert: (self ensurePackage: #'   Test1') name equals: #Test1.
+
+	
+]
+
+{ #category : 'tests' }
+PackageTest >> testPackageCanNotContainSpaceAtEnd [
+
+	self assert: (self ensurePackage: #'Test1   ') name equals: #Test1.
+
+	
+]
+
+{ #category : 'tests' }
+PackageTest >> testPackageCanNotContainSpaceEitherAtBeginingOrEnd [
+
+	self assert: (self ensurePackage: #'      Test1   ') name equals: #Test1.
+
+	
+]
+
 { #category : 'tests - properties' }
 PackageTest >> testPropertyAtPut [
 
