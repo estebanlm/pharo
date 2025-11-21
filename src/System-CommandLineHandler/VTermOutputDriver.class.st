@@ -25,9 +25,9 @@ Class {
 		'light',
 		'blink'
 	],
-	#category : 'System-CommandLine-VTerm-Driver',
-	#package : 'System-CommandLine',
-	#tag : 'VTerm-Driver'
+	#category : 'System-CommandLineHandler-Base',
+	#package : 'System-CommandLineHandler',
+	#tag : 'Base'
 }
 
 { #category : 'instance creation' }
