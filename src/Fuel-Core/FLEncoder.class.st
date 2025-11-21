@@ -32,7 +32,7 @@ FLEncoder >> encodeByte: aSmallInteger [
 
 { #category : 'encoding' }
 FLEncoder >> encodeBytes: aBytesObject [
-	stream nextBytesPutAll: aBytesObject
+	stream nextPutAll: aBytesObject
 ]
 
 { #category : 'encoding' }
@@ -110,7 +110,7 @@ FLEncoder >> encodeString: aString [
 			stream nextPut: (length byteAt: 3).
 			stream nextPut: (length byteAt: 2).
 			stream nextPut: (length byteAt: 1) ].
-	stream nextBytesPutAll: aString
+	stream nextPutAll: aString
 ]
 
 { #category : 'encoding' }

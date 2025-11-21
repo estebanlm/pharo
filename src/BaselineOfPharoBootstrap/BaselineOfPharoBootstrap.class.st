@@ -127,7 +127,6 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		
 		spec package: 'CodeImport-Commands'.
 		
-		spec package: 'Debugging-Utils'.
 		spec package: 'OpalCompiler-Core'.
 		spec package: 'DebugInfo'
 			with: [ spec requires: #( 'OpalCompiler-Core' ) ].
@@ -199,7 +198,6 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			'Collections-Stack'.
 			'CodeImport'.
 			'CodeImport-Commands'.
-			'Debugging-Utils'.
 			'DebugInfo'.
 			'NumberParser'.
 			'OpalCompiler-Core'.
