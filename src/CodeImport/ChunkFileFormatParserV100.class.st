@@ -6,12 +6,7 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'readStream',
-		'parsedDeclarations',
-		'classSelector',
-		'classTraitSelector',
-		'commentStampSelector',
-		'methodsForSelector',
-		'reorganizeSelector'
+		'parsedDeclarations'
 	],
 	#category : 'CodeImport-Utilities',
 	#package : 'CodeImport',
@@ -46,61 +41,6 @@ ChunkFileFormatParserV100 >> classOrganisationChunkClass [
 	^ ClassOrganizationChunk
 ]
 
-{ #category : 'custom points' }
-ChunkFileFormatParserV100 >> classSelector [
-	^ classSelector
-]
-
-{ #category : 'custom points' }
-ChunkFileFormatParserV100 >> classSelector: anObject [
-	classSelector := anObject
-]
-
-{ #category : 'custom points' }
-ChunkFileFormatParserV100 >> classTraitSelector [
-	^ classTraitSelector
-]
-
-{ #category : 'custom points' }
-ChunkFileFormatParserV100 >> classTraitSelector: anObject [
-	classTraitSelector := anObject
-]
-
-{ #category : 'custom points' }
-ChunkFileFormatParserV100 >> commentStampSelector [
-	^ commentStampSelector
-]
-
-{ #category : 'custom points' }
-ChunkFileFormatParserV100 >> commentStampSelector: anObject [
-	commentStampSelector := anObject
-]
-
-{ #category : 'initialization' }
-ChunkFileFormatParserV100 >> defaultClassSelector [
-	^ #class
-]
-
-{ #category : 'initialization' }
-ChunkFileFormatParserV100 >> defaultClassTraitSelector [
-	^ #classTrait
-]
-
-{ #category : 'initialization' }
-ChunkFileFormatParserV100 >> defaultCommentStampSelector [
-	^ #commentStamp:
-]
-
-{ #category : 'initialization' }
-ChunkFileFormatParserV100 >> defaultMethodsForSelector [
-	^ #methodsFor:
-]
-
-{ #category : 'initialization' }
-ChunkFileFormatParserV100 >> defaultReorganizeSelector [
-	^ #reorganize
-]
-
 { #category : 'class factory' }
 ChunkFileFormatParserV100 >> doItChunkClass [
 	^ DoItChunkV100
@@ -108,13 +48,9 @@ ChunkFileFormatParserV100 >> doItChunkClass [
 
 { #category : 'initialization' }
 ChunkFileFormatParserV100 >> initialize [
+
 	super initialize.
-	parsedDeclarations := OrderedCollection new.
-	classSelector := self defaultClassSelector.
-	classTraitSelector := self defaultClassTraitSelector.
-	commentStampSelector := self defaultCommentStampSelector.
-	methodsForSelector := self defaultMethodsForSelector.
-	reorganizeSelector := self defaultReorganizeSelector
+	parsedDeclarations := OrderedCollection new
 ]
 
 { #category : 'versions' }
@@ -126,16 +62,6 @@ ChunkFileFormatParserV100 >> major [
 { #category : 'class factory' }
 ChunkFileFormatParserV100 >> methodChunkClass [
 	^ MethodChunk
-]
-
-{ #category : 'custom points' }
-ChunkFileFormatParserV100 >> methodsForSelector [
-	^ methodsForSelector
-]
-
-{ #category : 'custom points' }
-ChunkFileFormatParserV100 >> methodsForSelector: anObject [
-	methodsForSelector := anObject
 ]
 
 { #category : 'parsing' }
@@ -191,9 +117,9 @@ ChunkFileFormatParserV100 >> parseChunkWithMetadata: nextChunk [
 
 	| substrings |
 	substrings := OCParser parseLiterals: nextChunk.
-	(substrings includes: self methodsForSelector asString) ifTrue: [ ^ self parseMethodDeclarations: substrings ].
-	(substrings includes: self commentStampSelector asString) ifTrue: [ ^ self parseCommentDeclaration: substrings ].
-	^ (substrings includes: self reorganizeSelector asString) ifTrue: [ ^ self parseClassOrganization: substrings ]
+	(substrings includes: #methodsFor: asString) ifTrue: [ ^ self parseMethodDeclarations: substrings ].
+	(substrings includes: #commentStamp: asString) ifTrue: [ ^ self parseCommentDeclaration: substrings ].
+	^ (substrings includes: #reorganize asString) ifTrue: [ ^ self parseClassOrganization: substrings ]
 ]
 
 { #category : 'parsing' }
@@ -217,7 +143,7 @@ ChunkFileFormatParserV100 >> parseClassOrganization: classOrganizationPreamble [
 
 	| behaviorName isMeta organizationContents metadata |
 	behaviorName := classOrganizationPreamble first.
-	isMeta := classOrganizationPreamble second ~= self reorganizeSelector.
+	isMeta := classOrganizationPreamble second ~= #reorganize.
 	organizationContents := readStream next.
 	metadata := readStream next.
 	self addDeclaration:
@@ -240,7 +166,7 @@ ChunkFileFormatParserV100 >> parseCommentDeclaration: commentPreamble [
 
 	| behaviorName isMeta stamp commentContents metadata |
 	behaviorName := commentPreamble first asSymbol.
-	isMeta := commentPreamble second ~= self commentStampSelector.
+	isMeta := commentPreamble second ~= #commentStamp:.
 	stamp := isMeta
 		         ifTrue: [ commentPreamble at: 4 ]
 		         ifFalse: [ commentPreamble at: 3 ].
@@ -275,7 +201,7 @@ ChunkFileFormatParserV100 >> parseMethodDeclarations: methodsPreamble [
 
 	"
 	behaviorName := methodsPreamble first.
-	isMeta := methodsPreamble second = self classSelector or: [ methodsPreamble second = self classTraitSelector ].
+	isMeta := methodsPreamble second = #class or: [ methodsPreamble second = #classTrait ].
 	protocol := isMeta
 		            ifTrue: [ methodsPreamble at: 4 ]
 		            ifFalse: [ methodsPreamble at: 3 ].
@@ -312,16 +238,6 @@ ChunkFileFormatParserV100 >> parseNextDeclaration [
 { #category : 'accessing' }
 ChunkFileFormatParserV100 >> readStream: aReadStream [
 	readStream := ChunkReadStream on: aReadStream
-]
-
-{ #category : 'custom points' }
-ChunkFileFormatParserV100 >> reorganizeSelector [
-	^ reorganizeSelector
-]
-
-{ #category : 'custom points' }
-ChunkFileFormatParserV100 >> reorganizeSelector: anObject [
-	reorganizeSelector := anObject
 ]
 
 { #category : 'versions' }

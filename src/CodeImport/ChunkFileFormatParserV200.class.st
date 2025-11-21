@@ -22,6 +22,12 @@ ChunkFileFormatParserV200 >> checkCompatibilityWith: versionNumber [
 		CodeImportError signal: 'Parser VERSION ' , self versionString , ' cannot read file VERSION ' , ($. join: versionNumber) ]
 ]
 
+{ #category : 'class factory' }
+ChunkFileFormatParserV200 >> methodChunkClass [
+
+	^ DoItChunkV200
+]
+
 { #category : 'parsing' }
 ChunkFileFormatParserV200 >> parseAndValidateVersion [
 	

@@ -9,7 +9,7 @@ Class {
 	#tag : 'Utilities'
 }
 
-{ #category : 'tests' }
+{ #category : 'Protocol (tests) - 2 selector(s)' }
 ChunkFileFormatParserV100Test >> testParseClassDefinition [
 
 	| parser declarations oldDefinition input |
@@ -28,6 +28,62 @@ ChunkFileFormatParserV100Test >> testParseClassDefinition [
 	self assert: declarations first isDoItDeclaration.
 	self assert: declarations first contents equals: oldDefinition.
 	self assert: declarations first isClassAdditionChunk
+]
+
+{ #category : 'Protocol (tests) - 2 selector(s)' }
+ChunkFileFormatParserV100Test >> testParseDoItDefinition [
+
+	| parser declarations input |
+	input := '
+arbitraty text is just a do it....!'.
+	
+	parser := ChunkFileFormatParserV100 for: input readStream.
+	
+	declarations := parser parseChunks.
+	self assert: declarations size equals: 1.
+	self assert: declarations first isDoItDeclaration.
+	self assert: declarations first contents equals: 'arbitraty text is just a do it....'.
+	
+	self deny: declarations first isClassAdditionChunk.
+	self deny: declarations first isPackageAdditionChunk
+]
+
+{ #category : 'Protocol (tests) - 2 selector(s)' }
+ChunkFileFormatParserV100Test >> testParseMethodDefinitionWithTimestamp [
+
+	| parser declarations input |
+	input := '
+!MyClass methodsFor: ''toto'' stamp: ''wat''!
+foo'.
+	
+	parser := ChunkFileFormatParserV100 for: input readStream.
+	
+	declarations := parser parseChunks.
+	self assert: declarations size equals: 1.
+	self assert: declarations first isMethodDeclaration.
+
+	self assert: declarations first protocol equals: 'toto'.
+	self assert: declarations first stamp equals: 'wat'.
+	self assert: declarations first contents equals: 'foo'
+]
+
+{ #category : 'Protocol (tests) - 2 selector(s)' }
+ChunkFileFormatParserV100Test >> testParseMethodDefinitionWithoutTimestamp [
+
+	| parser declarations input |
+	input := '
+!MyClass methodsFor: ''toto''!
+foo'.
+	
+	parser := ChunkFileFormatParserV100 for: input readStream.
+	
+	declarations := parser parseChunks.
+	self assert: declarations size equals: 1.
+	self assert: declarations first isMethodDeclaration.
+
+	self assert: declarations first protocol equals: 'toto'.
+	self assert: declarations first stamp equals: ''.
+	self assert: declarations first contents equals: 'foo'
 ]
 
 { #category : 'tests' }
