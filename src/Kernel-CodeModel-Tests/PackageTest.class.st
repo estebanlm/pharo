@@ -495,6 +495,17 @@ PackageTest >> testPackageCanNotContainSpaceEitherAtBeginingOrEnd [
 	
 ]
 
+{ #category : 'tests' }
+PackageTest >> testPackageCanNotContainSpaces [
+
+
+	self ensurePackage: ' toto'.
+	self ensurePackage: 'toto '.
+	self ensurePackage: ' toto '.
+
+	self assert: (self organizer packageMatchingWithName: 'toto') size equals: 1
+]
+
 { #category : 'tests - properties' }
 PackageTest >> testPropertyAtPut [
 

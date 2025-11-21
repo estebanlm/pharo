@@ -188,6 +188,15 @@ PackageOrganizer >> packageMatchingExtensionName: anExtensionName [
 		  ifFalse: [ self packageNamed: tmpPackageName ]
 ]
 
+{ #category : 'as yet unclassified' }
+PackageOrganizer >> packageMatchingWithName: aPackageName [
+
+	^ self packages select: [ :package | package name includesSubstring: aPackageName ]
+
+	 
+	
+]
+
 { #category : 'accessing' }
 PackageOrganizer >> packageNamed: aSymbol [
 	^ self
