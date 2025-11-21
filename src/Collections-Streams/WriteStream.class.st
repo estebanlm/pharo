@@ -196,7 +196,7 @@ WriteStream >> nextPut: anObject [
 WriteStream >> nextPutAll: aCollection [
 
  	| newEnd |
- 	collection class == aCollection class ifFalse:
+ 	collection class instSpec == aCollection class instSpec ifFalse:
  		[^ super nextPutAll: aCollection ].
 
  	newEnd := position + aCollection size.
