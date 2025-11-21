@@ -13,5 +13,5 @@ Class {
 ManifestMonticello class >> manuallyResolvedDependencies [
 
 	<ignoreForCoverage>
-	^ #(#Jobs #'Zinc-Resource-Meta-Core' #'Random-Core' #'System-Support')
+	^ #(#Jobs #'Random-Core' #'System-Support')
 ]
