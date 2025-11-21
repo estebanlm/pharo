@@ -23,7 +23,7 @@ ChunkFileFormatParserV200 >> checkCompatibilityWith: versionNumber [
 ]
 
 { #category : 'class factory' }
-ChunkFileFormatParserV200 >> methodChunkClass [
+ChunkFileFormatParserV200 >> doItChunkClass [
 
 	^ DoItChunkV200
 ]

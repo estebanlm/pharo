@@ -49,6 +49,26 @@ arbitraty text is just a do it....!'.
 ]
 
 { #category : 'Protocol (tests) - 2 selector(s)' }
+ChunkFileFormatParserV100Test >> testParseMethodDefinitionWithMetadata [
+
+	| parser declarations input |
+	input := '
+!MyClass methodsFor: ''toto'' stamp: ''wat''!
+foo!metadata!'.
+	
+	parser := ChunkFileFormatParserV100 for: input readStream.
+	
+	declarations := parser parseChunks.
+	self assert: declarations size equals: 1.
+	self assert: declarations first isMethodDeclaration.
+
+	self assert: declarations first protocol equals: 'toto'.
+	self assert: declarations first stamp equals: 'wat'.
+	self assert: declarations first contents equals: 'foo'.
+	self assert: declarations first metadata equals: 'metadata'
+]
+
+{ #category : 'Protocol (tests) - 2 selector(s)' }
 ChunkFileFormatParserV100Test >> testParseMethodDefinitionWithTimestamp [
 
 	| parser declarations input |
