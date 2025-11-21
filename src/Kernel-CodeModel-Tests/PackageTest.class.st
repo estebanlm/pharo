@@ -503,7 +503,8 @@ PackageTest >> testPackageCanNotContainSpaces [
 	self ensurePackage: 'toto '.
 	self ensurePackage: ' toto '.
 
-	self assert: (self organizer packageMatchingWithName: 'toto') size equals: 1
+	self assert: (self organizer packages reject: #isUndefined) size equals: 1.
+
 ]
 
 { #category : 'tests - properties' }
