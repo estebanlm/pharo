@@ -77,10 +77,10 @@ Package class >> initializeProperties [
 ]
 
 { #category : 'instance creation' }
-Package class >> named: aString [
+Package class >> named: aPackageName [
 
 	^ self new
-		  name: aString;
+		  name: aPackageName trimRight trimLeft;
 		  yourself
 ]
 
