@@ -30,9 +30,8 @@ Class {
 	#classVars : [
 		'Instance'
 	],
-	#category : 'System-CommandLineHandler-Utilities',
-	#package : 'System-CommandLineHandler',
-	#tag : 'Utilities'
+	#category : 'StartupPreferences',
+	#package : 'StartupPreferences'
 }
 
 { #category : 'accessing' }

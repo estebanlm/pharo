@@ -5,9 +5,8 @@ I provide a simple mapping from high-level commands to low-level terminal charac
 Class {
 	#name : 'NullTermInfo',
 	#superclass : 'Object',
-	#category : 'System-CommandLine-Utilities',
-	#package : 'System-CommandLine',
-	#tag : 'Utilities'
+	#category : 'System-CommandLine-TextSupport',
+	#package : 'System-CommandLine-TextSupport'
 }
 
 { #category : 'instance creation' }

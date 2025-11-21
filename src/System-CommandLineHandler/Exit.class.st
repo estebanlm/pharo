@@ -9,9 +9,9 @@ Class {
 	#instVars : [
 		'status'
 	],
-	#category : 'System-CommandLine-Exceptions',
-	#package : 'System-CommandLine',
-	#tag : 'Exceptions'
+	#category : 'System-CommandLineHandler-Utilities',
+	#package : 'System-CommandLineHandler',
+	#tag : 'Utilities'
 }
 
 { #category : 'instance creation' }

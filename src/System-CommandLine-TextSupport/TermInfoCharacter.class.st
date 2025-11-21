@@ -8,9 +8,8 @@ Class {
 	#instVars : [
 		'out'
 	],
-	#category : 'System-CommandLine-Utilities',
-	#package : 'System-CommandLine',
-	#tag : 'Utilities'
+	#category : 'System-CommandLine-TextSupport',
+	#package : 'System-CommandLine-TextSupport'
 }
 
 { #category : 'term style' }
