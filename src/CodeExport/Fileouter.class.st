@@ -7,7 +7,8 @@ Class {
 	#instVars : [
 		'behaviors',
 		'methods',
-		'exporter'
+		'exporter',
+		'packageDefinitions'
 	],
 	#category : 'CodeExport-Base',
 	#package : 'CodeExport',
@@ -32,6 +33,7 @@ Fileouter >> addFullClass: aClass [
 { #category : 'API - configuration' }
 Fileouter >> addFullPackage: aPackage [
 
+	packageDefinitions add: aPackage.
 	behaviors addAll: aPackage definedClasses.
 	methods addAll: aPackage methods. 
 ]
@@ -62,6 +64,7 @@ Fileouter >> fileOut [
 	sortedMethods := self methods sorted: [ :a :b | a name < b name ].
 
 	self writeFileoutVersion.
+	packageDefinitions do: [ :p | self fileoutPackageDefinition: p ].
 	sortedBehaviors do: [ :c | self fileoutBehavior: c ].
 	sortedMethods do: [ :m | self fileoutMethod: m ].
 	sortedBehaviors do: [ :c | self fileoutBehaviorInitializer: c ].
@@ -123,6 +126,18 @@ Fileouter >> methods [
 Fileouter >> methods: anObject [
 
 	methods := anObject
+]
+
+{ #category : 'accessing' }
+Fileouter >> packageDefinitions [
+
+	^ packageDefinitions
+]
+
+{ #category : 'accessing' }
+Fileouter >> packageDefinitions: anObject [
+
+	packageDefinitions := anObject
 ]
 
 { #category : 'accessing' }

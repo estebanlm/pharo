@@ -101,7 +101,31 @@ SourceFileTest >> testOpenNonExistingFileFails [
 ]
 
 { #category : 'tests' }
-SourceFileTest >> testWriteClassDefinitionOnFormat [
+SourceFileTest >> testWriteClassDefinitionOnFormatV100 [
+
+	| fs file importer declarations |
+	fs := FileSystem memory.
+	file := fs / 'changes.chunk'.
+	self deny: file exists.
+
+	(SourceFile createFileNamed: file version: ChunkFileFormatParserV100) newWriter
+		successBlock: [ :x | ];
+		failBlock: [  ];
+		writeClassDefinition: 'ASDASD'.
+	
+	importer := CodeImporter withParserClass: ChunkFileFormatParserV100.
+	file readStreamDo: [ :str |
+		importer readStream: str.
+		declarations := importer parseChunks
+	].
+	
+	self assert: declarations size equals: 1.
+	self assert: declarations first isDoItDeclaration.
+	self assert: declarations first contents equals: 'ASDASD'
+]
+
+{ #category : 'tests' }
+SourceFileTest >> testWriteClassDefinitionOnFormatV200 [
 
 	| fs file importer declarations |
 	fs := FileSystem memory.

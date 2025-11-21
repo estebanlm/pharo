@@ -26,6 +26,12 @@ ChunkFileFormatParserV100 class >> for: aReadStream [
 ]
 
 { #category : 'accessing' }
+ChunkFileFormatParserV100 class >> writer [
+	
+	^ CodeExporterV100
+]
+
+{ #category : 'accessing' }
 ChunkFileFormatParserV100 >> addDeclaration: aDeclaration [
 	parsedDeclarations	 add: aDeclaration
 ]

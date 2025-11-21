@@ -141,6 +141,13 @@ CodeExporterV100 >> writeMethodWithClass: methodClass selector: methodSelector s
 	^ sourceCodePosition
 ]
 
+{ #category : 'writing' }
+CodeExporterV100 >> writePackageDefinitionOf: aPackage [
+
+	writeStream cr.
+	writeStream nextPut: 'SystemOrganization addCategory: ', aPackage name printString
+]
+
 { #category : 'accessing' }
 CodeExporterV100 >> writeStream [
 	^ writeStream
