@@ -1224,28 +1224,6 @@ SmalltalkImage >> printOn: aStream [
 	aStream nextPutAll: 'Smalltalk'
 ]
 
-{ #category : 'private' }
-SmalltalkImage >> privSaveImageWithCleanup [
-
-	"Do not use this method for common image saving. This method is designated for saving the image during the shrinking process in headless images."
-
-	20 timesRepeat: [
-		(Delay forMilliseconds: 50) wait.
-		Processor yield.
-		Smalltalk garbageCollect. ].
-
-	[
-		self snapshot: true andQuit: true.
-	] onErrorDo: [:e |
-		'PharoDebug.log' asFileReference ensureDelete; writeStreamDo: [ :rep |
-			rep nextPutAll: 'Error:'; cr.
-			rep nextPutAll: e asString; cr.
-	  		rep nextPutAll: thisContext stack size asString.
-	 	  	thisContext stack copy withIndexDo: [:stck :i |
-				[ rep nextPutAll: i asString; space; nextPutAll: stck asString; cr] onErrorDo: []]].
-		Smalltalk exitFailure ]
-]
-
 { #category : 'snapshot and quit' }
 SmalltalkImage >> quitPrimitive [
 	"Primitive. Exit to another operating system on the host machine, if one
@@ -1414,16 +1392,6 @@ SmalltalkImage >> saveImageInFileNamed: aFile [
 		closeSourceFiles;
 		openSourceFiles;  "so SNAPSHOT appears in new changes file"
 		snapshot: true andQuit: false
-]
-
-{ #category : 'saving' }
-SmalltalkImage >> saveImageInNewContext [
-
-	" This method is used for saving the Smalltalk image in a new process so the current process with all stack information may be forgotten.
-
-	Do not use this method for common image saving. This method is designated for saving the image during the shrinking process in headless images. "
-
-	[ self privSaveImageWithCleanup ] forkAt: 40
 ]
 
 { #category : 'saving' }

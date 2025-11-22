@@ -11,5 +11,5 @@ Class {
 
 { #category : 'meta-data - dependency analyser' }
 ManifestSystemCommandLineHandler class >> manuallyResolvedDependencies [
-	^ #( #'Collections-Abstract' #'System-Support' #'Kernel-CodeModel')
+	^ #( #'Collections-Abstract' #'System-Support' #'Kernel-CodeModel' #'Collections-Streams')
 ]
