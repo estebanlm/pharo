@@ -27,5 +27,5 @@ BaselineOfDebugging >> baseline: spec [
 
 			spec
 				group: 'Core' with: #( 'Debugging-Core' 'Debugging-Utils' 'Debugger-Model' 'Debugger-Oups' );
-				group: 'Tests' with: #( 'Debugging-Utils-Tests' 'Debugger-Mode-Tests' 'Debugger-Oups-Tests' ) ]
+				group: 'Tests' with: #( 'Debugging-Utils-Tests' 'Debugger-Model-Tests' 'Debugger-Oups-Tests' ) ]
 ]
