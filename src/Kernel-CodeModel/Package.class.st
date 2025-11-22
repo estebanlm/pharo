@@ -722,7 +722,7 @@ Package >> roots [
 { #category : 'accessing' }
 Package >> sanitizeName: aName [
 
-	^ aName trimLeft trimRight
+	^ aName trimBoth
 ]
 
 { #category : 'accessing' }
