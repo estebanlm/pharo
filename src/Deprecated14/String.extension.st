@@ -8,13 +8,6 @@ String >> asDate [
 ]
 
 { #category : '*Deprecated14' }
-String >> asDateAndTime [
- 	"Convert from UTC format"
-	self backwardCompatible: 'Should use DateAndTime class directly' on: '21 Nov 2025' in: 'pharo14' transformWith: '`@receiver asDateAndTime' -> '`DateAndTime fromString: @receiver'.
-	^ DateAndTime fromString: self
-]
-
-{ #category : '*Deprecated14' }
 String >> isValidSelector [
 	"check I could be a valid selector (name of method).
 	 For checking if there is symbol like me used as a selector, see #isSelectorSymbol on Symbol"
