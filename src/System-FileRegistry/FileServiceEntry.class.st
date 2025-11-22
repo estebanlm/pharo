@@ -20,7 +20,7 @@ readOnlyStream (returns an open read-only stream)
 
 "
 Class {
-	#name : 'SimpleServiceEntry',
+	#name : 'FileServiceEntry',
 	#superclass : 'Object',
 	#instVars : [
 		'provider',
@@ -37,40 +37,47 @@ Class {
 	#tag : 'Base'
 }
 
+{ #category : 'class initialization' }
+FileServiceEntry class >> initialize [
+	"Alisases added in Pharo 14 development"
+
+	self deprecatedAliases: { #FileModifyingSimpleServiceEntry. #SimpleServiceEntry }
+]
+
 { #category : 'instance creation' }
-SimpleServiceEntry class >> provider: anObject label: aString selector: aSymbol [
+FileServiceEntry class >> provider: anObject label: aString selector: aSymbol [
 
 	^self provider: anObject label: aString selector: aSymbol description: ''
 ]
 
 { #category : 'instance creation' }
-SimpleServiceEntry class >> provider: anObject label: aString selector: aSymbol description: anotherString [
+FileServiceEntry class >> provider: anObject label: aString selector: aSymbol description: anotherString [
 
 	^self new provider: anObject label: aString selector: aSymbol description: anotherString
 ]
 
 { #category : 'instance creation' }
-SimpleServiceEntry class >> provider: anObject label: aString selector: aSymbol description: anotherString buttonLabel: aLabel [
+FileServiceEntry class >> provider: anObject label: aString selector: aSymbol description: anotherString buttonLabel: aLabel [
 	"Answer a new service object with the given initializations.  This variant allows a custom button label to be provided, in order to preserve precious horizontal real-estate in the button pane, while still allowing more descriptive wordings in the popup menu"
 
 	^ self new provider: anObject label: aString selector: aSymbol description: anotherString; buttonLabel: aLabel; yourself
 ]
 
 { #category : 'accessing' }
-SimpleServiceEntry >> argumentGetter: aBlock [
+FileServiceEntry >> argumentGetter: aBlock [
 
 	argumentGetter := aBlock
 ]
 
 { #category : 'accessing' }
-SimpleServiceEntry >> buttonLabel [
+FileServiceEntry >> buttonLabel [
 	"Answer the label to be emblazoned on a button representing the service in a file list, for example"
 
 	^ buttonLabel ifNil: [label]
 ]
 
 { #category : 'accessing' }
-SimpleServiceEntry >> buttonLabel: aString [
+FileServiceEntry >> buttonLabel: aString [
 	"Set the receiver's buttonLabel, to be used on a button in a
 	tool-pane; this is split out so that a more abbreviated wording
 	can be deployed if desired"
@@ -78,59 +85,59 @@ SimpleServiceEntry >> buttonLabel: aString [
 ]
 
 { #category : 'accessing' }
-SimpleServiceEntry >> description [
+FileServiceEntry >> description [
 	"may be used for balloon or other"
 
 	^ description
 ]
 
 { #category : 'accessing' }
-SimpleServiceEntry >> description: aString [
+FileServiceEntry >> description: aString [
 	"may be used for balloon or other"
 
 	description := aString
 ]
 
 { #category : 'services menu' }
-SimpleServiceEntry >> doNotUseLineAfter [
+FileServiceEntry >> doNotUseLineAfter [
 
 	self usingLineAfter: false
 ]
 
 { #category : 'accessing' }
-SimpleServiceEntry >> extraSelector [
+FileServiceEntry >> extraSelector [
 	"normally should not be used directly"
 
 	^stateSelector
 ]
 
 { #category : 'accessing' }
-SimpleServiceEntry >> extraSelector: aSymbol [
+FileServiceEntry >> extraSelector: aSymbol [
 
 	stateSelector := aSymbol
 ]
 
 { #category : 'performing service' }
-SimpleServiceEntry >> getArgumentsFrom: aProvider [
+FileServiceEntry >> getArgumentsFrom: aProvider [
 
 	argumentGetter ifNil: [^aProvider fullName].
 	^argumentGetter value: aProvider
 ]
 
 { #category : 'initialization' }
-SimpleServiceEntry >> initialize [
+FileServiceEntry >> initialize [
 
 	super initialize.
 	self useLineAfter
 ]
 
 { #category : 'accessing' }
-SimpleServiceEntry >> label [
+FileServiceEntry >> label [
 	^label
 ]
 
 { #category : 'extra' }
-SimpleServiceEntry >> performExtraFor: anObject [
+FileServiceEntry >> performExtraFor: anObject [
 	"carry out the extra service I provide"
 	"the stateSelector can be used to ask state of the provider to be reflected in button or other"
 
@@ -140,7 +147,7 @@ SimpleServiceEntry >> performExtraFor: anObject [
 ]
 
 { #category : 'performing service' }
-SimpleServiceEntry >> performServiceFor: anObject [
+FileServiceEntry >> performServiceFor: anObject [
 	"carry out the service I provide"
 
 	^selector numArgs = 0
@@ -152,7 +159,7 @@ SimpleServiceEntry >> performServiceFor: anObject [
 ]
 
 { #category : 'printing' }
-SimpleServiceEntry >> printOn: aStream [
+FileServiceEntry >> printOn: aStream [
 
 	aStream
 		nextPutAll: self class name;
@@ -164,13 +171,13 @@ SimpleServiceEntry >> printOn: aStream [
 ]
 
 { #category : 'accessing' }
-SimpleServiceEntry >> provider [
+FileServiceEntry >> provider [
 
 	^ provider
 ]
 
 { #category : 'accessing' }
-SimpleServiceEntry >> provider: anObject label: aString selector: aSymbol [
+FileServiceEntry >> provider: anObject label: aString selector: aSymbol [
 	"basic initialization message"
 	provider := anObject.
 	label := aString.
@@ -180,7 +187,7 @@ SimpleServiceEntry >> provider: anObject label: aString selector: aSymbol [
 ]
 
 { #category : 'performing service' }
-SimpleServiceEntry >> provider: anObject label: aString selector: aSymbol description: anotherString [
+FileServiceEntry >> provider: anObject label: aString selector: aSymbol description: anotherString [
 	"basic initialization message"
 	self
 		provider: anObject
@@ -191,33 +198,33 @@ SimpleServiceEntry >> provider: anObject label: aString selector: aSymbol descri
 ]
 
 { #category : 'extra' }
-SimpleServiceEntry >> requestExtraSelector [
+FileServiceEntry >> requestExtraSelector [
 	"send me this message to ask me to perform secondary service"
 
 	^#performExtraFor:
 ]
 
 { #category : 'accessing' }
-SimpleServiceEntry >> selector [
+FileServiceEntry >> selector [
 	"normally should not be used directly"
 
 	^selector
 ]
 
 { #category : 'services menu' }
-SimpleServiceEntry >> useLineAfter [
+FileServiceEntry >> useLineAfter [
 
 	self usingLineAfter: true
 ]
 
 { #category : 'accessing' }
-SimpleServiceEntry >> usingLineAfter [
+FileServiceEntry >> usingLineAfter [
 
 	^ usingLineAfter
 ]
 
 { #category : 'accessing' }
-SimpleServiceEntry >> usingLineAfter: aBoolean [
+FileServiceEntry >> usingLineAfter: aBoolean [
 
 	usingLineAfter := aBoolean
 ]
