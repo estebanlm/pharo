@@ -85,7 +85,6 @@ BaselineOfMorphic >> baseline: spec [
 		spec package: 'Settings-System'.
 
 		spec package: 'System-History'.
-		spec package: 'System-Installers'.
 		spec package: 'PragmaCollector'.
 		spec package: 'System-Settings-Browser'
 			with: [ spec requires: #( 'PragmaCollector' ) ].
@@ -123,7 +122,7 @@ BaselineOfMorphic >> postload: loader package: packageSpec [
 
 	#( #ProgressBarMorph #GlobalIdentifier #HaloMorph
 	   #CharacterScanner #ImageMorph
-	   #Locale #MczInstaller #MD5NonPrimitive #MenuItemMorph
+	   #Locale #MenuItemMorph
 	   #MenuMorph #RxMatcher #RxParser #RxsPredicate #SHA1
 	   #SystemProgressMorph #SystemWindow #TextContainer
 	   #TextDiffBuilder #ThumbnailMorph #TransferMorph #UITheme )
