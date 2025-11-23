@@ -32,18 +32,16 @@ ReGenerateMethodDriver >> configureRefactoring [
 
 { #category : 'configuration' }
 ReGenerateMethodDriver >> defaultSelectDialog [
+
 	| dialog |
-	
 	dialog := SpSelectMultipleDialog newApplication: self application.
-	dialog
-	  	title: self dialogTitle;
-	  	label: 'Please select the variable(s)';
-	  	items: self targetClass instanceVariableNames;
+	^ dialog
+		title: self dialogTitle;
+		message: 'Please select the variable(s)';
+		items: self targetClass instanceVariableNames;
 		display: [ :each | each asString ];
 		displayIcon: [ :each | self iconNamed: each systemIconName ];
-	  	openModal.
-
-	^ dialog
+		yourself
 ]
 
 { #category : 'configuration' }
@@ -69,12 +67,14 @@ ReGenerateMethodDriver >> refactoringClass [
 { #category : 'execution' }
 ReGenerateMethodDriver >> runRefactoring [
 
-	self selectDialog
-		ifNil: [ ^ self ]
-		ifNotNil: [ selectedVariables := self selectDialog selectedItems ].
-	selectedVariables ifEmpty: [ ^ self ].
+	| dialog selection |
+	dialog := self selectDialog.
+	selection := dialog openModal.
+	selection ifNil: [ ^ false ].
+	selection ifEmpty: [ ^ self ].
 	self configureRefactoring.
 	self applyChanges.
+	^ true
 ]
 
 { #category : 'accessing' }

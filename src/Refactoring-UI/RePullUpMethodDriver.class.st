@@ -137,18 +137,6 @@ RePullUpMethodDriver >> gatherUserInput [
 	self selectMethodsAndClass
 ]
 
-{ #category : 'execution' }
-RePullUpMethodDriver >> handleBreakingChanges [
-	"Display previous transformations that will fix the fixable breaking conditions"
-
-	| dialog selection |
-	dialog := self selectDialog.
-	selection := dialog openModal.
-	selection ifNil: [ ^ false ].
-	selection action.
-	^ true
-]
-
 { #category : 'configuration' }
 RePullUpMethodDriver >> instantiateRefactoring [
 

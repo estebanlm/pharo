@@ -144,6 +144,17 @@ ReInteractionDriver >> furtherActionFor: aReport [
 	aReport browse
 ]
 
+{ #category : 'execution' }
+ReInteractionDriver >> handleBreakingChanges [
+
+	| selection dialog |
+	dialog := self selectDialog.
+	selection := dialog openModal.
+	selection ifNil: [ ^ false ].
+	selection action.
+	^ true
+]
+
 { #category : 'ui - requests' }
 ReInteractionDriver >> inform: aString [
 	"Display a message for the user to read and then dismiss."
