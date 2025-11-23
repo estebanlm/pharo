@@ -91,7 +91,7 @@ FreeTypeFileInfo >> modificationTime: anObject [
 	modificationTime := anObject
 ]
 
-{ #category : 'Protocol (printing) - 1 selector(s)' }
+{ #category : 'printing' }
 FreeTypeFileInfo >> printOn: aStream [
 	"super printOn: aStream."
 	aStream
