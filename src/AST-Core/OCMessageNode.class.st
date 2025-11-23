@@ -439,6 +439,8 @@ OCMessageNode >> selectorAndArgumentNames [
 					do: [:sel :arg |
 							st
 								<< sel asString;
+								"we do not want to get #between: 1 #and: 2
+								but between: 1 and: 2"
 								<< ' ';
 								<< arg sourceCode;
 								<< ' ']]) allButLast ]

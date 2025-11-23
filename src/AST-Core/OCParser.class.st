@@ -521,7 +521,7 @@ OCParser >> parseErrorNode: aMessageString [
 	Anyway, the error node is an empty string and the current token will be used to continue the parsing."
 	^ OCParseErrorNode new
 		errorMessage: aMessageString;
-		value: '' asString;
+		value: '';
 		start: self errorPosition;
 		stop: self errorPosition - 1;
 		errorPosition: self errorPosition
