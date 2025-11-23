@@ -19,5 +19,7 @@ BaselineOfUIInfrastructure >> baseline: spec [
 				baseline: 'MenuRegistration' with: [ spec repository: repository ];
 				baseline: 'Keymapping' with: [ spec loads: #Core from: repository ].
 
-			spec package: 'System-Utilities' ]
+			spec
+				package: 'System-Utilities';
+				package: 'System-FileRegistry' ]
 ]

@@ -40,6 +40,5 @@ BaselineOfMorphicCore >> baseline: spec [
 			spec
 				repository: repository;
 				loads: 'ui' ].
-		spec package: 'Morphic-Core' with: [ spec requires: #( 'System-Model' ) ].
-		spec package: 'System-FileRegistry' with: [ spec requires: #( 'System-Model' ) ] ]
+		spec package: 'Morphic-Core' with: [ spec requires: #( 'System-Model' ) ] ]
 ]
