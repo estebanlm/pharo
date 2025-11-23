@@ -269,7 +269,7 @@ ReInteractionDriver >> scopes: anObject [
 
 { #category : 'configuration' }
 ReInteractionDriver >> selectDialog [
-	
+
 	^ selectDialog ifNil: [ selectDialog := self defaultSelectDialog ].
 	
 ]
