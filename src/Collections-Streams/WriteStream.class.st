@@ -196,10 +196,8 @@ WriteStream >> nextPut: anObject [
 WriteStream >> nextPutAll: aCollection [
 
  	| newEnd |
- 	collection class instSpec == aCollection class instSpec ifFalse:
+ 	collection class == aCollection class ifFalse:
  		[^ super nextPutAll: aCollection ].
-
-	"if the layout is the same, we can use replaceFrom:to:with:startingAt: (fast primitive on the collections used here)"
 
  	newEnd := position + aCollection size.
  	newEnd > writeLimit ifTrue:
