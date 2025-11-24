@@ -56,6 +56,7 @@ ReGenerateMethodDriver >> runRefactoring [
 	| dialog selection |
 	"I do not use defaultSelectDialog because it is used mainly for choices selection 
 	when breaking changes. Here this is for doing something else. "
+
 	dialog := SpSelectMultipleDialog newApplication: self application.
 	dialog
 		title: self dialogTitle;
