@@ -13,7 +13,7 @@ ReBrowseMethodsChoice >> action [
 ]
 
 { #category : 'accessing' }
-ReBrowseMethodsChoice >> description [ 
+ReBrowseMethodsChoice >> description [
 
-	^ 'Browse the methods'
+	^ description ifNil: [ description := 'Browse the methods' ]
 ]
