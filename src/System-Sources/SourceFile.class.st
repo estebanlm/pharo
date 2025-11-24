@@ -17,8 +17,7 @@ SourceFile class >> createFileNamed: aFileReference version: aVersion [
 	
 	| file |
 	file := self lookupFileNamed: aFileReference basename potentialLocations: { aFileReference parent }.
-	file version: aVersion.
-	file declareVersion.
+	file forceCreateSourceFile.
 	^ file
 ]
 
@@ -93,6 +92,16 @@ SourceFile >> discardBuffer [
 	stream wrappedStream discardBuffer
 ]
 
+{ #category : 'as yet unclassified' }
+SourceFile >> ensureSourceFileCreated [
+
+	"Make sure that the source file is set up if it does not exist"
+	(self newSourceStreamReadOnly: true) ifNotNil: [ ^ self ].
+	
+	"If the file does not exist, open it for write and declare the default version v1.0.0"
+	self forceCreateSourceFile
+]
+
 { #category : 'accessing' }
 SourceFile >> ensureWrittenPosition: aPosition [
 
@@ -114,6 +123,15 @@ SourceFile >> flush [
 		ifTrue: [ ^ self ].
 
 	stream flush
+]
+
+{ #category : 'as yet unclassified' }
+SourceFile >> forceCreateSourceFile [
+	
+	"If the file does not exist, open it for write and declare the default version v1.0.0"
+	self version: ChunkFileFormatParserV100.
+	self declareVersion.
+	self close
 ]
 
 { #category : 'formatting' }

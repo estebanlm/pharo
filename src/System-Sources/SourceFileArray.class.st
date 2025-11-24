@@ -18,9 +18,6 @@ Class {
 		'flushChanges',
 		'exporterClass'
 	],
-	#classVars : [
-		'Default'
-	],
 	#category : 'System-Sources-Sources',
 	#package : 'System-Sources',
 	#tag : 'Sources'
@@ -36,6 +33,13 @@ SourceFileArray class >> default [
 SourceFileArray class >> default: anInstance [
 
 	Default := anInstance
+]
+
+{ #category : 'system startup' }
+SourceFileArray class >> ensureSourceFilesCreated [
+	
+	PharoFilesOpener default locateSources ensureSourceFileCreated.
+	PharoFilesOpener default locateChanges ensureSourceFileCreated.
 ]
 
 { #category : 'class initialization' }
@@ -60,7 +64,9 @@ SourceFileArray class >> shutDown: isImageClosing [
 { #category : 'system startup' }
 SourceFileArray class >> startUp: resuming [
 
-	resuming ifTrue: [ Smalltalk openSourceFiles ]
+	resuming ifTrue: [ 
+		self ensureSourceFilesCreated.
+		Smalltalk openSourceFiles ]
 ]
 
 { #category : 'accessing' }

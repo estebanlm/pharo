@@ -132,6 +132,29 @@ PharoFilesOpener >> lastImagePath [
 	^ Smalltalk lastImagePath
 ]
 
+{ #category : 'open sources' }
+PharoFilesOpener >> locateChanges [
+	^ self locateSources: self changesName forImage: self lastImagePath
+]
+
+{ #category : 'open sources' }
+PharoFilesOpener >> locateSources [
+	^ self locateSources: self sourcesName forImage: self lastImagePath
+]
+
+{ #category : 'open sources' }
+PharoFilesOpener >> locateSources: fullSourcesName forImage: imagePath [
+	"Look in various places for a sources file, return an open stream to it."
+
+	| locations |
+	locations := OSPlatform current potentialLocationsOfSourcesFile, {
+		FileLocator imageDirectory.
+		FileLocator workingDirectory
+	}.
+
+	^ (SourceFile lookupFileNamed: fullSourcesName potentialLocations: locations)
+]
+
 { #category : 'open changes' }
 PharoFilesOpener >> openChanges: changesPath readOnly: readOnly [
 
@@ -151,13 +174,7 @@ PharoFilesOpener >> openSources [
 PharoFilesOpener >> openSources: fullSourcesName forImage: imagePath [
 	"Look in various places for a sources file, return an open stream to it."
 
-	| locations |
-	locations := OSPlatform current potentialLocationsOfSourcesFile, {
-		FileLocator imageDirectory.
-		FileLocator workingDirectory
-	}.
-
-	^ (SourceFile lookupFileNamed: fullSourcesName potentialLocations: locations)
+	^ (self locateSources: fullSourcesName forImage: imagePath)
 		tryOpenReadOnly: true;
 		yourself
 ]
