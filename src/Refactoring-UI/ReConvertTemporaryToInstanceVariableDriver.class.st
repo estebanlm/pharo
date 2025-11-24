@@ -57,13 +57,6 @@ ReConvertTemporaryToInstanceVariableDriver >> class: aClass selector: aSelector 
 ]
 
 { #category : 'configuration' }
-ReConvertTemporaryToInstanceVariableDriver >> instantiateRefactoring [
-
-	refactoring := RBTemporaryToInstanceVariableRefactoring class: class selector: selector variable: variable.
-	refactoring prepareForExecution
-]
-
-{ #category : 'configuration' }
 ReConvertTemporaryToInstanceVariableDriver >> defaultSelectDialog [
 
 	^ super defaultSelectDialog
@@ -82,6 +75,12 @@ ReConvertTemporaryToInstanceVariableDriver >> handleBreakingChanges [
 	| select |
 	select := self selectDialog.
 	select ifNotNil: [ select action ]
+]
+
+{ #category : 'configuration' }
+ReConvertTemporaryToInstanceVariableDriver >> instantiateRefactoring [
+
+	^ RBTemporaryToInstanceVariableRefactoring class: class selector: selector variable: variable
 ]
 
 { #category : 'ui - dialogs' }
