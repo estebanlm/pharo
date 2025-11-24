@@ -8,9 +8,8 @@ Class {
 		'fork',
 		'value'
 	],
-	#category : 'Kernel-Tests-Processes',
-	#package : 'Kernel-Tests',
-	#tag : 'Processes'
+	#category : 'Debugging-Utils-Tests',
+	#package : 'Debugging-Utils-Tests'
 }
 
 { #category : 'running' }

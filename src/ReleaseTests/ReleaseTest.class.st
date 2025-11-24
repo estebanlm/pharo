@@ -547,7 +547,7 @@ ReleaseTest >> testThatThereAreNoSelectorsRemainingThatAreSentButNotImplemented 
 	                    'Context>>#doPrimitive:method:receiver:args:' 'Context>>#failPrimitiveWith:' 'EDTest>>#prepareMethodVersionTest'
 	                    'ExternalDropHandler class>>#defaultHandler' 'FFICallbackArgumentReader>>#stackPointer' 'FFIFloat32>>#callbackReturnOn:for:'
 	                    'FFIFloatType>>#callbackReturnOn:for:' 'FFIIndirectFunctionResolution>>#resolveFunction:'
-	                    'OCIRReconstructor>>#fixPushNilsForTemps' 'IceTipHiedraAltComponentHistoryBrowser>>#newCommitRow:commit:'
+	                    'IceTipHiedraAltComponentHistoryBrowser>>#newCommitRow:commit:'
 	                    'IceTipHiedraAltHistoryBrowser>>#newCommitRow:commit:' 'IceTipHiedraAltHistoryBrowser>>#initializeCommitList'
 	                    'InstructionStream>>#interpretNext3ByteSistaV1Instruction:for:extA:extB:'
 	                    'LazyListMorph>>#drawOnAthensCanvas:' 'MCFileTreeAbstractReader>>#packageProperties' 'MicrodownSpecComponentForTest class>>#open'

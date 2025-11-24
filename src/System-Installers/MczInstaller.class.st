@@ -62,7 +62,7 @@ MczInstaller class >> on: aStream [
 
 { #category : 'System-FileRegistry' }
 MczInstaller class >> serviceLoadVersion [
-	^ SimpleServiceEntry
+	^ FileServiceEntry
 		provider: self
 		label: 'Load'
 		selector: #loadVersionFile:
