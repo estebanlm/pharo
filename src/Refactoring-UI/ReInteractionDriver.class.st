@@ -150,8 +150,7 @@ ReInteractionDriver >> handleBreakingChanges [
 	| selection dialog |
 	dialog := self selectDialog.
 	selection := dialog openModal.
-	dialog window isCancelled  
-		ifTrue: [ ^ false ].
+	selection ifNil: [ ^ false ].
 	selection action.
 	^ true
 ]
