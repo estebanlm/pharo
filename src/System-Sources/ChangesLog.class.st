@@ -7,9 +7,6 @@ But you can have your own instance and log whatever you want.
 Class {
 	#name : 'ChangesLog',
 	#superclass : 'Object',
-	#instVars : [
-		'startupStamp'
-	],
 	#classVars : [
 		'DefaultInstance'
 	],
@@ -49,50 +46,22 @@ ChangesLog class >> unsubscribeAnnouncersOfDefaultInstance [
 	self codeSupportAnnouncer unsubscribe: DefaultInstance
 ]
 
-{ #category : 'private' }
-ChangesLog >> assureStartupStampLogged [
-	"If there is a startup stamp not yet actually logged to disk, do it now."
-
-	startupStamp ifNil: [ ^ self ].
-
-	SourceFileArray default
-		changesWriteStreamDo: [ :changesFile |
-				(ChunkWriteStream on: changesFile)
-					cr;
-					cr;
-					nextPut: startupStamp asString;
-					cr.
-				startupStamp := nil ];
-		forceChangesToDisk
-]
-
-{ #category : 'logging' }
-ChangesLog >> forceChangesToDisk [
-
-	SourceFileArray default forceChangesToDisk
-]
-
 { #category : 'logging' }
 ChangesLog >> logChange: aStringOrText [
 	"Write the argument, aString, onto the changes file."
 
-	| aString sources |
-	sources := SourceFileArray default.
-	(sources changesFileStream isNil or: [ sources changesFileStream closed ]) ifTrue: [ ^ self ].
-
-	self assureStartupStampLogged.
-
+	| aString |
 	aString := aStringOrText asString.
 	(aString findFirst: [ :char | char isSeparator not ]) = 0 ifTrue: [ ^ self ]. "null doits confuse replay"
 
-	sources changesWriteStreamDo: [ :changesFile |
-			changesFile
-				cr;
-				cr.
+	SourceFileArray default
+		changesWriteStreamDo: [ :changesFile |
+				changesFile
+					cr;
+					cr.
 
-			(ChunkWriteStream on: changesFile) nextPut: aString ].
-
-	sources forceChangesToDisk
+				(ChunkWriteStream on: changesFile) nextPut: aString ];
+		forceChangesToDisk
 ]
 
 { #category : 'event-listening' }
@@ -119,28 +88,10 @@ ChangesLog >> logMethodRemoved: announcement [
 ]
 
 { #category : 'event-listening' }
-ChangesLog >> logRemovedClassAnnouncement: announcement [
-
-	self logRemovedClassNamed: announcement classRemoved name
-]
-
-{ #category : 'event-listening' }
-ChangesLog >> logRemovedClassNamed: removedClassName [
-
-	self logChange: 'Smalltalk globals removeClassNamed: #' , removedClassName
-]
-
-{ #category : 'accessing' }
-ChangesLog >> recordStartupStamp [
-
-	startupStamp := '----STARTUP----', DateAndTime now printString, ' as ', Smalltalk imagePath
-]
-
-{ #category : 'event-listening' }
 ChangesLog >> registerToAnnouncements [
 
 	self class codeChangeAnnouncer weak
-		when: ClassRemoved send: #logRemovedClassAnnouncement: to: self;
+		when: ClassRemoved send: #logClassRemoved: to: self;
 		when: ClassRenamed send: #logClassRenamed: to: self;
 		when: MethodRemoved send: #logMethodRemoved: to: self.
 	self class codeSupportAnnouncer weak 

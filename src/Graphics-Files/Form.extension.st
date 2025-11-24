@@ -99,7 +99,7 @@ Form >> resourceTag [
 Form class >> serviceImageAsBackground [
 	"Answer a service for setting the desktop background from a given graphical file's contents"
 	<formService>
-	^ SimpleServiceEntry
+	^ FileServiceEntry
 		provider: self
 		label: 'Use graphic as background'
 		selector: #setBackgroundFromImageFileNamed:

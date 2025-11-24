@@ -8,9 +8,9 @@ Class {
 	#instVars : [
 		'cache'
 	],
-	#category : 'System-CommandLine-Utilities',
-	#package : 'System-CommandLine',
-	#tag : 'Utilities'
+	#category : 'System-CommandLineHandler-Base',
+	#package : 'System-CommandLineHandler',
+	#tag : 'Base'
 }
 
 { #category : 'initialization' }
