@@ -66,7 +66,8 @@ SourceFile >> declareVersion [
 	newStream ifNil: [ Error signal: 'Cannot create source file: cannot open file' ].
 	newStream size = 0 ifFalse: [ Error signal: 'Cannot create source file: file already exists' ].	
 	
-	(self exporterClass onStream: newStream) writeFileoutVersion; flush.
+	(self exporterClass onStream: newStream) writeFileoutVersion.
+	newStream flush.
 	stream := newStream.
 ]
 
@@ -361,7 +362,7 @@ SourceFile >> tryOpenReadOnly: readOnly [
 		"The file exists and we have the right to at least read it"
 		newStream size = 0 ifTrue: [
 			"If empty, then the file has not been open as a source file"
-			Error signal: 'Cannot open non source file'
+			Error signal: 'Cannot open non source file: ', self fullName asString
 		] ].
 	
 	stream := newStream.
