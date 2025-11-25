@@ -66,7 +66,7 @@ SourceFile >> declareVersion [
 	newStream ifNil: [ Error signal: 'Cannot create source file: cannot open file' ].
 	newStream size = 0 ifFalse: [ Error signal: 'Cannot create source file: file already exists' ].	
 	
-	(self exporterClass onStream: newStream) writeFileoutVersion.
+	(self exporterClass onStream: newStream) writeFileoutVersion; flush.
 	stream := newStream.
 ]
 
@@ -96,7 +96,7 @@ SourceFile >> discardBuffer [
 SourceFile >> ensureSourceFileCreated [
 
 	"Make sure that the source file is set up if it does not exist"
-	(self newSourceStreamReadOnly: false) ifNotNil: [ ^ self ].
+	(self newSourceStreamReadOnly: true) ifNotNil: [ ^ self ].
 	
 	"If the file does not exist, open it for write and declare the default version v1.0.0"
 	self forceCreateSourceFile
