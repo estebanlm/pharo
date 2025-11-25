@@ -13,8 +13,8 @@ Class {
 	#classVars : [
 		'Versions'
 	],
-	#category : 'System-Installers',
-	#package : 'System-Installers'
+	#category : 'MonticelloFileServices',
+	#package : 'MonticelloFileServices'
 }
 
 { #category : 'versioninfo' }
