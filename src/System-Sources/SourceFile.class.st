@@ -96,7 +96,7 @@ SourceFile >> discardBuffer [
 SourceFile >> ensureSourceFileCreated [
 
 	"Make sure that the source file is set up if it does not exist"
-	(self newSourceStreamReadOnly: true) ifNotNil: [ ^ self ].
+	(self newSourceStreamReadOnly: false) ifNotNil: [ ^ self ].
 	
 	"If the file does not exist, open it for write and declare the default version v1.0.0"
 	self forceCreateSourceFile
