@@ -4,18 +4,11 @@ Extension { #name : 'CompiledMethod' }
 CompiledMethod >> asMCMethodDefinition [
 	"Creates a MCMethodDefinition from the receiver"
 
-	^ MCMethodDefinition
-		  className: self methodClass instanceSide name
-		  classIsMeta: self isClassSide
-		  selector: self selector
-		  category: self protocolName
-		  timeStamp: self stamp
-		  source: self sourceCode
+	^ self basicAsMCMethodDefinition
 ]
 
 { #category : '*Monticello-Model' }
 CompiledMethod >> basicAsMCMethodDefinition [
-
 	"Creates a MCMethodDefinition from the receiver"
 
 	^ MCMethodDefinition
@@ -23,6 +16,6 @@ CompiledMethod >> basicAsMCMethodDefinition [
 		  classIsMeta: self isClassSide
 		  selector: self selector
 		  category: self protocolName
-		  timeStamp: self stamp
+		  sourcePointer: self sourcePointer
 		  source: self sourceCode
 ]
