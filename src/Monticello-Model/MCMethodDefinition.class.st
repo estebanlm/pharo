@@ -30,18 +30,11 @@ Class {
 		'sourcePointer'
 	],
 	#classVars : [
-		'Definitions',
 		'InitializersEnabled'
 	],
 	#category : 'Monticello-Model',
 	#package : 'Monticello-Model'
 }
-
-{ #category : 'accessing' }
-MCMethodDefinition class >> cachedDefinitions [
-
-	^ Definitions ifNil: [ Definitions := WeakIdentityKeyDictionary new ]
-]
 
 { #category : 'instance creation' }
 MCMethodDefinition class >> className: classString classIsMeta: metaBoolean selector: selectorString category: protocolName sourcePointer: aNumber source: sourceString [
@@ -81,26 +74,6 @@ MCMethodDefinition class >> className: classString selector: selectorString cate
 		  source: sourceString
 ]
 
-{ #category : 'cleanup' }
-MCMethodDefinition class >> cleanUp [
-	"Flush caches"
-
-	self shutDown
-]
-
-{ #category : 'cleanup' }
-MCMethodDefinition class >> flushMethodCache [
-	"We do not named this method flushCache because it would override an important class methods."
-
-	Definitions := nil
-]
-
-{ #category : 'class initialization' }
-MCMethodDefinition class >> initialize [
-
-	SessionManager default registerSystemClassNamed: self name
-]
-
 { #category : 'settings' }
 MCMethodDefinition class >> initializersEnabled [
 
@@ -111,13 +84,6 @@ MCMethodDefinition class >> initializersEnabled [
 MCMethodDefinition class >> initializersEnabled: aBoolean [
 
 	InitializersEnabled := aBoolean
-]
-
-{ #category : 'system startup' }
-MCMethodDefinition class >> shutDown [
-	"Free up all cached monticello method definitions"
-
-	self flushMethodCache
 ]
 
 { #category : 'comparing' }
