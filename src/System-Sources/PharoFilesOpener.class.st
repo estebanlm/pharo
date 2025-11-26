@@ -147,7 +147,7 @@ PharoFilesOpener >> locateSources: fullSourcesName forImage: imagePath [
 	"Look in various places for a sources file, return an open stream to it."
 
 	| locations |
-	locations := OSPlatform current potentialLocationsOfSourcesFile, {
+	locations := {
 		FileLocator imageDirectory.
 		FileLocator workingDirectory
 	}.
@@ -158,11 +158,9 @@ PharoFilesOpener >> locateSources: fullSourcesName forImage: imagePath [
 { #category : 'open changes' }
 PharoFilesOpener >> openChanges: changesPath readOnly: readOnly [
 
-	^ (SourceFile lookupFileNamed: changesPath potentialLocations: {
-			FileLocator imageDirectory.
-			FileLocator workingDirectory.
-		}) tryOpenReadOnly: readOnly;
-			yourself
+	^ (self locateSources: changesPath forImage: self lastImagePath)
+		  tryOpenReadOnly: readOnly;
+		  yourself
 ]
 
 { #category : 'open sources' }
