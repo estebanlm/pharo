@@ -64,9 +64,7 @@ SourceFileArray class >> shutDown: isImageClosing [
 { #category : 'system startup' }
 SourceFileArray class >> startUp: resuming [
 
-	resuming ifTrue: [ 
-		self ensureSourceFilesCreated.
-		Smalltalk openSourceFiles ]
+	resuming ifTrue: [ Smalltalk openSourceFiles ]
 ]
 
 { #category : 'accessing' }
