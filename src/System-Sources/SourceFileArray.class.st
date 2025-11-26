@@ -18,6 +18,9 @@ Class {
 		'flushChanges',
 		'exporterClass'
 	],
+	#classVars : [
+		'Default'
+	],
 	#category : 'System-Sources-Sources',
 	#package : 'System-Sources',
 	#tag : 'Sources'
