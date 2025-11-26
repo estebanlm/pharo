@@ -6,8 +6,8 @@ Class {
 		'DownloadCache',
 		'ETagsCache'
 	],
-	#category : 'Metacello-GitHub',
-	#package : 'Metacello-GitHub'
+	#category : 'MonticelloRemoteRepositories',
+	#package : 'MonticelloRemoteRepositories'
 }
 
 { #category : 'accessing' }

@@ -323,13 +323,6 @@ PBBootstrap >> mczCache [
 ]
 
 { #category : 'package-names' }
-PBBootstrap >> monticelloNetworkPackageNames [
-
-	self ensureBaselineOfPharoBootstrap.
-	^ #BaselineOfMonticello asClass remoteRepositoriesPackageNames
-]
-
-{ #category : 'package-names' }
 PBBootstrap >> monticelloPackageNames [
 
 	self ensureBaselineOfPharoBootstrap.
@@ -350,7 +343,7 @@ PBBootstrap >> originRepository [
 { #category : 'package-names' }
 PBBootstrap >> packagesToExportAsMCZ [
 
-	^ #(BaselineOfMetacello) , (#BaselineOfMetacello asClass allPackageNames)  , self monticelloPackageNames , self hermesPackageNames, self kernelPackageNames , self monticelloNetworkPackageNames
+	^ #(BaselineOfMetacello) , (#BaselineOfMetacello asClass allPackageNames)  , self monticelloPackageNames , self hermesPackageNames, self kernelPackageNames
 ]
 
 { #category : 'preparation' }

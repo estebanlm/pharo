@@ -2,15 +2,12 @@
 mcPackages := #(
  'ScriptingExtensions'
  'FileSystem-Memory'
+ 'Zinc-Resource-Meta-Core'
  'STON-Core'
  'MonticelloFileTree-Core'
  'MonticelloFileTree-FileSystem-Utilities'
  'Metacello-Base'
  'Metacello-Core'
- 'Metacello-GitBasedRepository'
- 'Metacello-Gitlab'
- 'Metacello-GitHub'
- 'Metacello-Bitbucket'
  'Metacello-CommandLine'
  ).
 

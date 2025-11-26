@@ -107,7 +107,6 @@ CORE_IMAGE_NAME=${PHARO_NAME_PREFIX}-core-${SUFFIX}
 COMPILER_IMAGE_NAME=${PHARO_NAME_PREFIX}-compiler-${SUFFIX}
 TRAITS_IMAGE_NAME=${PHARO_NAME_PREFIX}-traits-${SUFFIX}
 MC_BOOTSTRAP_IMAGE_NAME=${PHARO_NAME_PREFIX}-monticello_bootstrap-${SUFFIX}
-MC_IMAGE_NAME=${PHARO_NAME_PREFIX}-monticello-${SUFFIX}
 METACELLO_IMAGE_NAME=${PHARO_NAME_PREFIX}-metacello-${SUFFIX}
 PHARO_IMAGE_NAME=${PHARO_NAME_PREFIX}-${SUFFIX}
 
@@ -182,15 +181,9 @@ ${VM} "${MC_BOOTSTRAP_IMAGE_NAME}.image" st ${ST_CACHE}/Monticello.st --save --q
 ${VM} "${MC_BOOTSTRAP_IMAGE_NAME}.image" st ${BOOTSTRAP_REPOSITORY}/bootstrap/scripts/02-monticello-bootstrap/01-bootstrapMonticello.st --save --quit
 zip "${MC_BOOTSTRAP_IMAGE_NAME}.zip" ${MC_BOOTSTRAP_IMAGE_NAME}.*
 
-#Bootstrap Monticello Part 2: Networking Packages and Remote Repositories
-echo $(date -u) "[Monticello] Loading Networking Packages and Remote Repositories"
-${VM} "${MC_BOOTSTRAP_IMAGE_NAME}.image" save $MC_IMAGE_NAME
-${VM} "${MC_IMAGE_NAME}.image" st ${BOOTSTRAP_REPOSITORY}/bootstrap/scripts/02-monticello-bootstrap/02-bootstrapMonticelloRemote.st --save --quit
-zip "${MC_IMAGE_NAME}.zip" ${MC_IMAGE_NAME}.*
-
 #Bootstrap Metacello
 echo "[Metacello] Bootstrapping Metacello"
-${VM} "${MC_IMAGE_NAME}.image" save ${METACELLO_IMAGE_NAME}
+${VM} "${MC_BOOTSTRAP_IMAGE_NAME}.image" save ${METACELLO_IMAGE_NAME}
 ${VM} "${METACELLO_IMAGE_NAME}.image" st ${BOOTSTRAP_REPOSITORY}/bootstrap/scripts/03-metacello-bootstrap/01-loadMetacello.st --save --quit
 ${VM} "${METACELLO_IMAGE_NAME}.image" metacello install --save --signalErrorOnWarning "github://pharo-vcs/tonel:Pharo${PHARO_MAJOR}" Tonel --groups core
 zip "${METACELLO_IMAGE_NAME}.zip" ${METACELLO_IMAGE_NAME}.*
