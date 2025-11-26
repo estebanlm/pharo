@@ -759,7 +759,7 @@ Package >> sortTopologically: allBehaviors [
 		| behaviorsWithoutInternalDependencies |
 		behaviorsWithoutInternalDependencies := toSort select: [ :e |
 			e dependencies noneSatisfy: [ :d | toSort includes: d ] ].
-		sorted addAllFirst: behaviorsWithoutInternalDependencies.
+		sorted addAllLast: behaviorsWithoutInternalDependencies.
 		toSort removeAll: behaviorsWithoutInternalDependencies.
 
 		behaviorsWithoutInternalDependencies ifEmpty: [ changed := false ].

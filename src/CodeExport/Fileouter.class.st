@@ -35,7 +35,8 @@ Fileouter >> addFullPackage: aPackage [
 
 	packageDefinitions add: aPackage.
 	behaviors addAll: aPackage definedClasses.
-	methods addAll: aPackage methods. 
+	methods addAll: aPackage methods.
+	methods addAll: aPackage extensionMethods.	
 ]
 
 { #category : 'API - configuration' }
@@ -64,7 +65,7 @@ Fileouter >> fileOut [
 	sortedMethods := self methods sorted: [ :a :b | a name < b name ].
 
 	self writeFileoutVersion.
-	packageDefinitions do: [ :p | self fileoutPackageDefinition: p ].
+"	packageDefinitions do: [ :p | self fileoutPackageDefinition: p ]."
 	sortedBehaviors do: [ :c | self fileoutBehavior: c ].
 	sortedMethods do: [ :m | self fileoutMethod: m ].
 	sortedBehaviors do: [ :c | self fileoutBehaviorInitializer: c ].
@@ -112,6 +113,7 @@ Fileouter >> fileoutOnStream: aStream [
 Fileouter >> initialize [
 
 	super initialize.
+	packageDefinitions := Set new.
 	behaviors := Set new.
 	methods := Set new
 ]

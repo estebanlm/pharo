@@ -56,7 +56,7 @@ ChangesLog >> logChange: aStringOrText [
 ChangesLog >> logClassAdded: announcement [
 
 	SourceFiles newWriter
-		successBlock: [ "Ignore" ];
+		successBlock: [ :sourcePointer | "Ignore" ];
 		failBlock: [ "Ignore" ];
 		writeClassDefinition: announcement classAdded definitionString
 ]

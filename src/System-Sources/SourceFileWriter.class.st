@@ -97,8 +97,11 @@ SourceFileWriter >> writeClassDefinition: aClassDefinition [
 
 	sourceFile
 		writeChangesDuring: [ :file |
-				(self exporterClass onStream: file)
-					writeClassDefinition: aClassDefinition ]
+			| position |
+			position := file position.
+			(self exporterClass onStream: file)
+				writeClassDefinition: aClassDefinition.
+			position ]
 		onSuccess: successBlock
 		onFail: failBlock
 ]
