@@ -185,7 +185,10 @@ zip "${MC_BOOTSTRAP_IMAGE_NAME}.zip" ${MC_BOOTSTRAP_IMAGE_NAME}.*
 echo "[Metacello] Bootstrapping Metacello"
 ${VM} "${MC_BOOTSTRAP_IMAGE_NAME}.image" save ${METACELLO_IMAGE_NAME}
 ${VM} "${METACELLO_IMAGE_NAME}.image" st ${BOOTSTRAP_REPOSITORY}/bootstrap/scripts/03-metacello-bootstrap/01-loadMetacello.st --save --quit
-${VM} "${METACELLO_IMAGE_NAME}.image" metacello install --save --signalErrorOnWarning "github://pharo-vcs/tonel:Pharo${PHARO_MAJOR}" Tonel --groups core
+git clone https://github.com/pharo-vcs/tonel.git -b "Pharo${PHARO_MAJOR}" "${BOOTSTRAP_DOWNLOADS}/tonel"
+${VM} "${METACELLO_IMAGE_NAME}.image" metacello install --save --signalErrorOnWarning "filetree://${BOOTSTRAP_DOWNLOADS}/tonel" Tonel --groups core
+#We need the next line because we will reload Tonel from github and this could cause some trouble later
+${VM} "${METACELLO_IMAGE_NAME}.image" "${IMAGE_FLAGS}" eval --save "MetacelloProjectRegistration resetRegistry"
 zip "${METACELLO_IMAGE_NAME}.zip" ${METACELLO_IMAGE_NAME}.*
 
 echo $(date -u) "[Pharo] Reloading rest of packages"
@@ -200,6 +203,8 @@ ${VM} "${PHARO_IMAGE_NAME}.image" eval --save "Smalltalk vm parameterAt: 45 put:
 env 2>&1 > env.log
 
 ${VM} "${PHARO_IMAGE_NAME}.image" eval --save "MCCacheRepository uniqueInstance disable"
+#First we load the remote repositories capabilities of Monticello to be able to load the Pharo baseline with external remote dependencies
+${VM} "${PHARO_IMAGE_NAME}.image" metacello install --save --signalErrorOnWarning "tonel://${BOOTSTRAP_REPOSITORY}/src" Monticello --groups RemoteRepositories
 ${VM} "${PHARO_IMAGE_NAME}.image" metacello install --save --signalErrorOnWarning "tonel://${BOOTSTRAP_REPOSITORY}/src" Pharo
 
 #Storing the image version into the image header
