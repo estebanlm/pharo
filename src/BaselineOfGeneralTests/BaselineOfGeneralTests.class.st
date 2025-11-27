@@ -19,7 +19,6 @@ BaselineOfGeneralTests >> baseline: spec [
 			package: 'AST-Core-Tests';
 			package: 'Kernel-CodeModel-Tests';
 			package: 'Monticello-Tests';
-			"required by MonticelloMocks"package: 'System-Installers-Tests';
 			package: 'MonticelloMocks';
 			package: 'Fuel-Core-Tests';
 			package: 'FormCanvas-Tests';

@@ -5,21 +5,9 @@ Class {
 		'expected',
 		'diff'
 	],
-	#category : 'System-Installers-Tests',
-	#package : 'System-Installers-Tests'
+	#category : 'Monticello-Tests',
+	#package : 'Monticello-Tests'
 }
-
-{ #category : 'testing' }
-MCMczInstallerTest class >> isAbstract [
-	^ (Smalltalk hasClassNamed: #MczInstaller) not
-]
-
-{ #category : 'accessing' }
-MCMczInstallerTest class >> suite [
-	^ (Smalltalk hasClassNamed: #MczInstaller)
-		ifTrue: [ super suite ]
-		ifFalse: [ self classForTestSuite new name: self name asString ]
-]
 
 { #category : 'assertions' }
 MCMczInstallerTest >> assertDict: dict matchesInfo: info [
@@ -35,29 +23,9 @@ MCMczInstallerTest >> assertNoChange [
 	self assertEmpty: diff
 ]
 
-{ #category : 'assertions' }
-MCMczInstallerTest >> assertVersionInfoPresent [
-	| dict info |
-	dict := MczInstaller versionInfo at: self mockPackage name.
-	info := expected info.
-	self assertDict: dict matchesInfo: info
-]
-
-{ #category : 'utilities' }
-MCMczInstallerTest >> deleteFile [
-	self fileName asFileReference ensureDelete
-]
-
 { #category : 'accessing' }
 MCMczInstallerTest >> fileName [
 	^ 'InstallerTest.mcz'
-]
-
-{ #category : 'accessing' }
-MCMczInstallerTest >> fileStream [
-	^ self fileName asFileReference
-		ensureDelete;
-		binaryWriteStream
 ]
 
 { #category : 'running' }
@@ -69,18 +37,18 @@ MCMczInstallerTest >> setUp [
 
 { #category : 'running' }
 MCMczInstallerTest >> tearDown [
+
 	expected snapshot updatePackage: self mockPackage.
-	self deleteFile.
+	self fileName asFileReference ensureDelete.
 	super tearDown
 ]
 
 { #category : 'tests' }
 MCMczInstallerTest >> testInstallFromFile [
-	| stream |
-	stream := self fileStream.
 
-	MCMczWriter fileOut: expected on: stream.
-	stream close.
+	self fileName asFileReference
+		ensureDelete;
+		binaryWriteStreamDo: [ :stream | MCMczWriter fileOut: expected on: stream ].
 
 	MczInstaller installFileNamed: self fileName.
 	self assertNoChange
@@ -90,10 +58,8 @@ MCMczInstallerTest >> testInstallFromFile [
 MCMczInstallerTest >> testInstallFromStream [
 
 	| array |
-	array := ByteArray streamContents: [:stream |.
-		MCMczWriter fileOut: expected on: stream.
-	].
+	array := ByteArray streamContents: [ :stream | MCMczWriter fileOut: expected on: stream ].
 	MczInstaller installStream: array readStream.
 	self assertNoChange.
-	self assertVersionInfoPresent
+	self assertDict: (MczInstaller versionInfo at: self mockPackage name) matchesInfo: expected info
 ]
