@@ -26,9 +26,7 @@ SycGenerateVariableAccessorCommand >> execute [
 	(ReGenerateAccessorsDriver new
 		 targetClass: variables first definingClass;
 		 scopes: toolContext refactoringScopes;
-		 scopeInstanceSide: ((toolContext respondsTo: #metaLevelScope)
-				  ifTrue: [ toolContext metaLevelScope isInstanceSide ]
-				  ifFalse: [ toolContext isInstanceSide ]);
+		 scopeInstanceSide: variables first definingClass isInstanceSide;
 		 selectedVariables: (variables collect: [ :each | each name ])) runRefactoring
 ]
 

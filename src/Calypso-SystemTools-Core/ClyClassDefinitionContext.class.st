@@ -5,9 +5,3 @@ Class {
 	#package : 'Calypso-SystemTools-Core',
 	#tag : 'Editors-Classes'
 }
-
-{ #category : 'testing' }
-ClyClassDefinitionContext >> isInstanceSide [
-
-	^ selectedSourceNode parent class = CDClassDefinitionNode
-]
