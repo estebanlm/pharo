@@ -111,7 +111,7 @@ CodeImporter class >> readStream: aReadStream [
 		yourself
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'instance creation' }
 CodeImporter class >> withParserClass: aClass [
 
 	^ self new

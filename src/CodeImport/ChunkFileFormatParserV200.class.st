@@ -34,7 +34,7 @@ ChunkFileFormatParserV200 >> parseAndValidateVersion [
 	self checkCompatibilityWith: self parseVersion
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'parsing' }
 ChunkFileFormatParserV200 >> parseBehaviorDefinition: aMetadataChunk [
 	"The behavior preamble is:
 	
@@ -47,7 +47,7 @@ ChunkFileFormatParserV200 >> parseBehaviorDefinition: aMetadataChunk [
 	self addDeclaration: (ClassChunk contents: classDefinitionString)
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'parsing' }
 ChunkFileFormatParserV200 >> parseChunkWithMetadata: nextChunk [
 
 	nextChunk = #PackageDefinition ifTrue: [ ^ self parsePackageDefinition: nextChunk ].
@@ -55,7 +55,7 @@ ChunkFileFormatParserV200 >> parseChunkWithMetadata: nextChunk [
 	^ super parseChunkWithMetadata: nextChunk
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'parsing' }
 ChunkFileFormatParserV200 >> parsePackageDefinition: aMetadataChunk [
 	"The package preamble is:
 	

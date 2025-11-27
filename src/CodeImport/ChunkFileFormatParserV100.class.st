@@ -112,7 +112,7 @@ ChunkFileFormatParserV100 >> parseAndValidateVersion [
 		ifFalse: [ CodeImportError signal: 'Parser VERSION ', self versionString, ' cannot read file VERSION ', ($. join: versionNumber) ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'parsing' }
 ChunkFileFormatParserV100 >> parseChunkWithMetadata: nextChunk [
 
 	| substrings |
