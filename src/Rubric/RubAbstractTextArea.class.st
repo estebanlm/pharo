@@ -746,6 +746,8 @@ RubAbstractTextArea >> deselect [
 
 { #category : 'event handling' }
 RubAbstractTextArea >> doubleClick: anEvent [
+
+	(model interactionModel isKindOf: ClyRichTextClassCommentEditorToolMorph) ifTrue: [ model interactionModel toggleMode ].
 	^ self handleEdit: [ self editor doubleClick: anEvent ]
 ]
 
