@@ -822,89 +822,6 @@ SmalltalkImage >> lastImagePath [
 	^ LastImagePath
 ]
 
-{ #category : 'sources, change log' }
-SmalltalkImage >> licenseString [
-	^ self licenseStringTemplate format: (Array with: Date today year asString)
-]
-
-{ #category : 'sources, change log' }
-SmalltalkImage >> licenseStringTemplate [
-	^ 'LICENSE
-
-Licensed under the MIT License with parts under the Apache License.
-
-Copyright (c) 2008-{1} The Pharo Project, and Contributors
-Copyright (c) 2008-{1} Inria
-Copyright (c) 1996-2008 Viewpoints Research Institute, and Contributors
-Copyright (c) 1996 Apple Computer, Inc.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this
-software and associated documentation files (the "Software"), to deal in the Software
-without restriction, including without limitation the rights to use, copy, modify, merge,
-publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
-to whom the Software is furnished to do so, subject to the following conditions: The
-above copyright notice and this permission notice shall be included in all copies or
-substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS
-OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-You may obtain a copy of the Apache License at
-http://www.apache.org/licenses/LICENSE-2.0
-
-Pharo uses icons by Mark James (http://www.famfamfam.com) under
-Creative Commons Attribution 2.5 License.
-
-Pharo uses icons by Eclipse under
-Eclipse Public License - v 1.0
-http://www.eclipse.org/legal/epl-v10.html
-
-Pharo uses Source Code Pro Fonts by Adobe under
-SIL Open Font License, v 1.1
-http://scripts.sil.org/OFL
-
-Pharo uses Open Sans by Steve Matteson under
-Apache License, 2.0
-http://www.apache.org/licenses/LICENSE-2.0.html
-
-Pharo uses  Bitstream Vera Fonts
-http://dejavu-fonts.org/wiki/index.php?title=License
-
-Copyright (c) 2003 by Bitstream, Inc. All Rights Reserved.
-Bitstream Vera is a trademark of Bitstream, Inc.
-Permission is hereby granted, free of charge, to any person obtaining a copy of the fonts
-accompanying this license ("Fonts") and associated documentation files (the "Font Software"),
-to reproduce and distribute the Font Software, including without limitation the rights to use, copy,
-merge, publish, distribute, and/or sell copies of the Font Software, and to permit persons to whom
-the Font Software is furnished to do so, subject to the following conditions:
-The above copyright and trademark notices and this permission notice shall be included in all
-copies of one or more of the Font Software typefaces.
-The Font Software may be modified, altered, or added to, and in particular the designs of glyphs
-or characters in the Fonts may be modified and additional glyphs or characters may be added to
-the Fonts, only if the fonts are renamed to names not containing either the words "Bitstream"
-or the word "Vera".
-This License becomes null and void to the extent applicable to Fonts or Font Software that
-has been modified and is distributed under the "Bitstream Vera" names.
-The Font Software may be sold as part of a larger software package but no copy of one or more
-of the Font Software typefaces may be sold by itself.
-THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-INCLUDING BUT NOT LIMITED TO ANY WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
-PURPOSE AND NONINFRINGEMENT OF COPYRIGHT, PATENT, TRADEMARK, OR OTHER RIGHT. IN NO EVENT
-SHALL BITSTREAM OR THE GNOME FOUNDATION BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-INCLUDING ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, WHETHER IN AN
-ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF THE USE OR INABILITY TO USE THE
-FONT SOFTWARE OR FROM OTHER DEALINGS IN THE FONT SOFTWARE.
-Except as contained in this notice, the names of Gnome, the Gnome Foundation,
-and Bitstream Inc., shall not be used in advertising or otherwise to promote the sale,
-use or other dealings in this Font Software without prior written authorization from
-the Gnome Foundation or Bitstream Inc., respectively.
-For further information, contact: fonts at gnome dot org.'
-]
-
 { #category : 'miscellaneous' }
 SmalltalkImage >> logDuring: aMonadicBlock [
 	" for safe use, if stream is a file, it needs to be closed after use "
@@ -1307,28 +1224,6 @@ SmalltalkImage >> printOn: aStream [
 	aStream nextPutAll: 'Smalltalk'
 ]
 
-{ #category : 'private' }
-SmalltalkImage >> privSaveImageWithCleanup [
-
-	"Do not use this method for common image saving. This method is designated for saving the image during the shrinking process in headless images."
-
-	20 timesRepeat: [
-		(Delay forMilliseconds: 50) wait.
-		Processor yield.
-		Smalltalk garbageCollect. ].
-
-	[
-		self snapshot: true andQuit: true.
-	] onErrorDo: [:e |
-		'PharoDebug.log' asFileReference ensureDelete; writeStreamDo: [ :rep |
-			rep nextPutAll: 'Error:'; cr.
-			rep nextPutAll: e asString; cr.
-	  		rep nextPutAll: thisContext stack size asString.
-	 	  	thisContext stack copy withIndexDo: [:stck :i |
-				[ rep nextPutAll: i asString; space; nextPutAll: stck asString; cr] onErrorDo: []]].
-		Smalltalk exitFailure ]
-]
-
 { #category : 'snapshot and quit' }
 SmalltalkImage >> quitPrimitive [
 	"Primitive. Exit to another operating system on the host machine, if one
@@ -1344,12 +1239,6 @@ SmalltalkImage >> recompile [
 	Smalltalk globals allClassesAndTraits
 		do: [:classOrTrait | classOrTrait recompile]
 		displayingProgress: 'Recompiling all classes and traits'
-]
-
-{ #category : 'snapshot and quit' }
-SmalltalkImage >> recordStartupStamp [
-
-	ChangesLog default recordStartupStamp
 ]
 
 { #category : 'special objects' }
@@ -1503,16 +1392,6 @@ SmalltalkImage >> saveImageInFileNamed: aFile [
 		closeSourceFiles;
 		openSourceFiles;  "so SNAPSHOT appears in new changes file"
 		snapshot: true andQuit: false
-]
-
-{ #category : 'saving' }
-SmalltalkImage >> saveImageInNewContext [
-
-	" This method is used for saving the Smalltalk image in a new process so the current process with all stack information may be forgotten.
-
-	Do not use this method for common image saving. This method is designated for saving the image during the shrinking process in headless images. "
-
-	[ self privSaveImageWithCleanup ] forkAt: 40
 ]
 
 { #category : 'saving' }
@@ -1696,15 +1575,6 @@ SmalltalkImage >> unregisterExternalObject: anObject [
 	"Unregister the given object in the external objects array. Do nothing if it isn't registered."
 
 	ExternalSemaphoreTable unregisterExternalObject: anObject
-]
-
-{ #category : 'sources, change log' }
-SmalltalkImage >> version [
-	"Answer the version of this release."
-
-	^ SystemVersion current
-		  ifNil: [ 'No version set yet' ]
-		  ifNotNil: [ :version | version version ]
 ]
 
 { #category : 'accessing' }

@@ -29,6 +29,12 @@ SystemDependenciesTest >> compilerLayerPackages [
 	^ self kernelLayerPackages , BaselineOfPharoBootstrap compilerPackageNames
 ]
 
+{ #category : 'packages' }
+SystemDependenciesTest >> debuggingLayerPackages [
+
+	^ self sunitCoreLayerPackages , BaselineOfDebugging corePackageNames
+]
+
 { #category : 'accessing' }
 SystemDependenciesTest >> dependenciesReport [
 
@@ -70,6 +76,13 @@ SystemDependenciesTest >> knownCompilerDependencies [
 ]
 
 { #category : 'known dependencies' }
+SystemDependenciesTest >> knownDebuggingDependencies [
+	"ideally this list should be empty"
+
+	^ #( #'Morphic-Core' #'System-Object Events' #'Tool-Base' )
+]
+
+{ #category : 'known dependencies' }
 SystemDependenciesTest >> knownKernelDependencies [
 	"ideally this list should be empty"
 
@@ -80,7 +93,7 @@ SystemDependenciesTest >> knownKernelDependencies [
 SystemDependenciesTest >> knownMorphicCoreDependencies [
 	"ideally this list should be empty"
 
-	^ #(#'Keymapping-KeyCombinations' #'Morphic-Base' 'Morphic-Widgets-ColorPicker')
+	^ #(#'Keymapping-KeyCombinations' #'Morphic-Base' 'Morphic-Widgets-ColorPicker' 'Tool-Base')
 ]
 
 { #category : 'known dependencies' }
@@ -97,6 +110,13 @@ SystemDependenciesTest >> knownUIDependencies [
 
 	^ #( 'Athens-Cairo' 'Athens-Core' #'Refactoring-Environment' 'Reflectivity-Tools' #Shout #'Tool-Diff' #'HeuristicCompletion-Model'
 	     'NECompletion-Morphic' #VariablesLibrary #'Tools-CodeNavigation' #'Spec2-CommonWidgets' #'NewTools-Scopes' #'NewTools-FileBrowser' #EnlumineurFormatter )
+]
+
+{ #category : 'known dependencies' }
+SystemDependenciesTest >> knownUIInfrastructureDependencies [
+	"ideally this list should be empty"
+
+	^ #( #'Morphic-Core' #'System-Object Events' #'Tool-Base' )
 ]
 
 { #category : 'packages' }
@@ -169,7 +189,8 @@ SystemDependenciesTest >> testExternalBasicToolsDependencies [
 		self tonelCorePackageNames,
 		BaselineOfKernelTests withAllPackageNames,
 		BaselineOfTraits corePackages,
-		BaselineOfSUnit withAllPackageNames, "ALL"
+		BaselineOfSUnit withAllPackageNames,
+		BaselineOfDebugging corePackageNames,
 		BaselineOfDisplay withAllPackageNames,
 		BaselineOfUnifiedFFI withAllPackageNames,
 		BaselineOfFonts allPackageNames,
@@ -178,6 +199,7 @@ SystemDependenciesTest >> testExternalBasicToolsDependencies [
 		BaselineOfMorphicCore withAllPackageNames,
 		BaselineOfMorphic withAllPackageNames,
 		BaselineOfMenuRegistration withAllPackageNames,
+		BaselineOfUIInfrastructure withAllPackageNames,
 		BaselineOfUI withAllPackageNames,
 		BaselineOfRefactoring withAllPackageNames,
 		{ BaselineOfCommander2 name }, (BaselineOfCommander2 deepPackagesOfGroupNamed: #core),
@@ -200,6 +222,15 @@ SystemDependenciesTest >> testExternalCompilerDependencies [
 	dependencies := self externalDependendiesOf: self compilerLayerPackages.
 
 	self assertCollection: dependencies hasSameElements: self knownCompilerDependencies
+]
+
+{ #category : 'tests' }
+SystemDependenciesTest >> testExternalDebuggingDependencies [
+
+	| dependencies |
+	dependencies := self externalDependendiesOf: self debuggingLayerPackages.
+
+	self assertCollection: dependencies hasSameElements: self knownDebuggingDependencies
 ]
 
 { #category : 'tests' }
@@ -295,7 +326,8 @@ SystemDependenciesTest >> testExternalMorphicCoreDependencies [
 	dependencies := self externalDependendiesOf: (
 		self metacelloPackageNames,
 		self tonelCorePackageNames,
-		BaselineOfUI debuggerBaseUIPackageNames,
+		BaselineOfDebugging corePackageNames,
+		BaselineOfUIInfrastructure withAllPackageNames,
 		BaselineOfTraits corePackages,
 		BaselineOfSUnit corePackageNames,
 		BaselineOfDisplay allPackageNames,
@@ -316,7 +348,8 @@ SystemDependenciesTest >> testExternalMorphicDependencies [
 	dependencies := self externalDependendiesOf: (
 		self metacelloPackageNames,
 		self tonelCorePackageNames,
-		BaselineOfUI debuggerBaseUIPackageNames,
+		BaselineOfDebugging corePackageNames,
+		BaselineOfUIInfrastructure withAllPackageNames,
 		BaselineOfTraits corePackages,
 		BaselineOfSUnit corePackageNames,
 		BaselineOfDisplay allPackageNames,
@@ -352,7 +385,9 @@ SystemDependenciesTest >> testExternalSpec2Dependencies [
 		"Language"
 		self metacelloPackageNames,
 		self tonelCorePackageNames,
+		BaselineOfDebugging corePackageNames,
 		BaselineOfUI allPackageNames,
+		BaselineOfUIInfrastructure withAllPackageNames,
 		BaselineOfTraits corePackages,
 		BaselineOfUnifiedFFI allPackageNames,
 		BaselineOfFonts allPackageNames,
@@ -403,7 +438,9 @@ SystemDependenciesTest >> testExternalUIDependencies [
 	dependencies := (self externalDependendiesOf: (
 		self metacelloPackageNames,
 		self tonelCorePackageNames,
+		BaselineOfDebugging corePackageNames,
 		BaselineOfUI allPackageNames,
+		BaselineOfUIInfrastructure withAllPackageNames,
 		BaselineOfTraits corePackages,
 		BaselineOfSUnit corePackageNames,
 		BaselineOfDisplay allPackageNames,
@@ -432,7 +469,7 @@ SystemDependenciesTest >> testExternalUIInfrastructureDependencies [
 	| dependencies |
 	dependencies := self externalDependendiesOf: self uiInfrastructureCoreLayerPackages.
 
-	self assertEmpty: dependencies
+	self assertCollection: dependencies hasSameElements: self knownUIInfrastructureDependencies
 ]
 
 { #category : 'tests' }
@@ -463,6 +500,6 @@ SystemDependenciesTest >> tonelCorePackageNames [
 { #category : 'packages' }
 SystemDependenciesTest >> uiInfrastructureCoreLayerPackages [
 
-	^ self sunitCoreLayerPackages , BaselineOfUnifiedFFI allPackageNames , BaselineOfThreadedFFI allPackageNames , BaselineOfDisplay allPackageNames
+	^ self debuggingLayerPackages , BaselineOfUnifiedFFI allPackageNames , BaselineOfThreadedFFI allPackageNames , BaselineOfDisplay allPackageNames
 	  , BaselineOfFonts allPackageNames , BaselineOfFreeType allPackageNames , BaselineOfMenuRegistration allPackageNames , BaselineOfKeymapping corePackageNames
 ]

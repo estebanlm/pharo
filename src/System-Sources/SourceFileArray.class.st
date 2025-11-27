@@ -216,9 +216,8 @@ SourceFileArray >> forceChangesToDisk [
 	"Ensure that the changes file has been fully written to disk by closing and re-opening it. This makes the system more robust in the face of a power failure or hard-reboot."
 
 	| changesFile |
-	changesFile := self changesFileStream.
-	changesFile isReadOnly ifFalse: [
-		changesFile flush ].
+	changesFile := self changesFileStream ifNil: [ ^ self ].
+	changesFile isReadOnly ifFalse: [ changesFile flush ].
 	changesFile close.
 	changesFile tryOpen.
 	changesFile setToEnd
@@ -478,8 +477,6 @@ SourceFileArray >> writeChangesDuring: aBlock onSuccess: successBlock onFail: fa
 	| file sourceCodePosition |
 	file := self changesFileStream.
 	(file isNil or: [ file closed or: [ file isReadOnly ] ]) ifTrue: [ ^ failBlock value ].
-
-	ChangesLog default assureStartupStampLogged.
 
 	file setToEnd.
 	sourceCodePosition := aBlock value: file.
