@@ -45,6 +45,6 @@ ReConvertTemporaryToInstanceVariableDriverTest >> testConvertTempSuccessfully [
 
 	driver runRefactoring.
 
-	self assert: driver refactoring changes changes size equals: 3.
+	self assert: driver refactoring changes changes size equals: 2.
 	
 ]

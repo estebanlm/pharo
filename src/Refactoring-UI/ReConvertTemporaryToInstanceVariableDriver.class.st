@@ -21,7 +21,10 @@ ReConvertTemporaryToInstanceVariableDriver >> breakingChoices [
 	items := OrderedCollection new.
 	subclassesNotDefiningVar check ifFalse: [ items add: (ReBrowseClassReferencesChoice new driver: self) ].
 	noReadBeforeWritten check ifFalse: [ items add: (ReBrowseMethodChoice new driver: self) ].
-	notMultipleTempOccurences check ifFalse: [ items add: (ReBrowseMethodsChoice new driver: self) ].
+	notMultipleTempOccurences check ifFalse: [
+			items add: (ReBrowseMethodsChoice new
+					 driver: self;
+					 description: self browseMethodsDescription) ].
 	^ items
 ]
 
@@ -36,9 +39,13 @@ ReConvertTemporaryToInstanceVariableDriver >> browseMethods [
 
 	| violators |
 	violators := notMultipleTempOccurences violators.
-	StMessageBrowser
-		browse: (violators collect: [ :each | each value methodClass realClass >> each value selector ])
-		asSendersOf: (violators collect: [ :v | v selector ])
+	ClyQueryBrowserMorph browseMethods: (violators collect: [ :v | v compiledMethod ]) 
+]
+
+{ #category : 'description' }
+ReConvertTemporaryToInstanceVariableDriver >> browseMethodsDescription [
+
+	^ 'Browse all methods containing a temporary variable with the same name'
 ]
 
 { #category : 'actions' }
@@ -54,13 +61,6 @@ ReConvertTemporaryToInstanceVariableDriver >> class: aClass selector: aSelector 
 	variable := aVariable.
 	selector := aSelector.
 	class := aClass
-]
-
-{ #category : 'configuration' }
-ReConvertTemporaryToInstanceVariableDriver >> instantiateRefactoring [
-
-	refactoring := RBTemporaryToInstanceVariableRefactoring class: class selector: selector variable: variable.
-	refactoring prepareForExecution
 ]
 
 { #category : 'configuration' }
@@ -84,16 +84,24 @@ ReConvertTemporaryToInstanceVariableDriver >> handleBreakingChanges [
 	select ifNotNil: [ select action ]
 ]
 
+{ #category : 'configuration' }
+ReConvertTemporaryToInstanceVariableDriver >> instantiateRefactoring [
+
+	refactoring := RBTemporaryToInstanceVariableRefactoring class: class selector: selector variable: variable.
+	refactoring prepareForExecution
+]
+
 { #category : 'ui - dialogs' }
 ReConvertTemporaryToInstanceVariableDriver >> labelBasedOnBreakingChanges [
 
 	^ String streamContents: [ :stream |
-			  subclassesNotDefiningVar violationMessageOn: stream.
-			  stream cr.
+			  subclassesNotDefiningVar check ifFalse: [
+					  subclassesNotDefiningVar violationMessageOn: stream.
+					  stream cr ].
 			  notMultipleTempOccurences violationMessageOn: stream.
 			  stream cr.
 			  noReadBeforeWritten violationMessageOn: stream.
-			  stream cr. 
+			  stream cr.
 			  stream nextPutAll: 'Select a strategy' ]
 ]
 
