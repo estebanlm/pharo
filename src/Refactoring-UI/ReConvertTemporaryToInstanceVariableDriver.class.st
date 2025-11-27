@@ -31,7 +31,7 @@ ReConvertTemporaryToInstanceVariableDriver >> breakingChoices [
 { #category : 'execution' }
 ReConvertTemporaryToInstanceVariableDriver >> browseMethod [
 
-	(class realClass methodDict at: selector) browse 
+	(application toolNamed: #messageList) browse: { (class realClass methodDict at: selector) }
 ]
 
 { #category : 'actions' }
@@ -39,7 +39,7 @@ ReConvertTemporaryToInstanceVariableDriver >> browseMethods [
 
 	| violators |
 	violators := notMultipleTempOccurences violators.
-	ClyQueryBrowserMorph browseMethods: (violators collect: [ :v | v compiledMethod ]) 
+	(application toolNamed: #messageList) browse: (violators collect: [ :v | v compiledMethod ])
 ]
 
 { #category : 'description' }
@@ -51,7 +51,7 @@ ReConvertTemporaryToInstanceVariableDriver >> browseMethodsDescription [
 { #category : 'actions' }
 ReConvertTemporaryToInstanceVariableDriver >> browseReferences [
 
-	ClyQueryBrowserMorph browseClasses: (class allSubclasses select: [ :cls | cls hasInstVarNamed: variable ])
+	(application toolNamed: #browser) browseClasses: (class allSubclasses select: [ :cls | cls hasInstVarNamed: variable ])
 ]
 
 { #category : 'instance creation' }
@@ -66,9 +66,9 @@ ReConvertTemporaryToInstanceVariableDriver >> class: aClass selector: aSelector 
 ReConvertTemporaryToInstanceVariableDriver >> defaultSelectDialog [
 
 	^ super defaultSelectDialog
-		  extent: 400@1200;
+		  extent: 400 @ 1200;
 		  title: 'There are potential breaking changes!';
-		  label: self labelBasedOnBreakingChanges;
+		  message: self labelBasedOnBreakingChanges;
 		  items: self breakingChoices;
 		  display: [ :each | each description ];
 		  displayIcon: [ :each | self iconNamed: each systemIconName ];
@@ -78,9 +78,7 @@ ReConvertTemporaryToInstanceVariableDriver >> defaultSelectDialog [
 { #category : 'execution' }
 ReConvertTemporaryToInstanceVariableDriver >> handleBreakingChanges [
 
-	| select |
-	select := self selectDialog.
-	select ifNotNil: [ select action ]
+	self selectDialogForBreakingChanges ifNotNil: [ :dialog | dialog action ]
 ]
 
 { #category : 'configuration' }
