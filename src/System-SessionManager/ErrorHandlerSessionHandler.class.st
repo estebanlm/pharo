@@ -34,3 +34,17 @@ ErrorHandlerSessionHandler class >> uniqueInstance [
 ErrorHandlerSessionHandler >> handledId [
 	^ self class name
 ]
+
+{ #category : 'handlers' }
+ErrorHandlerSessionHandler >> shutdown: isImageQuitting [
+	"Prepare the shutdown and the next startup"
+
+	ErrorHandler default: SessionManagerErrorHandler new
+]
+
+{ #category : 'handlers' }
+ErrorHandlerSessionHandler >> startup: isImageStarting [
+	"Install the right error Manager"
+
+	ErrorHandler default: ErrorHandler forCurrentSystemConfiguration
+]

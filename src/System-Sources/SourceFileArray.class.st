@@ -17,10 +17,38 @@ Class {
 		'readOnlyQueue',
 		'flushChanges'
 	],
+	#classVars : [
+		'Default'
+	],
 	#category : 'System-Sources-Sources',
 	#package : 'System-Sources',
 	#tag : 'Sources'
 }
+
+{ #category : 'accessing' }
+SourceFileArray class >> default [
+
+	^ Default
+]
+
+{ #category : 'accessing' }
+SourceFileArray class >> default: anInstance [
+
+	Default := anInstance
+]
+
+{ #category : 'class initialization' }
+SourceFileArray class >> initialize [
+
+	"Guard since initializing twice would create bugs."
+	self default ifNotNil: [ ^ self ].
+	
+	self default: self new.
+	
+	"This next line is to add a deprecated global variable. The deprecation happened in Pharo 14 development. We can remove it completly in the future."
+	self class environment at: #SourceFiles put: self default.
+	(self class environment bindingOf: #SourceFiles) isDeprecated: true
+]
 
 { #category : 'system startup' }
 SourceFileArray class >> startUp: resuming [
@@ -188,9 +216,8 @@ SourceFileArray >> forceChangesToDisk [
 	"Ensure that the changes file has been fully written to disk by closing and re-opening it. This makes the system more robust in the face of a power failure or hard-reboot."
 
 	| changesFile |
-	changesFile := self changesFileStream.
-	changesFile isReadOnly ifFalse: [
-		changesFile flush ].
+	changesFile := self changesFileStream ifNil: [ ^ self ].
+	changesFile isReadOnly ifFalse: [ changesFile flush ].
 	changesFile close.
 	changesFile tryOpen.
 	changesFile setToEnd
@@ -450,8 +477,6 @@ SourceFileArray >> writeChangesDuring: aBlock onSuccess: successBlock onFail: fa
 	| file sourceCodePosition |
 	file := self changesFileStream.
 	(file isNil or: [ file closed or: [ file isReadOnly ] ]) ifTrue: [ ^ failBlock value ].
-
-	ChangesLog default assureStartupStampLogged.
 
 	file setToEnd.
 	sourceCodePosition := aBlock value: file.

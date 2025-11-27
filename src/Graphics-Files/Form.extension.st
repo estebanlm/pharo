@@ -42,16 +42,6 @@ Form class >> fromFileNamed: fileName [
 			binaryReadStreamDo: [ :in | self fromBinaryStream: in ]
 ]
 
-{ #category : '*Graphics-Files-FileRegistry' }
-Form class >> openImageInWindow: fullName [
-	"Handle five file formats: GIF, JPG, PNG, Form storeOn: (run coded), and
-	BMP. Fail if file format is not recognized."
-
-	| image |
-	image := self fromFileNamed: fullName.
-	(ImageMorph withForm: image) openInWorld
-]
-
 { #category : '*Graphics-Files' }
 Form >> readNativeResourceFrom: byteStream [
 	| img |
@@ -109,24 +99,12 @@ Form >> resourceTag [
 Form class >> serviceImageAsBackground [
 	"Answer a service for setting the desktop background from a given graphical file's contents"
 	<formService>
-	^ SimpleServiceEntry
+	^ FileServiceEntry
 		provider: self
 		label: 'Use graphic as background'
 		selector: #setBackgroundFromImageFileNamed:
 		description: 'Use the graphic as the background for the desktop'
 		buttonLabel: 'Background'
-]
-
-{ #category : '*Graphics-Files-FileRegistry' }
-Form class >> serviceOpenImageInWindow [
-	"Answer a service for opening a graphic in a window"
-	<formService>
-	^ SimpleServiceEntry
-		provider: self
-		label: 'Open graphic in a window'
-		selector: #openImageInWindow:
-		description: 'Open a graphic file in a window'
-		buttonLabel: 'Open'
 ]
 
 { #category : '*Graphics-Files-FileRegistry' }

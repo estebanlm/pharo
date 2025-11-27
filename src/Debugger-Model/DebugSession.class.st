@@ -71,26 +71,13 @@ DebugSession class >> fastStepThroughMode: aBoolean [
 	^ FastStepThroughMode := aBoolean
 ]
 
-{ #category : 'settings' }
-DebugSession class >> fastStepThroughModeSettingOn: aBuilder [
-
-	<systemsettings>
-	(aBuilder setting: #fastStepThroughMode)
-		label: 'Enable the fast step through mode';
-		target: self;
-		parent: #debugging;
-		default: false;
-		description:
-			'If enabled, the debugger will perform step through operations using halting blocks. This implementation is more efficient than the original one based on interpreter steps'
-]
-
-{ #category : 'settings' }
+{ #category : 'accessing' }
 DebugSession class >> logDebuggerStackToFile [
 	^ LogDebuggerStackToFile 
 		ifNil: [ LogDebuggerStackToFile := false ]
 ]
 
-{ #category : 'settings' }
+{ #category : 'accessing' }
 DebugSession class >> logDebuggerStackToFile: aBoolean [
 	LogDebuggerStackToFile := aBoolean
 ]
@@ -191,25 +178,6 @@ DebugSession >> implement: aMessage classified: aSymbol inClass: aClass forConte
 
 	self updateContextTo: aContext.
 	self contextChanged
-]
-
-{ #category : 'debug - session' }
-DebugSession >> implement: aMessage inClass: aClass forContext: aContext [
-	| method |
-	aClass compile: (DynamicMessageImplementor for: aMessage in: aClass) value.
-	method := aClass lookupSelector: aMessage selector.
-
-	MethodClassifier classify: method.
-
-	aContext privRefreshWith: method.
-	aContext method numArgs > 0 ifTrue:
-		[aMessage arguments withIndexDo:
-			[:arg :index|
-				aContext tempAt: index put: arg]].
-
-	self updateContextTo: aContext.
-	self contextChanged.
-	^ method
 ]
 
 { #category : 'private' }
@@ -457,7 +425,7 @@ DebugSession >> rewindContextToMethod: aMethod fromContext: aContext [
 
 	ctxt == aContext
 		ifFalse: [
-			self inform: 'Method saved, but current context unchanged\because of unwind error. Click OK to see error' withCRs ]
+			InformativeNotification signal: 'Method saved, but current context unchanged\because of unwind error. Click OK to see error' withCRs ]
 		ifTrue: [
 			interruptedProcess restartTopWith: aMethod.
 			self stepToFirstInterestingBytecodeIn: interruptedProcess ].

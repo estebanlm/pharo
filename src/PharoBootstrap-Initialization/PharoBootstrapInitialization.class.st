@@ -51,9 +51,7 @@ PharoBootstrapInitialization class >> initializeCommandLineHandlerAndErrorHandli
 		at: #Transcript
 		put: (NonInteractiveTranscript stdout install).
 
-
-	UIManager default: NonInteractiveUIManager new.
-	ErrorHandler defaultErrorHandler: UIManager default.
+	ErrorHandler default: NonInteractiveErrorHandler new.
 
 	InstructionStream initialize.
 
@@ -75,7 +73,7 @@ PharoBootstrapInitialization class >> initializeCommandLineHandlerAndErrorHandli
 	'Initializing sources' traceCr.
 	Smalltalk sourceFileVersionString: 'PharoV60'.
 	(Smalltalk class classVariableNamed: 'LastImagePath') value: Smalltalk imagePath. "set the default value"
-	SourceFiles := SourceFileArray new.
+	SourceFileArray initialize.
 
 	'InitializingFFI' traceCr.
 	"FFI"
@@ -85,7 +83,6 @@ PharoBootstrapInitialization class >> initializeCommandLineHandlerAndErrorHandli
 	'Initializing Session Manager' traceCr.
 	SessionManager initialize.
 	SessionManager initializeKernelRegistrations.
-	SessionManager default installNewSession.
 
 
 	'Initializing basic command line behaviors' traceCr.

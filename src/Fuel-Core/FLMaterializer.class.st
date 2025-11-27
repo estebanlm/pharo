@@ -79,7 +79,7 @@ FLMaterializer class >> materializeHeaderFromFileNamed: aFilePath [
 
 { #category : 'file service' }
 FLMaterializer class >> serviceFuelMaterialize [
-	^ SimpleServiceEntry 
+	^ FileServiceEntry 
 		provider: self 
 		label: 'Materialize Fuel file'
 		selector: #inspectMaterializationFromFileNamed:

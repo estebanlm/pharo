@@ -30,21 +30,24 @@ BaselineOfMonticello >> baseline: spec [
 			package: 'Ring-OldChunkImporter' with: [ spec requires: #('Ring-Definitions-Core') ];
 			package: 'System-Changes';
 			package: 'Jobs';
+			package: 'Random-Core';
+			package: 'System-Hashing';
 			package: 'Compression';
 			package: 'Monticello-Model';
+			package: 'Network-UUID';
 			package: 'Monticello';
 			package: 'Ring-Definitions-Monticello';
 			
 			package: 'Network-Kernel';
-			package: 'Network-MIME';
 			package: 'Network-Protocols';
 			package: 'Zinc-Resource-Meta-Core';
+			package: 'Network-MIME';
 			package: 'Zinc-HTTP';
 			package: 'MonticelloRemoteRepositories';
 			package: 'Zodiac-Core'.
 		spec 
-			group: 'Core' with: #('Ring-OldChunkImporter' 'System-Changes' 'Ring-Definitions-Core' 'Jobs' 'Compression' 'Monticello-Model' 'Monticello' 'Ring-Definitions-Monticello');
-			group: 'RemoteRepositories' with: #( 'Network-Kernel' 'Network-MIME' 'Network-Protocols' 'Zinc-Resource-Meta-Core' 'Zinc-HTTP' 'MonticelloRemoteRepositories' 'Zodiac-Core' );
+			group: 'Core' with: #('System-Changes' 'Ring-Definitions-Core' 'Ring-OldChunkImporter' 'Jobs' 'Random-Core' 'System-Hashing' 'Compression' 'Monticello-Model' 'Network-UUID' 'Monticello' 'Ring-Definitions-Monticello');
+			group: 'RemoteRepositories' with: #( 'Network-Kernel' 'Network-Protocols' 'Zinc-Resource-Meta-Core' 'Network-MIME' 'Zinc-HTTP' 'MonticelloRemoteRepositories' 'Zodiac-Core' );
 
 			group: 'default' with: #('Core' 'RemoteRepositories' ). ].
 ]

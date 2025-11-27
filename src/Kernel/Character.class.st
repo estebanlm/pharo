@@ -13,7 +13,9 @@ Class {
 	#type : 'immediate',
 	#classVars : [
 		'CharSet',
-		'DigitValues'
+		'Cr',
+		'DigitValues',
+		'Lf'
 	],
 	#category : 'Kernel-BasicObjects',
 	#package : 'Kernel',
@@ -103,7 +105,7 @@ Character class >> constantNames [
 Character class >> cr [
 	"Answer the Character representing a carriage return."
 
-	^self value: 13
+	^ Cr
 ]
 
 { #category : 'accessing - untypeable characters' }
@@ -154,7 +156,11 @@ Character class >> home [
 Character class >> initialize [
 	"Create the DigitsValues table."
 
-	self initializeDigitValues
+	self initializeDigitValues.
+
+	"Cr and LF are heavily used by some projects and we gain to cache them."
+	Cr := self value: 13.
+	Lf := self value: 10
 ]
 
 { #category : 'private - initialization' }
@@ -179,7 +185,7 @@ Character class >> insert [
 Character class >> lf [
 	"Answer the Character representing a linefeed."
 
-	^self value: 10
+	^ Lf
 ]
 
 { #category : 'accessing - untypeable characters' }
@@ -263,13 +269,6 @@ Character class >> specialCharacters [
 		   with: self divide
 		   with: self plusOrMinus
 		   with: self times)
-]
-
-{ #category : 'queries' }
-Character class >> supportsNonASCII [
-
-	^ (self environment includesKey: #Unicode) and: [
-		((self environment  at: #EncodedCharSet) charsetAt: 255) name = #Unicode ]
 ]
 
 { #category : 'constants' }
@@ -468,11 +467,6 @@ Character >> hexDigitValue [
 	^ ((codePoint := self asInteger) between: 0 and: 127)
 		ifTrue: [ #(nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil 0 1 2 3 4 5 6 7 8 9 nil nil nil nil nil nil nil 10 11 12 13 14 15 nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil 10 11 12 13 14 15 nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil) at: codePoint + 1 ]
 		ifFalse: [ nil ]
-]
-
-{ #category : 'initialization' }
-Character >> initialize [
-		super initialize.
 ]
 
 { #category : 'testing' }
@@ -867,13 +861,6 @@ Character >> shouldBePrintedAsLiteral [
 	^ self asInteger between: 33 and: 255
 ]
 
-{ #category : 'printing' }
-Character >> storeBinaryOn: aStream [
-	self asInteger < 256
-		ifTrue: [ aStream nextPut: self asInteger ]
-		ifFalse: [ aStream nextInt32Put: self asInteger ]
-]
-
 { #category : 'storing' }
 Character >> storeOn: aStream [
 	"Common character literals are preceded by '$', however special need to be encoded differently: for some this might be done by using one of the shortcut constructor methods for the rest we have to create them by ascii-value."
@@ -912,10 +899,4 @@ Character >> tokenish [
 { #category : 'converting' }
 Character >> uppercase [
 	^ self asUppercase
-]
-
-{ #category : 'copying' }
-Character >> veryDeepCopyWith: deepCopier [
-	"Answer the receiver, because Characters are unique."
-	^self
 ]

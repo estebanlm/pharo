@@ -73,33 +73,16 @@ ReRenameMethodDriver >> configureMessage [
 	refactoring renameMap: newMessage renameMap.
 ]
 
-{ #category : 'execution' }
-ReRenameMethodDriver >> configureRefactoring [
-
-	"here we do not fully configure the refactoring because we are missing information such as the signature.
-	Since we want to let the refactoring validate input we need to create it upfront then configure later."
-	
-	refactoring := ReRenameMethodRefactoring new renameMethod: originalMessage selector in: class 
-]
-
 { #category : 'configuration' }
-ReRenameMethodDriver >> defaultSelectDialog [ 
+ReRenameMethodDriver >> defaultSelectDialog [
 
 	^ super defaultSelectDialog
-		title: 'There are potential breaking changes!';
-		label: 'Watchout potential override detected!';
-		items: self breakingChoices;
-		display: [ :each | each description ];
-		displayIcon: [ :each | self iconNamed: each systemIconName ];
-		openModal
-]
-
-{ #category : 'execution' }
-ReRenameMethodDriver >> handleBreakingChanges [
-
-	| select |
-	select := self selectDialog.
-	select ifNotNil: [ select action ]
+		  title: 'There are potential breaking changes!';
+		  message: 'Watchout potential override detected!';
+		  items: self breakingChoices;
+		  display: [ :each | each description ];
+		  displayIcon: [ :each | self iconNamed: each systemIconName ];
+		  yourself
 ]
 
 { #category : 'initialization' }
@@ -107,6 +90,16 @@ ReRenameMethodDriver >> initialize [
 	
 	super initialize.
 	shouldEscape := false.
+]
+
+{ #category : 'configuration' }
+ReRenameMethodDriver >> instantiateRefactoring [
+	"here we do not fully configure the refactoring because we are missing information such as the signature.
+	Since we want to let the refactoring validate input we need to create it upfront then configure later."
+
+	^ ReRenameMethodRefactoring new 
+		renameMethod: originalMessage selector 
+		in: class
 ]
 
 { #category : 'for mocks' }

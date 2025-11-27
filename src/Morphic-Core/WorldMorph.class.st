@@ -182,6 +182,9 @@ WorldMorph class >> initializeWorldAndActiveWorld [
 	Waybe some of the initialization code could go directly in WorldMorph and other classes normal initialization?"
 
 	| world hand |
+	"Ensure Morph is initialized."
+	Morph initialize.
+	
 	world := self new.
 	hand := HandMorph new.
 	world addHand: hand.
@@ -229,24 +232,6 @@ WorldMorph class >> resizeActionBlock [
 WorldMorph class >> resizeActionBlock: aBlock [
 
 	resizeActionBlock := aBlock
-]
-
-{ #category : 'setting' }
-WorldMorph class >> scaleFactor [
-
-	self
-		deprecated: 'Use #zoomFactor instead.'
-		transformWith: '`@rcv scaleFactor' -> '`@rcv zoomFactor'.
-	^ self zoomFactor
-]
-
-{ #category : 'setting' }
-WorldMorph class >> scaleFactor: aValue [
-
-	self
-		deprecated: 'Use #zoomFactor: instead.'
-		transformWith: '`@rcv scaleFactor: `@arg1' -> '`@rcv zoomFactor: `@arg1'.
-	^ self zoomFactor: aValue
 ]
 
 { #category : 'settings' }
@@ -679,18 +664,6 @@ WorldMorph >> runLocalStepMethods [
 WorldMorph >> runStepMethods [
 
 	worldState runStepMethodsIn: self
-]
-
-{ #category : 'accessing' }
-WorldMorph >> scaleFactor: newZoomFactor [
-
-	self
-		deprecated: 'Use #zoomFactor: instead'
-		on: '20/12/2024'
-		in: 'pharo13'
-		transformWith:
-		'`@receiver scaleFactor: `@arg' -> '`@receiver zoomFactor: `@arg'.
-	self zoomFactor: newZoomFactor
 ]
 
 { #category : 'stepping' }
