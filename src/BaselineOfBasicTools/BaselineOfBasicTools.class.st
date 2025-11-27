@@ -69,13 +69,8 @@ BaselineOfBasicTools >> baseline: spec [
 			spec package: 'System-Sources-Tests'. "<= Not sure this one should be here but it is where the classes were loaded before been extracted from Tests package."
 
 			spec package: 'ClassDefinitionPrinters-Tests'.
-			spec package: 'Kernel-CodeModel-Tests'.
-			spec package: 'Monticello-Tests'.
-			spec package: 'MonticelloMocks'.
 			spec package: 'Network-Mail'.
 			spec package: 'Network-Mail-Tests'.
-
-
 
 			spec package: 'OpalCompiler-ToolFeatures'.
 			spec package: 'OpalCompiler-ToolFeatures-Tests'.
