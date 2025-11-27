@@ -220,10 +220,6 @@ BorderedMorph >> isTranslucentButNotTransparent [
 	^ false
 ]
 
-{ #category : 'event handling' }
-BorderedMorph >> reactToRubTextAreaDoubleClick: anEvent [
-]
-
 { #category : 'accessing' }
 BorderedMorph >> useSquareCorners [
 	self cornerStyle: #square
