@@ -146,8 +146,8 @@ RBTemporaryToInstanceVariableRefactoring >> preconditionNoReadBeforeWritten [
 
 	^ ReVariablesNotReadBeforeWrittenCondition new
 		  subtree: parseTree;
-		  variables: temporaryVariableName;
-		  checkForTemporaryVariables: true 
+		  variables: { temporaryVariableName };
+		  checkForTemporaryVariables: true
 ]
 
 { #category : 'preconditions' }

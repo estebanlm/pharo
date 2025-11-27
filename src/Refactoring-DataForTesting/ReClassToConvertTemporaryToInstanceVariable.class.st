@@ -25,3 +25,10 @@ ReClassToConvertTemporaryToInstanceVariable >> doAction2 [
 	instVar := 3.
 	^ instVar
 ]
+
+{ #category : 'initialization' }
+ReClassToConvertTemporaryToInstanceVariable >> initialize [
+
+	<ignoreUnusedVariables: #( #instVar )>
+	super initialize
+]
