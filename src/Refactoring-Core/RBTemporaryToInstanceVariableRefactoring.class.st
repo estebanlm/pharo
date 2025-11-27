@@ -138,7 +138,7 @@ RBTemporaryToInstanceVariableRefactoring >> isTemporaryVariableNameValid [
 { #category : 'preconditions' }
 RBTemporaryToInstanceVariableRefactoring >> preconditionNoMultipleTempOccurences [
 
-	^ ReMultipleMethodsDontReferToTempVarsCondition name: temporaryVariableName class: class selector: selector 
+	^ ReMultipleMethodsDontReferToTempVarCondition name: temporaryVariableName class: class selector: selector 
 ]
 
 { #category : 'preconditions' }
@@ -156,7 +156,7 @@ RBTemporaryToInstanceVariableRefactoring >> preconditionNoSubclassDefinesVar [
 	^ RBCondition
 		  withBlock: [ (class allSubclasses anySatisfy: [ :cls | cls definesInstanceVariable: temporaryVariableName asString ]) not ]
 		  errorString:
-			  ('One or more subclasses of <1p> already defines an<n>instance variable with the same name. Proceed anyway?'
+			  ('One or more subclasses of <1p> already defines an<n>instance variable with the same name.'
 				   expandMacrosWith: class name)
 ]
 

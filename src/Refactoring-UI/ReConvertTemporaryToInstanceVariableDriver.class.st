@@ -51,8 +51,7 @@ ReConvertTemporaryToInstanceVariableDriver >> browseMethodsDescription [
 { #category : 'actions' }
 ReConvertTemporaryToInstanceVariableDriver >> browseReferences [
 
-	(class allSubclasses select:[ :cls | cls hasInstVarNamed: variable ]) do: [ :violator  | "we should pass the application! "
-		violator browse ]
+	ClyQueryBrowserMorph browseClasses: (class allSubclasses select: [ :cls | cls hasInstVarNamed: variable ])
 ]
 
 { #category : 'instance creation' }
@@ -87,8 +86,7 @@ ReConvertTemporaryToInstanceVariableDriver >> handleBreakingChanges [
 { #category : 'configuration' }
 ReConvertTemporaryToInstanceVariableDriver >> instantiateRefactoring [
 
-	refactoring := RBTemporaryToInstanceVariableRefactoring class: class selector: selector variable: variable.
-	refactoring prepareForExecution
+	^ RBTemporaryToInstanceVariableRefactoring class: class selector: selector variable: variable
 ]
 
 { #category : 'ui - dialogs' }

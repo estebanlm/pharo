@@ -1,5 +1,8 @@
+"
+I check if temporary variable name is used in other methods of the class.
+"
 Class {
-	#name : 'ReMultipleMethodsDontReferToTempVarsCondition',
+	#name : 'ReMultipleMethodsDontReferToTempVarCondition',
 	#superclass : 'ReVariableNameCondition',
 	#instVars : [
 		'class',
@@ -11,7 +14,7 @@ Class {
 }
 
 { #category : 'instance creation' }
-ReMultipleMethodsDontReferToTempVarsCondition class >> name: aString class: aClass selector: aSelector [
+ReMultipleMethodsDontReferToTempVarCondition class >> name: aString class: aClass selector: aSelector [
 
 	^ (self name: aString)
 		  class: aClass;
@@ -19,20 +22,20 @@ ReMultipleMethodsDontReferToTempVarsCondition class >> name: aString class: aCla
 ]
 
 { #category : 'checking' }
-ReMultipleMethodsDontReferToTempVarsCondition >> check [
+ReMultipleMethodsDontReferToTempVarCondition >> check [
 
 	^ self violators isEmpty
 ]
 
 { #category : 'setter' }
-ReMultipleMethodsDontReferToTempVarsCondition >> class: aRBClass [ 
+ReMultipleMethodsDontReferToTempVarCondition >> class: aRBClass [ 
 
 	class := aRBClass.
 
 ]
 
 { #category : 'utilities' }
-ReMultipleMethodsDontReferToTempVarsCondition >> multipleMethodsDefiningTemporary: aString in: aClass ignore: aBlock [
+ReMultipleMethodsDontReferToTempVarCondition >> multipleMethodsDefiningTemporary: aString in: aClass ignore: aBlock [
 
 	| searcher methods method |
 	searcher := OCParseTreeSearcher new.
@@ -51,13 +54,13 @@ ReMultipleMethodsDontReferToTempVarsCondition >> multipleMethodsDefiningTemporar
 ]
 
 { #category : 'accessing' }
-ReMultipleMethodsDontReferToTempVarsCondition >> selector: aSelector [
+ReMultipleMethodsDontReferToTempVarCondition >> selector: aSelector [
 
 	selector := aSelector
 ]
 
 { #category : 'displaying' }
-ReMultipleMethodsDontReferToTempVarsCondition >> violationMessageOn: aStream [
+ReMultipleMethodsDontReferToTempVarCondition >> violationMessageOn: aStream [
 
 	self violators ifEmpty: [ ^ self ].
 	^ aStream
@@ -68,7 +71,7 @@ ReMultipleMethodsDontReferToTempVarsCondition >> violationMessageOn: aStream [
 ]
 
 { #category : 'checking' }
-ReMultipleMethodsDontReferToTempVarsCondition >> violators [
+ReMultipleMethodsDontReferToTempVarCondition >> violators [
 
 	| methods |
 	methods := self multipleMethodsDefiningTemporary: name in: class ignore: [ :cls :selectors | false ].
