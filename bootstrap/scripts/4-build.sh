@@ -192,7 +192,7 @@ zip "${MC_IMAGE_NAME}.zip" ${MC_IMAGE_NAME}.*
 echo "[Metacello] Bootstrapping Metacello"
 ${VM} "${MC_IMAGE_NAME}.image" save ${METACELLO_IMAGE_NAME}
 ${VM} "${METACELLO_IMAGE_NAME}.image" st ${BOOTSTRAP_REPOSITORY}/bootstrap/scripts/03-metacello-bootstrap/01-loadMetacello.st --save --quit
-${VM} "${METACELLO_IMAGE_NAME}.image" metacello install --save --signalErrorOnWarning 'github://pharo-vcs/tonel:Pharo12' Tonel --groups core
+${VM} "${METACELLO_IMAGE_NAME}.image" metacello install --save --signalErrorOnWarning "github://pharo-vcs/tonel:Pharo${PHARO_MAJOR}" Tonel --groups core
 zip "${METACELLO_IMAGE_NAME}.zip" ${METACELLO_IMAGE_NAME}.*
 
 echo $(date -u) "[Pharo] Reloading rest of packages"
