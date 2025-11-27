@@ -12,7 +12,7 @@ Class {
 	#tag : 'Sources'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'instance creation' }
 SourceFile class >> createFileNamed: aFileReference version: aVersion [ 
 	
 	| file |
@@ -58,7 +58,7 @@ SourceFile >> cr [
 	stream cr
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'versions' }
 SourceFile >> declareVersion [
 	
 	| newStream |
@@ -71,7 +71,7 @@ SourceFile >> declareVersion [
 	stream := newStream.
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'versions' }
 SourceFile >> detectParserVersion [
 	
 	"Let's find a compatible parser for this file"
@@ -93,7 +93,7 @@ SourceFile >> discardBuffer [
 	stream wrappedStream discardBuffer
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'opening' }
 SourceFile >> ensureSourceFileCreated [
 
 	"Make sure that the source file is set up if it does not exist"
@@ -111,7 +111,7 @@ SourceFile >> ensureWrittenPosition: aPosition [
 	^ stream ensureWrittenPosition: aPosition
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'versions' }
 SourceFile >> exporterClass [
 
 	^ formatVersionClass writer
@@ -126,7 +126,7 @@ SourceFile >> flush [
 	stream flush
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'opening' }
 SourceFile >> forceCreateSourceFile [
 	
 	"If the file does not exist, open it for write and declare the default version v1.0.0"
@@ -190,7 +190,7 @@ SourceFile >> isReadOnly [
 	^ stream isReadOnly
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'streaming' }
 SourceFile >> newSourceStreamReadOnly: readOnly [
 
 	| basename newStream |
