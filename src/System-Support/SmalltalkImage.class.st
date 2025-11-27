@@ -72,18 +72,6 @@ SmalltalkImage class >> new [
 	self error: 'Use current'
 ]
 
-{ #category : 'system startup' }
-SmalltalkImage class >> shutDown: isImageClosing [
-
-	isImageClosing ifTrue: [ SourceFileArray default close ]
-]
-
-{ #category : 'system startup' }
-SmalltalkImage class >> startUp: isImageStarting [
-
-	ChangesLog default
-]
-
 { #category : 'image' }
 SmalltalkImage class >> wordSize [
 	^ Smalltalk vm wordSize
