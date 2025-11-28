@@ -87,8 +87,7 @@ BaselineOfBasicTools >> baseline: spec [
 			spec package: 'Tools-CodeNavigation'.
 			spec package: 'Tool-Diff'.
 			spec package: 'Tool-ImageCleaner'.
-			spec package: 'Tools'.
-			spec package: 'FileSystem-Memory' ]
+			spec package: 'Tools' ]
 ]
 
 { #category : 'actions' }
