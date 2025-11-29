@@ -236,17 +236,15 @@ BaselineOfBasicTools >> postload: loader package: packageSpec [
 	Initialized := true
 ]
 
-{ #category : 'baseline' }
+{ #category : 'accessing' }
 BaselineOfBasicTools >> project [
-	
-	| aProject |
-	
-	aProject := super project.
-	aProject loadType: #atomic.
-	^ aProject.
+
+	^ super project
+		  loadType: #atomic;
+		  yourself
 ]
 
-{ #category : 'baseline' }
+{ #category : 'dependencies' }
 BaselineOfBasicTools >> specRefactoring: spec [
 	
 	"Package used to rename #defaultSpec methods to #defaultLayout.

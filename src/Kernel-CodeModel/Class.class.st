@@ -150,12 +150,12 @@ Class >> addSharedPool: aSharedPool [
 
 { #category : 'pool variables' }
 Class >> addSharedPoolNamed: aSharedPoolName [
+
 	<reflection: 'Class structural modification - Shared pool modification'>
-	|poolClass|
-	poolClass := aSharedPoolName asClassIfAbsent: [nil].
-	poolClass isPool
-		ifTrue: [ self addSharedPool: poolClass ]
-		ifFalse: [ self error: 'The specified class is not pool.' ]
+	self environment at: aSharedPoolName ifPresent: [ :poolClass |
+			poolClass isPool
+				ifTrue: [ self addSharedPool: poolClass ]
+				ifFalse: [ self error: 'The specified class is not pool.' ] ]
 ]
 
 { #category : 'accessing - class hierarchy' }
