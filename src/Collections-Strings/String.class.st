@@ -571,7 +571,11 @@ String >> asByteArray [
 	"'A' asByteArray >>> #[65]"
 	"'ABA' asByteArray >>> #[65 66 65]"
 	
-	self subclassResponsibility
+	| ba sz |
+	sz := self byteSize.
+	ba := ByteArray new: sz.
+	ba replaceFrom: 1 to: sz with: self startingAt: 1.
+	^ba
 ]
 
 { #category : 'converting' }
