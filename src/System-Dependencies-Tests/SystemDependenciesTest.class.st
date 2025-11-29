@@ -501,5 +501,6 @@ SystemDependenciesTest >> tonelCorePackageNames [
 SystemDependenciesTest >> uiInfrastructureCoreLayerPackages [
 
 	^ self debuggingLayerPackages , BaselineOfUnifiedFFI allPackageNames , BaselineOfThreadedFFI allPackageNames , BaselineOfDisplay allPackageNames
-	  , BaselineOfFonts allPackageNames , BaselineOfFreeType allPackageNames , BaselineOfMenuRegistration allPackageNames , BaselineOfKeymapping corePackageNames
+	  , BaselineOfFonts corePackageNames , BaselineOfFreeType uiPackageNames , BaselineOfMenuRegistration allPackageNames , BaselineOfKeymapping corePackageNames
+	  , BaselineOfFuel corePackageNames
 ]
