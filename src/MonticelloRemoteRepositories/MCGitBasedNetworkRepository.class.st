@@ -14,8 +14,8 @@ Class {
 		'siteUsername',
 		'sitePassword'
 	],
-	#category : 'Metacello-GitBasedRepository',
-	#package : 'Metacello-GitBasedRepository'
+	#category : 'MonticelloRemoteRepositories',
+	#package : 'MonticelloRemoteRepositories'
 }
 
 { #category : 'accessing' }
