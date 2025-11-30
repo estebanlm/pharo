@@ -11,8 +11,8 @@ Class {
 		'hostname',
 		'sshPort'
 	],
-	#category : 'Metacello-GitBasedRepository',
-	#package : 'Metacello-GitBasedRepository'
+	#category : 'MonticelloRemoteRepositories',
+	#package : 'MonticelloRemoteRepositories'
 }
 
 { #category : 'testing' }

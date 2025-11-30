@@ -45,8 +45,6 @@ BaselineOfMorphic >> baseline: spec [
 
 		spec package: 'System-Localization'.
 
-		spec package: 'FileSystem-Zip'.
-
 		spec package: 'Graphics-Shapes'.
 		spec package: 'Growl'.
 

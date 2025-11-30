@@ -122,7 +122,7 @@ SystemDependenciesTest >> knownUIInfrastructureDependencies [
 { #category : 'packages' }
 SystemDependenciesTest >> metacelloCoreLayerPackages [
 
-	^ self monticelloLayerPackages , (BaselineOfMetacello packagesOfGroupNamed: 'Core') , (BaselineOfTonel packagesOfGroupNamed: #core)
+	^ self monticelloCoreLayerPackages , (BaselineOfMetacello packagesOfGroupNamed: 'Core') , (BaselineOfTonel packagesOfGroupNamed: #core)
 ]
 
 { #category : 'accessing' }
@@ -147,7 +147,7 @@ SystemDependenciesTest >> monticelloCoreLayerPackages [
 { #category : 'packages' }
 SystemDependenciesTest >> monticelloLayerPackages [
 
-	^ self monticelloCoreLayerPackages , BaselineOfMonticello remoteRepositoriesPackageNames
+	^ self metacelloCoreLayerPackages , BaselineOfMonticello remoteRepositoriesPackageNames
 ]
 
 { #category : 'accessing' }
@@ -166,7 +166,7 @@ SystemDependenciesTest >> packagesOfGroupNamed: aGroupName on: aBaseline [
 { #category : 'packages' }
 SystemDependenciesTest >> sunitCoreLayerPackages [
 
-	^ self metacelloCoreLayerPackages , BaselineOfSUnit corePackageNames
+	^ self monticelloLayerPackages , BaselineOfSUnit corePackageNames
 ]
 
 { #category : 'tests' }
@@ -501,5 +501,6 @@ SystemDependenciesTest >> tonelCorePackageNames [
 SystemDependenciesTest >> uiInfrastructureCoreLayerPackages [
 
 	^ self debuggingLayerPackages , BaselineOfUnifiedFFI allPackageNames , BaselineOfThreadedFFI allPackageNames , BaselineOfDisplay allPackageNames
-	  , BaselineOfFonts allPackageNames , BaselineOfFreeType allPackageNames , BaselineOfMenuRegistration allPackageNames , BaselineOfKeymapping corePackageNames
+	  , BaselineOfFonts corePackageNames , BaselineOfFreeType uiPackageNames , BaselineOfMenuRegistration allPackageNames , BaselineOfKeymapping corePackageNames
+	  , BaselineOfFuel corePackageNames
 ]

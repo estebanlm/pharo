@@ -33,10 +33,6 @@ BaselineOfUI >> baseline: spec [
 	spec for: #common do: [
 		spec postLoadDoIt: #postload:package:.
 
-		spec baseline: 'Fuel' with: [
-			spec
-				repository: repository;
-				loads: #( 'Core' ) ].
 		spec
 				baseline: 'SUnit' with: [
 						spec
