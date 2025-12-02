@@ -86,7 +86,7 @@ SystemDependenciesTest >> knownDebuggingDependencies [
 SystemDependenciesTest >> knownKernelDependencies [
 	"ideally this list should be empty"
 
-	^ #( #'FileSystem-Core' )
+	^ #( #'FileSystem-Core' 'CodeImport' )
 ]
 
 { #category : 'known dependencies' }

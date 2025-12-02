@@ -113,6 +113,7 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		spec package: 'System-Platforms'.
 		spec package: 'System-SessionManager'.
 		
+		spec package: 'ClassDefinitionPrinters'.
 		spec package: 'CodeExport'.
 		spec package: 'System-Sources'.
 		spec package: 'System-Support'.
@@ -168,6 +169,7 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			'System-Platforms'.
 			'System-SessionManager'.
 
+			'ClassDefinitionPrinters'.
 			'CodeExport'.
 			'System-Sources'.
 			

@@ -48,26 +48,17 @@ ChangesLog class >> unsubscribeAnnouncersOfDefaultInstance [
 
 { #category : 'logging' }
 ChangesLog >> logChange: aStringOrText [
-	"Write the argument, aString, onto the changes file."
 
-	| aString |
-	aString := aStringOrText asString.
-	(aString findFirst: [ :char | char isSeparator not ]) = 0 ifTrue: [ ^ self ]. "null doits confuse replay"
-
-	SourceFileArray default
-		changesWriteStreamDo: [ :changesFile |
-				changesFile
-					cr;
-					cr.
-
-				(ChunkWriteStream on: changesFile) nextPut: aString ];
-		forceChangesToDisk
+	SourceFileArray default logChange: aStringOrText
 ]
 
 { #category : 'event-listening' }
-ChangesLog >> logClassRemoved: announcement [
+ChangesLog >> logClassAdded: announcement [
 
-	self logChange: 'Smalltalk globals removeClassNamed: #' , announcement classRemoved name
+	SourceFiles newWriter
+		successBlock: [ :sourcePointer | "Ignore" ];
+		failBlock: [ "Ignore" ];
+		writeClassDefinition: announcement classAdded definitionString
 ]
 
 { #category : 'event-listening' }
@@ -77,23 +68,23 @@ ChangesLog >> logClassRenamed: announcement [
 ]
 
 { #category : 'event-listening' }
-ChangesLog >> logExpressionEvaluated: announcement [
-	self logChange: announcement expressionEvaluated
-]
-
-{ #category : 'event-listening' }
 ChangesLog >> logMethodRemoved: announcement [
 
 	self logChange: announcement methodClass name , ' removeSelector: #' , announcement selector
 ]
 
 { #category : 'event-listening' }
+ChangesLog >> logRemovedClassAnnouncement: announcement [
+
+	self logChange: 'Smalltalk globals removeClassNamed: #' , announcement classRemoved name
+]
+
+{ #category : 'event-listening' }
 ChangesLog >> registerToAnnouncements [
 
 	self class codeChangeAnnouncer weak
-		when: ClassRemoved send: #logClassRemoved: to: self;
+		when: ClassAdded send: #logClassAdded: to: self;
+		when: ClassRemoved send: #logRemovedClassAnnouncement: to: self;
 		when: ClassRenamed send: #logClassRenamed: to: self;
-		when: MethodRemoved send: #logMethodRemoved: to: self.
-	self class codeSupportAnnouncer weak 
-		when: ExpressionEvaluated send: #logExpressionEvaluated: to: self
+		when: MethodRemoved send: #logMethodRemoved: to: self
 ]

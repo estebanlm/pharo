@@ -396,14 +396,14 @@ Class >> comment: aString stamp: aStamp [
 
 	pointer := self commentSourcePointer ifNil: [ 0 ].
 
-	SourceFileArray default
+	SourceFileArray default newWriter
+		metadata: ' ';
+		timestamp: aStamp;
+		prior: pointer;
+		successBlock: [ :newSourcePointer | self commentSourcePointer: newSourcePointer ];
+		failBlock: [ "ignore" ];
 		writeComment: aString
-		ofClass: self
-		metadata: ' '
-		timestamp: aStamp
-		priorSourcePointer: pointer
-		onSuccess: [ :newSourcePointer | self commentSourcePointer: newSourcePointer ]
-		onFail: [ "ignore" ].
+		ofClass: self.
 
 	self codeChangeAnnouncer
 		class: self

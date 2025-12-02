@@ -58,7 +58,6 @@ BaselineOfBasicTools >> baseline: spec [
 						loads: 'Core';
 						repository: repository ].
 
-			spec package: 'ClassDefinitionPrinters'.
 			spec package: 'Tool-Profilers'.
 			spec package: 'NECompletion'.
 			spec package: 'NECompletion-Morphic'.
