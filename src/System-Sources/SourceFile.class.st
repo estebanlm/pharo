@@ -245,7 +245,7 @@ SourceFile >> next: anInteger putAll: aString startingAt: startIndex [
 	stream next: anInteger putAll: aString startingAt: startIndex
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'streaming' }
 SourceFile >> nextChunk [
 
 	^ (ChunkReadStream on: stream) next
