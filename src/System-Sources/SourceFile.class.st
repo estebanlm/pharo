@@ -115,7 +115,7 @@ SourceFile >> ensureWrittenPosition: aPosition [
 { #category : 'versions' }
 SourceFile >> exporterClass [
 
-	^ formatVersionClass writer
+	^ (formatVersionClass ifNil: [ formatVersionClass := self formatVersion ]) writer
 ]
 
 { #category : 'accessing' }
