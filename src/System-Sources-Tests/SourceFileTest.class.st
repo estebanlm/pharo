@@ -85,7 +85,7 @@ SourceFileTest >> testOpenEmptyFileFails [
 
 	file := SourceFile lookupFileNamed: 'changes.chunk' potentialLocations: { fs root }.
 	[ file tryOpen. self fail ] on: Error do: [ :err |
-		self assert: err messageText equals: 'Cannot open non source file' ]
+		self assert: err messageText equals: 'Cannot open non source file: changes.chunk' ]
 ]
 
 { #category : 'tests' }
@@ -97,7 +97,7 @@ SourceFileTest >> testOpenNonExistingFileFails [
 
 	file := SourceFile lookupFileNamed: 'changes.chunk' potentialLocations: { fs root }.
 	[ file tryOpen. self fail ] on: Error do: [ :err |
-		self assert: err messageText equals: 'Cannot open non source file' ]
+		self assert: err messageText equals: 'Cannot open non source file: changes.chunk' ]
 ]
 
 { #category : 'tests' }
@@ -108,11 +108,11 @@ SourceFileTest >> testWriteClassDefinitionOnFormatV100 [
 	file := fs / 'changes.chunk'.
 	self deny: file exists.
 
-	(SourceFile createFileNamed: file version: ChunkFileFormatParserV100) newWriter
+	(SourceFile createFileNamed: file version: ChunkFileFormatParserV100) tryOpen newWriter
 		successBlock: [ :x | ];
-		failBlock: [  ];
+		failBlock: [ self error ];
 		writeClassDefinition: 'ASDASD'.
-	
+
 	importer := CodeImporter withParserClass: ChunkFileFormatParserV100.
 	file readStreamDo: [ :str |
 		importer readStream: str.
@@ -132,7 +132,7 @@ SourceFileTest >> testWriteClassDefinitionOnFormatV200 [
 	file := fs / 'changes.chunk'.
 	self deny: file exists.
 
-	(SourceFile createFileNamed: file version: ChunkFileFormatParserV200) newWriter
+	(SourceFile createFileNamed: file version: ChunkFileFormatParserV200) tryOpen newWriter
 		successBlock: [ :x | ];
 		failBlock: [  ];
 		writeClassDefinition: 'ASDASD'.

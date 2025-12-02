@@ -17,6 +17,7 @@ SourceFile class >> createFileNamed: aFileReference version: aVersion [
 	
 	| file |
 	file := self lookupFileNamed: aFileReference basename potentialLocations: { aFileReference parent }.
+	file version: aVersion.
 	file forceCreateSourceFile.
 	^ file
 ]
@@ -130,7 +131,6 @@ SourceFile >> flush [
 SourceFile >> forceCreateSourceFile [
 	
 	"If the file does not exist, open it for write and declare the default version v1.0.0"
-	self version: ChunkFileFormatParserV100.
 	self declareVersion.
 	self close
 ]
@@ -242,6 +242,12 @@ SourceFile >> next: anInteger [
 SourceFile >> next: anInteger putAll: aString startingAt: startIndex [
 
 	stream next: anInteger putAll: aString startingAt: startIndex
+]
+
+{ #category : 'as yet unclassified' }
+SourceFile >> nextChunk [
+
+	^ (ChunkReadStream on: stream) next
 ]
 
 { #category : 'accessing' }
