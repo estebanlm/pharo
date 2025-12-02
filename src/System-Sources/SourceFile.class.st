@@ -101,6 +101,7 @@ SourceFile >> ensureSourceFileCreated [
 	(self newSourceStreamReadOnly: true) ifNotNil: [ ^ self ].
 	
 	"If the file does not exist, open it for write and declare the default version v1.0.0"
+	self version: ChunkFileFormatParserV100.
 	self forceCreateSourceFile
 ]
 
