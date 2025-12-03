@@ -8,9 +8,6 @@ Class {
 		'readonly',
 		'repositoryProperties'
 	],
-	#classInstVars : [
-		'defaultPropertyFileExtension'
-	],
 	#category : 'MonticelloFileTree-Core',
 	#package : 'MonticelloFileTree-Core'
 }
@@ -223,15 +220,6 @@ MCFileTreeRepository >> propertyFileExtension [
   ^ self repositoryProperties
     at: 'propertyFileExtension'
     ifAbsent: [ self class defaultPropertyFileExtension ]
-]
-
-{ #category : 'private' }
-MCFileTreeRepository >> propertyFileExtension: propertyFileExtension [
-  self class validatePropertyFileExtension: propertyFileExtension.
-  self repositoryProperties
-    at: 'propertyFileExtension'
-    put: propertyFileExtension.
-  self writeRepositoryProperties
 ]
 
 { #category : 'i/o' }
