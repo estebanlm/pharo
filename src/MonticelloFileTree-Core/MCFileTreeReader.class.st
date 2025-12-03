@@ -5,7 +5,7 @@ see https://github.com/CampSmalltalk/Cypress
 "
 Class {
 	#name : 'MCFileTreeReader',
-	#superclass : 'MCMczReader',
+	#superclass : 'MCAbstractMetadataFullReader',
 	#instVars : [
 		'packageDirectory'
 	],

@@ -3,10 +3,9 @@ Reader for an MCZ format
 "
 Class {
 	#name : 'MCMczReader',
-	#superclass : 'MCVersionReader',
+	#superclass : 'MCAbstractMetadataFullReader',
 	#instVars : [
 		'zip',
-		'infoCache',
 		'filename'
 	],
 	#classVars : [
@@ -52,19 +51,6 @@ MCMczReader class >> supportsVersions [
 	^ true
 ]
 
-{ #category : 'converting' }
-MCMczReader >> associate: tokens [
-	| result |
-	result := Dictionary new.
-	tokens pairsDo: [:key :value | 
-					| tmp |
-					tmp := value.
-					value isString ifFalse: [tmp := value collect: [:ea | self associate: ea]].
-					value = 'nil' ifTrue: [tmp := ''].
-					result at: key put: tmp].
-	^ result
-]
-
 { #category : 'parsing' }
 MCMczReader >> contentsForMember: member [
 	^[(member contentStreamFromEncoding: 'utf8') contents] on: ZnInvalidUTF8
@@ -94,11 +80,6 @@ MCMczReader >> extractDependencyFrom: zipMember [
 		info: (self extractInfoFrom: (self parseMember: zipMember))
 ]
 
-{ #category : 'utilities' }
-MCMczReader >> extractInfoFrom: dict [
-	^MCWorkingCopy infoFromDictionary: dict cache: self infoCache
-]
-
 { #category : 'accessing' }
 MCMczReader >> filename [
 	^ filename
@@ -107,11 +88,6 @@ MCMczReader >> filename [
 { #category : 'accessing' }
 MCMczReader >> filename: aString [
 	filename := aString
-]
-
-{ #category : 'accessing' }
-MCMczReader >> infoCache [
-	^ infoCache ifNil: [infoCache := Dictionary new]
 ]
 
 { #category : 'loading' }
@@ -126,13 +102,6 @@ MCMczReader >> loadDependencies [
 	dependencies := (self zip membersMatching: 'dependencies/*') collect: [:m | self extractDependencyFrom: m].
 	dependencies := dependencies asArray.
 
-]
-
-{ #category : 'loading' }
-MCMczReader >> loadPackage [
-	| dict |
-	dict := self parseMember: 'package'.
-	package := MCPackage named: (dict at: #name)
 ]
 
 { #category : 'loading' }
