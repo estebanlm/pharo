@@ -123,7 +123,8 @@ MCFileTreeWriter >> serializeVersionInfo: aVersionInfo [
 
 { #category : 'accessing' }
 MCFileTreeWriter >> snapshotWriterClass [
-	^ MCFileTreeAbstractStWriter
+
+	^ MCFileTreeStCypressWriter
 ]
 
 { #category : 'visiting' }

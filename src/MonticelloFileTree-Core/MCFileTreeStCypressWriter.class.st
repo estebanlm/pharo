@@ -5,13 +5,13 @@ see https://github.com/CampSmalltalk/Cypress
 "
 Class {
 	#name : 'MCFileTreeStCypressWriter',
-	#superclass : 'MCFileTreeAbstractStWriter',
+	#superclass : 'MCWriter',
 	#instVars : [
 		'fileStream',
 		'traitDefinitions',
-		'classTraitDefinitions',
 		'methodDefinitions',
-		'classDefinitions'
+		'classDefinitions',
+		'stWriter'
 	],
 	#classInstVars : [
 		'specials'
@@ -22,30 +22,27 @@ Class {
 
 { #category : 'accessing' }
 MCFileTreeStCypressWriter class >> fileNameForSelector: selector [
-  ^ (selector includes: $:)
-    ifTrue: [ 
-      selector
-        collect: [ :each | 
-          each = $:
-            ifTrue: [ $. ]
-            ifFalse: [ each ] ] ]
-    ifFalse: [ 
-      (self specials includes: selector first)
-        ifFalse: [ selector ]
-        ifTrue: [ 
-          | output |
-          output := String new writeStream.
-          output nextPut: $^.
-          selector
-            do: [ :each | 
-              output
-                nextPutAll:
-                  ((self specials includes: each)
-                    ifTrue: [ self specials at: each ]
-                    ifFalse: [ each asString ]) ]
-            separatedBy: [ output nextPut: $. ].
-          output contents ] ]
 
+	^ (selector includes: $:)
+		  ifTrue: [
+				  selector collect: [ :each |
+						  each = $:
+							  ifTrue: [ $. ]
+							  ifFalse: [ each ] ] ]
+		  ifFalse: [
+				  (self specials includes: selector first)
+					  ifFalse: [ selector ]
+					  ifTrue: [
+							  | output |
+							  output := String new writeStream.
+							  output nextPut: $^.
+							  selector
+								  do: [ :each |
+										  output nextPutAll: ((self specials includes: each)
+												   ifTrue: [ self specials at: each ]
+												   ifFalse: [ each asString ]) ]
+								  separatedBy: [ output nextPut: $. ].
+							  output contents ] ]
 ]
 
 { #category : 'private' }
@@ -78,6 +75,11 @@ MCFileTreeStCypressWriter class >> monticelloMetaDirName [
     ^ 'monticello.meta'
 ]
 
+{ #category : 'accessing' }
+MCFileTreeStCypressWriter class >> readerClass [
+	^ MCStReader
+]
+
 { #category : 'class initialization' }
 MCFileTreeStCypressWriter class >> resetSpecials [
     "Force initialization of specials ..."
@@ -96,10 +98,12 @@ MCFileTreeStCypressWriter >> classDefinitions [
    
 ]
 
-{ #category : 'accessing' }
-MCFileTreeStCypressWriter >> classTraitDefinitions [
-    classTraitDefinitions ifNil: [ classTraitDefinitions := Dictionary new ].
-    ^ classTraitDefinitions
+{ #category : 'private' }
+MCFileTreeStCypressWriter >> directoryForDirectoryNamed: directoryNameOrPath [
+
+	^ directoryNameOrPath = '.'
+		  ifTrue: [ stream packageFileDirectory ]
+		  ifFalse: [ stream subPackageFileDirectoryFor: directoryNameOrPath ]
 ]
 
 { #category : 'private' }
@@ -161,32 +165,65 @@ MCFileTreeStCypressWriter >> fileNameMapFor: aMethodDefinitionCollection [
 ]
 
 { #category : 'accessing' }
+MCFileTreeStCypressWriter >> fileUtils [
+    ^ MCFileTreeFileUtils current
+]
+
+{ #category : 'initialization' }
+MCFileTreeStCypressWriter >> initialize [
+
+	super initialize.
+	stWriter := MCFileTreePackageStructureStWriter new
+		            initializers: Set new;
+		            yourself
+]
+
+{ #category : 'accessing' }
 MCFileTreeStCypressWriter >> methodDefinitions [
-    methodDefinitions ifNil: [ methodDefinitions := Dictionary new ].
-    ^ methodDefinitions
+
+	^ methodDefinitions ifNil: [ methodDefinitions := Dictionary new ]
+]
+
+{ #category : 'private' }
+MCFileTreeStCypressWriter >> monticelloMetaDirName [
+    ^ self class monticelloMetaDirName
 ]
 
 { #category : 'initialization' }
 MCFileTreeStCypressWriter >> propertyFileExtension [
-  ^ self repository propertyFileExtension
+
+	^ self repository propertyFileExtension
+]
+
+{ #category : 'private' }
+MCFileTreeStCypressWriter >> repository [
+  ^ stream repository
 ]
 
 { #category : 'private' }
 MCFileTreeStCypressWriter >> setFileStream: aStream [
-    super setFileStream: aStream.
-    fileStream := aStream
+
+	stWriter stream: aStream.
+	fileStream := aStream
 ]
 
 { #category : 'accessing' }
 MCFileTreeStCypressWriter >> traitDefinitions [
-    traitDefinitions ifNil: [ traitDefinitions := Dictionary new ].
-    ^ traitDefinitions
+
+	^ traitDefinitions ifNil: [ traitDefinitions := Dictionary new ]
 ]
 
 { #category : 'visiting' }
 MCFileTreeStCypressWriter >> visitClassDefinition: definition [
-    orderedClassNames add: definition className.
-    self classDefinitions at: definition className put: definition
+
+	self classDefinitions at: definition className put: definition
+]
+
+{ #category : 'visiting' }
+MCFileTreeStCypressWriter >> visitMetaclassDefinition: definition [
+    "handled by class definition"
+
+
 ]
 
 { #category : 'visiting' }
@@ -197,9 +234,33 @@ MCFileTreeStCypressWriter >> visitMethodDefinition: definition [
 ]
 
 { #category : 'visiting' }
+MCFileTreeStCypressWriter >> visitOrganizationDefinition: definition [
+
+	self
+		writeInDirectoryName: self monticelloMetaDirName
+		fileName: 'categories'
+		extension: '.st'
+		visit: [ stWriter visitOrganizationDefinition: definition ]
+]
+
+{ #category : 'visiting' }
+MCFileTreeStCypressWriter >> visitScriptDefinition: definition [
+    self flag: #'skippedForNow'
+]
+
+{ #category : 'visiting' }
 MCFileTreeStCypressWriter >> visitTraitDefinition: definition [
-    orderedTraitNames add: definition className.
-    self traitDefinitions at: definition className put: definition
+
+	self traitDefinitions at: definition className put: definition
+]
+
+{ #category : 'initialization' }
+MCFileTreeStCypressWriter >> writeBasicDefinitions: aCollection [
+	"the correct initialization order is unknown if some classes are missing in the image"
+
+	self writePropertiesFile.
+	stWriter acceptVisitor: self forDefinitions: aCollection.
+	self writeInitializers
 ]
 
 { #category : 'writing' }
@@ -312,11 +373,36 @@ MCFileTreeStCypressWriter >> writeExtensionClassDefinition: definition [
 
 { #category : 'writing' }
 MCFileTreeStCypressWriter >> writeExtensionClassDefinition: definition to: classPath [
-  self
-    writeInDirectoryName: classPath
-    fileName: 'properties'
-    extension: self propertyFileExtension
-    visit: [ self writeExtensionClassDefinition: definition ]
+
+	self
+		writeInDirectoryName: classPath
+		fileName: 'properties'
+		extension: self propertyFileExtension
+		visit: [ self writeExtensionClassDefinition: definition ]
+]
+
+{ #category : 'visiting' }
+MCFileTreeStCypressWriter >> writeInDirectoryName: directoryNameOrPath fileName: fileName extension: ext visit: visitBlock [
+    | directory |
+    directory := self directoryForDirectoryNamed: directoryNameOrPath.
+    self fileUtils
+        writeStreamFor: fileName , ext
+        in: directory
+        do: [ :fileStream |
+            self setFileStream: (ZnNewLineWriterStream on: fileStream) forLf.
+            visitBlock value ]
+]
+
+{ #category : 'initialization' }
+MCFileTreeStCypressWriter >> writeInitializers [
+    self
+        writeInDirectoryName: self monticelloMetaDirName
+        fileName: 'initializers'
+        extension: '.st'
+        visit: [ 
+            stWriter
+                writePresentInitializers;
+                writeAbsentInitializers ]
 ]
 
 { #category : 'writing' }
@@ -358,37 +444,37 @@ MCFileTreeStCypressWriter >> writeMethodHolderDefinitions: aCollection extension
 
 { #category : 'initialization' }
 MCFileTreeStCypressWriter >> writeMethodProperties: classMethodDefinitions [
-    "Issue 33: https://github.com/dalehenrich/filetree/issues/33"
+	"Issue 33: https://github.com/dalehenrich/filetree/issues/33"
 
-    | properties classMethodsMap instanceMethodMap |
-    properties := Dictionary new.
-    properties at: 'class' put: (classMethodsMap := Dictionary new).
-    properties at: 'instance' put: (instanceMethodMap := Dictionary new).
-    classMethodDefinitions
-        do: [ :methodDefinition | 
-            (methodDefinition classIsMeta
-                ifTrue: [ classMethodsMap ]
-                ifFalse: [ instanceMethodMap ]) at: methodDefinition selector asString put: methodDefinition timeStamp ].
-    STON put: properties asJsonOnStreamPretty: fileStream
+	| properties classMethodsMap instanceMethodMap |
+	properties := Dictionary new.
+	properties at: 'class' put: (classMethodsMap := Dictionary new).
+	properties at: 'instance' put: (instanceMethodMap := Dictionary new).
+	classMethodDefinitions do: [ :methodDefinition |
+			(methodDefinition classIsMeta
+				 ifTrue: [ classMethodsMap ]
+				 ifFalse: [ instanceMethodMap ]) at: methodDefinition selector asString put: methodDefinition timeStamp ].
+	STON put: properties asJsonOnStreamPretty: fileStream
 ]
 
 { #category : 'initialization' }
 MCFileTreeStCypressWriter >> writePropertiesFile [
-  | properties |
-  properties := Dictionary new.
-  properties at: 'noMethodMetaData' put: true.
-  properties at: 'separateMethodMetaAndSource' put: false.
-  properties at: 'useCypressPropertiesFile' put: true.
-  self
-    writeInDirectoryName: '.'
-    fileName: ''
-    extension: '.filetree'
-    visit: [ STON put: properties asJsonOnStreamPretty: fileStream ].
-  self
-    writeInDirectoryName: '.'
-    fileName: 'properties'
-    extension: self propertyFileExtension
-    visit: [ STON put: (Dictionary new) asJsonOnStreamPretty: fileStream ]
+
+	| properties |
+	properties := Dictionary new.
+	properties at: 'noMethodMetaData' put: true.
+	properties at: 'separateMethodMetaAndSource' put: false.
+	properties at: 'useCypressPropertiesFile' put: true.
+	self
+		writeInDirectoryName: '.'
+		fileName: ''
+		extension: '.filetree'
+		visit: [ STON put: properties asJsonOnStreamPretty: fileStream ].
+	self
+		writeInDirectoryName: '.'
+		fileName: 'properties'
+		extension: self propertyFileExtension
+		visit: [ STON put: Dictionary new asJsonOnStreamPretty: fileStream ]
 ]
 
 { #category : 'writing' }
@@ -401,9 +487,7 @@ MCFileTreeStCypressWriter >> writeTraitDefinition: definition [
             property ~= '{}'
                 ifTrue: [ properties at: 'traitcomposition' put: property ] ].
     " handle the classTrait case "
-    compositionString := self classTraitDefinitions at: definition className ifPresent: [:classTraitDefinition |
-	classTraitDefinition classTraitCompositionString ].
-    compositionString ifNil: [ compositionString := definition classTraitCompositionString ].
+   compositionString := definition classTraitCompositionString.
     compositionString~= '{}'
                 ifTrue: [ properties at: 'classtraitcomposition' put: compositionString ] .
     properties at: 'category' put: definition category.
