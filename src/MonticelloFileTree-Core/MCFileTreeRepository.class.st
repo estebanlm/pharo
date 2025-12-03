@@ -178,7 +178,7 @@ MCFileTreeRepository >> flushCache [
 { #category : 'actions' }
 MCFileTreeRepository >> packageDescriptionFromPackageDirectory: packageDirectory [
     | filename info extension |
-    filename := self fileUtils current directoryName: packageDirectory.
+    filename := self fileUtils directoryName: packageDirectory.
     extension := filename copyFrom: (filename lastIndexOf: $.) to: filename size.
     ^ ((self packageExtension ~= '.package'
         and: [ 
