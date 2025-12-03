@@ -384,14 +384,12 @@ MCFileTreeStCypressWriter >> writeExtensionClassDefinition: definition to: class
 
 { #category : 'visiting' }
 MCFileTreeStCypressWriter >> writeInDirectoryName: directoryNameOrPath fileName: fileName extension: ext visit: visitBlock [
-    | directory |
-    directory := self directoryForDirectoryNamed: directoryNameOrPath.
-    self fileUtils
-        writeStreamFor: fileName , ext
-        in: directory
-        do: [ :fileStream |
-            self setFileStream: (ZnNewLineWriterStream on: fileStream) forLf.
-            visitBlock value ]
+
+	| directory |
+	directory := self directoryForDirectoryNamed: directoryNameOrPath.
+	self fileUtils writeStreamFor: fileName , ext in: directory do: [ :fs |
+			self setFileStream: (ZnNewLineWriterStream on: fs) forLf.
+			visitBlock value ]
 ]
 
 { #category : 'initialization' }

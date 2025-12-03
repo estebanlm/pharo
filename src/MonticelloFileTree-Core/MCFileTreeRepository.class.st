@@ -9,7 +9,6 @@ Class {
 		'repositoryProperties'
 	],
 	#classInstVars : [
-		'defaultPackageExtension',
 		'defaultPropertyFileExtension'
 	],
 	#category : 'MonticelloFileTree-Core',
@@ -23,43 +22,14 @@ MCFileTreeRepository class >> basicFromUrl: aZnUrl [
 
 { #category : 'accessing' }
 MCFileTreeRepository class >> defaultPackageExtension [
-    ".tree, .pkg, .package are the only formats supported at the moment:
-	.tree         - original structure
-	.pkg          - snapshot structure
-	.package - cypress structure"
 
-    defaultPackageExtension
-        ifNil: [ 
-            defaultPackageExtension := MCFileTreePackageStructureStWriter useCypressWriter
-                ifTrue: [ '.package' ]
-                ifFalse: [ '.pkg' ] ].
-    ^ defaultPackageExtension
-]
-
-{ #category : 'accessing' }
-MCFileTreeRepository class >> defaultPackageExtension: aString [
-    ".tree and .pkg are the only two formats supported at the moment"
-
-    "self defaultPackageExtension:'.package'"
-
-    (#('.tree' '.pkg' '.package') includes: aString)
-        ifFalse: [ self error: 'Unsupported package extension: ' , aString printString ].
-    defaultPackageExtension := aString
+	^ '.package'
 ]
 
 { #category : 'accessing' }
 MCFileTreeRepository class >> defaultPropertyFileExtension [
-  defaultPropertyFileExtension
-    ifNil: [ defaultPropertyFileExtension := '.json' ].
-  ^ defaultPropertyFileExtension
-]
 
-{ #category : 'accessing' }
-MCFileTreeRepository class >> defaultPropertyFileExtension: aString [
-  "self defaultPropertyFileExtension:'.ston'"
-
-  self validatePropertyFileExtension: aString.
-  defaultPropertyFileExtension := aString
+	^ '.json'
 ]
 
 { #category : 'instance creation' }
@@ -123,14 +93,6 @@ MCFileTreeRepository class >> urlSchemes [
 ]
 
 { #category : 'accessing' }
-MCFileTreeRepository class >> validatePropertyFileExtension: aString [
-  "see Issue #90: https://github.com/dalehenrich/filetree/issues/90"
-
-  (#('.json' '.ston') includes: aString)
-    ifFalse: [ self error: 'Unsupported property file extension: ' , aString printString ]
-]
-
-{ #category : 'accessing' }
 MCFileTreeRepository >> allFileNames [
     ^ (self directory entries select: [ :entry | entry isDirectory and: [ self canReadFileNamed: entry name ] ])
         collect: [ :entry | entry name ]
@@ -165,20 +127,17 @@ MCFileTreeRepository >> cachedFileNames [
 
 { #category : 'testing' }
 MCFileTreeRepository >> canReadFileNamed: aString [
-    ^ (aString endsWith: self packageExtension)
-        or: [ 
-            (aString endsWith: '.tree')
-                or: [ 
-                    "Cypress format"
-                    aString endsWith: '.package' ] ]
+
+	^ (aString endsWith: self packageExtension) or: [ aString endsWith: '.package' ]
 ]
 
 { #category : 'accessing' }
 MCFileTreeRepository >> defaultRepositoryProperties [
-  ^ Dictionary new
-    at: 'packageExtension' put: self class defaultPackageExtension;
-    at: 'propertyFileExtension' put: self propertyFileExtension;
-    yourself
+
+	^ Dictionary new
+		  at: 'packageExtension' put: self class defaultPackageExtension;
+		  at: 'propertyFileExtension' put: self propertyFileExtension;
+		  yourself
 ]
 
 { #category : 'descriptions' }
@@ -216,18 +175,6 @@ MCFileTreeRepository >> flushCache [
 					self repositoryProperties ] ]
 ]
 
-{ #category : 'accessing' }
-MCFileTreeRepository >> goferVersionFrom: aVersionReference [
-    "until we no longer find .tree directories in the wild"
-
-    ((self readableFileNames collect: [ :fileName | self fileDirectoryOn: fileName ])
-        select: [ :packageDirectory | self fileUtils directoryExists: packageDirectory ])
-        collect: [ :packageDirectory | 
-            (self versionInfoForPackageDirectory: packageDirectory) name = aVersionReference name
-                ifTrue: [ ^ self loadVersionFromFileNamed: (self fileUtils directoryName: packageDirectory) ] ].
-    ^ nil
-]
-
 { #category : 'actions' }
 MCFileTreeRepository >> packageDescriptionFromPackageDirectory: packageDirectory [
     | filename info extension |
@@ -262,9 +209,8 @@ MCFileTreeRepository >> packageDescriptionsFromReadableFileNames [
 
 { #category : 'private' }
 MCFileTreeRepository >> packageExtension [
-  ^ self repositoryProperties
-    at: 'packageExtension'
-    ifAbsent: [ self class defaultPackageExtension ]
+
+	^ self repositoryProperties at: 'packageExtension' ifAbsent: [ self class defaultPackageExtension ]
 ]
 
 { #category : 'private' }
