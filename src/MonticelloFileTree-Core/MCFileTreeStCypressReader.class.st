@@ -5,7 +5,7 @@ see https://github.com/CampSmalltalk/Cypress
 "
 Class {
 	#name : 'MCFileTreeStCypressReader',
-	#superclass : 'MCFileTreeStSnapshotReader',
+	#superclass : 'MCFileTreeAbstractReader',
 	#category : 'MonticelloFileTree-Core',
 	#package : 'MonticelloFileTree-Core'
 }

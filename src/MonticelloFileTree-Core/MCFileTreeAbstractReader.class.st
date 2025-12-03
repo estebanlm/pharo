@@ -30,35 +30,6 @@ MCFileTreeAbstractReader >> addClassAndMethodDefinitionsFromDirectory: aDirector
 ]
 
 { #category : 'utilities' }
-MCFileTreeAbstractReader >> addClassAndMethodDefinitionsFromDirectoryEntries: entries [
-
-	| timestamp |
-	self noMethodMetaData ifTrue: [
-		timestamp := self info author , ' ' , self info date mmddyyyy , ' '
-		             , self info time print24 ].
-	entries do: [ :element |
-		element isDirectory ifTrue: [
-			| directory |
-			directory := self fileUtils directoryFromEntry: element.
-			((self separateMethodMetaAndSource or: [ self noMethodMetaData ])
-				 ifTrue: [ self loadableDefinitionsFrom: directory ]
-				 ifFalse: [ directory entries ]) do: [ :file |
-				| definition |
-				(definition := self
-					               definitionFromFile: file
-					               inDirectory: directory) ifNotNil: [
-					definition isMethodDefinition ifTrue: [
-						self separateMethodMetaAndSource ifTrue: [
-							directory
-								fileNamed: definition selector asString , '.meta'
-								do: [ :fileStream |
-								definition setTimeStamp: fileStream contents ] ].
-						self noMethodMetaData ifTrue: [
-							definition setTimeStamp: timestamp ] ].
-					definitions add: definition ] ] ] ]
-]
-
-{ #category : 'utilities' }
 MCFileTreeAbstractReader >> addDefinitionFromFile: directoryEntry inDirectory: aDirectory [
     (self definitionFromFile: directoryEntry inDirectory: aDirectory) ifNotNil: [ :def | definitions add: def ]
 ]
@@ -165,11 +136,6 @@ MCFileTreeAbstractReader >> monticelloMetaDirName [
     ^ self class monticelloMetaDirName
 ]
 
-{ #category : 'testing' }
-MCFileTreeAbstractReader >> noMethodMetaData [
-    ^ self packageProperties at: 'noMethodMetaData' ifAbsent: [ false ]
-]
-
 { #category : 'accessing' }
 MCFileTreeAbstractReader >> packageDirectory: aDirectoryName [
     packageDirectory := self fileUtils directoryFromPath: aDirectoryName relativeTo: stream
@@ -219,9 +185,4 @@ MCFileTreeAbstractReader >> parseMember: fileName [
 { #category : 'accessing' }
 MCFileTreeAbstractReader >> scanner [
 	^ MCScanner
-]
-
-{ #category : 'testing' }
-MCFileTreeAbstractReader >> separateMethodMetaAndSource [
-    ^ self packageProperties at: 'separateMethodMetaAndSource' ifAbsent: [ false ]
 ]
