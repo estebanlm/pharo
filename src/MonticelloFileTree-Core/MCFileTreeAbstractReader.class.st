@@ -216,6 +216,11 @@ MCFileTreeAbstractReader >> parseMember: fileName [
     ^ self associate: tokens
 ]
 
+{ #category : 'accessing' }
+MCFileTreeAbstractReader >> scanner [
+	^ MCScanner
+]
+
 { #category : 'testing' }
 MCFileTreeAbstractReader >> separateMethodMetaAndSource [
     ^ self packageProperties at: 'separateMethodMetaAndSource' ifAbsent: [ false ]

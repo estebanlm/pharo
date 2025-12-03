@@ -52,22 +52,6 @@ MCMczReader class >> supportsVersions [
 	^ true
 ]
 
-{ #category : 'loading' }
-MCMczReader >> adaptDefinitions [
-	"In the old export format the 4th variable of a MCClassDefinition was a category. Now we have the package name and in the last variables we have the tag.
-	This is allowing us to read the old format and try to find the package and the tag. This is not bulletproof."
-
-	self class readingOldExport ifFalse: [ ^ self ].
-	definitions
-		select: [ :def | def isClassDefinition ]
-		thenDo: [ :definition |
-			| converter |
-			converter := CategoryConverter category: definition packageName.
-			definition
-				packageName: converter packageName;
-				tagName: converter tagName ]
-]
-
 { #category : 'converting' }
 MCMczReader >> associate: tokens [
 	| result |
@@ -164,11 +148,6 @@ MCMczReader >> parseMember: memberOrName [
 	member := self zip member: memberOrName.
 	tokens := (OCParser parseLiterals: (self contentsForMember: member)) first.
 	^ self associate: tokens
-]
-
-{ #category : 'accessing' }
-MCMczReader >> scanner [
-	^ MCScanner
 ]
 
 { #category : 'accessing' }
