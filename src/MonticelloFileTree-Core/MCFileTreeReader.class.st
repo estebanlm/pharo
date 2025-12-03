@@ -7,8 +7,7 @@ Class {
 	#name : 'MCFileTreeReader',
 	#superclass : 'MCMczReader',
 	#instVars : [
-		'packageDirectory',
-		'packageProperties'
+		'packageDirectory'
 	],
 	#category : 'MonticelloFileTree-Core',
 	#package : 'MonticelloFileTree-Core'
@@ -106,7 +105,15 @@ MCFileTreeReader >> addClassDefinitionFrom: classPropertiesDict comment: classCo
 
 { #category : 'utilities' }
 MCFileTreeReader >> addDefinitionFromFile: directoryEntry inDirectory: aDirectory [
-    (self definitionFromFile: directoryEntry inDirectory: aDirectory) ifNotNil: [ :def | definitions add: def ]
+
+	| defs reader |
+	directoryEntry ifNil: [ ^ nil ].
+	self fileUtils readStreamFor: directoryEntry name in: aDirectory do: [ :fileStream |
+			reader := MCStReader on: fileStream.
+			defs := reader definitions.
+			defs size <= 1 ifFalse: [ self error: 'we should be writing exactly 1 definition per file' ] ].
+	defs size = 0 ifTrue: [ ^ nil ].
+	defs first ifNotNil: [ :def | definitions add: def ]
 ]
 
 { #category : 'utilities' }
@@ -135,49 +142,42 @@ MCFileTreeReader >> addExtensionClassAndMethodDefinitionsFromEntry: classEntry [
 
 { #category : 'utilities' }
 MCFileTreeReader >> addMethodDefinitionsForClass: className methodProperties: methodProperties in: entries [
-  ^ self
-    addMethodDefinitionsForClass: className
-    methodProperties: methodProperties
-    in: entries
-    extensionMethod: false
+
+	^ self
+		  addMethodDefinitionsForClass: className
+		  methodProperties: methodProperties
+		  in: entries
+		  extensionMethod: false
 ]
 
 { #category : 'utilities' }
 MCFileTreeReader >> addMethodDefinitionsForClass: className methodProperties: methodProperties in: entries extensionMethod: extensionMethod [
 
 	entries do: [ :entry |
-		| classIsMeta |
-		classIsMeta := false.
-		entry name = 'class' ifTrue: [ classIsMeta := true ].
-		(entry name = 'instance' or: [ entry name = 'class' ]) ifTrue: [
-			(self loadableDefinitionsFrom:
-				 (self fileUtils directoryFromEntry: entry)) do: [ :methodEntry |
-				methodEntry readStreamDo: [ :fileStream |
-					| category source timestamp selector |
-					category := fileStream nextLine.
-					source := fileStream upToEnd.
-					selector := self methodSelectorFor: source.
-					timestamp := methodProperties
-						             at: (classIsMeta
-								              ifTrue: [ 'class' ]
-								              ifFalse: [ 'instance' ])
-						             ifPresent: [ :map |
-						             map at: selector asString ifAbsent: [  ] ]. "Issue 33: https://github.com/dalehenrich/filetree/issues/33"
-					timestamp ifNil: [
-						timestamp := self info date mmddyyyy , ' '
-						             , self info time print24 ].
-					extensionMethod ifTrue: [
-						self
-							validateExtensionMethodCategory: category
-							for: className
-							selector: selector ].
-					definitions add: (MCMethodDefinition
-							 className: className
-							 classIsMeta: classIsMeta
-							 selector: selector
-							 category: category
-							 timeStamp: timestamp
-							 source: source) ] ] ] ]
+			| classIsMeta |
+			classIsMeta := false.
+			entry name = 'class' ifTrue: [ classIsMeta := true ].
+			(entry name = 'instance' or: [ entry name = 'class' ]) ifTrue: [
+					(self loadableDefinitionsFrom: (self fileUtils directoryFromEntry: entry)) do: [ :methodEntry |
+							methodEntry readStreamDo: [ :fileStream |
+									| category source timestamp selector |
+									category := fileStream nextLine.
+									source := fileStream upToEnd.
+									selector := self methodSelectorFor: source.
+									timestamp := methodProperties
+										             at: (classIsMeta
+												              ifTrue: [ 'class' ]
+												              ifFalse: [ 'instance' ])
+										             ifPresent: [ :map | map at: selector asString ifAbsent: [ ] ]. "Issue 33: https://github.com/dalehenrich/filetree/issues/33"
+									timestamp ifNil: [ timestamp := self info date mmddyyyy , ' ' , self info time print24 ].
+									extensionMethod ifTrue: [ self validateExtensionMethodCategory: category for: className selector: selector ].
+									definitions add: (MCMethodDefinition
+											 className: className
+											 classIsMeta: classIsMeta
+											 selector: selector
+											 category: category
+											 timeStamp: timestamp
+											 source: source) ] ] ] ]
 ]
 
 { #category : 'utilities' }
@@ -244,23 +244,6 @@ MCFileTreeReader >> basicVersion [
 		  yourself
 ]
 
-{ #category : 'utilities' }
-MCFileTreeReader >> definitionFromFile: directoryEntry inDirectory: aDirectory [
-    | defs reader |
-    directoryEntry ifNil: [ ^ nil ].
-    self fileUtils
-        readStreamFor: directoryEntry name
-        in: aDirectory
-        do: [ :fileStream |
-            reader := MCStReader on: fileStream.
-            defs := reader definitions.
-		defs size <= 1
-                ifFalse: [ self error: 'we should be writing exactly 1 definition per file' ] ].
-    defs size = 0
-        ifTrue: [ ^ nil ].
-    ^ defs first
-]
-
 { #category : 'accessing' }
 MCFileTreeReader >> fileUtils [
     ^ MCFileTreeFileUtils current
@@ -268,21 +251,11 @@ MCFileTreeReader >> fileUtils [
 
 { #category : 'testing' }
 MCFileTreeReader >> hasMonticelloMetadata [
-    ^ (self fileUtils
-		filePathExists: 'version'
-		relativeTo:
-			(self fileUtils
-				directoryFromPath: MCFileTreeStCypressWriter monticelloMetaDirName
-				relativeTo: packageDirectory))
-		or:
-			[ (self fileUtils
-				filePathExists: 'version'
-				relativeTo: packageDirectory)
-				and:
-					[ self fileUtils
-						filePathExists: 'package'
-						relativeTo: packageDirectory ] ]
 
+	^ (self fileUtils
+		   filePathExists: 'version'
+		   relativeTo: (self fileUtils directoryFromPath: MCFileTreeStCypressWriter monticelloMetaDirName relativeTo: packageDirectory)) or: [
+		  (self fileUtils filePathExists: 'version' relativeTo: packageDirectory) and: [ self fileUtils filePathExists: 'package' relativeTo: packageDirectory ] ]
 ]
 
 { #category : 'utilities' }
@@ -330,21 +303,17 @@ MCFileTreeReader >> loadDefinitions [
 
 { #category : 'utilities' }
 MCFileTreeReader >> loadDependencies [
-    | dependencyDir directoryPath |
-    directoryPath := self monticelloMetaDirName , self fileUtils pathNameDelimiter asString , 'dependencies'.
-    dependencyDir := self fileUtils directoryFromPath: directoryPath relativeTo: packageDirectory.
-    (self fileUtils directoryExists: dependencyDir)
-        ifFalse: [ ^ dependencies := #() ].
-    dependencies := OrderedCollection new.
-    dependencyDir entries
-        do: [ :entry | 
-            dependencies
-                add:
-                    (MCVersionDependency
-                        package: (MCPackage named: entry name)
-                        info:
-                            (self extractInfoFrom: (self parseMember: 'dependencies' , self fileUtils pathNameDelimiter asString , entry name))) ].
-    dependencies := dependencies asArray
+
+	| dependencyDir directoryPath |
+	directoryPath := self monticelloMetaDirName , self fileUtils pathNameDelimiter asString , 'dependencies'.
+	dependencyDir := self fileUtils directoryFromPath: directoryPath relativeTo: packageDirectory.
+	(self fileUtils directoryExists: dependencyDir) ifFalse: [ ^ dependencies := #(  ) ].
+	dependencies := OrderedCollection new.
+	dependencyDir entries do: [ :entry |
+			dependencies add: (MCVersionDependency
+					 package: (MCPackage named: entry name)
+					 info: (self extractInfoFrom: (self parseMember: 'dependencies' , self fileUtils pathNameDelimiter asString , entry name))) ].
+	dependencies := dependencies asArray
 ]
 
 { #category : 'accessing' }
@@ -356,17 +325,16 @@ MCFileTreeReader >> loadPackage [
 
 { #category : 'accessing' }
 MCFileTreeReader >> loadVersionInfo [
-  self hasMonticelloMetadata
-    ifTrue: [ ^ info := self extractInfoFrom: (self parseMember: 'version') ].
-  info := MCVersionInfo
-    name: self packageNameFromPackageDirectory , '-cypress.1'
-    id: UUID new
-    message: 'fabricated from a Cypress format repository'
-    date: Date today
-    time: Time now
-    ancestors: #()
-    stepChildren: #()
 
+	self hasMonticelloMetadata ifTrue: [ ^ info := self extractInfoFrom: (self parseMember: 'version') ].
+	info := MCVersionInfo
+		        name: self packageNameFromPackageDirectory , '-cypress.1'
+		        id: UUID new
+		        message: 'fabricated from a Cypress format repository'
+		        date: Date today
+		        time: Time now
+		        ancestors: #(  )
+		        stepChildren: #(  )
 ]
 
 { #category : 'utilities' }
@@ -376,8 +344,8 @@ MCFileTreeReader >> loadableDefinitionsFrom: directory [
 
 { #category : 'utilities' }
 MCFileTreeReader >> methodSelectorFor: source [
-    ^ Object compilerClass new parseSelector: source
 
+	^ Object compilerClass new parseSelector: source
 ]
 
 { #category : 'accessing' }
@@ -387,60 +355,24 @@ MCFileTreeReader >> monticelloMetaDirName [
 
 { #category : 'accessing' }
 MCFileTreeReader >> packageDirectory: aDirectoryName [
-    packageDirectory := self fileUtils directoryFromPath: aDirectoryName relativeTo: stream
+
+	packageDirectory := self fileUtils directoryFromPath: aDirectoryName relativeTo: stream
 ]
 
 { #category : 'accessing' }
 MCFileTreeReader >> packageNameFromPackageDirectory [
-    | filename2 |
-    filename2 := self fileUtils directoryName: packageDirectory.
-    ^ filename2 copyFrom: 1 to: (filename2 lastIndexOf: $.) - 1
-]
 
-{ #category : 'accessing' }
-MCFileTreeReader >> packageProperties [
-    packageProperties
-        ifNil: [ 
-            packageProperties := Dictionary new.
-            (packageDirectory entries detect: [ :entry | entry name = '.filetree' ] ifNone: [  ])
-                ifNotNil: [ :configEntry | 
-                    configEntry
-                        readStreamDo: [ :fileStream | 
-                            | jsonObject structureVersion |
-                            [ 
-                            (jsonObject := STON fromStream: fileStream) isFloat
-                                ifTrue: [ 
-                                    "
-							0.0 - original structure
-							0.1 - separate files for method metaData (timestamp) and source
-							0.2 - no method metaData file"
-                                    packageProperties := Dictionary new.
-                                    structureVersion := jsonObject printShowingDecimalPlaces: 1.
-                                    packageProperties at: 'noMethodMetaData' put: structureVersion = '0.2'.
-                                    packageProperties at: 'separateMethodMetaAndSource' put: structureVersion = '0.1' ]
-                                ifFalse: [ 
-                                    packageProperties := jsonObject.
-                                    ((packageProperties at: 'noMethodMetaData' ifAbsent: [ false ])
-                                        and: [ packageProperties at: 'separateMethodMetaAndSource' ifAbsent: [ false ] ])
-                                        ifTrue: [ self error: 'noMethodMetaData and separateMethodMetaAndSource cannot both be true' ] ] ]
-                                on: Error
-                                do: [ :ex | 
-                                    SystemNotification signal:
-                                                'Error reading package properties (.filetree): ' , packageDirectory pathName , ' :: ' , ex description ] ] ] ].
-    ^ packageProperties
+	| filename2 |
+	filename2 := self fileUtils directoryName: packageDirectory.
+	^ filename2 copyFrom: 1 to: (filename2 lastIndexOf: $.) - 1
 ]
 
 { #category : 'utilities' }
 MCFileTreeReader >> parseMember: fileName [
     | directory tokens |
     directory := self fileUtils directoryFromPath: self monticelloMetaDirName relativeTo: packageDirectory.
-    self fileUtils readStreamFor: fileName in: directory do: [ :fileStream | tokens := self scanner scan: fileStream ].
+    self fileUtils readStreamFor: fileName in: directory do: [ :fileStream | tokens := MCScanner scan: fileStream ].
     ^ self associate: tokens
-]
-
-{ #category : 'accessing' }
-MCFileTreeReader >> scanner [
-	^ MCScanner
 ]
 
 { #category : 'utilities' }
@@ -457,50 +389,35 @@ MCFileTreeReader >> setPackageTagIn: definition fromCategory: category [
 
 { #category : 'validation' }
 MCFileTreeReader >> validateExtensionMethodCategory: categoryName for: className selector: selector [
-  "https://github.com/dalehenrich/filetree/issues/136"
+	"https://github.com/dalehenrich/filetree/issues/136"
 
-  "method category must match the package name for extension methods... guard against manual editing mistakes"
+	"method category must match the package name for extension methods... guard against manual editing mistakes"
 
-  "extracted from PackageInfo>>isForeignClassExtension:"
+	"extracted from PackageInfo>>isForeignClassExtension:"
 
-  | prefix |
-  prefix := '*' , self packageNameFromPackageDirectory asLowercase.
-  categoryName
-    ifNotNil: [ 
-      (categoryName isEmpty not
-        and: [ 
-          categoryName first = $*
-            and: [ 
-              "asLowercase needed in GemStone 3.1.0.6?"
-              self verifyCategory: categoryName asLowercase matches: prefix ] ])
-        ifTrue: [ ^ self ] ].
-  self
-    error:
-      'Method protocol ' , categoryName printString , ' for the method '
-        , selector asString printString , ' in class ' , className printString
-        , ' is inconsistent with the package name ' , prefix printString
-
+	| prefix |
+	prefix := '*' , self packageNameFromPackageDirectory asLowercase.
+	categoryName ifNotNil: [
+			(categoryName isEmpty not and: [
+				 categoryName first = $* and: [ "asLowercase needed in GemStone 3.1.0.6?" self verifyCategory: categoryName asLowercase matches: prefix ] ]) ifTrue: [
+				^ self ] ].
+	self error: 'Method protocol ' , categoryName printString , ' for the method ' , selector asString printString , ' in class ' , className printString
+		, ' is inconsistent with the package name ' , prefix printString
 ]
 
 { #category : 'validation' }
 MCFileTreeReader >> verifyCategory: categoryName matches: basicPackageName [
-  "https://github.com/dalehenrich/filetree/issues/136"
+	"https://github.com/dalehenrich/filetree/issues/136"
 
-  "copied from PackageInfo>>category:matches: and GoferVersionReference>>parseName:"
+	"copied from PackageInfo>>category:matches: and GoferVersionReference>>parseName:"
 
-  | prefixSize catSize packagePrefix |
-  categoryName ifNil: [ ^ false ].
-  packagePrefix := basicPackageName.
-  (packagePrefix includes: $.)
-    ifTrue: [ 
-      "exclude branch name"
-      packagePrefix := packagePrefix copyUpTo: $. ].
-  catSize := categoryName size.
-  prefixSize := packagePrefix size.
-  catSize < prefixSize
-    ifTrue: [ ^ false ].
-  (categoryName findString: packagePrefix startingAt: 1 caseSensitive: false)
-    = 1
-    ifFalse: [ ^ false ].
-  ^ (categoryName at: packagePrefix size + 1 ifAbsent: [ ^ true ]) = $-
+	| prefixSize catSize packagePrefix |
+	categoryName ifNil: [ ^ false ].
+	packagePrefix := basicPackageName.
+	(packagePrefix includes: $.) ifTrue: [ "exclude branch name" packagePrefix := packagePrefix copyUpTo: $. ].
+	catSize := categoryName size.
+	prefixSize := packagePrefix size.
+	catSize < prefixSize ifTrue: [ ^ false ].
+	(categoryName findString: packagePrefix startingAt: 1 caseSensitive: false) = 1 ifFalse: [ ^ false ].
+	^ (categoryName at: packagePrefix size + 1 ifAbsent: [ ^ true ]) = $-
 ]
