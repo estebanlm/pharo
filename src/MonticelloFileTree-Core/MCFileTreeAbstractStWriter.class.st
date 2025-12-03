@@ -21,11 +21,8 @@ MCFileTreeAbstractStWriter class >> monticelloMetaDirName [
 
 { #category : 'writing' }
 MCFileTreeAbstractStWriter class >> on: aStream [
-    MCFileTreePackageStructureStWriter useCypressWriter
-        ifTrue: [ ^ MCFileTreeStCypressWriter new stream: aStream ].
-    ^ (MCFileTreePackageStructureStWriter useSnapShotWriter
-        ifTrue: [ MCFileTreeStSnapshotWriter ]
-        ifFalse: [ MCFileTreeStWriter ]) new stream: aStream
+
+	^ MCFileTreeStCypressWriter new stream: aStream
 ]
 
 { #category : 'accessing' }
@@ -35,9 +32,10 @@ MCFileTreeAbstractStWriter class >> readerClass [
 
 { #category : 'private' }
 MCFileTreeAbstractStWriter >> directoryForDirectoryNamed: directoryNameOrPath [
-    ^ directoryNameOrPath = '.'
-        ifTrue: [ stream packageFileDirectory ]
-        ifFalse: [ stream subPackageFileDirectoryFor: directoryNameOrPath ]
+
+	^ directoryNameOrPath = '.'
+		  ifTrue: [ stream packageFileDirectory ]
+		  ifFalse: [ stream subPackageFileDirectoryFor: directoryNameOrPath ]
 ]
 
 { #category : 'private' }
@@ -81,11 +79,6 @@ MCFileTreeAbstractStWriter >> setFileStream: file [
 
 { #category : 'visiting' }
 MCFileTreeAbstractStWriter >> visitClassDefinition: definition [
-    self subclassResponsibility
-]
-
-{ #category : 'visiting' }
-MCFileTreeAbstractStWriter >> visitClassTraitDefinition: definition [
     self subclassResponsibility
 ]
 
@@ -137,12 +130,6 @@ MCFileTreeAbstractStWriter >> writeClassDefinition: definition [
         ifTrue: [ stWriter writeMetaclassDefinition: definition ].
     definition hasComment
         ifTrue: [ stWriter writeClassComment: definition ]
-]
-
-{ #category : 'writing' }
-MCFileTreeAbstractStWriter >> writeClassTraitDefinition: definition [
-    stWriter visitClassTraitDefinition: definition.
-
 ]
 
 { #category : 'initialization' }

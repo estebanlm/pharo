@@ -5,9 +5,13 @@ see https://github.com/CampSmalltalk/Cypress
 "
 Class {
 	#name : 'MCFileTreeStCypressWriter',
-	#superclass : 'MCFileTreeStSnapshotWriter',
+	#superclass : 'MCFileTreeAbstractStWriter',
 	#instVars : [
-		'fileStream'
+		'fileStream',
+		'traitDefinitions',
+		'classTraitDefinitions',
+		'methodDefinitions',
+		'classDefinitions'
 	],
 	#classInstVars : [
 		'specials'
@@ -86,6 +90,18 @@ MCFileTreeStCypressWriter class >> specials [
     ^ specials ifNil: [ specials := self initializeSpecials ]
 ]
 
+{ #category : 'accessing' }
+MCFileTreeStCypressWriter >> classDefinitions [
+    ^ classDefinitions ifNil: [ classDefinitions := Dictionary new ]
+   
+]
+
+{ #category : 'accessing' }
+MCFileTreeStCypressWriter >> classTraitDefinitions [
+    classTraitDefinitions ifNil: [ classTraitDefinitions := Dictionary new ].
+    ^ classTraitDefinitions
+]
+
 { #category : 'private' }
 MCFileTreeStCypressWriter >> fileNameForSelector: selector [
   ^ self class fileNameForSelector: selector
@@ -144,6 +160,12 @@ MCFileTreeStCypressWriter >> fileNameMapFor: aMethodDefinitionCollection [
   ^ filenameMetaMap
 ]
 
+{ #category : 'accessing' }
+MCFileTreeStCypressWriter >> methodDefinitions [
+    methodDefinitions ifNil: [ methodDefinitions := Dictionary new ].
+    ^ methodDefinitions
+]
+
 { #category : 'initialization' }
 MCFileTreeStCypressWriter >> propertyFileExtension [
   ^ self repository propertyFileExtension
@@ -153,6 +175,31 @@ MCFileTreeStCypressWriter >> propertyFileExtension [
 MCFileTreeStCypressWriter >> setFileStream: aStream [
     super setFileStream: aStream.
     fileStream := aStream
+]
+
+{ #category : 'accessing' }
+MCFileTreeStCypressWriter >> traitDefinitions [
+    traitDefinitions ifNil: [ traitDefinitions := Dictionary new ].
+    ^ traitDefinitions
+]
+
+{ #category : 'visiting' }
+MCFileTreeStCypressWriter >> visitClassDefinition: definition [
+    orderedClassNames add: definition className.
+    self classDefinitions at: definition className put: definition
+]
+
+{ #category : 'visiting' }
+MCFileTreeStCypressWriter >> visitMethodDefinition: definition [
+    (self methodDefinitions
+        at: definition className
+        ifAbsent: [ self methodDefinitions at: definition className put: OrderedCollection new ]) add: definition
+]
+
+{ #category : 'visiting' }
+MCFileTreeStCypressWriter >> visitTraitDefinition: definition [
+    orderedTraitNames add: definition className.
+    self traitDefinitions at: definition className put: definition
 ]
 
 { #category : 'writing' }
@@ -188,90 +235,71 @@ MCFileTreeStCypressWriter >> writeClassDefinition: definition [
 
 { #category : 'writing' }
 MCFileTreeStCypressWriter >> writeClassDefinition: definition to: classPath [
-  self
-    writeInDirectoryName: classPath
-    fileName: 'README'
-    extension: '.md'
-    visit: [ self writeClassComment: definition ].
-  self
-    writeInDirectoryName: classPath
-    fileName: 'properties'
-    extension: self propertyFileExtension
-    visit: [ self writeClassDefinition: definition ].
-  self
-    writeInDirectoryName: classPath
-    fileName: 'methodProperties'
-    extension: self propertyFileExtension
-    visit: [ 
-      self
-        writeMethodProperties:
-          (self methodDefinitions at: definition className ifAbsent: [ #() ]) ]
+
+	self
+		writeInDirectoryName: classPath
+		fileName: 'README'
+		extension: '.md'
+		visit: [ self writeClassComment: definition ].
+	self
+		writeInDirectoryName: classPath
+		fileName: 'properties'
+		extension: self propertyFileExtension
+		visit: [ self writeClassDefinition: definition ].
+	self
+		writeInDirectoryName: classPath
+		fileName: 'methodProperties'
+		extension: self propertyFileExtension
+		visit: [ self writeMethodProperties: (self methodDefinitions at: definition className ifAbsent: [ #(  ) ]) ]
 ]
 
 { #category : 'initialization' }
 MCFileTreeStCypressWriter >> writeDefinitions: aCollection [
-  | classDirExtension extensionClasses extensionMethodDefinitions extensionMethodMap methodHolders |
-  self writeBasicDefinitions: aCollection.
-  extensionClasses := OrderedCollection new.
-  extensionMethodDefinitions := OrderedCollection new.
-  methodHolders := self classDefinitions, self traitDefinitions.
-  self methodDefinitions
-    keysAndValuesDo: [ :className :extensionMethods | 
-      methodHolders
-        at: className
-        ifAbsent: [ 
-          extensionClasses add: className.
-          extensionMethodDefinitions addAll: extensionMethods ] ].
-  extensionClasses
-    do: [ :className | self methodDefinitions removeKey: className ].
-    self writeMethodHolderDefinitions: self traitDefinitions extension: '.trait' to: '' do: [ :definition :classPath |
-	self writeTraitDefinition: definition to: classPath. ].
-  self
-    writeMethodHolderDefinitions: self classDefinitions
-    extension: '.class'
-    to: ''
-    do: [ :definition :classPath | self writeClassDefinition: definition to: classPath ].
-  classDirExtension := '.extension'.
-  extensionMethodMap := Dictionary new.
-  extensionMethodDefinitions
-    do: [ :methodDefinition | 
-      | classPath methodPath |
-      (extensionMethodMap
-        at: methodDefinition className
-        ifAbsent: [ extensionMethodMap at: methodDefinition className put: OrderedCollection new ])
-        add: methodDefinition.
-      classPath := methodDefinition className , classDirExtension
-        , self fileUtils pathNameDelimiter asString.
-      self writeExtensionClassDefinition: methodDefinition to: classPath ].
-  extensionMethodMap
-    keysAndValuesDo: [ :className :classMethodDefinitions | 
-      | classPath filenameMetaMap |
-      filenameMetaMap := self fileNameMapFor: classMethodDefinitions.
-      classMethodDefinitions
-        do: [ :methodDefinition | 
-          | filename methodPath |
-          filename := (filenameMetaMap at: methodDefinition classIsMeta)
-            at: methodDefinition selector.
-          classPath := methodDefinition className , classDirExtension
-            , self fileUtils pathNameDelimiter asString.
-          methodPath := classPath
-            ,
-              (methodDefinition classIsMeta
-                ifTrue: [ 'class' ]
-                ifFalse: [ 'instance' ])
-            , self fileUtils pathNameDelimiter asString.
-          self
-            writeMethodDefinition: methodDefinition
-            to: methodPath
-            filename: filename ].
-      classPath := className , classDirExtension
-        , self fileUtils pathNameDelimiter asString.
-      self
-        writeInDirectoryName: classPath
-        fileName: 'methodProperties'
-        extension: self propertyFileExtension
-        visit: [ self writeMethodProperties: classMethodDefinitions ] ]
 
+	| classDirExtension extensionClasses extensionMethodDefinitions extensionMethodMap methodHolders |
+	self writeBasicDefinitions: aCollection.
+	extensionClasses := OrderedCollection new.
+	extensionMethodDefinitions := OrderedCollection new.
+	methodHolders := self classDefinitions , self traitDefinitions.
+	self methodDefinitions keysAndValuesDo: [ :className :extensionMethods |
+			methodHolders at: className ifAbsent: [
+					extensionClasses add: className.
+					extensionMethodDefinitions addAll: extensionMethods ] ].
+	extensionClasses do: [ :className | self methodDefinitions removeKey: className ].
+	self
+		writeMethodHolderDefinitions: self traitDefinitions
+		extension: '.trait'
+		to: ''
+		do: [ :definition :classPath | self writeTraitDefinition: definition to: classPath ].
+	self
+		writeMethodHolderDefinitions: self classDefinitions
+		extension: '.class'
+		to: ''
+		do: [ :definition :classPath | self writeClassDefinition: definition to: classPath ].
+	classDirExtension := '.extension'.
+	extensionMethodMap := Dictionary new.
+	extensionMethodDefinitions do: [ :methodDefinition |
+			| classPath |
+			(extensionMethodMap at: methodDefinition className ifAbsentPut: [ OrderedCollection new ]) add: methodDefinition.
+			classPath := methodDefinition className , classDirExtension , self fileUtils pathNameDelimiter asString.
+			self writeExtensionClassDefinition: methodDefinition to: classPath ].
+	extensionMethodMap keysAndValuesDo: [ :className :classMethodDefinitions |
+			| classPath filenameMetaMap |
+			filenameMetaMap := self fileNameMapFor: classMethodDefinitions.
+			classMethodDefinitions do: [ :methodDefinition |
+					| filename methodPath |
+					filename := (filenameMetaMap at: methodDefinition classIsMeta) at: methodDefinition selector.
+					classPath := methodDefinition className , classDirExtension , self fileUtils pathNameDelimiter asString.
+					methodPath := classPath , (methodDefinition classIsMeta
+						               ifTrue: [ 'class' ]
+						               ifFalse: [ 'instance' ]) , self fileUtils pathNameDelimiter asString.
+					self writeMethodDefinition: methodDefinition to: methodPath filename: filename ].
+			classPath := className , classDirExtension , self fileUtils pathNameDelimiter asString.
+			self
+				writeInDirectoryName: classPath
+				fileName: 'methodProperties'
+				extension: self propertyFileExtension
+				visit: [ self writeMethodProperties: classMethodDefinitions ] ]
 ]
 
 { #category : 'writing' }
@@ -301,17 +329,31 @@ MCFileTreeStCypressWriter >> writeMethodDefinition: definition [
 ]
 
 { #category : 'writing' }
-MCFileTreeStCypressWriter >> writeMethodDefinition: methodDefinition to: methodPath [
-  self shouldNotImplement
-]
-
-{ #category : 'writing' }
 MCFileTreeStCypressWriter >> writeMethodDefinition: methodDefinition to: methodPath filename: filename [
   self
     writeInDirectoryName: methodPath
     fileName: filename
     extension: '.st'
     visit: [ self writeMethodDefinition: methodDefinition ]
+]
+
+{ #category : 'writing' }
+MCFileTreeStCypressWriter >> writeMethodHolderDefinitions: aCollection extension: extension to: basePath do: aBlock [
+
+	aCollection keysAndValuesDo: [ :className :definition |
+			| classPath instanceMethodPath classMethodPath filenameMetaMap theMethodDefinitions |
+			classPath := basePath , definition className , extension , self fileUtils pathNameDelimiter asString.
+			aBlock value: definition value: classPath.
+			instanceMethodPath := classPath , 'instance' , self fileUtils pathNameDelimiter asString.
+			classMethodPath := classPath , 'class' , self fileUtils pathNameDelimiter asString.
+			theMethodDefinitions := self methodDefinitions at: className ifAbsent: [ #(  ) ].
+			filenameMetaMap := self fileNameMapFor: theMethodDefinitions.
+			theMethodDefinitions do: [ :methodDefinition |
+					| filename |
+					filename := (filenameMetaMap at: methodDefinition classIsMeta) at: methodDefinition selector.
+					methodDefinition classIsMeta
+						ifTrue: [ self writeMethodDefinition: methodDefinition to: classMethodPath filename: filename ]
+						ifFalse: [ self writeMethodDefinition: methodDefinition to: instanceMethodPath filename: filename ] ] ]
 ]
 
 { #category : 'initialization' }
@@ -373,22 +415,20 @@ MCFileTreeStCypressWriter >> writeTraitDefinition: definition [
 
 { #category : 'writing' }
 MCFileTreeStCypressWriter >> writeTraitDefinition: definition to: classPath [
-  self
-    writeInDirectoryName: classPath
-    fileName: 'README'
-    extension: '.md'
-    visit: [ self writeClassComment: definition ].
-  self
-    writeInDirectoryName: classPath
-    fileName: 'properties'
-    extension: self propertyFileExtension
-    visit: [ self writeTraitDefinition: definition ].
-  self
-    writeInDirectoryName: classPath
-    fileName: 'methodProperties'
-    extension: self propertyFileExtension
-    visit: [ 
-      self
-        writeMethodProperties:
-          (self methodDefinitions at: definition className ifAbsent: [ #() ]) ]
+
+	self
+		writeInDirectoryName: classPath
+		fileName: 'README'
+		extension: '.md'
+		visit: [ self writeClassComment: definition ].
+	self
+		writeInDirectoryName: classPath
+		fileName: 'properties'
+		extension: self propertyFileExtension
+		visit: [ self writeTraitDefinition: definition ].
+	self
+		writeInDirectoryName: classPath
+		fileName: 'methodProperties'
+		extension: self propertyFileExtension
+		visit: [ self writeMethodProperties: (self methodDefinitions at: definition className ifAbsent: [ #(  ) ]) ]
 ]

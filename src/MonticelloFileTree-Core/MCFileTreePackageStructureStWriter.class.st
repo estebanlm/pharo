@@ -18,11 +18,6 @@ MCFileTreePackageStructureStWriter class >> useCypressWriter [
 ]
 
 { #category : 'accessing' }
-MCFileTreePackageStructureStWriter class >> useSnapShotWriter [
-    ^ MCFileTreeRepository defaultPackageExtension = '.pkg'
-]
-
-{ #category : 'accessing' }
 MCFileTreePackageStructureStWriter >> absentInitializers [
 	^ initializers reject: [ :each | Smalltalk hasClassNamed: each key ]
 ]
