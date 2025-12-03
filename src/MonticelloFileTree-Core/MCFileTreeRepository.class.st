@@ -200,21 +200,20 @@ MCFileTreeRepository >> fileDirectoryOn: directoryPath [
 
 { #category : 'accessing' }
 MCFileTreeRepository >> fileUtils [
-    ^ MCFileTreeFileUtils current
+
+	^ MCFileTreeFileUtils
 ]
 
 { #category : 'private' }
 MCFileTreeRepository >> flushCache [
-  "force properties to be reread ... if the directory exists, otherwise let nature
+	"force properties to be reread ... if the directory exists, otherwise let nature
    take it's course"
 
-  super flushCache.
-  directory
-    ifNotNil: [ 
-      (MCFileTreeFileUtils current directoryExists: directory)
-        ifTrue: [ 
-          repositoryProperties := nil.
-          self repositoryProperties ] ]
+	super flushCache.
+	directory ifNotNil: [
+			(self fileUtils directoryExists: directory) ifTrue: [
+					repositoryProperties := nil.
+					self repositoryProperties ] ]
 ]
 
 { #category : 'accessing' }

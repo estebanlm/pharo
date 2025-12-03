@@ -14,7 +14,6 @@ BaselineOfMetacello >> baseline: spec [
 			package: 'Metacello-Base';
 			package: 'Metacello-Core';
 			package: 'MonticelloFileTree-Core';
-			package: 'MonticelloFileTree-FileSystem-Utilities';
 			package: 'Zinc-Resource-Meta-Core';
 			package: 'STON-Core';
 			package: 'Metacello-CommandLine'. 
@@ -25,7 +24,7 @@ BaselineOfMetacello >> baseline: spec [
 			package: 'Metacello-TestsReference'.
 
 		spec 
-			group: 'Core' with: #('Metacello-Base' 'Metacello-Core' 'MonticelloFileTree-Core' 'MonticelloFileTree-FileSystem-Utilities' 'Zinc-Resource-Meta-Core' 'STON-Core' 'Metacello-CommandLine');
+			group: 'Core' with: #('Metacello-Base' 'Metacello-Core' 'MonticelloFileTree-Core' 'Zinc-Resource-Meta-Core' 'STON-Core' 'Metacello-CommandLine');
 			group: 'Tests' with: #( 'Metacello-TestsCore' 'Metacello-TestsMCCore' 'Metacello-TestsReference');
 			group: 'default' with: #('Core') ]
 ]

@@ -246,7 +246,8 @@ MCFileTreeReader >> basicVersion [
 
 { #category : 'accessing' }
 MCFileTreeReader >> fileUtils [
-    ^ MCFileTreeFileUtils current
+
+	^ MCFileTreeFileUtils
 ]
 
 { #category : 'testing' }

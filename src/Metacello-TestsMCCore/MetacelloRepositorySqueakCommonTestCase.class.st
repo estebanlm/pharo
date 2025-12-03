@@ -78,7 +78,7 @@ MetacelloRepositorySqueakCommonTestCase >> baseline16: spec [
             includes: 'Example-AddOn';
             file: 'Example-Core-anon.1';
             repository:
-                'filetree://' , MCFileTreeFileUtils current default fullName , '/temp/repo' ] ]
+                'filetree://' , MCFileTreeFileUtils default fullName , '/temp/repo' ] ]
 ]
 
 { #category : 'accessing' }
@@ -170,7 +170,7 @@ MetacelloRepositorySqueakCommonTestCase >> testFileTreeRepository [
 	"must create repository against an existing directory"
 
 	| project pkg repoSpec repo fileUtils workingDir tempDir repoDir |
-	fileUtils := MCFileTreeFileUtils current.
+	fileUtils := MCFileTreeFileUtils.
 	workingDir := fileUtils default.
 	tempDir := fileUtils directoryFromPath: 'temp' relativeTo: workingDir.
 	[ fileUtils ensureDirectoryExists: tempDir.

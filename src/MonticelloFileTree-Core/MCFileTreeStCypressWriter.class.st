@@ -166,7 +166,8 @@ MCFileTreeStCypressWriter >> fileNameMapFor: aMethodDefinitionCollection [
 
 { #category : 'accessing' }
 MCFileTreeStCypressWriter >> fileUtils [
-    ^ MCFileTreeFileUtils current
+
+	^ MCFileTreeFileUtils
 ]
 
 { #category : 'initialization' }
