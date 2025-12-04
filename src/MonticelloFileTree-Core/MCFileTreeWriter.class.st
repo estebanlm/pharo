@@ -21,19 +21,6 @@ MCFileTreeWriter class >> readerClass [
 ]
 
 { #category : 'writing' }
-MCFileTreeWriter >> addString: string at: fileNameOrPath [
-	"fileNameOrPath may have one or two elements"
-
-	| fullPath path |
-	path := fullPath := self fileUtils buildPathFrom: {
-			                    MCFileTreeStCypressWriter monticelloMetaDirName.
-			                    fileNameOrPath }.
-	self fileUtils ensureFilePathExists: fullPath relativeTo: self packageFileDirectory.
-	fullPath.
-	string isEmpty ifFalse: [ self fileUtils writeStreamFor: path in: self packageFileDirectory do: [ :file | file nextPutAll: string ] ]
-]
-
-{ #category : 'writing' }
 MCFileTreeWriter >> addString: string at: fileNameOrPath encodedTo: ignored [
 	"fileNameOrPath may have one or two elements"
 

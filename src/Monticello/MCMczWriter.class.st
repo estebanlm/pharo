@@ -29,14 +29,6 @@ MCMczWriter class >> readerClass [
 ]
 
 { #category : 'writing' }
-MCMczWriter >> addString: string at: path [
-	| member |
-	member := zip addString: string as: path.
-	member desiredCompressionMethod: ZipArchive compressionDeflated 
-	
-]
-
-{ #category : 'writing' }
 MCMczWriter >> addString: string at: path encodedTo: encodingName [
 	| member |
 	member := zip addString: (string encodeWith: encodingName) as: path.
@@ -47,11 +39,6 @@ MCMczWriter >> addString: string at: path encodedTo: encodingName [
 { #category : 'writing' }
 MCMczWriter >> flush [
 	zip writeTo: stream.
-]
-
-{ #category : 'accessing' }
-MCMczWriter >> format [
-	^ '1'
 ]
 
 { #category : 'initialization' }
