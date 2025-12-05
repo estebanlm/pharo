@@ -73,14 +73,6 @@ MCFileTreeWriter >> repository [
   ^ stream
 ]
 
-{ #category : 'serializing' }
-MCFileTreeWriter >> serializeVersionInfo: aVersionInfo [
-	infoWriter ifNil: [infoWriter := MCFileTreeVersionInfoWriter new].
-	^ String streamContents: [:s |
-		infoWriter stream: s.
-		infoWriter writeVersionInfo: aVersionInfo]
-]
-
 { #category : 'accessing' }
 MCFileTreeWriter >> snapshotWriterClass [
 
