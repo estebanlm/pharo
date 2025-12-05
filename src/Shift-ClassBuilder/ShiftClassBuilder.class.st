@@ -243,14 +243,16 @@ ShiftClassBuilder >> createClass [
 
 { #category : 'building' }
 ShiftClassBuilder >> createMetaclass [
-
+   | slots |
 	newMetaclass := self metaclassClass new.
-
+	slots := oldMetaclass 
+		ifNil: [ self classSlots ] 
+		ifNotNil: [ oldMetaclass slots ]. 
 	self builderEnhancer
 		configureMetaclass: newMetaclass
 		superclass: self metaSuperclass
 		withLayoutType: FixedLayout
-		slots: (self withAdditionalSlots: self classSlots)
+		slots: (self withAdditionalSlots: slots)
 ]
 
 { #category : 'building' }

@@ -76,7 +76,6 @@ ReInsertSuperclassDriver >> instantiateRefactoring [
 		  packageName: self packageName; 
 		  tagName: self tagName;
 		  comment: self comment;
-		  prepareForExecution;
 		  yourself
 ]
 
