@@ -80,11 +80,6 @@ MCMczWriter >> writeDefinitions: aVersion [
 ]
 
 { #category : 'visiting' }
-MCMczWriter >> writeFormat [
-"	self addString: self format at: 'format'."
-]
-
-{ #category : 'visiting' }
 MCMczWriter >> writePackage: aPackage [
 	self addString: (self serializePackage: aPackage) at: 'package' encodedTo: 'utf8'
 ]
@@ -100,7 +95,6 @@ MCMczWriter >> writeSnapshot: aSnapshot [
 
 { #category : 'visiting' }
 MCMczWriter >> writeVersion: aVersion [
-	self writeFormat.
 	self writePackage: aVersion package.
 	self writeVersionInfo: aVersion info.
 	self writeDefinitions: aVersion.
