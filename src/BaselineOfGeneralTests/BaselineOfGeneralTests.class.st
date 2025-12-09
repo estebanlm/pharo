@@ -43,6 +43,7 @@ BaselineOfGeneralTests >> baseline: spec [
 			package: 'Ring-Definitions-Monticello-Tests';
 			package: 'Rubric-Tests';
 			package: 'ScriptingExtensions-Tests';
+			package: 'StartupPreferences-Tests';
 			package: 'STON-Tests';
 			package: 'System-Object Events-Tests';
 			package: 'System-Caching-Tests';
