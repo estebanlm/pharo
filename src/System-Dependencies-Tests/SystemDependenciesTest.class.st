@@ -328,6 +328,7 @@ SystemDependenciesTest >> testExternalMorphicCoreDependencies [
 		self tonelCorePackageNames,
 		BaselineOfDebugging corePackageNames,
 		BaselineOfUIInfrastructure withAllPackageNames,
+		BaselineOfMenuRegistration withAllPackageNames,
 		BaselineOfTraits corePackages,
 		BaselineOfSUnit corePackageNames,
 		BaselineOfDisplay allPackageNames,
