@@ -1392,6 +1392,14 @@ OCProgramNode >> whichUpNodeDefines: aName [
 		  ifFalse: [ parent ifNotNil: [ parent whichUpNodeDefines: aName ] ]
 ]
 
+{ #category : 'iterating' }
+OCProgramNode >> withAllChildren [
+	| children |
+	children := OrderedCollection new.
+	self nodesDo: [ :each | children addLast: each ].
+	^ children
+]
+
 { #category : 'accessing' }
 OCProgramNode >> withAllParents [
 	"return me and all my parents. Topmost parent first, me last
