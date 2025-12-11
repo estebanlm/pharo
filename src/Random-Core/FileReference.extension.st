@@ -1,6 +1,6 @@
 Extension { #name : 'FileReference' }
 
-{ #category : '*Network-UUID' }
+{ #category : '*Random-Core' }
 FileReference class >> newTempFilePrefix: prefix suffix: suffix [
 	| tmpDir random fileName |
 

@@ -33,7 +33,6 @@ BaselineOfMonticello >> baseline: spec [
 			package: 'System-Hashing';
 			package: 'Compression';
 			package: 'Monticello-Model';
-			package: 'Network-UUID';
 			package: 'Monticello';
 			package: 'Ring-Definitions-Monticello';
 			
@@ -45,6 +44,6 @@ BaselineOfMonticello >> baseline: spec [
 			package: 'Zodiac-Core'.
 
 		spec 
-			group: 'Core' with: #('Ring-Definitions-Core' 'Ring-OldChunkImporter' 'Jobs' 'Random-Core' 'System-Hashing' 'Compression' 'Monticello-Model' 'Network-UUID' 'Monticello' 'Ring-Definitions-Monticello');
+			group: 'Core' with: #('Ring-Definitions-Core' 'Ring-OldChunkImporter' 'Jobs' 'Random-Core' 'System-Hashing' 'Compression' 'Monticello-Model' 'Monticello' 'Ring-Definitions-Monticello');
 			group: 'RemoteRepositories' with: #( 'Network-Kernel' 'Network-Protocols' 'Network-MIME' 'Zinc-HTTP' 'MonticelloRemoteRepositories' 'Zodiac-Core' ) ].
 ]
