@@ -66,11 +66,11 @@ TestSuiteTest >> testAnnouncementInCompositeTest [
 
 	self
 		assert: (announcements at: TestCaseStarted ifAbsent: [ #() ]) size
-		equals: (suiteTest tests collect: [ :eachSuite | eachSuite tests size ]) sum.
+		equals: (suiteTest tests inject: 0 into: [ :sum :suite | sum + suite tests size ]).
 	self
 		assert: (announcements at: TestCaseEnded ifAbsent: [ #() ]) size
-		equals: (suiteTest tests collect: [ :eachSuite | eachSuite tests size ]) sum.
-	
+		equals: (suiteTest tests inject: 0 into: [ :sum :suite | sum + suite tests size ]). 
+
 	self assertCollection: announcements keys hasSameElements: {
 			TestCaseStarted.
 			TestCaseEnded.
