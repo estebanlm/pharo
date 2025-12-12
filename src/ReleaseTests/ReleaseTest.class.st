@@ -228,7 +228,7 @@ ReleaseTest >> testInstanceSideMethodsWithNilKeyInLastLiteral [
 { #category : 'tests' }
 ReleaseTest >> testKeyClassesArePresentInStartupList [
 	| keyClasses registeredHandlers |
-	keyClasses := #(#Delay #ProcessorScheduler #Stdio #OSPlatform #UUIDGenerator #DiskStore #FinalizationProcess).
+	keyClasses := #(#Delay #ProcessorScheduler #Stdio #OSPlatform #DiskStore #FinalizationProcess).
 	registeredHandlers := SessionManager default startupList
 		collect: [:each | each handledId].
 

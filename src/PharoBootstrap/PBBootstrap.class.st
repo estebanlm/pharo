@@ -191,8 +191,7 @@ PBBootstrap >> exportMonticelloInStFile [
 		SharedRandom initialize.
 		DigitalSignatureAlgorithm initialize.
 		MD5NonPrimitive initialize.
-		SHA1 initialize.
-		UUIDGenerator initialize.'
+		SHA1 initialize.'
 		intoFile: 'Monticello.st'
 
 ]
