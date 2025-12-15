@@ -389,12 +389,6 @@ MetacelloProjectSpec >> getFile [
     ^ file
 ]
 
-{ #category : 'accessing' }
-MetacelloProjectSpec >> getOperator [
-
-	^operator
-]
-
 { #category : 'querying' }
 MetacelloProjectSpec >> getPostLoadDoIt [
 

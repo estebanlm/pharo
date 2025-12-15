@@ -129,13 +129,6 @@ MetacelloProject >> groupSpec [
 	^ MetacelloGroupSpec for: self
 ]
 
-{ #category : 'versions' }
-MetacelloProject >> hasVersion: versionString [
-
-	self version: versionString ifAbsent: [ ^false ].
-	^true
-]
-
 { #category : 'accessing' }
 MetacelloProject >> label [
 
@@ -160,12 +153,6 @@ MetacelloProject >> latestVersion [
 	excluded := self excludeFromLatestVersion.
 	^(self map values select: [:version |  
 		(excluded includes: version blessing) not ]) detectMax: [:version | version ]
-]
-
-{ #category : 'versions' }
-MetacelloProject >> latestVersion: blessing [
-
-	^(self map values select: [:version | blessing = version blessing ]) detectMax: [:version | version ]
 ]
 
 { #category : 'loading' }
