@@ -1,9 +1,6 @@
 Class {
 	#name : 'MetacelloReferenceBaseline',
 	#superclass : 'Object',
-	#instVars : [
-		'project'
-	],
 	#category : 'Metacello-TestsCore',
 	#package : 'Metacello-TestsCore'
 }
