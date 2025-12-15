@@ -10,10 +10,6 @@ Class {
 		'specBuilder',
 		'projectReferenceSpec'
 	],
-	#classVars : [
-		'DefaultRepositoryDescription',
-		'DefaultVersionString'
-	],
 	#category : 'Metacello-Core-Scripts',
 	#package : 'Metacello-Core',
 	#tag : 'Scripts'
@@ -47,34 +43,6 @@ MetacelloScriptEngine class >> configurationNameFrom: baseName [
 		   ifFalse: [ 'ConfigurationOf' , baseName ]) asSymbol
 ]
 
-{ #category : 'defaults' }
-MetacelloScriptEngine class >> defaultRepositoryDescription [
-
-	DefaultRepositoryDescription ifNil: [ DefaultRepositoryDescription := 'http://smalltalkhub.com/mc/Pharo/MetaRepoForPharo30/main' ].
-	^ DefaultRepositoryDescription
-]
-
-{ #category : 'defaults' }
-MetacelloScriptEngine class >> defaultRepositoryDescription: descriptionOrNil [
-  DefaultRepositoryDescription := descriptionOrNil
-]
-
-{ #category : 'defaults' }
-MetacelloScriptEngine class >> defaultVersionString [
-    DefaultVersionString ifNil: [ DefaultVersionString := #'stable' ].
-    ^ DefaultVersionString
-]
-
-{ #category : 'defaults' }
-MetacelloScriptEngine >> defaultRepositoryDescription [
-    ^ self class defaultRepositoryDescription
-]
-
-{ #category : 'defaults' }
-MetacelloScriptEngine >> defaultVersionString [
-    ^ self class defaultVersionString
-]
-
 { #category : 'actions api' }
 MetacelloScriptEngine >> do: aBlock required: required [
 
@@ -93,7 +61,7 @@ MetacelloScriptEngine >> do: aBlock required: required onProjectDownGrade: onDow
 		copyRegistryDuring: [
 			self handleNotificationsForAction: [
 				| versionSpec projectSpec requiredArray |
-				self setDefaultsAndValidateProjectSpec.
+				self validateProjectSpec.
 				[
 				projectSpec := (self lookupProjectSpecFor:
 					                self projectReferenceSpec) copy ]
@@ -143,7 +111,7 @@ MetacelloScriptEngine >> get [
 		copyRegistryDuring: [
 			self handleNotificationsForAction: [
 				| spec projectPackage |
-				self setDefaultsAndValidateProjectSpec.
+				self validateProjectSpec.
 				spec := self projectReferenceSpec.
 				projectPackage := spec projectPackage.
 				projectPackage repositorySpecs do: [ :repoSpec |
@@ -248,7 +216,7 @@ MetacelloScriptEngine >> initialize [
 
 { #category : 'actions api' }
 MetacelloScriptEngine >> list [
-  self setDefaultsAndValidateProjectSpec.
+  self validateProjectSpec.
   self root: self projectReferenceSpec
 ]
 
@@ -303,7 +271,7 @@ MetacelloScriptEngine >> lock [
 	| spec |
 	MetacelloProjectRegistration
 		copyRegistryDuring: [
-			self setDefaultsAndValidate: self projectReferenceSpec copy. "don't add defaults"
+			self validateProjectSpec.
 			spec := self projectReferenceSpec.
 			MetacelloProjectRegistration
 				registrationForProjectSpec: spec
@@ -384,13 +352,12 @@ MetacelloScriptEngine >> record: required [
 MetacelloScriptEngine >> register [
 
 	| spec |
-	self setDefaultsAndValidate: self projectReferenceSpec copy. "don't add defaults"
+	self validateProjectSpec.
 	spec := self projectReferenceSpec.
 	MetacelloProjectRegistration
 		registrationForProjectSpec: spec
 		ifAbsent: [ :new | new registerProject ]
-		ifPresent: [ :existing :new |
-			existing copyOnWrite: [ :existingCopy | existingCopy merge: new ] ].
+		ifPresent: [ :existing :new | existing copyOnWrite: [ :existingCopy | existingCopy merge: new ] ].
 	self root: spec
 ]
 
@@ -429,29 +396,6 @@ MetacelloScriptEngine >> root: anObject [
 	root := anObject
 ]
 
-{ #category : 'project lookup' }
-MetacelloScriptEngine >> setDefaultsAndValidate: aProjectSpec [
-	"NOTE: aProjectSpec has defaults assigned if versionString or repository missing"
-
-	| issues |
-	issues := aProjectSpec
-		          validateForScriptLoad: self
-		          withDefaultVersionString: self defaultVersionString
-		          withDefaultRepositoryDecription:
-		          self defaultRepositoryDescription.
-	issues isEmpty ifTrue: [ ^ self ].
-	(MetacelloValidationFailure
-		 issues: issues
-		 message: 'Project spec validation failure') signal
-]
-
-{ #category : 'project lookup' }
-MetacelloScriptEngine >> setDefaultsAndValidateProjectSpec [
-  "NOTE: projectSpec has defaults assigned if versionString or repository missing"
-
-  self setDefaultsAndValidate: self projectReferenceSpec
-]
-
 { #category : 'options' }
 MetacelloScriptEngine >> silently [
     ^ self options at: #'silently' ifAbsent: [ false ]
@@ -468,7 +412,7 @@ MetacelloScriptEngine >> unlock [
 	| spec |
 	MetacelloProjectRegistration
 		copyRegistryDuring: [
-			self setDefaultsAndValidate: self projectReferenceSpec copy. "don't add defaults"
+			self validateProjectSpec.
 			spec := self projectReferenceSpec.
 			MetacelloProjectRegistration
 				registrationForProjectSpec: spec
@@ -484,11 +428,14 @@ MetacelloScriptEngine >> unlock [
 MetacelloScriptEngine >> unregister [
 
 	| spec |
-	self setDefaultsAndValidate: self projectReferenceSpec copy. "don't add defaults"
+	self validateProjectSpec.
 	spec := self projectReferenceSpec.
-	MetacelloProjectRegistration
-		registrationForProjectSpec: spec
-		ifAbsent: [ :ignored |  ]
-		ifPresent: [ :existing :new | existing unregisterProject ].
+	MetacelloProjectRegistration registrationForProjectSpec: spec ifAbsent: [ :ignored |  ] ifPresent: [ :existing :new | existing unregisterProject ].
 	self root: spec
+]
+
+{ #category : 'project lookup' }
+MetacelloScriptEngine >> validateProjectSpec [
+
+	self projectReferenceSpec lookForIssues
 ]
