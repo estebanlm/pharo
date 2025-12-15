@@ -72,7 +72,8 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		BaselineOfKernel corePackageNames do: [ :package | spec package: package ].
 		BaselineOfKernel additionalPackagesPackageNames do: [ :package | spec package: package ].
 		BaselineOfCompiler corePackageNames do: [ :package | spec package: package ].
-		BaselineOfFileSystem corePackageNames  do: [ :package | spec package: package ].
+		BaselineOfFileSystem corePackageNames do: [ :package | spec package: package ].
+		BaselineOfTraits corePackageNames do: [ :package | spec package: package ].
 		BaselineOfMonticello corePackageNames do: [ :package | spec package: package ].
 
 		spec group: 'KernelGroup' with: BaselineOfKernel corePackageNames.
@@ -82,6 +83,8 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		spec group: 'CompilerGroup' with:BaselineOfCompiler corePackageNames.
 		
 		spec group: 'FileSystemGroup' with: BaselineOfFileSystem corePackageNames.
+		
+		spec group: 'TraitGroup' with: BaselineOfTraits corePackageNames.
 			
 		spec group: 'MonticelloCore' with: BaselineOfMonticello corePackageNames.
 
@@ -89,11 +92,12 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			'AdditionalPackages'.
 			'CompilerGroup'.
 			'FileSystemGroup'.
-			'Hermes-Extensions'.
+			'TraitGroup'.
 			'MonticelloCore'.
 			'SUnitGroup'.
 		}.
-
+	
+		"The next group is here for testing the minimal image"
 		spec group: 'SUnitGroup' with: {
 			'Deprecation'.
 			'Random-Core'.

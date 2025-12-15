@@ -83,7 +83,7 @@ PBBootstrap class >> repositoryLocation [
 { #category : 'package-names' }
 PBBootstrap >> allPackagesForHermes [
 
-	^ #BaselineOfPharoBootstrap asClass allPackageNames , #BaselineOfTraits asClass packagesToExportWithHermes
+	^ #BaselineOfPharoBootstrap asClass allPackageNames
 ]
 
 { #category : 'accessing' }
@@ -211,7 +211,8 @@ PBBootstrap >> generateHermesFiles [
 
 { #category : 'package-names' }
 PBBootstrap >> hermesPackageNames [
-	^ #BaselineOfPharoBootstrap asClass packagesToExportWithHermes , #BaselineOfTraits asClass packagesToExportWithHermes
+
+	^ #BaselineOfPharoBootstrap asClass packagesToExportWithHermes
 ]
 
 { #category : 'accessing' }

@@ -48,6 +48,12 @@ SystemDependenciesTest >> _4fileSystemLayerPackages [
 ]
 
 { #category : 'packages' }
+SystemDependenciesTest >> _5traitsLayerPackages [
+
+	^ self _4fileSystemLayerPackages , BaselineOfTraits corePackageNames
+]
+
+{ #category : 'packages' }
 SystemDependenciesTest >> debuggingLayerPackages [
 
 	^ self sunitCoreLayerPackages , BaselineOfDebugging corePackageNames
@@ -158,7 +164,7 @@ SystemDependenciesTest >> metacelloPackageNames [
 { #category : 'packages' }
 SystemDependenciesTest >> monticelloCoreLayerPackages [
 
-	^ self _3compilerLayerPackages , BaselineOfTraits corePackages , BaselineOfPharoBootstrap fileSystemPackageNames , BaselineOfMonticello corePackageNames
+	^ self _3compilerLayerPackages , BaselineOfTraits corePackageNames , BaselineOfPharoBootstrap fileSystemPackageNames , BaselineOfMonticello corePackageNames
 ]
 
 { #category : 'packages' }
@@ -205,7 +211,8 @@ SystemDependenciesTest >> testExternalBasicToolsDependencies [
 		self metacelloPackageNames,
 		self tonelCorePackageNames,
 		BaselineOfKernelTests withAllPackageNames,
-		BaselineOfTraits corePackages,
+		BaselineOfTraits corePackageNames,
+		BaselineOfTraits coreTraitsPackageNames,
 		BaselineOfSUnit withAllPackageNames,
 		BaselineOfDebugging corePackageNames,
 		BaselineOfDisplay withAllPackageNames,
@@ -258,7 +265,7 @@ SystemDependenciesTest >> testExternalDisplayDependencies [
 	dependencies := self externalDependendiesOf: (
 		self metacelloPackageNames,
 		self tonelCorePackageNames,
-		BaselineOfTraits corePackages,
+		BaselineOfTraits corePackageNames,
 		BaselineOfSUnit corePackageNames,
 		BaselineOfUnifiedFFI allPackageNames,
 		BaselineOfThreadedFFI allPackageNames,
@@ -308,7 +315,7 @@ SystemDependenciesTest >> testExternalMinimalImageWithSUnitDependencies [
 
 	| dependencies |
 	dependencies := self externalDependendiesOf:
-		                self _3compilerLayerPackages , BaselineOfTraits corePackages , BaselineOfPharoBootstrap fileSystemPackageNames
+		                self _3compilerLayerPackages , BaselineOfTraits corePackageNames , BaselineOfPharoBootstrap fileSystemPackageNames
 		                , BaselineOfPharoBootstrap sUnitPackageNames.
 
 	self assertEmpty: dependencies
@@ -343,7 +350,7 @@ SystemDependenciesTest >> testExternalMorphicCoreDependencies [
 		BaselineOfDebugging corePackageNames,
 		BaselineOfUIInfrastructure withAllPackageNames,
 		BaselineOfMenuRegistration withAllPackageNames,
-		BaselineOfTraits corePackages,
+		BaselineOfTraits corePackageNames,
 		BaselineOfSUnit corePackageNames,
 		BaselineOfDisplay allPackageNames,
 		BaselineOfUnifiedFFI allPackageNames,
@@ -365,7 +372,7 @@ SystemDependenciesTest >> testExternalMorphicDependencies [
 		self tonelCorePackageNames,
 		BaselineOfDebugging corePackageNames,
 		BaselineOfUIInfrastructure withAllPackageNames,
-		BaselineOfTraits corePackages,
+		BaselineOfTraits corePackageNames,
 		BaselineOfSUnit corePackageNames,
 		BaselineOfDisplay allPackageNames,
 		BaselineOfUnifiedFFI allPackageNames,
@@ -403,7 +410,8 @@ SystemDependenciesTest >> testExternalSpec2Dependencies [
 		BaselineOfDebugging corePackageNames,
 		BaselineOfUI allPackageNames,
 		BaselineOfUIInfrastructure withAllPackageNames,
-		BaselineOfTraits corePackages,
+		BaselineOfTraits corePackageNames,
+		BaselineOfTraits coreTraitsPackageNames,
 		BaselineOfUnifiedFFI allPackageNames,
 		BaselineOfFonts allPackageNames,
 
@@ -430,6 +438,12 @@ SystemDependenciesTest >> testExternalSpec2Dependencies [
 ]
 
 { #category : 'tests' }
+SystemDependenciesTest >> testExternalTraitsDependencies [
+
+	self assertEmpty: (self externalDependendiesOf: self _5traitsLayerPackages)
+]
+
+{ #category : 'tests' }
 SystemDependenciesTest >> testExternalUFFIDependencies [
 
 	| dependencies |
@@ -437,7 +451,7 @@ SystemDependenciesTest >> testExternalUFFIDependencies [
 	dependencies := self externalDependendiesOf: (
 		self metacelloPackageNames,
 		self tonelCorePackageNames,
-		BaselineOfTraits corePackages,
+		BaselineOfTraits corePackageNames,
 		BaselineOfSUnit corePackageNames,
 		BaselineOfUnifiedFFI allPackageNames,
 		BaselineOfThreadedFFI corePackageNames).
@@ -456,7 +470,8 @@ SystemDependenciesTest >> testExternalUIDependencies [
 		BaselineOfDebugging corePackageNames,
 		BaselineOfUI allPackageNames,
 		BaselineOfUIInfrastructure withAllPackageNames,
-		BaselineOfTraits corePackages,
+		BaselineOfTraits corePackageNames,
+		BaselineOfTraits coreTraitsPackageNames,
 		BaselineOfSUnit corePackageNames,
 		BaselineOfDisplay allPackageNames,
 		BaselineOfUnifiedFFI allPackageNames,
