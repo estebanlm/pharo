@@ -164,7 +164,6 @@ MetacelloVersionSpecTestCase >> testVersionSpec2 [
 				name: 'Package';
 				requires: 'AnotherPackage';
 				includes: 'IncludedPackage';
-				answers: #(#('preload' 'preload answer') #('postload' 'postload answer'));
 				file: 'Package-dkh.1';
 				preLoadDoIt: #preLoadDoIt;
 				postLoadDoIt: #postLoadDoIt;
