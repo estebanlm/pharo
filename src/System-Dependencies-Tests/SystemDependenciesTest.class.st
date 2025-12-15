@@ -24,9 +24,21 @@ SystemDependenciesTest class >> resources [
 ]
 
 { #category : 'packages' }
+SystemDependenciesTest >> _1kernelLayerPackages [
+
+	^ BaselineOfPharoBootstrap kernelPackageNames asSet , BaselineOfPharoBootstrap kernelAdditionalPackagesNames
+]
+
+{ #category : 'packages' }
+SystemDependenciesTest >> _2kernelAdditionalPackagesLayerPackages [
+
+	^ self _1kernelLayerPackages , BaselineOfPharoBootstrap kernelAdditionalPackagesNames
+]
+
+{ #category : 'packages' }
 SystemDependenciesTest >> compilerLayerPackages [
 
-	^ self kernelLayerPackages , BaselineOfPharoBootstrap compilerPackageNames
+	^ self _1kernelLayerPackages , BaselineOfPharoBootstrap compilerPackageNames
 ]
 
 { #category : 'packages' }
@@ -51,13 +63,6 @@ SystemDependenciesTest >> externalDependendiesOf: packagesCollection [
 	dependencies := dependencies copyWithoutAll: packagesCollection.
 
 	^ dependencies sorted
-]
-
-{ #category : 'packages' }
-SystemDependenciesTest >> kernelLayerPackages [
-
-	^ (BaselineOfPharoBootstrap kernelPackageNames , BaselineOfPharoBootstrap multilingualPackageNames , BaselineOfPharoBootstrap kernelAdditionalPackagesNames)
-		  asSet
 ]
 
 { #category : 'known dependencies' }
@@ -131,7 +136,6 @@ SystemDependenciesTest >> metacelloPackageNames [
 	^ BaselineOfPharoBootstrap kernelPackageNames,
 	  BaselineOfPharoBootstrap compilerPackageNames,
 	  BaselineOfPharoBootstrap fileSystemPackageNames,
-	  BaselineOfPharoBootstrap multilingualPackageNames,
 	  BaselineOfPharoBootstrap kernelAdditionalPackagesNames,
 	  BaselineOfMonticello corePackageNames,
 	  BaselineOfMonticello remoteRepositoriesPackageNames,
@@ -255,7 +259,7 @@ SystemDependenciesTest >> testExternalFileSystemDependencies [
 
 	| dependencies |
 	dependencies := self externalDependendiesOf:
-		                BaselineOfPharoBootstrap kernelPackageNames , BaselineOfPharoBootstrap multilingualPackageNames
+		                BaselineOfPharoBootstrap kernelPackageNames
 		                , BaselineOfPharoBootstrap kernelAdditionalPackagesNames , BaselineOfPharoBootstrap compilerPackageNames
 		                , BaselineOfPharoBootstrap fileSystemPackageNames.
 
@@ -263,8 +267,13 @@ SystemDependenciesTest >> testExternalFileSystemDependencies [
 ]
 
 { #category : 'tests' }
-SystemDependenciesTest >> testExternalKernelDependencies [
+SystemDependenciesTest >> testExternalKernelAdditionalPackagesDependencies [
 
+	self assertCollection: (self externalDependendiesOf: self _2kernelAdditionalPackagesLayerPackages) hasSameElements: self knownKernelDependencies
+]
+
+{ #category : 'tests' }
+SystemDependenciesTest >> testExternalKernelDependencies [
 "
 If you will break or weaken this test, a puppy will die!!!
      _ _      _
@@ -272,12 +281,8 @@ If you will break or weaken this test, a puppy will die!!!
      `_/      )
      (_(_/-(_/
 "
-	| dependencies |
 
-	dependencies := self
-		externalDependendiesOf: BaselineOfPharoBootstrap kernelPackageNames , BaselineOfPharoBootstrap multilingualPackageNames, BaselineOfPharoBootstrap kernelAdditionalPackagesNames.
-
-	self assertCollection: dependencies hasSameElements: self knownKernelDependencies
+	self assertCollection: (self externalDependendiesOf: self _1kernelLayerPackages) hasSameElements: self knownKernelDependencies
 ]
 
 { #category : 'tests' }
