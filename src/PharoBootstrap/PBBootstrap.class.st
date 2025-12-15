@@ -143,10 +143,9 @@ PBBootstrap >> createImage [
 
 { #category : 'pre-requisites' }
 PBBootstrap >> ensureBaselineOfPharoBootstrap [
-	(self originRepository versionWithInfo: (self originRepository versionInfoFromVersionNamed: 'BaselineOfMonticello')) load.
-	(self originRepository versionWithInfo: (self originRepository versionInfoFromVersionNamed: 'BaselineOfPharoBootstrap')) load.
-	(self originRepository versionWithInfo: (self originRepository versionInfoFromVersionNamed: 'BaselineOfTraits')) load.
-	(self originRepository versionWithInfo: (self originRepository versionInfoFromVersionNamed: 'BaselineOfMetacello')) load.	
+
+	#( BaselineOfKernel BaselineOfCompiler BaselineOfTraits BaselineOfFileSystem BaselineOfMonticello BaselineOfPharoBootstrap BaselineOfMetacello ) do: [
+		:baselineName | (self originRepository versionWithInfo: (self originRepository versionInfoFromVersionNamed: baselineName)) load ]
 ]
 
 { #category : 'preparation' }
@@ -235,7 +234,6 @@ PBBootstrap >> initializeImage [
 { #category : 'package-names' }
 PBBootstrap >> kernelPackageNames [
 
-	self ensureBaselineOfPharoBootstrap.
 	^ #BaselineOfPharoBootstrap asClass kernelPackageNames
 ]
 
@@ -243,13 +241,6 @@ PBBootstrap >> kernelPackageNames [
 PBBootstrap >> mczCache [
 	
 	^ MCDirectoryRepository new directory: (self bootstrapCacheDirectory / 'pharo-local' / 'package-cache') ensureCreateDirectory
-]
-
-{ #category : 'package-names' }
-PBBootstrap >> monticelloCorePackageNames [
-
-	self ensureBaselineOfPharoBootstrap.
-	^ #BaselineOfMonticello asClass corePackageNames
 ]
 
 { #category : 'accessing' }
@@ -266,19 +257,19 @@ PBBootstrap >> originRepository [
 { #category : 'package-names' }
 PBBootstrap >> packagesToExportAsMCZ [
 
-	^ #(BaselineOfMetacello) , (#BaselineOfMetacello asClass allPackageNames)  , self monticelloCorePackageNames , self hermesPackageNames, self kernelPackageNames
+	^ #BaselineOfPharoBootstrap asClass packagesToExportAsMCZ
 ]
 
 { #category : 'preparation' }
 PBBootstrap >> prepareBootstrap [
-	
+
 	self
+		ensureBaselineOfPharoBootstrap;
 		exportKernelProtocols;
 		exportAllPackagesIntoMcz;
-		
 		prepareEnvironmentForHermes;
 		generateHermesFiles;
-		prepareEnvironmentForExport.
+		prepareEnvironmentForExport
 ]
 
 { #category : 'preparation' }
@@ -323,14 +314,6 @@ PBBootstrap >> repositoryLocation [
 PBBootstrap >> repositoryLocation: aFileReference [
 
 	repositoryLocation := aFileReference
-]
-
-{ #category : 'package-names' }
-PBBootstrap >> sUnitPackageNames [
-
-	self ensureBaselineOfPharoBootstrap.
-	^ #BaselineOfPharoBootstrap asClass sUnitPackageNames
-
 ]
 
 { #category : 'accessing' }

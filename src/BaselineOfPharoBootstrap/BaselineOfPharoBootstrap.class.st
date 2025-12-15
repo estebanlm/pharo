@@ -13,24 +13,6 @@ Class {
 }
 
 { #category : 'accessing' }
-BaselineOfPharoBootstrap class >> compilerPackageNames [
-
-	^ self packagesOfGroupNamed: #CompilerGroup
-]
-
-{ #category : 'accessing' }
-BaselineOfPharoBootstrap class >> fileSystemPackageNames [
-
-	^ self packagesOfGroupNamed: #FileSystemGroup
-]
-
-{ #category : 'accessing' }
-BaselineOfPharoBootstrap class >> kernelAdditionalPackagesNames [
-
-	^ self packagesOfGroupNamed: #AdditionalPackages
-]
-
-{ #category : 'accessing' }
 BaselineOfPharoBootstrap class >> kernelPackageNames [
 
 	^ self packagesOfGroupNamed: #KernelGroup
@@ -48,6 +30,12 @@ BaselineOfPharoBootstrap class >> packagesRecursiveIn: aGroupName [
 ]
 
 { #category : 'accessing' }
+BaselineOfPharoBootstrap class >> packagesToExportAsMCZ [
+
+	^ self packagesRecursiveIn: 'ToExportAsMCZ'
+]
+
+{ #category : 'accessing' }
 BaselineOfPharoBootstrap class >> packagesToExportWithHermes [
 
 	^ self packagesRecursiveIn: 'ToLoadByHermes'
@@ -61,51 +49,42 @@ BaselineOfPharoBootstrap class >> sUnitPackageNames [
 
 { #category : 'baselines' }
 BaselineOfPharoBootstrap >> baseline: spec [
+
 	<baseline>
-
 	spec for: #common do: [
-		spec package: 'Random-Core'.
-		spec package: 'SUnit-Core'.
-		spec package: 'SUnit-Tests'.
-		spec package: 'Kernel-Tests'.
-		spec package: 'SUnit-Basic-CLI'.		
-		BaselineOfKernel corePackageNames do: [ :package | spec package: package ].
-		BaselineOfKernel additionalPackagesPackageNames do: [ :package | spec package: package ].
-		BaselineOfCompiler corePackageNames do: [ :package | spec package: package ].
-		BaselineOfFileSystem corePackageNames do: [ :package | spec package: package ].
-		BaselineOfTraits corePackageNames do: [ :package | spec package: package ].
-		BaselineOfMonticello corePackageNames do: [ :package | spec package: package ].
+			spec package: 'Random-Core'.
+			spec package: 'SUnit-Core'.
+			spec package: 'SUnit-Tests'.
+			spec package: 'Kernel-Tests'.
+			spec package: 'SUnit-Basic-CLI'.
+			BaselineOfKernel corePackageNames do: [ :package | spec package: package ].
+			BaselineOfKernel additionalPackagesPackageNames do: [ :package | spec package: package ].
+			BaselineOfCompiler corePackageNames do: [ :package | spec package: package ].
+			BaselineOfFileSystem corePackageNames do: [ :package | spec package: package ].
+			BaselineOfTraits corePackageNames do: [ :package | spec package: package ].
+			BaselineOfMonticello corePackageNames do: [ :package | spec package: package ].
+			BaselineOfMetacello corePackageNames do: [ :package | spec package: package ].
 
-		spec group: 'KernelGroup' with: BaselineOfKernel corePackageNames.
-		
-		spec group: 'AdditionalPackages' with: BaselineOfKernel additionalPackagesPackageNames.
-		
-		spec group: 'CompilerGroup' with:BaselineOfCompiler corePackageNames.
-		
-		spec group: 'FileSystemGroup' with: BaselineOfFileSystem corePackageNames.
-		
-		spec group: 'TraitGroup' with: BaselineOfTraits corePackageNames.
+			spec group: 'KernelGroup' with: BaselineOfKernel corePackageNames.
+
+			spec group: 'AdditionalPackages' with: BaselineOfKernel additionalPackagesPackageNames.
+
+			spec group: 'CompilerGroup' with: BaselineOfCompiler corePackageNames.
+
+			spec group: 'FileSystemGroup' with: BaselineOfFileSystem corePackageNames.
+
+			spec group: 'TraitGroup' with: BaselineOfTraits corePackageNames.
+
+			spec group: 'MonticelloCore' with: BaselineOfMonticello corePackageNames.
+
+			spec group: 'MetacelloGroup' with: BaselineOfMetacello corePackageNames.
+
+			"Group of packages to load with Hermes."
+			spec group: 'ToLoadByHermes' with: { 'AdditionalPackages'. 'CompilerGroup'. 'FileSystemGroup'. 'TraitGroup'. 'MonticelloCore'. 'SUnitGroup' }.
+
+			"Group of packages to export as MCZ"
+			spec group: 'ToExportAsMCZ' with: { 'KernelGroup'. 'ToLoadByHermes'. 'MetacelloGroup' }. 
 			
-		spec group: 'MonticelloCore' with: BaselineOfMonticello corePackageNames.
-
-		spec group: 'ToLoadByHermes' with: {
-			'AdditionalPackages'.
-			'CompilerGroup'.
-			'FileSystemGroup'.
-			'TraitGroup'.
-			'MonticelloCore'.
-			'SUnitGroup'.
-		}.
-	
-		"The next group is here for testing the minimal image"
-		spec group: 'SUnitGroup' with: {
-			'Deprecation'.
-			'Random-Core'.
-			'ParseTreeRewriter'.
-			'SUnit-Core'.
-			'SUnit-Tests'.
-			'Kernel-Tests'.
-			'SUnit-Basic-CLI'}.
-
-	]
+			"The next group is here for testing the minimal image"
+			spec group: 'SUnitGroup' with: { 'Deprecation'. 'Random-Core'. 'ParseTreeRewriter'. 'SUnit-Core'. 'SUnit-Tests'. 'Kernel-Tests'. 'SUnit-Basic-CLI' } ]
 ]
