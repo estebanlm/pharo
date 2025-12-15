@@ -64,27 +64,7 @@ BaselineOfPharoBootstrap >> baseline: spec [
 	<baseline>
 
 	spec for: #common do: [
-		spec package: 'AST-Core'.
-		spec package: 'Collections-Arithmetic'.
-		spec package: 'Collections-Atomic'.
-		spec package: 'Collections-Stack'.
-		spec package: 'Deprecation'.
 		spec package: 'FileSystem-Path'.
-		spec package: 'Hermes-Extensions'.
-
-		spec package: 'NumberParser'.
-	
-		spec package: 'ParseTreeRewriter'.
-		
-		spec package: 'UIManager'.
-		
-		spec package: 'CodeImport'.
-		
-		spec package: 'CodeImport-Commands'.
-		
-		spec package: 'OpalCompiler-Core'.
-		spec package: 'DebugInfo'
-			with: [ spec requires: #( 'OpalCompiler-Core' ) ].
 		
 		spec package: 'FileSystem-Core'.
 		spec package: 'FileSystem-Disk'.
@@ -96,27 +76,14 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		spec package: 'SUnit-Basic-CLI'.		
 		BaselineOfKernel corePackageNames do: [ :package | spec package: package ].
 		BaselineOfKernel additionalPackagesPackageNames do: [ :package | spec package: package ].
+		BaselineOfCompiler corePackageNames do: [ :package | spec package: package ].
 		BaselineOfMonticello corePackageNames do: [ :package | spec package: package ].
 
 		spec group: 'KernelGroup' with: BaselineOfKernel corePackageNames.
 		
 		spec group: 'AdditionalPackages' with: BaselineOfKernel additionalPackagesPackageNames.
-
-		"These packages are added using hermes after bootstrap"
-
-		spec group: 'CompilerGroup' with: {
-			'UIManager'.
-			'AST-Core'.
-			'Collections-Arithmetic'.
-			'Collections-Atomic'.
-			'Collections-Stack'.
-			'CodeImport'.
-			'CodeImport-Commands'.
-			'DebugInfo'.
-			'NumberParser'.
-			'OpalCompiler-Core'.
-			'ParseTreeRewriter'.
-			'Deprecation'}.
+		
+		spec group: 'CompilerGroup' with:BaselineOfCompiler corePackageNames.
 		
 		spec group: 'FileSystemGroup' with: {
 			'FileSystem-Path'.

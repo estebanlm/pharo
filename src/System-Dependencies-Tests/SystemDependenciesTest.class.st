@@ -36,9 +36,9 @@ SystemDependenciesTest >> _2kernelAdditionalPackagesLayerPackages [
 ]
 
 { #category : 'packages' }
-SystemDependenciesTest >> compilerLayerPackages [
+SystemDependenciesTest >> _3compilerLayerPackages [
 
-	^ self _1kernelLayerPackages , BaselineOfPharoBootstrap compilerPackageNames
+	^ self _2kernelAdditionalPackagesLayerPackages , BaselineOfPharoBootstrap compilerPackageNames
 ]
 
 { #category : 'packages' }
@@ -145,7 +145,7 @@ SystemDependenciesTest >> metacelloPackageNames [
 { #category : 'packages' }
 SystemDependenciesTest >> monticelloCoreLayerPackages [
 
-	^ self compilerLayerPackages , BaselineOfTraits corePackages , BaselineOfPharoBootstrap fileSystemPackageNames , BaselineOfMonticello corePackageNames
+	^ self _3compilerLayerPackages , BaselineOfTraits corePackages , BaselineOfPharoBootstrap fileSystemPackageNames , BaselineOfMonticello corePackageNames
 ]
 
 { #category : 'packages' }
@@ -223,7 +223,7 @@ SystemDependenciesTest >> testExternalBasicToolsDependencies [
 SystemDependenciesTest >> testExternalCompilerDependencies [
 
 	| dependencies |
-	dependencies := self externalDependendiesOf: self compilerLayerPackages.
+	dependencies := self externalDependendiesOf: self _3compilerLayerPackages.
 
 	self assertCollection: dependencies hasSameElements: self knownCompilerDependencies
 ]
@@ -299,7 +299,7 @@ SystemDependenciesTest >> testExternalMinimalImageWithSUnitDependencies [
 
 	| dependencies |
 	dependencies := self externalDependendiesOf:
-		                self compilerLayerPackages , BaselineOfTraits corePackages , BaselineOfPharoBootstrap fileSystemPackageNames
+		                self _3compilerLayerPackages , BaselineOfTraits corePackages , BaselineOfPharoBootstrap fileSystemPackageNames
 		                , BaselineOfPharoBootstrap sUnitPackageNames.
 
 	self assertEmpty: dependencies

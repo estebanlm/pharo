@@ -54,6 +54,7 @@ BaselineOfKernel >> baseline: spec [
 				package: 'Zinc-Character-Encoding-Core'.
 
 			spec
+				package: 'Hermes-Extensions';
 				package: 'Clap-Core';
 				package: 'Clap-Commands-Pharo';
 				package: 'ReflectionMirrors-Primitives';
@@ -71,6 +72,6 @@ BaselineOfKernel >> baseline: spec [
 					'System-CommandLineHandler'. 'System-Finalization'. 'System-Platforms'. 'System-SessionManager'. 'ClassDefinitionPrinters'. 'CodeExport'. 'System-Sources'.
 					'System-Support'. 'Zinc-Character-Encoding-Core' };
 				group: 'AdditionalPackages'
-				with: { 'Clap-Core'. 'Clap-Commands-Pharo'. 'ReflectionMirrors-Primitives'. 'System-Time'. 'Math-Operations-Extensions'. 'System-NumberPrinting'.
-					'System-Version'. 'Multilingual-Encodings' } ]
+				with: { 'Hermes-Extensions'. 'Clap-Core'. 'Clap-Commands-Pharo'. 'ReflectionMirrors-Primitives'. 'System-Time'. 'Math-Operations-Extensions'.
+					'System-NumberPrinting'. 'System-Version'. 'Multilingual-Encodings' } ]
 ]
