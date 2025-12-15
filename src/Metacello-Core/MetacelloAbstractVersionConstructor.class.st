@@ -604,12 +604,6 @@ MetacelloAbstractVersionConstructor >> setProject: aProject [
 	project := aProject
 ]
 
-{ #category : 'api' }
-MetacelloAbstractVersionConstructor >> supplyingAnswers: aCollection [
-
-	self root answers: aCollection
-]
-
 { #category : 'accessing' }
 MetacelloAbstractVersionConstructor >> symbolicVersion [
 

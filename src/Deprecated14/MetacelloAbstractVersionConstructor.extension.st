@@ -43,3 +43,9 @@ MetacelloAbstractVersionConstructor >> setTimestampWithBlock: aBlock [
 		self root timestamp: spec ].
 	self with: spec during: aBlock
 ]
+
+{ #category : '*Deprecated14' }
+MetacelloAbstractVersionConstructor >> supplyingAnswers: aCollection [
+
+	self deprecated: 'This option is not available anymore since multiple versions of Pharo.'
+]
