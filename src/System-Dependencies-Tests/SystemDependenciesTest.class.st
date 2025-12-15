@@ -26,19 +26,25 @@ SystemDependenciesTest class >> resources [
 { #category : 'packages' }
 SystemDependenciesTest >> _1kernelLayerPackages [
 
-	^ BaselineOfPharoBootstrap kernelPackageNames asSet , BaselineOfPharoBootstrap kernelAdditionalPackagesNames
+	^ BaselineOfKernel corePackageNames asSet
 ]
 
 { #category : 'packages' }
 SystemDependenciesTest >> _2kernelAdditionalPackagesLayerPackages [
 
-	^ self _1kernelLayerPackages , BaselineOfPharoBootstrap kernelAdditionalPackagesNames
+	^ self _1kernelLayerPackages , BaselineOfKernel additionalPackagesPackageNames
 ]
 
 { #category : 'packages' }
 SystemDependenciesTest >> _3compilerLayerPackages [
 
-	^ self _2kernelAdditionalPackagesLayerPackages , BaselineOfPharoBootstrap compilerPackageNames
+	^ self _2kernelAdditionalPackagesLayerPackages , BaselineOfCompiler corePackageNames
+]
+
+{ #category : 'packages' }
+SystemDependenciesTest >> _4fileSystemLayerPackages [
+
+	^ self _3compilerLayerPackages , BaselineOfFileSystem corePackageNames
 ]
 
 { #category : 'packages' }
@@ -88,10 +94,17 @@ SystemDependenciesTest >> knownDebuggingDependencies [
 ]
 
 { #category : 'known dependencies' }
-SystemDependenciesTest >> knownKernelDependencies [
+SystemDependenciesTest >> knownKernelAdditionalPackagesDependencies [
 	"ideally this list should be empty"
 
 	^ #( #'FileSystem-Core' 'CodeImport' )
+]
+
+{ #category : 'known dependencies' }
+SystemDependenciesTest >> knownKernelDependencies [
+	"ideally this list should be empty"
+
+	^ #( #'FileSystem-Core' 'CodeImport' 'Math-Operations-Extensions' 'System-Time' )
 ]
 
 { #category : 'known dependencies' }
@@ -257,19 +270,15 @@ SystemDependenciesTest >> testExternalDisplayDependencies [
 { #category : 'tests' }
 SystemDependenciesTest >> testExternalFileSystemDependencies [
 
-	| dependencies |
-	dependencies := self externalDependendiesOf:
-		                BaselineOfPharoBootstrap kernelPackageNames
-		                , BaselineOfPharoBootstrap kernelAdditionalPackagesNames , BaselineOfPharoBootstrap compilerPackageNames
-		                , BaselineOfPharoBootstrap fileSystemPackageNames.
-
-	self assertEmpty: dependencies
+	self assertEmpty: (self externalDependendiesOf: self _4fileSystemLayerPackages)
 ]
 
 { #category : 'tests' }
 SystemDependenciesTest >> testExternalKernelAdditionalPackagesDependencies [
 
-	self assertCollection: (self externalDependendiesOf: self _2kernelAdditionalPackagesLayerPackages) hasSameElements: self knownKernelDependencies
+	self
+		assertCollection: (self externalDependendiesOf: self _2kernelAdditionalPackagesLayerPackages)
+		hasSameElements: self knownKernelAdditionalPackagesDependencies
 ]
 
 { #category : 'tests' }

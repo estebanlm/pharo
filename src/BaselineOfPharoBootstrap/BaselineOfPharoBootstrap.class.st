@@ -64,11 +64,6 @@ BaselineOfPharoBootstrap >> baseline: spec [
 	<baseline>
 
 	spec for: #common do: [
-		spec package: 'FileSystem-Path'.
-		
-		spec package: 'FileSystem-Core'.
-		spec package: 'FileSystem-Disk'.
-
 		spec package: 'Random-Core'.
 		spec package: 'SUnit-Core'.
 		spec package: 'SUnit-Tests'.
@@ -77,6 +72,7 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		BaselineOfKernel corePackageNames do: [ :package | spec package: package ].
 		BaselineOfKernel additionalPackagesPackageNames do: [ :package | spec package: package ].
 		BaselineOfCompiler corePackageNames do: [ :package | spec package: package ].
+		BaselineOfFileSystem corePackageNames  do: [ :package | spec package: package ].
 		BaselineOfMonticello corePackageNames do: [ :package | spec package: package ].
 
 		spec group: 'KernelGroup' with: BaselineOfKernel corePackageNames.
@@ -85,10 +81,7 @@ BaselineOfPharoBootstrap >> baseline: spec [
 		
 		spec group: 'CompilerGroup' with:BaselineOfCompiler corePackageNames.
 		
-		spec group: 'FileSystemGroup' with: {
-			'FileSystem-Path'.
-			'FileSystem-Core'.
-			'FileSystem-Disk'}.
+		spec group: 'FileSystemGroup' with: BaselineOfFileSystem corePackageNames.
 			
 		spec group: 'MonticelloCore' with: BaselineOfMonticello corePackageNames.
 
