@@ -1,23 +1,23 @@
 Class {
-	#name : 'MetacelloReferenceConfig',
+	#name : 'MetacelloReferenceBaseline',
 	#superclass : 'Object',
 	#instVars : [
 		'project'
 	],
-	#category : 'Metacello-TestsReference',
-	#package : 'Metacello-TestsReference'
+	#category : 'Metacello-TestsCore',
+	#package : 'Metacello-TestsCore'
 }
 
 { #category : 'accessing' }
-MetacelloReferenceConfig class >> project [
+MetacelloReferenceBaseline class >> project [
   "force new version as workaround for https://code.google.com/p/smalltalk-hub/issues/detail?id=21"
 
   ^ self new project
 ]
 
 { #category : 'baseline 1.0' }
-MetacelloReferenceConfig >> baseline10: spec [ 
-	<version: '1.0-baseline'>
+MetacelloReferenceBaseline >> baseline: spec [ 
+	<baseline>
 	
 	spec for: #common do: [
 		"recommended methods for specifying author, blessing, description, timestamp, preLoadDoIt, postLoadDoit"
@@ -157,9 +157,7 @@ MetacelloReferenceConfig >> baseline10: spec [
 ]
 
 { #category : 'accessing' }
-MetacelloReferenceConfig >> project [
+MetacelloReferenceBaseline >> project [
 
-	^ project ifNil: [
-		  "Construct Metacello project"
-		  project := (MetacelloVersionConstructor on: self) project ]
+	^ (MetacelloBaselineConstructor on: self) project
 ]
