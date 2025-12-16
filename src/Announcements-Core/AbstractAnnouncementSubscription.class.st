@@ -12,10 +12,31 @@ Class {
 		'announcementClass',
 		'action'
 	],
+	#classVars : [
+		'ShouldForkDelivery'
+	],
 	#category : 'Announcements-Core-Subscription',
 	#package : 'Announcements-Core',
 	#tag : 'Subscription'
 }
+
+{ #category : 'class initialization' }
+AbstractAnnouncementSubscription class >> initialize [
+
+	self shouldForkDelivery: true
+]
+
+{ #category : 'accessing' }
+AbstractAnnouncementSubscription class >> shouldForkDelivery [
+
+	^ ShouldForkDelivery
+]
+
+{ #category : 'accessing' }
+AbstractAnnouncementSubscription class >> shouldForkDelivery: anObject [
+
+	ShouldForkDelivery := anObject
+]
 
 { #category : 'accessing' }
 AbstractAnnouncementSubscription >> action [
@@ -104,6 +125,12 @@ AbstractAnnouncementSubscription >> subscriber [
 AbstractAnnouncementSubscription >> subscriber: aSubscriber [
 
 	^ self subclassResponsibility
+]
+
+{ #category : 'finalization' }
+AbstractAnnouncementSubscription >> unregister [
+
+	"Nothing, for compatibility with weak subscriptions"
 ]
 
 { #category : 'accessing' }
