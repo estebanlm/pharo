@@ -152,12 +152,6 @@ ConfigurationOf >> projectClass [
     ^ MetacelloProject
 ]
 
-{ #category : 'private' }
-ConfigurationOf >> versionDoesNotExistError: versionStringOrSymbol [
-
-	(MetacelloSymbolicVersionDoesNotExistError project: self project versionString: versionStringOrSymbol) signal
-]
-
 { #category : 'accessing' }
 ConfigurationOf >> versionNumberClass [
     ^ MetacelloSemanticVersionNumber

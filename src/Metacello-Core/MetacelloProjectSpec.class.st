@@ -389,12 +389,6 @@ MetacelloProjectSpec >> getFile [
     ^ file
 ]
 
-{ #category : 'accessing' }
-MetacelloProjectSpec >> getOperator [
-
-	^operator
-]
-
 { #category : 'querying' }
 MetacelloProjectSpec >> getPostLoadDoIt [
 
@@ -531,6 +525,13 @@ MetacelloProjectSpec >> loads [
 MetacelloProjectSpec >> loads: aCollection [
 
 	aCollection setLoadsInMetacelloProject: self
+]
+
+{ #category : 'scripting' }
+MetacelloProjectSpec >> lookForIssues [
+
+	self name ifNil: [ MetacelloValidationFailure signal: 'Name field required' ].
+	self className ifNil: [ MetacelloValidationFailure signal: 'ClassName field required' ]
 ]
 
 { #category : 'merging' }
@@ -801,50 +802,6 @@ MetacelloProjectSpec >> unregisterProject [
         registrationForProjectSpec: self
         ifAbsent: [  ]
         ifPresent: [ :existing :new | existing unregisterProject ]
-]
-
-{ #category : 'scripting' }
-MetacelloProjectSpec >> validateForScriptLoad: aScriptEngine withDefaultVersionString: defaultVersionString withDefaultRepositoryDecription: defaultRepositoryDecription [
-
-	| issues callSite |
-	issues := OrderedCollection new.
-	callSite := #validateForScriptLoad:withDefaultVersionString:withDefaultRepositoryDecription:.
-	self name ifNil: [
-		issues add: (MetacelloValidationError
-				 reasonCode: #incompleteProjectSpec
-				 callSite: callSite
-				 explanation: 'name field required') ].
-	self className ifNil: [
-		issues add: (MetacelloValidationError
-				 reasonCode: #incompleteProjectSpec
-				 callSite: callSite
-				 explanation: 'className field required') ].
-	self repositories isEmpty ifTrue: [
-		defaultRepositoryDecription
-			ifNotNil: [ self repository: defaultRepositoryDecription ]
-			ifNil: [
-				issues add: (MetacelloValidationError
-						 reasonCode: #incompleteProjectSpec
-						 callSite: callSite
-						 explanation: 'repository field required') ] ].
-	self
-		validateVersionString: issues
-		withDefaultVersionString: defaultVersionString.
-	^ issues
-]
-
-{ #category : 'scripting' }
-MetacelloProjectSpec >> validateVersionString: issues withDefaultVersionString: defaultVersionString [
-
-	self versionString ifNil: [
-		defaultVersionString
-			ifNotNil: [ self versionString: defaultVersionString ]
-			ifNil: [
-				issues add: (MetacelloValidationError
-						 reasonCode: #incompleteProjectSpec
-						 callSite:
-						 #validateForScriptLoad:withDefaultVersionString:withDefaultRepositoryDecription:
-						 explanation: 'version field required') ] ]
 ]
 
 { #category : 'querying' }
