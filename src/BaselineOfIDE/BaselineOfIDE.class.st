@@ -101,9 +101,12 @@ BaselineOfIDE >> baseline: spec [
 		self load: 'NewValueHolder' group: 'tests' spec: spec.
 		spec package: 'STON-Extensions'.
 
-		spec package: 'BaselineOfPharoBootstrap'.
+		spec package: 'BaselineOfKernel'.
+		spec package: 'BaselineOfCompiler'.
+		spec package: 'BaselineOfFileSystem'.
 		spec package: 'BaselineOfMonticello'.
 		spec package: 'BaselineOfMetacello'.
+		spec package: 'BaselineOfPharoBootstrap'.
 		spec baseline: 'ReferenceFinder' with: [ spec repository: repository ].
 		spec baseline: 'ClassParser' with: [ spec repository: repository ].
 
