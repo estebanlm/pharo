@@ -78,6 +78,7 @@ BaselineOfKernel >> baseline: spec [
 				package: 'Collections-Unordered-Tests';
 				package: 'Collections-Weak-Tests' with: [ spec requires: #( 'Collections-Unordered-Tests' ) ];
 				package: 'Kernel-Tests';
+				package: 'Files-Tests';
 				package: 'Announcements-Core-Tests';
 				package: 'System-Platforms-Tests';
 				package: 'System-Finalization-Tests';
@@ -98,5 +99,5 @@ BaselineOfKernel >> baseline: spec [
 				with:
 					{ 'Collections-Abstract-Tests'. 'Collections-Native-Tests'. 'Collections-Sequenceable-Tests'. 'Collections-Streams-Tests'. 'Collections-Strings-Tests'.
 					'Collections-Support-Tests'. 'Collections-Unordered-Tests'. 'Collections-Weak-Tests'. 'Kernel-Tests'. 'Announcements-Core-Tests'. 'System-Platforms-Tests'.
-					'System-Finalization-Tests'. 'Zinc-Character-Encoding-Tests'. 'System-Time-Tests' } ]
+					 'Files-Tests'. 'System-Finalization-Tests'. 'Zinc-Character-Encoding-Tests'. 'System-Time-Tests' } ]
 ]

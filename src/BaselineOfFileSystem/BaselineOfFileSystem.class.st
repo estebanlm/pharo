@@ -11,6 +11,12 @@ BaselineOfFileSystem class >> corePackageNames [
 	^ self packagesOfGroupNamed: #Core
 ]
 
+{ #category : 'accessing' }
+BaselineOfFileSystem class >> testsPackageNames [
+
+	^ self packagesOfGroupNamed: #Tests
+]
+
 { #category : 'baselines' }
 BaselineOfFileSystem >> baseline: spec [
 
@@ -19,7 +25,13 @@ BaselineOfFileSystem >> baseline: spec [
 			spec
 				package: 'FileSystem-Path';
 				package: 'FileSystem-Core';
-				package: 'FileSystem-Disk'.
+				package: 'FileSystem-Disk';
+				
+				package: 'FileSystem-Core-Tests';
+				package: 'FileSystem-Disk-Tests';
+				package: 'FileSystem-Tests-Attributes'.
 
-			spec group: 'Core' with: { 'FileSystem-Path'. 'FileSystem-Core'. 'FileSystem-Disk' } ]
+			spec
+				group: 'Core' with: { 'FileSystem-Path'. 'FileSystem-Core'. 'FileSystem-Disk' };
+				group: 'Tests' with: { 'FileSystem-Core-Tests'. 'FileSystem-Disk-Tests'. 'FileSystem-Tests-Attributes' } ]
 ]

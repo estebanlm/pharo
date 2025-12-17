@@ -22,6 +22,8 @@ BaselineOfBaseLibraries >> baseline: spec [
 	spec for: #common do: [
 			spec baseline: 'SUnit' with: [ spec loads: 'Core' from: repository ].
 			spec baseline: 'Kernel' with: [ spec loads: 'Tests' from: repository ].
+			spec baseline: 'Compiler' with: [ spec loads: 'Tests' from: repository ].
+			spec baseline: 'FileSystem' with: [ spec loads: 'Tests' from: repository ].
 			spec baseline: 'KernelTests' with: [ spec repository: repository ].
 			spec baseline: 'Slot' with: [ spec loads: 'core' from: repository ].
 			spec baseline: 'Beacon' with: [ spec loads: #( 'CoreTests' ) from: repository ].

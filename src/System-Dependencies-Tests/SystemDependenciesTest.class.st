@@ -193,6 +193,7 @@ SystemDependenciesTest >> testExternalBasicToolsDependencies [
 		self _10debuggingLayerPackages,
 		BaselineOfKernel testsPackageNames,
 		BaselineOfCompiler testsPackageNames,
+		BaselineOfFileSystem testsPackageNames,
 		BaselineOfKernelTests withAllPackageNames,
 		BaselineOfTraits coreTraitsPackageNames,
 		BaselineOfSUnit withAllPackageNames,
