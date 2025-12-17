@@ -203,7 +203,7 @@ ReRenameMethodDriver >> runRefactoring [
 		failedConditions := refactoring failedApplicabilityPreconditions.
 		failedConditions do: [ :cond |
 				self informDialog
-					message: cond errorString;
+					label: cond errorString;
 					title: 'Invalid method name';
 					openModal ] ] doWhileFalse: [ failedConditions isEmpty ].
 

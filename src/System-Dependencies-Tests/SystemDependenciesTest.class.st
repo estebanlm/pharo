@@ -194,7 +194,6 @@ SystemDependenciesTest >> testExternalBasicToolsDependencies [
 		BaselineOfKernel testsPackageNames,
 		BaselineOfCompiler testsPackageNames,
 		BaselineOfFileSystem testsPackageNames,
-		BaselineOfKernelTests withAllPackageNames,
 		BaselineOfTraits coreTraitsPackageNames,
 		BaselineOfSUnit withAllPackageNames,
 		BaselineOfDisplay withAllPackageNames,
