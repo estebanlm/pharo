@@ -402,7 +402,8 @@ ReleaseTest >> testNoShadowedVariablesInMethods [
 		                   (OCClosureCompilerTest >> #testInlineBlockShadowVariableUsedInInnerInnerBlock).
 		                   (OCClosureCompilerTest >> #testInlineBlockShadowVariableInnerBlocks).
 		                   (OCClosureCompilerTest >> #testInlineBlockShadowVariableParameter).
-		                   (ReClassToConvertTemporaryToInstanceVariable >> #doAction2) }.
+		                   (ReClassToConvertTemporaryToInstanceVariable >> #doAction2).
+		                   (MethodMapExamples >> #exampleWithNestedHoisting) }.
 
 	remaining := found asOrderedCollection
 		             removeAll: validExceptions;
