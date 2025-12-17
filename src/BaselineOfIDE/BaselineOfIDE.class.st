@@ -71,6 +71,7 @@ BaselineOfIDE >> baseline: spec [
 		spec package: 'OpalCompiler-UI'.
 		spec package: 'OpalCompiler-UI-Tests'.
 
+		self load: 'Monticello' group: 'Tests' spec: spec.
 		self load: 'Metacello' group: 'Tests' spec: spec.
 
 		spec baseline: 'ReflectionMirrors' with: [ spec repository: repository ].
