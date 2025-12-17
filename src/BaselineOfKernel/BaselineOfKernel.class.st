@@ -17,6 +17,12 @@ BaselineOfKernel class >> corePackageNames [
 	^ self packagesOfGroupNamed: #Core
 ]
 
+{ #category : 'accessing' }
+BaselineOfKernel class >> testsPackageNames [
+
+	^ self packagesOfGroupNamed: #Tests
+]
+
 { #category : 'baselines' }
 BaselineOfKernel >> baseline: spec [
 
@@ -51,9 +57,8 @@ BaselineOfKernel >> baseline: spec [
 				package: 'CodeExport';
 				package: 'System-Sources';
 				package: 'System-Support';
-				package: 'Zinc-Character-Encoding-Core'.
-
-			spec
+				package: 'Zinc-Character-Encoding-Core';
+				
 				package: 'Hermes-Extensions';
 				package: 'Clap-Core';
 				package: 'Clap-Commands-Pharo';
@@ -62,7 +67,20 @@ BaselineOfKernel >> baseline: spec [
 				package: 'Math-Operations-Extensions';
 				package: 'System-NumberPrinting';
 				package: 'System-Version';
-				package: 'Multilingual-Encodings'.
+				package: 'Multilingual-Encodings';
+				
+				package: 'Collections-Abstract-Tests';
+				package: 'Collections-Native-Tests';
+				package: 'Collections-Sequenceable-Tests';
+				package: 'Collections-Streams-Tests';
+				package: 'Collections-Strings-Tests';
+				package: 'Collections-Support-Tests';
+				package: 'Collections-Unordered-Tests';
+				package: 'Collections-Weak-Tests' with: [ spec requires: #( 'Collections-Unordered-Tests' ) ];
+				package: 'Kernel-Tests';
+				package: 'Announcements-Core-Tests';
+				package: 'System-Platforms-Tests';
+				package: 'System-Finalization-Tests'.
 
 			spec
 				group: 'Core'
@@ -73,5 +91,10 @@ BaselineOfKernel >> baseline: spec [
 					'System-Support'. 'Zinc-Character-Encoding-Core' };
 				group: 'AdditionalPackages'
 				with: { 'Hermes-Extensions'. 'Clap-Core'. 'Clap-Commands-Pharo'. 'ReflectionMirrors-Primitives'. 'System-Time'. 'Math-Operations-Extensions'.
-					'System-NumberPrinting'. 'System-Version'. 'Multilingual-Encodings' } ]
+					'System-NumberPrinting'. 'System-Version'. 'Multilingual-Encodings' };
+				group: 'Tests'
+				with:
+					{ 'Collections-Abstract-Tests'. 'Collections-Native-Tests'. 'Collections-Sequenceable-Tests'. 'Collections-Streams-Tests'. 'Collections-Strings-Tests'.
+					'Collections-Support-Tests'. 'Collections-Unordered-Tests'. 'Collections-Weak-Tests'. 'Kernel-Tests'. 'Announcements-Core-Tests'. 'System-Platforms-Tests'.
+					'System-Finalization-Tests' } ]
 ]

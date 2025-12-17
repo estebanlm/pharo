@@ -191,6 +191,7 @@ SystemDependenciesTest >> testExternalBasicToolsDependencies [
 
 	dependencies := self externalDependendiesOf: (
 		self _10debuggingLayerPackages,
+		BaselineOfKernel testsPackageNames,
 		BaselineOfKernelTests withAllPackageNames,
 		BaselineOfTraits coreTraitsPackageNames,
 		BaselineOfSUnit withAllPackageNames,
