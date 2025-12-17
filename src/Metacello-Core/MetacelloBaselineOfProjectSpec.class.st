@@ -38,11 +38,6 @@ MetacelloBaselineOfProjectSpec >> canUpgradeTo: aProjectSpec [
   ^ false
 ]
 
-{ #category : 'printing' }
-MetacelloBaselineOfProjectSpec >> configHasVersionString [
-  ^ false
-]
-
 { #category : 'private' }
 MetacelloBaselineOfProjectSpec >> constructClassName [
     ^ 'BaselineOf' , self name

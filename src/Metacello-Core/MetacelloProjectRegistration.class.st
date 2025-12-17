@@ -256,17 +256,6 @@ MetacelloProjectRegistration >> copyOnWrite: aBlock [
 ]
 
 { #category : 'accessing' }
-MetacelloProjectRegistration >> currentBranchName [
-
-	^ self configurationProjectSpec
-		  ifNotNil: [
-			  configurationProjectSpec versionOrNil
-				  ifNil: [ '' ]
-				  ifNotNil: [ :vrsn | vrsn blessing asString ] ]
-		  ifNil: [ baselineProjectSpec repositoryBranchName ]
-]
-
-{ #category : 'accessing' }
 MetacelloProjectRegistration >> currentVersionString [
 
 	^ self configurationProjectSpec
