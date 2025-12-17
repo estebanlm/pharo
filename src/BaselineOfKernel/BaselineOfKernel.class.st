@@ -80,7 +80,9 @@ BaselineOfKernel >> baseline: spec [
 				package: 'Kernel-Tests';
 				package: 'Announcements-Core-Tests';
 				package: 'System-Platforms-Tests';
-				package: 'System-Finalization-Tests'.
+				package: 'System-Finalization-Tests';
+				package: 'Zinc-Character-Encoding-Tests';
+				package: 'System-Time-Tests'.
 
 			spec
 				group: 'Core'
@@ -96,5 +98,5 @@ BaselineOfKernel >> baseline: spec [
 				with:
 					{ 'Collections-Abstract-Tests'. 'Collections-Native-Tests'. 'Collections-Sequenceable-Tests'. 'Collections-Streams-Tests'. 'Collections-Strings-Tests'.
 					'Collections-Support-Tests'. 'Collections-Unordered-Tests'. 'Collections-Weak-Tests'. 'Kernel-Tests'. 'Announcements-Core-Tests'. 'System-Platforms-Tests'.
-					'System-Finalization-Tests' } ]
+					'System-Finalization-Tests'. 'Zinc-Character-Encoding-Tests'. 'System-Time-Tests' } ]
 ]
