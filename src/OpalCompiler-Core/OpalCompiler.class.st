@@ -547,7 +547,7 @@ OpalCompiler >> install [
 
 	changeStamp ifNil: [ changeStamp := DateAndTime now printString ].
 	logSource := self logged ifNil: [ true ].
-	protocol := protocol ifNil: [ self priorMethod ifNotNil: [ self priorMethod protocol name ] ].
+	protocol := protocol ifNil: [ self priorMethod ifNotNil: [ self priorMethod protocol name ] ifNil: [ Protocol unclassified ] ].
 
 	logSource ifTrue: [
 			method
