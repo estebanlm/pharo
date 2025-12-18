@@ -1,3 +1,6 @@
+"
+I'm a heurisitc that apply when i see a dependency for a package
+"
 Class {
 	#name : 'CoDependencyMessageHeuritics',
 	#superclass : 'CoASTNodeFetcherHeuristic',
@@ -8,7 +11,6 @@ Class {
 
 { #category : 'requests' }
 CoDependencyMessageHeuritics >> appliesForNode: aNode inContext: aContext [
-
     ^ (aNode isMessage and: [ aNode receiver isVariable ])
         or: [ aNode isMethod ]
 ]
