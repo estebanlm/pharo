@@ -77,7 +77,6 @@ MetacelloReferenceBaseline >> baseline: spec [
 						operator: #~>;
 						loads: #('UI-Core' 'UI-Tests' );
 						repository: 'http://www.example.com/r'];
-			"Change the versionString for 'UI Support' to '1.0.1'"
 			project: 'UI Support';	
 			"Remove the project reference 'UI Tests'"				
 			removeProject: 'UI Tests';
