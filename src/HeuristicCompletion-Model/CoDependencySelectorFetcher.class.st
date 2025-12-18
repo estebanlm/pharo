@@ -1,3 +1,6 @@
+"
+Suggests selectors visible from the local package and its direct dependencies.
+"
 Class {
 	#name : 'CoDependencySelectorFetcher',
 	#superclass : 'CoPackageScopedSelectorFetcher',

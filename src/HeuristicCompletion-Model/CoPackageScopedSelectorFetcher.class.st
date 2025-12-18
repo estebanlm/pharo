@@ -1,3 +1,6 @@
+"
+Provides selector completions from the local package, its direct dependencies, and their dependencies.
+"
 Class {
 	#name : 'CoPackageScopedSelectorFetcher',
 	#superclass : 'CoGlobalSelectorFetcher',
