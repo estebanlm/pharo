@@ -369,9 +369,9 @@ SHRBTextStyler class >> initialTextAttributesForStyleTable: aStyleTable [
 	
 	dictionary := IdentityDictionary new.
 	aStyleTable do: [ :each |
-		| element emphasis color backgroundColor backgroundEmphasis |
+		| element emphasis color backgroundColor |
 		
-		element := each 	at: 1.
+		element := each at: 1.
 		color := each at: 2 ifAbsent: [ ].
 		color := color ifNotNil: [ Color colorFrom: color ].
 		emphasis := each at: 3 ifAbsent: [  ].
@@ -383,7 +383,7 @@ SHRBTextStyler class >> initialTextAttributesForStyleTable: aStyleTable [
 			backgroundColor: backgroundColor
 			emphasis: emphasis)
 		ifNotEmpty: [ :attrArray | 
-			dict at: element put: attrArray ] ].
+			dictionary at: element put: attrArray ] ].
 
 	^ dictionary
 ]
