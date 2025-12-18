@@ -4,8 +4,6 @@ Class {
 	#instVars : [
 		'versionNumberClass',
 		'projectAttributes',
-		'errorMap',
-		'symbolicVersionMap',
 		'loadType',
 		'versionMap',
 		'configuration'
@@ -27,11 +25,6 @@ MetacelloProject class >> new [
 MetacelloProject class >> on: aConfig [
 
 	^self basicNew configuration: aConfig; yourself
-]
-
-{ #category : 'accessing' }
-MetacelloProject class >> versionConstructorClass [
-    ^ MetacelloVersionConstructor
 ]
 
 { #category : 'scripting' }
@@ -100,17 +93,6 @@ MetacelloProject >> development [
 	^self version: #development
 ]
 
-{ #category : 'accessing' }
-MetacelloProject >> errorMap [
-	^ errorMap
-]
-
-{ #category : 'accessing' }
-MetacelloProject >> errorMap: anObject [
-    errorMap ifNil: [ errorMap := Dictionary new ].
-    errorMap := anObject
-]
-
 { #category : 'spec classes' }
 MetacelloProject >> groupSpec [
 
@@ -154,14 +136,9 @@ MetacelloProject >> loadType: aSymbol [
 
 { #category : 'private' }
 MetacelloProject >> lookupVersion: aVersionString ifAbsent: aBlock [
-    "please use version:...this is a private method"
+	"please use version:...this is a private method"
 
-    ^ self map
-        at: aVersionString
-        ifAbsent: [ 
-            (MetacelloVersionDefinitionError project: self project versionString: aVersionString)
-                exception: (self errorMap at: aVersionString ifAbsent: [ ^ aBlock value ]);
-                signal ]
+	^ self map at: aVersionString ifAbsent: [ ^ aBlock value ]
 ]
 
 { #category : 'accessing' }
@@ -307,24 +284,6 @@ MetacelloProject >> stableVersion [
 	^self version: #stable
 ]
 
-{ #category : 'accessing' }
-MetacelloProject >> symbolicVersionMap [
-
-	^symbolicVersionMap
-]
-
-{ #category : 'accessing' }
-MetacelloProject >> symbolicVersionMap: aDictionary [
-
-	symbolicVersionMap := aDictionary
-]
-
-{ #category : 'versions' }
-MetacelloProject >> symbolicVersionSymbols [
-
-	^self symbolicVersionMap keys asArray sort: [:a :b | a <= b ]
-]
-
 { #category : 'spec classes' }
 MetacelloProject >> valueHolderSpec [
 
@@ -333,21 +292,8 @@ MetacelloProject >> valueHolderSpec [
 
 { #category : 'versions' }
 MetacelloProject >> version: aVersionString [
-    
-    aVersionString isSymbol
-        ifTrue: [ 
-            | symbolicVersionString |
-            symbolicVersionString := self symbolicVersionMap
-                at: aVersionString
-                ifAbsent: [ (MetacelloSymbolicVersionDoesNotExistError project: self project versionString: aVersionString) signal ].
-            symbolicVersionString == #'notDefined'
-                ifTrue: [ (MetacelloSymbolicVersionNotDefinedError project: self project versionString: aVersionString) signal ].
-            ^ self
-                lookupVersion: symbolicVersionString
-                ifAbsent: [ (MetacelloSymbolicVersionDoesNotExistError project: self project versionString: symbolicVersionString) signal ] ].
-    ^ self
-        lookupVersion: aVersionString
-        ifAbsent: [ (MetacelloVersionDoesNotExistError project: self project versionString: aVersionString) signal ]
+
+	^ self lookupVersion: aVersionString ifAbsent: [ (MetacelloVersionDoesNotExistError project: self project versionString: aVersionString) signal ]
 ]
 
 { #category : 'versions' }
