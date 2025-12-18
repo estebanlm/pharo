@@ -25,24 +25,6 @@ MetacelloScriptEngine class >> baseNameOf: className [
         ifFalse: [ className ] ]
 ]
 
-{ #category : 'utilities' }
-MetacelloScriptEngine class >> baselineNameFrom: baseName [
-    "Return the fully-qualified configuration class name."
-
-    ^ (baseName indexOfSubCollection: 'BaselineOf') > 0
-        ifTrue: [ baseName ]
-        ifFalse: [ 'BaselineOf' , baseName ]
-]
-
-{ #category : 'utilities' }
-MetacelloScriptEngine class >> configurationNameFrom: baseName [
-	"Return the fully-qualified configuration class name."
-
-	^ ((baseName beginsWith: 'ConfigurationOf')
-		   ifTrue: [ baseName ]
-		   ifFalse: [ 'ConfigurationOf' , baseName ]) asSymbol
-]
-
 { #category : 'actions api' }
 MetacelloScriptEngine >> do: aBlock required: required [
 
