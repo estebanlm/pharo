@@ -100,6 +100,9 @@ fi
 BOOTSTRAP_IMAGE_NAME=bootstrap
 BOOTSTRAP_ARCHIVE_IMAGE_NAME=${PHARO_NAME_PREFIX}-bootstrap-${SUFFIX}
 
+HERMES_ARCHIVE_NAME=${PHARO_NAME_PREFIX}-hermesPackages-${SUFFIX}
+RPACKAGE_ARCHIVE_NAME=${PHARO_NAME_PREFIX}-rpackage-${SUFFIX}
+
 CORE_IMAGE_NAME=${PHARO_NAME_PREFIX}-core-${SUFFIX}
 COMPILER_IMAGE_NAME=${PHARO_NAME_PREFIX}-compiler-${SUFFIX}
 TRAITS_IMAGE_NAME=${PHARO_NAME_PREFIX}-traits-${SUFFIX}
@@ -117,6 +120,12 @@ cp "${BOOTSTRAP_IMAGE_NAME}.image" "${COMPILER_IMAGE_NAME}.image"
 # Archive bootstrap image
 cp "${BOOTSTRAP_IMAGE_NAME}.image" "${BOOTSTRAP_ARCHIVE_IMAGE_NAME}.image"
 zip "${BOOTSTRAP_ARCHIVE_IMAGE_NAME}.zip" "${BOOTSTRAP_ARCHIVE_IMAGE_NAME}.image"
+
+# Archive binary Hermes packages
+zip "${HERMES_ARCHIVE_NAME}.zip" *.hermes
+
+# Archive Package definitions
+zip "${RPACKAGE_ARCHIVE_NAME}.zip" protocolsKernel.txt
 
 # Installing Package
 echo $(date -u) "[Compiler] Initializing Bootstraped Image and fixing the code"
