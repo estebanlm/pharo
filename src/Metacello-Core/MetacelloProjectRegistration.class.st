@@ -81,14 +81,6 @@ MetacelloProjectRegistration class >> fromMCBaselineProjectSpec: aProjectSpec [
         yourself
 ]
 
-{ #category : 'instance creation' }
-MetacelloProjectRegistration class >> fromMCConfigurationProjectSpec: aProjectSpec [
-    ^ self new
-        projectName: aProjectSpec name;
-        configurationProjectSpec: aProjectSpec;
-        yourself
-]
-
 { #category : 'querying' }
 MetacelloProjectRegistration class >> projectSpecForClassNamed: aClassName ifAbsent: absentBlock [
     ^ self registry projectSpecForClassNamed: aClassName ifAbsent: absentBlock

@@ -71,11 +71,6 @@ MetacelloProject >> configuration: anObject [
 	configuration := anObject
 ]
 
-{ #category : 'spec classes' }
-MetacelloProject >> configurationOfProjectSpec [
-    ^ MetacelloConfigurationOfProjectSpec for: self
-]
-
 { #category : 'private' }
 MetacelloProject >> defaultPlatformAttributes [
 	"Returns the tags for the conditional platform loading in Metacello. Pay attention the order is important: from most  to least general."
