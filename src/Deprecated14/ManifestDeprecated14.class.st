@@ -9,3 +9,9 @@ Class {
 	#package : 'Deprecated14',
 	#tag : 'Manifest'
 }
+
+{ #category : 'deprecation' }
+ManifestDeprecated14 class >> isDeprecated [
+
+	^ true
+]
