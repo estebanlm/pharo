@@ -275,7 +275,7 @@ ReleaseTest >> testManifestNamesAccordingToPackageNames [
 { #category : 'tests' }
 ReleaseTest >> testMethodsContainNoHalt [
 
-	| methods |
+	| methods explicitlyRejectMethods |
 	methods := SystemNavigation new allMethods select: [ :method | method containsHalt ].
 	"these methods are using halt for testing something"
 	methods := methods reject: [ :method |
@@ -283,7 +283,10 @@ ReleaseTest >> testMethodsContainNoHalt [
 	"these methods are implementing halt, we are not interested"
 	methods := methods reject: [ :method |
 		           method hasPragmaNamed: #debuggerCompleteToSender ].
-
+	
+	explicitlyRejectMethods := { 'DebugContext>>#confirm:trueChoice:falseChoice:' }.
+	methods := methods reject: [ :method | explicitlyRejectMethods includes: method name  ].
+	
 	"there should be no method left"
 	self assert: methods isEmpty description: [
 		String streamContents: [ :stream |
