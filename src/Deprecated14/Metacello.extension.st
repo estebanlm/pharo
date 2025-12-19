@@ -15,6 +15,6 @@ Metacello >> project: projectName [
 { #category : '*Deprecated14' }
 Metacello >> version: versionString [
 
-	self error:
+	self deprecated:
 		'Configurations are not supported anymore, only baseline can be used as dependencies and project managed with baseline have their version managed by the repositories.'
 ]
