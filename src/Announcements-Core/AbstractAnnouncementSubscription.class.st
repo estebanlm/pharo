@@ -79,9 +79,11 @@ AbstractAnnouncementSubscription >> deliver: anAnnouncement [
 	"Deliver an announcement to receiver. In case of failure, it will be handled in separate process"
 
 	(self handlesAnnouncement: anAnnouncement) ifTrue: [
-		[ action cull: anAnnouncement cull: announcer ]
-			on: UnhandledError
-			fork: [ :ex | ex pass ] ]
+		self class shouldForkDelivery 
+			ifTrue: [ [ action cull: anAnnouncement cull: announcer ]
+							on: UnhandledError
+							fork: [ :ex | ex pass ] ]
+			ifFalse: [ action cull: anAnnouncement cull: announcer ] ]
 ]
 
 { #category : 'error handling' }
