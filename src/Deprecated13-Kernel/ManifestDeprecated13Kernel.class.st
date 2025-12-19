@@ -1,6 +1,6 @@
 "
-Deprecated classes and methods of Pharo 13. 
-I will be removed in Pharo 14
+Deprecated classes and methods of Pharo 13 - Kernel.
+I will be removed in Pharo 17
 "
 Class {
 	#name : 'ManifestDeprecated13Kernel',
