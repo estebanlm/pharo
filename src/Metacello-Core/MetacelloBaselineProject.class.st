@@ -90,11 +90,6 @@ MetacelloBaselineProject >> stableVersion [
 ]
 
 { #category : 'versions' }
-MetacelloBaselineProject >> symbolicVersionSymbols [
-    ^ nil
-]
-
-{ #category : 'versions' }
 MetacelloBaselineProject >> version [
     ^ self version: self singletonVersionName
 ]
