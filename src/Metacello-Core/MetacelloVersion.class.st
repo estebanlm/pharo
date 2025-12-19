@@ -2,7 +2,6 @@ Class {
 	#name : 'MetacelloVersion',
 	#superclass : 'Magnitude',
 	#instVars : [
-		'importedVersions',
 		'spec',
 		'versionNumber'
 	],
@@ -38,20 +37,9 @@ MetacelloVersion >> = aMetacelloVersion [
 	^self versionNumber = aMetacelloVersion versionNumber
 ]
 
-{ #category : 'querying' }
-MetacelloVersion >> author [
-
-	^self spec author value
-]
-
 { #category : 'accessing' }
 MetacelloVersion >> basicSpec [
     ^ self spec
-]
-
-{ #category : 'querying' }
-MetacelloVersion >> blessing [
-    ^ self basicSpec blessing value
 ]
 
 { #category : 'querying' }
@@ -59,11 +47,6 @@ MetacelloVersion >> defaultPackageNamesToLoad: defaultList [
 	"Answer the list of packages and projects to be loaded: packages already loaded plust defaultList"
 	
 	^ self packageAndProjectNamesToLoad: defaultList loader: nil
-]
-
-{ #category : 'querying' }
-MetacelloVersion >> description [
-    ^ self basicSpec description value
 ]
 
 { #category : 'private' }
@@ -148,18 +131,6 @@ MetacelloVersion >> groups [
 MetacelloVersion >> hash [
 
 	^self versionNumber hash
-]
-
-{ #category : 'accessing' }
-MetacelloVersion >> importedVersions [
-
-	^ importedVersions ifNil: [ importedVersions := #(  ) ]
-]
-
-{ #category : 'accessing' }
-MetacelloVersion >> importedVersions: aCollection [
-
-	importedVersions := aCollection
 ]
 
 { #category : 'private' }
@@ -309,11 +280,6 @@ MetacelloVersion >> spec [
 MetacelloVersion >> spec: aMetacellVersionSpec [
 
 	spec := aMetacellVersionSpec
-]
-
-{ #category : 'querying' }
-MetacelloVersion >> timestamp [
-    ^ self basicSpec timestamp value
 ]
 
 { #category : 'actions' }

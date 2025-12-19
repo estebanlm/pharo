@@ -21,12 +21,8 @@ MetacelloReferenceTestCase >> conditionResult: resultString [
 
 { #category : 'testing' }
 MetacelloReferenceTestCase >> expectedPrintString [
-    ^ 'spec blessing: #''baseline''.
-spec description: ''Descriptive comment''.
-spec preLoadDoIt: #''preloadForVersion''.
+    ^ 'spec preLoadDoIt: #''preloadForVersion''.
 spec postLoadDoIt: #''postloadForVersion''.
-spec author: ''dkh''.
-spec timestamp: ''12009-07-10T14:40''.
 spec repositories: [
 	spec
 		repository: ''/opt/mc/repository'';
@@ -40,7 +36,6 @@ spec
 	project: ''UI Support'' with: [
 		spec
 			className: ''ConfigurationOfUI'';
-			versionString: ''1.0'';
 			preLoadDoIt: #''preloadForProject'';
 			postLoadDoIt: #''postloadForProject'';
 			operator: #''~>'';
@@ -49,18 +44,16 @@ spec
 	project: ''UI Support'' overrides: [
 		spec
 			className: ''ConfigurationOfUINew'';
-			versionString: ''1.0'';
 			operator: #''>='';
 			loads: #(''UI-Core'' ''UI-Tests'' );
 			repository: ''http://www.example.com/r'' username: ''foo'' password: ''bar'' ];
 	project: ''UI Tests'' copyFrom: ''UI Support'' with: [
 		spec
 			className: ''ConfigurationOfUI'';
-			versionString: ''1.0'';
 			operator: #''~>'';
 			loads: #(''UI-Core'' ''UI-Tests'' );
 			repository: ''http://www.example.com/r'' ];
-	project: ''UI Support'' with: ''1.0.1'';
+	project: ''UI Support'' ;
 	removeProject: ''UI Tests'';
 	project: ''UI Multi'' with: [
 		spec
@@ -133,7 +126,6 @@ MetacelloReferenceTestCase >> testReferenceConfig [
 	projectReference: [
 		spec
 			className: ''ConfigurationOfUINew'';
-			versionString: ''1.0.1'';
 			operator: #''>='';
 			loads: #(''UI-Core'' ''UI-Tests'' );
 			repository: ''http://www.example.com/r'' username: ''foo'' password: ''bar'' ].'

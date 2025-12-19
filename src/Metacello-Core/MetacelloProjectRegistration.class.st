@@ -94,13 +94,6 @@ MetacelloProjectRegistration class >> projectSpecForClassNamed: aClassName ifAbs
     ^ self registry projectSpecForClassNamed: aClassName ifAbsent: absentBlock
 ]
 
-{ #category : 'accessing' }
-MetacelloProjectRegistration class >> projectSpecs [
-    "MetacelloProjectRegistration projectSpecs"
-
-    ^ self configurationProjectSpecs , self baselineProjectSpecs
-]
-
 { #category : 'registration' }
 MetacelloProjectRegistration class >> registrationForClassNamed: aClassName ifAbsent: absentBlock [
 
@@ -253,17 +246,6 @@ MetacelloProjectRegistration >> copyOnWrite: aBlock [
 	aBlock value: copy.
 	copy registerProject.
 	^ copy
-]
-
-{ #category : 'accessing' }
-MetacelloProjectRegistration >> currentBranchName [
-
-	^ self configurationProjectSpec
-		  ifNotNil: [
-			  configurationProjectSpec versionOrNil
-				  ifNil: [ '' ]
-				  ifNotNil: [ :vrsn | vrsn blessing asString ] ]
-		  ifNil: [ baselineProjectSpec repositoryBranchName ]
 ]
 
 { #category : 'accessing' }

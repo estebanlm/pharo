@@ -21,15 +21,9 @@ MetacelloVersionDoesNotExistError class >> project: aMetacelloProject versionStr
 
 { #category : 'printing' }
 MetacelloVersionDoesNotExistError >> description [
-    "Return a textual description of the exception."
+	"Return a textual description of the exception."
 
-    ^ 'Version ' , self versionString printString , ' is not defined in ' , self project label
-        , '. Possible versions include: ' , self possibleVersions printString
-]
-
-{ #category : 'accessing' }
-MetacelloVersionDoesNotExistError >> possibleVersions [
-    ^ self project symbolicVersionSymbols , (self project versions collect: [ :each | each versionString ])
+	^ 'Version ' , self versionString printString , ' is not defined in ' , self project label , '.'
 ]
 
 { #category : 'accessing' }

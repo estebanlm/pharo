@@ -4,8 +4,6 @@ Class {
 	#instVars : [
 		'versionNumberClass',
 		'projectAttributes',
-		'errorMap',
-		'symbolicVersionMap',
 		'loadType',
 		'versionMap',
 		'configuration'
@@ -27,11 +25,6 @@ MetacelloProject class >> new [
 MetacelloProject class >> on: aConfig [
 
 	^self basicNew configuration: aConfig; yourself
-]
-
-{ #category : 'accessing' }
-MetacelloProject class >> versionConstructorClass [
-    ^ MetacelloVersionConstructor
 ]
 
 { #category : 'scripting' }
@@ -83,12 +76,6 @@ MetacelloProject >> configurationOfProjectSpec [
     ^ MetacelloConfigurationOfProjectSpec for: self
 ]
 
-{ #category : 'accessing' }
-MetacelloProject >> defaultBlessing [
-
-	^#release
-]
-
 { #category : 'private' }
 MetacelloProject >> defaultPlatformAttributes [
 	"Returns the tags for the conditional platform loading in Metacello. Pay attention the order is important: from most  to least general."
@@ -104,23 +91,6 @@ MetacelloProject >> defaultPlatformAttributes [
 MetacelloProject >> development [
 
 	^self version: #development
-]
-
-{ #category : 'accessing' }
-MetacelloProject >> errorMap [
-	^ errorMap
-]
-
-{ #category : 'accessing' }
-MetacelloProject >> errorMap: anObject [
-    errorMap ifNil: [ errorMap := Dictionary new ].
-    errorMap := anObject
-]
-
-{ #category : 'private' }
-MetacelloProject >> excludeFromLatestVersion [
-
-	^#(structural development broken baseline)
 ]
 
 { #category : 'spec classes' }
@@ -142,17 +112,6 @@ MetacelloProject >> lastVersion [
 	coll := (self map values asArray sort: [:a :b | a <= b ]) asOrderedCollection.
 	coll isEmpty ifTrue: [ ^nil ].
 	^coll last
-]
-
-{ #category : 'versions' }
-MetacelloProject >> latestVersion [
-
-	| excluded |
-"	self deprecated: 'Please use #stableVersion instead.'.
-"	self flag: 'deprecate after version 1.0'.
-	excluded := self excludeFromLatestVersion.
-	^(self map values select: [:version |  
-		(excluded includes: version blessing) not ]) detectMax: [:version | version ]
 ]
 
 { #category : 'loading' }
@@ -177,14 +136,9 @@ MetacelloProject >> loadType: aSymbol [
 
 { #category : 'private' }
 MetacelloProject >> lookupVersion: aVersionString ifAbsent: aBlock [
-    "please use version:...this is a private method"
+	"please use version:...this is a private method"
 
-    ^ self map
-        at: aVersionString
-        ifAbsent: [ 
-            (MetacelloVersionDefinitionError project: self project versionString: aVersionString)
-                exception: (self errorMap at: aVersionString ifAbsent: [ ^ aBlock value ]);
-                signal ]
+	^ self map at: aVersionString ifAbsent: [ ^ aBlock value ]
 ]
 
 { #category : 'accessing' }
@@ -324,34 +278,10 @@ MetacelloProject >> setBaselineRepositoryDescription: aListOrRepositoryDescripti
     "noop "
 ]
 
-{ #category : 'private' }
-MetacelloProject >> sortedAndFilteredVersions [
-
-		^(self map values asArray sort: [:a :b | a >= b ]) select: [:vrsn | (#(structural broken baseline) includes: vrsn blessing) not ].
-]
-
 { #category : 'versions' }
 MetacelloProject >> stableVersion [
 
 	^self version: #stable
-]
-
-{ #category : 'accessing' }
-MetacelloProject >> symbolicVersionMap [
-
-	^symbolicVersionMap
-]
-
-{ #category : 'accessing' }
-MetacelloProject >> symbolicVersionMap: aDictionary [
-
-	symbolicVersionMap := aDictionary
-]
-
-{ #category : 'versions' }
-MetacelloProject >> symbolicVersionSymbols [
-
-	^self symbolicVersionMap keys asArray sort: [:a :b | a <= b ]
 ]
 
 { #category : 'spec classes' }
@@ -362,21 +292,8 @@ MetacelloProject >> valueHolderSpec [
 
 { #category : 'versions' }
 MetacelloProject >> version: aVersionString [
-    
-    aVersionString isSymbol
-        ifTrue: [ 
-            | symbolicVersionString |
-            symbolicVersionString := self symbolicVersionMap
-                at: aVersionString
-                ifAbsent: [ (MetacelloSymbolicVersionDoesNotExistError project: self project versionString: aVersionString) signal ].
-            symbolicVersionString == #'notDefined'
-                ifTrue: [ (MetacelloSymbolicVersionNotDefinedError project: self project versionString: aVersionString) signal ].
-            ^ self
-                lookupVersion: symbolicVersionString
-                ifAbsent: [ (MetacelloSymbolicVersionDoesNotExistError project: self project versionString: symbolicVersionString) signal ] ].
-    ^ self
-        lookupVersion: aVersionString
-        ifAbsent: [ (MetacelloVersionDoesNotExistError project: self project versionString: aVersionString) signal ]
+
+	^ self lookupVersion: aVersionString ifAbsent: [ (MetacelloVersionDoesNotExistError project: self project versionString: aVersionString) signal ]
 ]
 
 { #category : 'versions' }
