@@ -62,6 +62,7 @@ BaselineOfKernel >> baseline: spec [
 				package: 'Hermes-Extensions';
 				package: 'Clap-Core';
 				package: 'Clap-Commands-Pharo';
+				package: 'NumberParser';
 				package: 'ReflectionMirrors-Primitives';
 				package: 'System-Time';
 				package: 'Math-Operations-Extensions';
@@ -96,7 +97,7 @@ BaselineOfKernel >> baseline: spec [
 					'System-CommandLineHandler'. 'System-Finalization'. 'System-Platforms'. 'System-SessionManager'. 'ClassDefinitionPrinters'. 'CodeExport'. 'System-Sources'.
 					'System-Support'. 'Zinc-Character-Encoding-Core' };
 				group: 'AdditionalPackages'
-				with: { 'Clap-Core'. 'Clap-Commands-Pharo'. 'Hermes-Extensions'. 'ReflectionMirrors-Primitives'. 'System-Time'. 'Math-Operations-Extensions'.
+				with: { 'Clap-Core'. 'Clap-Commands-Pharo'. 'Hermes-Extensions'. 'NumberParser'. 'ReflectionMirrors-Primitives'. 'System-Time'. 'Math-Operations-Extensions'.
 					'System-NumberPrinting'. 'System-Version'. 'Multilingual-Encodings' };
 				group: 'Tests'
 				with:
