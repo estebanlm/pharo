@@ -47,28 +47,16 @@ MetacelloProjectSpec >> asBaselineProjectSpec [
 ]
 
 { #category : 'scripting' }
-MetacelloProjectSpec >> asConfigurationProjectSpec [
-    ^ self copyForScriptingInto: (MetacelloConfigurationOfProjectSpec for: self project asConfigurationProject)
-]
-
-{ #category : 'scripting' }
 MetacelloProjectSpec >> asProjectRegistration [
-  (self className beginsWith: 'BaselineOf')
-    ifTrue: [ 
-      ^ MetacelloProjectRegistration
-        fromMCBaselineProjectSpec: self asBaselineProjectSpec ].
-  ^ MetacelloProjectRegistration
-    fromMCConfigurationProjectSpec: self asConfigurationProjectSpec
+
+	(self className beginsWith: 'BaselineOf') ifFalse: [ self error: 'The class name should be a baseline and begin with `BaselineOf`.' ].
+
+	^ MetacelloProjectRegistration fromMCBaselineProjectSpec: self asBaselineProjectSpec
 ]
 
 { #category : 'scripting' }
 MetacelloProjectSpec >> asProjectSpec [
     ^ self
-]
-
-{ #category : 'scripting' }
-MetacelloProjectSpec >> asProjectSpecForVersion: vrsn [
-  ^ self
 ]
 
 { #category : 'accessing' }
@@ -399,10 +387,10 @@ MetacelloProjectSpec >> hasConflictWithConfigurationSpec: projectSpec [
 
 { #category : 'testing' }
 MetacelloProjectSpec >> hasConflictWithProjectSpec: projectSpec [
-  (self className beginsWith: 'BaselineOf')
-    ifTrue: [ ^ projectSpec hasConflictWithBaselineSpec: self asBaselineProjectSpec ].
-  ^ projectSpec
-    hasConflictWithConfigurationSpec: self asConfigurationProjectSpec
+
+	(self className beginsWith: 'BaselineOf') ifFalse: [ self error: 'The class name should be a baseline and begin with `BaselineOf`.' ].
+
+	^ projectSpec hasConflictWithBaselineSpec: self asBaselineProjectSpec
 ]
 
 { #category : 'testing' }

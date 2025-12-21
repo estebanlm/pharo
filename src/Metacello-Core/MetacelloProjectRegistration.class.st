@@ -3,7 +3,6 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'projectName',
-		'configurationProjectSpec',
 		'baselineProjectSpec',
 		'loadedInImage',
 		'locked',
@@ -45,13 +44,6 @@ MetacelloProjectRegistration class >> classRemoved: aClassRemovalAnnouncement [
 	registration unregisterProject
 ]
 
-{ #category : 'accessing' }
-MetacelloProjectRegistration class >> configurationProjectSpecs [
-    "MetacelloProjectRegistration configurationProjectSpecs"
-
-    ^ self registry configurationProjectSpecs
-]
-
 { #category : 'mutability' }
 MetacelloProjectRegistration class >> copyRegistryDuring: aBlock commitIfSuccess: aBoolean [
 	"install copy of registry for duration of <aBlock> execution."
@@ -78,14 +70,6 @@ MetacelloProjectRegistration class >> fromMCBaselineProjectSpec: aProjectSpec [
     ^ self new
         projectName: aProjectSpec name;
         baselineProjectSpec: aProjectSpec;
-        yourself
-]
-
-{ #category : 'instance creation' }
-MetacelloProjectRegistration class >> fromMCConfigurationProjectSpec: aProjectSpec [
-    ^ self new
-        projectName: aProjectSpec name;
-        configurationProjectSpec: aProjectSpec;
         yourself
 ]
 
@@ -123,15 +107,24 @@ MetacelloProjectRegistration class >> registry: aMetacelloProjectRegistry [
 
 { #category : 'accessing' }
 MetacelloProjectRegistration class >> resetRegistry [
-    Registry := nil
+
+	<script>
+	Registry := nil
+]
+
+{ #category : 'accessing' }
+MetacelloProjectRegistration class >> useRegistry: aRegistry during: aBlock [
+
+	| oldRegistry |
+	oldRegistry := Registry.
+	[ aBlock value ] ensure: [ Registry := oldRegistry ]
 ]
 
 { #category : 'comparing' }
 MetacelloProjectRegistration >> = aRegistration [
-    aRegistration class == self class
-        ifFalse: [ ^ false ].
-    ^ (configurationProjectSpec registrationsCompareEqual: aRegistration configurationProjectSpec)
-        and: [ baselineProjectSpec registrationsCompareEqual: aRegistration baselineProjectSpec ]
+
+	aRegistration class == self class ifFalse: [ ^ false ].
+	^ baselineProjectSpec registrationsCompareEqual: aRegistration baselineProjectSpec
 ]
 
 { #category : 'accessing' }
@@ -148,16 +141,15 @@ MetacelloProjectRegistration >> baselineProjectSpec [
 
 { #category : 'accessing' }
 MetacelloProjectRegistration >> baselineProjectSpec: anObject [
-  "force the registration to be consistent -- difficult for Metacello to 
+	"force the registration to be consistent -- difficult for Metacello to 
    repair registrations during load -- I've tried. "
 
-  "https://github.com/dalehenrich/metacello-work/issues/212"
+	"https://github.com/dalehenrich/metacello-work/issues/212"
 
-  self shouldBeMutable.
-  configurationProjectSpec := nil.
-  self assert: anObject isBaselineOfProjectSpec.
+	self shouldBeMutable.
+	self assert: anObject isBaselineOfProjectSpec.
 
-  baselineProjectSpec := anObject
+	baselineProjectSpec := anObject
 ]
 
 { #category : 'accessing' }
@@ -175,9 +167,7 @@ MetacelloProjectRegistration >> canDowngradeTo: aProjectRegistration [
        if the load conflicts involved two cofigurations ONLY and a downgrade is allowed"
 
 	(self hasLoadConflicts: aProjectRegistration) ifFalse: [ ^ true ].
-	configurationProjectSpec ifNotNil: [
-		aProjectRegistration configurationProjectSpec ifNotNil: [
-			^ configurationProjectSpec canDowngradeTo: aProjectRegistration configurationProjectSpec ] ].
+
 	^ false
 ]
 
@@ -188,49 +178,10 @@ MetacelloProjectRegistration >> canUpgradeTo: aProjectRegistration [
        if the load conflicts involved two cofigurations ONLY and an upgrade is allowed"
 
 	(self hasLoadConflicts: aProjectRegistration) ifFalse: [ ^ true ].
-	configurationProjectSpec ifNotNil: [
-		aProjectRegistration configurationProjectSpec ifNotNil: [
-			^ configurationProjectSpec canUpgradeTo:
-				  aProjectRegistration configurationProjectSpec ] ].
+
 	baselineProjectSpec ifNotNil: [
-		aProjectRegistration baselineProjectSpec ifNotNil: [
-			^ baselineProjectSpec canUpgradeTo:
-				  aProjectRegistration baselineProjectSpec ] ].
+		aProjectRegistration baselineProjectSpec ifNotNil: [ ^ baselineProjectSpec canUpgradeTo: aProjectRegistration baselineProjectSpec ] ].
 	^ false
-]
-
-{ #category : 'accessing' }
-MetacelloProjectRegistration >> configurationProjectSpec [
-  "only one of baselineProjectSpec or configurationProjectSpec should ever be set"
-
-  ^ configurationProjectSpec
-]
-
-{ #category : 'accessing' }
-MetacelloProjectRegistration >> configurationProjectSpec: anObject [
-	"force the registration to be consistent -- difficult for Metacello to 
-   repair registrations during load -- I've tried. "
-
-	"https://github.com/dalehenrich/metacello-work/issues/212"
-
-	self shouldBeMutable.
-	baselineProjectSpec := nil.
-	self assert: anObject isConfigurationOfProjectSpec.
-	configurationProjectSpec := anObject
-]
-
-{ #category : 'accessing' }
-MetacelloProjectRegistration >> configurationProjectSpecIfAbsent: absentBlock [
-
-	^ configurationProjectSpec ifNil: [ absentBlock value ]
-]
-
-{ #category : 'accessing' }
-MetacelloProjectRegistration >> configurationProjectSpecIfPresent: presentBlock ifAbsent: absentBlock [
-
-	^ configurationProjectSpec
-		  ifNotNil: [ presentBlock cull: configurationProjectSpec ]
-		  ifNil: [ absentBlock value ]
 ]
 
 { #category : 'mutability' }
@@ -251,9 +202,7 @@ MetacelloProjectRegistration >> copyOnWrite: aBlock [
 { #category : 'accessing' }
 MetacelloProjectRegistration >> currentVersionString [
 
-	^ self configurationProjectSpec
-		  ifNotNil: [ :aSpec | aSpec versionString ]
-		  ifNil: [ baselineProjectSpec repositoryVersionString ]
+	^ baselineProjectSpec repositoryVersionString
 ]
 
 { #category : 'accessing' }
@@ -280,8 +229,8 @@ MetacelloProjectRegistration >> hasLoadConflicts: aProjectRegistration [
 
 { #category : 'comparing' }
 MetacelloProjectRegistration >> hash [
-    ^ ((String stringHash: projectName initialHash: 0) bitXor: configurationProjectSpec metacelloRegistrationHash)
-        bitXor: baselineProjectSpec metacelloRegistrationHash
+
+	^ (String stringHash: projectName initialHash: 0) bitXor: baselineProjectSpec metacelloRegistrationHash
 ]
 
 { #category : 'mutability' }
@@ -297,12 +246,10 @@ MetacelloProjectRegistration >> isMutable [
 
 { #category : 'testing' }
 MetacelloProjectRegistration >> isValid [
-
 	" has a name and one or the other of the projectSpecs is non-nil, but not both ... this is CRITICAL"
 
 	projectName ifNil: [ ^ false ].
-	configurationProjectSpec ifNil: [ ^ baselineProjectSpec isNotNil ].
-	^ baselineProjectSpec isNil
+	^ baselineProjectSpec isNotNil
 ]
 
 { #category : 'accessing' }
@@ -335,19 +282,9 @@ MetacelloProjectRegistration >> merge: aProjectRegistration [
 
 	self shouldBeMutable.
 	aProjectRegistration validate.
-	aProjectRegistration configurationProjectSpec
-		ifNotNil: [ :aSpec |
-			configurationProjectSpec := aSpec copy.
-			configurationProjectSpec versionOrNil ifNotNil: [ :version | "resolve symbolic versions for loaded projects"
-				configurationProjectSpec versionString: version versionString ].
-			baselineProjectSpec := nil.
-			self versionInfo versionString:
-				configurationProjectSpec versionString ]
-		ifNil: [
-			baselineProjectSpec := aProjectRegistration baselineProjectSpec.
-			configurationProjectSpec := nil.
-			self versionInfo versionString:
-				baselineProjectSpec repositoryVersionString ]
+
+	baselineProjectSpec := aProjectRegistration baselineProjectSpec.
+	self versionInfo versionString: baselineProjectSpec repositoryVersionString
 ]
 
 { #category : 'mutability' }
@@ -364,29 +301,19 @@ MetacelloProjectRegistration >> postCopy [
 { #category : 'printing' }
 MetacelloProjectRegistration >> printOn: aStream [
 
-	| label versionString descriptions |
-	self
-		configurationProjectSpecIfPresent: [ :spec |
-			label := spec className.
-			versionString := spec versionString ]
-		ifAbsent: [ "baseline"
-			label := self baselineProjectSpec className.
-			versionString := '[baseline]' ].
-	aStream nextPutAll: label.
-	versionString
-		ifNil: [ aStream nextPutAll: ' --no version specified--' ]
-		ifNotNil: [
-			aStream
-				space;
-				nextPutAll: versionString ].
+	| descriptions |
+	aStream
+		nextPutAll: self baselineProjectSpec className;
+		space;
+		nextPutAll: '[baseline]'.
 	(descriptions := self repositoryDescriptions) isEmpty ifTrue: [ ^ self ].
 	aStream nextPutAll: ' from '.
 	descriptions size = 1
 		ifTrue: [ aStream nextPutAll: descriptions first ]
 		ifFalse: [
-			aStream nextPut: ${.
-			descriptions do: [ :description | aStream nextPutAll: description ].
-			aStream nextPut: $} ]
+				aStream nextPut: ${.
+				descriptions do: [ :description | aStream nextPutAll: description ].
+				aStream nextPut: $} ]
 ]
 
 { #category : 'accessing' }
@@ -402,10 +329,8 @@ MetacelloProjectRegistration >> projectName: anObject [
 
 { #category : 'accessing' }
 MetacelloProjectRegistration >> projectSpec [
+
 	^ baselineProjectSpec
-		ifNil: [ 
-			self assert: configurationProjectSpec isNotNil.
-			configurationProjectSpec ]
 ]
 
 { #category : 'accessing' }
@@ -428,7 +353,8 @@ MetacelloProjectRegistration >> registerProject [
 
 { #category : 'accessing' }
 MetacelloProjectRegistration >> repositoryDescriptions [
-    ^ (self configurationProjectSpecIfAbsent: [ self baselineProjectSpec ]) repositoryDescriptions
+
+	^ self baselineProjectSpec repositoryDescriptions
 ]
 
 { #category : 'mutability' }
@@ -451,21 +377,14 @@ MetacelloProjectRegistration >> validate [
 
 { #category : 'accessing' }
 MetacelloProjectRegistration >> version [
-    ^ (self configurationProjectSpecIfAbsent: [ ^ MetacelloBaselineProject singletonVersionName ]) versionString
+
+	^ MetacelloBaselineProject singletonVersionName
 ]
 
 { #category : 'accessing' }
 MetacelloProjectRegistration >> versionInfo [
-  versionInfo
-    ifNil: [ 
-      versionInfo := MetacelloProjectRegistrationVersionInfo new.
-      self
-        configurationProjectSpecIfPresent: [ versionInfo versionString: self version ]
-        ifAbsent: [ 
-          "do not set versionString for freshly minted baseline ... 
-           see https://github.com/dalehenrich/metacello-work/issues/328"
-           ] ].
-  ^ versionInfo
+
+	^ versionInfo ifNil: [ versionInfo := MetacelloProjectRegistrationVersionInfo new ]
 ]
 
 { #category : 'accessing' }
