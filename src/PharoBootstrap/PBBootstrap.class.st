@@ -138,7 +138,8 @@ PBBootstrap >> createHermesPackageListFiles [
 		            with: 'hermesCompilerPackages.txt' -> BaselineOfCompiler corePackageNames
 		            with: 'hermesFileSystemPackages.txt' -> BaselineOfFileSystem corePackageNames
 		            with: 'hermesTraitsPackages.txt' -> BaselineOfTraits corePackageNames
-		            with: 'hermesMonticelloPackages.txt' -> BaselineOfMonticello corePackageNames.
+		            with: 'hermesMonticelloPackages.txt' -> BaselineOfMonticello corePackageNames
+		            with: 'hermesMetacelloPackages.txt' -> BaselineOfMetacello corePackageNames.
 
 	toExport keysAndValuesDo: [ :fileName :packageNames |
 			self bootstrapCacheDirectory / fileName writeStreamDo: [ :stream |
