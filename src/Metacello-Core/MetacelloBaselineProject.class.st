@@ -37,31 +37,6 @@ MetacelloBaselineProject class >> singletonVersionName [
     ^ 'baseline'
 ]
 
-{ #category : 'scripting' }
-MetacelloBaselineProject >> asBaselineProject [
-    ^ self
-]
-
-{ #category : 'versions' }
-MetacelloBaselineProject >> bleedingEdge [
-    ^ nil
-]
-
-{ #category : 'versions' }
-MetacelloBaselineProject >> development [
-    ^ nil
-]
-
-{ #category : 'versions' }
-MetacelloBaselineProject >> lastVersion [
-    ^ self version
-]
-
-{ #category : 'versions' }
-MetacelloBaselineProject >> latestVersion [
-    ^ self version
-]
-
 { #category : 'accessing' }
 MetacelloBaselineProject >> repositoryDescription [
 	^ repositoryDescription
@@ -77,11 +52,6 @@ MetacelloBaselineProject >> setBaselineRepositoryDescription: aListOrRepositoryD
 { #category : 'versions' }
 MetacelloBaselineProject >> singletonVersionName [
     ^ self class singletonVersionName
-]
-
-{ #category : 'versions' }
-MetacelloBaselineProject >> stableVersion [
-    ^ nil
 ]
 
 { #category : 'versions' }

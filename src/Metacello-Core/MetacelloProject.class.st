@@ -28,11 +28,6 @@ MetacelloProject class >> on: aConfig [
 ]
 
 { #category : 'scripting' }
-MetacelloProject >> asBaselineProject [
-    ^ MetacelloBaselineProject new
-]
-
-{ #category : 'scripting' }
 MetacelloProject >> asConfigurationProject [
     ^ self
 ]
@@ -53,12 +48,6 @@ MetacelloProject >> baselineOfProjectSpec [
 { #category : 'spec classes' }
 MetacelloProject >> baselineOfProjectSpecClass [
     ^ MetacelloBaselineOfProjectSpec
-]
-
-{ #category : 'versions' }
-MetacelloProject >> bleedingEdge [
-
-	^self version: #bleedingEdge
 ]
 
 { #category : 'accessing' }
@@ -82,12 +71,6 @@ MetacelloProject >> defaultPlatformAttributes [
 		  ('pharo' , SystemVersion current major asString , '.0.x') asSymbol }
 ]
 
-{ #category : 'versions' }
-MetacelloProject >> development [
-
-	^self version: #development
-]
-
 { #category : 'spec classes' }
 MetacelloProject >> groupSpec [
 
@@ -105,21 +88,6 @@ MetacelloProject >> initialize [
 MetacelloProject >> label [
 
 	^self configuration class name
-]
-
-{ #category : 'versions' }
-MetacelloProject >> lastVersion [
-
-	| coll |
-	coll := (self map values asArray sort: [:a :b | a <= b ]) asOrderedCollection.
-	coll isEmpty ifTrue: [ ^nil ].
-	^coll last
-]
-
-{ #category : 'loading' }
-MetacelloProject >> load: aVersionString [
-
-	^(self version: aVersionString) load
 ]
 
 { #category : 'accessing' }
@@ -280,12 +248,6 @@ MetacelloProject >> setBaselineRepositoryDescription: aListOrRepositoryDescripti
     "noop "
 ]
 
-{ #category : 'versions' }
-MetacelloProject >> stableVersion [
-
-	^self version: #stable
-]
-
 { #category : 'spec classes' }
 MetacelloProject >> valueHolderSpec [
 
@@ -296,12 +258,6 @@ MetacelloProject >> valueHolderSpec [
 MetacelloProject >> version: aVersionString [
 
 	^ self lookupVersion: aVersionString ifAbsent: [ (MetacelloVersionDoesNotExistError project: self project versionString: aVersionString) signal ]
-]
-
-{ #category : 'versions' }
-MetacelloProject >> version: aVersionString ifAbsent: aBlock [
-
-	^[ self version: aVersionString ] on: MetacelloVersionDoesNotExistError do: [:ex | aBlock value ].
 ]
 
 { #category : 'versions' }
