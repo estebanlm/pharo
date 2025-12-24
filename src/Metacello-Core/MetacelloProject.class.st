@@ -113,13 +113,6 @@ MetacelloProject >> groupSpec [
 	^ MetacelloGroupSpec for: self
 ]
 
-{ #category : 'initialization' }
-MetacelloProject >> initialize [
-	super initialize.
-	
-	loadType := #linear
-]
-
 { #category : 'accessing' }
 MetacelloProject >> label [
 
@@ -130,7 +123,7 @@ MetacelloProject >> label [
 MetacelloProject >> loadType [
 	"#atomic or #linear"
 
-	^ loadType ifNil: [ #atomic ]
+	^ loadType
 ]
 
 { #category : 'accessing' }

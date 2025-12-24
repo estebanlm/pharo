@@ -215,6 +215,8 @@ BaselineOf >> newProjectWithRepositoryDescription: aListOrRepositoryDescriptions
 	
 	"Construct the project"
 	MetacelloBaselineConstructor on: self project: aProject. 
+	
+	aProject loadType: #linear.
 
 	aListOrRepositoryDescriptions do: [ :desc | aProject version spec repository: desc ].
 	^ aProject
