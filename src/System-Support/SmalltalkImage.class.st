@@ -340,24 +340,7 @@ SmalltalkImage >> cleanUp: aggressive except: exclusions [
 
 	"Smalltalk cleanUp: true except: {Point}"
 
-	^self cleanUp: aggressive except: exclusions confirming: aggressive
-]
-
-{ #category : 'cleanup' }
-SmalltalkImage >> cleanUp: aggressive except: exclusions confirming: aBool [
-	"Clean up. When aggressive is true, this will destroy resources, etc.
-	Leave out any classes specifically listed in exclusions."
-
-	"Smalltalk cleanUp: true except: {Point}
-		- will ask for confirmation"
-	"SmalltalkImage current cleanUp: true except: {} confirming: false
-		- will not ask for confirmation"
-
 	| classes |
-	aBool ifTrue:[
-		"Give the user a chance to bail"
-		(self confirm: 'Cleanup will destroy change sets and more.
-Are you sure you want to proceed?') ifFalse: [^self]].
 
 	"Find all classes implementing #cleanUp or cleanUp:"
 	classes := Smalltalk allClasses select: [:aClass|
