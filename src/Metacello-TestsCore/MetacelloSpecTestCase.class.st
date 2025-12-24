@@ -28,11 +28,6 @@ MetacelloSpecTestCase >> project [
 	^ (MetacelloStubConstructor on: self) project
 ]
 
-{ #category : 'accessing' }
-MetacelloSpecTestCase >> projectClass [
-    ^ MetacelloProject
-]
-
 { #category : 'specs' }
 MetacelloSpecTestCase >> projectReferenceSpec [
     ^ self project projectReferenceSpec

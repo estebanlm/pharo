@@ -1,10 +1,34 @@
+"
+The **MetacelloMCBaselineProject**  is a wrapper for the **BaselineOf** version specification for file-based repositories.
+
+There is a single version in a **MetacelloMCBaselineProject**, named *'baseline'*.
+
+A typical **BaselineOf** is specification:
+
+```Smalltalk
+baseline: spec
+    <baseline>
+    spec
+        package: 'External-Core';
+        package: 'External-Tests' with: [ spec requires: 'External-Core' ];
+        yourself.
+    spec
+        group: 'Core' with: #('External-Core');
+        group: 'default' with: #('Core');
+        group: 'Tests' with: #('External-Tests');
+        yourself
+```
+
+The `<baseline>` pragma marks the method containing the baseline specification.
+"
 Class {
 	#name : 'MetacelloProject',
 	#superclass : 'Object',
 	#instVars : [
+		'repositoryDescription',
 		'versionNumberClass',
-		'projectAttributes',
 		'loadType',
+		'projectAttributes',
 		'versionMap',
 		'configuration'
 	],
@@ -12,6 +36,13 @@ Class {
 	#package : 'Metacello-Core',
 	#tag : 'Model'
 }
+
+{ #category : 'class initialization' }
+MetacelloProject class >> initialize [
+	"Deprecation added during the development of Pharo 14."
+
+	self deprecatedAliases: #( #MetacelloMCBaselineProject #MetacelloBaselineProject )
+]
 
 { #category : 'instance creation' }
 MetacelloProject class >> new [
@@ -27,9 +58,9 @@ MetacelloProject class >> on: aConfig [
 	^self basicNew configuration: aConfig; yourself
 ]
 
-{ #category : 'scripting' }
-MetacelloProject >> asBaselineProject [
-    ^ MetacelloBaselineProject new
+{ #category : 'accessing' }
+MetacelloProject class >> singletonVersionName [
+    ^ 'baseline'
 ]
 
 { #category : 'scripting' }
@@ -55,12 +86,6 @@ MetacelloProject >> baselineOfProjectSpecClass [
     ^ MetacelloBaselineOfProjectSpec
 ]
 
-{ #category : 'versions' }
-MetacelloProject >> bleedingEdge [
-
-	^self version: #bleedingEdge
-]
-
 { #category : 'accessing' }
 MetacelloProject >> configuration [
 	^ configuration
@@ -82,12 +107,6 @@ MetacelloProject >> defaultPlatformAttributes [
 		  ('pharo' , SystemVersion current major asString , '.0.x') asSymbol }
 ]
 
-{ #category : 'versions' }
-MetacelloProject >> development [
-
-	^self version: #development
-]
-
 { #category : 'spec classes' }
 MetacelloProject >> groupSpec [
 
@@ -100,26 +119,11 @@ MetacelloProject >> label [
 	^self configuration class name
 ]
 
-{ #category : 'versions' }
-MetacelloProject >> lastVersion [
-
-	| coll |
-	coll := (self map values asArray sort: [:a :b | a <= b ]) asOrderedCollection.
-	coll isEmpty ifTrue: [ ^nil ].
-	^coll last
-]
-
-{ #category : 'loading' }
-MetacelloProject >> load: aVersionString [
-
-	^(self version: aVersionString) load
-]
-
 { #category : 'accessing' }
 MetacelloProject >> loadType [
 	"#atomic or #linear"
 
-	^ loadType ifNil: [ #atomic ]
+	^ loadType
 ]
 
 { #category : 'accessing' }
@@ -256,6 +260,11 @@ MetacelloProject >> repositoriesSpecClass [
 	^MetacelloRepositoriesSpec
 ]
 
+{ #category : 'accessing' }
+MetacelloProject >> repositoryDescription [
+	^ repositoryDescription
+]
+
 { #category : 'spec classes' }
 MetacelloProject >> repositorySpec [
 
@@ -270,13 +279,14 @@ MetacelloProject >> repositorySpecClass [
 
 { #category : 'development support' }
 MetacelloProject >> setBaselineRepositoryDescription: aListOrRepositoryDescriptions [
-    "noop "
+	"set #version repositories to < aListOrRepositoryDescriptions>. Should be the directory where the BaselineOf is located."
+
+	repositoryDescription := aListOrRepositoryDescriptions
 ]
 
 { #category : 'versions' }
-MetacelloProject >> stableVersion [
-
-	^self version: #stable
+MetacelloProject >> singletonVersionName [
+    ^ self class singletonVersionName
 ]
 
 { #category : 'spec classes' }
@@ -286,15 +296,14 @@ MetacelloProject >> valueHolderSpec [
 ]
 
 { #category : 'versions' }
-MetacelloProject >> version: aVersionString [
-
-	^ self lookupVersion: aVersionString ifAbsent: [ (MetacelloVersionDoesNotExistError project: self project versionString: aVersionString) signal ]
+MetacelloProject >> version [
+    ^ self version: self singletonVersionName
 ]
 
 { #category : 'versions' }
-MetacelloProject >> version: aVersionString ifAbsent: aBlock [
+MetacelloProject >> version: aVersionString [
 
-	^[ self version: aVersionString ] on: MetacelloVersionDoesNotExistError do: [:ex | aBlock value ].
+	^ self lookupVersion: aVersionString ifAbsent: [ (MetacelloVersionDoesNotExistError project: self project versionString: aVersionString) signal ]
 ]
 
 { #category : 'versions' }
@@ -316,6 +325,7 @@ MetacelloProject >> versionSpec [
 
 { #category : 'versions' }
 MetacelloProject >> versions [
-
-	^self map values asArray sort: [:a :b | a <= b ]
+  ^ [ {(self version)} ]
+    on: MetacelloVersionDoesNotExistError
+    do: [ :ex | ^ #() ]
 ]
