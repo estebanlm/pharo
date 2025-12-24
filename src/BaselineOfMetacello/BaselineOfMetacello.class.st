@@ -19,8 +19,6 @@ BaselineOfMetacello >> baseline: spec [
 		spec 
 			package: 'Metacello-Base';
 			package: 'Metacello-Core';
-			package: 'Zinc-Resource-Meta-Core';
-			package: 'STON-Core';
 			package: 'Metacello-CommandLine'. 
 
 		spec
@@ -28,7 +26,7 @@ BaselineOfMetacello >> baseline: spec [
 			package: 'Metacello-TestsMCCore'.
 
 		spec 
-			group: 'Core' with: #('Metacello-Base' 'Metacello-Core' 'Zinc-Resource-Meta-Core' 'STON-Core' 'Metacello-CommandLine');
+			group: 'Core' with: #('Metacello-Base' 'Metacello-Core' 'Metacello-CommandLine');
 			group: 'Tests' with: #( 'Metacello-TestsCore' 'Metacello-TestsMCCore');
 			group: 'default' with: #('Core') ]
 ]
