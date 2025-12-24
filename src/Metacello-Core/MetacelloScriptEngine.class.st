@@ -55,8 +55,7 @@ MetacelloScriptEngine >> do: aBlock required: required onProjectDownGrade: onDow
 
 				projectSpec loads: required.
 				projectSpec ensureProjectLoadedWithEngine: self.
-				versionSpec := projectSpec project version:
-					               projectSpec versionString.
+				versionSpec := projectSpec project version.
 				requiredArray := projectSpec loadListForVersion: versionSpec.
 				self root:
 					(aBlock

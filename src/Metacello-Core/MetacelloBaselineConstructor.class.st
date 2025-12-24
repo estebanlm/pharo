@@ -258,7 +258,7 @@ MetacelloBaselineConstructor >> on: aConfig project: aProject [
 	| pragma versionMap versionSpec |
 	self configuration: aConfig.
 	pragma := self extractBaselinePragmaFor: aConfig class.
-	self setProject: (aProject ifNil: [ MetacelloBaselineProject new ]).
+	self setProject: (aProject ifNil: [ MetacelloProject new ]).
 	versionSpec := self project versionSpec.
 	self root: versionSpec.
 	self evaluatePragma: pragma.
@@ -397,7 +397,7 @@ MetacelloBaselineConstructor >> project: aString with: aBlockOrString [
 
 { #category : 'accessing' }
 MetacelloBaselineConstructor >> projectClass [
-    ^ MetacelloBaselineProject
+    ^ MetacelloProject
 ]
 
 { #category : 'api' }
