@@ -141,16 +141,6 @@ String >> setLoadsInMetacelloProject: aMetacelloPackageSpec [
 ]
 
 { #category : '*Metacello-Core' }
-String >> setPostLoadDoItInMetacelloSpec: aMetacelloSpec [
-    self asSymbol setPostLoadDoItInMetacelloSpec: aMetacelloSpec
-]
-
-{ #category : '*Metacello-Core' }
-String >> setPreLoadDoItInMetacelloSpec: aMetacelloSpec [
-    self asSymbol setPreLoadDoItInMetacelloSpec: aMetacelloSpec
-]
-
-{ #category : '*Metacello-Core' }
 String >> setRequiresInMetacelloPackage: aMetacelloPackageSpec [
 
 	aMetacelloPackageSpec setRequires: { self }.
