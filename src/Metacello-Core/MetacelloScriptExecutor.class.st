@@ -79,7 +79,7 @@ MetacelloScriptExecutor >> executeString: aString do: projectSpecBlock [
 	singleRoot ifNil: [ self singleRoot: true ].
 	projectSpec := MetacelloProjectRegistration projectSpecForClassNamed: (self class baselineNameFrom: aString) ifAbsent: [ ].
 
-	(self projectSpecSelectBlock value: projectSpec) ifTrue: [ projectSpecBlock value: (self applyArgsToProjectSpec: projectSpec copy) ]
+	(self shouldBeExecutedFor: projectSpec) ifTrue: [ projectSpecBlock value: (self applyArgsToProjectSpec: projectSpec copy) ]
 ]
 
 { #category : 'actions api' }
@@ -157,11 +157,6 @@ MetacelloScriptExecutor >> postCopy [
 	options := options copy
 ]
 
-{ #category : 'execution callback' }
-MetacelloScriptExecutor >> projectSpecSelectBlock [
-    ^ [ :projectSpec | true ]
-]
-
 { #category : 'actions api' }
 MetacelloScriptExecutor >> record: required [
     actionArg := #'record:' -> {required}
@@ -186,6 +181,12 @@ MetacelloScriptExecutor >> repositoryArg: anObject [
 MetacelloScriptExecutor >> roots [
 
 	^ roots ifNil: [ roots := OrderedCollection new ]
+]
+
+{ #category : 'execution callback' }
+MetacelloScriptExecutor >> shouldBeExecutedFor: aSpec [
+
+	^ true
 ]
 
 { #category : 'options api' }
