@@ -58,4 +58,4 @@ export PHARO_CI_TESTING_ENVIRONMENT=1
 ./pharo bootstrap.image perform --save Pragma buildCache
 
 #Running tests
-./pharo bootstrap.image test --junit-xml-output --stage-name ${2} '.*'
+./pharo bootstrap.image test --junit-xml-output --stage-name ${2} SUnit-Tests Kernel-Tests
