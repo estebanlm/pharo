@@ -101,7 +101,6 @@ BOOTSTRAP_IMAGE_NAME=bootstrap
 BOOTSTRAP_ARCHIVE_IMAGE_NAME=${PHARO_NAME_PREFIX}-bootstrap-${SUFFIX}
 
 HERMES_ARCHIVE_NAME=${PHARO_NAME_PREFIX}-hermesPackages-${SUFFIX}
-RPACKAGE_ARCHIVE_NAME=${PHARO_NAME_PREFIX}-rpackage-${SUFFIX}
 
 COMPILER_IMAGE_NAME=${PHARO_NAME_PREFIX}-compiler-${SUFFIX}
 TRAITS_IMAGE_NAME=${PHARO_NAME_PREFIX}-traits-${SUFFIX}
@@ -115,6 +114,8 @@ cd "${BOOTSTRAP_CACHE}"
 # Initializing bootstrap image
 echo $(date -u) "[Compiler] Initializing Bootstraped Image and fixing the code"
 ${VM} "${BOOTSTRAP_IMAGE_NAME}.image" # I have to run once the image so the next time it starts the CommandLineHandler.
+${VM} "${BOOTSTRAP_IMAGE_NAME}.image" perform --save PharoBootstrapInitialization fixMethodsIn: protocolsKernel.txt # Fixing some things espell does not handel well
+${VM} "${BOOTSTRAP_IMAGE_NAME}.image" perform --save PharoBootstrapInitialization fixExtensionMethods
 cp "${BOOTSTRAP_IMAGE_NAME}.image" "${COMPILER_IMAGE_NAME}.image"
 
 # Archive bootstrap image
@@ -123,12 +124,6 @@ zip "${BOOTSTRAP_ARCHIVE_IMAGE_NAME}.zip" "${BOOTSTRAP_ARCHIVE_IMAGE_NAME}.image
 
 # Archive binary Hermes packages
 zip "${HERMES_ARCHIVE_NAME}.zip" *.hermes
-
-# Archive Package definitions
-zip "${RPACKAGE_ARCHIVE_NAME}.zip" protocolsKernel.txt
-
-${VM} "${COMPILER_IMAGE_NAME}.image" perform --save PharoBootstrapInitialization fixMethodsIn: protocolsKernel.txt # Fixing some things espell does not handel well
-${VM} "${COMPILER_IMAGE_NAME}.image" perform --save PharoBootstrapInitialization fixExtensionMethods
 
 echo $(date -u) "[Compiler] Adding more Kernel packages"
 echo "Loading packages: $(cat hermesAdditionalKernelPackages.txt)"
