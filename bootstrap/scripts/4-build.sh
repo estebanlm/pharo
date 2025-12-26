@@ -99,9 +99,7 @@ fi
 
 BOOTSTRAP_IMAGE_NAME=bootstrap
 BOOTSTRAP_ARCHIVE_IMAGE_NAME=${PHARO_NAME_PREFIX}-bootstrap-${SUFFIX}
-
 HERMES_ARCHIVE_NAME=${PHARO_NAME_PREFIX}-hermesPackages-${SUFFIX}
-
 COMPILER_IMAGE_NAME=${PHARO_NAME_PREFIX}-compiler-${SUFFIX}
 TRAITS_IMAGE_NAME=${PHARO_NAME_PREFIX}-traits-${SUFFIX}
 MC_BOOTSTRAP_IMAGE_NAME=${PHARO_NAME_PREFIX}-monticello_bootstrap-${SUFFIX}
@@ -116,11 +114,12 @@ echo $(date -u) "[Compiler] Initializing Bootstraped Image and fixing the code"
 ${VM} "${BOOTSTRAP_IMAGE_NAME}.image" # I have to run once the image so the next time it starts the CommandLineHandler.
 ${VM} "${BOOTSTRAP_IMAGE_NAME}.image" perform --save PharoBootstrapInitialization fixMethodsIn: protocolsKernel.txt # Fixing some things espell does not handel well
 ${VM} "${BOOTSTRAP_IMAGE_NAME}.image" perform --save PharoBootstrapInitialization fixExtensionMethods
-cp "${BOOTSTRAP_IMAGE_NAME}.image" "${COMPILER_IMAGE_NAME}.image"
 
-# Archive bootstrap image
+# Archive bootstrap image and prepare compiler image
+echo "Prepare Bootstrap files"
 cp "${BOOTSTRAP_IMAGE_NAME}.image" "${BOOTSTRAP_ARCHIVE_IMAGE_NAME}.image"
 zip "${BOOTSTRAP_ARCHIVE_IMAGE_NAME}.zip" "${BOOTSTRAP_ARCHIVE_IMAGE_NAME}.image"
+cp "${BOOTSTRAP_IMAGE_NAME}.image" "${COMPILER_IMAGE_NAME}.image"
 
 # Archive binary Hermes packages
 zip "${HERMES_ARCHIVE_NAME}.zip" *.hermes
