@@ -173,16 +173,8 @@ MetacelloProjectRegistration >> currentlyLoadedClassesInProject [
 
 { #category : 'testing' }
 MetacelloProjectRegistration >> hasLoadConflicts: aProjectRegistration [
-	"5 combinations of loads with no load conflicts:
-        No configs and baselines =
-        configs = and no baselines
-        configs = and baselines =
-        configs = and no baseline loaded (self) with a baseline to load (aProjectRegistration)
-        config loaded (self), no config to load (aProjectRegistration) and no baseline loaded(self) with a baseline to load (aProjectRegistration) "
 
 	aProjectRegistration validate.
-	self isValid
-		ifFalse: [ ^ false ].
 	^ self projectSpec hasConflictWithProjectSpec: aProjectRegistration projectSpec
 ]
 
@@ -201,13 +193,6 @@ MetacelloProjectRegistration >> immutable [
 MetacelloProjectRegistration >> isMutable [
 
 	^ mutable ifNil: [ true ]
-]
-
-{ #category : 'testing' }
-MetacelloProjectRegistration >> isValid [
-	" has a name and one or the other of the projectSpecs is non-nil, but not both ... this is CRITICAL"
-
-	^ projectSpec isNotNil
 ]
 
 { #category : 'accessing' }
@@ -331,8 +316,8 @@ MetacelloProjectRegistration >> unregisterProject [
 
 { #category : 'accessing' }
 MetacelloProjectRegistration >> validate [
-	self isValid
-		ifFalse: [ self error: 'Invalid project registration' ]
+
+	projectSpec ifNil: [ self error: 'Invalid project registration' ]
 ]
 
 { #category : 'accessing' }
