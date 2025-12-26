@@ -94,8 +94,8 @@ MetacelloProjectRegistration class >> registrationForProjectSpec: aProjectSpec i
 
 { #category : 'accessing' }
 MetacelloProjectRegistration class >> registry [
-    Registry ifNil: [ Registry := MetacelloProjectRegistry new ].
-    ^ Registry
+
+	^ Registry ifNil: [ Registry := MetacelloProjectRegistry new ]
 ]
 
 { #category : 'accessing' }
@@ -115,6 +115,7 @@ MetacelloProjectRegistration class >> useRegistry: aRegistry during: aBlock [
 
 	| oldRegistry |
 	oldRegistry := Registry.
+	Registry := self new.
 	[ aBlock value ] ensure: [ Registry := oldRegistry ]
 ]
 
