@@ -122,7 +122,7 @@ zip "${BOOTSTRAP_ARCHIVE_IMAGE_NAME}.zip" "${BOOTSTRAP_ARCHIVE_IMAGE_NAME}.image
 cp "${BOOTSTRAP_IMAGE_NAME}.image" "${COMPILER_IMAGE_NAME}.image"
 
 # Archive binary Hermes packages
-zip "${HERMES_ARCHIVE_NAME}.zip" *.hermes
+zip "${HERMES_ARCHIVE_NAME}.zip" *.hermes hermesSUnitPackages.txt
 
 echo $(date -u) "[Compiler] Adding more Kernel packages"
 ${VM} "${COMPILER_IMAGE_NAME}.image" perform --save BasicHermesTool load: --as-array $(cat hermesAdditionalKernelPackages.txt)
