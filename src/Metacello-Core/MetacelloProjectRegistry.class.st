@@ -10,17 +10,6 @@ Class {
 }
 
 { #category : 'accessing' }
-MetacelloProjectRegistry >> baselineProjectSpecs [
-    "MetacelloProjectRegistration baselineProjectSpecs"
-
-    | projectSpecs |
-    projectSpecs := OrderedCollection new.
-    self baselineRegistry
-        keysAndValuesDo: [ :className :registration | projectSpecs add: (self projectSpecForClassNamed: className ifAbsent: [ self error: 'not expected' ]) ].
-    ^ projectSpecs asArray
-]
-
-{ #category : 'accessing' }
 MetacelloProjectRegistry >> baselineRegistry [
 
 	^ baselineRegistry ifNil: [ baselineRegistry := Dictionary new ]
@@ -43,6 +32,16 @@ MetacelloProjectRegistry >> postCopy [
 MetacelloProjectRegistry >> projectSpecForClassNamed: aClassName ifAbsent: absentBlock [
 
 	^ (self baselineRegistry at: aClassName ifAbsent: [ ^ absentBlock value ]) projectSpec
+]
+
+{ #category : 'accessing' }
+MetacelloProjectRegistry >> projectSpecs [
+
+	| projectSpecs |
+	projectSpecs := OrderedCollection new.
+	self baselineRegistry keysAndValuesDo: [ :className :registration |
+		projectSpecs add: (self projectSpecForClassNamed: className ifAbsent: [ self error: 'not expected' ]) ].
+	^ projectSpecs asArray
 ]
 
 { #category : 'registration' }

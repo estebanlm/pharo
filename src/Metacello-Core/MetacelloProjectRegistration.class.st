@@ -25,24 +25,6 @@ MetacelloProjectRegistration class >> baselineClasses [
     ^ BaselineOf allSubclasses
 ]
 
-{ #category : 'accessing' }
-MetacelloProjectRegistration class >> baselineProjectSpecs [
-    "MetacelloProjectRegistration baselineProjectSpecs"
-
-    ^ self registry baselineProjectSpecs
-]
-
-{ #category : 'accessing' }
-MetacelloProjectRegistration class >> classRemoved: aClassRemovalAnnouncement [
-	"aRemovalAnnouncement is platform-specific ... responds to #itemClass to 
-   answer the class that was removed."
-
-	| aClass registration |
-	aClass := aClassRemovalAnnouncement itemClass.
-	registration := self registry registrationForExactClassNamed: aClass name asString ifAbsent: [ ^ self ].
-	registration unregisterProject
-]
-
 { #category : 'mutability' }
 MetacelloProjectRegistration class >> copyRegistryDuring: aBlock commitIfSuccess: aBoolean [
 	"install copy of registry for duration of <aBlock> execution."
@@ -74,6 +56,12 @@ MetacelloProjectRegistration class >> projectSpec: aProjectSpec [
 { #category : 'querying' }
 MetacelloProjectRegistration class >> projectSpecForClassNamed: aClassName ifAbsent: absentBlock [
     ^ self registry projectSpecForClassNamed: aClassName ifAbsent: absentBlock
+]
+
+{ #category : 'accessing' }
+MetacelloProjectRegistration class >> projectSpecs [
+
+	^ self registry baselineProjectSpecs
 ]
 
 { #category : 'registration' }
@@ -115,7 +103,7 @@ MetacelloProjectRegistration class >> useRegistry: aRegistry during: aBlock [
 
 	| oldRegistry |
 	oldRegistry := Registry.
-	Registry := self new.
+	Registry := MetacelloProjectRegistry new.
 	[ aBlock value ] ensure: [ Registry := oldRegistry ]
 ]
 
