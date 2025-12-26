@@ -55,9 +55,7 @@ unzip $RPACKAGE_ARCHIVE
 mv $IMAGE_FILE bootstrap.image
 
 export PHARO_CI_TESTING_ENVIRONMENT=1
-	
-#Initializing the Image
-./pharo bootstrap.image
+
 #Adding packages removed from the bootstrap
 ./pharo bootstrap.image perform --save BasicHermesTool load: --as-array Clap-Core.hermes Clap-Commands-Pharo.hermes Hermes-Extensions.hermes
 ./pharo bootstrap.image perform --save Pragma buildCache

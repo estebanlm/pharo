@@ -112,8 +112,9 @@ PHARO_IMAGE_NAME=${PHARO_NAME_PREFIX}-${SUFFIX}
 #Get inside the bootstrap-cache folder. Pharo interprets relatives as relatives to the image and not the 'working directory'
 cd "${BOOTSTRAP_CACHE}"
 
-#Prepare
-echo "Prepare Bootstrap files"
+# Initializing bootstrap image
+echo $(date -u) "[Compiler] Initializing Bootstraped Image and fixing the code"
+${VM} "${BOOTSTRAP_IMAGE_NAME}.image" # I have to run once the image so the next time it starts the CommandLineHandler.
 cp "${BOOTSTRAP_IMAGE_NAME}.image" "${COMPILER_IMAGE_NAME}.image"
 
 # Archive bootstrap image
@@ -126,9 +127,6 @@ zip "${HERMES_ARCHIVE_NAME}.zip" *.hermes
 # Archive Package definitions
 zip "${RPACKAGE_ARCHIVE_NAME}.zip" protocolsKernel.txt
 
-# Installing Package
-echo $(date -u) "[Compiler] Initializing Bootstraped Image and fixing the code"
-${VM} "${COMPILER_IMAGE_NAME}.image" # I have to run once the image so the next time it starts the CommandLineHandler.
 ${VM} "${COMPILER_IMAGE_NAME}.image" perform --save PharoBootstrapInitialization fixMethodsIn: protocolsKernel.txt # Fixing some things espell does not handel well
 ${VM} "${COMPILER_IMAGE_NAME}.image" perform --save PharoBootstrapInitialization fixExtensionMethods
 
