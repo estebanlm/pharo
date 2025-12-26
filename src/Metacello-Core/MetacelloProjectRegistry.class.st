@@ -42,21 +42,21 @@ MetacelloProjectRegistry >> postCopy [
 { #category : 'querying' }
 MetacelloProjectRegistry >> projectSpecForClassNamed: aClassName ifAbsent: absentBlock [
 
-	^ (self baselineRegistry at: aClassName ifAbsent: [ ^ absentBlock value ]) baselineProjectSpec
+	^ (self baselineRegistry at: aClassName ifAbsent: [ ^ absentBlock value ]) projectSpec
 ]
 
 { #category : 'registration' }
 MetacelloProjectRegistry >> registerProjectRegistration: aMetacelloProjectRegistration [
 	"unconditionally register <newRegistration> ... use with care"
 
-	aMetacelloProjectRegistration baselineProjectSpec ifNotNil: [ :spec |
-			self baselineRegistry at: spec className ifPresent: [ :existing |
-					(existing baselineProjectSpec registrationsCompareEqual: spec) ifFalse: [
-						MetacelloNotification signal:
-							'REGISTRATION OF INCOMPATABLE PROJECTS: ' , existing printString , ' REPLACED BY ' , aMetacelloProjectRegistration printString ] ].
-			(aMetacelloProjectRegistration respondsTo: #versionInfo) ifTrue: [ aMetacelloProjectRegistration versionInfo setVersionString: spec repositoryVersionString ].
-			spec immutable.
-			self baselineRegistry at: spec className put: aMetacelloProjectRegistration ].
+	| spec |
+	spec := aMetacelloProjectRegistration projectSpec.
+	self baselineRegistry at: spec className ifPresent: [ :existing |
+			(existing projectSpec registrationsCompareEqual: spec) ifFalse: [
+				MetacelloNotification signal: 'REGISTRATION OF INCOMPATABLE PROJECTS: ' , existing printString , ' REPLACED BY ' , aMetacelloProjectRegistration printString ] ].
+	aMetacelloProjectRegistration versionInfo setVersionString: spec repositoryVersionString.
+	spec immutable.
+	self baselineRegistry at: spec className put: aMetacelloProjectRegistration.
 	aMetacelloProjectRegistration immutable
 ]
 
@@ -65,8 +65,8 @@ MetacelloProjectRegistry >> registrationFor: aMetacelloProjectRegistration ifPre
 
 	| baseName |
 	baseName := aMetacelloProjectRegistration baseName.
-	aMetacelloProjectRegistration baselineProjectSpec ifNotNil: [ :spec |
-		self baselineRegistry at: spec className ifPresent: [ :existing | ^ presentBlock value: existing ] ].
+
+	self baselineRegistry at: aMetacelloProjectRegistration projectSpec className ifPresent: [ :existing | ^ presentBlock value: existing ].
 	self baselineRegistry at: 'BaselineOf' , baseName ifPresent: [ :existing | ^ presentBlock value: existing ].
 	^ absentBlock value
 ]
@@ -97,6 +97,5 @@ MetacelloProjectRegistry >> registrations [
 { #category : 'registration' }
 MetacelloProjectRegistry >> unregisterProjectRegistration: aMetacelloProjectRegistration [
 
-	aMetacelloProjectRegistration baselineProjectSpec ifNotNil: [ :spec |
-		self baselineRegistry removeKey: spec className ifAbsent: [ self error: 'unexpectedly missing project registration' ] ]
+	self baselineRegistry removeKey: aMetacelloProjectRegistration projectSpec className ifAbsent: [ self error: 'unexpectedly missing project registration' ]
 ]

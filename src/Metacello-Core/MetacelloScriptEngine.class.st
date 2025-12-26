@@ -303,11 +303,6 @@ MetacelloScriptEngine >> options: aDictionary [
 ]
 
 { #category : 'accessing' }
-MetacelloScriptEngine >> projectName [
-    ^ self projectSpec name
-]
-
-{ #category : 'accessing' }
 MetacelloScriptEngine >> projectReferenceSpec [
     ^ projectReferenceSpec projectReference
 ]
@@ -340,11 +335,6 @@ MetacelloScriptEngine >> register [
 		ifAbsent: [ :new | new registerProject ]
 		ifPresent: [ :existing :new | existing copyOnWrite: [ :existingCopy | existingCopy merge: new ] ].
 	self root: spec
-]
-
-{ #category : 'accessing' }
-MetacelloScriptEngine >> repositories [
-    ^ self projectSpec repositories
 ]
 
 { #category : 'private' }
