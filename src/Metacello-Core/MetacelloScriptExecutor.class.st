@@ -18,6 +18,15 @@ Class {
 	#tag : 'Scripts'
 }
 
+{ #category : 'baselines' }
+MetacelloScriptExecutor class >> baselineNameFrom: baseName [
+	"Return the fully-qualified configuration class name."
+
+	^ (baseName indexOfSubCollection: 'BaselineOf') > 0
+		  ifTrue: [ baseName ]
+		  ifFalse: [ 'BaselineOf' , baseName ]
+]
+
 { #category : 'execution' }
 MetacelloScriptExecutor >> applyArgsToProjectSpec: aProjectSpec [
     classNameArg ifNotNil: [ aProjectSpec className: classNameArg ].
@@ -33,15 +42,6 @@ MetacelloScriptExecutor >> baselineArg [
 { #category : 'args' }
 MetacelloScriptExecutor >> baselineArg: anObject [
 	baselineArg := anObject
-]
-
-{ #category : 'baselines' }
-MetacelloScriptExecutor >> baselineNameFrom: baseName [
-	"Return the fully-qualified configuration class name."
-
-	^ (baseName indexOfSubCollection: 'BaselineOf') > 0
-		  ifTrue: [ baseName ]
-		  ifFalse: [ 'BaselineOf' , baseName ]
 ]
 
 { #category : 'args' }
@@ -77,7 +77,7 @@ MetacelloScriptExecutor >> executeString: aString do: projectSpecBlock [
 
 	| projectSpec |
 	singleRoot ifNil: [ self singleRoot: true ].
-	projectSpec := MetacelloProjectRegistration projectSpecForClassNamed: (self baselineNameFrom: aString) ifAbsent: [ ].
+	projectSpec := MetacelloProjectRegistration projectSpecForClassNamed: (self class baselineNameFrom: aString) ifAbsent: [ ].
 
 	(self projectSpecSelectBlock value: projectSpec) ifTrue: [ projectSpecBlock value: (self applyArgsToProjectSpec: projectSpec copy) ]
 ]
