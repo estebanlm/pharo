@@ -55,8 +55,7 @@ export PHARO_CI_TESTING_ENVIRONMENT=1
 
 #Adding packages removed from the bootstrap
 ./pharo bootstrap.image perform --save BasicHermesTool load: --as-array $(cat hermesSUnitPackages.txt)
-
 ./pharo bootstrap.image perform --save Pragma buildCache
 
 #Running tests
-./pharo bootstrap.image test --junit-xml-output --stage-name ${2} SUnit-Core SUnit-Tests Kernel-Tests
+./pharo bootstrap.image test --junit-xml-output --stage-name ${2} '.*'
