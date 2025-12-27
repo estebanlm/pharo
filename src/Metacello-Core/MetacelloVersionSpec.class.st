@@ -166,7 +166,7 @@ MetacelloVersionSpec >> configPackagesSpecMethodOn: aStream indent: indent [
 { #category : 'private' }
 MetacelloVersionSpec >> createVersion [
 
-	^ self versionClass fromSpec: self
+	^ MetacelloVersion fromSpec: self
 ]
 
 { #category : 'enumerating' }
@@ -514,12 +514,6 @@ MetacelloVersionSpec >> specsNamed: packageAndProjectNames projectDo: projectBlo
 	map := self packages map.
 	packageAndProjectNames do: [ :name |
 		(map at: name ifAbsent: [  ]) ifNotNil: [ :pkgSpec | pkgSpec projectDo: projectBlock packageDo: packageBlock groupDo: groupBlock ] ]
-]
-
-{ #category : 'private' }
-MetacelloVersionSpec >> versionClass [
-
-	^ MetacelloVersion
 ]
 
 { #category : 'private' }
