@@ -256,9 +256,9 @@ MetacelloBaselineConstructor >> name: anObject [
 MetacelloBaselineConstructor >> on: aConfig project: aProject [
 
 	| pragma versionMap versionSpec |
+	project := aProject.
 	self configuration: aConfig.
 	pragma := self extractBaselinePragmaFor: aConfig class.
-	self setProject: (aProject ifNil: [ MetacelloProject new ]).
 	versionSpec := self project versionSpec.
 	self root: versionSpec.
 	self evaluatePragma: pragma.
@@ -338,7 +338,7 @@ MetacelloBaselineConstructor >> preLoadDoIt: aSymbol [
 { #category : 'accessing' }
 MetacelloBaselineConstructor >> project [
 
-	^ project ifNil: [ project := self projectClass new ]
+	^ project ifNil: [ project := MetacelloProject new ]
 ]
 
 { #category : 'api' }
@@ -391,11 +391,6 @@ MetacelloBaselineConstructor >> project: aString with: aBlockOrString [
 			 yourself).
 
 	self with: projectSpec during: aBlockOrString
-]
-
-{ #category : 'accessing' }
-MetacelloBaselineConstructor >> projectClass [
-    ^ MetacelloProject
 ]
 
 { #category : 'api' }
@@ -468,12 +463,6 @@ MetacelloBaselineConstructor >> root [
 { #category : 'accessing' }
 MetacelloBaselineConstructor >> root: aMetacelloSpec [
     root := aMetacelloSpec
-]
-
-{ #category : 'accessing' }
-MetacelloBaselineConstructor >> setProject: aProject [
-
-	project := aProject
 ]
 
 { #category : 'api' }

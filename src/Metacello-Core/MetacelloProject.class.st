@@ -63,11 +63,6 @@ MetacelloProject class >> singletonVersionName [
     ^ 'baseline'
 ]
 
-{ #category : 'scripting' }
-MetacelloProject >> asConfigurationProject [
-    ^ self
-]
-
 { #category : 'private' }
 MetacelloProject >> attributes [
 

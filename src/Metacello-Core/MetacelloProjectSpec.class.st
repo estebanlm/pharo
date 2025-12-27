@@ -398,11 +398,6 @@ MetacelloProjectSpec >> initialize [
 	projectInitialized := false
 ]
 
-{ #category : 'testing' }
-MetacelloProjectSpec >> isConfigurationOfProjectSpec [
-	^ false
-]
-
 { #category : 'scripting' }
 MetacelloProjectSpec >> isLocked [
 
@@ -549,15 +544,6 @@ MetacelloProjectSpec >> operator: anObject [
 
     self shouldBeMutable.
     operator := anObject
-]
-
-{ #category : 'accessing' }
-MetacelloProjectSpec >> packageFileSpecFor: aMetacelloPackagesSpec [
-
-	^(aMetacelloPackagesSpec project projectReferenceSpec)
-			name: self name;
-			projectReference: self copy;
-			yourself.
 ]
 
 { #category : 'copying' }
