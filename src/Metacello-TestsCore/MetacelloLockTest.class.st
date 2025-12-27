@@ -41,5 +41,5 @@ MetacelloLockTest >> testRegisterProject [
 		repository: 'http://repo.com';
 		register.
 
-	self assertCollection: (MetacelloProjectRegistration registry baselineProjectSpecs collect: #name) includesAny: #( 'TestToLock2' )
+	self assertCollection: (MetacelloProjectRegistration registry projectSpecs collect: #name) includesAny: #( 'TestToLock2' )
 ]

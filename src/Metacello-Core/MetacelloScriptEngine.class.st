@@ -17,12 +17,8 @@ Class {
 
 { #category : 'utilities' }
 MetacelloScriptEngine class >> baseNameOf: className [
-  ^ (className beginsWith: 'BaselineOf')
-    ifTrue: [ className copyFrom: 'BaselineOf' size + 1 to: className size ]
-    ifFalse: [ 
-      (className beginsWith: 'ConfigurationOf')
-        ifTrue: [ className copyFrom: 'ConfigurationOf' size + 1 to: className size ]
-        ifFalse: [ className ] ]
+
+	^ className withoutPrefix: 'BaselineOf'
 ]
 
 { #category : 'actions api' }
@@ -303,11 +299,6 @@ MetacelloScriptEngine >> options: aDictionary [
 ]
 
 { #category : 'accessing' }
-MetacelloScriptEngine >> projectName [
-    ^ self projectSpec name
-]
-
-{ #category : 'accessing' }
 MetacelloScriptEngine >> projectReferenceSpec [
     ^ projectReferenceSpec projectReference
 ]
@@ -340,11 +331,6 @@ MetacelloScriptEngine >> register [
 		ifAbsent: [ :new | new registerProject ]
 		ifPresent: [ :existing :new | existing copyOnWrite: [ :existingCopy | existingCopy merge: new ] ].
 	self root: spec
-]
-
-{ #category : 'accessing' }
-MetacelloScriptEngine >> repositories [
-    ^ self projectSpec repositories
 ]
 
 { #category : 'private' }

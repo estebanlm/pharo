@@ -20,39 +20,32 @@ Class {
 }
 
 { #category : 'instance creation' }
-MetacelloProjectSpec class >> new [
-	self name == #MetacelloProjectSpec
-		ifTrue: [ self error: 'This class is abstract' ].
-	^ super new
+MetacelloProjectSpec class >> isAbstract [
+
+	^ self = MetacelloProjectSpec
 ]
 
 { #category : 'adding' }
 MetacelloProjectSpec >> addToMetacelloPackages: aMetacelloPackagesSpec [
 
 	| spec |
-	spec := (aMetacelloPackagesSpec project projectReferenceSpec)
-			name: self name;
-			projectReference: self copy;
-			yourself.
-	aMetacelloPackagesSpec addMember: 
-		(aMetacelloPackagesSpec addMember 
-			name: spec name;
-			spec: spec;
-			yourself)
+	spec := aMetacelloPackagesSpec project projectReferenceSpec
+		        name: self name;
+		        projectReference: self copy;
+		        yourself.
+	aMetacelloPackagesSpec addMemberForSpec: spec
 ]
 
 { #category : 'scripting' }
 MetacelloProjectSpec >> asBaselineProjectSpec [
 
-	^ self copyForScriptingInto: (MetacelloBaselineOfProjectSpec for: self project)
+	^ self subclassResponsibility
 ]
 
 { #category : 'scripting' }
 MetacelloProjectSpec >> asProjectRegistration [
 
-	(self className beginsWith: 'BaselineOf') ifFalse: [ self error: 'The class name should be a baseline and begin with `BaselineOf`.' ].
-
-	^ MetacelloProjectRegistration fromMCBaselineProjectSpec: self asBaselineProjectSpec
+	^ MetacelloProjectRegistration projectSpec: self asBaselineProjectSpec
 ]
 
 { #category : 'scripting' }
@@ -68,25 +61,19 @@ MetacelloProjectSpec >> baseName [
 { #category : 'scripting' }
 MetacelloProjectSpec >> canDowngradeTo: aMetacelloProjectSpec [
 
-	self file = aMetacelloProjectSpec file ifFalse: [ ^ false ].
-	(self className = aMetacelloProjectSpec className and: [ self operator == aMetacelloProjectSpec operator ]) ifFalse: [ ^ false ].
-	self versionOrNil ifNil: [ "https://github.com/dalehenrich/metacello-work/issues/198#issuecomment-21737458" ^ true ].
-	^ (self compareVersions: aMetacelloProjectSpec usingOperator: self operator) not
+	^ self subclassResponsibility
 ]
 
 { #category : 'scripting' }
 MetacelloProjectSpec >> canUpgradeTo: aMetacelloProjectSpec [
 
-	self file = aMetacelloProjectSpec file ifFalse: [ ^ false ].
-	(self className = aMetacelloProjectSpec className and: [ self operator == aMetacelloProjectSpec operator ]) ifFalse: [ ^ false ].
-	self versionOrNil ifNil: [ "https://github.com/dalehenrich/metacello-work/issues/198#issuecomment-21737458" ^ true ].
-	^ self compareVersions: aMetacelloProjectSpec usingOperator: self operator
+	^ self subclassResponsibility
 ]
 
 { #category : 'querying' }
 MetacelloProjectSpec >> className [
-    className ifNil: [ self name ifNotNil: [ self className: self constructClassName ] ].
-    ^ className
+
+	^ className
 ]
 
 { #category : 'accessing' }
@@ -280,28 +267,10 @@ MetacelloProjectSpec >> configShortCutMethodOn: aStream member: aMember indent: 
 			^ self ]
 ]
 
-{ #category : 'private' }
-MetacelloProjectSpec >> constructClassName [
-    ^ nil
-]
-
 { #category : 'mutability' }
 MetacelloProjectSpec >> copyForRegistration: aMetacelloProjectRegistration onWrite: aBlock [
-    self subclassResponsibility
-]
 
-{ #category : 'scripting' }
-MetacelloProjectSpec >> copyForScriptingInto: aProjectSpec [
-    ^aProjectSpec
-        setName: name;
-        className: className;
-        versionString: versionString;
-        operator: operator;
-        setLoads: loads;
-        preLoadDoIt: preLoadDoIt;
-        postLoadDoIt: postLoadDoIt;
-        repositories: repositories copy;
-        file: file
+	self subclassResponsibility
 ]
 
 { #category : 'accessing' }
@@ -382,16 +351,9 @@ MetacelloProjectSpec >> hasConflictWithBaselineSpec: projectSpec [
 ]
 
 { #category : 'testing' }
-MetacelloProjectSpec >> hasConflictWithConfigurationSpec: projectSpec [
-	^ self hasLoadConflicts: projectSpec
-]
-
-{ #category : 'testing' }
 MetacelloProjectSpec >> hasConflictWithProjectSpec: projectSpec [
 
-	(self className beginsWith: 'BaselineOf') ifFalse: [ self error: 'The class name should be a baseline and begin with `BaselineOf`.' ].
-
-	^ projectSpec hasConflictWithBaselineSpec: self asBaselineProjectSpec
+	^ projectSpec hasConflictWithBaselineSpec: self
 ]
 
 { #category : 'testing' }
@@ -434,11 +396,6 @@ MetacelloProjectSpec >> initialize [
 
 	super initialize.
 	projectInitialized := false
-]
-
-{ #category : 'testing' }
-MetacelloProjectSpec >> isBaselineOfProjectSpec [
-	^ false
 ]
 
 { #category : 'testing' }
@@ -515,9 +472,7 @@ MetacelloProjectSpec >> mergeMap [
 { #category : 'merging' }
 MetacelloProjectSpec >> mergeRepositoriesSpec: anotherRepositories [
 
-	self repositories: (self getRepositories
-			 ifNotNil: [ self repositories mergeSpec: anotherRepositories ]
-			 ifNil: [ anotherRepositories ])
+	self subclassResponsibility
 ]
 
 { #category : 'scripting' }
@@ -619,9 +574,11 @@ MetacelloProjectSpec >> postLoadDoIt [
 ]
 
 { #category : 'accessing' }
-MetacelloProjectSpec >> postLoadDoIt: anObject [
+MetacelloProjectSpec >> postLoadDoIt: aSymbol [
 
-	anObject setPostLoadDoItInMetacelloSpec: self
+	self shouldBeMutable.
+	self validateDoItSelector: aSymbol.
+	postLoadDoIt := aSymbol
 ]
 
 { #category : 'querying' }
@@ -631,9 +588,11 @@ MetacelloProjectSpec >> preLoadDoIt [
 ]
 
 { #category : 'accessing' }
-MetacelloProjectSpec >> preLoadDoIt: anObject [
+MetacelloProjectSpec >> preLoadDoIt: aSymbol [
 
-	anObject setPreLoadDoItInMetacelloSpec: self
+	self shouldBeMutable.
+	self validateDoItSelector: aSymbol.
+	preLoadDoIt := aSymbol
 ]
 
 { #category : 'visiting' }
@@ -648,7 +607,8 @@ MetacelloProjectSpec >> projectInitialized [
 
 { #category : 'printing' }
 MetacelloProjectSpec >> projectLabel [
-    ^ 'project'
+
+	^ self subclassResponsibility
 ]
 
 { #category : 'accessing' }
@@ -746,18 +706,6 @@ MetacelloProjectSpec >> setName: aStringOrNil [
     name := aStringOrNil
 ]
 
-{ #category : 'accessing' }
-MetacelloProjectSpec >> setPostLoadDoIt: aSymbol [
-    self shouldBeMutable.
-    postLoadDoIt := aSymbol
-]
-
-{ #category : 'accessing' }
-MetacelloProjectSpec >> setPreLoadDoIt: aSymbol [
-    self shouldBeMutable.
-    preLoadDoIt := aSymbol
-]
-
 { #category : 'scripting' }
 MetacelloProjectSpec >> unregisterProject [
     ^ MetacelloProjectRegistration
@@ -768,9 +716,8 @@ MetacelloProjectSpec >> unregisterProject [
 
 { #category : 'querying' }
 MetacelloProjectSpec >> version [
-	"Empty version string means use latestVersion or #bleedingEdge"
 
-	^ self versionString ifNotNil: [ self project versionString ]
+	^ self subclassResponsibility
 ]
 
 { #category : 'querying' }

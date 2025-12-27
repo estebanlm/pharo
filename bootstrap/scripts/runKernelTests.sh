@@ -45,7 +45,6 @@ ${BOOTSTRAP_REPOSITORY:-.}/bootstrap/scripts/getPharoVM.sh ${TEST_VM_VERSION} ${
 IMAGE_ARCHIVE=$(find ${CACHE} -name ${TEST_NAME_PREFIX}-bootstrap-${1}bit-*.zip)
 unzip $IMAGE_ARCHIVE
 IMAGE_FILE=$(find . -name ${TEST_NAME_PREFIX}-bootstrap-${1}bit-*.image)
-
 HERMES_ARCHIVE=$(find ${CACHE} -name ${TEST_NAME_PREFIX}-hermesPackages-${1}bit-*.zip)
 unzip $HERMES_ARCHIVE
 

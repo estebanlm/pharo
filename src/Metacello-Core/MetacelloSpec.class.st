@@ -28,22 +28,10 @@ MetacelloSpec >> acceptVisitor: aVisitor [
 	self subclassResponsibility
 ]
 
-{ #category : 'spec creation' }
-MetacelloSpec >> addMember [
-
-	^MetacelloAddMemberSpec for: self project
-]
-
 { #category : 'printing' }
 MetacelloSpec >> configMethodOn: aStream indent: indent [
 
 	self subclassResponsibility
-]
-
-{ #category : 'spec creation' }
-MetacelloSpec >> copyMember [
-
-	^MetacelloCopyMemberSpec for: self project
 ]
 
 { #category : 'mutability' }
@@ -98,12 +86,6 @@ MetacelloSpec >> mergeImportLoads: aLoadList [
 MetacelloSpec >> mergeMap [
 
 	^Dictionary new.
-]
-
-{ #category : 'spec creation' }
-MetacelloSpec >> mergeMember [
-
-	^MetacelloMergeMemberSpec for: self project
 ]
 
 { #category : 'merging' }
@@ -173,17 +155,19 @@ MetacelloSpec >> project [
 	^project
 ]
 
-{ #category : 'spec creation' }
-MetacelloSpec >> removeMember [
-
-	^MetacelloRemoveMemberSpec for: self project
-]
-
 { #category : 'mutability' }
 MetacelloSpec >> shouldBeMutable [
 
 	self isMutable ifTrue: [ ^ self ].
 	self error: 'Not allowed to modify an immutable object'
+]
+
+{ #category : 'validation' }
+MetacelloSpec >> validateDoItSelector: anObject [
+
+	anObject ifNil: [ ^ self ].
+	anObject isSymbol ifFalse: [ self error: 'Invalid message selector for doit: ' , anObject printString ].
+	anObject precedence == 0 ifTrue: [ self error: 'Invalid selector for doit: ' , anObject printString ]
 ]
 
 { #category : 'merging' }
