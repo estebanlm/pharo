@@ -49,7 +49,7 @@ MetacelloProjectSpec >> asBaselineProjectSpec [
 { #category : 'scripting' }
 MetacelloProjectSpec >> asProjectRegistration [
 
-	^ MetacelloProjectRegistration fromMCBaselineProjectSpec: self asBaselineProjectSpec
+	^ MetacelloProjectRegistration projectSpec: self asBaselineProjectSpec
 ]
 
 { #category : 'scripting' }
