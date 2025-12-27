@@ -98,9 +98,8 @@ Class {
 		'preReleaseVersion',
 		'buildVersion'
 	],
-	#category : 'Metacello-Core-Model',
-	#package : 'Metacello-Core',
-	#tag : 'Model'
+	#category : 'Deprecated14',
+	#package : 'Deprecated14'
 }
 
 { #category : 'private' }
@@ -215,6 +214,13 @@ MetacelloSemanticVersionNumber class >> integerFromString: aString [
     error:
       'invalid version number: normal version component must be integer '
         , aString asString
+]
+
+{ #category : 'testing' }
+MetacelloSemanticVersionNumber class >> isDeprecated [
+	"This was only used with ConfigurationOf but cannot be used with BaselineOf."
+
+	^ true
 ]
 
 { #category : 'private' }
