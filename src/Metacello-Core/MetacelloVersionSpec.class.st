@@ -4,7 +4,6 @@ Class {
 	#instVars : [
 		'repositories',
 		'packages',
-		'versionString',
 		'packageList',
 		'importArray',
 		'postLoadDoIt',
@@ -525,10 +524,5 @@ MetacelloVersionSpec >> versionNumber [
 { #category : 'querying' }
 MetacelloVersionSpec >> versionString [
 
-	^ versionString ifNil: [ '' ]
-]
-
-{ #category : 'accessing' }
-MetacelloVersionSpec >> versionString: anObject [
-	versionString := anObject
+	^ self project singletonVersionName
 ]

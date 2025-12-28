@@ -36,8 +36,8 @@ MetacelloVersionDoesNotExistError >> project: anObject [
 
 { #category : 'signaling' }
 MetacelloVersionDoesNotExistError >> signal [
-  "GemStone needs this to print exception correctly"
+	"GemStone needs this to print exception correctly"
 
-  self messageText: self description.
-  ^ super signal
+	self messageText: self description.
+	^ super signal
 ]
