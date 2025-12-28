@@ -203,9 +203,3 @@ MetacelloProjectReferenceSpec >> versionString [
 
 	^self projectReference versionString
 ]
-
-{ #category : 'querying' }
-MetacelloProjectReferenceSpec >> versionString: aString [
-
-	^self projectReference versionString: aString
-]

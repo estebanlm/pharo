@@ -123,5 +123,5 @@ MetacelloBaselineOfProjectSpec >> version [
 { #category : 'querying' }
 MetacelloBaselineOfProjectSpec >> versionString [
 
-	^ versionString ifNil: [ self version ifNotNil: [ :v | v versionString ] ]
+	^ self version ifNotNil: [ :v | v versionString ]
 ]

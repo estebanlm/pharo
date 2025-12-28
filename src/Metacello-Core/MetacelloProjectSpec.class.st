@@ -3,7 +3,6 @@ Class {
 	#superclass : 'MetacelloSpec',
 	#instVars : [
 		'file',
-		'versionString',
 		'preLoadDoIt',
 		'loads',
 		'projectPackage',
@@ -455,7 +454,6 @@ MetacelloProjectSpec >> mergeMap [
 	map := super mergeMap.
 	map at: #name put: name.
 	map at: #className put: className.
-	map at: #versionString put: versionString.
 	map at: #operator put: operator.
 	map at: #loads put: loads.
 	map at: #preLoadDoIt put: preLoadDoIt.
@@ -723,12 +721,7 @@ MetacelloProjectSpec >> versionOrNil [
 
 { #category : 'querying' }
 MetacelloProjectSpec >> versionString [
+	"This method should be removed once all senders are removed."
 
-	^ versionString
-]
-
-{ #category : 'accessing' }
-MetacelloProjectSpec >> versionString: anObject [
-    self shouldBeMutable.
-    versionString := anObject
+	^ nil
 ]

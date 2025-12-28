@@ -8,30 +8,28 @@ Class {
 
 { #category : 'tests' }
 MetacelloProjectSpecTestCase >> testProjectMergeSpec [
+
 	| projectA projectB project |
 	projectA := self projectSpec
-		name: 'Project';
-		className: 'ConfigurationOfProject';
-		versionString: '1.0';
-		loads: #('MyPackage');
-		preLoadDoIt: #preLoadDoIt;
-		postLoadDoIt: #postLoadDoIt;
-		yourself.
+		            name: 'Project';
+		            className: 'ConfigurationOfProject';
+		            loads: #( 'MyPackage' );
+		            preLoadDoIt: #preLoadDoIt;
+		            postLoadDoIt: #postLoadDoIt;
+		            yourself.
 	projectB := self projectSpec
-		name: 'Project';
-		className: 'ConfigurationOfProjectB';
-		versionString: #stable;
-		operator: #<;
-		loads: #('MyPackage' 'MyTests');
-		preLoadDoIt: #preLoadDoItB;
-		postLoadDoIt: #postLoadDoItB;
-		yourself.
+		            name: 'Project';
+		            className: 'ConfigurationOfProjectB';
+		            operator: #<;
+		            loads: #( 'MyPackage' 'MyTests' );
+		            preLoadDoIt: #preLoadDoItB;
+		            postLoadDoIt: #postLoadDoItB;
+		            yourself.
 	project := projectA mergeSpec: projectB.
 	self assert: project name equals: 'Project'.
 	self assert: project className equals: 'ConfigurationOfProjectB'.
-	self assert: project versionString equals: #stable.
 	self assert: project operator identicalTo: #<.
-	self assert: project loads equals: #('MyPackage' 'MyTests').
+	self assert: project loads equals: #( 'MyPackage' 'MyTests' ).
 	self assert: project preLoadDoIt value identicalTo: #preLoadDoItB.
 	self assert: project postLoadDoIt value identicalTo: #postLoadDoItB
 ]
@@ -75,8 +73,6 @@ MetacelloProjectSpecTestCase >> testProjectSpec [
 	project
 		name: 'Project';
 		className: 'ConfigurationOfProject';
-		versionString: '1.0';
-		versionString: #stable;
 		operator: #<;
 		operator: nil;
 		loads: 'MyPackage';
@@ -86,7 +82,6 @@ MetacelloProjectSpecTestCase >> testProjectSpec [
 		yourself.
 	self assert: project name equals: 'Project'.
 	self assert: project className equals: 'ConfigurationOfProject'.
-	self assert: project versionString equals: #stable.
 	self assert: project operator identicalTo: #>=.
 	self assert: project loads equals: #('MyPackage' 'MyTests').
 	self assert: project preLoadDoIt value identicalTo: #preLoadDoIt.
