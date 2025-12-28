@@ -25,19 +25,11 @@ MetacelloBaselineOfProjectSpec >> asBaselineProjectSpec [
 ]
 
 { #category : 'scripting' }
-MetacelloBaselineOfProjectSpec >> canDowngradeTo: aProjectSpec [
-	"cannot upgrade between baselines"
-
-	^ false
-]
-
-{ #category : 'scripting' }
 MetacelloBaselineOfProjectSpec >> canUpgradeTo: aProjectSpec [
-  "cannot upgrade between baselines unless repositories can be upgraded"
+	"cannot upgrade between baselines unless repositories can be upgraded"
 
-  (self repositories canUpgradeTo: aProjectSpec repositories)
-    ifTrue: [ ^ true ].
-  ^ false
+	(self repositories canUpgradeTo: aProjectSpec repositories) ifTrue: [ ^ true ].
+	^ false
 ]
 
 { #category : 'querying' }

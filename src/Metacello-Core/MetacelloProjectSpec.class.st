@@ -57,18 +57,6 @@ MetacelloProjectSpec >> baseName [
 	^ MetacelloScriptEngine baseNameOf: self className
 ]
 
-{ #category : 'scripting' }
-MetacelloProjectSpec >> canDowngradeTo: aMetacelloProjectSpec [
-
-	^ self subclassResponsibility
-]
-
-{ #category : 'scripting' }
-MetacelloProjectSpec >> canUpgradeTo: aMetacelloProjectSpec [
-
-	^ self subclassResponsibility
-]
-
 { #category : 'querying' }
 MetacelloProjectSpec >> className [
 
@@ -94,15 +82,6 @@ MetacelloProjectSpec >> compareEqual: aMetacelloProjectSpec [
 					  self preLoadDoIt value == aMetacelloProjectSpec preLoadDoIt value and: [
 						  self postLoadDoIt value == aMetacelloProjectSpec postLoadDoIt value and: [
 							  (self repositories compareEqual: aMetacelloProjectSpec repositories) and: [ self file = aMetacelloProjectSpec file ] ] ] ] ] ] ]
-]
-
-{ #category : 'scripting' }
-MetacelloProjectSpec >> compareVersions: aMetacelloProjectSpec usingOperator: anOperator [
-
-	^ aMetacelloProjectSpec versionOrNil
-		  ifNotNil: [ ^ aMetacelloProjectSpec version perform: anOperator with: self version ]
-		  ifNil: [ "https://github.com/dalehenrich/metacello-work/issues/199#issuecomment-21739622"
-			  aMetacelloProjectSpec versionString asMetacelloVersionNumber perform: anOperator with: self version versionNumber ]
 ]
 
 { #category : 'scripting' }

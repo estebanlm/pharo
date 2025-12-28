@@ -25,24 +25,6 @@ MetacelloNamelessProjectSpec >> asBaselineProjectSpec [
 	^ self copyForScriptingInto: (MetacelloBaselineOfProjectSpec for: self project)
 ]
 
-{ #category : 'scripting' }
-MetacelloNamelessProjectSpec >> canDowngradeTo: aMetacelloProjectSpec [
-
-	self file = aMetacelloProjectSpec file ifFalse: [ ^ false ].
-	(self className = aMetacelloProjectSpec className and: [ self operator == aMetacelloProjectSpec operator ]) ifFalse: [ ^ false ].
-	self versionOrNil ifNil: [ "https://github.com/dalehenrich/metacello-work/issues/198#issuecomment-21737458" ^ true ].
-	^ (self compareVersions: aMetacelloProjectSpec usingOperator: self operator) not
-]
-
-{ #category : 'scripting' }
-MetacelloNamelessProjectSpec >> canUpgradeTo: aMetacelloProjectSpec [
-
-	self file = aMetacelloProjectSpec file ifFalse: [ ^ false ].
-	(self className = aMetacelloProjectSpec className and: [ self operator == aMetacelloProjectSpec operator ]) ifFalse: [ ^ false ].
-	self versionOrNil ifNil: [ "https://github.com/dalehenrich/metacello-work/issues/198#issuecomment-21737458" ^ true ].
-	^ self compareVersions: aMetacelloProjectSpec usingOperator: self operator
-]
-
 { #category : 'mutability' }
 MetacelloNamelessProjectSpec >> copyForRegistration: aMetacelloProjectRegistration onWrite: aBlock [
 
