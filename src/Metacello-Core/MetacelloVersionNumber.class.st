@@ -195,16 +195,6 @@ MetacelloVersionNumber >> compareLessThan: aMetacelloVersionNumber [
 			(self at: commonSize + 1) isString ]
 ]
 
-{ #category : 'private' }
-MetacelloVersionNumber >> decrementVersionAt: index [
-  | int |
-  int := self at: index.
-  (int := self at: index) isString
-    ifFalse: [ 
-      int > 0
-        ifTrue: [ self at: index put: int - 1 ] ]
-]
-
 { #category : 'enumerating' }
 MetacelloVersionNumber >> do: aBlock [ 
 	"Refer to the comment in Collection|do:."
@@ -253,14 +243,6 @@ hashValue := 4459.
   ].
 
 ^ hashValue abs
-]
-
-{ #category : 'private' }
-MetacelloVersionNumber >> incrementVersionAt: index [
-  | int |
-  int := self at: index.
-  (int := self at: index) isString
-    ifFalse: [ self at: index put: int + 1 ]
 ]
 
 { #category : 'comparing' }

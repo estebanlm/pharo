@@ -367,21 +367,6 @@ MetacelloSemanticVersionNumber >> copyFrom: start to: stop [
 	^new
 ]
 
-{ #category : 'operations' }
-MetacelloSemanticVersionNumber >> decrementMajorVersion [
-  self decrementNormalVersionAt: 1
-]
-
-{ #category : 'operations' }
-MetacelloSemanticVersionNumber >> decrementMinorVersion [
-  self decrementNormalVersionAt: 2
-]
-
-{ #category : 'operations' }
-MetacelloSemanticVersionNumber >> decrementMinorVersionNumber [
-  self decrementNormalVersionAt: 3
-]
-
 { #category : 'private' }
 MetacelloSemanticVersionNumber >> decrementNormalVersionAt: index [
   | int col |
@@ -389,11 +374,6 @@ MetacelloSemanticVersionNumber >> decrementNormalVersionAt: index [
   int := col at: index.
   int > 0
     ifTrue: [ col at: index put: int - 1 ]
-]
-
-{ #category : 'operations' }
-MetacelloSemanticVersionNumber >> decrementPatchVersion [
-  self decrementNormalVersionAt: 3
 ]
 
 { #category : 'enumerating' }
@@ -423,32 +403,12 @@ MetacelloSemanticVersionNumber >> hash [
     ^ self versionComponents hash
 ]
 
-{ #category : 'operations' }
-MetacelloSemanticVersionNumber >> incrementMajorVersion [
-  self incrementNormalVersionAt: 1
-]
-
-{ #category : 'operations' }
-MetacelloSemanticVersionNumber >> incrementMinorVersion [
-  self incrementNormalVersionAt: 2
-]
-
-{ #category : 'operations' }
-MetacelloSemanticVersionNumber >> incrementMinorVersionNumber [
-  self incrementNormalVersionAt: 3
-]
-
 { #category : 'private' }
 MetacelloSemanticVersionNumber >> incrementNormalVersionAt: index [
   | int col |
   col := self normalVersion.
   int := col at: index.
   col at: index put: int + 1
-]
-
-{ #category : 'operations' }
-MetacelloSemanticVersionNumber >> incrementPatchVersion [
-  self incrementNormalVersionAt: 3
 ]
 
 { #category : 'comparing' }
