@@ -518,7 +518,8 @@ MetacelloVersionSpec >> specsNamed: packageAndProjectNames projectDo: projectBlo
 
 { #category : 'private' }
 MetacelloVersionSpec >> versionNumber [
-    ^ self project versionNumberClass fromString: self versionString
+
+	^ MetacelloVersionNumber fromString: self versionString
 ]
 
 { #category : 'querying' }

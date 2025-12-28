@@ -26,7 +26,6 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'repositoryDescription',
-		'versionNumberClass',
 		'loadType',
 		'projectAttributes',
 		'version',
@@ -265,17 +264,6 @@ MetacelloProject >> version [
 MetacelloProject >> version: aVersion [
 
 	version := aVersion
-]
-
-{ #category : 'versions' }
-MetacelloProject >> versionNumberClass [
-
-	^ versionNumberClass ifNil: [ versionNumberClass := MetacelloVersionNumber ]
-]
-
-{ #category : 'versions' }
-MetacelloProject >> versionNumberClass: aClass [
-    versionNumberClass := aClass
 ]
 
 { #category : 'spec classes' }

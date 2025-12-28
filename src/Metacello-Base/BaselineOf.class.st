@@ -265,8 +265,3 @@ BaselineOf >> tools [
 
 	^ Smalltalk tools
 ]
-
-{ #category : 'accessing' }
-BaselineOf >> versionNumberClass [
-    ^ MetacelloVersionNumber
-]
