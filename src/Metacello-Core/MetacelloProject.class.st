@@ -41,7 +41,7 @@ Class {
 MetacelloProject class >> initialize [
 	"Deprecation added during the development of Pharo 14."
 
-	self deprecatedAliases: #( #MetacelloMCBaselineProject #MetacelloBaselineProject )
+	self deprecatedAliases: #( #MetacelloMCBaselineProject #MetacelloBaselineProject #MetacelloCypressBaselineProject )
 ]
 
 { #category : 'instance creation' }
