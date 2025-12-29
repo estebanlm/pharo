@@ -55,6 +55,14 @@ MetacelloBaselineConstructor >> attributeOrder [
 	^ attributeOrder ifNil: [ attributeOrder := OrderedCollection new ]
 ]
 
+{ #category : 'api - old' }
+MetacelloBaselineConstructor >> author: aBlockOrString [
+	"Kept for compiatibility with other Smalltalk and old Pharo versions."
+
+	MetacelloNotification signal:
+		'The option #author: will not do anything anymore in Pharo 14+. This option can be removed in it is in an attribute for Pharo 14+ or ignored if this is for a different platform. Reason: The author metadata was used with SmalltalkHub but not this information is already managed by git or other CVS.'
+]
+
 { #category : 'api' }
 MetacelloBaselineConstructor >> baseline: aString [
 
@@ -75,6 +83,14 @@ MetacelloBaselineConstructor >> baseline: aString [
 MetacelloBaselineConstructor >> baseline: aString with: aBlock [
 
 	self with: (self baseline: aString) during: aBlock
+]
+
+{ #category : 'api - old' }
+MetacelloBaselineConstructor >> blessing: aBlockOrString [
+	"Kept for compiatibility with other Smalltalk and old Pharo versions."
+
+	MetacelloNotification signal:
+		'The option #blessing: will not do anything anymore in Pharo 14+. This option can be removed in it is in an attribute for Pharo 14+ or ignored if this is for a different platform. Reason: The author metadata was used with SmalltalkHub but not this information is already managed by git or other CVS.'
 ]
 
 { #category : 'api' }
@@ -102,10 +118,25 @@ MetacelloBaselineConstructor >> configuration: aConfig [
 	configuration := aConfig
 ]
 
+{ #category : 'api - old' }
+MetacelloBaselineConstructor >> configuration: aString with: aBlock [
+
+	MetacelloNotification signal:
+		'The option #configuration:with: will not do anything anymore in Pharo 14+. This option can be removed in it is in an attribute for Pharo 14+ or ignored if this is for a different platform. Reason: This option was here for configurations but not baselines. Since we cannot load configurations anymore in Pharo, it is been removed.'
+]
+
 { #category : 'accessing' }
 MetacelloBaselineConstructor >> configurationClass [
 
 	^self configuration class
+]
+
+{ #category : 'api - old' }
+MetacelloBaselineConstructor >> description: aBlockOrString [
+	"Kept for compiatibility with other Smalltalk and old Pharo versions."
+
+	MetacelloNotification signal:
+		'The option #description: will not do anything anymore in Pharo 14+. This option can be removed in it is in an attribute for Pharo 14+ or ignored if this is for a different platform. Reason: The author metadata was used with SmalltalkHub but not this information is already managed by git or other CVS.'
 ]
 
 { #category : 'private' }
@@ -166,15 +197,11 @@ MetacelloBaselineConstructor >> for: attributeListOrSymbol do: aBlock [
 		self addAttribute: attribute ]
 ]
 
-{ #category : 'api' }
+{ #category : 'api - old' }
 MetacelloBaselineConstructor >> for: attributeListOrSymbol version: aString [
-	"conditional symbolicVersion support"
 
-	(attributeListOrSymbol isSymbol
-		 ifTrue: [ { attributeListOrSymbol } ]
-		 ifFalse: [ attributeListOrSymbol ]) do: [ :attribute |
-		self attributeMap at: attribute put: aString.
-		self addAttribute: attribute ]
+	MetacelloNotification signal:
+		'The option #for:version: will not do anything anymore in Pharo 14+. This option can be removed in it is in an attribute for Pharo 14+ or ignored if this is for a different platform. Reason: This option was here for configurations but not baselines. Since we cannot load configurations anymore in Pharo, it is been removed.'
 ]
 
 { #category : 'api' }
@@ -462,10 +489,28 @@ MetacelloBaselineConstructor >> root: aMetacelloSpec [
     root := aMetacelloSpec
 ]
 
-{ #category : 'api' }
-MetacelloBaselineConstructor >> value: anObject [
+{ #category : 'api - old' }
+MetacelloBaselineConstructor >> supplyingAnswers: aCollection [
+	"Kept for compiatibility with other Smalltalk and old Pharo versions."
 
-	self root value: anObject
+	MetacelloNotification signal:
+		'The option #supplyingAnswer: will not do anything anymore in Pharo 14+. This option can be removed in it is in an attribute for Pharo 14+ or ignored if this is for a different platform. Reason: The author metadata was used with SmalltalkHub but not this information is already managed by git or other CVS.'
+]
+
+{ #category : 'api - old' }
+MetacelloBaselineConstructor >> timestamp: aBlockOrStringOrDateAndTime [
+	"Kept for compiatibility with other Smalltalk and old Pharo versions."
+
+	MetacelloNotification signal:
+		'The option #timestamp: will not do anything anymore in Pharo 14+. This option can be removed in it is in an attribute for Pharo 14+ or ignored if this is for a different platform. Reason: The author metadata was used with SmalltalkHub but not this information is already managed by git or other CVS.'
+]
+
+{ #category : 'api - old' }
+MetacelloBaselineConstructor >> versionString: anObject [
+	"Kept for compiatibility with other Smalltalk and old Pharo versions."
+
+	MetacelloNotification signal:
+		'The option #versionString:: will not do anything anymore in Pharo 14+. This option can be removed in it is in an attribute for Pharo 14+ or ignored if this is for a different platform. Reason: This option was here for configurations but not baselines. Since we cannot load configurations anymore in Pharo, it is been removed.'
 ]
 
 { #category : 'private' }
