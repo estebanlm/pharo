@@ -120,8 +120,8 @@ MetacelloProjectSpec >> configMethodBodyOn: aStream indent: indent fromShortCut:
 	hasOperator := operator isNotNil.
 	hasProjectPackage := self hasRepository or: [ hasClassName & self getFile isNotNil ].
 	hasLoads := self loads isNotNil.
-	hasPreLoadDoIt := self getPreLoadDoIt isNotNil.
-	hasPostLoadDoIt := self getPostLoadDoIt isNotNil.
+	hasPreLoadDoIt := self preLoadDoIt isNotNil.
+	hasPostLoadDoIt := self postLoadDoIt isNotNil.
 	hasClassName ifTrue: [
 		hasOperator | hasProjectPackage | hasLoads
 			ifTrue: [
@@ -237,8 +237,8 @@ MetacelloProjectSpec >> configShortCutMethodOn: aStream member: aMember indent: 
 	hasOperator := operator isNotNil.
 	hasProjectPackage := self hasRepository or: [ hasClassName & (self getFile isNotNil or: [ className ~= self name ]) ].
 	hasLoads := self loads isNotNil.
-	hasPreLoadDoIt := self getPreLoadDoIt isNotNil.
-	hasPostLoadDoIt := self getPostLoadDoIt isNotNil.
+	hasPreLoadDoIt := self preLoadDoIt isNotNil.
+	hasPostLoadDoIt := self postLoadDoIt isNotNil.
 	hasClassName | hasOperator | hasProjectPackage | hasLoads | hasPreLoadDoIt | hasPostLoadDoIt ifTrue: [
 			(aMember methodUpdateSelector == #copy: or: [ aMember methodUpdateSelector == #with: ])
 				ifTrue: [
@@ -317,18 +317,6 @@ MetacelloProjectSpec >> getFile [
     ^ file
 ]
 
-{ #category : 'querying' }
-MetacelloProjectSpec >> getPostLoadDoIt [
-
-	^postLoadDoIt
-]
-
-{ #category : 'querying' }
-MetacelloProjectSpec >> getPreLoadDoIt [
-
-	^preLoadDoIt
-]
-
 { #category : 'accessing' }
 MetacelloProjectSpec >> getRepositories [
     "raw access to iv"
@@ -378,8 +366,8 @@ MetacelloProjectSpec >> hasNonVersionStringField [
 	hasOperator := operator isNotNil.
 	hasProjectPackage := (self file isNotNil and: [ hasClassName and: [ self className ~= self name ] ]) or: [ self hasRepository ].
 	hasLoads := self loads isNotNil.
-	hasPreLoadDoIt := self getPreLoadDoIt isNotNil.
-	hasPostLoadDoIt := self getPostLoadDoIt isNotNil.
+	hasPreLoadDoIt := self preLoadDoIt isNotNil.
+	hasPostLoadDoIt := self postLoadDoIt isNotNil.
 	^ hasClassName | hasOperator | hasProjectPackage | hasLoads | hasPreLoadDoIt | hasPostLoadDoIt
 ]
 
@@ -728,13 +716,6 @@ MetacelloProjectSpec >> version [
 
 	projectInitialized ifFalse: [ ^ nil ].
 	^ self project version
-]
-
-{ #category : 'querying' }
-MetacelloProjectSpec >> versionKey [
-	"suitable for using as a unique key for the receiver's version in a dictionary"
-
-	^ self version versionKey
 ]
 
 { #category : 'querying' }
