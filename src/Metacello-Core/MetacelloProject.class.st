@@ -70,12 +70,6 @@ MetacelloProject >> attributes [
 		  yourself
 ]
 
-{ #category : 'spec classes' }
-MetacelloProject >> baselineOfProjectSpec [
-
-	^ MetacelloProjectSpec for: self
-]
-
 { #category : 'accessing' }
 MetacelloProject >> configuration [
 	^ configuration
