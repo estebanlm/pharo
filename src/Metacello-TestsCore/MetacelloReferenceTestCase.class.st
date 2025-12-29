@@ -33,7 +33,7 @@ spec repositories: [
 		repository: ''http://www.example.com/private'' username: ''foo'' password: ''bar'';
 		repository: ''http://www.example.com/rr'' ].
 spec 
-	project: ''UI Support'' with: [
+	baseline: ''UI Support'' with: [
 		spec
 			className: ''ConfigurationOfUI'';
 			preLoadDoIt: #''preloadForProject'';
@@ -41,21 +41,21 @@ spec
 			operator: #''~>'';
 			loads: #(''UI-Core'' );
 			repository: ''http://www.example.com/r'' ];
-	project: ''UI Support'' overrides: [
+	baseline: ''UI Support'' overrides: [
 		spec
 			className: ''ConfigurationOfUINew'';
 			operator: #''>='';
 			loads: #(''UI-Core'' ''UI-Tests'' );
 			repository: ''http://www.example.com/r'' username: ''foo'' password: ''bar'' ];
-	project: ''UI Tests'' copyFrom: ''UI Support'' with: [
+	baseline: ''UI Tests'' copyFrom: ''UI Support'' with: [
 		spec
 			className: ''ConfigurationOfUI'';
 			operator: #''~>'';
 			loads: #(''UI-Core'' ''UI-Tests'' );
 			repository: ''http://www.example.com/r'' ];
-	project: ''UI Support'' ;
+	baseline: ''UI Support'' ;
 	removeProject: ''UI Tests'';
-	project: ''UI Multi'' with: [
+	baseline: ''UI Multi'' with: [
 		spec
 			className: ''ConfigurationOfMulti'';
 			repository: ''http://www.example.com/r'';

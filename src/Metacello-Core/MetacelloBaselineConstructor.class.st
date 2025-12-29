@@ -57,24 +57,16 @@ MetacelloBaselineConstructor >> attributeOrder [
 
 { #category : 'api' }
 MetacelloBaselineConstructor >> baseline: aString [
+	"Alias to make baselines more explicits and backward compatible"
 
-	| spec projectSpec |
-	projectSpec := self project baselineOfProjectSpec
-		               name: aString;
-		               className: 'BaselineOf' , aString;
-		               yourself.
-	spec := self project projectReferenceSpec
-		        name: aString;
-		        projectReference: projectSpec;
-		        yourself.
-	self root packages merge: spec.
-	^ projectSpec
+	self project: aString
 ]
 
 { #category : 'api' }
 MetacelloBaselineConstructor >> baseline: aString with: aBlock [
+	"Alias to make baselines more explicits and backward compatible"
 
-	self with: (self baseline: aString) during: aBlock
+	^ self project: aString with: aBlock
 ]
 
 { #category : 'api' }
@@ -377,15 +369,17 @@ MetacelloBaselineConstructor >> project: aString overrides: aBlock [
 { #category : 'api' }
 MetacelloBaselineConstructor >> project: aString with: aBlockOrString [
 
-	| projectSpec |
+	| projectSpec spec |
 	projectSpec := self project projectSpec
 		               name: aString;
 		               yourself.
 
-	self root packages merge: (self project projectReferenceSpec
-			 name: aString;
-			 projectReference: projectSpec;
-			 yourself).
+	spec := self project projectReferenceSpec
+		        name: aString;
+		        projectReference: projectSpec;
+		        yourself.
+
+	self root packages merge: spec.
 
 	self with: projectSpec during: aBlockOrString
 ]

@@ -18,10 +18,19 @@ Class {
 	#tag : 'Specs'
 }
 
-{ #category : 'instance creation' }
-MetacelloProjectSpec class >> isAbstract [
+{ #category : 'class initialization' }
+MetacelloProjectSpec class >> initialize [
 
-	^ self = MetacelloProjectSpec
+	"Deprecation added during the development of Pharo 14."
+	self deprecatedAliases:
+		#( MetacelloMCBaselineOfProjectSpec MetacelloConfigurationOfProjectSpec MetacelloCypressBaselineProjectSpec MetacelloMCNamelessProjectSpec
+		   MetacelloNamelessProjectSpec MetacelloBaselineOfProjectSpec )
+]
+
+{ #category : 'visiting' }
+MetacelloProjectSpec >> acceptVisitor: aVisitor [
+	
+	^ aVisitor visitProjectSpec: self
 ]
 
 { #category : 'adding' }
@@ -36,15 +45,9 @@ MetacelloProjectSpec >> addToMetacelloPackages: aMetacelloPackagesSpec [
 ]
 
 { #category : 'scripting' }
-MetacelloProjectSpec >> asBaselineProjectSpec [
-
-	^ self subclassResponsibility
-]
-
-{ #category : 'scripting' }
 MetacelloProjectSpec >> asProjectRegistration [
 
-	^ MetacelloProjectRegistration projectSpec: self asBaselineProjectSpec
+	^ MetacelloProjectRegistration projectSpec: self
 ]
 
 { #category : 'scripting' }
@@ -58,20 +61,17 @@ MetacelloProjectSpec >> baseName [
 ]
 
 { #category : 'scripting' }
-MetacelloProjectSpec >> canDowngradeTo: aMetacelloProjectSpec [
+MetacelloProjectSpec >> canUpgradeTo: aProjectSpec [
+	"cannot upgrade between baselines unless repositories can be upgraded"
 
-	^ self subclassResponsibility
-]
-
-{ #category : 'scripting' }
-MetacelloProjectSpec >> canUpgradeTo: aMetacelloProjectSpec [
-
-	^ self subclassResponsibility
+	(self repositories canUpgradeTo: aProjectSpec repositories) ifTrue: [ ^ true ].
+	^ false
 ]
 
 { #category : 'querying' }
 MetacelloProjectSpec >> className [
 
+	className ifNil: [ self name ifNotNil: [ self className: self constructClassName ] ].
 	^ className
 ]
 
@@ -94,15 +94,6 @@ MetacelloProjectSpec >> compareEqual: aMetacelloProjectSpec [
 					  self preLoadDoIt value == aMetacelloProjectSpec preLoadDoIt value and: [
 						  self postLoadDoIt value == aMetacelloProjectSpec postLoadDoIt value and: [
 							  (self repositories compareEqual: aMetacelloProjectSpec repositories) and: [ self file = aMetacelloProjectSpec file ] ] ] ] ] ] ]
-]
-
-{ #category : 'scripting' }
-MetacelloProjectSpec >> compareVersions: aMetacelloProjectSpec usingOperator: anOperator [
-
-	^ aMetacelloProjectSpec versionOrNil
-		  ifNotNil: [ ^ aMetacelloProjectSpec version perform: anOperator with: self version ]
-		  ifNil: [ "https://github.com/dalehenrich/metacello-work/issues/199#issuecomment-21739622"
-			  aMetacelloProjectSpec versionString asMetacelloVersionNumber perform: anOperator with: self version versionNumber ]
 ]
 
 { #category : 'scripting' }
@@ -129,8 +120,8 @@ MetacelloProjectSpec >> configMethodBodyOn: aStream indent: indent fromShortCut:
 	hasOperator := operator isNotNil.
 	hasProjectPackage := self hasRepository or: [ hasClassName & self getFile isNotNil ].
 	hasLoads := self loads isNotNil.
-	hasPreLoadDoIt := self getPreLoadDoIt isNotNil.
-	hasPostLoadDoIt := self getPostLoadDoIt isNotNil.
+	hasPreLoadDoIt := self preLoadDoIt isNotNil.
+	hasPostLoadDoIt := self postLoadDoIt isNotNil.
 	hasClassName ifTrue: [
 		hasOperator | hasProjectPackage | hasLoads
 			ifTrue: [
@@ -246,8 +237,8 @@ MetacelloProjectSpec >> configShortCutMethodOn: aStream member: aMember indent: 
 	hasOperator := operator isNotNil.
 	hasProjectPackage := self hasRepository or: [ hasClassName & (self getFile isNotNil or: [ className ~= self name ]) ].
 	hasLoads := self loads isNotNil.
-	hasPreLoadDoIt := self getPreLoadDoIt isNotNil.
-	hasPostLoadDoIt := self getPostLoadDoIt isNotNil.
+	hasPreLoadDoIt := self preLoadDoIt isNotNil.
+	hasPostLoadDoIt := self postLoadDoIt isNotNil.
 	hasClassName | hasOperator | hasProjectPackage | hasLoads | hasPreLoadDoIt | hasPostLoadDoIt ifTrue: [
 			(aMember methodUpdateSelector == #copy: or: [ aMember methodUpdateSelector == #with: ])
 				ifTrue: [
@@ -266,10 +257,19 @@ MetacelloProjectSpec >> configShortCutMethodOn: aStream member: aMember indent: 
 			^ self ]
 ]
 
+{ #category : 'private' }
+MetacelloProjectSpec >> constructClassName [
+
+	^ 'BaselineOf' , self name
+]
+
 { #category : 'mutability' }
 MetacelloProjectSpec >> copyForRegistration: aMetacelloProjectRegistration onWrite: aBlock [
 
-	self subclassResponsibility
+	| copy |
+	copy := aMetacelloProjectRegistration projectSpec copy.
+	aBlock value: copy.
+	aMetacelloProjectRegistration projectSpec: copy
 ]
 
 { #category : 'accessing' }
@@ -317,18 +317,6 @@ MetacelloProjectSpec >> getFile [
     ^ file
 ]
 
-{ #category : 'querying' }
-MetacelloProjectSpec >> getPostLoadDoIt [
-
-	^postLoadDoIt
-]
-
-{ #category : 'querying' }
-MetacelloProjectSpec >> getPreLoadDoIt [
-
-	^preLoadDoIt
-]
-
 { #category : 'accessing' }
 MetacelloProjectSpec >> getRepositories [
     "raw access to iv"
@@ -339,18 +327,7 @@ MetacelloProjectSpec >> getRepositories [
 { #category : 'printing' }
 MetacelloProjectSpec >> hasClassName [
 
-	^ className isNotNil
-]
-
-{ #category : 'testing' }
-MetacelloProjectSpec >> hasConflictWithBaselineSpec: projectSpec [
-	^ self hasLoadConflicts: projectSpec
-]
-
-{ #category : 'testing' }
-MetacelloProjectSpec >> hasConflictWithProjectSpec: projectSpec [
-
-	^ projectSpec hasConflictWithBaselineSpec: self
+	^ className isNotNil and: [ className ~= self constructClassName ]
 ]
 
 { #category : 'testing' }
@@ -378,8 +355,8 @@ MetacelloProjectSpec >> hasNonVersionStringField [
 	hasOperator := operator isNotNil.
 	hasProjectPackage := (self file isNotNil and: [ hasClassName and: [ self className ~= self name ] ]) or: [ self hasRepository ].
 	hasLoads := self loads isNotNil.
-	hasPreLoadDoIt := self getPreLoadDoIt isNotNil.
-	hasPostLoadDoIt := self getPostLoadDoIt isNotNil.
+	hasPreLoadDoIt := self preLoadDoIt isNotNil.
+	hasPostLoadDoIt := self postLoadDoIt isNotNil.
 	^ hasClassName | hasOperator | hasProjectPackage | hasLoads | hasPreLoadDoIt | hasPostLoadDoIt
 ]
 
@@ -445,6 +422,15 @@ MetacelloProjectSpec >> lookForIssues [
 	self className ifNil: [ MetacelloValidationFailure signal: 'ClassName field required' ]
 ]
 
+{ #category : 'importing' }
+MetacelloProjectSpec >> mergeImportLoads: aLoadList [
+
+	aLoadList ifNotNil: [ :otherLoads |
+			self loads
+				ifNil: [ loads := otherLoads ]
+				ifNotNil: [ loads := loads , otherLoads ] ]
+]
+
 { #category : 'merging' }
 MetacelloProjectSpec >> mergeMap [
 
@@ -462,8 +448,12 @@ MetacelloProjectSpec >> mergeMap [
 
 { #category : 'merging' }
 MetacelloProjectSpec >> mergeRepositoriesSpec: anotherRepositories [
+	"anotherRepositories wins ... there can ever only be one repository for the 
+   baseline to load from"
 
-	self subclassResponsibility
+	"https://github.com/dalehenrich/metacello-work/issues/251"
+
+	self repositories: anotherRepositories
 ]
 
 { #category : 'scripting' }
@@ -590,7 +580,7 @@ MetacelloProjectSpec >> projectInitialized [
 { #category : 'printing' }
 MetacelloProjectSpec >> projectLabel [
 
-	^ self subclassResponsibility
+	^ 'baseline'
 ]
 
 { #category : 'accessing' }
@@ -636,8 +626,8 @@ MetacelloProjectSpec >> registrationsCompareEqual: aMetacelloProjectSpec [
 
 { #category : 'accessing' }
 MetacelloProjectSpec >> repositories [
-    repositories ifNil: [ repositories := self project repositoriesSpec ].
-    ^ repositories
+
+	^ repositories ifNil: [ repositories := self project repositoriesSpec ]
 ]
 
 { #category : 'accessing' }
@@ -670,6 +660,20 @@ MetacelloProjectSpec >> repositorySpecs [
     ^ self repositories map values
 ]
 
+{ #category : 'querying' }
+MetacelloProjectSpec >> repositoryVersionString [
+	"extract a version string from the repository ... if possible"
+
+	"must parallel implementation of MetacelloMCBaselineProject>>setBaselineRepositoryDescription: we want the same repoSpec"
+
+	| spec repo |
+	self repositorySpecs do: [ :repoSpec | spec := repoSpec ].
+	[ repo := spec createRepository ]
+		on: Error
+		do: [ :ex | ^ '' ].
+	^ repo repositoryVersionString
+]
+
 { #category : 'private' }
 MetacelloProjectSpec >> resolveToLoadableSpec [
 
@@ -699,14 +703,8 @@ MetacelloProjectSpec >> unregisterProject [
 { #category : 'querying' }
 MetacelloProjectSpec >> version [
 
-	^ self subclassResponsibility
-]
-
-{ #category : 'querying' }
-MetacelloProjectSpec >> versionKey [
-	"suitable for using as a unique key for the receiver's version in a dictionary"
-
-	^ self version versionKey
+	projectInitialized ifFalse: [ ^ nil ].
+	^ self project version
 ]
 
 { #category : 'querying' }
@@ -719,7 +717,6 @@ MetacelloProjectSpec >> versionOrNil [
 
 { #category : 'querying' }
 MetacelloProjectSpec >> versionString [
-	"This method should be removed once all senders are removed."
 
-	^ nil
+	^ self version ifNotNil: [ :v | v versionString ]
 ]
