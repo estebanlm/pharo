@@ -36,15 +36,9 @@ MetacelloProjectSpec >> addToMetacelloPackages: aMetacelloPackagesSpec [
 ]
 
 { #category : 'scripting' }
-MetacelloProjectSpec >> asBaselineProjectSpec [
-
-	^ self subclassResponsibility
-]
-
-{ #category : 'scripting' }
 MetacelloProjectSpec >> asProjectRegistration [
 
-	^ MetacelloProjectRegistration projectSpec: self asBaselineProjectSpec
+	^ MetacelloProjectRegistration projectSpec: self
 ]
 
 { #category : 'scripting' }
@@ -243,12 +237,6 @@ MetacelloProjectSpec >> configShortCutMethodOn: aStream member: aMember indent: 
 			self configMethodBodyOn: aStream indent: indent fromShortCut: true.
 			aStream nextPutAll: ' ]'.
 			^ self ]
-]
-
-{ #category : 'mutability' }
-MetacelloProjectSpec >> copyForRegistration: aMetacelloProjectRegistration onWrite: aBlock [
-
-	self subclassResponsibility
 ]
 
 { #category : 'accessing' }

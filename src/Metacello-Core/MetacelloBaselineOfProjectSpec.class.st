@@ -10,18 +10,13 @@ Class {
 MetacelloBaselineOfProjectSpec class >> initialize [
 
 	"Deprecation added during the development of Pharo 14."
-	self deprecatedAliases: #( #MetacelloMCBaselineOfProjectSpec #MetacelloConfigurationOfProjectSpec #MetacelloCypressBaselineProjectSpec )
+	self deprecatedAliases: #( MetacelloMCBaselineOfProjectSpec MetacelloConfigurationOfProjectSpec MetacelloCypressBaselineProjectSpec MetacelloMCNamelessProjectSpec MetacelloNamelessProjectSpec)
 ]
 
 { #category : 'visiting' }
 MetacelloBaselineOfProjectSpec >> acceptVisitor: aVisitor [
 	
 	^ aVisitor visitProjectSpec: self
-]
-
-{ #category : 'scripting' }
-MetacelloBaselineOfProjectSpec >> asBaselineProjectSpec [
-    ^ self
 ]
 
 { #category : 'scripting' }
@@ -77,12 +72,6 @@ MetacelloBaselineOfProjectSpec >> mergeRepositoriesSpec: anotherRepositories [
 	"https://github.com/dalehenrich/metacello-work/issues/251"
 
 	self repositories: anotherRepositories
-]
-
-{ #category : 'merging' }
-MetacelloBaselineOfProjectSpec >> mergeSpec: anotherSpec [
-
-	^ super mergeSpec: anotherSpec asBaselineProjectSpec
 ]
 
 { #category : 'printing' }
