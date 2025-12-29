@@ -73,7 +73,7 @@ MetacelloProject >> attributes [
 { #category : 'spec classes' }
 MetacelloProject >> baselineOfProjectSpec [
 
-	^ MetacelloBaselineOfProjectSpec for: self
+	^ MetacelloProjectSpec for: self
 ]
 
 { #category : 'accessing' }
