@@ -331,17 +331,6 @@ MetacelloProjectSpec >> hasClassName [
 ]
 
 { #category : 'testing' }
-MetacelloProjectSpec >> hasConflictWithBaselineSpec: projectSpec [
-	^ self hasLoadConflicts: projectSpec
-]
-
-{ #category : 'testing' }
-MetacelloProjectSpec >> hasConflictWithProjectSpec: projectSpec [
-
-	^ projectSpec hasConflictWithBaselineSpec: self
-]
-
-{ #category : 'testing' }
 MetacelloProjectSpec >> hasLoadConflicts: aMetacelloProjectSpec [
   ^ (self hasNoLoadConflicts: aMetacelloProjectSpec) not
 ]
@@ -637,8 +626,8 @@ MetacelloProjectSpec >> registrationsCompareEqual: aMetacelloProjectSpec [
 
 { #category : 'accessing' }
 MetacelloProjectSpec >> repositories [
-    repositories ifNil: [ repositories := self project repositoriesSpec ].
-    ^ repositories
+
+	^ repositories ifNil: [ repositories := self project repositoriesSpec ]
 ]
 
 { #category : 'accessing' }
