@@ -83,14 +83,6 @@ String >> metacelloVersionComponentLessThan: aMetacelloVersonComponent [
 ]
 
 { #category : '*Metacello-Core' }
-String >> packageFileSpecFor: aMetacelloPackagesSpec [
-
-	^(aMetacelloPackagesSpec project packageSpec)
-			file: self;
-			yourself
-]
-
-{ #category : '*Metacello-Core' }
 String >> removeFromMetacelloPackages: aMetacelloPackagesSpec [
 
 	aMetacelloPackagesSpec removeMemberNamed: self

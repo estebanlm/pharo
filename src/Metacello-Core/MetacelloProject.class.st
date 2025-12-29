@@ -26,10 +26,9 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'repositoryDescription',
-		'versionNumberClass',
 		'loadType',
 		'projectAttributes',
-		'versionMap',
+		'version',
 		'configuration'
 	],
 	#category : 'Metacello-Core-Model',
@@ -61,11 +60,6 @@ MetacelloProject class >> on: aConfig [
 { #category : 'accessing' }
 MetacelloProject class >> singletonVersionName [
     ^ 'baseline'
-]
-
-{ #category : 'scripting' }
-MetacelloProject >> asConfigurationProject [
-    ^ self
 ]
 
 { #category : 'private' }
@@ -133,25 +127,6 @@ MetacelloProject >> loadType: aSymbol [
 	loadType := aSymbol
 ]
 
-{ #category : 'private' }
-MetacelloProject >> lookupVersion: aVersionString ifAbsent: aBlock [
-	"please use version:...this is a private method"
-
-	^ self map at: aVersionString ifAbsent: [ ^ aBlock value ]
-]
-
-{ #category : 'accessing' }
-MetacelloProject >> map [
-	versionMap ifNil: [ ^ Dictionary new ].
-	^ versionMap
-]
-
-{ #category : 'accessing' }
-MetacelloProject >> map: aDictionary [
-
-	versionMap := aDictionary
-]
-
 { #category : 'spec classes' }
 MetacelloProject >> packageSpec [
 
@@ -179,15 +154,16 @@ MetacelloProject >> pragmaKeywords [
 { #category : 'printing' }
 MetacelloProject >> printOn: aStream [
 
-	| label |
 	self configuration class printOn: aStream.
 	aStream nextPut: $(.
-	self versions do: [ :vrsn |
-		aStream nextPutAll: vrsn versionString.
-		vrsn spec ifNotNil: [ (label := vrsn spec projectLabel) isEmpty ifFalse: [ aStream nextPutAll: ' [' , label , ']' ] ].
-		aStream
-			nextPut: $,;
-			space ].
+	version
+		ifNil: [ aStream nextPutAll: 'No version yet' ]
+		ifNotNil: [
+				aStream nextPutAll: self singletonVersionName.
+				version spec projectLabel ifNotEmpty: [ :label | aStream nextPutAll: ' [' , label , ']' ].
+				aStream
+					nextPut: $,;
+					space ].
 	aStream nextPut: $)
 ]
 
@@ -274,40 +250,24 @@ MetacelloProject >> setBaselineRepositoryDescription: aListOrRepositoryDescripti
 
 { #category : 'versions' }
 MetacelloProject >> singletonVersionName [
-    ^ self class singletonVersionName
+
+	^ self class singletonVersionName
 ]
 
 { #category : 'versions' }
 MetacelloProject >> version [
-    ^ self version: self singletonVersionName
+
+	^ version ifNil: [ (MetacelloVersionDoesNotExistError project: self project) signal ]
 ]
 
 { #category : 'versions' }
-MetacelloProject >> version: aVersionString [
+MetacelloProject >> version: aVersion [
 
-	^ self lookupVersion: aVersionString ifAbsent: [ (MetacelloVersionDoesNotExistError project: self project versionString: aVersionString) signal ]
-]
-
-{ #category : 'versions' }
-MetacelloProject >> versionNumberClass [
-
-	^ versionNumberClass ifNil: [ versionNumberClass := MetacelloVersionNumber ]
-]
-
-{ #category : 'versions' }
-MetacelloProject >> versionNumberClass: aClass [
-    versionNumberClass := aClass
+	version := aVersion
 ]
 
 { #category : 'spec classes' }
 MetacelloProject >> versionSpec [
 
 	^ MetacelloVersionSpec for: self
-]
-
-{ #category : 'versions' }
-MetacelloProject >> versions [
-  ^ [ {(self version)} ]
-    on: MetacelloVersionDoesNotExistError
-    do: [ :ex | ^ #() ]
 ]

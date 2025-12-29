@@ -3,7 +3,6 @@ Class {
 	#superclass : 'MetacelloSpec',
 	#instVars : [
 		'file',
-		'versionString',
 		'preLoadDoIt',
 		'loads',
 		'projectPackage',
@@ -285,9 +284,7 @@ MetacelloProjectSpec >> ensureProjectLoadedWithEngine: anEngine [
 	"Ensure that the MetacelloProject is loaded in image. 
 	 projectClass == nil or requested version non-existent warrants a project package load."
 
-	(projectInitialized and: [
-		 (self isMutable and: [ anEngine ignoreImage ]) not ]) ifTrue: [
-		^ self ].
+	(projectInitialized and: [ (self isMutable and: [ anEngine ignoreImage ]) not ]) ifTrue: [ ^ self ].
 
 	projectInitialized := true.
 	project := anEngine loader loadProject: self
@@ -398,11 +395,6 @@ MetacelloProjectSpec >> initialize [
 	projectInitialized := false
 ]
 
-{ #category : 'testing' }
-MetacelloProjectSpec >> isConfigurationOfProjectSpec [
-	^ false
-]
-
 { #category : 'scripting' }
 MetacelloProjectSpec >> isLocked [
 
@@ -460,7 +452,6 @@ MetacelloProjectSpec >> mergeMap [
 	map := super mergeMap.
 	map at: #name put: name.
 	map at: #className put: className.
-	map at: #versionString put: versionString.
 	map at: #operator put: operator.
 	map at: #loads put: loads.
 	map at: #preLoadDoIt put: preLoadDoIt.
@@ -549,15 +540,6 @@ MetacelloProjectSpec >> operator: anObject [
 
     self shouldBeMutable.
     operator := anObject
-]
-
-{ #category : 'accessing' }
-MetacelloProjectSpec >> packageFileSpecFor: aMetacelloPackagesSpec [
-
-	^(aMetacelloPackagesSpec project projectReferenceSpec)
-			name: self name;
-			projectReference: self copy;
-			yourself.
 ]
 
 { #category : 'copying' }
@@ -737,12 +719,7 @@ MetacelloProjectSpec >> versionOrNil [
 
 { #category : 'querying' }
 MetacelloProjectSpec >> versionString [
+	"This method should be removed once all senders are removed."
 
-	^ versionString
-]
-
-{ #category : 'accessing' }
-MetacelloProjectSpec >> versionString: anObject [
-    self shouldBeMutable.
-    versionString := anObject
+	^ nil
 ]

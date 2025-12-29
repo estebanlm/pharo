@@ -2,28 +2,26 @@ Class {
 	#name : 'MetacelloVersionDoesNotExistError',
 	#superclass : 'MetacelloError',
 	#instVars : [
-		'project',
-		'versionString'
+		'project'
 	],
-	#category : 'Metacello-Core-Exceptions-Errors',
+	#category : 'Metacello-Core-Exceptions',
 	#package : 'Metacello-Core',
-	#tag : 'Exceptions-Errors'
+	#tag : 'Exceptions'
 }
 
 { #category : 'instance creation' }
-MetacelloVersionDoesNotExistError class >> project: aMetacelloProject versionString: aVersionString [
+MetacelloVersionDoesNotExistError class >> project: aMetacelloProject [
 
-	^(self new)
-		project: aMetacelloProject;
-		versionString: aVersionString;
-		yourself
+	^ self new
+		  project: aMetacelloProject;
+		  yourself
 ]
 
-{ #category : 'printing' }
+{ #category : 'accessing' }
 MetacelloVersionDoesNotExistError >> description [
 	"Return a textual description of the exception."
 
-	^ 'Version ' , self versionString printString , ' is not defined in ' , self project label , '.'
+	^ 'Not version defined in ' , self project label
 ]
 
 { #category : 'accessing' }
@@ -36,20 +34,10 @@ MetacelloVersionDoesNotExistError >> project: anObject [
 	project := anObject
 ]
 
-{ #category : 'Signaling' }
+{ #category : 'signaling' }
 MetacelloVersionDoesNotExistError >> signal [
-  "GemStone needs this to print exception correctly"
+	"GemStone needs this to print exception correctly"
 
-  self messageText: self description.
-  ^ super signal
-]
-
-{ #category : 'accessing' }
-MetacelloVersionDoesNotExistError >> versionString [
-	^ versionString
-]
-
-{ #category : 'accessing' }
-MetacelloVersionDoesNotExistError >> versionString: anObject [
-	versionString := anObject
+	self messageText: self description.
+	^ super signal
 ]

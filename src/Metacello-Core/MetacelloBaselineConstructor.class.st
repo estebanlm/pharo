@@ -255,19 +255,16 @@ MetacelloBaselineConstructor >> name: anObject [
 { #category : 'initialization' }
 MetacelloBaselineConstructor >> on: aConfig project: aProject [
 
-	| pragma versionMap versionSpec |
+	| pragma versionSpec |
+	project := aProject.
 	self configuration: aConfig.
 	pragma := self extractBaselinePragmaFor: aConfig class.
-	self setProject: (aProject ifNil: [ MetacelloProject new ]).
 	versionSpec := self project versionSpec.
 	self root: versionSpec.
 	self evaluatePragma: pragma.
-	versionMap := Dictionary new.
 	self project attributes do: [ :attribute |
 		(self attributeMap at: attribute ifAbsent: [ ]) ifNotNil: [ :blockList | blockList do: [ :block | self with: versionSpec during: block ] ] ].
-	versionSpec versionString: self project singletonVersionName.
-	versionMap at: versionSpec versionString put: versionSpec createVersion.
-	self project map: versionMap.
+	self project version: versionSpec createVersion.
 	self project configuration: aConfig
 ]
 
@@ -297,7 +294,7 @@ MetacelloBaselineConstructor >> package: aString overrides: aBlock [
 ]
 
 { #category : 'api' }
-MetacelloBaselineConstructor >> package: packageName with: aBlockOrString [
+MetacelloBaselineConstructor >> package: packageName with: aBlock [
 	"Define specification for package <packageName>.
 	 If <aBlockOrString> is a String (or Symbol), the String is expected to be a version (or symbolic version).
 	If <aBlockOrString> is a Block, the specifications in <aBlockOrString> are applied to the project:
@@ -314,13 +311,13 @@ MetacelloBaselineConstructor >> package: packageName with: aBlockOrString [
 		        name: packageName;
 		        yourself.
 
-	aBlockOrString isString
+	aBlock isString
 		ifTrue: [
-			spec file: aBlockOrString.
+			spec file: aBlock.
 			self root packages merge: spec ]
 		ifFalse: [
 			self root packages merge: spec.
-			self with: spec during: aBlockOrString ]
+			self with: spec during: aBlock ]
 ]
 
 { #category : 'api' }
@@ -338,7 +335,7 @@ MetacelloBaselineConstructor >> preLoadDoIt: aSymbol [
 { #category : 'accessing' }
 MetacelloBaselineConstructor >> project [
 
-	^ project ifNil: [ project := self projectClass new ]
+	^ project ifNil: [ project := MetacelloProject new ]
 ]
 
 { #category : 'api' }
@@ -391,11 +388,6 @@ MetacelloBaselineConstructor >> project: aString with: aBlockOrString [
 			 yourself).
 
 	self with: projectSpec during: aBlockOrString
-]
-
-{ #category : 'accessing' }
-MetacelloBaselineConstructor >> projectClass [
-    ^ MetacelloProject
 ]
 
 { #category : 'api' }
@@ -468,12 +460,6 @@ MetacelloBaselineConstructor >> root [
 { #category : 'accessing' }
 MetacelloBaselineConstructor >> root: aMetacelloSpec [
     root := aMetacelloSpec
-]
-
-{ #category : 'accessing' }
-MetacelloBaselineConstructor >> setProject: aProject [
-
-	project := aProject
 ]
 
 { #category : 'api' }

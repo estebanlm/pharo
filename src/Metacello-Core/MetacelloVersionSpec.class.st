@@ -4,7 +4,6 @@ Class {
 	#instVars : [
 		'repositories',
 		'packages',
-		'versionString',
 		'packageList',
 		'importArray',
 		'postLoadDoIt',
@@ -166,7 +165,7 @@ MetacelloVersionSpec >> configPackagesSpecMethodOn: aStream indent: indent [
 { #category : 'private' }
 MetacelloVersionSpec >> createVersion [
 
-	^ self versionClass fromSpec: self
+	^ MetacelloVersion fromSpec: self
 ]
 
 { #category : 'enumerating' }
@@ -517,23 +516,13 @@ MetacelloVersionSpec >> specsNamed: packageAndProjectNames projectDo: projectBlo
 ]
 
 { #category : 'private' }
-MetacelloVersionSpec >> versionClass [
-
-	^ MetacelloVersion
-]
-
-{ #category : 'private' }
 MetacelloVersionSpec >> versionNumber [
-    ^ self project versionNumberClass fromString: self versionString
+
+	^ MetacelloVersionNumber fromString: self versionString
 ]
 
 { #category : 'querying' }
 MetacelloVersionSpec >> versionString [
 
-	^ versionString ifNil: [ '' ]
-]
-
-{ #category : 'accessing' }
-MetacelloVersionSpec >> versionString: anObject [
-	versionString := anObject
+	^ self project singletonVersionName
 ]
