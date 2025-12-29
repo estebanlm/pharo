@@ -72,12 +72,8 @@ MetacelloProject >> attributes [
 
 { #category : 'spec classes' }
 MetacelloProject >> baselineOfProjectSpec [
-    ^ self baselineOfProjectSpecClass for: self
-]
 
-{ #category : 'spec classes' }
-MetacelloProject >> baselineOfProjectSpecClass [
-    ^ MetacelloBaselineOfProjectSpec
+	^ MetacelloBaselineOfProjectSpec for: self
 ]
 
 { #category : 'accessing' }
@@ -221,7 +217,7 @@ MetacelloProject >> projectReferenceSpec [
 { #category : 'spec classes' }
 MetacelloProject >> projectSpec [
 
-	^ MetacelloNamelessProjectSpec for: self
+	^ self baselineOfProjectSpec
 ]
 
 { #category : 'spec classes' }
