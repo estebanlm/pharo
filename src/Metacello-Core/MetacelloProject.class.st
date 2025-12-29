@@ -211,7 +211,7 @@ MetacelloProject >> projectReferenceSpec [
 { #category : 'spec classes' }
 MetacelloProject >> projectSpec [
 
-	^ self baselineOfProjectSpec
+	^ MetacelloProjectSpec for: self
 ]
 
 { #category : 'spec classes' }
