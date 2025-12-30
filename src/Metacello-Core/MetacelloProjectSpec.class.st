@@ -10,7 +10,8 @@ Class {
 		'operator',
 		'postLoadDoIt',
 		'className',
-		'projectInitialized'
+		'projectInitialized',
+		'mutable'
 	],
 	#category : 'Metacello-Core-Specs',
 	#package : 'Metacello-Core',
@@ -340,6 +341,11 @@ MetacelloProjectSpec >> hasRepository [
     ^ self repositorySpecs notEmpty
 ]
 
+{ #category : 'mutability' }
+MetacelloProjectSpec >> immutable [
+    mutable := false
+]
+
 { #category : 'initialization' }
 MetacelloProjectSpec >> initialize [
 
@@ -353,6 +359,12 @@ MetacelloProjectSpec >> isLocked [
   ^ self registration 
 	ifNotNil: [ :aRegistration | aRegistration locked ]
 	ifNil: [ false ]
+]
+
+{ #category : 'mutability' }
+MetacelloProjectSpec >> isMutable [
+
+	^ mutable ifNil: [ ^ true ]
 ]
 
 { #category : 'printing' }
@@ -471,6 +483,11 @@ MetacelloProjectSpec >> metacelloRegistrationHash [
 	^ hash bitXor: self repositories metacelloRegistrationHash
 ]
 
+{ #category : 'mutability' }
+MetacelloProjectSpec >> mutable [
+    mutable := true
+]
+
 { #category : 'querying' }
 MetacelloProjectSpec >> name [
 
@@ -506,9 +523,11 @@ MetacelloProjectSpec >> operator: anObject [
 
 { #category : 'copying' }
 MetacelloProjectSpec >> postCopy [
-    super postCopy.
-    repositories := repositories copy.
-    projectPackage := nil
+
+	super postCopy.
+	mutable := nil.
+	repositories := repositories copy.
+	projectPackage := nil
 ]
 
 { #category : 'querying' }
@@ -666,6 +685,13 @@ MetacelloProjectSpec >> setLoads: aCollection [
 MetacelloProjectSpec >> setName: aStringOrNil [
     self shouldBeMutable.
     name := aStringOrNil
+]
+
+{ #category : 'mutability' }
+MetacelloProjectSpec >> shouldBeMutable [
+
+	self isMutable ifTrue: [ ^ self ].
+	self error: 'Not allowed to modify an immutable object'
 ]
 
 { #category : 'scripting' }

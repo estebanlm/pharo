@@ -146,9 +146,6 @@ MetacelloProjectRegistration >> copyOnWrite: aBlock [
 	"assume that only registered projects are immutable ... otherwise you'll get an error"
 
 	| copy |
-	self class registry registrationFor: self ifPresent: [ :existing |  ] ifAbsent: [
-		aBlock value: self.
-		^ self ].
 	self unregisterProject.
 	copy := self copy.
 	aBlock value: copy.
@@ -189,7 +186,7 @@ MetacelloProjectRegistration >> immutable [
 { #category : 'mutability' }
 MetacelloProjectRegistration >> isMutable [
 
-	^ mutable ifNil: [ true ]
+	^ mutable ifNil: [ mutable := true ]
 ]
 
 { #category : 'accessing' }
