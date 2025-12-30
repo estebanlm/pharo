@@ -270,8 +270,7 @@ MetacelloProjectSpec >> currentlyLoadedClassesInVersion [
 
 { #category : 'loading' }
 MetacelloProjectSpec >> ensureProjectLoadedWithEngine: anEngine [
-	"Ensure that the MetacelloProject is loaded in image. 
-	 projectClass == nil or requested version non-existent warrants a project package load."
+	"Ensure that the MetacelloProject is loaded in image"
 
 	(self projectInitialized and: [ (self isMutable and: [ anEngine ignoreImage ]) not ]) ifTrue: [ ^ self ].
 
@@ -549,9 +548,8 @@ MetacelloProjectSpec >> projectDo: projectBlock packageDo: packageBlock groupDo:
 
 { #category : 'accessing' }
 MetacelloProjectSpec >> projectInitialized [
-
-	projectInitialized ifTrue: [ self versionOrNil ifNil: [ 'METAERROR: Project is initialized but version is nil.' traceCr ] ].
-	projectInitialized ifFalse: [ self versionOrNil ifNotNil: [ 'METAERROR: Project is not initialized but version is present.' traceCr ] ].
+	"Cyril: I first though that we could just do `self version isNotNil` instead of this, but in fact we cannot. The reason is that for dependencies we first create a MetacelloProjectSpec pointing to the root MetacelloProject instead of a project dedicated to the dependency. Then we create the right project and we set it when we set this variable to true. 
+	In the future we should simplify the code to create dependences without any project spec. Then I could be implemented as simply as `self project isNotNil` which would be much better because if we still ded not load "
 
 	^ projectInitialized
 ]
