@@ -688,15 +688,13 @@ MetacelloProjectSpec >> unregisterProject [
 MetacelloProjectSpec >> version [
 
 	projectInitialized ifFalse: [ ^ nil ].
-	^ self project version
+	^ self versionOrNil
 ]
 
 { #category : 'querying' }
 MetacelloProjectSpec >> versionOrNil [
 
-	^ [ self version ]
-		  on: MetacelloVersionDoesNotExistError
-		  do: [ :ex | nil ]
+	^ self project version
 ]
 
 { #category : 'querying' }
