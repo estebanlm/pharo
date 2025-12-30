@@ -75,7 +75,7 @@ CoPackageSelectorFetcher >> packageLocalSelectors: aBlock [
 	selectors addAll: package extensionSelectors.
 	selectors do: [ :sel |
 			(filter accepts: sel) ifTrue: [
-					aBlock value: ((NECSelectorEntry contents: sel node: nil)
+					aBlock value: ((NECSelectorEntry contents: sel node: astNode)
 							 fetcher: self;
 							 yourself) ] ].
 	^ selectors size

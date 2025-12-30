@@ -27,7 +27,7 @@ CoTransitiveDependenySelectorFetcher >> entriesDo: aBlock [
 
 	dependentSelectors do: [ :sel |
 			(filter accepts: sel) ifTrue: [
-					aBlock value: ((NECSelectorEntry contents: sel node: nil)
+					aBlock value: ((NECSelectorEntry contents: sel node: astNode)
 							 fetcher: self;
 							 yourself) ] ]
 ]
