@@ -39,6 +39,7 @@ CoASTHeuristicsResultSetBuilder >> messagesHeuristic [
 
 	^ messageHeuristic ifNil: [
 			  messageHeuristic := self newHeuristicBuilder
+											add: CooSessionMessagesHeuristic new;
 				                      add: CoSelfMessageHeuristic new;
 				                      add: CoSuperMessageHeuristic new;
 				                      add: CoDependencyMessageHeuristics new;

@@ -7,9 +7,9 @@ Class {
 	#instVars : [
 		'sorterClass'
 	],
-	#category : 'HeuristicCompletion-Model-Old/Unused',
+	#category : 'HeuristicCompletion-Model-Old-Unused',
 	#package : 'HeuristicCompletion-Model',
-	#tag : 'Old/Unused'
+	#tag : 'Old-Unused'
 }
 
 { #category : 'API - building' }
