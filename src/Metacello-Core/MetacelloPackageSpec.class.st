@@ -243,7 +243,7 @@ MetacelloPackageSpec >> projectDo: projectBlock packageDo: packageBlock groupDo:
 { #category : 'querying' }
 MetacelloPackageSpec >> repositories [
 
-	^ repositories ifNil: [ repositories := self project repositoriesSpec ]
+	^ repositories ifNil: [ repositories := self newRepositoriesSpec ]
 ]
 
 { #category : 'querying' }

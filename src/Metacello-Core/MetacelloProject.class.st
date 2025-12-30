@@ -202,12 +202,6 @@ MetacelloProject >> projectSpec [
 	^ MetacelloProjectSpec for: self
 ]
 
-{ #category : 'spec classes' }
-MetacelloProject >> repositoriesSpec [
-
-	^ MetacelloRepositoriesSpec for: self
-]
-
 { #category : 'accessing' }
 MetacelloProject >> repositoryDescription [
 	^ repositoryDescription
@@ -242,10 +236,4 @@ MetacelloProject >> version [
 MetacelloProject >> version: aVersion [
 
 	version := aVersion
-]
-
-{ #category : 'spec classes' }
-MetacelloProject >> versionSpec [
-
-	^ MetacelloVersionSpec for: self
 ]

@@ -417,7 +417,7 @@ MetacelloVersionSpec >> projectLabel [
 { #category : 'accessing' }
 MetacelloVersionSpec >> repositories [
 
-	^ repositories ifNil: [ repositories := self project repositoriesSpec ]
+	^ repositories ifNil: [ repositories := self newRepositoriesSpec ]
 ]
 
 { #category : 'accessing' }

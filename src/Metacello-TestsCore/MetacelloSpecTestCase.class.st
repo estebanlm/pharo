@@ -20,7 +20,7 @@ MetacelloSpecTestCase >> packageSpec [
 { #category : 'specs' }
 MetacelloSpecTestCase >> packagesSpec [
 
-	^ MetacelloPackagesSpec for: self project packagesSpec
+	^ MetacelloPackagesSpec for: self project
 ]
 
 { #category : 'accessing' }
@@ -42,7 +42,7 @@ MetacelloSpecTestCase >> projectSpec [
 { #category : 'accessing' }
 MetacelloSpecTestCase >> repositoriesSpec [
 
-	^ self project repositoriesSpec
+	^ MetacelloRepositoriesSpec for: self project
 ]
 
 { #category : 'accessing' }
@@ -53,5 +53,6 @@ MetacelloSpecTestCase >> repositorySpec [
 
 { #category : 'specs' }
 MetacelloSpecTestCase >> versionSpec [
-    ^ self project versionSpec
+
+	^ MetacelloVersionSpec for: self project
 ]
