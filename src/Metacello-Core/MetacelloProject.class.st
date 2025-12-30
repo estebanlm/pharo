@@ -123,12 +123,6 @@ MetacelloProject >> packageSpec [
 	^ MetacelloPackageSpec for: self
 ]
 
-{ #category : 'spec classes' }
-MetacelloProject >> packagesSpec [
-
-	^ MetacelloPackagesSpec for: self
-]
-
 { #category : 'private' }
 MetacelloProject >> platformAttributes [
 

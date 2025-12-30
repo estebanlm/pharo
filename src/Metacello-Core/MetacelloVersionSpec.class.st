@@ -3,11 +3,11 @@ Class {
 	#superclass : 'MetacelloSpec',
 	#instVars : [
 		'repositories',
-		'packageList',
 		'importArray',
 		'postLoadDoIt',
 		'importName',
-		'preLoadDoIt'
+		'preLoadDoIt',
+		'packages'
 	],
 	#category : 'Metacello-Core-Specs',
 	#package : 'Metacello-Core',
@@ -66,7 +66,7 @@ MetacelloVersionSpec >> configMethodOn: aStream indent: indent [
 	hasRepositories := (spec := self repositoriesSpec) isNotNil and: [ spec list isEmpty not ].
 	hasImport := self import isNotNil.
 	hasPackageSpecs := false.
-	self packagesSpec list do: [ :member |
+	self packages list do: [ :member |
 		member spec
 			projectDo: [ :proj | member spec name ifNotNil: [ hasPackageSpecs := true ] ]
 			packageDo: [ :package | member spec name ifNotNil: [ hasPackageSpecs := true ] ]
@@ -119,7 +119,7 @@ MetacelloVersionSpec >> configPackagesSpecMethodOn: aStream indent: indent [
 	projectSpecs := OrderedCollection new.
 	packageSpecs := OrderedCollection new.
 	groupSpecs := OrderedCollection new.
-	self packagesSpec list do: [ :member |
+	self packages list do: [ :member |
 		member spec
 			projectDo: [ :proj | member spec name ifNotNil: [ projectSpecs add: member ] ]
 			packageDo: [ :package | member spec name ifNotNil: [ packageSpecs add: member ] ]
@@ -301,7 +301,6 @@ MetacelloVersionSpec >> packageNamed: aString ifAbsent: aBlock [
 MetacelloVersionSpec >> packageNames [
 	"leave reference to packages for upgrade purposes"
 
-	packageList ifNil: [ ^ #(  ) ].
 	^ self packages map keys asSet
 ]
 
@@ -359,25 +358,19 @@ MetacelloVersionSpec >> packageSpecsInLoadOrderForMap: packageMap [
 MetacelloVersionSpec >> packages [
 	"leave reference to packages for upgrade purposes"
 
-	^ packageList ifNil: [ packageList := self project packagesSpec ]
+	^ packages ifNil: [ packages := MetacelloPackagesSpec for: self project ]
 ]
 
 { #category : 'accessing' }
 MetacelloVersionSpec >> packages: anObject [
-    packageList := anObject
-]
-
-{ #category : 'accessing' }
-MetacelloVersionSpec >> packagesSpec [
-
-	^self packages
+    packages := anObject
 ]
 
 { #category : 'copying' }
 MetacelloVersionSpec >> postCopy [
 
 	super postCopy.
-	packageList := packageList copy.
+	packages := packages copy.
 	repositories := repositories copy
 ]
 
