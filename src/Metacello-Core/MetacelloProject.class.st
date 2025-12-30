@@ -132,7 +132,10 @@ MetacelloProject >> packagesSpec [
 { #category : 'private' }
 MetacelloProject >> platformAttributes [
 
-	 ^self projectPlatformAttributes
+	| list |
+	list := OrderedCollection new.
+	self projectAttributes ifNotNil: [ :aBlock | list addAll: aBlock value ].
+	^ self defaultPlatformAttributes , list
 ]
 
 { #category : 'private' }
@@ -191,15 +194,6 @@ MetacelloProject >> projectPackage [
 		pkgSpec repository: (repo asRepositorySpecFor: self).
 		^ pkgSpec ].
 	^ nil
-]
-
-{ #category : 'private' }
-MetacelloProject >> projectPlatformAttributes [
-
-	| list aBlock |
-	list := OrderedCollection new.
-	(aBlock := self projectAttributes) ifNotNil: [ list addAll: aBlock value ].
-	^ self defaultPlatformAttributes , list
 ]
 
 { #category : 'spec classes' }
