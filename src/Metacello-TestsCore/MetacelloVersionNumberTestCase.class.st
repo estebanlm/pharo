@@ -1,9 +1,36 @@
 Class {
 	#name : 'MetacelloVersionNumberTestCase',
-	#superclass : 'MetacelloCommonVersionNumberTestCase',
+	#superclass : 'TestCase',
 	#category : 'Metacello-TestsCore',
 	#package : 'Metacello-TestsCore'
 }
+
+{ #category : 'tests - alpha/numeric version numbers' }
+MetacelloVersionNumberTestCase >> testAlphaNumericVersion1 [
+
+	"Use numeric comparison for pure numbers. If you non-numeric version separate with '-'"
+	
+	| x y |
+	self assert: ((x := self versionClass fromString: '2.9.0') < (y := self versionClass fromString: '2.10.0')).
+]
+
+{ #category : 'tests - alpha/numeric version numbers' }
+MetacelloVersionNumberTestCase >> testAlphaNumericVersion2 [
+
+	self assert: ((self versionClass fromString: '2.9.0-alpha.2') < (self versionClass fromString: '2.9.0-alpha.3')).
+]
+
+{ #category : 'tests - alpha/numeric version numbers' }
+MetacelloVersionNumberTestCase >> testAlphaNumericVersion3 [
+
+	self assert: ((self versionClass fromString: '2.9.9-alpha.2') < (self versionClass fromString: '2.9.10')).
+]
+
+{ #category : 'tests - alpha/numeric version numbers' }
+MetacelloVersionNumberTestCase >> testAlphaNumericVersion4 [
+
+	self assert: ((self versionClass fromString: '2.9.9-alpha.2') < (self versionClass fromString: '2.9.9')).
+]
 
 { #category : 'tests - approximately greater than' }
 MetacelloVersionNumberTestCase >> testApproxVersion01 [
@@ -67,10 +94,34 @@ MetacelloVersionNumberTestCase >> testStandardMatch [
 ]
 
 { #category : 'tests' }
+MetacelloVersionNumberTestCase >> testVersion01 [
+	self assert: (self versionClass fromString: '1.1.1') versionString equals: '1.1.1'
+]
+
+{ #category : 'tests' }
+MetacelloVersionNumberTestCase >> testVersion02 [
+	| v1 v2 |
+	v1 := self versionClass fromString: '1.1.1'.
+	v2 := self versionClass fromString: '1.0.0'.
+	self assert: v1 equals: v1.
+	self assert: v2 equals: v2.
+	self assert: v1 > v2
+]
+
+{ #category : 'tests' }
 MetacelloVersionNumberTestCase >> testVersion03 [
 
 	| v1 v2 |
 	v1 := self versionClass fromString: '1.0.0.1'.
+	v2 := self versionClass fromString: '1.0.0'.
+	self assert: (v1 > v2)
+]
+
+{ #category : 'tests' }
+MetacelloVersionNumberTestCase >> testVersion04 [
+
+	| v1 v2 |
+	v1 := self versionClass fromString: '1.0.1'.
 	v2 := self versionClass fromString: '1.0.0'.
 	self assert: (v1 > v2)
 ]
@@ -155,6 +206,12 @@ MetacelloVersionNumberTestCase >> testVersion13 [
 ]
 
 { #category : 'tests' }
+MetacelloVersionNumberTestCase >> testVersion14 [
+
+	self assert: ((self versionClass fromString: '2.9.0-alpha02') < (self versionClass fromString: '2.9.0-alpha03')).
+]
+
+{ #category : 'tests' }
 MetacelloVersionNumberTestCase >> testVersion15 [
 
 	self assert: ((self versionClass fromString: '1.0-beta.0') < (self versionClass fromString: '1.0-beta.1')).
@@ -203,10 +260,34 @@ MetacelloVersionNumberTestCase >> testVersion21 [
 ]
 
 { #category : 'tests' }
+MetacelloVersionNumberTestCase >> testVersion22 [
+	self assert: (MetacelloVersionNumber fromString: '3.0.0') collapseZeros size equals: 1.
+	self assert: (MetacelloVersionNumber fromString: '3.0.0') equals: (MetacelloVersionNumber fromString: '3.0').
+	self assert: (MetacelloVersionNumber fromString: '3.0') equals: (MetacelloVersionNumber fromString: '3.0.0')
+]
+
+{ #category : 'tests' }
+MetacelloVersionNumberTestCase >> testVersion23 [
+	self assert: (MetacelloVersionNumber fromString: '3.0.0.-rc.1') equals: (MetacelloVersionNumber fromString: '3.0.0-rc.1').
+	self assert: (MetacelloVersionNumber fromString: '3.0') > (MetacelloVersionNumber fromString: '3.0-rc.1').
+	self assert: (MetacelloVersionNumber fromString: '3') > (MetacelloVersionNumber fromString: '3-rc.1').
+	self assert: (MetacelloVersionNumber fromString: '3.-rc.1') equals: (MetacelloVersionNumber fromString: '3.0.0-rc.1').
+	self assert: (MetacelloVersionNumber fromString: '3.0.-rc.1') equals: (MetacelloVersionNumber fromString: '3.0.0-rc.1').
+	self assert: (MetacelloVersionNumber fromString: '3') > (MetacelloVersionNumber fromString: '3.0-rc.1').
+	self assert: (MetacelloVersionNumber fromString: '3.0') > (MetacelloVersionNumber fromString: '3.0.0-rc.1')
+]
+
+{ #category : 'tests' }
 MetacelloVersionNumberTestCase >> testVersion24 [
 	self assert: (MetacelloVersionNumber fromString: '3.0.3.-rc.1') ~= (MetacelloVersionNumber fromString: '3.0.0.3-rc.1').
 	self assert: (MetacelloVersionNumber fromString: '1.0.0.1.0.0') equals: (MetacelloVersionNumber fromString: '1.0.0.1').
 	self assert: (MetacelloVersionNumber fromString: '1.0.0.1') ~= (MetacelloVersionNumber fromString: '1..1')
+]
+
+{ #category : 'tests' }
+MetacelloVersionNumberTestCase >> testVersion25 [
+
+	self assert: ((MetacelloVersionNumber fromString: '1.0-beta.24.0.1') < (MetacelloVersionNumber fromString: '1.0-beta.28')).
 ]
 
 { #category : 'private' }
