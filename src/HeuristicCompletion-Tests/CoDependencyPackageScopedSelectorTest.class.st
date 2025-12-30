@@ -77,7 +77,7 @@ CoDependencyPackageScopedSelectorTest >> testLocalFirstThenDependent [
 { #category : 'tests - dependency' }
 CoDependencyPackageScopedSelectorTest >> testWhenNoLocalThenDependentPackages [
 
-	| localFetcher fetchedElements fetchedSymbols notLocallyDefinedInClassWithDependencyOnData2Package |
+	| localFetcher fetchedElements fetchedSymbols |
 	localFetcher := CoDependencySelectorFetcher new.
 	localFetcher
 		completionClass: ClassWithDependencyOnData2;
@@ -88,4 +88,6 @@ CoDependencyPackageScopedSelectorTest >> testWhenNoLocalThenDependentPackages [
 
 	self assert: fetchedElements size equals: 1.
 	self assert: (fetchedSymbols includes: #zznotLocallyDefinedInClassWithDependencyOnData2Package)
+	"note that we use this zz starting method because Kernel is part of the dependency because of the Object inheritance so this makes the tests more complex
+	to write."
 ]
