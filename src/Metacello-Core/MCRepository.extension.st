@@ -1,7 +1,7 @@
 Extension { #name : 'MCRepository' }
 
 { #category : '*Metacello-Core' }
-MCRepository >> asRepositorySpecFor: aMetacelloMCProject [
+MCRepository >> asRepositorySpec [
 
 	self subclassResponsibility
 ]

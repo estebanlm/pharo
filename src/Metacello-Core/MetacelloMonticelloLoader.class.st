@@ -88,12 +88,10 @@ MetacelloMonticelloLoader >> loadProject: aMetacelloProjectSpec [
 				 repositorySpecs:
 				 aMetacelloProjectSpec repositorySpecs) ].
 
-	projectClass := self lookupProjectClassNamed:
-		                aMetacelloProjectSpec className asSymbol.
+	projectClass := self lookupProjectClassNamed:  aMetacelloProjectSpec className asSymbol.
 	projectClassInstance := projectClass new.
 	"Subclasses typically change the load type of the project to #atomic"
-	projectClassInstance initalizeProjectWithRepositoryDescription:
-		aMetacelloProjectSpec repositoryDescriptions.
+	projectClassInstance initalizeProjectWithRepositoryDescription: aMetacelloProjectSpec repositoryDescriptions.
 	project := projectClassInstance project.
 	projectCache
 		at: aMetacelloProjectSpec className

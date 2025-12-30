@@ -72,7 +72,7 @@ MetacelloRepositoryCommonTestCase >> testAsRepositorySpecFor [
 		             repoSpec1 := pkg repositorySpecs first.
 		             self assert: repoSpec1 type equals: expectedType1.
 		             repo := repoSpec1 createRepository.
-		             repoSpec2 := repo asRepositorySpecFor: project.
+		             repoSpec2 := repo asRepositorySpec.
 		             self assert: repoSpec2 type equals: expectedType2.
 		             expectedType1 = expectedType2
 			             ifTrue: [ self assert: repoSpec1 description equals: repoSpec2 description ]

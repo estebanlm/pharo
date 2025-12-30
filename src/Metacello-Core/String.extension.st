@@ -13,11 +13,7 @@ String >> addToMetacelloPackages: aMetacelloPackagesSpec [
 { #category : '*Metacello-Core' }
 String >> addToMetacelloRepositories: aMetacelloRepositoriesSpec [
 
-	| spec |
-	spec := aMetacelloRepositoriesSpec project repositorySpec
-		        description: self;
-		        yourself.
-	aMetacelloRepositoriesSpec addMemberForSpec: spec
+	aMetacelloRepositoriesSpec addMemberForSpec: (MetacelloRepositorySpec description: self)
 ]
 
 { #category : '*Metacello-Core' }
@@ -39,11 +35,7 @@ String >> mergeIntoMetacelloPackages: aMetacelloPackagesSpec [
 { #category : '*Metacello-Core' }
 String >> mergeIntoMetacelloRepositories: aMetacelloRepositoriesSpec [
 
-	| spec |
-	spec := aMetacelloRepositoriesSpec project repositorySpec
-		        description: self;
-		        yourself.
-	aMetacelloRepositoriesSpec mergeMemberForSpec: spec
+	aMetacelloRepositoriesSpec mergeMemberForSpec: (MetacelloRepositorySpec description: self)
 ]
 
 { #category : '*Metacello-Core-version comparison' }

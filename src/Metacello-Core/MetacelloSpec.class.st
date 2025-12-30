@@ -63,7 +63,7 @@ MetacelloSpec >> mergeImportLoads: aLoadList [
 { #category : 'merging' }
 MetacelloSpec >> mergeMap [
 
-	^Dictionary new.
+	^ Dictionary new
 ]
 
 { #category : 'merging' }
@@ -141,6 +141,6 @@ MetacelloSpec >> validateMergeForSpec: aSpec [
         ifFalse: [ 
             self
                 error:
-                    'The project spec ' , self name printString , ' in project ' , self project label , ' has incompatible specs. '
+                    'The project spec ' , self label , ' in project ' , self project label , ' has incompatible specs. '
                         , aSpec class name asString , ' and ' , self class name asString , ' are not compatible.' ]
 ]

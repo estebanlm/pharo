@@ -330,10 +330,9 @@ MCGitBasedNetworkRepository >> allFileNames [
 ]
 
 { #category : 'accessing' }
-MCGitBasedNetworkRepository >> asRepositorySpecFor: aMetacelloProject [
+MCGitBasedNetworkRepository >> asRepositorySpec [
 
-	^ aMetacelloProject repositorySpec
-		  description: self description;
+	^ (MetacelloRepositorySpec description: self description)
 		  type: self class basicDescription;
 		  yourself
 ]
@@ -595,9 +594,7 @@ MCGitBasedNetworkRepository >> resolveLocalRespository [
 	directory := self calculateRepositoryDirectory.
 	directoryPath := self class fileUtils directoryPathString: directory.
 	directory ifAbsent: [ self error: 'Local directory ' , directoryPath , ' does not exist.' ].
-	localRepository := MetacelloPlatform current createRepository: (MetacelloRepositorySpec new
-			                    description: 'filetree://' , directoryPath;
-			                    yourself)
+	localRepository := MetacelloPlatform current createRepository: (MetacelloRepositorySpec description: 'filetree://' , directoryPath)
 ]
 
 { #category : 'private' }
