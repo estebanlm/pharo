@@ -488,13 +488,15 @@ NECMenuMorph >> initialize [
 { #category : 'actions' }
 NECMenuMorph >> insertSelected [
 
-	| item selectionIndex |
+	|  selectionIndex |
 	self delete.
 	context hasEntries ifFalse: [ ^ false ].
+	context activateEntryAt: self selectedIndex.
+	
+	"Now we can handle the announcement"
 	selectionIndex := self selectedIndex.
-	item := context activateEntryAt: selectionIndex.
 	self class environment codeChangeAnnouncer announce: (CompletionItemSelected new
-			 selectedItem: item;
+			 selectedItem: (context entries at: selectionIndex);
 			 token: context completionToken;
 			 entries: context entries;
 			 index: selectionIndex).
