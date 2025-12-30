@@ -21,6 +21,12 @@ MetacelloRepositorySpec class >> description: aString [
 		  yourself
 ]
 
+{ #category : 'visiting' }
+MetacelloRepositorySpec >> acceptVisitor: aVisitor [
+
+	self error: 'Should not be visitable..'
+]
+
 { #category : 'adding' }
 MetacelloRepositorySpec >> addToMetacelloRepositories: aMetacelloRepositoriesSpec [
 

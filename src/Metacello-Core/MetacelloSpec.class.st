@@ -77,12 +77,6 @@ MetacelloSpec >> mergeSpec: aSpec [
 	^ newSpec
 ]
 
-{ #category : 'initialization' }
-MetacelloSpec >> newRepositoriesSpec [
-
-	^ MetacelloRepositoriesSpec for: self project
-]
-
 { #category : 'merging' }
 MetacelloSpec >> nonOverridable [
 

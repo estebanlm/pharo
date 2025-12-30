@@ -42,7 +42,7 @@ MetacelloSpecTestCase >> projectSpec [
 { #category : 'accessing' }
 MetacelloSpecTestCase >> repositoriesSpec [
 
-	^ MetacelloRepositoriesSpec for: self project
+	^ MetacelloRepositoriesSpec new
 ]
 
 { #category : 'accessing' }

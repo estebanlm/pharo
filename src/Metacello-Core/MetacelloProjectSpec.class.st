@@ -280,13 +280,6 @@ MetacelloProjectSpec >> ensureProjectLoadedWithEngine: anEngine [
 ]
 
 { #category : 'accessing' }
-MetacelloProjectSpec >> getClassName [
-    "raw access to iv"
-
-    ^ className
-]
-
-{ #category : 'accessing' }
 MetacelloProjectSpec >> getRepositories [
     "raw access to iv"
 
@@ -615,7 +608,7 @@ MetacelloProjectSpec >> registrationsCompareEqual: aMetacelloProjectSpec [
 { #category : 'accessing' }
 MetacelloProjectSpec >> repositories [
 
-	^ repositories ifNil: [ repositories := self newRepositoriesSpec ]
+	^ repositories ifNil: [ repositories := MetacelloRepositoriesSpec new ]
 ]
 
 { #category : 'accessing' }
@@ -679,12 +672,6 @@ MetacelloProjectSpec >> resolveToLoadableSpec [
 MetacelloProjectSpec >> setLoads: aCollection [
     self shouldBeMutable.
     loads := aCollection
-]
-
-{ #category : 'private' }
-MetacelloProjectSpec >> setName: aStringOrNil [
-    self shouldBeMutable.
-    name := aStringOrNil
 ]
 
 { #category : 'mutability' }
