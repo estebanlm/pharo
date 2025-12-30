@@ -49,3 +49,27 @@ CoDependencyPackageScopedSelectorTest >> testBuildFetcherUsesPackageScopedSelect
     self assert: (fetcher instVarNamed: #completionClass) equals: Object.
     self assert: (fetcher instVarNamed: #astNode) equals: node.
 ]
+
+{ #category : 'tests - dependency' }
+CoDependencyPackageScopedSelectorTest >> testLocalFirstThenDependent [
+
+	| localFetcher fetchedElements fetchedSymbols |
+	localFetcher := CoDependencySelectorFetcher new.
+	localFetcher
+		completionClass: ClassWithDependencyOnData2;
+		filter: (CoBeginsWithFilter caseSensitive: false filterString: 'define').
+
+	fetchedElements := localFetcher next: 3.
+
+	self assert: fetchedElements size equals: 3.
+	fetchedSymbols := (fetchedElements collect: [:each | each contents]) asArray.
+	
+	self
+		assert: (fetchedSymbols includes: #defineADependencyToAnalyserData1).
+	self
+		assert: (fetchedSymbols includes: #defineADependencyToDifferentAnalyserData1).
+	self
+		assert: (fetchedSymbols includes: #defineInDependentOfClassWithDependencyOnData2Package).
+		
+	
+]
