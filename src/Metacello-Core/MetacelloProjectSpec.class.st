@@ -273,7 +273,7 @@ MetacelloProjectSpec >> ensureProjectLoadedWithEngine: anEngine [
 	"Ensure that the MetacelloProject is loaded in image. 
 	 projectClass == nil or requested version non-existent warrants a project package load."
 
-	(projectInitialized and: [ (self isMutable and: [ anEngine ignoreImage ]) not ]) ifTrue: [ ^ self ].
+	(self projectInitialized and: [ (self isMutable and: [ anEngine ignoreImage ]) not ]) ifTrue: [ ^ self ].
 
 	projectInitialized := true.
 	project := anEngine loader loadProject: self
@@ -549,6 +549,10 @@ MetacelloProjectSpec >> projectDo: projectBlock packageDo: packageBlock groupDo:
 
 { #category : 'accessing' }
 MetacelloProjectSpec >> projectInitialized [
+
+	projectInitialized ifTrue: [ self versionOrNil ifNil: [ 'METAERROR: Project is initialized but version is nil.' traceCr ] ].
+	projectInitialized ifFalse: [ self versionOrNil ifNotNil: [ 'METAERROR: Project is not initialized but version is present.' traceCr ] ].
+
 	^ projectInitialized
 ]
 
@@ -676,8 +680,8 @@ MetacelloProjectSpec >> unregisterProject [
 
 { #category : 'querying' }
 MetacelloProjectSpec >> version [
+	"We should unify #version and #versionOrNil"
 
-	projectInitialized ifFalse: [ ^ nil ].
 	^ self versionOrNil
 ]
 
