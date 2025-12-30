@@ -14,7 +14,7 @@ CoDependencySelectorFetcher >> entriesDo: aBlock [
 
 	| dependentPackages dependentSelectors |
 	completionClass isNil ifTrue: [ ^ self ].
-
+	
 	self packageLocalSelectors: aBlock.
 
 	dependentSelectors := Set new.

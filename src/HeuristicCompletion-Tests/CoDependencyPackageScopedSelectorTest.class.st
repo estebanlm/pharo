@@ -73,3 +73,19 @@ CoDependencyPackageScopedSelectorTest >> testLocalFirstThenDependent [
 		
 	
 ]
+
+{ #category : 'tests - dependency' }
+CoDependencyPackageScopedSelectorTest >> testWhenNoLocalThenDependentPackages [
+
+	| localFetcher fetchedElements fetchedSymbols notLocallyDefinedInClassWithDependencyOnData2Package |
+	localFetcher := CoDependencySelectorFetcher new.
+	localFetcher
+		completionClass: ClassWithDependencyOnData2;
+		filter: (CoBeginsWithFilter caseSensitive: false filterString: 'zz').
+
+	fetchedElements := localFetcher next: 3.
+	fetchedSymbols := fetchedElements collect: #contents.
+
+	self assert: fetchedElements size equals: 1.
+	self assert: (fetchedSymbols includes: #zznotLocallyDefinedInClassWithDependencyOnData2Package)
+]

@@ -16,7 +16,7 @@ AnalyserA >> defineInDependentOfClassWithDependencyOnData2Package [
 ]
 
 { #category : 'operations' }
-AnalyserA >> notLocallyDefinedInClassWithDependencyOnData2Package [
+AnalyserA >> zznotLocallyDefinedInClassWithDependencyOnData2Package [
 	"I'm a method used for the test to check that dependent methods are invoked when there is no local one."
 
 	^ 42
