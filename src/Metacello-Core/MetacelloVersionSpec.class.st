@@ -63,7 +63,7 @@ MetacelloVersionSpec >> configMethodOn: aStream for: spec selector: selector las
 MetacelloVersionSpec >> configMethodOn: aStream indent: indent [
 
 	| spec hasRepositories hasPackageSpecs hasImport |
-	hasRepositories := (spec := self repositoriesSpec) isNotNil and: [ spec list isEmpty not ].
+	hasRepositories := (spec := self repositories) isNotNil and: [ spec list isEmpty not ].
 	hasImport := self import isNotNil.
 	hasPackageSpecs := false.
 	self packages list do: [ :member |
@@ -299,7 +299,6 @@ MetacelloVersionSpec >> packageNamed: aString ifAbsent: aBlock [
 
 { #category : 'querying' }
 MetacelloVersionSpec >> packageNames [
-	"leave reference to packages for upgrade purposes"
 
 	^ self packages map keys asSet
 ]
@@ -356,7 +355,6 @@ MetacelloVersionSpec >> packageSpecsInLoadOrderForMap: packageMap [
 
 { #category : 'accessing' }
 MetacelloVersionSpec >> packages [
-	"leave reference to packages for upgrade purposes"
 
 	^ packages ifNil: [ packages := MetacelloPackagesSpec for: self project ]
 ]
@@ -428,19 +426,15 @@ MetacelloVersionSpec >> repositories: anObject [
 ]
 
 { #category : 'accessing' }
-MetacelloVersionSpec >> repositoriesSpec [
-
-	^self repositories
-]
-
-{ #category : 'accessing' }
 MetacelloVersionSpec >> repository: aString [
-	self repositoriesSpec add: aString
+
+	self repositories add: aString
 ]
 
 { #category : 'accessing' }
 MetacelloVersionSpec >> repository: aString username: username password: password [
-	self repositoriesSpec repository: aString username: username password: password
+
+	self repositories repository: aString username: username password: password
 ]
 
 { #category : 'loading' }
