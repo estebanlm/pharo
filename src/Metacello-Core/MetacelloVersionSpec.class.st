@@ -3,7 +3,6 @@ Class {
 	#superclass : 'MetacelloSpec',
 	#instVars : [
 		'repositories',
-		'packages',
 		'packageList',
 		'importArray',
 		'postLoadDoIt',
@@ -302,7 +301,7 @@ MetacelloVersionSpec >> packageNamed: aString ifAbsent: aBlock [
 MetacelloVersionSpec >> packageNames [
 	"leave reference to packages for upgrade purposes"
 
-	packages ifNil: [ packageList ifNil: [ ^ #(  ) ] ].
+	packageList ifNil: [ ^ #(  ) ].
 	^ self packages map keys asSet
 ]
 
@@ -360,7 +359,7 @@ MetacelloVersionSpec >> packageSpecsInLoadOrderForMap: packageMap [
 MetacelloVersionSpec >> packages [
 	"leave reference to packages for upgrade purposes"
 
-	^ packages ifNil: [ packageList ifNil: [ packageList := self project packagesSpec ] ]
+	^ packageList ifNil: [ packageList := self project packagesSpec ]
 ]
 
 { #category : 'accessing' }
@@ -379,8 +378,7 @@ MetacelloVersionSpec >> postCopy [
 
 	super postCopy.
 	packageList := packageList copy.
-	repositories := repositories copy.
-	packages := packages copy "leave reference to packages for upgrade purposes"
+	repositories := repositories copy
 ]
 
 { #category : 'querying' }
