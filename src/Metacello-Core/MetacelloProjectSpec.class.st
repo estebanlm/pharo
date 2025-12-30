@@ -181,18 +181,8 @@ MetacelloProjectSpec >> configMethodBodyOn: aStream indent: indent fromShortCut:
 		aStream nextPut: $).
 		hasProjectPackage ifTrue: [ aStream nextPut: $; ] ].
 	hasProjectPackage ifTrue: [
-		| hasName hasRepo |
+		| hasRepo |
 		hasRepo := self hasRepository.
-		hasName := self name ~= self className.
-		hasName ifTrue: [
-			hasClassName | hasOperator | hasLoads | hasPreLoadDoIt | hasPostLoadDoIt
-				ifTrue: [
-					aStream
-						cr;
-						tab: indent + 1 ]
-				ifFalse: [ aStream space ].
-			aStream nextPutAll: 'file: ' , self name printString.
-			hasRepo ifTrue: [ aStream nextPut: $; ] ].
 		hasRepo ifTrue: [
 			| repos |
 			repos := self repositories map values.
@@ -200,7 +190,7 @@ MetacelloProjectSpec >> configMethodBodyOn: aStream indent: indent fromShortCut:
 				ifTrue: [
 					fromShortCut
 						ifTrue: [
-							hasClassName | hasOperator | hasLoads | hasPreLoadDoIt | hasPostLoadDoIt | hasName
+							hasClassName | hasOperator | hasLoads | hasPreLoadDoIt | hasPostLoadDoIt
 								ifTrue: [
 									aStream
 										cr;
