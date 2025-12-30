@@ -9,7 +9,7 @@ Class {
 { #category : 'tests' }
 CoDependencyPackageScopedSelectorTest >> testAppliesForMessageWithVariableReceiver [
     | heuristic node |
-    heuristic := CoDependencyMessageHeuritics new.
+    heuristic := CoDependencyMessageHeuristics new.
     node := CoDependencyPackageScopedSelectorTestNodeStub
                 messageWithReceiver: CoDependencyPackageScopedSelectorTestReceiverStub variable.
 
@@ -19,7 +19,7 @@ CoDependencyPackageScopedSelectorTest >> testAppliesForMessageWithVariableReceiv
 { #category : 'tests' }
 CoDependencyPackageScopedSelectorTest >> testAppliesForMethodNode [
     | heuristic node |
-    heuristic := CoDependencyMessageHeuritics new.
+    heuristic := CoDependencyMessageHeuristics new.
     node := CoDependencyPackageScopedSelectorTestNodeStub methodNode.
 
     self assert: (heuristic appliesForNode: node inContext: nil).
@@ -28,7 +28,7 @@ CoDependencyPackageScopedSelectorTest >> testAppliesForMethodNode [
 { #category : 'tests' }
 CoDependencyPackageScopedSelectorTest >> testAppliesForNonVariableReceiverMessage [
     | heuristic node |
-    heuristic := CoDependencyMessageHeuritics new.
+    heuristic := CoDependencyMessageHeuristics new.
     node := CoDependencyPackageScopedSelectorTestNodeStub
                 messageWithReceiver: CoDependencyPackageScopedSelectorTestReceiverStub new.
 
@@ -38,7 +38,7 @@ CoDependencyPackageScopedSelectorTest >> testAppliesForNonVariableReceiverMessag
 { #category : 'tests' }
 CoDependencyPackageScopedSelectorTest >> testBuildFetcherUsesPackageScopedSelectorFetcher [
     | heuristic node context |
-    heuristic := CoDependencyMessageHeuritics new.
+    heuristic := CoDependencyMessageHeuristics new.
     node := Object new.
     context := CoDependencyPackageScopedSelectorTestContextStub new.
     context completionClass: Object.
