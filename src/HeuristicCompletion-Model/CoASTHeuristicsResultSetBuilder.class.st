@@ -171,7 +171,7 @@ CoASTHeuristicsResultSetBuilder >> visitValueNode: aNode [
 			aMessageNode selector: #''.
 			^ self
 				  configureFetcherForNode: aMessageNode
-				  usingHeuristicAvoidingRepetitions: self messageHeuristic ] ].
+				  usingHeuristicAvoidingRepetitions: self messagesHeuristic ] ].
 
 	^ super visitValueNode: aNode
 ]
