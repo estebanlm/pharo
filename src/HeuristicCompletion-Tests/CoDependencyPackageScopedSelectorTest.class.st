@@ -37,17 +37,18 @@ CoDependencyPackageScopedSelectorTest >> testAppliesForNonVariableReceiverMessag
 
 { #category : 'tests' }
 CoDependencyPackageScopedSelectorTest >> testBuildFetcherUsesPackageScopedSelectorFetcher [
-    | heuristic node context |
-    heuristic := CoDependencyMessageHeuristics new.
-    node := Object new.
-    context := CoDependencyPackageScopedSelectorTestContextStub new.
-    context completionClass: Object.
 
-    fetcher := heuristic buildFetcherFor: node inContext: context.
+	| heuristic node context |
+	heuristic := CoDependencyMessageHeuristics new.
+	node := Object new.
+	context := CoDependencyPackageScopedSelectorTestContextStub new.
+	context completionClass: Object.
 
-    self assert: fetcher class equals: CoPackageScopedSelectorFetcher.
-    self assert: (fetcher instVarNamed: #completionClass) equals: Object.
-    self assert: (fetcher instVarNamed: #astNode) equals: node.
+	fetcher := heuristic buildFetcherFor: node inContext: context.
+
+	self assert: fetcher class equals: CoDependencySelectorFetcher.
+	self assert: (fetcher instVarNamed: #completionClass) equals: Object.
+	self assert: (fetcher instVarNamed: #astNode) equals: node
 ]
 
 { #category : 'tests - dependency' }
