@@ -12,8 +12,9 @@ Class {
 		'ddb10',
 		'vers'
 	],
-	#category : 'FileSystem-Core-Tests',
-	#package : 'FileSystem-Core-Tests'
+	#category : 'FileSystem-Core-Tests-Base',
+	#package : 'FileSystem-Core-Tests',
+	#tag : 'Base'
 }
 
 { #category : 'running' }
@@ -43,7 +44,8 @@ FileVersionnerTest >> testExtractVersionWhenExtensionIsEmpty [
 	| ref |
 	ref := (fileSystem / 'BD.10') ensureCreateFile.
 	self assert: ref fullName equals: '/BD.10'.
-	vers := NewFileVersionner from: ref.
+	vers := (NewFileVersionner from: ref).
+	vers useBasenameNumber.
 	self assert: vers extractVersionOrZero equals: 10.
 ]
 
@@ -54,6 +56,7 @@ FileVersionnerTest >> testExtractVersionWhenVersionIsAbsent [
 	ref := (fileSystem / 'BD..md') ensureCreateFile.
 	self assert: ref fullName equals: '/BD..md'.
 	vers := NewFileVersionner from: ref.
+	vers useBasenameNumberExtension.
 	self assert: vers extractVersionOrZero equals: 0.
 ]
 
@@ -64,11 +67,13 @@ FileVersionnerTest >> testExtractVersionWhenVersionIsAsBasename [
 	ref := (fileSystem / '11.a.12') ensureCreateFile.
 	self assert: ref fullName equals: '/11.a.12'.
 	vers := NewFileVersionner from: ref.
+	vers useBasenameNumberExtension.
 	self assert: vers extractVersionOrZero equals: 0.
 	
 	ref := (fileSystem / '11.121.12') ensureCreateFile.
 	self assert: ref fullName equals: '/11.121.12'.
 	vers := NewFileVersionner from: ref.
+	vers useBasenameNumberExtension.
 	self assert: vers extractVersionOrZero equals: 121.
 ]
 
@@ -79,6 +84,7 @@ FileVersionnerTest >> testExtractVersionWhenVersionIsAsExtension [
 	ref := (fileSystem / 'BD.a.12') ensureCreateFile.
 	self assert: ref fullName equals: '/BD.a.12'.
 	vers := NewFileVersionner from: ref.
+	vers useBasenameNumberExtension.
 	self assert: vers extractVersionOrZero equals: 0.
 ]
 
@@ -89,6 +95,7 @@ FileVersionnerTest >> testExtractVersionWhenVersionIsBogus [
 	ref := (fileSystem / 'BD.a.md') ensureCreateFile.
 	self assert: ref fullName equals: '/BD.a.md'.
 	vers := NewFileVersionner from: ref.
+	vers useBasenameNumberExtension.
 	self assert: vers extractVersionOrZero equals: 0.
 ]
 
@@ -97,6 +104,7 @@ FileVersionnerTest >> testExtractVersionWhenVersionIsDefined [
 
 	self assert: ddb10 fullName equals: '/dir/BD.10.md'.
 	vers := NewFileVersionner from: ddb10.
+	vers useBasenameNumberExtension.
 	self assert: vers extractVersionOrZero equals: 10.
 ]
 
@@ -107,6 +115,7 @@ FileVersionnerTest >> testExtractVersionWhenVersionSectionDoesNotExist [
 	ref := (fileSystem / 'BD.md') ensureCreateFile.
 	self assert: ref fullName equals: '/BD.md'.
 	vers := NewFileVersionner from: ref.
+	vers useBasenameNumberExtension.
 	self assert: vers extractVersionOrZero equals: 0.
 ]
 

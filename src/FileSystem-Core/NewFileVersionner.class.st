@@ -1,6 +1,12 @@
 "
 I'm an utility class to manage numbered file pattern e.g. 'games.12.ston' and I offers simple way to get the following version (e.g., 'games.13.ston') or the last version between a set of files. 
 
+To work the user should explicitly set the pattern of the files. 
+So far I define two.
+- basename.number
+- basename.number.extension
+
+
 ## Core methods
 
 - nextVersion : Answer the next available version number for the file.
@@ -10,7 +16,8 @@ Class {
 	#name : 'NewFileVersionner',
 	#superclass : 'Object',
 	#instVars : [
-		'fileReference'
+		'fileReference',
+		'pattern'
 	],
 	#category : 'FileSystem-Core-Public',
 	#package : 'FileSystem-Core',
@@ -23,18 +30,20 @@ NewFileVersionner class >> from: aFileReference [
  	^ self new fileReference: aFileReference ; yourself
 ]
 
-{ #category : 'utilities' }
+{ #category : 'API' }
 NewFileVersionner >> extractVersionOrZero [
 	"Given a pattern basename.number.extension returns number.
 	All the other case returns 0."
 	
 	| tokenizedFilename |
+	pattern ifNil: [  Error signal: 'no pattern set!' ].
+	
 	tokenizedFilename := fileReference basename findTokens: '.'.
-	^ tokenizedFilename size = 3
+	^ tokenizedFilename size = pattern size
 		ifFalse: [ 0 ]
 		ifTrue: [ 
 			| numberOrNil |
-			numberOrNil := NumberParser parse: (tokenizedFilename at: 2) onError: [ nil ].
+			numberOrNil := NumberParser parse: (tokenizedFilename at: (self indexOfNumber)) onError: [ nil ].
 			numberOrNil ifNil: [ 0 ] ifNotNil: [ :n | n ]]
 
 ]
@@ -51,12 +60,20 @@ NewFileVersionner >> fileReference: aFileReference [
 	fileReference := aFileReference
 ]
 
-{ #category : 'accessing' }
+{ #category : 'pattern' }
+NewFileVersionner >> indexOfNumber [
+
+	^ pattern indexOf: #number
+]
+
+{ #category : 'API' }
 NewFileVersionner >> nextFileReferenceVersion [
 
 	"Assumes a file (or folder) name follows the pattern prior.number.extension, increment the version number and answer the new filereference. If a version number is not found, raise an error"
 
 	|  tokenizedFilename version |
+	pattern ifNil: [  Error signal: 'no pattern set!' ].
+	
 	tokenizedFilename := fileReference basename findTokens: '.'.
 	version := tokenizedFilename size = 3
 		ifFalse: [ 0 ]
@@ -70,40 +87,14 @@ NewFileVersionner >> nextFileReferenceVersion [
 	 ^ ( fileReference parent / (tokenizedFilename first , '.' , (version + 1) asString , '.' ,  fileReference extension)) asFileReference
 ]
 
-{ #category : 'accessing' }
-NewFileVersionner >> nextVersion2 [
-	"Assumes a file (or folder) name follows the pattern prior.number.extension, increment the version number and answer the new filereference.
-	If a version number is not found, raise an error"
-
-	|  tokenizedFilename version |
-	tokenizedFilename := fileReference basename findTokens: '.'.
-	version := tokenizedFilename size = 3
-		ifFalse: [ 0 ]
-		ifTrue: [ 
-			| numberOrNil |
-			numberOrNil := NumberParser parse: (tokenizedFilename at: 2) onError: [ nil ].
-			numberOrNil ifNil: [ 0 ] ifNotNil: [ :n | n ]].
-	version isZero 
-		ifTrue: [ Error signal: fileReference fullname,  ' second element of basename is not a number.' ].
+{ #category : 'pattern' }
+NewFileVersionner >> useBasenameNumber [
 	
-	 ^ ( fileReference parent / (tokenizedFilename first , '.' , (version + 1) asString , '.' ,  fileReference extension)) asFileReference
+	pattern := #(basename number)
 ]
 
-{ #category : 'accessing' }
-NewFileVersionner >> nextVersionFileReference [
-
-	"Assumes a file (or folder) name follows the pattern prior.number.extension, increment the version number and answer the new filereference. If a version number is not found, raise an error"
-
-	|  tokenizedFilename version |
-	tokenizedFilename := fileReference basename findTokens: '.'.
-	version := tokenizedFilename size = 3
-		ifFalse: [ 0 ]
-		ifTrue: [ 
-			| numberOrNil |
-			numberOrNil := NumberParser parse: (tokenizedFilename at: 2) onError: [ nil ].
-			numberOrNil ifNil: [ 0 ] ifNotNil: [ :n | n ]].
-	version isZero 
-		ifTrue: [ Error signal: fileReference fullname,  ' second element of basename is not a number.' ].
+{ #category : 'pattern' }
+NewFileVersionner >> useBasenameNumberExtension [
 	
-	 ^ ( fileReference parent / (tokenizedFilename first , '.' , (version + 1) asString , '.' ,  fileReference extension)) asFileReference
+	pattern := #(basename number extension)
 ]
