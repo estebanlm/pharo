@@ -10,6 +10,12 @@ Class {
 	#tag : 'Specs'
 }
 
+{ #category : 'testing' }
+MetacelloAbstractPackageSpec class >> isAbstract [
+
+	^ self = MetacelloAbstractPackageSpec
+]
+
 { #category : 'adding' }
 MetacelloAbstractPackageSpec >> addToMetacelloPackages: aMetacelloPackagesSpec [
 

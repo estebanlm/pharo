@@ -10,6 +10,12 @@ Class {
 	#tag : 'Members'
 }
 
+{ #category : 'testing' }
+MetacelloMemberListSpec class >> isAbstract [
+
+	^ self = MetacelloMemberListSpec
+]
+
 { #category : 'visiting' }
 MetacelloMemberListSpec >> acceptVisitor: aVisitor [
 
@@ -198,9 +204,7 @@ MetacelloMemberListSpec >> removeMemberForSpec: aSpec [
 { #category : 'adding' }
 MetacelloMemberListSpec >> removeMemberNamed: aString [
 
-	^ self addMember: ((MetacelloRemoveMemberSpec for: self project)
-			   name: aString;
-			   yourself)
+	^ self addMember: (MetacelloRemoveMemberSpec named: aString)
 ]
 
 { #category : 'enumeration' }
