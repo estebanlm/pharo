@@ -20,7 +20,7 @@ MetacelloSpecTestCase >> packageSpec [
 { #category : 'specs' }
 MetacelloSpecTestCase >> packagesSpec [
 
-	^ MetacelloPackagesSpec for: self project
+	^ MetacelloPackagesSpec new
 ]
 
 { #category : 'accessing' }

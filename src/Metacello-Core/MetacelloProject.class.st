@@ -201,12 +201,6 @@ MetacelloProject >> repositoryDescription [
 	^ repositoryDescription
 ]
 
-{ #category : 'spec classes' }
-MetacelloProject >> repositorySpec [
-
-	^ MetacelloRepositorySpec new
-]
-
 { #category : 'development support' }
 MetacelloProject >> setBaselineRepositoryDescription: aListOrRepositoryDescriptions [
 	"set #version repositories to < aListOrRepositoryDescriptions>. Should be the directory where the BaselineOf is located."

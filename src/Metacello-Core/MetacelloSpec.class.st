@@ -33,16 +33,6 @@ MetacelloSpec >> configMethodOn: aStream indent: indent [
 	self subclassResponsibility
 ]
 
-{ #category : 'doits' }
-MetacelloSpec >> doItBlock: selector [
-
-	selector ifNil: [ ^ nil ].
-	selector numArgs = 0 ifTrue: [ ^ [ self project configuration perform: selector ] ].
-	selector numArgs = 1 ifTrue: [ ^ [ :aLoader | self project configuration perform: selector with: aLoader ] ].
-	selector numArgs = 2 ifTrue: [ ^ [ :aLoader :pkgSpec | self project configuration perform: selector with: aLoader with: pkgSpec ] ].
-	^ nil
-]
-
 { #category : 'initialization' }
 MetacelloSpec >> for: aProject [
 
@@ -91,22 +81,10 @@ MetacelloSpec >> postLoadDoIt [
 ]
 
 { #category : 'doits' }
-MetacelloSpec >> postLoadDoItBlock [
-
-	^self doItBlock: self postLoadDoIt value
-]
-
-{ #category : 'doits' }
 MetacelloSpec >> preLoadDoIt [
 	"noop unless non-nil value returned"
 	
 	^nil
-]
-
-{ #category : 'doits' }
-MetacelloSpec >> preLoadDoItBlock [
-
-	^self doItBlock: self preLoadDoIt value
 ]
 
 { #category : 'printing' }
@@ -131,10 +109,8 @@ MetacelloSpec >> validateDoItSelector: anObject [
 
 { #category : 'merging' }
 MetacelloSpec >> validateMergeForSpec: aSpec [
-    aSpec class = self class
-        ifFalse: [ 
-            self
-                error:
-                    'The project spec ' , self label , ' in project ' , self project label , ' has incompatible specs. '
-                        , aSpec class name asString , ' and ' , self class name asString , ' are not compatible.' ]
+
+	aSpec class = self class ifFalse: [
+			self error:
+				'The project spec ' , self label , ' has incompatible specs. ' , aSpec class name asString , ' and ' , self class name asString , ' are not compatible.' ]
 ]

@@ -356,7 +356,7 @@ MetacelloVersionSpec >> packageSpecsInLoadOrderForMap: packageMap [
 { #category : 'accessing' }
 MetacelloVersionSpec >> packages [
 
-	^ packages ifNil: [ packages := MetacelloPackagesSpec for: self project ]
+	^ packages ifNil: [ packages := MetacelloPackagesSpec new ]
 ]
 
 { #category : 'accessing' }
