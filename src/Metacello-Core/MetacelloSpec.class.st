@@ -56,20 +56,6 @@ MetacelloSpec >> nonOverridable [
 	^#()
 ]
 
-{ #category : 'doits' }
-MetacelloSpec >> postLoadDoIt [
-	"noop unless non-nil value returned"
-1halt.
-	^nil
-]
-
-{ #category : 'doits' }
-MetacelloSpec >> preLoadDoIt [
-	"noop unless non-nil value returned"
-	1halt.
-	^nil
-]
-
 { #category : 'printing' }
 MetacelloSpec >> printOn: aStream [
 
