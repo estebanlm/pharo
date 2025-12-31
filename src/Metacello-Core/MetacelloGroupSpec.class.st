@@ -1,6 +1,9 @@
 Class {
 	#name : 'MetacelloGroupSpec',
 	#superclass : 'MetacelloAbstractPackageSpec',
+	#instVars : [
+		'name'
+	],
 	#category : 'Metacello-Core-Specs',
 	#package : 'Metacello-Core',
 	#tag : 'Specs'
@@ -44,6 +47,27 @@ MetacelloGroupSpec >> configMethodOn: aStream indent: indent [
 { #category : 'private' }
 MetacelloGroupSpec >> includeSpecNamesForPackageOrdering: aVersionSpec [
   ^ #()
+]
+
+{ #category : 'merging' }
+MetacelloGroupSpec >> mergeSpec: anotherSpec [
+
+	| newSpec |
+	newSpec := super mergeSpec: anotherSpec.
+	anotherSpec name ifNotNil: [ :aName | newSpec name: aName ].
+	^ newSpec
+]
+
+{ #category : 'querying' }
+MetacelloGroupSpec >> name [
+
+	^name
+]
+
+{ #category : 'accessing' }
+MetacelloGroupSpec >> name: aString [
+
+	name := aString trim
 ]
 
 { #category : 'loading' }

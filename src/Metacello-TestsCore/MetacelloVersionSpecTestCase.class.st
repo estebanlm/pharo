@@ -43,7 +43,6 @@ MetacelloVersionSpecTestCase >> testVersionMergeSpec2 [
 				yourself);
 		merge:
 			(self projectReferenceSpec
-				name: 'Project';
 				projectReference:
 					(self projectSpec
 						name: 'Project';
@@ -69,7 +68,6 @@ MetacelloVersionSpecTestCase >> testVersionMergeSpec2 [
 				yourself);
 		merge:
 			(self projectReferenceSpec
-				name: 'Project';
 				projectReference:
 					(self projectSpec
 						name: 'Project';

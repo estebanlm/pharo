@@ -26,7 +26,6 @@ MetacelloScriptApiExecutor >> executeString: aString do: projectSpecBlock [
 		               className: 'BaselineOf' , aString;
 		               yourself.
 	spec := MetacelloProject new projectReferenceSpec
-		        name: aString;
 		        projectReference: projectSpec;
 		        yourself.
 

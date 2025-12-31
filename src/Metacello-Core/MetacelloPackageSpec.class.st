@@ -2,6 +2,7 @@ Class {
 	#name : 'MetacelloPackageSpec',
 	#superclass : 'MetacelloAbstractPackageSpec',
 	#instVars : [
+		'name',
 		'repositories',
 		'preLoadDoIt',
 		'postLoadDoIt'
@@ -177,16 +178,27 @@ MetacelloPackageSpec >> mergeMap [
 { #category : 'merging' }
 MetacelloPackageSpec >> mergeSpec: anotherSpec [
 
-	| newSpec map anotherRepositories |
+	| newSpec anotherRepositories |
 	newSpec := super mergeSpec: anotherSpec.
-	map := anotherSpec mergeMap.
-	(anotherRepositories := map at: #repositories) notEmpty
-		ifTrue: [ 
-			newSpec 
-				repositories: (self repositories isEmpty
-					ifTrue: [ anotherRepositories ]
-					ifFalse: [ self repositories mergeSpec: anotherRepositories ]) ].
-	^newSpec
+	(anotherRepositories := anotherSpec mergeMap at: #repositories) notEmpty ifTrue: [
+			newSpec repositories: (self repositories isEmpty
+					 ifTrue: [ anotherRepositories ]
+					 ifFalse: [ self repositories mergeSpec: anotherRepositories ]) ].
+
+	anotherSpec name ifNotNil: [ newSpec name: anotherSpec name ].
+	^ newSpec
+]
+
+{ #category : 'querying' }
+MetacelloPackageSpec >> name [
+
+	^name
+]
+
+{ #category : 'accessing' }
+MetacelloPackageSpec >> name: aString [
+
+	name := aString trim
 ]
 
 { #category : 'merging' }

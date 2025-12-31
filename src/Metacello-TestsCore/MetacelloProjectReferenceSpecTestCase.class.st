@@ -11,14 +11,12 @@ MetacelloProjectReferenceSpecTestCase >> testProjectReferenceMergeSpec [
 
 	| projectReferenceA projectReferenceB projectReference project |
 	projectReferenceA := self projectReferenceSpec
-		                     name: 'Project';
 		                     projectReference: (self projectSpec
 				                      name: 'Project';
 				                      className: 'ConfigurationOfProjectA';
 				                      yourself);
 		                     yourself.
 	projectReferenceB := self projectReferenceSpec
-		                     name: 'Project';
 		                     projectReference: (self projectSpec
 				                      name: 'Project';
 				                      className: 'ConfigurationOfProjectB';
@@ -36,7 +34,6 @@ MetacelloProjectReferenceSpecTestCase >> testProjectReferenceSpec [
 
 	| projectReference project |
 	projectReference := self projectReferenceSpec
-		                    name: 'Project';
 		                    projectReference: (project := self projectSpec
 				                                name: 'Project';
 				                                className: 'ConfigurationOfProjectA';

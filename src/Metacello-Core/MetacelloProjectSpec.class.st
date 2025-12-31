@@ -38,7 +38,6 @@ MetacelloProjectSpec >> addToMetacelloPackages: aMetacelloPackagesSpec [
 
 	| spec |
 	spec := aMetacelloPackagesSpec project projectReferenceSpec
-		        name: self name;
 		        projectReference: self copy;
 		        yourself.
 	aMetacelloPackagesSpec addMemberForSpec: spec

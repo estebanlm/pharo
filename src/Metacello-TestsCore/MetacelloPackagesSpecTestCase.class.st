@@ -283,28 +283,25 @@ MetacelloPackagesSpecTestCase >> testCopyToProject [
 
 	| packages project referenceSpec |
 	packages := self packagesSpec.
-	packages
-		add:
-			(self projectSpec
-				name: 'Project';
-				className: 'ConfigurationOfProjectA';
-				loads: #('MyPackage' 'MyTests');
-				preLoadDoIt: #preLoadDoItB;
-				postLoadDoIt: #postLoadDoItB;
-				yourself).
+	packages add: (self projectSpec
+			 name: 'Project';
+			 className: 'ConfigurationOfProjectA';
+			 loads: #( 'MyPackage' 'MyTests' );
+			 preLoadDoIt: #preLoadDoItB;
+			 postLoadDoIt: #postLoadDoItB;
+			 yourself).
 	project := self projectSpec
-		name: 'ProjectCopy';
-		yourself.
+		           name: 'ProjectCopy';
+		           yourself.
 	referenceSpec := self project projectReferenceSpec
-		name: 'ProjectCopy';
-		projectReference: project;
-		yourself.
+		                 projectReference: project;
+		                 yourself.
 	packages copy: 'Project' to: referenceSpec.
 	project := (packages packageNamed: 'ProjectCopy' ifAbsent: [ self assert: false ]) referencedSpec.
 	self assert: project name equals: 'ProjectCopy'.
 	self assert: project className equals: 'ConfigurationOfProjectA'.
-	self assert: project operator identicalTo: #>=.
-	self assert: project loads equals: #('MyPackage' 'MyTests').
+	self assert: project operator identicalTo: #'>='.
+	self assert: project loads equals: #( 'MyPackage' 'MyTests' ).
 	self assert: project preLoadDoIt value identicalTo: #preLoadDoItB.
 	self assert: project postLoadDoIt value identicalTo: #postLoadDoItB
 ]
@@ -442,7 +439,6 @@ MetacelloPackagesSpecTestCase >> testMergeProjectA [
 		postLoadDoIt: #postLoadDoItB;
 		yourself.
 	referenceSpec := self project projectReferenceSpec
-		name: project name;
 		projectReference: project;
 		yourself.
 	packages add: referenceSpec.
@@ -455,7 +451,6 @@ MetacelloPackagesSpecTestCase >> testMergeProjectA [
 		postLoadDoIt: #postLoadDoIt;
 		yourself.
 	referenceSpec := self project projectReferenceSpec
-		name: project name;
 		projectReference: project;
 		yourself.
 	packages merge: referenceSpec.
@@ -484,7 +479,6 @@ MetacelloPackagesSpecTestCase >> testMergeProjectB [
 		postLoadDoIt: #postLoadDoItB;
 		yourself.
 	referenceSpec := self project projectReferenceSpec
-		name: project name;
 		projectReference: project;
 		yourself.
 	packages add: referenceSpec.
@@ -497,7 +491,6 @@ MetacelloPackagesSpecTestCase >> testMergeProjectB [
 		postLoadDoIt: #postLoadDoIt;
 		yourself.
 	referenceSpec := self project projectReferenceSpec
-		name: project name;
 		projectReference: project;
 		yourself.
 	packages merge: {referenceSpec}.
@@ -516,7 +509,6 @@ MetacelloPackagesSpecTestCase >> testMergeProjectB [
 MetacelloPackagesSpecTestCase >> testPackageMergeSpec [
 	| packageA packageB package repository |
 	packageA := self packageSpec
-		name: 'Package';
 		name: 'Package';
 		requires: 'AnotherPackage';
 		includes: 'IncludedPackage';
@@ -770,29 +762,25 @@ MetacelloPackagesSpecTestCase >> testRemoveProjectA [
 
 	| packages project projectReferenceSpec removed |
 	packages := self packagesSpec.
-	packages
-		add:
-			(self projectSpec
-				name: 'Project';
-				className: 'ConfigurationOfProject';
-				operator: #<;
-				loads: #('MyPackage');
-				preLoadDoIt: #preLoadDoIt;
-				postLoadDoIt: #postLoadDoIt;
-				yourself).
+	packages add: (self projectSpec
+			 name: 'Project';
+			 className: 'ConfigurationOfProject';
+			 operator: #<;
+			 loads: #( 'MyPackage' );
+			 preLoadDoIt: #preLoadDoIt;
+			 postLoadDoIt: #postLoadDoIt;
+			 yourself).
 	projectReferenceSpec := packages packageNamed: 'Project' ifAbsent: [ self assert: false ].
 	project := projectReferenceSpec referencedSpec.
 	self assert: project name equals: 'Project'.
 	self assert: project className equals: 'ConfigurationOfProject'.
 	self assert: project operator identicalTo: #<.
-	self assert: project loads equals: #('MyPackage').
+	self assert: project loads equals: #( 'MyPackage' ).
 	self assert: project preLoadDoIt value identicalTo: #preLoadDoIt.
 	self assert: project postLoadDoIt value identicalTo: #postLoadDoIt.
-	packages
-		remove:
-			(self projectReferenceSpec
-				name: 'Project';
-				yourself).
+	packages remove: (self projectReferenceSpec
+			 projectReference: project;
+			 yourself).
 	removed := false.
 	packages packageNamed: 'Project' ifAbsent: [ removed := true ].
 	self assert: removed
@@ -804,29 +792,25 @@ MetacelloPackagesSpecTestCase >> testRemoveProjectB [
 
 	| packages project projectReferenceSpec removed |
 	packages := self packagesSpec.
-	packages
-		add:
-			(self projectSpec
-				name: 'Project';
-				className: 'ConfigurationOfProject';
-				operator: #<;
-				loads: #('MyPackage');
-				preLoadDoIt: #preLoadDoIt;
-				postLoadDoIt: #postLoadDoIt;
-				yourself).
+	packages add: (self projectSpec
+			 name: 'Project';
+			 className: 'ConfigurationOfProject';
+			 operator: #<;
+			 loads: #( 'MyPackage' );
+			 preLoadDoIt: #preLoadDoIt;
+			 postLoadDoIt: #postLoadDoIt;
+			 yourself).
 	projectReferenceSpec := packages packageNamed: 'Project' ifAbsent: [ self assert: false ].
 	project := projectReferenceSpec referencedSpec.
 	self assert: project name equals: 'Project'.
 	self assert: project className equals: 'ConfigurationOfProject'.
 	self assert: project operator identicalTo: #<.
-	self assert: project loads equals: #('MyPackage').
+	self assert: project loads equals: #( 'MyPackage' ).
 	self assert: project preLoadDoIt value identicalTo: #preLoadDoIt.
 	self assert: project postLoadDoIt value identicalTo: #postLoadDoIt.
-	packages
-		remove:
-			{(self projectReferenceSpec
-				name: 'Project';
-				yourself)}.
+	packages remove: { (self projectReferenceSpec
+			 projectReference: project;
+			 yourself) }.
 	removed := false.
 	packages packageNamed: 'Project' ifAbsent: [ removed := true ].
 	self assert: removed

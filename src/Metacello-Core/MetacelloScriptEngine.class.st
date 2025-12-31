@@ -41,8 +41,7 @@ MetacelloScriptEngine >> do: aBlock required: required onProjectDownGrade: onDow
 				| versionSpec projectSpec requiredArray |
 				self validateProjectSpec.
 				[
-				projectSpec := (self lookupProjectSpecFor:
-					                self projectReferenceSpec) copy ]
+				projectSpec := (self lookupProjectSpecFor: self projectReferenceSpec) copy ]
 					on: MetacelloAllowProjectDowngrade , MetacelloAllowProjectUpgrade
 					do: [ :notification |
 						notification

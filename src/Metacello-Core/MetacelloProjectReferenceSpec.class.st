@@ -90,6 +90,12 @@ MetacelloProjectReferenceSpec >> mergeSpec: anotherSpec [
 	^ newSpec
 ]
 
+{ #category : 'querying' }
+MetacelloProjectReferenceSpec >> name [
+
+	^ self projectReference name
+]
+
 { #category : 'merging' }
 MetacelloProjectReferenceSpec >> nonOverridable [
 
