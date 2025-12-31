@@ -3,12 +3,11 @@ Class {
 	#superclass : 'MetacelloSpec',
 	#instVars : [
 		'repositories',
-		'packages',
-		'packageList',
 		'importArray',
 		'postLoadDoIt',
 		'importName',
-		'preLoadDoIt'
+		'preLoadDoIt',
+		'packages'
 	],
 	#category : 'Metacello-Core-Specs',
 	#package : 'Metacello-Core',
@@ -64,10 +63,10 @@ MetacelloVersionSpec >> configMethodOn: aStream for: spec selector: selector las
 MetacelloVersionSpec >> configMethodOn: aStream indent: indent [
 
 	| spec hasRepositories hasPackageSpecs hasImport |
-	hasRepositories := (spec := self repositoriesSpec) isNotNil and: [ spec list isEmpty not ].
+	hasRepositories := (spec := self repositories) isNotNil and: [ spec list isEmpty not ].
 	hasImport := self import isNotNil.
 	hasPackageSpecs := false.
-	self packagesSpec list do: [ :member |
+	self packages list do: [ :member |
 		member spec
 			projectDo: [ :proj | member spec name ifNotNil: [ hasPackageSpecs := true ] ]
 			packageDo: [ :package | member spec name ifNotNil: [ hasPackageSpecs := true ] ]
@@ -120,7 +119,7 @@ MetacelloVersionSpec >> configPackagesSpecMethodOn: aStream indent: indent [
 	projectSpecs := OrderedCollection new.
 	packageSpecs := OrderedCollection new.
 	groupSpecs := OrderedCollection new.
-	self packagesSpec list do: [ :member |
+	self packages list do: [ :member |
 		member spec
 			projectDo: [ :proj | member spec name ifNotNil: [ projectSpecs add: member ] ]
 			packageDo: [ :package | member spec name ifNotNil: [ packageSpecs add: member ] ]
@@ -300,9 +299,7 @@ MetacelloVersionSpec >> packageNamed: aString ifAbsent: aBlock [
 
 { #category : 'querying' }
 MetacelloVersionSpec >> packageNames [
-	"leave reference to packages for upgrade purposes"
 
-	packages ifNil: [ packageList ifNil: [ ^ #(  ) ] ].
 	^ self packages map keys asSet
 ]
 
@@ -358,29 +355,21 @@ MetacelloVersionSpec >> packageSpecsInLoadOrderForMap: packageMap [
 
 { #category : 'accessing' }
 MetacelloVersionSpec >> packages [
-	"leave reference to packages for upgrade purposes"
 
-	^ packages ifNil: [ packageList ifNil: [ packageList := self project packagesSpec ] ]
+	^ packages ifNil: [ packages := MetacelloPackagesSpec for: self project ]
 ]
 
 { #category : 'accessing' }
 MetacelloVersionSpec >> packages: anObject [
-    packageList := anObject
-]
-
-{ #category : 'accessing' }
-MetacelloVersionSpec >> packagesSpec [
-
-	^self packages
+    packages := anObject
 ]
 
 { #category : 'copying' }
 MetacelloVersionSpec >> postCopy [
 
 	super postCopy.
-	packageList := packageList copy.
-	repositories := repositories copy.
-	packages := packages copy "leave reference to packages for upgrade purposes"
+	packages := packages copy.
+	repositories := repositories copy
 ]
 
 { #category : 'querying' }
@@ -428,7 +417,7 @@ MetacelloVersionSpec >> projectLabel [
 { #category : 'accessing' }
 MetacelloVersionSpec >> repositories [
 
-	^ repositories ifNil: [ repositories := self project repositoriesSpec ]
+	^ repositories ifNil: [ repositories := self newRepositoriesSpec ]
 ]
 
 { #category : 'accessing' }
@@ -437,19 +426,15 @@ MetacelloVersionSpec >> repositories: anObject [
 ]
 
 { #category : 'accessing' }
-MetacelloVersionSpec >> repositoriesSpec [
-
-	^self repositories
-]
-
-{ #category : 'accessing' }
 MetacelloVersionSpec >> repository: aString [
-	self repositoriesSpec add: aString
+
+	self repositories add: aString
 ]
 
 { #category : 'accessing' }
 MetacelloVersionSpec >> repository: aString username: username password: password [
-	self repositoriesSpec repository: aString username: username password: password
+
+	self repositories repository: aString username: username password: password
 ]
 
 { #category : 'loading' }

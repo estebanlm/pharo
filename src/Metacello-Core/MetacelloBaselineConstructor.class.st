@@ -253,7 +253,7 @@ MetacelloBaselineConstructor >> on: aConfig project: aProject [
 	project := aProject.
 	self configuration: aConfig.
 	pragma := self extractBaselinePragmaFor: aConfig class.
-	versionSpec := self project versionSpec.
+	versionSpec := MetacelloVersionSpec for: self project.
 	self root: versionSpec.
 	self evaluatePragma: pragma.
 	self project attributes do: [ :attribute |

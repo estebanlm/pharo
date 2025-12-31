@@ -123,16 +123,13 @@ MetacelloProject >> packageSpec [
 	^ MetacelloPackageSpec for: self
 ]
 
-{ #category : 'spec classes' }
-MetacelloProject >> packagesSpec [
-
-	^ MetacelloPackagesSpec for: self
-]
-
 { #category : 'private' }
 MetacelloProject >> platformAttributes [
 
-	 ^self projectPlatformAttributes
+	| list |
+	list := OrderedCollection new.
+	self projectAttributes ifNotNil: [ :aBlock | list addAll: aBlock value ].
+	^ self defaultPlatformAttributes , list
 ]
 
 { #category : 'private' }
@@ -193,15 +190,6 @@ MetacelloProject >> projectPackage [
 	^ nil
 ]
 
-{ #category : 'private' }
-MetacelloProject >> projectPlatformAttributes [
-
-	| list aBlock |
-	list := OrderedCollection new.
-	(aBlock := self projectAttributes) ifNotNil: [ list addAll: aBlock value ].
-	^ self defaultPlatformAttributes , list
-]
-
 { #category : 'spec classes' }
 MetacelloProject >> projectReferenceSpec [
 
@@ -212,12 +200,6 @@ MetacelloProject >> projectReferenceSpec [
 MetacelloProject >> projectSpec [
 
 	^ MetacelloProjectSpec for: self
-]
-
-{ #category : 'spec classes' }
-MetacelloProject >> repositoriesSpec [
-
-	^ MetacelloRepositoriesSpec for: self
 ]
 
 { #category : 'accessing' }
@@ -247,17 +229,11 @@ MetacelloProject >> singletonVersionName [
 { #category : 'versions' }
 MetacelloProject >> version [
 
-	^ version ifNil: [ (MetacelloVersionDoesNotExistError project: self project) signal ]
+	^ version
 ]
 
 { #category : 'versions' }
 MetacelloProject >> version: aVersion [
 
 	version := aVersion
-]
-
-{ #category : 'spec classes' }
-MetacelloProject >> versionSpec [
-
-	^ MetacelloVersionSpec for: self
 ]

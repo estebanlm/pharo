@@ -10,7 +10,8 @@ Class {
 		'operator',
 		'postLoadDoIt',
 		'className',
-		'projectInitialized'
+		'projectInitialized',
+		'mutable'
 	],
 	#category : 'Metacello-Core-Specs',
 	#package : 'Metacello-Core',
@@ -79,7 +80,7 @@ MetacelloProjectSpec >> className: aString [
 
 	self shouldBeMutable.
 	className := aString.
-	self projectPackage: nil
+	self resetProjectPackage
 ]
 
 { #category : 'scripting' }
@@ -181,18 +182,8 @@ MetacelloProjectSpec >> configMethodBodyOn: aStream indent: indent fromShortCut:
 		aStream nextPut: $).
 		hasProjectPackage ifTrue: [ aStream nextPut: $; ] ].
 	hasProjectPackage ifTrue: [
-		| hasName hasRepo |
+		| hasRepo |
 		hasRepo := self hasRepository.
-		hasName := self name ~= self className.
-		hasName ifTrue: [
-			hasClassName | hasOperator | hasLoads | hasPreLoadDoIt | hasPostLoadDoIt
-				ifTrue: [
-					aStream
-						cr;
-						tab: indent + 1 ]
-				ifFalse: [ aStream space ].
-			aStream nextPutAll: 'file: ' , self name printString.
-			hasRepo ifTrue: [ aStream nextPut: $; ] ].
 		hasRepo ifTrue: [
 			| repos |
 			repos := self repositories map values.
@@ -200,7 +191,7 @@ MetacelloProjectSpec >> configMethodBodyOn: aStream indent: indent fromShortCut:
 				ifTrue: [
 					fromShortCut
 						ifTrue: [
-							hasClassName | hasOperator | hasLoads | hasPreLoadDoIt | hasPostLoadDoIt | hasName
+							hasClassName | hasOperator | hasLoads | hasPreLoadDoIt | hasPostLoadDoIt
 								ifTrue: [
 									aStream
 										cr;
@@ -280,10 +271,9 @@ MetacelloProjectSpec >> currentlyLoadedClassesInVersion [
 
 { #category : 'loading' }
 MetacelloProjectSpec >> ensureProjectLoadedWithEngine: anEngine [
-	"Ensure that the MetacelloProject is loaded in image. 
-	 projectClass == nil or requested version non-existent warrants a project package load."
+	"Ensure that the MetacelloProject is loaded in image"
 
-	(projectInitialized and: [ (self isMutable and: [ anEngine ignoreImage ]) not ]) ifTrue: [ ^ self ].
+	(self projectInitialized and: [ (self isMutable and: [ anEngine ignoreImage ]) not ]) ifTrue: [ ^ self ].
 
 	projectInitialized := true.
 	project := anEngine loader loadProject: self
@@ -351,6 +341,11 @@ MetacelloProjectSpec >> hasRepository [
     ^ self repositorySpecs notEmpty
 ]
 
+{ #category : 'mutability' }
+MetacelloProjectSpec >> immutable [
+    mutable := false
+]
+
 { #category : 'initialization' }
 MetacelloProjectSpec >> initialize [
 
@@ -364,6 +359,12 @@ MetacelloProjectSpec >> isLocked [
   ^ self registration 
 	ifNotNil: [ :aRegistration | aRegistration locked ]
 	ifNil: [ false ]
+]
+
+{ #category : 'mutability' }
+MetacelloProjectSpec >> isMutable [
+
+	^ mutable ifNil: [ ^ true ]
 ]
 
 { #category : 'printing' }
@@ -482,6 +483,11 @@ MetacelloProjectSpec >> metacelloRegistrationHash [
 	^ hash bitXor: self repositories metacelloRegistrationHash
 ]
 
+{ #category : 'mutability' }
+MetacelloProjectSpec >> mutable [
+    mutable := true
+]
+
 { #category : 'querying' }
 MetacelloProjectSpec >> name [
 
@@ -491,11 +497,9 @@ MetacelloProjectSpec >> name [
 { #category : 'accessing' }
 MetacelloProjectSpec >> name: aString [
 
-	((aString at: 1) isSeparator or: [ (aString at: aString size) isSeparator ]) ifTrue: [
-		self error: 'Names are not allowed to have leading or trailing blanks: ' , aString printString ].
 	self shouldBeMutable.
-	name := aString.
-	self projectPackage: nil
+	name := aString trim.
+	self resetProjectPackage
 ]
 
 { #category : 'merging' }
@@ -519,9 +523,11 @@ MetacelloProjectSpec >> operator: anObject [
 
 { #category : 'copying' }
 MetacelloProjectSpec >> postCopy [
-    super postCopy.
-    repositories := repositories copy.
-    projectPackage := nil
+
+	super postCopy.
+	mutable := nil.
+	repositories := repositories copy.
+	projectPackage := nil
 ]
 
 { #category : 'querying' }
@@ -559,6 +565,9 @@ MetacelloProjectSpec >> projectDo: projectBlock packageDo: packageBlock groupDo:
 
 { #category : 'accessing' }
 MetacelloProjectSpec >> projectInitialized [
+	"Cyril: I first though that we could just do `self version isNotNil` instead of this, but in fact we cannot. The reason is that for dependencies we first create a MetacelloProjectSpec pointing to the root MetacelloProject instead of a project dedicated to the dependency. Then we create the right project and we set it when we set this variable to true. 
+	In the future we should simplify the code to create dependences without any project spec. Then I could be implemented as simply as `self project isNotNil` which would be much better because if we still ded not load "
+
 	^ projectInitialized
 ]
 
@@ -570,19 +579,14 @@ MetacelloProjectSpec >> projectLabel [
 
 { #category : 'accessing' }
 MetacelloProjectSpec >> projectPackage [
-    projectPackage
-        ifNil: [ 
-            self className ifNil: [ ^ nil ].
-            projectPackage := self project packageSpec.
-            projectPackage name: self className.
-            projectPackage repositories: self getRepositories ].
-    ^ projectPackage
-]
+	"I return a MetacelloPackageSpec corresponding to the BaselineOf of the project."
 
-{ #category : 'accessing' }
-MetacelloProjectSpec >> projectPackage: aProjectPackage [
-    self shouldBeMutable.
-    projectPackage := aProjectPackage
+	^ projectPackage ifNil: [
+			  self className ifNil: [ ^ nil ].
+			  projectPackage := self project packageSpec
+				                    name: self className;
+				                    repositories: self getRepositories;
+				                    yourself ]
 ]
 
 { #category : 'querying' }
@@ -611,26 +615,27 @@ MetacelloProjectSpec >> registrationsCompareEqual: aMetacelloProjectSpec [
 { #category : 'accessing' }
 MetacelloProjectSpec >> repositories [
 
-	^ repositories ifNil: [ repositories := self project repositoriesSpec ]
+	^ repositories ifNil: [ repositories := self newRepositoriesSpec ]
 ]
 
 { #category : 'accessing' }
 MetacelloProjectSpec >> repositories: anObject [
     self shouldBeMutable.
     repositories := anObject.
-    self projectPackage: nil
+    self resetProjectPackage
 ]
 
 { #category : 'accessing' }
 MetacelloProjectSpec >> repository: aStringOrMetacelloRepositorySpec [
     self repositories repository: aStringOrMetacelloRepositorySpec.
-    self projectPackage: nil
+    self resetProjectPackage
 ]
 
 { #category : 'accessing' }
 MetacelloProjectSpec >> repository: aString username: username password: password [
-    self repositories repository: aString username: username password: password.
-    self projectPackage: nil
+
+	self repositories repository: aString username: username password: password.
+	self resetProjectPackage
 ]
 
 { #category : 'querying' }
@@ -659,6 +664,12 @@ MetacelloProjectSpec >> repositoryVersionString [
 ]
 
 { #category : 'private' }
+MetacelloProjectSpec >> resetProjectPackage [
+
+	projectPackage := nil
+]
+
+{ #category : 'private' }
 MetacelloProjectSpec >> resolveToLoadableSpec [
 
 	^self copy
@@ -676,6 +687,13 @@ MetacelloProjectSpec >> setName: aStringOrNil [
     name := aStringOrNil
 ]
 
+{ #category : 'mutability' }
+MetacelloProjectSpec >> shouldBeMutable [
+
+	self isMutable ifTrue: [ ^ self ].
+	self error: 'Not allowed to modify an immutable object'
+]
+
 { #category : 'scripting' }
 MetacelloProjectSpec >> unregisterProject [
     ^ MetacelloProjectRegistration
@@ -686,17 +704,15 @@ MetacelloProjectSpec >> unregisterProject [
 
 { #category : 'querying' }
 MetacelloProjectSpec >> version [
+	"We should unify #version and #versionOrNil"
 
-	projectInitialized ifFalse: [ ^ nil ].
-	^ self project version
+	^ self versionOrNil
 ]
 
 { #category : 'querying' }
 MetacelloProjectSpec >> versionOrNil [
 
-	^ [ self version ]
-		  on: MetacelloVersionDoesNotExistError
-		  do: [ :ex | nil ]
+	^ self project version
 ]
 
 { #category : 'querying' }

@@ -2,8 +2,7 @@ Class {
 	#name : 'MetacelloSpec',
 	#superclass : 'Object',
 	#instVars : [
-		'project',
-		'mutable'
+		'project'
 	],
 	#category : 'Metacello-Core-Specs',
 	#package : 'Metacello-Core',
@@ -34,16 +33,6 @@ MetacelloSpec >> configMethodOn: aStream indent: indent [
 	self subclassResponsibility
 ]
 
-{ #category : 'mutability' }
-MetacelloSpec >> copyOnWrite: aBlock [
-    "assume that only registered projects are immutable ... otherwise you'll get an error"
-
-    | copy |
-    copy := self copy.
-    aBlock value: copy.
-    ^ copy
-]
-
 { #category : 'doits' }
 MetacelloSpec >> doItBlock: selector [
 
@@ -56,19 +45,8 @@ MetacelloSpec >> doItBlock: selector [
 
 { #category : 'initialization' }
 MetacelloSpec >> for: aProject [
-    self shouldBeMutable.
-    project := aProject
-]
 
-{ #category : 'mutability' }
-MetacelloSpec >> immutable [
-    mutable := false
-]
-
-{ #category : 'mutability' }
-MetacelloSpec >> isMutable [
-    mutable ifNil: [ ^ true ].
-    ^ mutable
+	project := aProject
 ]
 
 { #category : 'printing' }
@@ -99,22 +77,16 @@ MetacelloSpec >> mergeSpec: aSpec [
 	^ newSpec
 ]
 
-{ #category : 'mutability' }
-MetacelloSpec >> mutable [
-    mutable := true
+{ #category : 'initialization' }
+MetacelloSpec >> newRepositoriesSpec [
+
+	^ MetacelloRepositoriesSpec for: self project
 ]
 
 { #category : 'merging' }
 MetacelloSpec >> nonOverridable [
 
 	^#()
-]
-
-{ #category : 'copying' }
-MetacelloSpec >> postCopy [
-
-	super postCopy.
-	mutable := nil
 ]
 
 { #category : 'doits' }
@@ -153,13 +125,6 @@ MetacelloSpec >> printOn: aStream [
 MetacelloSpec >> project [
 
 	^project
-]
-
-{ #category : 'mutability' }
-MetacelloSpec >> shouldBeMutable [
-
-	self isMutable ifTrue: [ ^ self ].
-	self error: 'Not allowed to modify an immutable object'
 ]
 
 { #category : 'validation' }
