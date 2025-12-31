@@ -55,5 +55,5 @@ MetacelloSpecTestCase >> repositorySpec [
 { #category : 'specs' }
 MetacelloSpecTestCase >> versionSpec [
 
-	^ MetacelloVersionSpec for: self project
+	^ MetacelloVersionSpec project: self project
 ]

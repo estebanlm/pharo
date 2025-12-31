@@ -2,6 +2,7 @@ Class {
 	#name : 'MetacelloPackageSpec',
 	#superclass : 'MetacelloAbstractPackageSpec',
 	#instVars : [
+		'project',
 		'name',
 		'repositories',
 		'preLoadDoIt',
@@ -11,6 +12,14 @@ Class {
 	#package : 'Metacello-Core',
 	#tag : 'Specs'
 }
+
+{ #category : 'instance creation' }
+MetacelloPackageSpec class >> project: aMetacelloProject [
+
+	^ self new
+		  project: aMetacelloProject;
+		  yourself
+]
 
 { #category : 'visiting' }
 MetacelloPackageSpec >> acceptVisitor: aVisitor [
@@ -244,6 +253,18 @@ MetacelloPackageSpec >> preLoadDoIt: aSymbol [
 
 	self validateDoItSelector: aSymbol.
 	preLoadDoIt := aSymbol
+]
+
+{ #category : 'accessing' }
+MetacelloPackageSpec >> project [
+
+	^ project
+]
+
+{ #category : 'accessing' }
+MetacelloPackageSpec >> project: aMetacelloProject [
+
+	project := aMetacelloProject
 ]
 
 { #category : 'visiting' }

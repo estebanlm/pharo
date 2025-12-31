@@ -31,23 +31,21 @@ MetacelloPackagesSpecTestCase >> testAddGroupA [
 
 { #category : 'tests' }
 MetacelloPackagesSpecTestCase >> testAddGroupB [
-    "used by MetacelloAbstractVersionConstructor>>group:overrides:"
+	"used by MetacelloAbstractVersionConstructor>>group:overrides:"
 
-    | packages group |
-    packages := self packagesSpec.
-    packages
-        add:
-            {(self groupSpec
-                name: 'Platform';
-                includes: 'Core';
-                yourself).
-            (self groupSpec
-                name: 'Platform';
-                includes: 'Tests';
-                yourself)}.
-    group := packages packageNamed: 'Platform' ifAbsent: [ self assert: false ].
-    self deny: (group includes includes: 'Core').
-    self assert: (group includes includes: 'Tests')
+	| packages group |
+	packages := self packagesSpec.
+	packages add: (self groupSpec
+			 name: 'Platform';
+			 includes: 'Core';
+			 yourself).
+	packages add: (self groupSpec
+			 name: 'Platform';
+			 includes: 'Tests';
+			 yourself).
+	group := packages packageNamed: 'Platform' ifAbsent: [ self assert: false ].
+	self deny: (group includes includes: 'Core').
+	self assert: (group includes includes: 'Tests')
 ]
 
 { #category : 'tests' }
@@ -86,51 +84,56 @@ MetacelloPackagesSpecTestCase >> testAddPackageB [
 
 	| packages package |
 	packages := self packagesSpec.
-	packages
-		add:
-			{(self packageSpec
-				name: 'Package';
-				requires: 'AnotherPackage';
-				includes: 'IncludedPackage';
-				preLoadDoIt: #preLoadDoIt;
-				postLoadDoIt: #postLoadDoIt;
-				yourself) . (self packageSpec
-				name: 'Package';
-				requires: 'AndAnotherPackage';
-				includes: 'AndIncludedPackage';
-				yourself)}.
+	packages add: (self packageSpec
+			 name: 'Package';
+			 requires: 'AnotherPackage';
+			 includes: 'IncludedPackage';
+			 preLoadDoIt: #preLoadDoIt;
+			 postLoadDoIt: #postLoadDoIt;
+			 yourself).
+	packages add: (self packageSpec
+			 name: 'Package';
+			 requires: 'AndAnotherPackage';
+			 includes: 'AndIncludedPackage';
+			 yourself).
 	package := packages packageNamed: 'Package' ifAbsent: [ self assert: false ].
 	self assert: package name equals: 'Package'.
-	self assert: package requires equals: #('AndAnotherPackage').
-	self assert: package includes equals: #('AndIncludedPackage').
+	self assert: package requires equals: #( 'AndAnotherPackage' ).
+	self assert: package includes equals: #( 'AndIncludedPackage' ).
 	self assert: package preLoadDoIt value identicalTo: nil.
 	self assert: package postLoadDoIt value identicalTo: nil
 ]
 
 { #category : 'tests' }
 MetacelloPackagesSpecTestCase >> testAddPackageC [
-    "used by MetacelloAbstractVersionConstructor>>package: and MetacelloAbstractVersionConstructor>>package:overrides:"
+	"used by MetacelloAbstractVersionConstructor>>package: and MetacelloAbstractVersionConstructor>>package:overrides:"
 
-    | packages |
-    packages := self packagesSpec.
-    packages
-        add:
-            {'Platform'.
-            'Base'.
-            'Tests'}.
-    packages packageNamed: 'Platform' ifAbsent: [ self assert: false ].
-    packages packageNamed: 'Base' ifAbsent: [ self assert: false ].
-    packages packageNamed: 'Tests' ifAbsent: [ self assert: false ]
+	| packages |
+	packages := self packagesSpec.
+	packages add: (self packageSpec
+			 name: 'Platform';
+			 yourself).
+	packages add: (self packageSpec
+			 name: 'Base';
+			 yourself).
+	packages add: (self packageSpec
+			 name: 'Tests';
+			 yourself).
+	packages packageNamed: 'Platform' ifAbsent: [ self assert: false ].
+	packages packageNamed: 'Base' ifAbsent: [ self assert: false ].
+	packages packageNamed: 'Tests' ifAbsent: [ self assert: false ]
 ]
 
 { #category : 'tests' }
 MetacelloPackagesSpecTestCase >> testAddPackageD [
-    "used by MetacelloAbstractVersionConstructor>>package: and MetacelloAbstractVersionConstructor>>package:overrides:"
+	"used by MetacelloAbstractVersionConstructor>>package: and MetacelloAbstractVersionConstructor>>package:overrides:"
 
-    | packages |
-    packages := self packagesSpec.
-    packages add: 'Platform'.
-    packages packageNamed: 'Platform' ifAbsent: [ self assert: false ]
+	| packages |
+	packages := self packagesSpec.
+	packages add: (self packageSpec
+			 name: 'Platform';
+			 yourself).
+	packages packageNamed: 'Platform' ifAbsent: [ self assert: false ]
 ]
 
 { #category : 'tests' }
@@ -182,26 +185,25 @@ MetacelloPackagesSpecTestCase >> testAddProjectB [
 
 	| packages project projectReferenceSpec |
 	packages := self packagesSpec.
-	packages
-		add:
-			{(self projectSpec
-				name: 'Project';
-				className: 'ConfigurationOfProjectA';
-				loads: #('MyPackage' 'MyTests');
-				preLoadDoIt: #preLoadDoItB;
-				postLoadDoIt: #postLoadDoItB;
-				yourself) . (self projectSpec
-				name: 'Project';
-				className: 'ConfigurationOfProject';
-				operator: #<;
-				loads: #('MyPackage');
-				preLoadDoIt: #preLoadDoIt;
-				postLoadDoIt: #postLoadDoIt;
-				yourself)}.
+	packages add: (self projectSpec
+			 name: 'Project';
+			 className: 'ConfigurationOfProjectA';
+			 loads: #( 'MyPackage' 'MyTests' );
+			 preLoadDoIt: #preLoadDoItB;
+			 postLoadDoIt: #postLoadDoItB;
+			 yourself).
+	packages add: (self projectSpec
+			 name: 'Project';
+			 className: 'ConfigurationOfProject';
+			 operator: #<;
+			 loads: #( 'MyPackage' );
+			 preLoadDoIt: #preLoadDoIt;
+			 postLoadDoIt: #postLoadDoIt;
+			 yourself).
 	projectReferenceSpec := packages packageNamed: 'Project' ifAbsent: [ self assert: false ].
 	self assert: projectReferenceSpec projectName equals: 'Project'.
-	self should: [ projectReferenceSpec includes: #() ] raise: Error.
-	self should: [ projectReferenceSpec requires: #() ] raise: Error.
+	self should: [ projectReferenceSpec includes: #(  ) ] raise: Error.
+	self should: [ projectReferenceSpec requires: #(  ) ] raise: Error.
 	projectReferenceSpec
 		projectDo: [ :prjct | self assert: projectReferenceSpec identicalTo: prjct ]
 		packageDo: [ :ignored | self assert: false ]
@@ -210,7 +212,7 @@ MetacelloPackagesSpecTestCase >> testAddProjectB [
 	self assert: project name equals: 'Project'.
 	self assert: project className equals: 'ConfigurationOfProject'.
 	self assert: project operator identicalTo: #<.
-	self assert: project loads equals: #('MyPackage').
+	self assert: project loads equals: #( 'MyPackage' ).
 	self assert: project preLoadDoIt value identicalTo: #preLoadDoIt.
 	self assert: project postLoadDoIt value identicalTo: #postLoadDoIt.
 	project projectDo: [ :prjct | self assert: project identicalTo: prjct ] packageDo: [ :ignored | self assert: false ] groupDo: [ :ignored | self assert: false ]
@@ -329,25 +331,21 @@ MetacelloPackagesSpecTestCase >> testMergeGroupA [
 
 { #category : 'tests' }
 MetacelloPackagesSpecTestCase >> testMergeGroupB [
-    "used by MetacelloAbstractVersionConstructor>>group:with:"
+	"used by MetacelloAbstractVersionConstructor>>group:with:"
 
-    | packages group |
-    packages := self packagesSpec.
-    packages
-        add:
-            (self groupSpec
-                name: 'Platform';
-                includes: 'Core';
-                yourself).
-    packages
-        merge:
-            {(self groupSpec
-                name: 'Platform';
-                includes: 'Tests';
-                yourself)}.
-    group := packages packageNamed: 'Platform' ifAbsent: [ self assert: false ].
-    self assert: (group includes includes: 'Core').
-    self assert: (group includes includes: 'Tests')
+	| packages group |
+	packages := self packagesSpec.
+	packages add: (self groupSpec
+			 name: 'Platform';
+			 includes: 'Core';
+			 yourself).
+	packages merge: (self groupSpec
+			 name: 'Platform';
+			 includes: 'Tests';
+			 yourself).
+	group := packages packageNamed: 'Platform' ifAbsent: [ self assert: false ].
+	self assert: (group includes includes: 'Core').
+	self assert: (group includes includes: 'Tests')
 ]
 
 { #category : 'tests' }
@@ -386,41 +384,41 @@ MetacelloPackagesSpecTestCase >> testMergePackageB [
 
 	| packages package |
 	packages := self packagesSpec.
-	packages
-		add:
-			(self packageSpec
-				name: 'Package';
-				requires: 'AnotherPackage';
-				includes: 'IncludedPackage';
-				preLoadDoIt: #preLoadDoIt;
-				postLoadDoIt: #postLoadDoIt;
-				yourself).
-	packages
-		merge:
-			{(self packageSpec
-				name: 'Package';
-				requires: 'AndAnotherPackage';
-				includes: 'AndIncludedPackage';
-				yourself)}.
+	packages add: (self packageSpec
+			 name: 'Package';
+			 requires: 'AnotherPackage';
+			 includes: 'IncludedPackage';
+			 preLoadDoIt: #preLoadDoIt;
+			 postLoadDoIt: #postLoadDoIt;
+			 yourself).
+	packages merge: (self packageSpec
+			 name: 'Package';
+			 requires: 'AndAnotherPackage';
+			 includes: 'AndIncludedPackage';
+			 yourself).
 	package := packages packageNamed: 'Package' ifAbsent: [ self assert: false ].
 	self assert: package name equals: 'Package'.
-	self assert: package requires equals: #('AnotherPackage' 'AndAnotherPackage').
-	self assert: package includes equals: #('IncludedPackage' 'AndIncludedPackage').
+	self assert: package requires equals: #( 'AnotherPackage' 'AndAnotherPackage' ).
+	self assert: package includes equals: #( 'IncludedPackage' 'AndIncludedPackage' ).
 	self assert: package preLoadDoIt value identicalTo: #preLoadDoIt.
 	self assert: package postLoadDoIt value identicalTo: #postLoadDoIt
 ]
 
 { #category : 'tests' }
 MetacelloPackagesSpecTestCase >> testMergePackageD [
-    "used by MetacelloAbstractVersionConstructor>>package:with:"
+	"used by MetacelloAbstractVersionConstructor>>package:with:"
 
-    | packages |
-    packages := self packagesSpec.
-    packages
-        add: 'Platform';
-        merge: 'Tests'.
-    packages packageNamed: 'Platform' ifAbsent: [ self assert: false ].
-    packages packageNamed: 'Tests' ifAbsent: [ self assert: false ]
+	| packages |
+	packages := self packagesSpec.
+	packages
+		add: (self packageSpec
+				 name: 'Platform';
+				 yourself);
+		merge: (self packageSpec
+				 name: 'Tests';
+				 yourself).
+	packages packageNamed: 'Platform' ifAbsent: [ self assert: false ].
+	packages packageNamed: 'Tests' ifAbsent: [ self assert: false ]
 ]
 
 { #category : 'tests' }
@@ -483,7 +481,7 @@ MetacelloPackagesSpecTestCase >> testMergeProjectB [
 		           postLoadDoIt: #postLoadDoIt;
 		           yourself.
 	referenceSpec := MetacelloProjectReferenceSpec projectReference: project.
-	packages merge: { referenceSpec }.
+	packages merge: referenceSpec.
 	projectReferenceSpec := packages packageNamed: 'Project' ifAbsent: [ self assert: false ].
 	project := projectReferenceSpec referencedSpec.
 	self assert: project name equals: 'Project'.
@@ -589,69 +587,62 @@ MetacelloPackagesSpecTestCase >> testRemoveGroupA [
 
 { #category : 'tests' }
 MetacelloPackagesSpecTestCase >> testRemoveGroupB [
-    "used by MetacelloAbstractVersionConstructor>>removeGroup:"
+	"used by MetacelloAbstractVersionConstructor>>removeGroup:"
 
-    | packages removed |
-    packages := self packagesSpec.
-    packages
-        add:
-            {(self groupSpec
-                name: 'Platform';
-                includes: 'Core';
-                yourself).
-            (self groupSpec
-                name: 'Base';
-                includes: 'Base';
-                yourself).
-            (self groupSpec
-                name: 'Tests';
-                includes: 'Tests';
-                yourself)}.
-    packages packageNamed: 'Platform' ifAbsent: [ self assert: false ].
-    packages packageNamed: 'Base' ifAbsent: [ self assert: false ].
-    packages packageNamed: 'Tests' ifAbsent: [ self assert: false ].
-    packages
-        remove:
-            {'Base'.
-            'Tests'}.
-    packages packageNamed: 'Platform' ifAbsent: [ self assert: false ].
-    removed := false.
-    packages packageNamed: 'Base' ifAbsent: [ removed := true ].
-    self assert: removed.
-    removed := false.
-    packages packageNamed: 'Tests' ifAbsent: [ removed := true ].
-    self assert: removed
+	| packages removed |
+	packages := self packagesSpec.
+	packages add: (self groupSpec
+			 name: 'Platform';
+			 includes: 'Core';
+			 yourself).
+	packages add: (self groupSpec
+			 name: 'Base';
+			 includes: 'Base';
+			 yourself).
+	packages add: (self groupSpec
+			 name: 'Tests';
+			 includes: 'Tests';
+			 yourself).
+	packages packageNamed: 'Platform' ifAbsent: [ self assert: false ].
+	packages packageNamed: 'Base' ifAbsent: [ self assert: false ].
+	packages packageNamed: 'Tests' ifAbsent: [ self assert: false ].
+	packages remove: { 'Base'. 'Tests' }.
+	packages packageNamed: 'Platform' ifAbsent: [ self assert: false ].
+	removed := false.
+	packages packageNamed: 'Base' ifAbsent: [ removed := true ].
+	self assert: removed.
+	removed := false.
+	packages packageNamed: 'Tests' ifAbsent: [ removed := true ].
+	self assert: removed
 ]
 
 { #category : 'tests' }
 MetacelloPackagesSpecTestCase >> testRemoveGroupC [
-    "used by MetacelloAbstractVersionConstructor>>removeGroup:"
+	"used by MetacelloAbstractVersionConstructor>>removeGroup:"
 
-    | packages removed |
-    packages := self packagesSpec.
-    packages
-        add:
-            {(self groupSpec
-                name: 'Platform';
-                includes: 'Core';
-                yourself).
-            (self groupSpec
-                name: 'Base';
-                includes: 'Base';
-                yourself).
-            (self groupSpec
-                name: 'Tests';
-                includes: 'Tests';
-                yourself)}.
-    packages packageNamed: 'Platform' ifAbsent: [ self assert: false ].
-    packages packageNamed: 'Base' ifAbsent: [ self assert: false ].
-    packages packageNamed: 'Tests' ifAbsent: [ self assert: false ].
-    packages remove: 'Tests'.
-    packages packageNamed: 'Platform' ifAbsent: [ self assert: false ].
-    packages packageNamed: 'Base' ifAbsent: [ self assert: false ].
-    removed := false.
-    packages packageNamed: 'Tests' ifAbsent: [ removed := true ].
-    self assert: removed
+	| packages removed |
+	packages := self packagesSpec.
+	packages add: (self groupSpec
+			 name: 'Platform';
+			 includes: 'Core';
+			 yourself).
+	packages add: (self groupSpec
+			 name: 'Base';
+			 includes: 'Base';
+			 yourself).
+	packages add: (self groupSpec
+			 name: 'Tests';
+			 includes: 'Tests';
+			 yourself).
+	packages packageNamed: 'Platform' ifAbsent: [ self assert: false ].
+	packages packageNamed: 'Base' ifAbsent: [ self assert: false ].
+	packages packageNamed: 'Tests' ifAbsent: [ self assert: false ].
+	packages remove: 'Tests'.
+	packages packageNamed: 'Platform' ifAbsent: [ self assert: false ].
+	packages packageNamed: 'Base' ifAbsent: [ self assert: false ].
+	removed := false.
+	packages packageNamed: 'Tests' ifAbsent: [ removed := true ].
+	self assert: removed
 ]
 
 { #category : 'tests' }

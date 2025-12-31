@@ -2,12 +2,21 @@ Class {
 	#name : 'MetacelloGroupSpec',
 	#superclass : 'MetacelloAbstractPackageSpec',
 	#instVars : [
+		'project',
 		'name'
 	],
 	#category : 'Metacello-Core-Specs',
 	#package : 'Metacello-Core',
 	#tag : 'Specs'
 }
+
+{ #category : 'instance creation' }
+MetacelloGroupSpec class >> project: aMetacelloProject [
+
+	^ self new
+		  project: aMetacelloProject;
+		  yourself
+]
 
 { #category : 'visiting' }
 MetacelloGroupSpec >> acceptVisitor: aVisitor [ 
@@ -76,6 +85,18 @@ MetacelloGroupSpec >> packageSpecsInLoadOrder [
 	^ (self project version spec packageSpecsInLoadOrder select: [ :each |
 		   self includes includes: each name ]) flatCollect: [ :e |
 		  e packageSpecsInLoadOrder ]
+]
+
+{ #category : 'accessing' }
+MetacelloGroupSpec >> project [
+
+	^ project
+]
+
+{ #category : 'accessing' }
+MetacelloGroupSpec >> project: aMetacelloProject [
+
+	project := aMetacelloProject
 ]
 
 { #category : 'visiting' }

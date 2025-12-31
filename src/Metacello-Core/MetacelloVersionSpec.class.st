@@ -2,6 +2,7 @@ Class {
 	#name : 'MetacelloVersionSpec',
 	#superclass : 'MetacelloSpec',
 	#instVars : [
+		'project',
 		'repositories',
 		'importArray',
 		'postLoadDoIt',
@@ -13,6 +14,14 @@ Class {
 	#package : 'Metacello-Core',
 	#tag : 'Specs'
 }
+
+{ #category : 'instance creation' }
+MetacelloVersionSpec class >> project: aMetacelloProject [
+
+	^ self new
+		  project: aMetacelloProject;
+		  yourself
+]
 
 { #category : 'visiting' }
 MetacelloVersionSpec >> acceptVisitor: aVisitor [
@@ -396,6 +405,18 @@ MetacelloVersionSpec >> preLoadDoIt: aSymbol [
 
 	self validateDoItSelector: aSymbol.
 	preLoadDoIt := aSymbol
+]
+
+{ #category : 'accessing' }
+MetacelloVersionSpec >> project [
+
+	^ project
+]
+
+{ #category : 'accessing' }
+MetacelloVersionSpec >> project: aMetacelloProject [
+
+	project := aMetacelloProject
 ]
 
 { #category : 'enumerating' }

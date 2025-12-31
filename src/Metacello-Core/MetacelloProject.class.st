@@ -94,7 +94,7 @@ MetacelloProject >> defaultPlatformAttributes [
 { #category : 'spec classes' }
 MetacelloProject >> groupSpec [
 
-	^ MetacelloGroupSpec for: self
+	^ MetacelloGroupSpec project: self
 ]
 
 { #category : 'accessing' }
@@ -120,7 +120,7 @@ MetacelloProject >> loadType: aSymbol [
 { #category : 'spec classes' }
 MetacelloProject >> packageSpec [
 
-	^ MetacelloPackageSpec for: self
+	^ MetacelloPackageSpec project: self
 ]
 
 { #category : 'private' }
@@ -193,7 +193,7 @@ MetacelloProject >> projectPackage [
 { #category : 'spec classes' }
 MetacelloProject >> projectSpec [
 
-	^ MetacelloProjectSpec for: self
+	^ MetacelloProjectSpec project: self
 ]
 
 { #category : 'accessing' }

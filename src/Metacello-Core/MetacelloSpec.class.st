@@ -1,21 +1,10 @@
 Class {
 	#name : 'MetacelloSpec',
 	#superclass : 'Object',
-	#instVars : [
-		'project'
-	],
 	#category : 'Metacello-Core-Specs',
 	#package : 'Metacello-Core',
 	#tag : 'Specs'
 }
-
-{ #category : 'instance creation' }
-MetacelloSpec class >> for: aVersionMap [
-
-	^ self new
-		  for: aVersionMap;
-		  yourself
-]
 
 { #category : 'merging' }
 MetacelloSpec >> aboutToCopy [
@@ -31,12 +20,6 @@ MetacelloSpec >> acceptVisitor: aVisitor [
 MetacelloSpec >> configMethodOn: aStream indent: indent [
 
 	self subclassResponsibility
-]
-
-{ #category : 'initialization' }
-MetacelloSpec >> for: aProject [
-
-	project := aProject
 ]
 
 { #category : 'printing' }
@@ -76,14 +59,14 @@ MetacelloSpec >> nonOverridable [
 { #category : 'doits' }
 MetacelloSpec >> postLoadDoIt [
 	"noop unless non-nil value returned"
-
+1halt.
 	^nil
 ]
 
 { #category : 'doits' }
 MetacelloSpec >> preLoadDoIt [
 	"noop unless non-nil value returned"
-	
+	1halt.
 	^nil
 ]
 
@@ -91,12 +74,6 @@ MetacelloSpec >> preLoadDoIt [
 MetacelloSpec >> printOn: aStream [
 
 	self configMethodOn: aStream indent: 0
-]
-
-{ #category : 'querying' }
-MetacelloSpec >> project [
-
-	^project
 ]
 
 { #category : 'validation' }

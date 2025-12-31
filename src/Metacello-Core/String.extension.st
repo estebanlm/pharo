@@ -1,16 +1,6 @@
 Extension { #name : 'String' }
 
 { #category : '*Metacello-Core' }
-String >> addToMetacelloPackages: aMetacelloPackagesSpec [
-
-	| spec |
-	spec := aMetacelloPackagesSpec project packageSpec
-		        name: self;
-		        yourself.
-	aMetacelloPackagesSpec addMemberForSpec: spec
-]
-
-{ #category : '*Metacello-Core' }
 String >> addToMetacelloRepositories: aMetacelloRepositoriesSpec [
 
 	aMetacelloRepositoriesSpec addMemberForSpec: (MetacelloRepositorySpec description: self)
@@ -20,16 +10,6 @@ String >> addToMetacelloRepositories: aMetacelloRepositoriesSpec [
 String >> asMetacelloVersionNumber [
 
 	^MetacelloVersionNumber fromString: self
-]
-
-{ #category : '*Metacello-Core' }
-String >> mergeIntoMetacelloPackages: aMetacelloPackagesSpec [
-
-	| spec |
-	spec := aMetacelloPackagesSpec project packageSpec
-		        name: self;
-		        yourself.
-	aMetacelloPackagesSpec mergeMemberForSpec: spec
 ]
 
 { #category : '*Metacello-Core' }

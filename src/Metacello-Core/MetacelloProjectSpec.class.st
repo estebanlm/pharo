@@ -2,6 +2,7 @@ Class {
 	#name : 'MetacelloProjectSpec',
 	#superclass : 'MetacelloSpec',
 	#instVars : [
+		'project',
 		'preLoadDoIt',
 		'loads',
 		'projectPackage',
@@ -25,6 +26,14 @@ MetacelloProjectSpec class >> initialize [
 	self deprecatedAliases:
 		#( MetacelloMCBaselineOfProjectSpec MetacelloConfigurationOfProjectSpec MetacelloCypressBaselineProjectSpec MetacelloMCNamelessProjectSpec
 		   MetacelloNamelessProjectSpec MetacelloBaselineOfProjectSpec )
+]
+
+{ #category : 'instance creation' }
+MetacelloProjectSpec class >> project: aMetacelloProject [
+
+	^ self new
+		  project: aMetacelloProject;
+		  yourself
 ]
 
 { #category : 'visiting' }
@@ -546,6 +555,18 @@ MetacelloProjectSpec >> preLoadDoIt: aSymbol [
 	self shouldBeMutable.
 	self validateDoItSelector: aSymbol.
 	preLoadDoIt := aSymbol
+]
+
+{ #category : 'accessing' }
+MetacelloProjectSpec >> project [
+
+	^ project
+]
+
+{ #category : 'accessing' }
+MetacelloProjectSpec >> project: aMetacelloProject [
+
+	project := aMetacelloProject
 ]
 
 { #category : 'visiting' }
