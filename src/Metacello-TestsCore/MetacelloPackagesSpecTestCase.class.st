@@ -606,7 +606,13 @@ MetacelloPackagesSpecTestCase >> testRemoveGroupB [
 	packages packageNamed: 'Platform' ifAbsent: [ self assert: false ].
 	packages packageNamed: 'Base' ifAbsent: [ self assert: false ].
 	packages packageNamed: 'Tests' ifAbsent: [ self assert: false ].
-	packages remove: { 'Base'. 'Tests' }.
+	packages
+		remove: (self groupSpec
+				 name: 'Base';
+				 yourself);
+		remove: (self groupSpec
+				 name: 'Tests';
+				 yourself).
 	packages packageNamed: 'Platform' ifAbsent: [ self assert: false ].
 	removed := false.
 	packages packageNamed: 'Base' ifAbsent: [ removed := true ].
@@ -637,7 +643,9 @@ MetacelloPackagesSpecTestCase >> testRemoveGroupC [
 	packages packageNamed: 'Platform' ifAbsent: [ self assert: false ].
 	packages packageNamed: 'Base' ifAbsent: [ self assert: false ].
 	packages packageNamed: 'Tests' ifAbsent: [ self assert: false ].
-	packages remove: 'Tests'.
+	packages remove: (self groupSpec
+			 name: 'Tests';
+			 yourself).
 	packages packageNamed: 'Platform' ifAbsent: [ self assert: false ].
 	packages packageNamed: 'Base' ifAbsent: [ self assert: false ].
 	removed := false.
@@ -672,69 +680,65 @@ MetacelloPackagesSpecTestCase >> testRemovePackageA [
 
 { #category : 'tests' }
 MetacelloPackagesSpecTestCase >> testRemovePackageB [
-    "used by MetacelloAbstractVersionConstructor>>removePackage:"
+	"used by MetacelloAbstractVersionConstructor>>removePackage:"
 
-    | packages removed |
-    packages := self packagesSpec.
-    packages
-        add:
-            (self packageSpec
-                name: 'Package';
-                requires: 'AnotherPackage';
-                includes: 'IncludedPackage';
-                preLoadDoIt: #'preLoadDoIt';
-                postLoadDoIt: #'postLoadDoIt';
-                yourself).
-    packages
-        remove:
-            {(self packageSpec
-                name: 'Package';
-                yourself)}.
-    removed := false.
-    packages packageNamed: 'Package' ifAbsent: [ removed := true ].
-    self assert: removed
+	| packages removed |
+	packages := self packagesSpec.
+	packages add: (self packageSpec
+			 name: 'Package';
+			 requires: 'AnotherPackage';
+			 includes: 'IncludedPackage';
+			 preLoadDoIt: #preLoadDoIt;
+			 postLoadDoIt: #postLoadDoIt;
+			 yourself).
+	packages remove: (self packageSpec
+			 name: 'Package';
+			 yourself).
+	removed := false.
+	packages packageNamed: 'Package' ifAbsent: [ removed := true ].
+	self assert: removed
 ]
 
 { #category : 'tests' }
 MetacelloPackagesSpecTestCase >> testRemovePackageC [
-    "used by MetacelloAbstractVersionConstructor>>removePackage:"
+	"used by MetacelloAbstractVersionConstructor>>removePackage:"
 
-    | packages removed |
-    packages := self packagesSpec.
-    packages
-        add:
-            (self packageSpec
-                name: 'Package';
-                requires: 'AnotherPackage';
-                includes: 'IncludedPackage';
-                preLoadDoIt: #'preLoadDoIt';
-                postLoadDoIt: #'postLoadDoIt';
-                yourself).
-    packages remove: {'Package'}.
-    removed := false.
-    packages packageNamed: 'Package' ifAbsent: [ removed := true ].
-    self assert: removed
+	| packages removed |
+	packages := self packagesSpec.
+	packages add: (self packageSpec
+			 name: 'Package';
+			 requires: 'AnotherPackage';
+			 includes: 'IncludedPackage';
+			 preLoadDoIt: #preLoadDoIt;
+			 postLoadDoIt: #postLoadDoIt;
+			 yourself).
+	packages remove: (self packageSpec
+			 name: 'Package';
+			 yourself).
+	removed := false.
+	packages packageNamed: 'Package' ifAbsent: [ removed := true ].
+	self assert: removed
 ]
 
 { #category : 'tests' }
 MetacelloPackagesSpecTestCase >> testRemovePackageD [
-    "used by MetacelloAbstractVersionConstructor>>removePackage:"
+	"used by MetacelloAbstractVersionConstructor>>removePackage:"
 
-    | packages removed |
-    packages := self packagesSpec.
-    packages
-        add:
-            (self packageSpec
-                name: 'Package';
-                requires: 'AnotherPackage';
-                includes: 'IncludedPackage';
-                preLoadDoIt: #'preLoadDoIt';
-                postLoadDoIt: #'postLoadDoIt';
-                yourself).
-    packages remove: 'Package'.
-    removed := false.
-    packages packageNamed: 'Package' ifAbsent: [ removed := true ].
-    self assert: removed
+	| packages removed |
+	packages := self packagesSpec.
+	packages add: (self packageSpec
+			 name: 'Package';
+			 requires: 'AnotherPackage';
+			 includes: 'IncludedPackage';
+			 preLoadDoIt: #preLoadDoIt;
+			 postLoadDoIt: #postLoadDoIt;
+			 yourself).
+	packages remove: (self packageSpec
+			 name: 'Package';
+			 yourself).
+	removed := false.
+	packages packageNamed: 'Package' ifAbsent: [ removed := true ].
+	self assert: removed
 ]
 
 { #category : 'tests' }
@@ -787,7 +791,7 @@ MetacelloPackagesSpecTestCase >> testRemoveProjectB [
 	self assert: project loads equals: #( 'MyPackage' ).
 	self assert: project preLoadDoIt value identicalTo: #preLoadDoIt.
 	self assert: project postLoadDoIt value identicalTo: #postLoadDoIt.
-	packages remove: { (MetacelloProjectReferenceSpec projectReference: project) }.
+	packages remove: (MetacelloProjectReferenceSpec projectReference: project).
 	removed := false.
 	packages packageNamed: 'Project' ifAbsent: [ removed := true ].
 	self assert: removed

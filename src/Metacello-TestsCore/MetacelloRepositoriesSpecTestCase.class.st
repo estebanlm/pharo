@@ -152,16 +152,18 @@ MetacelloRepositoriesSpecTestCase >> testMergeA [
 
 { #category : 'tests' }
 MetacelloRepositoriesSpecTestCase >> testMergeB [
+
 	| repositories repository |
 	repositories := self repositoriesSpec.
 	repositories
-		add:
-			(self repositorySpec
-				description: 'http://example.com/repository';
-				username: 'dkh';
-				password: 'password';
-				yourself);
-		merge: 'http://example.com/repository'.
+		add: (self repositorySpec
+				 description: 'http://example.com/repository';
+				 username: 'dkh';
+				 password: 'password';
+				 yourself);
+		merge: (self repositorySpec
+				 description: 'http://example.com/repository';
+				 yourself).
 	repository := repositories map at: 'http://example.com/repository' ifAbsent: [ self assert: false ].
 	self assert: repository description equals: 'http://example.com/repository'.
 	self assert: repository type equals: 'http'.
@@ -171,23 +173,23 @@ MetacelloRepositoriesSpecTestCase >> testMergeB [
 
 { #category : 'tests' }
 MetacelloRepositoriesSpecTestCase >> testMergeC [
+
 	| repositories repository |
 	repositories := self repositoriesSpec.
 	repositories
-		add:
-			(self repositorySpec
-				description: 'http://example.com/repository';
-				username: 'dkh';
-				password: 'password';
-				yourself);
-		merge:
-			{(self repositorySpec
-				description: 'http://example.com/repository';
-				password: 'secret';
-				yourself) . (self repositorySpec
-				description: 'http://example.com/repository';
-				username: 'DaleHenrichs';
-				yourself)}.
+		add: (self repositorySpec
+				 description: 'http://example.com/repository';
+				 username: 'dkh';
+				 password: 'password';
+				 yourself);
+		merge: (self repositorySpec
+				 description: 'http://example.com/repository';
+				 password: 'secret';
+				 yourself);
+		merge: (self repositorySpec
+				 description: 'http://example.com/repository';
+				 username: 'DaleHenrichs';
+				 yourself).
 	repository := repositories map at: 'http://example.com/repository' ifAbsent: [ self assert: false ].
 	self assert: repository description equals: 'http://example.com/repository'.
 	self assert: repository type equals: 'http'.
@@ -218,55 +220,54 @@ MetacelloRepositoriesSpecTestCase >> testRemoveA [
 
 { #category : 'tests' }
 MetacelloRepositoriesSpecTestCase >> testRemoveB [
-    | repositories removed |
-    repositories := self repositoriesSpec.
-    repositories
-        add:
-            (self repositorySpec
-                description: 'http://example.com/repository';
-                username: 'dkh';
-                password: 'password';
-                yourself).
-    repositories
-        remove:
-            {(self repositorySpec
-                description: 'http://example.com/repository';
-                yourself)}.
-    removed := false.
-    repositories map at: 'http://example.com/repository' ifAbsent: [ removed := true ].
-    self assert: removed
+
+	| repositories removed |
+	repositories := self repositoriesSpec.
+	repositories add: (self repositorySpec
+			 description: 'http://example.com/repository';
+			 username: 'dkh';
+			 password: 'password';
+			 yourself).
+	repositories remove: (self repositorySpec
+			 description: 'http://example.com/repository';
+			 yourself).
+	removed := false.
+	repositories map at: 'http://example.com/repository' ifAbsent: [ removed := true ].
+	self assert: removed
 ]
 
 { #category : 'tests' }
 MetacelloRepositoriesSpecTestCase >> testRemoveC [
-    | repositories removed |
-    repositories := self repositoriesSpec.
-    repositories
-        add:
-            (self repositorySpec
-                description: 'http://example.com/repository';
-                username: 'dkh';
-                password: 'password';
-                yourself).
-    repositories remove: {'http://example.com/repository'}.
-    removed := false.
-    repositories map at: 'http://example.com/repository' ifAbsent: [ removed := true ].
-    self assert: removed
+
+	| repositories removed |
+	repositories := self repositoriesSpec.
+	repositories add: (self repositorySpec
+			 description: 'http://example.com/repository';
+			 username: 'dkh';
+			 password: 'password';
+			 yourself).
+	repositories remove: (self repositorySpec
+			 description: 'http://example.com/repository';
+			 yourself).
+	removed := false.
+	repositories map at: 'http://example.com/repository' ifAbsent: [ removed := true ].
+	self assert: removed
 ]
 
 { #category : 'tests' }
 MetacelloRepositoriesSpecTestCase >> testRemoveD [
-    | repositories removed |
-    repositories := self repositoriesSpec.
-    repositories
-        add:
-            (self repositorySpec
-                description: 'http://example.com/repository';
-                username: 'dkh';
-                password: 'password';
-                yourself).
-    repositories remove: 'http://example.com/repository'.
-    removed := false.
-    repositories map at: 'http://example.com/repository' ifAbsent: [ removed := true ].
-    self assert: removed
+
+	| repositories removed |
+	repositories := self repositoriesSpec.
+	repositories add: (self repositorySpec
+			 description: 'http://example.com/repository';
+			 username: 'dkh';
+			 password: 'password';
+			 yourself).
+	repositories remove: (self repositorySpec
+			 description: 'http://example.com/repository';
+			 yourself).
+	removed := false.
+	repositories map at: 'http://example.com/repository' ifAbsent: [ removed := true ].
+	self assert: removed
 ]

@@ -7,24 +7,6 @@ Collection >> addToMetacelloRepositories: aMetacelloRepositoriesSpec [
 ]
 
 { #category : '*Metacello-Core' }
-Collection >> mergeIntoMetacelloRepositories: aMetacelloRepositoriesSpec [
-
-	self do: [:each | each mergeIntoMetacelloRepositories: aMetacelloRepositoriesSpec ]
-]
-
-{ #category : '*Metacello-Core' }
-Collection >> removeFromMetacelloPackages: aMetacelloPackagesSpec [
-
-	self do: [:each | each removeFromMetacelloPackages: aMetacelloPackagesSpec ]
-]
-
-{ #category : '*Metacello-Core' }
-Collection >> removeFromMetacelloRepositories: aMetacelloRepositoriesSpec [
-
-	self do: [:each | each removeFromMetacelloRepositories: aMetacelloRepositoriesSpec ]
-]
-
-{ #category : '*Metacello-Core' }
 Collection >> setIncludesInMetacelloPackage: aMetacelloPackageSpec [
 
 	aMetacelloPackageSpec setIncludes: self asArray.

@@ -12,12 +12,6 @@ String >> asMetacelloVersionNumber [
 	^MetacelloVersionNumber fromString: self
 ]
 
-{ #category : '*Metacello-Core' }
-String >> mergeIntoMetacelloRepositories: aMetacelloRepositoriesSpec [
-
-	aMetacelloRepositoriesSpec mergeMemberForSpec: (MetacelloRepositorySpec description: self)
-]
-
 { #category : '*Metacello-Core-version comparison' }
 String >> metacelloIntegerLessThanSelf: anInteger [
 	"integer version components are always '>' string component"
@@ -35,18 +29,6 @@ String >> metacelloStringLessThanSelf: aString [
 String >> metacelloVersionComponentLessThan: aMetacelloVersonComponent [
 
 	^aMetacelloVersonComponent metacelloStringLessThanSelf: self
-]
-
-{ #category : '*Metacello-Core' }
-String >> removeFromMetacelloPackages: aMetacelloPackagesSpec [
-
-	aMetacelloPackagesSpec removeMemberNamed: self
-]
-
-{ #category : '*Metacello-Core' }
-String >> removeFromMetacelloRepositories: aMetacelloRepositoriesSpec [
-
-	aMetacelloRepositoriesSpec removeMemberNamed: self
 ]
 
 { #category : '*Metacello-Core' }
