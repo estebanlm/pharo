@@ -9,6 +9,14 @@ Class {
 	#tag : 'Specs'
 }
 
+{ #category : 'accessing' }
+MetacelloProjectReferenceSpec class >> projectReference: aMetacelloProjectSpec [
+
+	^ self new
+		  projectReference: aMetacelloProjectSpec;
+		  yourself
+]
+
 { #category : 'merging' }
 MetacelloProjectReferenceSpec >> aboutToCopy [
     self projectReference className

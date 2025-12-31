@@ -31,7 +31,8 @@ MetacelloSpecTestCase >> project [
 
 { #category : 'specs' }
 MetacelloSpecTestCase >> projectReferenceSpec [
-    ^ self project projectReferenceSpec
+
+	^ MetacelloProjectReferenceSpec new
 ]
 
 { #category : 'specs' }

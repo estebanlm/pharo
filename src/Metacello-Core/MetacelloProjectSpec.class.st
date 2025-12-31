@@ -37,9 +37,7 @@ MetacelloProjectSpec >> acceptVisitor: aVisitor [
 MetacelloProjectSpec >> addToMetacelloPackages: aMetacelloPackagesSpec [
 
 	| spec |
-	spec := aMetacelloPackagesSpec project projectReferenceSpec
-		        projectReference: self copy;
-		        yourself.
+	spec := MetacelloProjectReferenceSpec projectReference: self copy.
 	aMetacelloPackagesSpec addMemberForSpec: spec
 ]
 

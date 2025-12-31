@@ -10,18 +10,14 @@ Class {
 MetacelloProjectReferenceSpecTestCase >> testProjectReferenceMergeSpec [
 
 	| projectReferenceA projectReferenceB projectReference project |
-	projectReferenceA := self projectReferenceSpec
-		                     projectReference: (self projectSpec
-				                      name: 'Project';
-				                      className: 'ConfigurationOfProjectA';
-				                      yourself);
-		                     yourself.
-	projectReferenceB := self projectReferenceSpec
-		                     projectReference: (self projectSpec
-				                      name: 'Project';
-				                      className: 'ConfigurationOfProjectB';
-				                      yourself);
-		                     yourself.
+	projectReferenceA := MetacelloProjectReferenceSpec projectReference: (self projectSpec
+			                      name: 'Project';
+			                      className: 'ConfigurationOfProjectA';
+			                      yourself).
+	projectReferenceB := MetacelloProjectReferenceSpec projectReference: (self projectSpec
+			                      name: 'Project';
+			                      className: 'ConfigurationOfProjectB';
+			                      yourself).
 	projectReference := projectReferenceA mergeSpec: projectReferenceB.
 	self assert: projectReference name equals: 'Project'.
 	self assert: projectReference projectName equals: 'Project'.
@@ -33,12 +29,10 @@ MetacelloProjectReferenceSpecTestCase >> testProjectReferenceMergeSpec [
 MetacelloProjectReferenceSpecTestCase >> testProjectReferenceSpec [
 
 	| projectReference project |
-	projectReference := self projectReferenceSpec
-		                    projectReference: (project := self projectSpec
-				                                name: 'Project';
-				                                className: 'ConfigurationOfProjectA';
-				                                yourself);
-		                    yourself.
+	projectReference := MetacelloProjectReferenceSpec projectReference: (project := self projectSpec
+			                                name: 'Project';
+			                                className: 'ConfigurationOfProjectA';
+			                                yourself).
 	self assert: projectReference name equals: 'Project'.
 	self assert: projectReference projectName equals: 'Project'.
 	self assert: projectReference projectReference identicalTo: project.

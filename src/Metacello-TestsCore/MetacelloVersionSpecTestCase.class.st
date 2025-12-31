@@ -25,57 +25,46 @@ MetacelloVersionSpecTestCase >> testVersionMergeSpec [
 
 { #category : 'tests' }
 MetacelloVersionSpecTestCase >> testVersionMergeSpec2 [
+
 	| versionA versionB version repository package group projectReferenceSpec |
 	versionA := self versionSpec
-		repository: 'http://example.com/repository' username: 'dkh' password: 'password';
-		repository: '/opt/gemstone/repository';
-		yourself.
+		            repository: 'http://example.com/repository' username: 'dkh' password: 'password';
+		            repository: '/opt/gemstone/repository';
+		            yourself.
 	versionA packages
-		merge:
-			(self packageSpec
-				name: 'Package';
-				requires: 'AnotherPackage';
-				yourself);
-		merge:
-			(self groupSpec
-				name: 'Platform';
-				includes: 'Core';
-				yourself);
-		merge:
-			(self projectReferenceSpec
-				projectReference:
-					(self projectSpec
-						name: 'Project';
-						className: 'ConfigurationOfProjectA';
-						repository: 'http://example.com/repository' username: 'dkh' password: 'password';
-						repository: '/opt/gemstone/repository';
-						yourself));
-		yourself.
+		merge: (self packageSpec
+				 name: 'Package';
+				 requires: 'AnotherPackage';
+				 yourself);
+		merge: (self groupSpec
+				 name: 'Platform';
+				 includes: 'Core';
+				 yourself);
+		merge: (MetacelloProjectReferenceSpec projectReference: (self projectSpec
+					  name: 'Project';
+					  className: 'ConfigurationOfProjectA';
+					  repository: 'http://example.com/repository' username: 'dkh' password: 'password';
+					  repository: '/opt/gemstone/repository';
+					  yourself)).
 	versionB := self versionSpec
-		repository: 'http://example.com/repository' username: 'DaleHenrichs' password: 'secret';
-		repository: '/opt/gemstone/repo';
-		yourself.
+		            repository: 'http://example.com/repository' username: 'DaleHenrichs' password: 'secret';
+		            repository: '/opt/gemstone/repo';
+		            yourself.
 	versionB packages
-		merge:
-			(self packageSpec
-				name: 'Package';
-				requires: 'AndAnotherPackage';
-				yourself);
-		merge:
-			(self groupSpec
-				name: 'Platform';
-				includes: 'Tests';
-				yourself);
-		merge:
-			(self projectReferenceSpec
-				projectReference:
-					(self projectSpec
-						name: 'Project';
-						className: 'ConfigurationOfProjectA';
-						repository: 'http://example.com/repository' username: 'DaleHenrichs' password: 'secret';
-						repository: '/opt/gemstone/repo';
-						yourself));
-		yourself.
+		merge: (self packageSpec
+				 name: 'Package';
+				 requires: 'AndAnotherPackage';
+				 yourself);
+		merge: (self groupSpec
+				 name: 'Platform';
+				 includes: 'Tests';
+				 yourself);
+		merge: (MetacelloProjectReferenceSpec projectReference: (self projectSpec
+					  name: 'Project';
+					  className: 'ConfigurationOfProjectA';
+					  repository: 'http://example.com/repository' username: 'DaleHenrichs' password: 'secret';
+					  repository: '/opt/gemstone/repo';
+					  yourself)).
 	version := versionA mergeSpec: versionB.
 	repository := version repositories map at: '/opt/gemstone/repository' ifAbsent: [ self assert: false ].
 	self assert: repository type equals: 'directory'.

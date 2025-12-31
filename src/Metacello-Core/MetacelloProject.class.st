@@ -191,12 +191,6 @@ MetacelloProject >> projectPackage [
 ]
 
 { #category : 'spec classes' }
-MetacelloProject >> projectReferenceSpec [
-
-	^ MetacelloProjectReferenceSpec for: self
-]
-
-{ #category : 'spec classes' }
 MetacelloProject >> projectSpec [
 
 	^ MetacelloProjectSpec for: self

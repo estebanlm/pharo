@@ -341,9 +341,7 @@ MetacelloBaselineConstructor >> project: aString copyFrom: oldSpecName with: aBl
 	projectSpec := self project projectSpec
 		               name: aString;
 		               yourself.
-	spec := self project projectReferenceSpec
-		        projectReference: projectSpec;
-		        yourself.
+	spec := MetacelloProjectReferenceSpec projectReference: projectSpec.
 	self root packages copy: oldSpecName to: spec.
 	self with: projectSpec during: aBlock
 ]
@@ -355,9 +353,7 @@ MetacelloBaselineConstructor >> project: aString overrides: aBlock [
 	projectSpec := self project projectSpec
 		               name: aString;
 		               yourself.
-	spec := self project projectReferenceSpec
-		        projectReference: projectSpec;
-		        yourself.
+	spec := MetacelloProjectReferenceSpec projectReference: projectSpec.
 	self root packages add: spec.
 	self with: projectSpec during: aBlock
 ]
@@ -370,10 +366,7 @@ MetacelloBaselineConstructor >> project: aString with: aBlockOrString [
 		               name: aString;
 		               yourself.
 
-	spec := self project projectReferenceSpec
-		        projectReference: projectSpec;
-		        yourself.
-
+	spec := MetacelloProjectReferenceSpec projectReference: projectSpec.
 	self root packages merge: spec.
 
 	self with: projectSpec during: aBlockOrString
@@ -405,9 +398,7 @@ MetacelloBaselineConstructor >> removePackage: aString [
 { #category : 'api' }
 MetacelloBaselineConstructor >> removeProject: aString [
 
-	self root packages remove: (self project projectReferenceSpec
-			 projectReference: (self root packageNamed: aString);
-			 yourself)
+	self root packages remove: (MetacelloProjectReferenceSpec projectReference: (self root packageNamed: aString))
 ]
 
 { #category : 'api' }
