@@ -66,7 +66,7 @@ MetacelloPackagesSpec >> configMethodOn: aStream indent: indent [
 { #category : 'actions' }
 MetacelloPackagesSpec >> copy: specNamed to: spec [
 
-	self addMember: ((MetacelloCopyMemberSpec for: self project spec: spec)
+	self addMember: ((MetacelloCopyMemberSpec spec: spec)
 			 sourceName: specNamed;
 			 yourself)
 ]

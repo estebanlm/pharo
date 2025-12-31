@@ -32,7 +32,7 @@ MetacelloMemberListSpec >> addMember: aMember [
 { #category : 'adding' }
 MetacelloMemberListSpec >> addMemberForSpec: aSpec [
 
-	^ self addMember: (MetacelloAddMemberSpec for: self project spec: aSpec)
+	^ self addMember: (MetacelloAddMemberSpec spec: aSpec)
 ]
 
 { #category : 'private' }
@@ -156,7 +156,7 @@ MetacelloMemberListSpec >> merge: aSpec [
 { #category : 'adding' }
 MetacelloMemberListSpec >> mergeMemberForSpec: aSpec [
 
-	^ self addMember: (MetacelloMergeMemberSpec for: self project spec: aSpec)
+	^ self addMember: (MetacelloMergeMemberSpec spec: aSpec)
 ]
 
 { #category : 'merging' }
@@ -192,7 +192,7 @@ MetacelloMemberListSpec >> remove: aSpec [
 { #category : 'adding' }
 MetacelloMemberListSpec >> removeMemberForSpec: aSpec [
 
-	^ self addMember: (MetacelloRemoveMemberSpec for: self project spec: aSpec)
+	^ self addMember: (MetacelloRemoveMemberSpec spec: aSpec)
 ]
 
 { #category : 'adding' }
