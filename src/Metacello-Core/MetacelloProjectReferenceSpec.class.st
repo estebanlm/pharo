@@ -206,12 +206,6 @@ MetacelloProjectReferenceSpec >> version [
 	^self projectReference version
 ]
 
-{ #category : 'querying' }
-MetacelloProjectReferenceSpec >> versionOrNil [
-
-	^ self projectReference versionOrNil
-]
-
 { #category : 'accessing' }
 MetacelloProjectReferenceSpec >> versionString [
 

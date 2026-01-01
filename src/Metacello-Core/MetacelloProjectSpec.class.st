@@ -112,12 +112,9 @@ MetacelloProjectSpec >> compareEqual: aMetacelloProjectSpec [
 { #category : 'scripting' }
 MetacelloProjectSpec >> compareVersionsEqual: aMetacelloProjectSpec [
 
-	| vrsn otherVrsn |
-	vrsn := self versionOrNil.
-	otherVrsn := aMetacelloProjectSpec versionOrNil.
-	vrsn ifNil: [ ^ vrsn = otherVrsn ].
-	otherVrsn ifNil: [ ^ false ].
-	^ vrsn versionNumber = otherVrsn versionNumber
+	self version ifNil: [ ^ aMetacelloProjectSpec version isNil ].
+	aMetacelloProjectSpec version ifNil: [ ^ false ].
+	^ self version versionNumber = aMetacelloProjectSpec version versionNumber
 ]
 
 { #category : 'printing' }
@@ -278,7 +275,7 @@ MetacelloProjectSpec >> copyForRegistration: aMetacelloProjectRegistration onWri
 { #category : 'accessing' }
 MetacelloProjectSpec >> currentlyLoadedClassesInVersion [
 
-	self versionOrNil ifNotNil: [ :vrsn | ^ vrsn spec currentlyLoadedClassesInVersion ].
+	self version ifNotNil: [ :vrsn | ^ vrsn spec currentlyLoadedClassesInVersion ].
 	^ #(  )
 ]
 
@@ -382,10 +379,10 @@ MetacelloProjectSpec >> loadListForVersion: vrsn [
 { #category : 'accessing' }
 MetacelloProjectSpec >> loadPackageList [
 
-	| vrsn pkgs |
-	(vrsn := self versionOrNil) ifNil: [ ^ #(  ) ].
+	| pkgs |
+	self version ifNil: [ ^ #(  ) ].
 	pkgs := OrderedCollection new.
-	(self loadListForVersion: vrsn) do: [ :nm | pkgs addAll: ((vrsn packagesForSpecNamed: nm) collect: [ :each | each name ]) ].
+	(self loadListForVersion: self version) do: [ :nm | pkgs addAll: ((self version packagesForSpecNamed: nm) collect: [ :each | each name ]) ].
 	^ pkgs
 ]
 
@@ -700,13 +697,6 @@ MetacelloProjectSpec >> unregisterProject [
 
 { #category : 'querying' }
 MetacelloProjectSpec >> version [
-	"We should unify #version and #versionOrNil"
-
-	^ self versionOrNil
-]
-
-{ #category : 'querying' }
-MetacelloProjectSpec >> versionOrNil [
 
 	^ self project ifNotNil: [ :aProject | aProject version ]
 ]
@@ -714,5 +704,5 @@ MetacelloProjectSpec >> versionOrNil [
 { #category : 'querying' }
 MetacelloProjectSpec >> versionString [
 
-	^ self versionOrNil ifNotNil: [ :v | v versionString ]
+	^ self version ifNotNil: [ :v | v versionString ]
 ]

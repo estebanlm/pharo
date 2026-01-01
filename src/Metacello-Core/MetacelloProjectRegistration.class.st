@@ -275,7 +275,7 @@ MetacelloProjectRegistration >> projectVersion [
 
 	^ self versionInfo projectVersion ifNil: [
 			  | version |
-			  version := self projectSpec versionOrNil.
+			  version := self projectSpec version.
 			  self versionInfo projectVersion: version.
 			  version ]
 ]
