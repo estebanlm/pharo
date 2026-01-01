@@ -593,10 +593,8 @@ MetacelloProjectSpec >> projectReference [
 
 { #category : 'scripting' }
 MetacelloProjectSpec >> registration [
-    ^ MetacelloProjectRegistration
-        registrationForProjectSpec: self
-        ifAbsent: [ :ignored |  ]
-        ifPresent: [ :existing :new | existing ]
+
+	^ MetacelloProjectRegistration registrationForProjectSpec: self ifPresent: [ :existing | existing ]
 ]
 
 { #category : 'scripting' }
@@ -684,10 +682,8 @@ MetacelloProjectSpec >> shouldBeMutable [
 
 { #category : 'scripting' }
 MetacelloProjectSpec >> unregisterProject [
-    ^ MetacelloProjectRegistration
-        registrationForProjectSpec: self
-        ifAbsent: [  ]
-        ifPresent: [ :existing :new | existing unregisterProject ]
+
+	^ MetacelloProjectRegistration registrationForProjectSpec: self ifPresent: [ :existing | existing unregisterProject ]
 ]
 
 { #category : 'querying' }

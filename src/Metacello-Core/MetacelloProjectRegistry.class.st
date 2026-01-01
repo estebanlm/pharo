@@ -56,10 +56,9 @@ MetacelloProjectRegistry >> registerProjectRegistration: aMetacelloProjectRegist
 ]
 
 { #category : 'registration' }
-MetacelloProjectRegistry >> registrationFor: aMetacelloProjectRegistration ifPresent: presentBlock ifAbsent: absentBlock [
+MetacelloProjectRegistry >> registrationFor: aMetacelloProjectSpec ifPresent: presentBlock ifAbsent: absentBlock [
 
-	self projectSpecsRegistry at: aMetacelloProjectRegistration projectSpec className ifPresent: [ :existing | ^ presentBlock value: existing ].
-	self projectSpecsRegistry at: 'BaselineOf' , aMetacelloProjectRegistration baseName ifPresent: [ :existing | ^ presentBlock value: existing ].
+	self projectSpecsRegistry at: aMetacelloProjectSpec className ifPresent: [ :existing | ^ presentBlock value: existing ].
 	^ absentBlock value
 ]
 

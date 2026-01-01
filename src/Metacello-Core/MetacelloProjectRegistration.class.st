@@ -71,13 +71,15 @@ MetacelloProjectRegistration class >> registrationForClassNamed: aClassName ifAb
 ]
 
 { #category : 'querying' }
-MetacelloProjectRegistration class >> registrationForProjectSpec: aProjectSpec ifAbsent: absentBlock ifPresent: presentBlock [
-    | newRegistration |
-    newRegistration := aProjectSpec asProjectRegistration.
-    self registry
-        registrationFor: newRegistration
-        ifPresent: [ :existing | ^ presentBlock value: existing value: newRegistration ]
-        ifAbsent: [ ^ absentBlock value: newRegistration ]
+MetacelloProjectRegistration class >> registrationForProjectSpec: aProjectSpec ifPresent: presentBlock [
+
+	^ self registrationForProjectSpec: aProjectSpec ifPresent: presentBlock ifAbsent: [ ]
+]
+
+{ #category : 'querying' }
+MetacelloProjectRegistration class >> registrationForProjectSpec: aProjectSpec ifPresent: presentBlock ifAbsent: absentBlock [
+
+	^ self registry registrationFor: aProjectSpec ifPresent: presentBlock ifAbsent: absentBlock
 ]
 
 { #category : 'accessing' }
