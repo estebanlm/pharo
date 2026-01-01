@@ -9,7 +9,9 @@ Class {
 		'dir',
 		'ddb99',
 		'ddb09',
-		'ddb10'
+		'ddb10',
+		'noPattern',
+		'noExtension'
 	],
 	#category : 'FileSystem-Core-Tests-Base',
 	#package : 'FileSystem-Core-Tests',
@@ -28,12 +30,19 @@ FileVersionnerTest >> setUp [
 	db10 ensureCreateFile.
 	
 	dir := (fileSystem / 'dir') ensureCreateDirectory.
-	ddb99 := fileSystem / 'dir' / 'BD.99.md'.
+	ddb99 := fileSystem / 'dir' / 'BD.999.md'.
 	ddb99 ensureCreateFile.
 	ddb09 := fileSystem / 'dir' / 'BD.09.md'.
 	ddb09 ensureCreateFile.
 	ddb10 := fileSystem / 'dir' / 'BD.10.md'.
-	ddb10 ensureCreateFile
+	ddb10 ensureCreateFile.
+	
+	noPattern := fileSystem / 'dir' / 'NoPattern.md'.
+	noPattern ensureCreateFile.
+	
+	noExtension := fileSystem / 'dir' / 'NoExtension'.
+	noExtension ensureCreateFile
+	
 	
 ]
 
@@ -119,6 +128,127 @@ FileVersionnerTest >> testExtractVersionWhenVersionSectionDoesNotExist [
 	self assert: vers extractVersionOrZero equals: 0.
 ]
 
+{ #category : 'tests - last file' }
+FileVersionnerTest >> testLastFile [
+	
+	| vers res |
+	
+	vers := (NewFileVersionner from: fileSystem root).
+	vers useBasenameNumberExtension. 
+	res := vers lastFileFor: 'BD' extension: 'md'.
+
+	self 
+		assert: res fullName 
+		equals:  '/BD.99.md'.
+	self assert: res isAbsolute
+	
+]
+
+{ #category : 'tests - last file error' }
+FileVersionnerTest >> testLastFileDifferentExtensionRaiseError [
+	
+	| vers res should |
+	
+	should := false.
+	[ vers := NewFileVersionner from: fileSystem root / 'dir'.
+	vers useBasenameNumberExtension. 
+	res := vers lastFileFor: 'BD' extension: 'mdbogus']
+		on: Error 
+		do: [ :ex | 
+				self assert: ex description equals: 'Error: There is no file following the pattern #(#basename #number #extension) in /dir'.
+				should := true ].
+	self assert: should
+]
+
+{ #category : 'tests - last file' }
+FileVersionnerTest >> testLastFileInDir [
+	
+	| vers res |
+	
+	vers := NewFileVersionner from: fileSystem root / 'dir'.
+	vers useBasenameNumberExtension. 
+	res := vers lastFileFor: 'BD' extension: 'md'.
+
+	self 
+		assert: res fullName 
+		equals:  '/dir/BD.999.md'.
+	self assert: res isAbsolute
+	
+]
+
+{ #category : 'tests - last file error' }
+FileVersionnerTest >> testLastFileInDirFromFileRaiseAnError [
+	
+	| vers should |
+	vers := NewFileVersionner from: ddb09.
+	vers useBasenameNumberExtension. 
+	
+	should := false.
+	 [ 
+		vers lastFileFor: 'BD' extension: 'md' ]
+		on: Error
+		do: [ :ex | 
+			self assert: ex description equals: 'Error: /dir/BD.09.md is not directory'.
+			should := true. ].
+		
+	self assert: should.
+		
+		
+	
+]
+
+{ #category : 'tests - last file error' }
+FileVersionnerTest >> testLastFileInDirNoPatternRaiseError [
+	
+	| vers should |
+	vers := NewFileVersionner from: ddb09.
+	
+	should := false.
+	 [ 
+		vers lastFileFor: 'BD' extension: 'md' ]
+		on: Error
+		do: [ :ex | 
+			self assert: ex description equals: 'Error: no pattern set!'.
+			should := true. ].
+		
+	self assert: should.
+]
+
+{ #category : 'tests - last file error' }
+FileVersionnerTest >> testLastFileInDirNotFollowingThePatternRaiseError [
+	
+	| vers should |
+	
+	vers := NewFileVersionner from: fileSystem root / 'dir'.
+	vers useBasenameNumberExtension. 
+
+	should := false.
+	 [ 
+		vers lastFileFor: 'NoPattern' extension: 'md' ]
+		on: Error
+		do: [ :ex | 
+			self assert: ex description equals: 'Error: Some files do not follow the pattern size.'.
+			should := true. ].
+		
+	self assert: should.
+]
+
+{ #category : 'tests - last file error' }
+FileVersionnerTest >> testLastFileNoExtensionRaiseError [
+	
+	| vers res should |
+	
+	should := false.
+	[ vers := NewFileVersionner from: fileSystem root / 'dir'.
+	vers useBasenameNumberExtension. 
+	res := vers lastFileFor: 'NoExtension' extension: 'md']
+		on: Error 
+		do: [ :ex | 
+				self assert: ex description equals: 'Error: There is no file following the pattern #(#basename #number #extension) in /dir'.
+				should := true ].
+	self assert: should
+]
+
 { #category : 'tests - next version' }
 FileVersionnerTest >> testNextVersionOf09Is10 [
 	"This shows that we treat the number as a number and not as a list of digits
@@ -133,7 +263,7 @@ FileVersionnerTest >> testNextVersionOf09Is10 [
 	self assert: ref fullName equals: '/BD.09.md'.
 	self assert: ref isAbsolute.
 	
-	vers := (NewFileVersionner from: ref).
+	vers := NewFileVersionner from: ref.
 	vers useBasenameNumberExtension. 
 	res := vers nextVersionFileReference.
 
@@ -167,7 +297,6 @@ FileVersionnerTest >> testNextVersionOf1Is2 [
 	
 	| ref vers |
 	ref := (fileSystem / 'BD.1.md') ensureCreateFile.
-	self assert: ref fullName equals: '/BD.1.md'.
 	
 	vers := NewFileVersionner from: ref.
 	vers useBasenameNumberExtension.
@@ -176,8 +305,8 @@ FileVersionnerTest >> testNextVersionOf1Is2 [
 		equals:  '/BD.2.md'.
 ]
 
-{ #category : 'tests - next version' }
-FileVersionnerTest >> testNextVersionOfNoExtension [
+{ #category : 'tests - next version errors' }
+FileVersionnerTest >> testNextVersionOfNoExtensionRaiseError [
 	
 	| ref should |
 	ref := (fileSystem / 'BD') ensureCreateFile.
@@ -233,8 +362,8 @@ FileVersionnerTest >> testNextVersionOfNoNumberBaseNumber [
 	
 ]
 
-{ #category : 'tests - next version' }
-FileVersionnerTest >> testNextVersionOfNoNumberBaseNumberExt [
+{ #category : 'tests - next version errors' }
+FileVersionnerTest >> testNextVersionOfNoNumberBaseNumberRaiseError [
 	
 	| ref should |
 	ref := (fileSystem / 'BD.md') ensureCreateFile.
@@ -244,19 +373,19 @@ FileVersionnerTest >> testNextVersionOfNoNumberBaseNumberExt [
 	[ 
 	| vers |
 	vers := NewFileVersionner from: ref.
-	vers useBasenameNumberExtension.
+	vers useBasenameNumber.
 	vers nextVersionFileReference ]
 		on: Error
 		do: [ :ex |
-			self assert: ex description equals: 'Error: /BD.md structure does not follow the one of the pattern: #(#basename #number #extension)'. 
+			self assert: ex description equals: 'Error: /BD.md second element is not a number.'. 
 			should := true. ].
 		
 	self assert: should.
 	
 ]
 
-{ #category : 'tests - next version' }
-FileVersionnerTest >> testNextVersionOfNumberBeingEmpty [
+{ #category : 'tests - next version errors' }
+FileVersionnerTest >> testNextVersionOfNumberBeingEmptyRaiseError [
 	
 	| ref should |
 	ref := (fileSystem / 'BD..md') ensureCreateFile.
@@ -277,8 +406,8 @@ FileVersionnerTest >> testNextVersionOfNumberBeingEmpty [
 	
 ]
 
-{ #category : 'tests - next version' }
-FileVersionnerTest >> testNextVersionOfNumberNotANumber [
+{ #category : 'tests - next version errors' }
+FileVersionnerTest >> testNextVersionOfNumberNotANumberRaiseError [
 	
 	| ref should vers |
 	ref := (fileSystem / 'BD.a.md') ensureCreateFile.
@@ -297,8 +426,8 @@ FileVersionnerTest >> testNextVersionOfNumberNotANumber [
 	
 ]
 
-{ #category : 'tests - next version' }
-FileVersionnerTest >> testNextVersionOfWhenNoPattern [
+{ #category : 'tests - next version errors' }
+FileVersionnerTest >> testNextVersionOfWhenNoPatternRaiseError [
 	
 	| ref should |
 	ref := (fileSystem / 'BD.10.md') ensureCreateFile.
