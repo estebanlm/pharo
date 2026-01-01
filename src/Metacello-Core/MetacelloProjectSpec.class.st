@@ -101,20 +101,11 @@ MetacelloProjectSpec >> compareEqual: aMetacelloProjectSpec [
 	"'projectPackage repositories'"
 
 	^ self className = aMetacelloProjectSpec className and: [
-		  (self compareVersionsEqual: aMetacelloProjectSpec) and: [
-			  self operator == aMetacelloProjectSpec operator and: [
-				  self loads = aMetacelloProjectSpec loads and: [
-					  self preLoadDoIt value == aMetacelloProjectSpec preLoadDoIt value and: [
-						  self postLoadDoIt value == aMetacelloProjectSpec postLoadDoIt value and: [
-							  self repositories compareEqual: aMetacelloProjectSpec repositories ] ] ] ] ] ]
-]
-
-{ #category : 'scripting' }
-MetacelloProjectSpec >> compareVersionsEqual: aMetacelloProjectSpec [
-
-	self version ifNil: [ ^ aMetacelloProjectSpec version isNil ].
-	aMetacelloProjectSpec version ifNil: [ ^ false ].
-	^ self version versionNumber = aMetacelloProjectSpec version versionNumber
+			  (self hasVersion and: [ aMetacelloProjectSpec hasVersion ]) and: [
+					  self operator == aMetacelloProjectSpec operator and: [
+							  self loads = aMetacelloProjectSpec loads and: [
+									  self preLoadDoIt value == aMetacelloProjectSpec preLoadDoIt value and: [
+										  self postLoadDoIt value == aMetacelloProjectSpec postLoadDoIt value and: [ self repositories compareEqual: aMetacelloProjectSpec repositories ] ] ] ] ] ]
 ]
 
 { #category : 'printing' }
@@ -283,7 +274,7 @@ MetacelloProjectSpec >> currentlyLoadedClassesInVersion [
 MetacelloProjectSpec >> ensureProjectLoadedWithEngine: anEngine [
 	"Ensure that the MetacelloProject version is built (We downloaded the baseline and we executed it to build a MetacelloVersion"
 
-	(self version isNotNil and: [ (self isMutable and: [ anEngine ignoreImage ]) not ]) ifTrue: [ ^ self ].
+	(self hasVersion and: [ (self isMutable and: [ anEngine ignoreImage ]) not ]) ifTrue: [ ^ self ].
 
 	project := anEngine loader loadProject: self
 ]
@@ -311,7 +302,7 @@ MetacelloProjectSpec >> hasNoLoadConflicts: aMetacelloProjectSpec [
 	"'projectPackage repositories'"
 
 	^ self className = aMetacelloProjectSpec className and: [
-			  (self compareVersionsEqual: aMetacelloProjectSpec) and: [
+			  (self hasVersion and: [ aMetacelloProjectSpec hasVersion ]) and: [
 					  self operator == aMetacelloProjectSpec operator and: [
 						  (self repositories isEmpty or: [ aMetacelloProjectSpec repositories isEmpty ]) or: [
 							  self repositories hasNoLoadConflicts: aMetacelloProjectSpec repositories ] ] ] ]
@@ -339,6 +330,12 @@ MetacelloProjectSpec >> hasNonVersionStringField [
 { #category : 'testing' }
 MetacelloProjectSpec >> hasRepository [
     ^ self repositorySpecs notEmpty
+]
+
+{ #category : 'testing' }
+MetacelloProjectSpec >> hasVersion [
+
+	^ self version isNotNil
 ]
 
 { #category : 'mutability' }
@@ -378,7 +375,7 @@ MetacelloProjectSpec >> loadListForVersion: vrsn [
 MetacelloProjectSpec >> loadPackageList [
 
 	| pkgs |
-	self version ifNil: [ ^ #(  ) ].
+	self hasVersion ifFalse: [ ^ #(  ) ].
 	pkgs := OrderedCollection new.
 	(self loadListForVersion: self version) do: [ :nm | pkgs addAll: ((self version packagesForSpecNamed: nm) collect: [ :each | each name ]) ].
 	^ pkgs
