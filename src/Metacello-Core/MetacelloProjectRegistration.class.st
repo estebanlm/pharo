@@ -161,7 +161,7 @@ MetacelloProjectRegistration >> ensureVersionString: anObject [
 
 { #category : 'testing' }
 MetacelloProjectRegistration >> hasLoadConflicts: aProjectRegistration [
-
+1halt.
 	^ aProjectRegistration projectSpec hasLoadConflicts: self projectSpec
 ]
 
@@ -292,6 +292,13 @@ MetacelloProjectRegistration >> shouldBeMutable [
 { #category : 'registration' }
 MetacelloProjectRegistration >> unregisterProject [
     self class registry unregisterProjectRegistration: self
+]
+
+{ #category : 'accessing' }
+MetacelloProjectRegistration >> versionInfo [
+	"Deprecated in Pharo 14"
+	self deprecated: 'Use #self.' transformWith: '`@rcv versionInfo' -> '`@rcv'.
+	^ self
 ]
 
 { #category : 'accessing' }
