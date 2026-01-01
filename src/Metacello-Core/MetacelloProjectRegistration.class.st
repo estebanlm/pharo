@@ -309,12 +309,6 @@ MetacelloProjectRegistration >> unregisterProject [
 ]
 
 { #category : 'accessing' }
-MetacelloProjectRegistration >> version [
-
-	^ MetacelloProject singletonVersionName
-]
-
-{ #category : 'accessing' }
 MetacelloProjectRegistration >> versionString [
 
 	^ versionString

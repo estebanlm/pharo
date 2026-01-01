@@ -205,9 +205,3 @@ MetacelloProjectReferenceSpec >> version [
 
 	^self projectReference version
 ]
-
-{ #category : 'accessing' }
-MetacelloProjectReferenceSpec >> versionString [
-
-	^self projectReference versionString
-]

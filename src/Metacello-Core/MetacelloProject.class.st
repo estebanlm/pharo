@@ -57,11 +57,6 @@ MetacelloProject class >> on: aConfig [
 	^self basicNew configuration: aConfig; yourself
 ]
 
-{ #category : 'accessing' }
-MetacelloProject class >> singletonVersionName [
-    ^ 'baseline'
-]
-
 { #category : 'private' }
 MetacelloProject >> attributes [
 
@@ -146,7 +141,7 @@ MetacelloProject >> printOn: aStream [
 	version
 		ifNil: [ aStream nextPutAll: 'No version yet' ]
 		ifNotNil: [
-				aStream nextPutAll: self singletonVersionName.
+				aStream nextPutAll: 'baseline'.
 				version spec projectLabel ifNotEmpty: [ :label | aStream nextPutAll: ' [' , label , ']' ].
 				aStream
 					nextPut: $,;
@@ -200,12 +195,6 @@ MetacelloProject >> setBaselineRepositoryDescription: aListOrRepositoryDescripti
 	"set #version repositories to < aListOrRepositoryDescriptions>. Should be the directory where the BaselineOf is located."
 
 	repositoryDescription := aListOrRepositoryDescriptions
-]
-
-{ #category : 'versions' }
-MetacelloProject >> singletonVersionName [
-
-	^ self class singletonVersionName
 ]
 
 { #category : 'versions' }

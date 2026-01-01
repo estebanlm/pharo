@@ -13,3 +13,10 @@ MetacelloProjectRegistration class >> baselineProjectSpecs [
 	self deprecated: 'Use #projectSpecs instead.' transformWith: '`@rcv baselineProjectSpecs' -> '`@rcv projectSpecs'.
 	^ self projectSpecs
 ]
+
+{ #category : '*Deprecated14' }
+MetacelloProjectRegistration >> versionInfo [
+
+	self deprecated: 'Use #self.' transformWith: '`@rcv versionInfo' -> '`@rcv'.
+	^ self
+]

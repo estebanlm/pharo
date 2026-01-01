@@ -323,8 +323,6 @@ MetacelloProjectSpec >> hasNonVersionStringField [
 	| hasProjectPackage |
 	self hasClassName ifTrue: [ ^ true ].
 
-	self versionString ifNotNil: [ ^ true ].
-
 	operator ifNotNil: [ ^ true ].
 
 	hasProjectPackage := self className ~= self name or: [ self hasRepository ].
@@ -470,7 +468,6 @@ MetacelloProjectSpec >> metacelloRegistrationHash [
 	| hash |
 	hash := String stringHash: name initialHash: 0.
 	hash := String stringHash: self className initialHash: hash.
-	hash := String stringHash: self versionString initialHash: hash.
 	hash := String stringHash: self operator asString initialHash: hash.
 	hash := String stringHash: self preLoadDoIt asString initialHash: hash.
 	hash := String stringHash: self postLoadDoIt asString initialHash: hash.
@@ -606,9 +603,7 @@ MetacelloProjectSpec >> registration [
 MetacelloProjectSpec >> registrationsCompareEqual: aMetacelloProjectSpec [
 	"name className versionString operator loads preLoadDoIt postLoadDoIt"
 
-	^ self className = aMetacelloProjectSpec className and: [
-		  self versionString = aMetacelloProjectSpec versionString and: [
-			  self operator == aMetacelloProjectSpec operator ] ]
+	^ self className = aMetacelloProjectSpec className and: [ self operator == aMetacelloProjectSpec operator ]
 ]
 
 { #category : 'accessing' }
@@ -699,10 +694,4 @@ MetacelloProjectSpec >> unregisterProject [
 MetacelloProjectSpec >> version [
 
 	^ self project ifNotNil: [ :aProject | aProject version ]
-]
-
-{ #category : 'querying' }
-MetacelloProjectSpec >> versionString [
-
-	^ self version ifNotNil: [ :v | v versionString ]
 ]

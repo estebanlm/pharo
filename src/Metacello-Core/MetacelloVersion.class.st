@@ -12,15 +12,10 @@ Class {
 
 { #category : 'instance creation' }
 MetacelloVersion class >> fromSpec: aMetacelloVersionSpec [
-    ^ (self new versionNumber: aMetacelloVersionSpec versionNumber)
-        spec: aMetacelloVersionSpec;
-        yourself
-]
 
-{ #category : 'instance creation' }
-MetacelloVersion class >> fromString: aString [
-
-	^self new versionNumber: aString asMetacelloVersionNumber
+	^ self new
+		  spec: aMetacelloVersionSpec;
+		  yourself
 ]
 
 { #category : 'comparing' }
@@ -154,8 +149,9 @@ MetacelloVersion >> loader [
 
 { #category : 'testing' }
 MetacelloVersion >> name [
+	"I'm probably some dead code."
 
-	^self versionString
+	^ 'baseline'
 ]
 
 { #category : 'querying' }
@@ -286,30 +282,13 @@ MetacelloVersion >> unload [
 { #category : 'querying' }
 MetacelloVersion >> versionNumber [
 
-	^versionNumber
-]
-
-{ #category : 'accessing' }
-MetacelloVersion >> versionNumber: aVersionNumber [
-
-	versionNumber := aVersionNumber
-]
-
-{ #category : 'querying' }
-MetacelloVersion >> versionNumberFrom: aString [
-    ^ self versionNumber class fromString: aString
+	^ versionNumber ifNil: [ MetacelloVersionNumber fromString: 'baseline' ]
 ]
 
 { #category : 'accessing' }
 MetacelloVersion >> versionSpec [
 
 	^self spec
-]
-
-{ #category : 'querying' }
-MetacelloVersion >> versionString [
-
-	^self versionNumber versionString
 ]
 
 { #category : 'comparing' }

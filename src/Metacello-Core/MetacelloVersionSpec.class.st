@@ -226,7 +226,7 @@ MetacelloVersionSpec >> importArray [
 { #category : 'printing' }
 MetacelloVersionSpec >> label [
 
-	^self versionString, ' [', self projectLabel, ']'
+	^ 'baseline [' , self projectLabel , ']'
 ]
 
 { #category : 'accessing' }
@@ -509,16 +509,4 @@ MetacelloVersionSpec >> specsNamed: packageAndProjectNames projectDo: projectBlo
 	map := self packages map.
 	packageAndProjectNames do: [ :name |
 		(map at: name ifAbsent: [  ]) ifNotNil: [ :pkgSpec | pkgSpec projectDo: projectBlock packageDo: packageBlock groupDo: groupBlock ] ]
-]
-
-{ #category : 'private' }
-MetacelloVersionSpec >> versionNumber [
-
-	^ MetacelloVersionNumber fromString: self versionString
-]
-
-{ #category : 'querying' }
-MetacelloVersionSpec >> versionString [
-
-	^ self project singletonVersionName
 ]
