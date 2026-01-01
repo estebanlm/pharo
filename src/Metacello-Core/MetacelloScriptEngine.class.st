@@ -22,18 +22,7 @@ MetacelloScriptEngine class >> baseNameOf: className [
 ]
 
 { #category : 'actions api' }
-MetacelloScriptEngine >> do: aBlock required: required [
-
-	^ self
-		  do: aBlock
-		  required: required
-		  onProjectDownGrade: [ :ex :existing :new | ex allowEvenIfLocked ]
-		  onProjectUpgrade: [ :ex :existing :new | ex allowEvenIfLocked ]
-		  commitIfSuccess: false
-]
-
-{ #category : 'actions api' }
-MetacelloScriptEngine >> do: aBlock required: required onProjectDownGrade: onDownGradeBlock onProjectUpgrade: onUpgradeBlock commitIfSuccess: aBoolean [
+MetacelloScriptEngine >> do: aBlock required: required commitIfSuccess: aBoolean [
 
 	MetacelloProjectRegistration
 		copyRegistryDuring: [
@@ -41,8 +30,8 @@ MetacelloScriptEngine >> do: aBlock required: required onProjectDownGrade: onDow
 						| versionSpec projectSpec requiredArray |
 						self validateProjectSpec.
 						[ projectSpec := (self lookupProjectSpecFor: self projectReferenceSpec) copy ]
-							on: MetacelloAllowProjectDowngrade , MetacelloAllowProjectUpgrade
-							do: [ :notification | notification handleOnDownGrade: onDownGradeBlock onUpgrade: onUpgradeBlock ].
+							on: MetacelloAllowProjectUpgrade
+							do: [ :notification | notification resume: notification newProjectRegistration ].
 
 						projectSpec loads: required.
 						projectSpec ensureProjectLoadedWithEngine: self.
@@ -64,11 +53,9 @@ MetacelloScriptEngine >> doLoadProjectSpecFrom: aMetacelloPackageSpec [
 MetacelloScriptEngine >> fetch: required [
 
 	^ self
-		  do: [ :versionSpec :requiredArray :projectSpec |
-			  versionSpec
-				  doFetchRequiredFromArray: requiredArray
-				  withEngine: self ]
+		  do: [ :versionSpec :requiredArray :projectSpec | versionSpec doFetchRequiredFromArray: requiredArray withEngine: self ]
 		  required: required
+		  commitIfSuccess: false
 ]
 
 { #category : 'actions api' }
@@ -125,18 +112,15 @@ MetacelloScriptEngine >> handleLock: exception [
 MetacelloScriptEngine >> handleNotificationsForAction: actionBlock [
 
 	[
-	[
-	actionBlock
-		on: MetacelloAllowProjectDowngrade , MetacelloAllowProjectUpgrade
-			, MetacelloAllowConflictingProjectUpgrade
-		do: [ :ex | "option handlers need to be outermost set of handlers ... last line of defense before users are involved"
-			ex handleResolutionFor: self ] ]
-		on: MetacelloAllowLockedProjectChange
-		do: [ :ex | "MetacelloAllowLockedProjectChange need to be outermost handler ... since it is signaled from second line of handlers"
+		[
+			actionBlock
+				on: MetacelloAllowProjectUpgrade , MetacelloAllowConflictingProjectUpgrade
+				do: [ :ex | "option handlers need to be outermost set of handlers ... last line of defense before users are involved" ex handleResolutionFor: self ] ]
+			on: MetacelloAllowLockedProjectChange
+			do: [ :ex | "MetacelloAllowLockedProjectChange need to be outermost handler ... since it is signaled from second line of handlers"
 			ex handleResolutionFor: self ] ]
 		on: Warning
-		do: [ :ex | "Warning is absolute outermost handler"
-			self handleWarning: ex ]
+		do: [ :ex | "Warning is absolute outermost handler" self handleWarning: ex ]
 ]
 
 { #category : 'handlers' }
@@ -189,14 +173,6 @@ MetacelloScriptEngine >> list [
 
 { #category : 'actions api' }
 MetacelloScriptEngine >> load: required [
-    self
-        load: required
-        onProjectDownGrade: [ :ex :existing :new | ex allowEvenIfLocked ]
-        onProjectUpgrade: [ :ex :existing :new | ex allowEvenIfLocked ]
-]
-
-{ #category : 'actions api' }
-MetacelloScriptEngine >> load: required onProjectDownGrade: onDownGradeBlock onProjectUpgrade: onUpgradeBlock [
 
 	self
 		do: [ :versionSpec :requiredArray :projectSpec |
@@ -205,8 +181,8 @@ MetacelloScriptEngine >> load: required onProjectDownGrade: onDownGradeBlock onP
 				self root: result.
 				MetacelloProjectRegistration
 					registrationForProjectSpec: projectSpec
-					ifPresent: [ :existing |
-							existing copyOnWrite: [ :existingCopy |
+					ifPresent: [ :existing1 |
+							existing1 copyOnWrite: [ :existingCopy |
 									existingCopy
 										loadedInImage: true;
 										merge: projectSpec asProjectRegistration ] ]
@@ -215,8 +191,6 @@ MetacelloScriptEngine >> load: required onProjectDownGrade: onDownGradeBlock onP
 								loadedInImage: true;
 								registerProject ] ]
 		required: required
-		onProjectDownGrade: onDownGradeBlock
-		onProjectUpgrade: onUpgradeBlock
 		commitIfSuccess: true
 ]
 
@@ -299,11 +273,9 @@ MetacelloScriptEngine >> projectReferenceSpec: aProjectSpec [
 MetacelloScriptEngine >> record: required [
 
 	^ self
-		  do: [ :versionSpec :requiredArray :projectSpec |
-			  versionSpec
-				  doRecordRequiredFromArray: requiredArray
-				  withEngine: self ]
+		  do: [ :versionSpec :requiredArray :projectSpec | versionSpec doRecordRequiredFromArray: requiredArray withEngine: self ]
 		  required: required
+		  commitIfSuccess: false
 ]
 
 { #category : 'actions api' }
@@ -328,10 +300,7 @@ MetacelloScriptEngine >> resolvePresentProject: existingRegistration new: newReg
 		  ifTrue: [
 				  ((existingRegistration canUpgradeTo: newRegistration)
 					   ifTrue: [ MetacelloAllowProjectUpgrade new ]
-					   ifFalse: [
-							   (existingRegistration canDowngradeTo: newRegistration)
-								   ifTrue: [ MetacelloAllowProjectDowngrade new ]
-								   ifFalse: [ MetacelloAllowConflictingProjectUpgrade new ] ])
+					   ifFalse: [ MetacelloAllowConflictingProjectUpgrade new ])
 					  existingProjectRegistration: existingRegistration;
 					  newProjectRegistration: newRegistration;
 					  signal ]
