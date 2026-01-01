@@ -11,8 +11,7 @@ Class {
 		'operator',
 		'postLoadDoIt',
 		'className',
-		'mutable',
-		'projectInitialized'
+		'mutable'
 	],
 	#category : 'Metacello-Core-Specs',
 	#package : 'Metacello-Core',
@@ -285,11 +284,10 @@ MetacelloProjectSpec >> currentlyLoadedClassesInVersion [
 
 { #category : 'loading' }
 MetacelloProjectSpec >> ensureProjectLoadedWithEngine: anEngine [
-	"Ensure that the MetacelloProject is loaded in image"
+	"Ensure that the MetacelloProject version is built (We downloaded the baseline and we executed it to build a MetacelloVersion"
 
-	(self projectInitialized and: [ (self isMutable and: [ anEngine ignoreImage ]) not ]) ifTrue: [ ^ self ].
+	(self version isNotNil and: [ (self isMutable and: [ anEngine ignoreImage ]) not ]) ifTrue: [ ^ self ].
 
-	projectInitialized := true.
 	project := anEngine loader loadProject: self
 ]
 
@@ -351,13 +349,6 @@ MetacelloProjectSpec >> hasRepository [
 { #category : 'mutability' }
 MetacelloProjectSpec >> immutable [
     mutable := false
-]
-
-{ #category : 'initialization' }
-MetacelloProjectSpec >> initialize [
-
-	super initialize.
-	projectInitialized := false
 ]
 
 { #category : 'scripting' }
@@ -580,14 +571,6 @@ MetacelloProjectSpec >> project: aMetacelloProject [
 { #category : 'visiting' }
 MetacelloProjectSpec >> projectDo: projectBlock packageDo: packageBlock groupDo: groupBlock [
     projectBlock value: self
-]
-
-{ #category : 'accessing' }
-MetacelloProjectSpec >> projectInitialized [
-	"Cyril: I first though that we could just do `self version isNotNil` instead of this, but in fact we cannot. The reason is that for dependencies we first create a MetacelloProjectSpec pointing to the root MetacelloProject instead of a project dedicated to the dependency. Then we create the right project and we set it when we set this variable to true. 
-	In the future we should simplify the code to create dependences without any project spec. Then I could be implemented as simply as `self project isNotNil` which would be much better because if we still ded not load "
-
-	^ projectInitialized
 ]
 
 { #category : 'printing' }
