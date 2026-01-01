@@ -44,11 +44,6 @@ MCRepository class >> newRepositoryFromSpec: aRepositorySpec [
 ]
 
 { #category : '*Metacello-Core' }
-MCRepository >> projectVersion: aString [
-    "noop"
-]
-
-{ #category : '*Metacello-Core' }
 MCRepository >> repositoryBranchName [
   "extract a branch name from the repository ... if possible"
 

@@ -5,7 +5,7 @@ Class {
 		'loadedInImage',
 		'locked',
 		'mutable',
-		'versionInfo',
+		'versionString',
 		'projectSpec'
 	],
 	#classVars : [
@@ -166,6 +166,13 @@ MetacelloProjectRegistration >> currentlyLoadedClassesInProject [
 	^ self projectSpec currentlyLoadedClassesInVersion asSet
 ]
 
+{ #category : 'initialization' }
+MetacelloProjectRegistration >> ensureVersionString: anObject [
+	"set versionString, only if it does not already have avalue"
+
+	versionString ifNil: [ self versionString: anObject ]
+]
+
 { #category : 'testing' }
 MetacelloProjectRegistration >> hasLoadConflicts: aProjectRegistration [
 
@@ -219,7 +226,7 @@ MetacelloProjectRegistration >> merge: aProjectRegistration [
 
 	self shouldBeMutable.
 	projectSpec := aProjectRegistration projectSpec.
-	self versionInfo versionString: projectSpec repositoryVersionString
+	versionString := projectSpec repositoryVersionString
 ]
 
 { #category : 'mutability' }
@@ -273,11 +280,7 @@ MetacelloProjectRegistration >> projectSpec: anObject [
 { #category : 'accessing' }
 MetacelloProjectRegistration >> projectVersion [
 
-	^ self versionInfo projectVersion ifNil: [
-			  | version |
-			  version := self projectSpec version.
-			  self versionInfo projectVersion: version.
-			  version ]
+	^ self projectSpec version
 ]
 
 { #category : 'registration' }
@@ -312,12 +315,13 @@ MetacelloProjectRegistration >> version [
 ]
 
 { #category : 'accessing' }
-MetacelloProjectRegistration >> versionInfo [
+MetacelloProjectRegistration >> versionString [
 
-	^ versionInfo ifNil: [ versionInfo := MetacelloProjectRegistrationVersionInfo new ]
+	^ versionString
 ]
 
 { #category : 'accessing' }
-MetacelloProjectRegistration >> versionInfo: aMetacelloProjectRegistrationVersionInfo [
-  versionInfo := aMetacelloProjectRegistrationVersionInfo
+MetacelloProjectRegistration >> versionString: anObject [
+
+	versionString := anObject
 ]
