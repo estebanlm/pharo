@@ -9,8 +9,7 @@ Class {
 		'dir',
 		'ddb99',
 		'ddb09',
-		'ddb10',
-		'vers'
+		'ddb10'
 	],
 	#category : 'FileSystem-Core-Tests-Base',
 	#package : 'FileSystem-Core-Tests',
@@ -41,7 +40,7 @@ FileVersionnerTest >> setUp [
 { #category : 'tests - utilities' }
 FileVersionnerTest >> testExtractVersionWhenExtensionIsEmpty [
 
-	| ref |
+	| ref vers |
 	ref := (fileSystem / 'BD.10') ensureCreateFile.
 	self assert: ref fullName equals: '/BD.10'.
 	vers := (NewFileVersionner from: ref).
@@ -52,7 +51,7 @@ FileVersionnerTest >> testExtractVersionWhenExtensionIsEmpty [
 { #category : 'tests - utilities' }
 FileVersionnerTest >> testExtractVersionWhenVersionIsAbsent [
 
-	| ref |
+	| ref vers |
 	ref := (fileSystem / 'BD..md') ensureCreateFile.
 	self assert: ref fullName equals: '/BD..md'.
 	vers := NewFileVersionner from: ref.
@@ -63,7 +62,7 @@ FileVersionnerTest >> testExtractVersionWhenVersionIsAbsent [
 { #category : 'tests - utilities' }
 FileVersionnerTest >> testExtractVersionWhenVersionIsAsBasename [
 
-	| ref |
+	| ref vers |
 	ref := (fileSystem / '11.a.12') ensureCreateFile.
 	self assert: ref fullName equals: '/11.a.12'.
 	vers := NewFileVersionner from: ref.
@@ -80,7 +79,7 @@ FileVersionnerTest >> testExtractVersionWhenVersionIsAsBasename [
 { #category : 'tests - utilities' }
 FileVersionnerTest >> testExtractVersionWhenVersionIsAsExtension [
 
-	| ref |
+	| ref vers |
 	ref := (fileSystem / 'BD.a.12') ensureCreateFile.
 	self assert: ref fullName equals: '/BD.a.12'.
 	vers := NewFileVersionner from: ref.
@@ -91,7 +90,7 @@ FileVersionnerTest >> testExtractVersionWhenVersionIsAsExtension [
 { #category : 'tests - utilities' }
 FileVersionnerTest >> testExtractVersionWhenVersionIsBogus [
 
-	| ref |
+	| ref vers |
 	ref := (fileSystem / 'BD.a.md') ensureCreateFile.
 	self assert: ref fullName equals: '/BD.a.md'.
 	vers := NewFileVersionner from: ref.
@@ -102,6 +101,7 @@ FileVersionnerTest >> testExtractVersionWhenVersionIsBogus [
 { #category : 'tests - utilities' }
 FileVersionnerTest >> testExtractVersionWhenVersionIsDefined [
 
+	| vers |
 	self assert: ddb10 fullName equals: '/dir/BD.10.md'.
 	vers := NewFileVersionner from: ddb10.
 	vers useBasenameNumberExtension.
@@ -111,7 +111,7 @@ FileVersionnerTest >> testExtractVersionWhenVersionIsDefined [
 { #category : 'tests - utilities' }
 FileVersionnerTest >> testExtractVersionWhenVersionSectionDoesNotExist [
 
-	| ref |
+	| ref vers |
 	ref := (fileSystem / 'BD.md') ensureCreateFile.
 	self assert: ref fullName equals: '/BD.md'.
 	vers := NewFileVersionner from: ref.
@@ -128,12 +128,15 @@ FileVersionnerTest >> testNextVersionOf09Is10 [
 	111
 	"
 	
-	| ref res |
+	| ref res vers |
 	ref := (fileSystem / 'BD.09.md') ensureCreateFile.
 	self assert: ref fullName equals: '/BD.09.md'.
 	self assert: ref isAbsolute.
 	
-	res := (NewFileVersionner from: ref) nextFileReferenceVersion.
+	vers := (NewFileVersionner from: ref).
+	vers useBasenameNumberExtension. 
+	res := vers nextVersionFileReference.
+
 	self 
 		assert: res fullName 
 		equals:  '/BD.10.md'.
@@ -144,10 +147,12 @@ FileVersionnerTest >> testNextVersionOf09Is10 [
 { #category : 'tests - next version' }
 FileVersionnerTest >> testNextVersionOf10Is11 [
 
+	| vers |
 	vers := NewFileVersionner from: ddb10.
+	vers useBasenameNumberExtension.
 	self assert: ddb10 fullName equals: '/dir/BD.10.md'.
 	self 
-		assert: vers nextFileReferenceVersion fullName
+		assert: vers nextVersionFileReference fullName
 		equals: '/dir/BD.11.md' asFileReference fullName
 ]
 
@@ -160,11 +165,14 @@ FileVersionnerTest >> testNextVersionOf1Is2 [
 	111
 	"
 	
-	| ref |
+	| ref vers |
 	ref := (fileSystem / 'BD.1.md') ensureCreateFile.
 	self assert: ref fullName equals: '/BD.1.md'.
+	
+	vers := NewFileVersionner from: ref.
+	vers useBasenameNumberExtension.
 	self 
-		assert: (NewFileVersionner from: ref) nextFileReferenceVersion fullName 
+		assert: vers nextVersionFileReference fullName 
 		equals:  '/BD.2.md'.
 ]
 
@@ -176,28 +184,14 @@ FileVersionnerTest >> testNextVersionOfNoExtension [
 	self assert: ref fullName equals: '/BD'.
 
 	should := false.	
-	[ (NewFileVersionner from: ref) nextFileReferenceVersion ]
+	[ 
+	| vers | 
+	vers := NewFileVersionner from: ref.
+	vers useBasenameNumberExtension. 
+	vers nextVersionFileReference ]
 		on: Error
 		do: [ :ex |
-			self assert: ex description equals: 'Error: /BD second element of basename is not a number.'. 
-			should := true. ].
-		
-	self assert: should.
-	
-]
-
-{ #category : 'tests - next version' }
-FileVersionnerTest >> testNextVersionOfNoNumber [
-	
-	| ref should |
-	ref := (fileSystem / 'BD.md') ensureCreateFile.
-	self assert: ref fullName equals: '/BD.md'.
-
-	should := false.	
-	[ (NewFileVersionner from: ref) nextFileReferenceVersion ]
-		on: Error
-		do: [ :ex |
-			self assert: ex description equals: 'Error: /BD.md second element of basename is not a number.'. 
+			self assert: ex description equals: 'Error: /BD structure does not follow the one of the pattern: #(#basename #number #extension)'. 
 			should := true. ].
 		
 	self assert: should.
@@ -207,17 +201,54 @@ FileVersionnerTest >> testNextVersionOfNoNumber [
 { #category : 'tests - next version' }
 FileVersionnerTest >> testNextVersionOfNoNumber2 [
 	
-	| ref should |
-	self flag: #ThisOneShouldBeOk.
+	| ref vers |
 	
 	ref := (fileSystem / 'BD.10') ensureCreateFile.
 	self assert: ref fullName equals: '/BD.10'.
 
+	vers := NewFileVersionner from: ref.
+	vers useBasenameNumber.
+	self assert: vers nextVersionFileReference fullName equals:  '/BD.11'.
+]
+
+{ #category : 'tests - next version' }
+FileVersionnerTest >> testNextVersionOfNoNumberBaseNumber [
+	
+	| ref should |
+	ref := (fileSystem / 'BD.md') ensureCreateFile.
+	self assert: ref fullName equals: '/BD.md'.
+
 	should := false.	
-	[ (NewFileVersionner from: ref) nextFileReferenceVersion ]
+	[ 
+	| vers |
+	vers := NewFileVersionner from: ref.
+	vers useBasenameNumber.
+	vers nextVersionFileReference ]
 		on: Error
 		do: [ :ex |
-			self assert: ex description equals: 'Error: /BD.10 second element of basename is not a number.'. 
+			self assert: ex description equals: 'Error: /BD.md second element is not a number.'. 
+			should := true. ].
+		
+	self assert: should.
+	
+]
+
+{ #category : 'tests - next version' }
+FileVersionnerTest >> testNextVersionOfNoNumberBaseNumberExt [
+	
+	| ref should |
+	ref := (fileSystem / 'BD.md') ensureCreateFile.
+	self assert: ref fullName equals: '/BD.md'.
+
+	should := false.	
+	[ 
+	| vers |
+	vers := NewFileVersionner from: ref.
+	vers useBasenameNumberExtension.
+	vers nextVersionFileReference ]
+		on: Error
+		do: [ :ex |
+			self assert: ex description equals: 'Error: /BD.md structure does not follow the one of the pattern: #(#basename #number #extension)'. 
 			should := true. ].
 		
 	self assert: should.
@@ -232,10 +263,14 @@ FileVersionnerTest >> testNextVersionOfNumberBeingEmpty [
 	self assert: ref fullName equals: '/BD..md'.
 
 	should := false.	
-	[ (NewFileVersionner from: ref) nextFileReferenceVersion ]
+	[ 
+	| vers |
+	vers := NewFileVersionner from: ref.
+	vers useBasenameNumberExtension.
+	vers nextVersionFileReference ]
 		on: Error
 		do: [ :ex |
-			self assert: ex description equals: 'Error: /BD..md second element of basename is not a number.'. 
+			self assert: ex description equals: 'Error: /BD..md structure does not follow the one of the pattern: #(#basename #number #extension)'. 
 			should := true. ].
 		
 	self assert: should.
@@ -245,16 +280,38 @@ FileVersionnerTest >> testNextVersionOfNumberBeingEmpty [
 { #category : 'tests - next version' }
 FileVersionnerTest >> testNextVersionOfNumberNotANumber [
 	
-	| ref should |
+	| ref should vers |
 	ref := (fileSystem / 'BD.a.md') ensureCreateFile.
 	self assert: ref fullName equals: '/BD.a.md'.
 
 	should := false.	
-	[ (NewFileVersionner from: ref) nextFileReferenceVersion ]
+	[ vers := NewFileVersionner from: ref.
+	vers useBasenameNumberExtension.
+	vers nextVersionFileReference ]
 		on: Error
 		do: [ :ex |
-			self assert: ex description equals: 'Error: /BD.a.md second element of basename is not a number.'. 
+			self assert: ex description equals: 'Error: /BD.a.md second element is not a number.'. 
 			should := true. ].
+		
+	self assert: should.
+	
+]
+
+{ #category : 'tests - next version' }
+FileVersionnerTest >> testNextVersionOfWhenNoPattern [
+	
+	| ref should |
+	ref := (fileSystem / 'BD.10.md') ensureCreateFile.
+
+	should := false.	
+	[ 
+	| vers |
+	vers := NewFileVersionner from: ref.
+	vers nextVersionFileReference ]
+		on: Error
+		do: [ :ex |
+			self assert: ex description equals: 'Error: no pattern set!'. 
+			should := true ].
 		
 	self assert: should.
 	

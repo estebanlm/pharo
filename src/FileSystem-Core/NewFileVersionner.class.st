@@ -67,24 +67,27 @@ NewFileVersionner >> indexOfNumber [
 ]
 
 { #category : 'API' }
-NewFileVersionner >> nextFileReferenceVersion [
+NewFileVersionner >> nextVersionFileReference [
+	"Assumes a file (or folder) name follows the pattern prior.number.extension pr prior.number, 
+	increment the version number and answer the new filereference. If the pattern is not set, respected or if a version number is not found, raise an error."
+	
 
-	"Assumes a file (or folder) name follows the pattern prior.number.extension, increment the version number and answer the new filereference. If a version number is not found, raise an error"
-
-	|  tokenizedFilename version |
+	|  tokenizedFilename version extension |
 	pattern ifNil: [  Error signal: 'no pattern set!' ].
-	
+
 	tokenizedFilename := fileReference basename findTokens: '.'.
-	version := tokenizedFilename size = 3
-		ifFalse: [ 0 ]
-		ifTrue: [ 
-			| numberOrNil |
-			numberOrNil := NumberParser parse: (tokenizedFilename at: 2) onError: [ nil ].
-			numberOrNil ifNil: [ 0 ] ifNotNil: [ :n | n ]].
-	version isZero 
-		ifTrue: [ Error new signal: fileReference fullName ,  ' second element of basename is not a number.'].
+	(tokenizedFilename size = pattern size)
+		ifFalse: [ Error new signal: fileReference fullName ,  ' structure does not follow the one of the pattern: ', pattern asString ].
+	 
+	version := NumberParser parse: (tokenizedFilename at: (self indexOfNumber)) onError: [ nil ].
+	version ifNil: [ Error new signal: fileReference fullName ,  ' second element is not a number.'].
 	
-	 ^ ( fileReference parent / (tokenizedFilename first , '.' , (version + 1) asString , '.' ,  fileReference extension)) asFileReference
+	extension := fileReference extension = (tokenizedFilename at: (self indexOfNumber))
+		ifTrue: [ '' ]
+		ifFalse: [ '.' ,  fileReference extension ].
+		
+	
+	 ^ ( fileReference parent / (tokenizedFilename first , '.' , (version + 1) asString , extension )) asFileReference
 ]
 
 { #category : 'pattern' }
