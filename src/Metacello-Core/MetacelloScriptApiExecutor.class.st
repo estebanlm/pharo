@@ -21,7 +21,7 @@ MetacelloScriptApiExecutor >> executeString: aString do: projectSpecBlock [
 	| projectSpec spec |
 	singleRoot ifNil: [ self singleRoot: true ].
 
-	projectSpec := MetacelloProject new projectSpec
+	projectSpec := (MetacelloProjectSpec project: MetacelloProject new)
 		               name: aString;
 		               className: 'BaselineOf' , aString;
 		               yourself.

@@ -190,12 +190,6 @@ MetacelloProject >> projectPackage [
 	^ nil
 ]
 
-{ #category : 'spec classes' }
-MetacelloProject >> projectSpec [
-
-	^ MetacelloProjectSpec project: self
-]
-
 { #category : 'accessing' }
 MetacelloProject >> repositoryDescription [
 	^ repositoryDescription

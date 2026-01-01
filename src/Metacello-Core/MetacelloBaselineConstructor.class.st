@@ -338,9 +338,7 @@ MetacelloBaselineConstructor >> project: aString [
 MetacelloBaselineConstructor >> project: aString copyFrom: oldSpecName with: aBlock [
 
 	| spec projectSpec |
-	projectSpec := self project projectSpec
-		               name: aString;
-		               yourself.
+	projectSpec := MetacelloProjectSpec named: aString.
 	spec := MetacelloProjectReferenceSpec projectReference: projectSpec.
 	self root packages copy: oldSpecName to: spec.
 	self with: projectSpec during: aBlock
@@ -350,9 +348,7 @@ MetacelloBaselineConstructor >> project: aString copyFrom: oldSpecName with: aBl
 MetacelloBaselineConstructor >> project: aString overrides: aBlock [
 
 	| spec projectSpec |
-	projectSpec := self project projectSpec
-		               name: aString;
-		               yourself.
+	projectSpec := MetacelloProjectSpec named: aString.
 	spec := MetacelloProjectReferenceSpec projectReference: projectSpec.
 	self root packages add: spec.
 	self with: projectSpec during: aBlock
@@ -362,10 +358,7 @@ MetacelloBaselineConstructor >> project: aString overrides: aBlock [
 MetacelloBaselineConstructor >> project: aString with: aBlockOrString [
 
 	| projectSpec spec |
-	projectSpec := self project projectSpec
-		               name: aString;
-		               yourself.
-
+	projectSpec := MetacelloProjectSpec named: aString.
 	spec := MetacelloProjectReferenceSpec projectReference: projectSpec.
 	self root packages merge: spec.
 

@@ -11,8 +11,8 @@ Class {
 		'operator',
 		'postLoadDoIt',
 		'className',
-		'projectInitialized',
-		'mutable'
+		'mutable',
+		'projectInitialized'
 	],
 	#category : 'Metacello-Core-Specs',
 	#package : 'Metacello-Core',
@@ -26,6 +26,14 @@ MetacelloProjectSpec class >> initialize [
 	self deprecatedAliases:
 		#( MetacelloMCBaselineOfProjectSpec MetacelloConfigurationOfProjectSpec MetacelloCypressBaselineProjectSpec MetacelloMCNamelessProjectSpec
 		   MetacelloNamelessProjectSpec MetacelloBaselineOfProjectSpec )
+]
+
+{ #category : 'instance creation' }
+MetacelloProjectSpec class >> named: aString [
+
+	^ self new
+		  name: aString;
+		  yourself
 ]
 
 { #category : 'instance creation' }
@@ -717,11 +725,11 @@ MetacelloProjectSpec >> version [
 { #category : 'querying' }
 MetacelloProjectSpec >> versionOrNil [
 
-	^ self project version
+	^ self project ifNotNil: [ :aProject | aProject version ]
 ]
 
 { #category : 'querying' }
 MetacelloProjectSpec >> versionString [
 
-	^ self version ifNotNil: [ :v | v versionString ]
+	^ self versionOrNil ifNotNil: [ :v | v versionString ]
 ]
