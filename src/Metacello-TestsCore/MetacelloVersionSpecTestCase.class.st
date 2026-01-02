@@ -31,7 +31,7 @@ MetacelloVersionSpecTestCase >> testVersionMergeSpec2 [
 		            repository: 'http://example.com/repository' username: 'dkh' password: 'password';
 		            repository: '/opt/gemstone/repository';
 		            yourself.
-	versionA packages
+	versionA packagesSpec
 		merge: (self packageSpec
 				 name: 'Package';
 				 requires: 'AnotherPackage';
@@ -50,7 +50,7 @@ MetacelloVersionSpecTestCase >> testVersionMergeSpec2 [
 		            repository: 'http://example.com/repository' username: 'DaleHenrichs' password: 'secret';
 		            repository: '/opt/gemstone/repo';
 		            yourself.
-	versionB packages
+	versionB packagesSpec
 		merge: (self packageSpec
 				 name: 'Package';
 				 requires: 'AndAnotherPackage';
@@ -74,9 +74,9 @@ MetacelloVersionSpecTestCase >> testVersionMergeSpec2 [
 	self assert: repository type equals: 'http'.
 	self assert: repository username equals: 'DaleHenrichs'.
 	self assert: repository password equals: 'secret'.
-	package := version packages packageNamed: 'Package' ifAbsent: [ self assert: false ].
+	package := version packagesSpec packageNamed: 'Package' ifAbsent: [ self assert: false ].
 	self assert: package name equals: 'Package'.
-	projectReferenceSpec := version packages packageNamed: 'Project' ifAbsent: [ self assert: false ].
+	projectReferenceSpec := version packagesSpec packageNamed: 'Project' ifAbsent: [ self assert: false ].
 	self assert: projectReferenceSpec projectName equals: 'Project'.
 	projectReferenceSpec repositories map at: '/opt/gemstone/repository' ifPresent: [ self assert: false ].
 	repository := projectReferenceSpec repositories map at: '/opt/gemstone/repo' ifAbsent: [ self assert: false ].
@@ -85,7 +85,7 @@ MetacelloVersionSpecTestCase >> testVersionMergeSpec2 [
 	self assert: repository type equals: 'http'.
 	self assert: repository username equals: 'DaleHenrichs'.
 	self assert: repository password equals: 'secret'.
-	group := version packages packageNamed: 'Platform' ifAbsent: [ self assert: false ].
+	group := version packagesSpec packageNamed: 'Platform' ifAbsent: [ self assert: false ].
 	self assert: (group includes includes: 'Core').
 	self assert: (group includes includes: 'Tests')
 ]
@@ -106,41 +106,37 @@ MetacelloVersionSpecTestCase >> testVersionSpec [
 
 { #category : 'tests' }
 MetacelloVersionSpecTestCase >> testVersionSpec2 [
+
 	| version projectReferenceSpec group package repository |
 	version := self versionSpec
-		repository: 'http://example.com/repository' username: 'dkh' password: 'password';
-		repository: '/opt/gemstone/repository';
-		yourself.
-	version packages
-		add:
-			(self packageSpec
-				name: 'Package';
-				requires: 'AnotherPackage';
-				includes: 'IncludedPackage';
-				preLoadDoIt: #preLoadDoIt;
-				postLoadDoIt: #postLoadDoIt;
-				yourself);
-		add:
-			(self packageSpec
-				name: 'AnotherPackage';
-				yourself);
-		add:
-			(self packageSpec
-				name: 'IncludedPackage';
-				yourself);
-		add:
-			(self groupSpec
-				name: 'Platform';
-				includes: 'Core';
-				yourself);
-		add:
-			(self projectSpec
-				name: 'Project';
-				className: 'ConfigurationOfProjectA';
-				loads: #('MyPackage' 'MyTests');
-				preLoadDoIt: #preLoadDoItB;
-				postLoadDoIt: #postLoadDoItB;
-				yourself);
+		           repository: 'http://example.com/repository' username: 'dkh' password: 'password';
+		           repository: '/opt/gemstone/repository';
+		           yourself.
+	version packagesSpec
+		add: (self packageSpec
+				 name: 'Package';
+				 requires: 'AnotherPackage';
+				 includes: 'IncludedPackage';
+				 preLoadDoIt: #preLoadDoIt;
+				 postLoadDoIt: #postLoadDoIt;
+				 yourself);
+		add: (self packageSpec
+				 name: 'AnotherPackage';
+				 yourself);
+		add: (self packageSpec
+				 name: 'IncludedPackage';
+				 yourself);
+		add: (self groupSpec
+				 name: 'Platform';
+				 includes: 'Core';
+				 yourself);
+		add: (self projectSpec
+				 name: 'Project';
+				 className: 'ConfigurationOfProjectA';
+				 loads: #( 'MyPackage' 'MyTests' );
+				 preLoadDoIt: #preLoadDoItB;
+				 postLoadDoIt: #postLoadDoItB;
+				 yourself);
 		yourself.
 	repository := version repositories map at: '/opt/gemstone/repository' ifAbsent: [ self assert: false ].
 	self assert: repository type equals: 'directory'.
@@ -148,24 +144,11 @@ MetacelloVersionSpecTestCase >> testVersionSpec2 [
 	self assert: repository type equals: 'http'.
 	self assert: repository username equals: 'dkh'.
 	self assert: repository password equals: 'password'.
-	package := version packages packageNamed: 'Package' ifAbsent: [ self assert: false ].
+	package := version packagesSpec packageNamed: 'Package' ifAbsent: [ self assert: false ].
 	self assert: package name equals: 'Package'.
-	group := version packages packageNamed: 'Platform' ifAbsent: [ self assert: false ].
+	group := version packagesSpec packageNamed: 'Platform' ifAbsent: [ self assert: false ].
 	self assert: (group includes includes: 'Core').
-	projectReferenceSpec := version packages packageNamed: 'Project' ifAbsent: [ self assert: false ].
+	projectReferenceSpec := version packagesSpec packageNamed: 'Project' ifAbsent: [ self assert: false ].
 	self assert: projectReferenceSpec projectName equals: 'Project'.
 	version projectDo: [ :prjct | prjct == projectReferenceSpec ] packageDo: [ :pkg | pkg == package ] groupDo: [ :grp | grp == group ]
-]
-
-{ #category : 'tests' }
-MetacelloVersionSpecTestCase >> testVersionSpecCreateVersion [
-
-	| spec version |
-	spec := self versionSpec
-		        preLoadDoIt: #preLoadDoIt;
-		        postLoadDoIt: #postLoadDoIt;
-		        yourself.
-	version := spec createVersion.
-	self assert: version class identicalTo: MetacelloVersion.
-	self assert: version spec identicalTo: spec
 ]

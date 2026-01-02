@@ -4,9 +4,9 @@ Class {
 	#instVars : [
 		'projectCache'
 	],
-	#category : 'Metacello-Core-Gofer',
+	#category : 'Metacello-Core-Monticello',
 	#package : 'Metacello-Core',
-	#tag : 'Gofer'
+	#tag : 'Monticello'
 }
 
 { #category : 'accessing' }

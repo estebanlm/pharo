@@ -93,8 +93,8 @@ spec
 MetacelloReferenceTestCase >> testReferenceConfig [
 
 	| spec map string expected |
-	spec := MetacelloReferenceBaseline project version spec.
-	map := spec packages map.
+	spec := MetacelloReferenceBaseline project version.
+	map := spec packagesSpec map.
 	string := self conditionResult: (map at: 'Example-AddOn') printString.
 	expected := 'spec 
 	name: ''Example-AddOn'';
@@ -128,7 +128,7 @@ MetacelloReferenceTestCase >> testReferenceConfigPrintString [
 
 	| version string expected x y |
 	version := MetacelloReferenceBaseline project version.
-	string := self conditionResult: version spec printString.
+	string := self conditionResult: version printString.
 	expected := self expectedPrintString.
 	1 to: string size do: [ :i |
 			(i > expected size or: [ (string at: i) ~= (expected at: i) ]) ifTrue: [

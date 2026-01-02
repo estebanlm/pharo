@@ -174,7 +174,7 @@ MetacelloBaselineConstructor >> for: attributeListOrSymbol version: aString [
 { #category : 'api' }
 MetacelloBaselineConstructor >> group: aString overrides: aStringOrCollection [
 
-	self root packages add: (self project groupSpec
+	self root packagesSpec add: (self project groupSpec
 			 name: aString;
 			 includes: aStringOrCollection;
 			 yourself)
@@ -183,7 +183,7 @@ MetacelloBaselineConstructor >> group: aString overrides: aStringOrCollection [
 { #category : 'api' }
 MetacelloBaselineConstructor >> group: aString with: aStringOrCollection [
 
-	self root packages merge: (self project groupSpec
+	self root packagesSpec merge: (self project groupSpec
 			 name: aString;
 			 includes: aStringOrCollection;
 			 yourself)
@@ -258,7 +258,7 @@ MetacelloBaselineConstructor >> on: aConfig project: aProject [
 	self evaluatePragma: pragma.
 	self project attributes do: [ :attribute |
 		(self attributeMap at: attribute ifAbsent: [ ]) ifNotNil: [ :blockList | blockList do: [ :block | self with: versionSpec during: block ] ] ].
-	self project version: versionSpec createVersion.
+	self project version: versionSpec.
 	self project configuration: aConfig
 ]
 
@@ -272,7 +272,7 @@ MetacelloBaselineConstructor >> operator: anObject [
 { #category : 'api' }
 MetacelloBaselineConstructor >> package: aString [
 
-	self root packages add: (self project packageSpec
+	self root packagesSpec add: (self project packageSpec
 			 name: aString;
 			 yourself)
 ]
@@ -284,7 +284,7 @@ MetacelloBaselineConstructor >> package: aString overrides: aBlock [
 	spec := self project packageSpec
 		        name: aString;
 		        yourself.
-	self root packages add: spec.
+	self root packagesSpec add: spec.
 	self with: spec during: aBlock
 ]
 
@@ -305,7 +305,7 @@ MetacelloBaselineConstructor >> package: packageName with: aBlock [
 		        name: packageName;
 		        yourself.
 
-	self root packages merge: spec.
+	self root packagesSpec merge: spec.
 	aBlock isString
 		ifTrue: [ MetacelloNotification signal: 'Now #package:with: only takes a block as second parameter and not a string.' ]
 		ifFalse: [ self with: spec during: aBlock ]
@@ -341,7 +341,7 @@ MetacelloBaselineConstructor >> project: aString copyFrom: oldSpecName with: aBl
 	| spec projectSpec |
 	projectSpec := MetacelloProjectSpec named: aString.
 	spec := MetacelloProjectReferenceSpec projectReference: projectSpec.
-	self root packages copy: oldSpecName to: spec.
+	self root packagesSpec copy: oldSpecName to: spec.
 	self with: projectSpec during: aBlock
 ]
 
@@ -351,7 +351,7 @@ MetacelloBaselineConstructor >> project: aString overrides: aBlock [
 	| spec projectSpec |
 	projectSpec := MetacelloProjectSpec named: aString.
 	spec := MetacelloProjectReferenceSpec projectReference: projectSpec.
-	self root packages add: spec.
+	self root packagesSpec add: spec.
 	self with: projectSpec during: aBlock
 ]
 
@@ -361,7 +361,7 @@ MetacelloBaselineConstructor >> project: aString with: aBlockOrString [
 	| projectSpec spec |
 	projectSpec := MetacelloProjectSpec named: aString.
 	spec := MetacelloProjectReferenceSpec projectReference: projectSpec.
-	self root packages merge: spec.
+	self root packagesSpec merge: spec.
 
 	self with: projectSpec during: aBlockOrString
 ]
@@ -376,7 +376,7 @@ MetacelloBaselineConstructor >> projectPackage: aBlock [
 { #category : 'api' }
 MetacelloBaselineConstructor >> removeGroup: aString [
 
-	self root packages remove: (self project groupSpec
+	self root packagesSpec remove: (self project groupSpec
 			 name: aString;
 			 yourself)
 ]
@@ -384,7 +384,7 @@ MetacelloBaselineConstructor >> removeGroup: aString [
 { #category : 'api' }
 MetacelloBaselineConstructor >> removePackage: aString [
 
-	self root packages remove: (self project packageSpec
+	self root packagesSpec remove: (self project packageSpec
 			 name: aString;
 			 yourself)
 ]
@@ -392,7 +392,7 @@ MetacelloBaselineConstructor >> removePackage: aString [
 { #category : 'api' }
 MetacelloBaselineConstructor >> removeProject: aString [
 
-	self root packages remove: (MetacelloProjectReferenceSpec projectReference: (self root packageNamed: aString))
+	self root packagesSpec remove: (MetacelloProjectReferenceSpec projectReference: (self root packageNamed: aString))
 ]
 
 { #category : 'api' }

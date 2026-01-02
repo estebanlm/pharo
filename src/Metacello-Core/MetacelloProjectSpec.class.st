@@ -356,16 +356,6 @@ MetacelloProjectSpec >> loadListForVersion: vrsn [
 		  ifFalse: [ self loads ]
 ]
 
-{ #category : 'accessing' }
-MetacelloProjectSpec >> loadPackageList [
-
-	| pkgs |
-	self hasVersion ifFalse: [ ^ #(  ) ].
-	pkgs := OrderedCollection new.
-	(self loadListForVersion: self version) do: [ :nm | pkgs addAll: ((self version packagesForSpecNamed: nm) collect: [ :each | each name ]) ].
-	^ pkgs
-]
-
 { #category : 'querying' }
 MetacelloProjectSpec >> loads [
 	^ loads
@@ -530,7 +520,8 @@ MetacelloProjectSpec >> project: aMetacelloProject [
 
 { #category : 'visiting' }
 MetacelloProjectSpec >> projectDo: projectBlock packageDo: packageBlock groupDo: groupBlock [
-    projectBlock value: self
+
+	projectBlock value: self
 ]
 
 { #category : 'printing' }

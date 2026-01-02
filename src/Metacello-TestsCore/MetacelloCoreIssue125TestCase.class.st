@@ -67,7 +67,7 @@ spec
 spec 
 	group: ''Core'' with: #(''Example Project'' );
 	group: ''Core'' with: #(''Extra Project'' ).'.
-	self assert: expected equals: project version spec printString
+	self assert: expected equals: project version printString
 ]
 
 { #category : 'tests' }
@@ -94,7 +94,7 @@ spec
 spec 
 	group: ''Core'' with: #(''Example Project'' );
 	group: ''Core'' with: #(''Extra Project'' ).'.
-	self assert: expected equals: project version spec printString
+	self assert: expected equals: project version printString
 ]
 
 { #category : 'tests' }
@@ -128,7 +128,7 @@ spec
 	group: ''Core'' with: #(''Example Project'' );
 	group: ''Core'' with: #(''Extra Project'' );
 	group: ''Core'' with: #(''Extra Project'' ).'.
-	self assert: expected equals: project version spec printString
+	self assert: expected equals: project version printString
 ]
 
 { #category : 'tests' }
@@ -146,5 +146,5 @@ spec baseline: ''Example Project'' with: [
 			loads: #(''core'' );
 			repository: ''repository'' ].
 spec group: ''Core'' with: #(''Example Project'' ).'.
-	self assert: expected equals: project version spec printString
+	self assert: expected equals: project version printString
 ]

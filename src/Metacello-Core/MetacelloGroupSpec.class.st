@@ -152,7 +152,7 @@ MetacelloGroupSpec >> resolveToPackagesIn: aVersionSpec andProjects: andProjects
 
 	visited visit: self doing: [ :aSpec |
 		| map |
-		map := aVersionSpec packages map.
+		map := aVersionSpec packagesSpec map.
 		aSpec includes do: [ :pkgName |
 			(aVersionSpec packageNamed: pkgName forMap: map ifAbsent: [  ])
 				projectDo: [ :prj | andProjectsBool ifTrue: [ packages at: prj name put: prj ] ]
