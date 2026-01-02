@@ -20,7 +20,6 @@ MetacelloProjectSpecTestCase >> testProjectMergeSpec [
 	projectB := self projectSpec
 		            name: 'Project';
 		            className: 'ConfigurationOfProjectB';
-		            operator: #<;
 		            loads: #( 'MyPackage' 'MyTests' );
 		            preLoadDoIt: #preLoadDoItB;
 		            postLoadDoIt: #postLoadDoItB;
@@ -28,7 +27,6 @@ MetacelloProjectSpecTestCase >> testProjectMergeSpec [
 	project := projectA mergeSpec: projectB.
 	self assert: project name equals: 'Project'.
 	self assert: project className equals: 'ConfigurationOfProjectB'.
-	self assert: project operator identicalTo: #<.
 	self assert: project loads equals: #( 'MyPackage' 'MyTests' ).
 	self assert: project preLoadDoIt value identicalTo: #preLoadDoItB.
 	self assert: project postLoadDoIt value identicalTo: #postLoadDoItB
@@ -65,26 +63,24 @@ MetacelloProjectSpecTestCase >> testProjectMergeSpec2 [
 
 { #category : 'tests' }
 MetacelloProjectSpecTestCase >> testProjectSpec [
+
 	| project |
 	project := self projectSpec.
 	project
 		name: 'Project';
 		className: 'ConfigurationOfProject';
-		operator: #<;
-		operator: nil;
 		loads: 'MyPackage';
-		loads: #('MyPackage' 'MyTests');
+		loads: #( 'MyPackage' 'MyTests' );
 		preLoadDoIt: #preLoadDoIt;
 		postLoadDoIt: #postLoadDoIt;
 		yourself.
 	self assert: project name equals: 'Project'.
 	self assert: project className equals: 'ConfigurationOfProject'.
-	self assert: project operator identicalTo: #>=.
-	self assert: project loads equals: #('MyPackage' 'MyTests').
+	self assert: project loads equals: #( 'MyPackage' 'MyTests' ).
 	self assert: project preLoadDoIt value identicalTo: #preLoadDoIt.
 	self assert: project postLoadDoIt value identicalTo: #postLoadDoIt.
-	self should: [ project includes: #() ] raise: Error.
-	self should: [ project requires: #() ] raise: Error.
+	self should: [ project includes: #(  ) ] raise: Error.
+	self should: [ project requires: #(  ) ] raise: Error.
 	project projectDo: [ :prjct | self assert: project identicalTo: prjct ] packageDo: [ :ignored | self assert: false ] groupDo: [ :ignored | self assert: false ].
 	self should: [ project preLoadDoIt: '' ] raise: Error.
 	self should: [ project postLoadDoIt: '' ] raise: Error

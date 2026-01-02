@@ -38,19 +38,16 @@ spec
 			className: ''ConfigurationOfUI'';
 			preLoadDoIt: #''preloadForProject'';
 			postLoadDoIt: #''postloadForProject'';
-			operator: #''~>'';
 			loads: #(''UI-Core'' );
 			repository: ''http://www.example.com/r'' ];
 	baseline: ''UI Support'' overrides: [
 		spec
 			className: ''ConfigurationOfUINew'';
-			operator: #''>='';
 			loads: #(''UI-Core'' ''UI-Tests'' );
 			repository: ''http://www.example.com/r'' username: ''foo'' password: ''bar'' ];
 	baseline: ''UI Tests'' copyFrom: ''UI Support'' with: [
 		spec
 			className: ''ConfigurationOfUI'';
-			operator: #''~>'';
 			loads: #(''UI-Core'' ''UI-Tests'' );
 			repository: ''http://www.example.com/r'' ];
 	baseline: ''UI Support'' ;
@@ -122,7 +119,6 @@ MetacelloReferenceTestCase >> testReferenceConfig [
 	projectReference: [
 		spec
 			className: ''ConfigurationOfUINew'';
-			operator: #''>='';
 			loads: #(''UI-Core'' ''UI-Tests'' );
 			repository: ''http://www.example.com/r'' username: ''foo'' password: ''bar'' ].'
 ]

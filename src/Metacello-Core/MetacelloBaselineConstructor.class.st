@@ -262,10 +262,11 @@ MetacelloBaselineConstructor >> on: aConfig project: aProject [
 	self project configuration: aConfig
 ]
 
-{ #category : 'api' }
+{ #category : 'api - old' }
 MetacelloBaselineConstructor >> operator: anObject [
 
-	self root operator: anObject
+	MetacelloNotification signal:
+		'The option #operator: will not do anything anymore in Pharo 14+. This option can be removed in it is in an attribute for Pharo 14+ or ignored if this is for a different platform. Reason: This option was here for configurations but not baselines. Since we cannot load configurations anymore in Pharo, it is been removed.'
 ]
 
 { #category : 'api' }

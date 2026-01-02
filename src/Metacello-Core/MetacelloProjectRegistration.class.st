@@ -113,7 +113,7 @@ MetacelloProjectRegistration class >> useRegistry: aRegistry during: aBlock [
 MetacelloProjectRegistration >> = aRegistration [
 
 	aRegistration class == self class ifFalse: [ ^ false ].
-	^ projectSpec registrationsCompareEqual: aRegistration projectSpec
+	^ projectSpec className: aRegistration className
 ]
 
 { #category : 'accessing' }

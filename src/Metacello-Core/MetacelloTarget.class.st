@@ -2,7 +2,6 @@ Class {
 	#name : 'MetacelloTarget',
 	#superclass : 'Object',
 	#instVars : [
-		'operator',
 		'engine'
 	],
 	#classVars : [
@@ -65,16 +64,4 @@ MetacelloTarget >> engine [
 { #category : 'accessing' }
 MetacelloTarget >> engine: aMetacelloScriptEngine [ 
 	engine := aMetacelloScriptEngine
-]
-
-{ #category : 'accessing' }
-MetacelloTarget >> operator [
-
-	^ operator ifNil: [ #= ]
-]
-
-{ #category : 'accessing' }
-MetacelloTarget >> operator: aSymbol [
-
-	operator := aSymbol
 ]

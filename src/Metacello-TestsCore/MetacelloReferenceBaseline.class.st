@@ -50,8 +50,6 @@ MetacelloReferenceBaseline >> baseline: spec [
 					preLoadDoIt: #preloadForProject;
 					"After loading this project, send #postloadForProject to an instance of this config"
 					postLoadDoIt: #postloadForProject;
-					"OPTIONAL: Version comparison operator #= #~= #> #< #>= #<= #~> "
-					operator: #~>; 	
 					"OPTIONAL: List of packages to be loaded from project"															
 					loads: #('UI-Core' );
 					"Repository where package resides"					
@@ -61,7 +59,6 @@ MetacelloReferenceBaseline >> baseline: spec [
 				"One or more of the following attributes may be defined"
 				spec
 					className: 'ConfigurationOfUINew';
-					operator: #>=;
 					loads: #('UI-Core' 'UI-Tests' );
 					repository: 'http://www.example.com/r' username: 'foo' password: 'bar' ];
 			"Create project reference named 'UI Tests'"
@@ -72,7 +69,6 @@ MetacelloReferenceBaseline >> baseline: spec [
 					"One or more of the following attributes may be changed"
 					spec
 						className: 'ConfigurationOfUI';
-						operator: #~>;
 						loads: #('UI-Core' 'UI-Tests' );
 						repository: 'http://www.example.com/r'];
 			project: 'UI Support';	

@@ -327,10 +327,9 @@ MetacelloVersionNumber >> privateCopyFrom: start to: stop [
 MetacelloVersionNumber >> versionString [
 
 	| strm |
-	1halt.
 	strm := WriteStream on: String new.
 	self printOn: strm.
-	^strm contents
+	^ strm contents
 ]
 
 { #category : 'comparing' }
