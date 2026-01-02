@@ -7,31 +7,6 @@ String >> addToMetacelloRepositories: aMetacelloRepositoriesSpec [
 ]
 
 { #category : '*Metacello-Core' }
-String >> asMetacelloVersionNumber [
-
-	^MetacelloVersionNumber fromString: self
-]
-
-{ #category : '*Metacello-Core-version comparison' }
-String >> metacelloIntegerLessThanSelf: anInteger [
-	"integer version components are always '>' string component"
-
-	^false
-]
-
-{ #category : '*Metacello-Core-version comparison' }
-String >> metacelloStringLessThanSelf: aString [
-
-	^aString < self
-]
-
-{ #category : '*Metacello-Core-version comparison' }
-String >> metacelloVersionComponentLessThan: aMetacelloVersonComponent [
-
-	^aMetacelloVersonComponent metacelloStringLessThanSelf: self
-]
-
-{ #category : '*Metacello-Core' }
 String >> setIncludesInMetacelloPackage: aMetacelloPackageSpec [
 
 	aMetacelloPackageSpec setIncludes: { self }

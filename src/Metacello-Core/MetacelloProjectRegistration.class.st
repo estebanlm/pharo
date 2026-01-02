@@ -168,7 +168,11 @@ MetacelloProjectRegistration >> hasLoadConflicts: aProjectRegistration [
 { #category : 'comparing' }
 MetacelloProjectRegistration >> hash [
 
-	^ String stringHash: projectSpec metacelloRegistrationHash initialHash: 0
+	^ String
+		  stringHash: (projectSpec
+				   ifNil: [ nil hash ]
+				   ifNotNil: [ :project | project metacelloRegistrationHash ])
+		  initialHash: 0
 ]
 
 { #category : 'mutability' }

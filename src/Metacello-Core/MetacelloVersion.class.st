@@ -1,6 +1,6 @@
 Class {
 	#name : 'MetacelloVersion',
-	#superclass : 'Magnitude',
+	#superclass : 'Object',
 	#instVars : [
 		'spec',
 		'versionNumber'
@@ -16,20 +16,6 @@ MetacelloVersion class >> fromSpec: aMetacelloVersionSpec [
 	^ self new
 		  spec: aMetacelloVersionSpec;
 		  yourself
-]
-
-{ #category : 'comparing' }
-MetacelloVersion >> < aMetacelloVersion [
-
-	aMetacelloVersion species = self species ifFalse: [ ^false ].
-	^self versionNumber < aMetacelloVersion versionNumber
-]
-
-{ #category : 'comparing' }
-MetacelloVersion >> = aMetacelloVersion [
-
-	aMetacelloVersion species = self species ifFalse: [ ^false ].
-	^self versionNumber = aMetacelloVersion versionNumber
 ]
 
 { #category : 'querying' }
@@ -109,12 +95,6 @@ MetacelloVersion >> groups [
 	groups := OrderedCollection new.
 	self spec projectDo: [:ignored | ] packageDo: [:ignored | ] groupDo: [:grp | groups add: grp ].
 	^groups
-]
-
-{ #category : 'comparing' }
-MetacelloVersion >> hash [
-
-	^self versionNumber hash
 ]
 
 { #category : 'private' }
@@ -210,9 +190,11 @@ MetacelloVersion >> packagesForSpecNamed: aString ifAbsent: aBlock [
 { #category : 'printing' }
 MetacelloVersion >> printOn: aStream [
 
-	| label |
-	self versionNumber printOn: aStream.
-	self spec ifNotNil: [ (label := self projectLabel) isEmpty ifFalse: [ aStream nextPutAll: ' [' , label , ']' ] ]
+	super printOn: aStream.
+	aStream
+		nextPutAll: ' [';
+		nextPutAll: self projectLabel;
+		nextPut: $]
 ]
 
 { #category : 'querying' }
@@ -273,21 +255,8 @@ MetacelloVersion >> unload [
 	^self spec unload
 ]
 
-{ #category : 'querying' }
-MetacelloVersion >> versionNumber [
-
-	^ versionNumber ifNil: [ MetacelloVersionNumber fromString: 'baseline' ]
-]
-
 { #category : 'accessing' }
 MetacelloVersion >> versionSpec [
 
 	^self spec
-]
-
-{ #category : 'comparing' }
-MetacelloVersion >> ~> aMetacelloVersion [
-
-	aMetacelloVersion species = self species ifFalse: [ ^false ].
-	^self versionNumber ~> aMetacelloVersion versionNumber
 ]
