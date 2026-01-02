@@ -189,15 +189,9 @@ MetacelloProjectReferenceSpec >> resolveToLoadableSpec [
 ]
 
 { #category : 'private' }
-MetacelloProjectReferenceSpec >> resolveToPackagesAndProjectsIn: aVersionSpec visited: visited [
+MetacelloProjectReferenceSpec >> resolveToPackagesAndProjectsIn: aVersionSpec [
 
 	^ { self }
-]
-
-{ #category : 'private' }
-MetacelloProjectReferenceSpec >> resolveToPackagesIn: aVersionSpec visited: visited [
-
-	^#()
 ]
 
 { #category : 'querying' }
