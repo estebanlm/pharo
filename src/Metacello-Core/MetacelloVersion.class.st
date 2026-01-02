@@ -72,26 +72,20 @@ MetacelloVersion >> doRecordRequiredFromArray: anArray withEngine: anEngine [
 { #category : 'private' }
 MetacelloVersion >> doWithProgress: aBlock label: aLabel silently: silently [
 
-	| displayString oldBypassProgress |
-	displayString := ' ' , self versionNumber printString , ' of '
-	                 , self spec projectLabel.
-	MetacelloNotification signal: aLabel , displayString , '...'.
-	oldBypassProgress := MetacelloPlatform current bypassProgressBars.
+	| displayString result |
+	displayString := aLabel , ' baseline of ' , self spec projectLabel.
+	MetacelloNotification signal: displayString , '...'.
 
-	silently ifTrue: [
-		MetacelloPlatform current bypassProgressBars: true ].
+	silently
+		ifTrue: [ result := aBlock value ]
+		ifFalse: [
+				displayString displayProgressFrom: 0 to: 2 during: [ :bar |
+						bar value: 1.
+						result := aBlock value.
+						bar value: 2 ] ].
 
-	[
-	MetacelloPlatform current
-		do: [
-			| result |
-			result := aBlock value.
-
-			MetacelloNotification signal:
-				'...finished ' , self versionNumber printString.
-			^ result ]
-		displaying: aLabel , displayString ] ensure: [
-		MetacelloPlatform current bypassProgressBars: oldBypassProgress ]
+	MetacelloNotification signal: '...finished to load the baseline'.
+	^ result
 ]
 
 { #category : 'private' }
