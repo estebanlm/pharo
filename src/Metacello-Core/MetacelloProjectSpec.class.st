@@ -595,7 +595,7 @@ MetacelloProjectSpec >> repositorySpecs [
 MetacelloProjectSpec >> repositoryVersionString [
 	"extract a version string from the repository ... if possible"
 
-	"must parallel implementation of MetacelloMCBaselineProject>>setBaselineRepositoryDescription: we want the same repoSpec"
+	"must parallel implementation of MetacelloProject>>setBaselineRepositoryDescription: we want the same repoSpec"
 
 	| spec repo |
 	self repositorySpecs do: [ :repoSpec | spec := repoSpec ].

@@ -87,12 +87,12 @@ MetacelloBaselineConstructor >> blessing: aBlockOrString [
 
 { #category : 'api' }
 MetacelloBaselineConstructor >> className: aString [
-	"Define className field of a project spec (MetacelloMCProjectSpec).
+	"Define className field of a project spec (MetacelloProjectSpec).
 	
 		spec project: 'CoolBrowser' with: [
-			spec className: 'ConfigurationOfCoolBrowser'. ].
+			spec className: 'BaselineOfCoolBrowser'. ].
 
-	The className field is OPTIONAL in the project spec. If omitted, the className will be created by prepending 'ConfigurationOf' to the project name.
+	The className field is OPTIONAL in the project spec. If omitted, the className will be created by prepending 'BaselineOf' to the project name.
 	 "
 
 	self root className: aString

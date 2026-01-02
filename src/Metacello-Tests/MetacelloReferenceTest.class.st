@@ -21,7 +21,8 @@ MetacelloReferenceTest >> conditionResult: resultString [
 
 { #category : 'testing' }
 MetacelloReferenceTest >> expectedPrintString [
-    ^ 'spec preLoadDoIt: #''preloadForVersion''.
+
+	^ 'spec preLoadDoIt: #''preloadForVersion''.
 spec postLoadDoIt: #''postloadForVersion''.
 spec repositories: [
 	spec
@@ -35,26 +36,26 @@ spec repositories: [
 spec 
 	baseline: ''UI Support'' with: [
 		spec
-			className: ''ConfigurationOfUI'';
+			className: ''BaselineOfUI'';
 			preLoadDoIt: #''preloadForProject'';
 			postLoadDoIt: #''postloadForProject'';
 			loads: #(''UI-Core'' );
 			repository: ''http://www.example.com/r'' ];
 	baseline: ''UI Support'' overrides: [
 		spec
-			className: ''ConfigurationOfUINew'';
+			className: ''BaselineOfUINew'';
 			loads: #(''UI-Core'' ''UI-Tests'' );
 			repository: ''http://www.example.com/r'' username: ''foo'' password: ''bar'' ];
 	baseline: ''UI Tests'' copyFrom: ''UI Support'' with: [
 		spec
-			className: ''ConfigurationOfUI'';
+			className: ''BaselineOfUI'';
 			loads: #(''UI-Core'' ''UI-Tests'' );
 			repository: ''http://www.example.com/r'' ];
 	baseline: ''UI Support'' ;
 	removeProject: ''UI Tests'';
 	baseline: ''UI Multi'' with: [
 		spec
-			className: ''ConfigurationOfMulti'';
+			className: ''BaselineOfMulti'';
 			repository: ''http://www.example.com/r'';
 			repository: ''http://www.example.com/s'' ].
 spec 
@@ -118,7 +119,7 @@ MetacelloReferenceTest >> testReferenceConfig [
 	name: ''UI Support'';
 	projectReference: [
 		spec
-			className: ''ConfigurationOfUINew'';
+			className: ''BaselineOfUINew'';
 			loads: #(''UI-Core'' ''UI-Tests'' );
 			repository: ''http://www.example.com/r'' username: ''foo'' password: ''bar'' ].'
 ]

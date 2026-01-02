@@ -259,7 +259,7 @@ Metacello >> gemsource: projectName [
 
 { #category : 'api actions' }
 Metacello >> get [
-	"resolve project name in given repository and return an instance of MetacelloProject resolved from a ConfigurationOf or BaselineOf"
+	"resolve project name in given repository and return an instance of MetacelloProject resolved from a BaselineOf"
 
 	^ self execute: [ :executor | executor get ]
 ]
