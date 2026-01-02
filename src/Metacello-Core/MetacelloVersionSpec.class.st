@@ -15,6 +15,13 @@ Class {
 	#tag : 'Specs'
 }
 
+{ #category : 'class initialization' }
+MetacelloVersionSpec class >> initialize [
+	"Added in Pharo 14."
+
+	self deprecatedAliases: #( MetacelloVersion )
+]
+
 { #category : 'instance creation' }
 MetacelloVersionSpec class >> project: aMetacelloProject [
 
@@ -588,6 +595,13 @@ MetacelloVersionSpec >> setImport: anArray [
   importArray := importArray
     ifNil: [ anArray ]
     ifNotNil: [ importArray , anArray ]
+]
+
+{ #category : 'accessing' }
+MetacelloVersionSpec >> spec [
+	"To remove once Iceberg is fixed."
+
+	^ self
 ]
 
 { #category : 'enumerating' }
