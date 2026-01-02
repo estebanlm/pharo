@@ -1,8 +1,8 @@
 Class {
 	#name : 'MetacelloRepositoryCommonTestCase',
 	#superclass : 'AbstractEnvironmentTestCase',
-	#category : 'Metacello-TestsMCCore',
-	#package : 'Metacello-TestsMCCore'
+	#category : 'Metacello-Tests',
+	#package : 'Metacello-Tests'
 }
 
 { #category : 'baselines' }

@@ -175,8 +175,9 @@ Class {
 	#instVars : [
 		'scriptExecutor'
 	],
-	#category : 'Metacello-Base',
-	#package : 'Metacello-Base'
+	#category : 'Metacello-Core-Model',
+	#package : 'Metacello-Core',
+	#tag : 'Model'
 }
 
 { #category : 'instance creation' }

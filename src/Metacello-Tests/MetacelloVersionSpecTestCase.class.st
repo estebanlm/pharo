@@ -1,8 +1,8 @@
 Class {
 	#name : 'MetacelloVersionSpecTestCase',
 	#superclass : 'MetacelloSpecTestCase',
-	#category : 'Metacello-TestsCore-Specs',
-	#package : 'Metacello-TestsCore',
+	#category : 'Metacello-Tests-Specs',
+	#package : 'Metacello-Tests',
 	#tag : 'Specs'
 }
 
