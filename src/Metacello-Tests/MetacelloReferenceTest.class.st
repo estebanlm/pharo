@@ -1,12 +1,12 @@
 Class {
-	#name : 'MetacelloReferenceTestCase',
+	#name : 'MetacelloReferenceTest',
 	#superclass : 'TestCase',
 	#category : 'Metacello-Tests',
 	#package : 'Metacello-Tests'
 }
 
 { #category : 'testing' }
-MetacelloReferenceTestCase >> conditionResult: resultString [ 
+MetacelloReferenceTest >> conditionResult: resultString [ 
 	"GemStone unconditionally prints Symbols with quotes, Squeak and Pharo do not"
 
 	^((((((resultString 
@@ -20,7 +20,7 @@ MetacelloReferenceTestCase >> conditionResult: resultString [
 ]
 
 { #category : 'testing' }
-MetacelloReferenceTestCase >> expectedPrintString [
+MetacelloReferenceTest >> expectedPrintString [
     ^ 'spec preLoadDoIt: #''preloadForVersion''.
 spec postLoadDoIt: #''postloadForVersion''.
 spec repositories: [
@@ -90,7 +90,7 @@ spec
 ]
 
 { #category : 'testing' }
-MetacelloReferenceTestCase >> testReferenceConfig [
+MetacelloReferenceTest >> testReferenceConfig [
 
 	| spec map string expected |
 	spec := MetacelloReferenceBaseline project version.
@@ -124,7 +124,7 @@ MetacelloReferenceTestCase >> testReferenceConfig [
 ]
 
 { #category : 'testing' }
-MetacelloReferenceTestCase >> testReferenceConfigPrintString [
+MetacelloReferenceTest >> testReferenceConfigPrintString [
 
 	| version string expected x y |
 	version := MetacelloReferenceBaseline project version.

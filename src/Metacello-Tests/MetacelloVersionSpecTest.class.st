@@ -1,13 +1,13 @@
 Class {
-	#name : 'MetacelloVersionSpecTestCase',
-	#superclass : 'MetacelloSpecTestCase',
+	#name : 'MetacelloVersionSpecTest',
+	#superclass : 'MetacelloAbstractSpecTest',
 	#category : 'Metacello-Tests-Specs',
 	#package : 'Metacello-Tests',
 	#tag : 'Specs'
 }
 
 { #category : 'tests' }
-MetacelloVersionSpecTestCase >> testVersionMergeSpec [
+MetacelloVersionSpecTest >> testVersionMergeSpec [
 
 	| versionA versionB version |
 	versionA := self versionSpec
@@ -24,7 +24,7 @@ MetacelloVersionSpecTestCase >> testVersionMergeSpec [
 ]
 
 { #category : 'tests' }
-MetacelloVersionSpecTestCase >> testVersionMergeSpec2 [
+MetacelloVersionSpecTest >> testVersionMergeSpec2 [
 
 	| versionA versionB version repository package group projectReferenceSpec |
 	versionA := self versionSpec
@@ -91,7 +91,7 @@ MetacelloVersionSpecTestCase >> testVersionMergeSpec2 [
 ]
 
 { #category : 'tests' }
-MetacelloVersionSpecTestCase >> testVersionSpec [
+MetacelloVersionSpecTest >> testVersionSpec [
 
 	| version |
 	version := self versionSpec
@@ -105,7 +105,7 @@ MetacelloVersionSpecTestCase >> testVersionSpec [
 ]
 
 { #category : 'tests' }
-MetacelloVersionSpecTestCase >> testVersionSpec2 [
+MetacelloVersionSpecTest >> testVersionSpec2 [
 
 	| version projectReferenceSpec group package repository |
 	version := self versionSpec
@@ -151,4 +151,10 @@ MetacelloVersionSpecTestCase >> testVersionSpec2 [
 	projectReferenceSpec := version packagesSpec packageNamed: 'Project' ifAbsent: [ self assert: false ].
 	self assert: projectReferenceSpec projectName equals: 'Project'.
 	version projectDo: [ :prjct | prjct == projectReferenceSpec ] packageDo: [ :pkg | pkg == package ] groupDo: [ :grp | grp == group ]
+]
+
+{ #category : 'specs' }
+MetacelloVersionSpecTest >> versionSpec [
+
+	^ MetacelloVersionSpec project: self project
 ]

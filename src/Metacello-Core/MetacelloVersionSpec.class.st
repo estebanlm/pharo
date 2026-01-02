@@ -157,7 +157,7 @@ MetacelloVersionSpec >> configPackagesSpecMethodOn: aStream indent: indent [
 					(packageSpecs at: index) configMethodCascadeOn: aStream last: index == packageSpecs size indent: indent + 1.
 					index ~= packageSpecs size ifTrue: [ aStream tab: indent + 1 ] ] ].
 	groupSpecs isEmpty ifFalse: [
-			projectSpecs isEmpty not | packageSpecs isEmpty ifFalse: [ aStream cr ].
+			projectSpecs isEmpty not | packageSpecs isEmpty not ifTrue: [ aStream cr ].
 			aStream
 				tab: indent;
 				nextPutAll: 'spec '.

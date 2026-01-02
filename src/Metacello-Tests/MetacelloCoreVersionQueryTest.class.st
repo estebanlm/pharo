@@ -1,5 +1,5 @@
 Class {
-	#name : 'MetacelloCoreVersionQueryTestCase',
+	#name : 'MetacelloCoreVersionQueryTest',
 	#superclass : 'TestCase',
 	#category : 'Metacello-Tests-Configs',
 	#package : 'Metacello-Tests',
@@ -7,7 +7,7 @@ Class {
 }
 
 { #category : 'baselines' }
-MetacelloCoreVersionQueryTestCase >> baseline: spec [
+MetacelloCoreVersionQueryTest >> baseline: spec [
 
 	<baseline>
 	spec for: #common do: [
@@ -22,13 +22,13 @@ MetacelloCoreVersionQueryTestCase >> baseline: spec [
 ]
 
 { #category : 'accessing' }
-MetacelloCoreVersionQueryTestCase >> project [
+MetacelloCoreVersionQueryTest >> project [
 
 	^ (MetacelloBaselineConstructor on: self) project
 ]
 
 { #category : 'tests' }
-MetacelloCoreVersionQueryTestCase >> testBaselineGroups [
+MetacelloCoreVersionQueryTest >> testBaselineGroups [
 
 	| project expected list |
 	project := self project.
@@ -39,7 +39,7 @@ MetacelloCoreVersionQueryTestCase >> testBaselineGroups [
 ]
 
 { #category : 'tests' }
-MetacelloCoreVersionQueryTestCase >> testBaselineProjects [
+MetacelloCoreVersionQueryTest >> testBaselineProjects [
 
 	| project expected list |
 	project := self project.

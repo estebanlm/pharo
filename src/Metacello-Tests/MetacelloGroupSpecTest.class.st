@@ -1,13 +1,13 @@
 Class {
-	#name : 'MetacelloGroupSpecTestCase',
-	#superclass : 'MetacelloSpecTestCase',
+	#name : 'MetacelloGroupSpecTest',
+	#superclass : 'MetacelloAbstractSpecTest',
 	#category : 'Metacello-Tests-Specs',
 	#package : 'Metacello-Tests',
 	#tag : 'Specs'
 }
 
 { #category : 'tests' }
-MetacelloGroupSpecTestCase >> testGroupMergeSpec [
+MetacelloGroupSpecTest >> testGroupMergeSpec [
     | groupA groupB group |
     groupA := self groupSpec
         name: 'Platform';
@@ -23,7 +23,7 @@ MetacelloGroupSpecTestCase >> testGroupMergeSpec [
 ]
 
 { #category : 'tests' }
-MetacelloGroupSpecTestCase >> testGroupSpec [
+MetacelloGroupSpecTest >> testGroupSpec [
 	| group |
 	group := self groupSpec
 		name: 'Platform';

@@ -1,5 +1,5 @@
 Class {
-	#name : 'MetacelloCoreIssue125TestCase',
+	#name : 'MetacelloCoreIssue125Test',
 	#superclass : 'TestCase',
 	#category : 'Metacello-Tests-Configs',
 	#package : 'Metacello-Tests',
@@ -7,7 +7,7 @@ Class {
 }
 
 { #category : 'baselines' }
-MetacelloCoreIssue125TestCase >> baseline: spec [
+MetacelloCoreIssue125Test >> baseline: spec [
 
 	<baseline>
 	spec for: #common do: [
@@ -33,7 +33,7 @@ MetacelloCoreIssue125TestCase >> baseline: spec [
 ]
 
 { #category : 'accessing' }
-MetacelloCoreIssue125TestCase >> projectWith: projectAttributes [
+MetacelloCoreIssue125Test >> projectWith: projectAttributes [
 
 	| project |
 	"Construct Metacello project"
@@ -44,7 +44,7 @@ MetacelloCoreIssue125TestCase >> projectWith: projectAttributes [
 ]
 
 { #category : 'tests' }
-MetacelloCoreIssue125TestCase >> testForDoListAtrribute1Active [
+MetacelloCoreIssue125Test >> testForDoListAtrribute1Active [
 	"https://github.com/dalehenrich/metacello-work/issues/125"
 
 	| project expected |
@@ -71,7 +71,7 @@ spec
 ]
 
 { #category : 'tests' }
-MetacelloCoreIssue125TestCase >> testForDoListAtrribute2Active [
+MetacelloCoreIssue125Test >> testForDoListAtrribute2Active [
 	"https://github.com/dalehenrich/metacello-work/issues/125"
 
 	| project expected |
@@ -98,7 +98,7 @@ spec
 ]
 
 { #category : 'tests' }
-MetacelloCoreIssue125TestCase >> testForDoListAttribute1Atrribute2Active [
+MetacelloCoreIssue125Test >> testForDoListAttribute1Atrribute2Active [
 	"https://github.com/dalehenrich/metacello-work/issues/125"
 
 	| project expected |
@@ -132,7 +132,7 @@ spec
 ]
 
 { #category : 'tests' }
-MetacelloCoreIssue125TestCase >> testForDoListNotActive [
+MetacelloCoreIssue125Test >> testForDoListNotActive [
 	"https://github.com/dalehenrich/metacello-work/issues/125"
 
 	| project expected |

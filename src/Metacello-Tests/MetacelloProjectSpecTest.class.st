@@ -1,13 +1,13 @@
 Class {
-	#name : 'MetacelloProjectSpecTestCase',
-	#superclass : 'MetacelloSpecTestCase',
+	#name : 'MetacelloProjectSpecTest',
+	#superclass : 'MetacelloAbstractSpecTest',
 	#category : 'Metacello-Tests-Specs',
 	#package : 'Metacello-Tests',
 	#tag : 'Specs'
 }
 
 { #category : 'tests' }
-MetacelloProjectSpecTestCase >> testProjectMergeSpec [
+MetacelloProjectSpecTest >> testProjectMergeSpec [
 
 	| projectA projectB project |
 	projectA := self projectSpec
@@ -33,7 +33,7 @@ MetacelloProjectSpecTestCase >> testProjectMergeSpec [
 ]
 
 { #category : 'tests' }
-MetacelloProjectSpecTestCase >> testProjectMergeSpec2 [
+MetacelloProjectSpecTest >> testProjectMergeSpec2 [
 
 	| projectA projectB project repository |
 	projectA := self projectSpec
@@ -62,7 +62,7 @@ MetacelloProjectSpecTestCase >> testProjectMergeSpec2 [
 ]
 
 { #category : 'tests' }
-MetacelloProjectSpecTestCase >> testProjectSpec [
+MetacelloProjectSpecTest >> testProjectSpec [
 
 	| project |
 	project := self projectSpec.
@@ -87,7 +87,7 @@ MetacelloProjectSpecTestCase >> testProjectSpec [
 ]
 
 { #category : 'tests' }
-MetacelloProjectSpecTestCase >> testProjectSpec2 [
+MetacelloProjectSpecTest >> testProjectSpec2 [
 	| project repository |
 	project := self projectSpec.
 	project
