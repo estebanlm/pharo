@@ -12,17 +12,17 @@ MetacelloProjectReferenceSpecTest >> testProjectReferenceMergeSpec [
 	| projectReferenceA projectReferenceB projectReference project |
 	projectReferenceA := MetacelloProjectReferenceSpec projectReference: (self projectSpec
 			                      name: 'Project';
-			                      className: 'ConfigurationOfProjectA';
+			                      className: 'BaselinenOfProjectA';
 			                      yourself).
 	projectReferenceB := MetacelloProjectReferenceSpec projectReference: (self projectSpec
 			                      name: 'Project';
-			                      className: 'ConfigurationOfProjectB';
+			                      className: 'BaselineOfProjectB';
 			                      yourself).
 	projectReference := projectReferenceA mergeSpec: projectReferenceB.
 	self assert: projectReference name equals: 'Project'.
 	self assert: projectReference projectName equals: 'Project'.
 	project := projectReference projectReference.
-	self assert: project className equals: 'ConfigurationOfProjectB'
+	self assert: project className equals: 'BaselineOfProjectB'
 ]
 
 { #category : 'tests' }
@@ -31,7 +31,6 @@ MetacelloProjectReferenceSpecTest >> testProjectReferenceSpec [
 	| projectReference project |
 	projectReference := MetacelloProjectReferenceSpec projectReference: (project := self projectSpec
 			                                name: 'Project';
-			                                className: 'ConfigurationOfProjectA';
 			                                yourself).
 	self assert: projectReference name equals: 'Project'.
 	self assert: projectReference projectName equals: 'Project'.

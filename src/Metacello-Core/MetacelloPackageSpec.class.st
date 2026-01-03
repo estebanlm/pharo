@@ -308,6 +308,12 @@ MetacelloPackageSpec >> repositorySpecs [
 ]
 
 { #category : 'private' }
+MetacelloPackageSpec >> resolveToPackagesAndProjectsIn: aVersionSpec [
+
+	^ { self }
+]
+
+{ #category : 'private' }
 MetacelloPackageSpec >> resolveToPackagesIn: aVersionSpec visited: visited [
 
 	^{ self }

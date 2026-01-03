@@ -317,11 +317,6 @@ MetacelloScriptEngine >> root: anObject [
 	root := anObject
 ]
 
-{ #category : 'options' }
-MetacelloScriptEngine >> silently [
-    ^ self options at: #'silently' ifAbsent: [ false ]
-]
-
 { #category : 'accessing' }
 MetacelloScriptEngine >> specBuilder [
 	^ specBuilder

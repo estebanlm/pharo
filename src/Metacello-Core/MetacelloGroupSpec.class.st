@@ -123,8 +123,8 @@ MetacelloGroupSpec >> resolveSpecsForPackageOrdering: aVersionSpec [
 	| packageOrProjectSpecs |
 	packageOrProjectSpecs := Set new.
 	self includes do: [ :specName |
-		(aVersionSpec packageNamed: specName ifAbsent: [  ]) ifNotNil: [ :pkgSpec |
-			packageOrProjectSpecs addAll: (pkgSpec resolveToPackagesAndProjectsIn: aVersionSpec visited: MetacelloVisitedPackages new) ] ].
+		(aVersionSpec packageNamed: specName ifAbsent: [ ]) ifNotNil: [ :pkgSpec |
+			packageOrProjectSpecs addAll: (pkgSpec resolveToPackagesAndProjectsIn: aVersionSpec) ] ].
 	^ packageOrProjectSpecs
 ]
 
@@ -135,45 +135,23 @@ MetacelloGroupSpec >> resolveToLoadableSpec [
 ]
 
 { #category : 'private' }
-MetacelloGroupSpec >> resolveToPackagesAndProjectsIn: aVersionSpec visited: visited [
+MetacelloGroupSpec >> resolveToPackagesAndProjectsIn: aVersionSpec [
 
 	| packages |
 	packages := Dictionary new.
-	self
-		resolveToPackagesIn: aVersionSpec
-		andProjects: true
-		into: packages
-		visited: visited.
+	self resolveToPackagesIn: aVersionSpec into: packages visited: MetacelloVisitedPackages new.
 	^ packages values asOrderedCollection
 ]
 
 { #category : 'private' }
-MetacelloGroupSpec >> resolveToPackagesIn: aVersionSpec andProjects: andProjectsBool into: packages visited: visited [
+MetacelloGroupSpec >> resolveToPackagesIn: aVersionSpec into: packages visited: visited [
 
 	visited visit: self doing: [ :aSpec |
-		| map |
-		map := aVersionSpec packagesSpec map.
-		aSpec includes do: [ :pkgName |
-			(aVersionSpec packageNamed: pkgName forMap: map ifAbsent: [  ])
-				projectDo: [ :prj | andProjectsBool ifTrue: [ packages at: prj name put: prj ] ]
-				packageDo: [ :pkg | packages at: pkg name put: pkg ]
-				groupDo: [ :grp |
-					grp
-						resolveToPackagesIn: aVersionSpec
-						andProjects: andProjectsBool
-						into: packages
-						visited: visited ] ] ]
-]
-
-{ #category : 'private' }
-MetacelloGroupSpec >> resolveToPackagesIn: aVersionSpec visited: visited [
-
-	| packages |
-	packages := Dictionary new.
-	self
-		resolveToPackagesIn: aVersionSpec
-		andProjects: false
-		into: packages
-		visited: visited.
-	^ packages values asOrderedCollection
+			| map |
+			map := aVersionSpec packagesSpec map.
+			aSpec includes do: [ :pkgName |
+					(aVersionSpec packageNamed: pkgName forMap: map ifAbsent: [ ])
+						projectDo: [ :prj | packages at: prj name put: prj ]
+						packageDo: [ :pkg | packages at: pkg name put: pkg ]
+						groupDo: [ :grp | grp resolveToPackagesIn: aVersionSpec into: packages visited: visited ] ] ]
 ]

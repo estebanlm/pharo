@@ -22,7 +22,7 @@ MetacelloAbstractPackageSpec >> addToMetacelloPackages: aMetacelloPackagesSpec [
 	aMetacelloPackagesSpec addMemberForSpec: self
 ]
 
-{ #category : 'Protocol (printing) - 4 selector(s)' }
+{ #category : 'printing' }
 MetacelloAbstractPackageSpec >> configMethodBodyOn: aStream hasName: hasName cascading: hasCascading indent: indent [
 
 	| hasRequires hasIncludes |
@@ -228,14 +228,9 @@ MetacelloAbstractPackageSpec >> resolveToLoadableSpec [
 ]
 
 { #category : 'private' }
-MetacelloAbstractPackageSpec >> resolveToPackagesAndProjectsIn: aVersionSpec  visited: visited [
-  ^ self resolveToPackagesIn: aVersionSpec visited: visited
-]
+MetacelloAbstractPackageSpec >> resolveToPackagesAndProjectsIn: aVersionSpec [
 
-{ #category : 'private' }
-MetacelloAbstractPackageSpec >> resolveToPackagesIn: aVersionSpec visited: visited [
-
-	^self subclassResponsibility
+	^ self subclassResponsibility
 ]
 
 { #category : 'private' }

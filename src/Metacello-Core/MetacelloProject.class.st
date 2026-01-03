@@ -1,7 +1,7 @@
 "
-The **MetacelloMCBaselineProject**  is a wrapper for the **BaselineOf** version specification for file-based repositories.
+The **MetacelloProject**  is a wrapper for the **BaselineOf** version specification for file-based repositories.
 
-There is a single version in a **MetacelloMCBaselineProject**, named *'baseline'*.
+There is a single version in a **MetacelloProject**, named *'baseline'*.
 
 A typical **BaselineOf** is specification:
 

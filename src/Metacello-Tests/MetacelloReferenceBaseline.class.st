@@ -43,9 +43,9 @@ MetacelloReferenceBaseline >> baseline: spec [
 			project: 'UI Support' with: [							
 				"One or more of the following attributes may be defined or changed"
 				spec
-					"OPTIONAL: Name of config class (i.e., ConfigurationOfXXX), if not specified, className is assumed to be the 
-					 name of the project prependended with 'ConfigurationOf'"
-					className: 'ConfigurationOfUI';
+					"OPTIONAL: Name of config class (i.e., BaselineOfXXX), if not specified, className is assumed to be the 
+					 name of the project prependended with 'BaselineOf'"
+					className: 'BaselineOfUI';
 					"Before loading this project, send #preloadForProject to an instance of this config"
 					preLoadDoIt: #preloadForProject;
 					"After loading this project, send #postloadForProject to an instance of this config"
@@ -58,7 +58,7 @@ MetacelloReferenceBaseline >> baseline: spec [
 			project: 'UI Support' overrides: [					
 				"One or more of the following attributes may be defined"
 				spec
-					className: 'ConfigurationOfUINew';
+					className: 'BaselineOfUINew';
 					loads: #('UI-Core' 'UI-Tests' );
 					repository: 'http://www.example.com/r' username: 'foo' password: 'bar' ];
 			"Create project reference named 'UI Tests'"
@@ -68,7 +68,7 @@ MetacelloReferenceBaseline >> baseline: spec [
 				with: [
 					"One or more of the following attributes may be changed"
 					spec
-						className: 'ConfigurationOfUI';
+						className: 'BaselineOfUI';
 						loads: #('UI-Core' 'UI-Tests' );
 						repository: 'http://www.example.com/r'];
 			project: 'UI Support';	
@@ -78,7 +78,7 @@ MetacelloReferenceBaseline >> baseline: spec [
 			 Secondary repository is useful when primary repository may not be available"
 			project: 'UI Multi' with: [							
 				spec
-					className: 'ConfigurationOfMulti';
+					className: 'BaselineOfMulti';
 					repository: 'http://www.example.com/r';
 					repository: 'http://www.example.com/s' ].
 		"Create or update 'Example-AddOn' package"								

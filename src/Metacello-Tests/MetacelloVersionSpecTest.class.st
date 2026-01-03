@@ -42,7 +42,7 @@ MetacelloVersionSpecTest >> testVersionMergeSpec2 [
 				 yourself);
 		merge: (MetacelloProjectReferenceSpec projectReference: (self projectSpec
 					  name: 'Project';
-					  className: 'ConfigurationOfProjectA';
+					  className: 'BaselineOfProjectA';
 					  repository: 'http://example.com/repository' username: 'dkh' password: 'password';
 					  repository: '/opt/gemstone/repository';
 					  yourself)).
@@ -61,7 +61,7 @@ MetacelloVersionSpecTest >> testVersionMergeSpec2 [
 				 yourself);
 		merge: (MetacelloProjectReferenceSpec projectReference: (self projectSpec
 					  name: 'Project';
-					  className: 'ConfigurationOfProjectA';
+					  className: 'BaselineOfProjectA';
 					  repository: 'http://example.com/repository' username: 'DaleHenrichs' password: 'secret';
 					  repository: '/opt/gemstone/repo';
 					  yourself)).
@@ -132,7 +132,7 @@ MetacelloVersionSpecTest >> testVersionSpec2 [
 				 yourself);
 		add: (self projectSpec
 				 name: 'Project';
-				 className: 'ConfigurationOfProjectA';
+				 className: 'BaselineOfProjectA';
 				 loads: #( 'MyPackage' 'MyTests' );
 				 preLoadDoIt: #preLoadDoItB;
 				 postLoadDoIt: #postLoadDoItB;

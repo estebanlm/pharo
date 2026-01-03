@@ -204,35 +204,32 @@ MetacelloVersionSpec >> defaultPackageNames [
 { #category : 'private' }
 MetacelloVersionSpec >> doFetchRequiredFromArray: anArray withEngine: anEngine [
 
-	^ self doWithProgress: [ self fetchRequiredFromArray: anArray withEngine: anEngine ] label: 'Fetching' silently: anEngine silently
+	^ self doWithProgress: [ self fetchRequiredFromArray: anArray withEngine: anEngine ] label: 'Fetching'
 ]
 
 { #category : 'private' }
 MetacelloVersionSpec >> doLoadRequiredFromArray: anArray withEngine: anEngine [
 
-	^ self doWithProgress: [ self loadRequiredFromArray: anArray withEngine: anEngine ] label: 'Loading' silently: anEngine silently
+	^ self doWithProgress: [ self loadRequiredFromArray: anArray withEngine: anEngine ] label: 'Loading'
 ]
 
 { #category : 'private' }
 MetacelloVersionSpec >> doRecordRequiredFromArray: anArray withEngine: anEngine [
 
-	^ self doWithProgress: [ self recordRequiredFromArray: anArray withEngine: anEngine ] label: 'Recording' silently: anEngine silently
+	^ self doWithProgress: [ self recordRequiredFromArray: anArray withEngine: anEngine ] label: 'Recording'
 ]
 
 { #category : 'private' }
-MetacelloVersionSpec >> doWithProgress: aBlock label: aLabel silently: silently [
+MetacelloVersionSpec >> doWithProgress: aBlock label: aLabel [
 
 	| displayString result |
 	displayString := aLabel , ' baseline of ' , self projectLabel.
 	MetacelloNotification signal: displayString , '...'.
 
-	silently
-		ifTrue: [ result := aBlock value ]
-		ifFalse: [
-				displayString displayProgressFrom: 0 to: 2 during: [ :bar |
-						bar value: 1.
-						result := aBlock value.
-						bar value: 2 ] ].
+	displayString displayProgressFrom: 0 to: 2 during: [ :bar |
+			bar value: 1.
+			result := aBlock value.
+			bar value: 2 ].
 
 	MetacelloNotification signal: '...finished to load the baseline'.
 	^ result
