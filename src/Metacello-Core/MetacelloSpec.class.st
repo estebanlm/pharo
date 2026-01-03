@@ -1,21 +1,10 @@
 Class {
 	#name : 'MetacelloSpec',
 	#superclass : 'Object',
-	#instVars : [
-		'project'
-	],
 	#category : 'Metacello-Core-Specs',
 	#package : 'Metacello-Core',
 	#tag : 'Specs'
 }
-
-{ #category : 'instance creation' }
-MetacelloSpec class >> for: aVersionMap [
-
-	^ self new
-		  for: aVersionMap;
-		  yourself
-]
 
 { #category : 'merging' }
 MetacelloSpec >> aboutToCopy [
@@ -33,22 +22,6 @@ MetacelloSpec >> configMethodOn: aStream indent: indent [
 	self subclassResponsibility
 ]
 
-{ #category : 'doits' }
-MetacelloSpec >> doItBlock: selector [
-
-	selector ifNil: [ ^ nil ].
-	selector numArgs = 0 ifTrue: [ ^ [ self project configuration perform: selector ] ].
-	selector numArgs = 1 ifTrue: [ ^ [ :aLoader | self project configuration perform: selector with: aLoader ] ].
-	selector numArgs = 2 ifTrue: [ ^ [ :aLoader :pkgSpec | self project configuration perform: selector with: aLoader with: pkgSpec ] ].
-	^ nil
-]
-
-{ #category : 'initialization' }
-MetacelloSpec >> for: aProject [
-
-	project := aProject
-]
-
 { #category : 'printing' }
 MetacelloSpec >> label [
 
@@ -63,7 +36,7 @@ MetacelloSpec >> mergeImportLoads: aLoadList [
 { #category : 'merging' }
 MetacelloSpec >> mergeMap [
 
-	^Dictionary new.
+	^ Dictionary new
 ]
 
 { #category : 'merging' }
@@ -77,54 +50,16 @@ MetacelloSpec >> mergeSpec: aSpec [
 	^ newSpec
 ]
 
-{ #category : 'initialization' }
-MetacelloSpec >> newRepositoriesSpec [
-
-	^ MetacelloRepositoriesSpec for: self project
-]
-
 { #category : 'merging' }
 MetacelloSpec >> nonOverridable [
 
 	^#()
 ]
 
-{ #category : 'doits' }
-MetacelloSpec >> postLoadDoIt [
-	"noop unless non-nil value returned"
-
-	^nil
-]
-
-{ #category : 'doits' }
-MetacelloSpec >> postLoadDoItBlock [
-
-	^self doItBlock: self postLoadDoIt value
-]
-
-{ #category : 'doits' }
-MetacelloSpec >> preLoadDoIt [
-	"noop unless non-nil value returned"
-	
-	^nil
-]
-
-{ #category : 'doits' }
-MetacelloSpec >> preLoadDoItBlock [
-
-	^self doItBlock: self preLoadDoIt value
-]
-
 { #category : 'printing' }
 MetacelloSpec >> printOn: aStream [
 
 	self configMethodOn: aStream indent: 0
-]
-
-{ #category : 'querying' }
-MetacelloSpec >> project [
-
-	^project
 ]
 
 { #category : 'validation' }
@@ -137,10 +72,8 @@ MetacelloSpec >> validateDoItSelector: anObject [
 
 { #category : 'merging' }
 MetacelloSpec >> validateMergeForSpec: aSpec [
-    aSpec class = self class
-        ifFalse: [ 
-            self
-                error:
-                    'The project spec ' , self name printString , ' in project ' , self project label , ' has incompatible specs. '
-                        , aSpec class name asString , ' and ' , self class name asString , ' are not compatible.' ]
+
+	aSpec class = self class ifFalse: [
+			self error:
+				'The project spec ' , self label , ' has incompatible specs. ' , aSpec class name asString , ' and ' , self class name asString , ' are not compatible.' ]
 ]

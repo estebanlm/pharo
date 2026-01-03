@@ -2,7 +2,6 @@ Class {
 	#name : 'MetacelloAbstractPackageSpec',
 	#superclass : 'MetacelloSpec',
 	#instVars : [
-		'name',
 		'requires',
 		'includes'
 	],
@@ -10,6 +9,12 @@ Class {
 	#package : 'Metacello-Core',
 	#tag : 'Specs'
 }
+
+{ #category : 'testing' }
+MetacelloAbstractPackageSpec class >> isAbstract [
+
+	^ self = MetacelloAbstractPackageSpec
+]
 
 { #category : 'adding' }
 MetacelloAbstractPackageSpec >> addToMetacelloPackages: aMetacelloPackagesSpec [
@@ -134,7 +139,6 @@ MetacelloAbstractPackageSpec >> mergeSpec: anotherSpec [
 	| newSpec map |
 	newSpec := super mergeSpec: anotherSpec.
 	map := anotherSpec mergeMap.
-	anotherSpec name ifNotNil: [ newSpec name: anotherSpec name ].
 	(map at: #requires) ifNotNil: [ :anotherRequires | newSpec setRequires: self requires , anotherRequires ].
 	(map at: #includes) ifNotNil: [ :anotherIncludes | newSpec setIncludes: self includes , anotherIncludes ].
 	^ newSpec
@@ -143,13 +147,7 @@ MetacelloAbstractPackageSpec >> mergeSpec: anotherSpec [
 { #category : 'querying' }
 MetacelloAbstractPackageSpec >> name [
 
-	^name
-]
-
-{ #category : 'accessing' }
-MetacelloAbstractPackageSpec >> name: aString [
-
-	name := aString trim
+	^ self subclassResponsibility
 ]
 
 { #category : 'merging' }
@@ -254,29 +252,19 @@ MetacelloAbstractPackageSpec >> setRequires: aCollection [
 
 { #category : 'private' }
 MetacelloAbstractPackageSpec >> specs: specNames forPackageOrdering: aVersionSpec [
-  | packageOrProjectSpecs |
-  packageOrProjectSpecs := Set new.
-  specNames
-    do: [ :specName | 
-      | spec |
-      "get project/group/package specs"
-      spec := aVersionSpec
-        packageNamed: specName
-        ifAbsent: [ 
-          MetacelloNameNotDefinedError
-            signal:
-              'project group, or package named: ' , specName printString
-                ,
-                  ' not found when used in requires: or includes: field of package: '
-                , self name printString , ' for version: '
-                , aVersionSpec versionString , ' of '
-                , aVersionSpec projectLabel , '.'.
-          nil	"return nil if resumed" ].
-      spec
-        ifNotNil: [ 
-          packageOrProjectSpecs
-            addAll: (spec resolveSpecsForPackageOrdering: aVersionSpec) ] ].
-  ^ packageOrProjectSpecs
+
+	| packageOrProjectSpecs |
+	packageOrProjectSpecs := Set new.
+	specNames do: [ :specName |
+			| spec |
+			"get project/group/package specs"
+			spec := aVersionSpec packageNamed: specName ifAbsent: [
+					        MetacelloNameNotDefinedError signal:
+						        'project group, or package named: ' , specName printString , ' not found when used in requires: or includes: field of package: '
+						        , self name printString , ' of ' , aVersionSpec projectLabel , '.'.
+					        nil "return nil if resumed" ].
+			spec ifNotNil: [ packageOrProjectSpecs addAll: (spec resolveSpecsForPackageOrdering: aVersionSpec) ] ].
+	^ packageOrProjectSpecs
 ]
 
 { #category : 'querying' }

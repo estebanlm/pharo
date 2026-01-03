@@ -9,6 +9,14 @@ Class {
 	#tag : 'Specs'
 }
 
+{ #category : 'accessing' }
+MetacelloProjectReferenceSpec class >> projectReference: aMetacelloProjectSpec [
+
+	^ self new
+		  projectReference: aMetacelloProjectSpec;
+		  yourself
+]
+
 { #category : 'merging' }
 MetacelloProjectReferenceSpec >> aboutToCopy [
     self projectReference className
@@ -88,6 +96,12 @@ MetacelloProjectReferenceSpec >> mergeSpec: anotherSpec [
 				 ifNotNil: [ :reference | reference mergeSpec: anotherProjectReference ]
 				 ifNil: [ anotherProjectReference ]) ].
 	^ newSpec
+]
+
+{ #category : 'querying' }
+MetacelloProjectReferenceSpec >> name [
+
+	^ self projectReference name
 ]
 
 { #category : 'merging' }
@@ -190,16 +204,4 @@ MetacelloProjectReferenceSpec >> resolveToPackagesIn: aVersionSpec visited: visi
 MetacelloProjectReferenceSpec >> version [
 
 	^self projectReference version
-]
-
-{ #category : 'querying' }
-MetacelloProjectReferenceSpec >> versionOrNil [
-
-	^ self projectReference versionOrNil
-]
-
-{ #category : 'accessing' }
-MetacelloProjectReferenceSpec >> versionString [
-
-	^self projectReference versionString
 ]

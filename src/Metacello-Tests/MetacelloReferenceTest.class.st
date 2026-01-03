@@ -1,12 +1,12 @@
 Class {
-	#name : 'MetacelloReferenceTestCase',
+	#name : 'MetacelloReferenceTest',
 	#superclass : 'TestCase',
-	#category : 'Metacello-TestsCore',
-	#package : 'Metacello-TestsCore'
+	#category : 'Metacello-Tests',
+	#package : 'Metacello-Tests'
 }
 
 { #category : 'testing' }
-MetacelloReferenceTestCase >> conditionResult: resultString [ 
+MetacelloReferenceTest >> conditionResult: resultString [ 
 	"GemStone unconditionally prints Symbols with quotes, Squeak and Pharo do not"
 
 	^((((((resultString 
@@ -20,7 +20,7 @@ MetacelloReferenceTestCase >> conditionResult: resultString [
 ]
 
 { #category : 'testing' }
-MetacelloReferenceTestCase >> expectedPrintString [
+MetacelloReferenceTest >> expectedPrintString [
     ^ 'spec preLoadDoIt: #''preloadForVersion''.
 spec postLoadDoIt: #''postloadForVersion''.
 spec repositories: [
@@ -38,19 +38,16 @@ spec
 			className: ''ConfigurationOfUI'';
 			preLoadDoIt: #''preloadForProject'';
 			postLoadDoIt: #''postloadForProject'';
-			operator: #''~>'';
 			loads: #(''UI-Core'' );
 			repository: ''http://www.example.com/r'' ];
 	baseline: ''UI Support'' overrides: [
 		spec
 			className: ''ConfigurationOfUINew'';
-			operator: #''>='';
 			loads: #(''UI-Core'' ''UI-Tests'' );
 			repository: ''http://www.example.com/r'' username: ''foo'' password: ''bar'' ];
 	baseline: ''UI Tests'' copyFrom: ''UI Support'' with: [
 		spec
 			className: ''ConfigurationOfUI'';
-			operator: #''~>'';
 			loads: #(''UI-Core'' ''UI-Tests'' );
 			repository: ''http://www.example.com/r'' ];
 	baseline: ''UI Support'' ;
@@ -93,11 +90,11 @@ spec
 ]
 
 { #category : 'testing' }
-MetacelloReferenceTestCase >> testReferenceConfig [
+MetacelloReferenceTest >> testReferenceConfig [
 
 	| spec map string expected |
-	spec := MetacelloReferenceBaseline project version spec.
-	map := spec packages map.
+	spec := MetacelloReferenceBaseline project version.
+	map := spec packagesSpec map.
 	string := self conditionResult: (map at: 'Example-AddOn') printString.
 	expected := 'spec 
 	name: ''Example-AddOn'';
@@ -122,17 +119,16 @@ MetacelloReferenceTestCase >> testReferenceConfig [
 	projectReference: [
 		spec
 			className: ''ConfigurationOfUINew'';
-			operator: #''>='';
 			loads: #(''UI-Core'' ''UI-Tests'' );
 			repository: ''http://www.example.com/r'' username: ''foo'' password: ''bar'' ].'
 ]
 
 { #category : 'testing' }
-MetacelloReferenceTestCase >> testReferenceConfigPrintString [
+MetacelloReferenceTest >> testReferenceConfigPrintString [
 
 	| version string expected x y |
 	version := MetacelloReferenceBaseline project version.
-	string := self conditionResult: version spec printString.
+	string := self conditionResult: version printString.
 	expected := self expectedPrintString.
 	1 to: string size do: [ :i |
 			(i > expected size or: [ (string at: i) ~= (expected at: i) ]) ifTrue: [

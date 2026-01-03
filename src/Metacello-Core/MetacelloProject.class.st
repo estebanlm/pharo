@@ -57,11 +57,6 @@ MetacelloProject class >> on: aConfig [
 	^self basicNew configuration: aConfig; yourself
 ]
 
-{ #category : 'accessing' }
-MetacelloProject class >> singletonVersionName [
-    ^ 'baseline'
-]
-
 { #category : 'private' }
 MetacelloProject >> attributes [
 
@@ -94,7 +89,7 @@ MetacelloProject >> defaultPlatformAttributes [
 { #category : 'spec classes' }
 MetacelloProject >> groupSpec [
 
-	^ MetacelloGroupSpec for: self
+	^ MetacelloGroupSpec project: self
 ]
 
 { #category : 'accessing' }
@@ -120,7 +115,7 @@ MetacelloProject >> loadType: aSymbol [
 { #category : 'spec classes' }
 MetacelloProject >> packageSpec [
 
-	^ MetacelloPackageSpec for: self
+	^ MetacelloPackageSpec project: self
 ]
 
 { #category : 'private' }
@@ -146,7 +141,7 @@ MetacelloProject >> printOn: aStream [
 	version
 		ifNil: [ aStream nextPutAll: 'No version yet' ]
 		ifNotNil: [
-				aStream nextPutAll: self singletonVersionName.
+				aStream nextPutAll: 'baseline'.
 				version spec projectLabel ifNotEmpty: [ :label | aStream nextPutAll: ' [' , label , ']' ].
 				aStream
 					nextPut: $,;
@@ -176,30 +171,18 @@ MetacelloProject >> projectAttributes: aList [
 MetacelloProject >> projectPackage [
 
 	self configuration class mcWorkingCopy ifNotNil: [ :workingCopy |
-		| pkgSpec repo |
-		pkgSpec := self packageSpec
-			           name: workingCopy packageName;
-			           yourself.
-		repo := workingCopy repositoryGroup repositories
-			        detect: [ :each | each ~~ MCCacheRepository default ]
-			        ifNone: [
-				        MetacelloNotification signal: 'Using cache repository for ' , self label , ' project package'.
-				        MCCacheRepository default ].
-		pkgSpec repository: (repo asRepositorySpecFor: self).
-		^ pkgSpec ].
+			| pkgSpec repo |
+			pkgSpec := self packageSpec
+				           name: workingCopy packageName;
+				           yourself.
+			repo := workingCopy repositoryGroup repositories
+				        detect: [ :each | each ~~ MCCacheRepository default ]
+				        ifNone: [
+						        MetacelloNotification signal: 'Using cache repository for ' , self label , ' project package'.
+						        MCCacheRepository default ].
+			pkgSpec repository: repo asRepositorySpec.
+			^ pkgSpec ].
 	^ nil
-]
-
-{ #category : 'spec classes' }
-MetacelloProject >> projectReferenceSpec [
-
-	^ MetacelloProjectReferenceSpec for: self
-]
-
-{ #category : 'spec classes' }
-MetacelloProject >> projectSpec [
-
-	^ MetacelloProjectSpec for: self
 ]
 
 { #category : 'accessing' }
@@ -207,23 +190,11 @@ MetacelloProject >> repositoryDescription [
 	^ repositoryDescription
 ]
 
-{ #category : 'spec classes' }
-MetacelloProject >> repositorySpec [
-
-	^ MetacelloRepositorySpec for: self
-]
-
 { #category : 'development support' }
 MetacelloProject >> setBaselineRepositoryDescription: aListOrRepositoryDescriptions [
 	"set #version repositories to < aListOrRepositoryDescriptions>. Should be the directory where the BaselineOf is located."
 
 	repositoryDescription := aListOrRepositoryDescriptions
-]
-
-{ #category : 'versions' }
-MetacelloProject >> singletonVersionName [
-
-	^ self class singletonVersionName
 ]
 
 { #category : 'versions' }

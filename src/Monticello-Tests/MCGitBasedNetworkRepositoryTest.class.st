@@ -1,8 +1,9 @@
 Class {
 	#name : 'MCGitBasedNetworkRepositoryTest',
-	#superclass : 'MetacelloSpecTestCase',
-	#category : 'Metacello-TestsMCCore',
-	#package : 'Metacello-TestsMCCore'
+	#superclass : 'TestCase',
+	#category : 'Monticello-Tests-Metacello',
+	#package : 'Monticello-Tests',
+	#tag : 'Metacello'
 }
 
 { #category : 'tests' }

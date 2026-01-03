@@ -4,8 +4,8 @@ A baseline to test lock/unlock
 Class {
 	#name : 'BaselineOfTestToLock1',
 	#superclass : 'BaselineOf',
-	#category : 'Metacello-TestsCore-Specs',
-	#package : 'Metacello-TestsCore',
+	#category : 'Metacello-Tests-Specs',
+	#package : 'Metacello-Tests',
 	#tag : 'Specs'
 }
 

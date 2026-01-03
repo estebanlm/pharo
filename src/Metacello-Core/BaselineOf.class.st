@@ -71,8 +71,9 @@ Class {
 	#instVars : [
 		'project'
 	],
-	#category : 'Metacello-Base',
-	#package : 'Metacello-Base'
+	#category : 'Metacello-Core-Model',
+	#package : 'Metacello-Core',
+	#tag : 'Model'
 }
 
 { #category : 'accessing' }

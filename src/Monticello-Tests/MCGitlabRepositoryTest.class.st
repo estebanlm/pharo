@@ -1,8 +1,9 @@
 Class {
 	#name : 'MCGitlabRepositoryTest',
 	#superclass : 'TestCase',
-	#category : 'Metacello-TestsMCCore',
-	#package : 'Metacello-TestsMCCore'
+	#category : 'Monticello-Tests-Metacello',
+	#package : 'Monticello-Tests',
+	#tag : 'Metacello'
 }
 
 { #category : 'tests' }

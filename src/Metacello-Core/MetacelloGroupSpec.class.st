@@ -1,10 +1,22 @@
 Class {
 	#name : 'MetacelloGroupSpec',
 	#superclass : 'MetacelloAbstractPackageSpec',
+	#instVars : [
+		'project',
+		'name'
+	],
 	#category : 'Metacello-Core-Specs',
 	#package : 'Metacello-Core',
 	#tag : 'Specs'
 }
+
+{ #category : 'instance creation' }
+MetacelloGroupSpec class >> project: aMetacelloProject [
+
+	^ self new
+		  project: aMetacelloProject;
+		  yourself
+]
 
 { #category : 'visiting' }
 MetacelloGroupSpec >> acceptVisitor: aVisitor [ 
@@ -46,12 +58,45 @@ MetacelloGroupSpec >> includeSpecNamesForPackageOrdering: aVersionSpec [
   ^ #()
 ]
 
+{ #category : 'merging' }
+MetacelloGroupSpec >> mergeSpec: anotherSpec [
+
+	| newSpec |
+	newSpec := super mergeSpec: anotherSpec.
+	anotherSpec name ifNotNil: [ :aName | newSpec name: aName ].
+	^ newSpec
+]
+
+{ #category : 'querying' }
+MetacelloGroupSpec >> name [
+
+	^name
+]
+
+{ #category : 'accessing' }
+MetacelloGroupSpec >> name: aString [
+
+	name := aString trim
+]
+
 { #category : 'loading' }
 MetacelloGroupSpec >> packageSpecsInLoadOrder [
 
 	^ (self project version spec packageSpecsInLoadOrder select: [ :each |
 		   self includes includes: each name ]) flatCollect: [ :e |
 		  e packageSpecsInLoadOrder ]
+]
+
+{ #category : 'accessing' }
+MetacelloGroupSpec >> project [
+
+	^ project
+]
+
+{ #category : 'accessing' }
+MetacelloGroupSpec >> project: aMetacelloProject [
+
+	project := aMetacelloProject
 ]
 
 { #category : 'visiting' }
@@ -107,7 +152,7 @@ MetacelloGroupSpec >> resolveToPackagesIn: aVersionSpec andProjects: andProjects
 
 	visited visit: self doing: [ :aSpec |
 		| map |
-		map := aVersionSpec packages map.
+		map := aVersionSpec packagesSpec map.
 		aSpec includes do: [ :pkgName |
 			(aVersionSpec packageNamed: pkgName forMap: map ifAbsent: [  ])
 				projectDo: [ :prj | andProjectsBool ifTrue: [ packages at: prj name put: prj ] ]

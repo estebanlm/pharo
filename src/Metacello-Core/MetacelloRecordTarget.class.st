@@ -104,8 +104,8 @@ MetacelloRecordTarget >> visitProjectReference: aMetacelloProjectReferenceSpec [
 
 	registration := MetacelloProjectRegistration
 		                registrationForProjectSpec: projectReferenceToLoad
-		                ifAbsent: [ :new | new ]
-		                ifPresent: [ :existing :new | engine resolvePresentProject: existing new: new ].
+		                ifPresent: [ :existing | engine resolvePresentProject: existing new: projectReferenceToLoad asProjectRegistration ]
+		                ifAbsent: [ projectReferenceToLoad asProjectRegistration ].
 	registered := registration projectSpec.
 
 	(registered compareEqual: projectReferenceToLoad) ifFalse: [ "counts as override, only if they differ in some aspect"

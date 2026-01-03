@@ -2,17 +2,33 @@ Class {
 	#name : 'MetacelloVersionSpec',
 	#superclass : 'MetacelloSpec',
 	#instVars : [
+		'project',
 		'repositories',
 		'importArray',
 		'postLoadDoIt',
 		'importName',
 		'preLoadDoIt',
-		'packages'
+		'packagesSpec'
 	],
 	#category : 'Metacello-Core-Specs',
 	#package : 'Metacello-Core',
 	#tag : 'Specs'
 }
+
+{ #category : 'class initialization' }
+MetacelloVersionSpec class >> initialize [
+	"Added in Pharo 14."
+
+	self deprecatedAliases: #( MetacelloVersion )
+]
+
+{ #category : 'instance creation' }
+MetacelloVersionSpec class >> project: aMetacelloProject [
+
+	^ self new
+		  project: aMetacelloProject;
+		  yourself
+]
 
 { #category : 'visiting' }
 MetacelloVersionSpec >> acceptVisitor: aVisitor [
@@ -66,35 +82,35 @@ MetacelloVersionSpec >> configMethodOn: aStream indent: indent [
 	hasRepositories := (spec := self repositories) isNotNil and: [ spec list isEmpty not ].
 	hasImport := self import isNotNil.
 	hasPackageSpecs := false.
-	self packages list do: [ :member |
-		member spec
-			projectDo: [ :proj | member spec name ifNotNil: [ hasPackageSpecs := true ] ]
-			packageDo: [ :package | member spec name ifNotNil: [ hasPackageSpecs := true ] ]
-			groupDo: [ :group | member spec name ifNotNil: [ hasPackageSpecs := true ] ] ].
+	self packagesSpec list do: [ :member |
+			member spec
+				projectDo: [ :proj | member spec name ifNotNil: [ hasPackageSpecs := true ] ]
+				packageDo: [ :package | member spec name ifNotNil: [ hasPackageSpecs := true ] ]
+				groupDo: [ :group | member spec name ifNotNil: [ hasPackageSpecs := true ] ] ].
 	self configMethodBasicOn: aStream last: (hasRepositories | hasPackageSpecs | hasImport) not indent: indent.
 	hasImport ifTrue: [
-		self
-			configMethodValueOn: aStream
-			for: self import
-			selector: 'import:'
-			last: (hasRepositories | hasPackageSpecs) not
-			indent: indent ].
+			self
+				configMethodValueOn: aStream
+				for: self import
+				selector: 'import:'
+				last: (hasRepositories | hasPackageSpecs) not
+				indent: indent ].
 	hasRepositories ifTrue: [
-		spec map values size = 1
-			ifTrue: [
-				aStream
-					tab: indent;
-					nextPutAll: 'spec repository: ';
-					nextPutAll: spec map values first description printString;
-					nextPutAll: '.'.
-				hasPackageSpecs ifTrue: [ aStream cr ] ]
-			ifFalse: [
-				self
-					configMethodOn: aStream
-					for: spec
-					selector: 'repositories:'
-					last: hasPackageSpecs not
-					indent: indent ] ].
+			spec map values size = 1
+				ifTrue: [
+						aStream
+							tab: indent;
+							nextPutAll: 'spec repository: ';
+							nextPutAll: spec map values first description printString;
+							nextPutAll: '.'.
+						hasPackageSpecs ifTrue: [ aStream cr ] ]
+				ifFalse: [
+						self
+							configMethodOn: aStream
+							for: spec
+							selector: 'repositories:'
+							last: hasPackageSpecs not
+							indent: indent ] ].
 	self configPackagesSpecMethodOn: aStream indent: indent
 ]
 
@@ -119,52 +135,46 @@ MetacelloVersionSpec >> configPackagesSpecMethodOn: aStream indent: indent [
 	projectSpecs := OrderedCollection new.
 	packageSpecs := OrderedCollection new.
 	groupSpecs := OrderedCollection new.
-	self packages list do: [ :member |
-		member spec
-			projectDo: [ :proj | member spec name ifNotNil: [ projectSpecs add: member ] ]
-			packageDo: [ :package | member spec name ifNotNil: [ packageSpecs add: member ] ]
-			groupDo: [ :group | member spec name ifNotNil: [ groupSpecs add: member ] ] ].
-	projectSpecs isEmpty not ifTrue: [
-		aStream
-			tab: indent;
-			nextPutAll: 'spec '.
-		projectSpecs size > 1 ifTrue: [
+	self packagesSpec list do: [ :member |
+			member spec
+				projectDo: [ :proj | member spec name ifNotNil: [ projectSpecs add: member ] ]
+				packageDo: [ :package | member spec name ifNotNil: [ packageSpecs add: member ] ]
+				groupDo: [ :group | member spec name ifNotNil: [ groupSpecs add: member ] ] ].
+	projectSpecs isEmpty ifFalse: [
 			aStream
-				cr;
-				tab: indent + 1 ].
-		1 to: projectSpecs size do: [ :index |
-			(projectSpecs at: index) configMethodCascadeOn: aStream last: index == projectSpecs size indent: indent + 1.
-			index ~= projectSpecs size ifTrue: [ aStream tab: indent + 1 ] ] ].
-	packageSpecs isEmpty not ifTrue: [
-		projectSpecs isEmpty not ifTrue: [ aStream cr ].
-		aStream
-			tab: indent;
-			nextPutAll: 'spec '.
-		packageSpecs size > 1 ifTrue: [
+				tab: indent;
+				nextPutAll: 'spec '.
+			projectSpecs size > 1 ifTrue: [
+					aStream
+						cr;
+						tab: indent + 1 ].
+			1 to: projectSpecs size do: [ :index |
+					(projectSpecs at: index) configMethodCascadeOn: aStream last: index == projectSpecs size indent: indent + 1.
+					index ~= projectSpecs size ifTrue: [ aStream tab: indent + 1 ] ] ].
+	packageSpecs isEmpty ifFalse: [
+			projectSpecs isEmpty ifFalse: [ aStream cr ].
 			aStream
-				cr;
-				tab: indent + 1 ].
-		1 to: packageSpecs size do: [ :index |
-			(packageSpecs at: index) configMethodCascadeOn: aStream last: index == packageSpecs size indent: indent + 1.
-			index ~= packageSpecs size ifTrue: [ aStream tab: indent + 1 ] ] ].
-	groupSpecs isEmpty not ifTrue: [
-		projectSpecs isEmpty not | packageSpecs isEmpty not ifTrue: [ aStream cr ].
-		aStream
-			tab: indent;
-			nextPutAll: 'spec '.
-		groupSpecs size > 1 ifTrue: [
+				tab: indent;
+				nextPutAll: 'spec '.
+			packageSpecs size > 1 ifTrue: [
+					aStream
+						cr;
+						tab: indent + 1 ].
+			1 to: packageSpecs size do: [ :index |
+					(packageSpecs at: index) configMethodCascadeOn: aStream last: index == packageSpecs size indent: indent + 1.
+					index ~= packageSpecs size ifTrue: [ aStream tab: indent + 1 ] ] ].
+	groupSpecs isEmpty ifFalse: [
+			projectSpecs isEmpty not | packageSpecs isEmpty not ifTrue: [ aStream cr ].
 			aStream
-				cr;
-				tab: indent + 1 ].
-		1 to: groupSpecs size do: [ :index |
-			(groupSpecs at: index) configMethodCascadeOn: aStream last: index == groupSpecs size indent: indent + 1.
-			index ~= groupSpecs size ifTrue: [ aStream tab: indent + 1 ] ] ]
-]
-
-{ #category : 'private' }
-MetacelloVersionSpec >> createVersion [
-
-	^ MetacelloVersion fromSpec: self
+				tab: indent;
+				nextPutAll: 'spec '.
+			groupSpecs size > 1 ifTrue: [
+					aStream
+						cr;
+						tab: indent + 1 ].
+			1 to: groupSpecs size do: [ :index |
+					(groupSpecs at: index) configMethodCascadeOn: aStream last: index == groupSpecs size indent: indent + 1.
+					index ~= groupSpecs size ifTrue: [ aStream tab: indent + 1 ] ] ]
 ]
 
 { #category : 'enumerating' }
@@ -187,8 +197,65 @@ MetacelloVersionSpec >> defaultPackageNames [
 	"if there is a package named 'default' (a group) then it defines the default package names,
 	 otherwise answer a list of all of the package names in this version"
 
-	self packages packageNamed: 'default' ifAbsent: [ ^self packageNames ].
-	^#('default')
+	self packagesSpec packageNamed: 'default' ifAbsent: [ ^ self packageNames ].
+	^ #( 'default' )
+]
+
+{ #category : 'private' }
+MetacelloVersionSpec >> doFetchRequiredFromArray: anArray withEngine: anEngine [
+
+	^ self doWithProgress: [ self fetchRequiredFromArray: anArray withEngine: anEngine ] label: 'Fetching' silently: anEngine silently
+]
+
+{ #category : 'private' }
+MetacelloVersionSpec >> doLoadRequiredFromArray: anArray withEngine: anEngine [
+
+	^ self doWithProgress: [ self loadRequiredFromArray: anArray withEngine: anEngine ] label: 'Loading' silently: anEngine silently
+]
+
+{ #category : 'private' }
+MetacelloVersionSpec >> doRecordRequiredFromArray: anArray withEngine: anEngine [
+
+	^ self doWithProgress: [ self recordRequiredFromArray: anArray withEngine: anEngine ] label: 'Recording' silently: anEngine silently
+]
+
+{ #category : 'private' }
+MetacelloVersionSpec >> doWithProgress: aBlock label: aLabel silently: silently [
+
+	| displayString result |
+	displayString := aLabel , ' baseline of ' , self projectLabel.
+	MetacelloNotification signal: displayString , '...'.
+
+	silently
+		ifTrue: [ result := aBlock value ]
+		ifFalse: [
+				displayString displayProgressFrom: 0 to: 2 during: [ :bar |
+						bar value: 1.
+						result := aBlock value.
+						bar value: 2 ] ].
+
+	MetacelloNotification signal: '...finished to load the baseline'.
+	^ result
+]
+
+{ #category : 'private' }
+MetacelloVersionSpec >> fetchRequiredFromArray: anArray withEngine: anEngine [
+
+	| directive |
+	directive := self recordRequiredFromArray: (anArray ifEmpty: [ self defaultPackageNames ]) withEngine: anEngine.
+
+	directive acceptVisitor: (MetacelloFetchTarget on: anEngine).
+	^ directive
+]
+
+{ #category : 'accessing' }
+MetacelloVersionSpec >> groups [
+	"Answers the list of groups associated with this version"
+
+	| groups |
+	groups := OrderedCollection new.
+	self projectDo: [ :ignored |  ] packageDo: [ :ignored |  ] groupDo: [ :grp | groups add: grp ].
+	^ groups
 ]
 
 { #category : 'accessing' }
@@ -217,7 +284,17 @@ MetacelloVersionSpec >> importArray [
 { #category : 'printing' }
 MetacelloVersionSpec >> label [
 
-	^self versionString, ' [', self projectLabel, ']'
+	^ 'baseline [' , self projectLabel , ']'
+]
+
+{ #category : 'private' }
+MetacelloVersionSpec >> loadRequiredFromArray: anArray withEngine: anEngine [
+
+	| directive |
+	directive := self fetchRequiredFromArray: (anArray ifEmpty: [ self defaultPackageNames ]) withEngine: anEngine.
+
+	directive acceptVisitor: (MetacelloLoadTarget on: anEngine).
+	^ directive
 ]
 
 { #category : 'accessing' }
@@ -232,7 +309,7 @@ MetacelloVersionSpec >> mergeMap [
 	^ super mergeMap
 		  at: #preLoadDoIt put: preLoadDoIt;
 		  at: #postLoadDoIt put: postLoadDoIt;
-		  at: #packageList put: self packages;
+		  at: #packageList put: self packagesSpec;
 		  at: #repositories put: self repositories;
 		  yourself
 ]
@@ -244,13 +321,13 @@ MetacelloVersionSpec >> mergeSpec: anotherSpec [
 	newSpec := super mergeSpec: anotherSpec.
 	map := anotherSpec mergeMap.
 	(anotherPackages := map at: #packageList) isEmpty not ifTrue: [
-		newSpec packages: (self packages isEmpty
-				 ifTrue: [ anotherPackages ]
-				 ifFalse: [ self packages mergeSpec: anotherPackages ]) ].
+			newSpec packagesSpec: (self packagesSpec isEmpty
+					 ifTrue: [ anotherPackages ]
+					 ifFalse: [ self packagesSpec mergeSpec: anotherPackages ]) ].
 	(anotherRepositories := map at: #repositories) isEmpty not ifTrue: [
-		newSpec repositories: (self repositories isEmpty
-				 ifTrue: [ anotherRepositories ]
-				 ifFalse: [ self repositories mergeSpec: anotherRepositories ]) ].
+			newSpec repositories: (self repositories isEmpty
+					 ifTrue: [ anotherRepositories ]
+					 ifFalse: [ self repositories mergeSpec: anotherRepositories ]) ].
 	^ newSpec
 ]
 
@@ -262,7 +339,7 @@ MetacelloVersionSpec >> nonOverridable [
 { #category : 'querying' }
 MetacelloVersionSpec >> packageNamed: aString [
 
-	^self packageNamed: aString ifAbsent: [ nil ]
+	^ self packageNamed: aString ifAbsent: [ nil ]
 ]
 
 { #category : 'querying' }
@@ -294,19 +371,19 @@ MetacelloVersionSpec >> packageNamed: aString forMap: map ifAbsent: absentBlock 
 { #category : 'querying' }
 MetacelloVersionSpec >> packageNamed: aString ifAbsent: aBlock [
 
-	^self packageNamed: aString forMap: self packages map ifAbsent: aBlock
+	^ self packageNamed: aString forMap: self packagesSpec map ifAbsent: aBlock
 ]
 
 { #category : 'querying' }
 MetacelloVersionSpec >> packageNames [
 
-	^ self packages map keys asSet
+	^ self packagesSpec map keys asSet
 ]
 
 { #category : 'querying' }
 MetacelloVersionSpec >> packageSpecsInLoadOrder [
 
-	^ self packages packageSpecsInLoadOrderFor: self
+	^ self packagesSpec packageSpecsInLoadOrderFor: self
 ]
 
 { #category : 'querying' }
@@ -355,20 +432,31 @@ MetacelloVersionSpec >> packageSpecsInLoadOrderForMap: packageMap [
 
 { #category : 'accessing' }
 MetacelloVersionSpec >> packages [
+	"Answers the list of packages associated with this version"
 
-	^ packages ifNil: [ packages := MetacelloPackagesSpec for: self project ]
+	| packages |
+	packages := OrderedCollection new.
+	self projectDo: [ :ignored |  ] packageDo: [ :pkg | packages add: pkg ] groupDo: [ :ignored |  ].
+	^ packages
 ]
 
 { #category : 'accessing' }
-MetacelloVersionSpec >> packages: anObject [
-    packages := anObject
+MetacelloVersionSpec >> packagesSpec [
+
+	^ packagesSpec ifNil: [ packagesSpec := MetacelloPackagesSpec new ]
+]
+
+{ #category : 'accessing' }
+MetacelloVersionSpec >> packagesSpec: anObject [
+
+	packagesSpec := anObject
 ]
 
 { #category : 'copying' }
 MetacelloVersionSpec >> postCopy [
 
 	super postCopy.
-	packages := packages copy.
+	packagesSpec := packagesSpec copy.
 	repositories := repositories copy
 ]
 
@@ -398,14 +486,22 @@ MetacelloVersionSpec >> preLoadDoIt: aSymbol [
 	preLoadDoIt := aSymbol
 ]
 
+{ #category : 'accessing' }
+MetacelloVersionSpec >> project [
+
+	^ project
+]
+
+{ #category : 'accessing' }
+MetacelloVersionSpec >> project: aMetacelloProject [
+
+	project := aMetacelloProject
+]
+
 { #category : 'enumerating' }
 MetacelloVersionSpec >> projectDo: projectBlock packageDo: packageBlock groupDo: groupBlock [
 
-	self packageSpecsInLoadOrder do: [ :pkgSpec |
-		pkgSpec
-			projectDo: projectBlock
-			packageDo: packageBlock
-			groupDo: groupBlock ]
+	self packageSpecsInLoadOrder do: [ :pkgSpec | pkgSpec projectDo: projectBlock packageDo: packageBlock groupDo: groupBlock ]
 ]
 
 { #category : 'accessing' }
@@ -415,9 +511,37 @@ MetacelloVersionSpec >> projectLabel [
 ]
 
 { #category : 'accessing' }
+MetacelloVersionSpec >> projects [
+	"Answers the list of projects associated with this version"
+
+	| projects |
+	projects := OrderedCollection new.
+	self projectDo: [ :prj | projects add: prj projectReference ] packageDo: [ :ignored |  ] groupDo: [ :ignored |  ].
+	^ projects
+]
+
+{ #category : 'private' }
+MetacelloVersionSpec >> recordRequiredFromArray: anArray withEngine: anEngine [
+
+	| target |
+	target := MetacelloRecordTarget on: anEngine.
+	target required: anArray.
+
+	self acceptVisitor: target.
+
+	^ target specBuilder root
+]
+
+{ #category : 'actions' }
+MetacelloVersionSpec >> recordWithEngine: anEngine [
+
+	^ self doRecordRequiredFromArray: self defaultPackageNames withEngine: anEngine
+]
+
+{ #category : 'accessing' }
 MetacelloVersionSpec >> repositories [
 
-	^ repositories ifNil: [ repositories := self newRepositoriesSpec ]
+	^ repositories ifNil: [ repositories := MetacelloRepositoriesSpec new ]
 ]
 
 { #category : 'accessing' }
@@ -450,20 +574,19 @@ MetacelloVersionSpec >> resolveToLoadableSpecs: aRequiredCollection [
 	packageMap := Dictionary new.
 	required := aRequiredCollection copy.
 	managedRequirements := Set new.
-	map := self packages map.
+	map := self packagesSpec map.
 	[ required isEmpty ] whileFalse: [
-		| newReqd |
-		newReqd := Set new.
-		required do: [ :req |
-			| loadableSpec |
-			loadableSpec := self packageNamed: req forMap: map ifAbsent: [ ^ self error: 'Name not found: ' , req ].
-			"If the loadable spec is a Group we ignore it."
-			loadableSpec resolveToLoadableSpec ifNotNil: [ :resolvedSpec | packageMap at: loadableSpec name put: resolvedSpec ].
-			newReqd addAll: loadableSpec requires.
-			newReqd addAll: loadableSpec includes ].
-		managedRequirements addAll: required.
-		newReqd removeAllFoundIn: managedRequirements.
-		required := newReqd ].
+			| newReqd |
+			newReqd := Set new.
+			required do: [ :req |
+					| loadableSpec |
+					loadableSpec := self packageNamed: req forMap: map ifAbsent: [ ^ self error: 'Name not found: ' , req ]. "If the loadable spec is a Group we ignore it."
+					loadableSpec resolveToLoadableSpec ifNotNil: [ :resolvedSpec | packageMap at: loadableSpec name put: resolvedSpec ].
+					newReqd addAll: loadableSpec requires.
+					newReqd addAll: loadableSpec includes ].
+			managedRequirements addAll: required.
+			newReqd removeAllFoundIn: managedRequirements.
+			required := newReqd ].
 	^ packageMap
 ]
 
@@ -474,30 +597,15 @@ MetacelloVersionSpec >> setImport: anArray [
     ifNotNil: [ importArray , anArray ]
 ]
 
+{ #category : 'accessing' }
+MetacelloVersionSpec >> spec [
+	"To remove once Iceberg is fixed."
+
+	^ self
+]
+
 { #category : 'enumerating' }
 MetacelloVersionSpec >> specListProjectDo: projectBlock packageDo: packageBlock groupDo: groupBlock [
 
-	self packages specListDo: [:pkgSpec |
-		pkgSpec projectDo: projectBlock packageDo: packageBlock groupDo: groupBlock ]
-]
-
-{ #category : 'enumerating' }
-MetacelloVersionSpec >> specsNamed: packageAndProjectNames projectDo: projectBlock packageDo: packageBlock groupDo: groupBlock [
-
-	| map |
-	map := self packages map.
-	packageAndProjectNames do: [ :name |
-		(map at: name ifAbsent: [  ]) ifNotNil: [ :pkgSpec | pkgSpec projectDo: projectBlock packageDo: packageBlock groupDo: groupBlock ] ]
-]
-
-{ #category : 'private' }
-MetacelloVersionSpec >> versionNumber [
-
-	^ MetacelloVersionNumber fromString: self versionString
-]
-
-{ #category : 'querying' }
-MetacelloVersionSpec >> versionString [
-
-	^ self project singletonVersionName
+	self packagesSpec specListDo: [ :pkgSpec | pkgSpec projectDo: projectBlock packageDo: packageBlock groupDo: groupBlock ]
 ]

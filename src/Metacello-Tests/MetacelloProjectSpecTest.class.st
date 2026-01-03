@@ -1,13 +1,13 @@
 Class {
-	#name : 'MetacelloProjectSpecTestCase',
-	#superclass : 'MetacelloSpecTestCase',
-	#category : 'Metacello-TestsCore-Specs',
-	#package : 'Metacello-TestsCore',
+	#name : 'MetacelloProjectSpecTest',
+	#superclass : 'MetacelloAbstractSpecTest',
+	#category : 'Metacello-Tests-Specs',
+	#package : 'Metacello-Tests',
 	#tag : 'Specs'
 }
 
 { #category : 'tests' }
-MetacelloProjectSpecTestCase >> testProjectMergeSpec [
+MetacelloProjectSpecTest >> testProjectMergeSpec [
 
 	| projectA projectB project |
 	projectA := self projectSpec
@@ -20,7 +20,6 @@ MetacelloProjectSpecTestCase >> testProjectMergeSpec [
 	projectB := self projectSpec
 		            name: 'Project';
 		            className: 'ConfigurationOfProjectB';
-		            operator: #<;
 		            loads: #( 'MyPackage' 'MyTests' );
 		            preLoadDoIt: #preLoadDoItB;
 		            postLoadDoIt: #postLoadDoItB;
@@ -28,14 +27,13 @@ MetacelloProjectSpecTestCase >> testProjectMergeSpec [
 	project := projectA mergeSpec: projectB.
 	self assert: project name equals: 'Project'.
 	self assert: project className equals: 'ConfigurationOfProjectB'.
-	self assert: project operator identicalTo: #<.
 	self assert: project loads equals: #( 'MyPackage' 'MyTests' ).
 	self assert: project preLoadDoIt value identicalTo: #preLoadDoItB.
 	self assert: project postLoadDoIt value identicalTo: #postLoadDoItB
 ]
 
 { #category : 'tests' }
-MetacelloProjectSpecTestCase >> testProjectMergeSpec2 [
+MetacelloProjectSpecTest >> testProjectMergeSpec2 [
 
 	| projectA projectB project repository |
 	projectA := self projectSpec
@@ -64,34 +62,32 @@ MetacelloProjectSpecTestCase >> testProjectMergeSpec2 [
 ]
 
 { #category : 'tests' }
-MetacelloProjectSpecTestCase >> testProjectSpec [
+MetacelloProjectSpecTest >> testProjectSpec [
+
 	| project |
 	project := self projectSpec.
 	project
 		name: 'Project';
 		className: 'ConfigurationOfProject';
-		operator: #<;
-		operator: nil;
 		loads: 'MyPackage';
-		loads: #('MyPackage' 'MyTests');
+		loads: #( 'MyPackage' 'MyTests' );
 		preLoadDoIt: #preLoadDoIt;
 		postLoadDoIt: #postLoadDoIt;
 		yourself.
 	self assert: project name equals: 'Project'.
 	self assert: project className equals: 'ConfigurationOfProject'.
-	self assert: project operator identicalTo: #>=.
-	self assert: project loads equals: #('MyPackage' 'MyTests').
+	self assert: project loads equals: #( 'MyPackage' 'MyTests' ).
 	self assert: project preLoadDoIt value identicalTo: #preLoadDoIt.
 	self assert: project postLoadDoIt value identicalTo: #postLoadDoIt.
-	self should: [ project includes: #() ] raise: Error.
-	self should: [ project requires: #() ] raise: Error.
+	self should: [ project includes: #(  ) ] raise: Error.
+	self should: [ project requires: #(  ) ] raise: Error.
 	project projectDo: [ :prjct | self assert: project identicalTo: prjct ] packageDo: [ :ignored | self assert: false ] groupDo: [ :ignored | self assert: false ].
 	self should: [ project preLoadDoIt: '' ] raise: Error.
 	self should: [ project postLoadDoIt: '' ] raise: Error
 ]
 
 { #category : 'tests' }
-MetacelloProjectSpecTestCase >> testProjectSpec2 [
+MetacelloProjectSpecTest >> testProjectSpec2 [
 	| project repository |
 	project := self projectSpec.
 	project

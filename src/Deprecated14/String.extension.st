@@ -13,6 +13,13 @@ String >> isValidSelector [
 ]
 
 { #category : '*Deprecated14' }
+String >> metacelloIntegerLessThanSelf: anInteger [
+	"integer version components are always '>' string component"
+
+	^false
+]
+
+{ #category : '*Deprecated14' }
 String >> metacelloSemanticIntegerLessThanSelf: anInteger [
     "integer version components are always '>' string component"
 
@@ -27,6 +34,18 @@ String >> metacelloSemanticStringLessThanSelf: aString [
 { #category : '*Deprecated14' }
 String >> metacelloSemanticVersionComponentLessThan: aMetacelloVersonComponent [
     ^ aMetacelloVersonComponent metacelloSemanticStringLessThanSelf: self
+]
+
+{ #category : '*Deprecated14' }
+String >> metacelloStringLessThanSelf: aString [
+
+	^aString < self
+]
+
+{ #category : '*Deprecated14' }
+String >> metacelloVersionComponentLessThan: aMetacelloVersonComponent [
+
+	^aMetacelloVersonComponent metacelloStringLessThanSelf: self
 ]
 
 { #category : '*Deprecated14' }

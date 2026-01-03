@@ -42,9 +42,8 @@ Class {
 	#name : 'MetacelloVersionNumber',
 	#superclass : 'Magnitude',
 	#type : 'variable',
-	#category : 'Metacello-Core-Model',
-	#package : 'Metacello-Core',
-	#tag : 'Model'
+	#category : 'Deprecated14',
+	#package : 'Deprecated14'
 }
 
 { #category : 'private' }
@@ -65,17 +64,21 @@ MetacelloVersionNumber class >> fromString: aString [
 
 	| new components |
 	components := OrderedCollection new.
-	(aString findTokens: '.') do: [:subString | | strs |
-		strs := subString findTokens: '-'.
-		"first subString token could be an integer"
-		components add: (self extractNumericComponent: strs first).
-		strs size > 1
-			ifTrue: [
-				"remaining are uncoditionally Strings, because of leading $-"
-				components addAll: strs allButFirst ]].
+	(aString findTokens: '.') do: [ :subString |
+			| strs |
+			strs := subString findTokens: '-'. "first subString token could be an integer"
+			components add: (self extractNumericComponent: strs first).
+			strs size > 1 ifTrue: [ "remaining are uncoditionally Strings, because of leading $-" components addAll: strs allButFirst ] ].
 	new := self new: components size.
-	1 to: components size do: [:i | new at: i put: (components at: i) ].
-	^new
+	1 to: components size do: [ :i | new at: i put: (components at: i) ].
+	^ new
+]
+
+{ #category : 'testing' }
+MetacelloVersionNumber class >> isDeprecated [
+	"This was only used with ConfigurationOf but cannot be used with BaselineOf."
+
+	^ true
 ]
 
 { #category : 'comparing' }
@@ -111,12 +114,6 @@ MetacelloVersionNumber >> approximateBase [
 	base := self privateCopyFrom: 1 to: self size - 1.
 	base at: base size put: (base at: base size) + 1.
 	^base
-]
-
-{ #category : 'converting' }
-MetacelloVersionNumber >> asMetacelloVersionNumber [
-
-	^self
 ]
 
 { #category : 'private' }
@@ -260,23 +257,24 @@ MetacelloVersionNumber >> match: aVersionPattern [
 	 version sequences. '?' as the version pattern matches all versions. No more version pattern 
 	 sequences are permitted once the '?' sequence is used. If used, it is the last version pattern
 	 sequence. "
-	
+
 	| patternVersion mySize patternSize |
-	patternVersion := aVersionPattern asMetacelloVersionNumber.
+	patternVersion := aVersionPattern isString
+		                  ifTrue: [ MetacelloVersionNumber fromString: aVersionPattern ]
+		                  ifFalse: [ aVersionPattern ].
 	mySize := self size.
 	patternSize := patternVersion size.
-	mySize = patternSize 
-		ifFalse: [ 
-			mySize < patternSize ifTrue: [ ^false ].
-			(patternVersion at: patternSize) ~= '?' ifTrue: [ ^false ].
+	mySize = patternSize ifFalse: [
+			mySize < patternSize ifTrue: [ ^ false ].
+			(patternVersion at: patternSize) ~= '?' ifTrue: [ ^ false ].
 			mySize := patternSize ].
-	1 to: mySize do: [:i | | pattern |
-		pattern := (patternVersion at: i) asString.
-		pattern = '?'
-			ifTrue: [i = mySize ifFalse: [ ^self error: 'Invalid version match pattern: ', aVersionPattern printString ]]
-			ifFalse: [ (pattern match: (self at: i) asString)  ifFalse: [ ^false ]]].
-	^true
-"
+	1 to: mySize do: [ :i |
+			| pattern |
+			pattern := (patternVersion at: i) asString.
+			pattern = '?'
+				ifTrue: [ i = mySize ifFalse: [ ^ self error: 'Invalid version match pattern: ' , aVersionPattern printString ] ]
+				ifFalse: [ (pattern match: (self at: i) asString) ifFalse: [ ^ false ] ] ].
+	^ true "
   '1.1.1' asMetacelloVersionNumber match: '*.*.*'. -> true
   '1.1.1' asMetacelloVersionNumber match: '*.#.*'. -> true
   '1.10.1' asMetacelloVersionNumber match: '*.#.*'. -> false
@@ -329,7 +327,7 @@ MetacelloVersionNumber >> versionString [
 	| strm |
 	strm := WriteStream on: String new.
 	self printOn: strm.
-	^strm contents
+	^ strm contents
 ]
 
 { #category : 'comparing' }

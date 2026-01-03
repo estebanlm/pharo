@@ -1,12 +1,12 @@
 Class {
-	#name : 'MetacelloRepositoryCommonTestCase',
+	#name : 'MetacelloRepositoryCommonTest',
 	#superclass : 'AbstractEnvironmentTestCase',
-	#category : 'Metacello-TestsMCCore',
-	#package : 'Metacello-TestsMCCore'
+	#category : 'Metacello-Tests',
+	#package : 'Metacello-Tests'
 }
 
 { #category : 'baselines' }
-MetacelloRepositoryCommonTestCase >> baseline: spec [
+MetacelloRepositoryCommonTest >> baseline: spec [
 
 	<baseline>
 	spec for: #common do: [
@@ -39,13 +39,13 @@ MetacelloRepositoryCommonTestCase >> baseline: spec [
 ]
 
 { #category : 'accessing' }
-MetacelloRepositoryCommonTestCase >> project [
+MetacelloRepositoryCommonTest >> project [
 
 	^ (MetacelloBaselineConstructor on: self) project
 ]
 
 { #category : 'running' }
-MetacelloRepositoryCommonTestCase >> setUp [
+MetacelloRepositoryCommonTest >> setUp [
     super setUp.
     testingEnvironment
         at: #'Metacello_Platform_Test_GlobalDictionary'
@@ -56,14 +56,14 @@ MetacelloRepositoryCommonTestCase >> setUp [
 ]
 
 { #category : 'running' }
-MetacelloRepositoryCommonTestCase >> tearDown [
+MetacelloRepositoryCommonTest >> tearDown [
 
 	testingEnvironment removeKey: #Metacello_Platform_Test_GlobalDictionary ifAbsent: [  ].
 	super tearDown
 ]
 
 { #category : 'tests' }
-MetacelloRepositoryCommonTestCase >> testAsRepositorySpecFor [
+MetacelloRepositoryCommonTest >> testAsRepositorySpecFor [
 
 	| project testBlock |
 	project := self project.
@@ -72,7 +72,7 @@ MetacelloRepositoryCommonTestCase >> testAsRepositorySpecFor [
 		             repoSpec1 := pkg repositorySpecs first.
 		             self assert: repoSpec1 type equals: expectedType1.
 		             repo := repoSpec1 createRepository.
-		             repoSpec2 := repo asRepositorySpecFor: project.
+		             repoSpec2 := repo asRepositorySpec.
 		             self assert: repoSpec2 type equals: expectedType2.
 		             expectedType1 = expectedType2
 			             ifTrue: [ self assert: repoSpec1 description equals: repoSpec2 description ]
@@ -85,7 +85,7 @@ MetacelloRepositoryCommonTestCase >> testAsRepositorySpecFor [
 ]
 
 { #category : 'tests' }
-MetacelloRepositoryCommonTestCase >> testDictionaryRepository [
+MetacelloRepositoryCommonTest >> testDictionaryRepository [
 
 	| pkg repoSpec repo |
 	pkg := self project version packageNamed: 'Example-Core4'.
@@ -97,7 +97,7 @@ MetacelloRepositoryCommonTestCase >> testDictionaryRepository [
 ]
 
 { #category : 'tests' }
-MetacelloRepositoryCommonTestCase >> testDirectoryRepository [
+MetacelloRepositoryCommonTest >> testDirectoryRepository [
 
 	| pkg repoSpec repo |
 	pkg := self project version packageNamed: 'Example-Core'.
@@ -111,7 +111,7 @@ MetacelloRepositoryCommonTestCase >> testDirectoryRepository [
 ]
 
 { #category : 'tests' }
-MetacelloRepositoryCommonTestCase >> testFileTreeRepository [
+MetacelloRepositoryCommonTest >> testFileTreeRepository [
 	"must create repository against an existing directory"
 
 	| pkg repoSpec repo fileUtils workingDir tempDir repoDir |
@@ -133,7 +133,7 @@ MetacelloRepositoryCommonTestCase >> testFileTreeRepository [
 ]
 
 { #category : 'tests' }
-MetacelloRepositoryCommonTestCase >> testFtpRepository [
+MetacelloRepositoryCommonTest >> testFtpRepository [
 
 	| pkg repoSpec repo |
 	pkg := self project version packageNamed: 'Example-Core2'.
@@ -146,7 +146,7 @@ MetacelloRepositoryCommonTestCase >> testFtpRepository [
 ]
 
 { #category : 'tests' }
-MetacelloRepositoryCommonTestCase >> testHttpRepository [
+MetacelloRepositoryCommonTest >> testHttpRepository [
 
 	| pkg repoSpec repo |
 	pkg := self project version packageNamed: 'Example-Core3'.
