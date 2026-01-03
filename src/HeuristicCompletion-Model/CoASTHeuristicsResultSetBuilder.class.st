@@ -57,32 +57,26 @@ CoASTHeuristicsResultSetBuilder class >> initializeMessagesHeuristic [
 { #category : 'initialization' }
 CoASTHeuristicsResultSetBuilder class >> initializeMethodNodeHeuristic [
 
-
-		MethodNodeHeuristic := OrderedCollection <- {  CoSuperMessageHeuristic new . CoUnknownMessageHeuristic new } 
-				                    
-				                     
+	MethodNodeHeuristic := OrderedCollection <- {
+		                       CoSuperMessageHeuristic new.
+		                       CoUnknownMessageHeuristic new } 
 ]
 
 { #category : 'initialization' }
 CoASTHeuristicsResultSetBuilder class >> initializeSymbolHeuristic [
 
-		SymbolsHeuristic := OrderedCollection <-  {  CoLiteralSymbolHeuristic new } 
-				                    
-				                     
-				
+	SymbolsHeuristic := OrderedCollection <- { CoLiteralSymbolHeuristic new } 
 ]
 
 { #category : 'initialization' }
 CoASTHeuristicsResultSetBuilder class >> initializeVariablesHeuristic [
 
-		VariablesHeuristic := OrderedCollection <- {  
-		 CoLocalScopeVariablesHeuristic new .
-		 CoWorkspaceVariablesHeuristic new . 
-		 CoInstanceAccessibleVariablesHeuristic new .
-		 (CoGlobalVariablesHeuristic new globalVariableFetcherClass:
-					CoDependencyGlobalVariableFetcher) .
-			 CoGlobalVariablesHeuristic new 
-		} 
+	VariablesHeuristic := OrderedCollection <- {
+		                      CoLocalScopeVariablesHeuristic new.
+		                      CoWorkspaceVariablesHeuristic new.
+		                      CoInstanceAccessibleVariablesHeuristic new.
+		                      (CoGlobalVariablesHeuristic new globalVariableFetcherClass: CoDependencyGlobalVariableFetcher).
+		                      CoGlobalVariablesHeuristic new } 
 ]
 
 { #category : 'deprecated' }
