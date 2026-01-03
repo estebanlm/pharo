@@ -173,7 +173,8 @@ Class {
 	#name : 'Metacello',
 	#superclass : 'Object',
 	#instVars : [
-		'scriptExecutor'
+		'scriptExecutor',
+		'silently'
 	],
 	#category : 'Metacello-Core-Model',
 	#package : 'Metacello-Core',
@@ -227,12 +228,20 @@ Metacello >> className: className [
 
 { #category : 'private' }
 Metacello >> execute: aBlock [
-	"I'm doing a copy of the script executor so that we can execute different commands with the same setup of our Metacello instance."
+	"I'm doing a copy of the script executor so that we can execute different commands with the same setup of our Metacello instance.
+	
+	If the execution should be silent, disable Jobs."
 
 	| executor |
 	executor := self scriptExecutor copy.
-	aBlock value: executor.
-	^ executor execute
+	^ silently
+		  ifTrue: [
+				  Job disableDuring: [
+						  aBlock value: executor.
+						  executor execute ] ]
+		  ifFalse: [
+				  aBlock value: executor.
+				  executor execute ]
 ]
 
 { #category : 'api actions' }
@@ -275,6 +284,13 @@ Metacello >> ignoreImage [
 	"ignore image state"
 
 	self scriptExecutor ignoreImage: true
+]
+
+{ #category : 'initialization' }
+Metacello >> initialize [
+
+	super initialize.
+	silently := Smalltalk isInteractive not "Load silently in non interactive mode by default"
 ]
 
 { #category : 'api actions' }
@@ -463,7 +479,7 @@ Metacello >> scriptExecutorClass: anObject [
 Metacello >> silently [
 	"no progress bars"
 
-	self scriptExecutor silently: true
+	silently := true
 ]
 
 { #category : 'api repository shortcuts' }
