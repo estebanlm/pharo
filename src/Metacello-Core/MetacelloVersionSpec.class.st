@@ -255,6 +255,12 @@ MetacelloVersionSpec >> groups [
 	^ groups
 ]
 
+{ #category : 'testing' }
+MetacelloVersionSpec >> hasImports [
+
+	^ self import isNotNil or: [ self importArray isNotNil ]
+]
+
 { #category : 'accessing' }
 MetacelloVersionSpec >> import [
     ^ importName
@@ -262,7 +268,8 @@ MetacelloVersionSpec >> import [
 
 { #category : 'accessing' }
 MetacelloVersionSpec >> import: aString [
-  importName := aString
+
+	importName := aString
 ]
 
 { #category : 'accessing' }
@@ -275,7 +282,8 @@ MetacelloVersionSpec >> import: aString provides: anArray [
 
 { #category : 'accessing' }
 MetacelloVersionSpec >> importArray [
-  ^ importArray
+
+	^ importArray
 ]
 
 { #category : 'printing' }
@@ -381,50 +389,6 @@ MetacelloVersionSpec >> packageNames [
 MetacelloVersionSpec >> packageSpecsInLoadOrder [
 
 	^ self packagesSpec packageSpecsInLoadOrderFor: self
-]
-
-{ #category : 'querying' }
-MetacelloVersionSpec >> packageSpecsInLoadOrderForMap: packageMap [
-
-	| loadOrder pkgs packageNames importNames importSpec importProjectSpecs importProjectNameMap |
-	loadOrder := self packageSpecsInLoadOrder.
-	importNames := (packageNames := (packageMap values collect: [ :pkg |
-		                                 pkg name ]) asSet) copy.
-	(self import isNil and: [ self importArray isNil ]) ifTrue: [
-		^ loadOrder select: [ :pkg | packageNames includes: pkg name ] ].
-	loadOrder do: [ :pkg | importNames remove: pkg name ifAbsent: [  ] ].
-	pkgs := OrderedCollection new.
-	importProjectSpecs := Dictionary new.
-	importProjectNameMap := Dictionary new.
-	importArray ifNotNil: [
-		loadOrder do: [ :pkg |
-			importArray do: [ :assoc |
-				assoc key = pkg name ifTrue: [
-					importProjectSpecs at: pkg name put: pkg.
-					(assoc value select: [ :each | importNames includes: each ]) do: [
-						:each |
-						(importProjectNameMap
-							 at: pkg name
-							 ifAbsent: [ importProjectNameMap at: pkg name put: Set new ])
-							add: each ] ] ] ] ].
-	self import ifNotNil: [
-		loadOrder do: [ :pkg |
-			pkg name = self import ifTrue: [
-				importProjectSpecs at: pkg name put: pkg.
-				importProjectNameMap at: pkg name put: importNames ] ] ].
-	loadOrder do: [ :pkg |
-		(packageNames includes: pkg name) ifTrue: [ pkgs add: pkg ].
-		importProjectSpecs
-			at: pkg name
-			ifPresent: [ :importProjectSpec | "insert the imports at this point"
-				(importProjectNameMap at: pkg name ifAbsent: [ #(  ) ]) do: [
-					:importedName |
-					pkgs add: (importSpec := importProjectSpec copy
-							               name: importedName;
-							               mergeImportLoads: { importedName };
-							               yourself).
-					importSpec projectReference name: importedName ] ] ].
-	^ pkgs
 ]
 
 { #category : 'accessing' }
@@ -562,36 +526,6 @@ MetacelloVersionSpec >> repository: aString username: username password: passwor
 MetacelloVersionSpec >> repositorySpecs [
 
 	^self repositories map values
-]
-
-{ #category : 'loading' }
-MetacelloVersionSpec >> resolveToLoadableSpecs: aRequiredCollection [
-
-	| packageMap required managedRequirements map |
-	packageMap := Dictionary new.
-	required := aRequiredCollection copy.
-	managedRequirements := Set new.
-	map := self packagesSpec map.
-	[ required isEmpty ] whileFalse: [
-			| newReqd |
-			newReqd := Set new.
-			required do: [ :req |
-					| loadableSpec |
-					loadableSpec := self packageNamed: req forMap: map ifAbsent: [ ^ self error: 'Name not found: ' , req ]. "If the loadable spec is a Group we ignore it."
-					loadableSpec resolveToLoadableSpec ifNotNil: [ :resolvedSpec | packageMap at: loadableSpec name put: resolvedSpec ].
-					newReqd addAll: loadableSpec requires.
-					newReqd addAll: loadableSpec includes ].
-			managedRequirements addAll: required.
-			newReqd removeAllFoundIn: managedRequirements.
-			required := newReqd ].
-	^ packageMap
-]
-
-{ #category : 'accessing' }
-MetacelloVersionSpec >> setImport: anArray [
-  importArray := importArray
-    ifNil: [ anArray ]
-    ifNotNil: [ importArray , anArray ]
 ]
 
 { #category : 'accessing' }
