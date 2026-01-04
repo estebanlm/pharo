@@ -37,32 +37,6 @@ MetacelloVersionSpec >> acceptVisitor: aVisitor [
 ]
 
 { #category : 'printing' }
-MetacelloVersionSpec >> configMethodBasicOn: aStream last: last indent: indent [
-
-	| values lastIndex lastBlock |
-	last
-		ifTrue: [ "need to calculate last statement with a value"
-				values := {
-					          self preLoadDoIt.
-					          self postLoadDoIt }.
-				1 to: values size do: [ :index | (values at: index) ifNotNil: [ lastIndex := index ] ].
-				lastBlock := [ :arg | arg = lastIndex ] ]
-		ifFalse: [ lastBlock := [ :arg | false ] ].
-	self
-		configMethodValueOn: aStream
-		for: self preLoadDoIt
-		selector: 'preLoadDoIt:'
-		last: (lastBlock value: 1)
-		indent: indent.
-	self
-		configMethodValueOn: aStream
-		for: self postLoadDoIt
-		selector: 'postLoadDoIt:'
-		last: (lastBlock value: 2)
-		indent: indent
-]
-
-{ #category : 'printing' }
 MetacelloVersionSpec >> configMethodOn: aStream for: spec selector: selector last: last indent: indent [
 
 	spec ifNil: [ ^ self ].
@@ -78,16 +52,31 @@ MetacelloVersionSpec >> configMethodOn: aStream for: spec selector: selector las
 { #category : 'printing' }
 MetacelloVersionSpec >> configMethodOn: aStream indent: indent [
 
-	| spec hasRepositories hasPackageSpecs hasImport |
+	| spec hasRepositories hasPackageSpecs hasImport hasPreLoadDoIt hasPostLoadDoIt |
 	hasRepositories := (spec := self repositories) isNotNil and: [ spec list isEmpty not ].
 	hasImport := self import isNotNil.
+	hasPreLoadDoIt := self preLoadDoIt isNotNil.
+	hasPostLoadDoIt := self postLoadDoIt isNotNil.
 	hasPackageSpecs := false.
 	self packagesSpec list do: [ :member |
 			member spec
 				projectDo: [ :proj | member spec name ifNotNil: [ hasPackageSpecs := true ] ]
 				packageDo: [ :package | member spec name ifNotNil: [ hasPackageSpecs := true ] ]
 				groupDo: [ :group | member spec name ifNotNil: [ hasPackageSpecs := true ] ] ].
-	self configMethodBasicOn: aStream last: (hasRepositories | hasPackageSpecs | hasImport) not indent: indent.
+	hasPreLoadDoIt ifTrue: [
+			self
+				configMethodValueOn: aStream
+				for: self preLoadDoIt
+				selector: 'preLoadDoIt:'
+				last: (hasRepositories | hasPackageSpecs | hasImport | hasPostLoadDoIt) not
+				indent: indent ].
+	hasPostLoadDoIt ifTrue: [
+			self
+				configMethodValueOn: aStream
+				for: self postLoadDoIt
+				selector: 'postLoadDoIt:'
+				last: (hasRepositories | hasPackageSpecs | hasImport) not
+				indent: indent ].
 	hasImport ifTrue: [
 			self
 				configMethodValueOn: aStream
@@ -118,7 +107,6 @@ MetacelloVersionSpec >> configMethodOn: aStream indent: indent [
 MetacelloVersionSpec >> configMethodValueOn: aStream for: spec selector: selector last: last indent: indent [
 
 	| valuePrintString |
-	spec ifNil: [ ^ self ].
 	valuePrintString := spec value isSymbol
 		                    ifTrue: [ '#' , spec value asString printString ]
 		                    ifFalse: [ spec value printString ].
