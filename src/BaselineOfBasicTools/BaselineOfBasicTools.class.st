@@ -62,7 +62,6 @@ BaselineOfBasicTools >> baseline: spec [
 			spec package: 'NECompletion'.
 			spec package: 'NECompletion-Morphic'.
 			spec package: 'NECompletion-Preferences'.
-			spec package: 'Metacello-FileTree'.
 			spec package: 'CodeExport'.
 			spec package: 'System-Sources-Tests'. "<= Not sure this one should be here but it is where the classes were loaded before been extracted from Tests package."
 

@@ -21,3 +21,14 @@ MCFileTreeRepository class >> createRepositoryFromSpec: aRepositorySpec [
 MCFileTreeRepository class >> isAvailableFor: type [
 	^ type = 'filetree'
 ]
+
+{ #category : '*Metacello-Core' }
+MCFileTreeRepository >> repositoryDescription [
+  ^ self description , ' [' , self repositoryVersionString , ':'
+    , self repositoryBranchName , ']'
+]
+
+{ #category : '*Metacello-Core' }
+MCFileTreeRepository >> resetDirectory [
+	directory := nil
+]
