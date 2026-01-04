@@ -48,14 +48,6 @@ MetacelloProjectSpec >> acceptVisitor: aVisitor [
 	^ aVisitor visitProjectSpec: self
 ]
 
-{ #category : 'adding' }
-MetacelloProjectSpec >> addToMetacelloPackages: aMetacelloPackagesSpec [
-
-	| spec |
-	spec := MetacelloProjectReferenceSpec projectReference: self copy.
-	aMetacelloPackagesSpec addMemberForSpec: spec
-]
-
 { #category : 'scripting' }
 MetacelloProjectSpec >> asProjectRegistration [
 

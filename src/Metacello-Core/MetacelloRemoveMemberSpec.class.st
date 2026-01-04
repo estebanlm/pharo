@@ -18,15 +18,9 @@ MetacelloRemoveMemberSpec class >> named: aString [
 ]
 
 { #category : 'actions' }
-MetacelloRemoveMemberSpec >> applyAdd: addBlock copy: copyBlock merge: mergeBlock remove: removeBlock [
+MetacelloRemoveMemberSpec >> applyToMap: map [
 
-	removeBlock value: self
-]
-
-{ #category : 'actions' }
-MetacelloRemoveMemberSpec >> applyToList: aListSpec [
-
-	aListSpec remove: self
+	map removeKey: self name ifAbsent: [ ]
 ]
 
 { #category : 'accessing' }

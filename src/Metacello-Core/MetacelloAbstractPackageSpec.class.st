@@ -16,12 +16,6 @@ MetacelloAbstractPackageSpec class >> isAbstract [
 	^ self = MetacelloAbstractPackageSpec
 ]
 
-{ #category : 'adding' }
-MetacelloAbstractPackageSpec >> addToMetacelloPackages: aMetacelloPackagesSpec [
-
-	aMetacelloPackagesSpec addMemberForSpec: self
-]
-
 { #category : 'printing' }
 MetacelloAbstractPackageSpec >> configMethodBodyOn: aStream hasName: hasName cascading: hasCascading indent: indent [
 

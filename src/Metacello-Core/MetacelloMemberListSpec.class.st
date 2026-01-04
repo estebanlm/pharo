@@ -55,12 +55,6 @@ MetacelloMemberListSpec >> collect: aBlock [
 	^ newCollection
 ]
 
-{ #category : 'actions' }
-MetacelloMemberListSpec >> copy: aMemberSpec [
-
-	self addMember: aMemberSpec
-]
-
 { #category : 'enumeration' }
 MetacelloMemberListSpec >> detect: aBlock [
 	"Evaluate aBlock with each of the receiver's elements as the argument. 
@@ -113,44 +107,8 @@ MetacelloMemberListSpec >> map [
 	| map |
 	memberMap ifNotNil: [ ^ memberMap ].
 	map := Dictionary new.
-	self list do: [ :member |
-		member
-			applyAdd: [ :memberSpec | self mapAdd: memberSpec into: map ]
-			copy: [ :memberSpec | self mapCopy: memberSpec into: map ]
-			merge: [ :memberSpec | self mapMerge: memberSpec into: map ]
-			remove: [ :memberSpec | self mapRemove: memberSpec into: map ] ].
-	memberMap := map.
-	^ memberMap
-]
-
-{ #category : 'private' }
-MetacelloMemberListSpec >> mapAdd: aMemberSpec into: map [
-	
-	map at: aMemberSpec name put: aMemberSpec spec
-]
-
-{ #category : 'private' }
-MetacelloMemberListSpec >> mapCopy: aMemberSpec into: map [
-
-	(map at: aMemberSpec sourceName ifAbsent: [  ])
-		ifNil: [ self error: 'Source spec named ' , aMemberSpec sourceName printString , ' not found' ]
-		ifNotNil: [ :spec |
-			spec aboutToCopy.
-			map at: aMemberSpec name put: (spec copy mergeSpec: aMemberSpec spec copy) ]
-]
-
-{ #category : 'private' }
-MetacelloMemberListSpec >> mapMerge: aMemberSpec into: map [
-
-	(map at: aMemberSpec name ifAbsent: [  ])
-		ifNotNil: [ :spec | map at: aMemberSpec name put: (spec mergeSpec: aMemberSpec spec) ]
-		ifNil: [ map at: aMemberSpec name put: aMemberSpec spec copy ]
-]
-
-{ #category : 'private' }
-MetacelloMemberListSpec >> mapRemove: aMemberSpec into: map [
-	
-	map removeKey: aMemberSpec name ifAbsent: []
+	self list do: [ :member | member applyToMap: map ].
+	^ memberMap := map
 ]
 
 { #category : 'actions' }
@@ -171,8 +129,8 @@ MetacelloMemberListSpec >> mergeSpec: anotherSpec [
 	| newSpec |
 	newSpec := super mergeSpec: anotherSpec.
 	newSpec list: self list copy.
-	anotherSpec list do: [:groupMember | groupMember applyToList: newSpec ].
-	^newSpec
+	anotherSpec list do: [ :groupMember | newSpec addMember: groupMember ].
+	^ newSpec
 ]
 
 { #category : 'testing' }

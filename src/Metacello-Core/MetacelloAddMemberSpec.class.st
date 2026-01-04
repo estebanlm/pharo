@@ -7,15 +7,9 @@ Class {
 }
 
 { #category : 'actions' }
-MetacelloAddMemberSpec >> applyAdd: addBlock copy: copyBlock merge: mergeBlock remove: removeBlock [
+MetacelloAddMemberSpec >> applyToMap: map [
 
-	addBlock value: self
-]
-
-{ #category : 'actions' }
-MetacelloAddMemberSpec >> applyToList: aListSpec [
-
-	aListSpec add: self
+	map at: self name put: self spec
 ]
 
 { #category : 'accessing' }
