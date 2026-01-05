@@ -9,7 +9,12 @@ Class {
 { #category : 'actions' }
 MetacelloRepositoriesSpec >> add: aStringOrSpec [
 
-	aStringOrSpec addToMetacelloRepositories: self
+	| spec |
+	spec := aStringOrSpec isString
+		        ifTrue: [ MetacelloRepositorySpec description: aStringOrSpec ]
+		        ifFalse: [ aStringOrSpec ].
+
+	self addMemberForSpec: spec
 ]
 
 { #category : 'scripting' }
@@ -95,7 +100,7 @@ MetacelloRepositoriesSpec >> remove: aRepositorySpec [
 { #category : 'actions' }
 MetacelloRepositoriesSpec >> repository: aStringOrSpec [
 
-	aStringOrSpec addToMetacelloRepositories: self
+	self add: aStringOrSpec
 ]
 
 { #category : 'actions' }

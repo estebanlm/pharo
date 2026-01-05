@@ -193,7 +193,7 @@ BaselineOf >> newProjectWithRepositoryDescription: aListOrRepositoryDescriptions
 	
 	aProject loadType: #linear.
 
-	aListOrRepositoryDescriptions do: [ :desc | aProject version spec repository: desc ].
+	aListOrRepositoryDescriptions do: [ :desc | aProject version repository: desc ].
 	^ aProject
 ]
 

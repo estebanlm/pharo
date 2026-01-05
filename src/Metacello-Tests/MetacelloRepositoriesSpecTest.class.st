@@ -56,7 +56,9 @@ MetacelloRepositoriesSpecTest >> testAddC [
 
 	| repositories repository |
 	repositories := MetacelloRepositoriesSpec new.
-	repositories add: #( 'http://example.com/repository' '/opt/gemstone/repository' ).
+	repositories
+		add: 'http://example.com/repository';
+		add: '/opt/gemstone/repository'.
 	repository := repositories map at: 'http://example.com/repository' ifAbsent: [ self assert: false ].
 	self assert: repository description equals: 'http://example.com/repository'.
 	self assert: repository type equals: 'http'.
