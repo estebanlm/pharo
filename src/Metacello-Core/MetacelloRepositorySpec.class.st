@@ -8,9 +8,9 @@ Class {
 		'type',
 		'resolvedReference'
 	],
-	#category : 'Metacello-Core-Specs',
+	#category : 'Metacello-Core-Model',
 	#package : 'Metacello-Core',
-	#tag : 'Specs'
+	#tag : 'Model'
 }
 
 { #category : 'instance creation' }
@@ -34,24 +34,6 @@ MetacelloRepositorySpec >> canUpgradeTo: aMetacelloRepositorySpec [
   (#('github' 'gitorious' 'bitbucket') includes: self type)
     ifTrue: [ ^ self createRepository canUpgradeTo: aMetacelloRepositorySpec createRepository ].
   ^ false
-]
-
-{ #category : 'printing' }
-MetacelloRepositorySpec >> configMethodCascadeOn: aStream lastCascade: lastCascade [
-
-	aStream nextPutAll: 'repository: ', self description printString.
-	(self username isEmpty not or: [ self password isEmpty not ])
-		ifTrue: [ aStream nextPutAll: ' username: ', self username printString, ' password: ', self password printString ].
-	lastCascade ifFalse: [ aStream nextPut: $;; cr ].
-]
-
-{ #category : 'printing' }
-MetacelloRepositorySpec >> configMethodOn: aStream indent: indent [
-
-	aStream 
-		tab: indent; 
-		nextPutAll: 'spec '.
-	self configMethodCascadeOn: aStream lastCascade: true
 ]
 
 { #category : 'mc support' }
@@ -112,8 +94,9 @@ MetacelloRepositorySpec >> mergeMap [
 
 { #category : 'querying' }
 MetacelloRepositorySpec >> name [
+	"To be polymorphic with MetacelloAbstractPackageSpec"
 
-	^self description
+	^ self description
 ]
 
 { #category : 'querying' }
@@ -126,6 +109,15 @@ MetacelloRepositorySpec >> password [
 MetacelloRepositorySpec >> password: aString [
 
 	password := aString
+]
+
+{ #category : 'printing' }
+MetacelloRepositorySpec >> printOn: aStream [
+
+	super printOn: aStream.
+	aStream nextPutAll: ' ['.
+	self description ifEmpty: [ aStream nextPutAll: 'No description' ] ifNotEmpty: [ :string | aStream nextPutAll: string ].
+	aStream nextPutAll: ']'
 ]
 
 { #category : 'private' }

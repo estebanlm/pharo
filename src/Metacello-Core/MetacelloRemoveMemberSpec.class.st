@@ -4,9 +4,9 @@ Class {
 	#instVars : [
 		'name'
 	],
-	#category : 'Metacello-Core-Members',
+	#category : 'Metacello-Core-Model',
 	#package : 'Metacello-Core',
-	#tag : 'Members'
+	#tag : 'Model'
 }
 
 { #category : 'instance creation' }
@@ -21,12 +21,6 @@ MetacelloRemoveMemberSpec class >> named: aString [
 MetacelloRemoveMemberSpec >> applyToMap: map [
 
 	map removeKey: self name ifAbsent: [ ]
-]
-
-{ #category : 'accessing' }
-MetacelloRemoveMemberSpec >> methodUpdateSelector [
-
-	^#remove:
 ]
 
 { #category : 'accessing' }

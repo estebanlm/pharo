@@ -12,9 +12,9 @@ Class {
 		'className',
 		'mutable'
 	],
-	#category : 'Metacello-Core-Specs',
+	#category : 'Metacello-Core-Model',
 	#package : 'Metacello-Core',
-	#tag : 'Specs'
+	#tag : 'Model'
 }
 
 { #category : 'class initialization' }
@@ -98,136 +98,6 @@ MetacelloProjectSpec >> compareEqual: aMetacelloProjectSpec [
 								  self postLoadDoIt == aMetacelloProjectSpec postLoadDoIt and: [ self repositories compareEqual: aMetacelloProjectSpec repositories ] ] ] ] ]
 ]
 
-{ #category : 'printing' }
-MetacelloProjectSpec >> configMethodBodyOn: aStream indent: indent [
-  ^ self configMethodBodyOn: aStream indent: indent fromShortCut: false
-]
-
-{ #category : 'printing' }
-MetacelloProjectSpec >> configMethodBodyOn: aStream indent: indent fromShortCut: fromShortCut [
-
-	| hasProjectPackage hasLoads hasClassName hasPreLoadDoIt hasPostLoadDoIt |
-	hasClassName := self hasClassName.
-	hasProjectPackage := self hasRepository or: [ hasClassName ].
-	hasLoads := self loads isNotNil.
-	hasPreLoadDoIt := self preLoadDoIt isNotNil.
-	hasPostLoadDoIt := self postLoadDoIt isNotNil.
-	hasClassName ifTrue: [
-			hasProjectPackage | hasLoads
-				ifTrue: [
-						aStream
-							cr;
-							tab: indent + 1 ]
-				ifFalse: [ aStream space ].
-			aStream nextPutAll: 'className: ' , self className printString.
-			hasPreLoadDoIt | hasPostLoadDoIt | hasLoads | hasProjectPackage ifTrue: [ aStream nextPut: $; ] ].
-	hasPreLoadDoIt ifTrue: [
-			hasClassName | hasProjectPackage | hasLoads | hasPreLoadDoIt
-				ifTrue: [
-						aStream
-							cr;
-							tab: indent + 1 ]
-				ifFalse: [ aStream space ].
-			aStream nextPutAll: 'preLoadDoIt: '.
-			self preLoadDoIt value isSymbol
-				ifTrue: [
-						aStream
-							nextPut: $#;
-							nextPutAll: self preLoadDoIt value asString printString ]
-				ifFalse: [ aStream nextPutAll: self preLoadDoIt value asString ].
-			hasPostLoadDoIt | hasProjectPackage | hasLoads ifTrue: [ aStream nextPut: $; ] ].
-	hasPostLoadDoIt ifTrue: [
-			hasClassName | hasProjectPackage | hasLoads | hasPostLoadDoIt
-				ifTrue: [
-						aStream
-							cr;
-							tab: indent + 1 ]
-				ifFalse: [ aStream space ].
-			aStream nextPutAll: 'postLoadDoIt: '.
-			self postLoadDoIt value isSymbol
-				ifTrue: [
-						aStream
-							nextPut: $#;
-							nextPutAll: self postLoadDoIt value asString printString ]
-				ifFalse: [ aStream nextPutAll: self postLoadDoIt value asString ].
-			hasProjectPackage | hasLoads ifTrue: [ aStream nextPut: $; ] ].
-
-	hasLoads ifTrue: [
-			hasClassName | hasProjectPackage | hasPreLoadDoIt | hasPostLoadDoIt
-				ifTrue: [
-						aStream
-							cr;
-							tab: indent + 1 ]
-				ifFalse: [ aStream space ].
-			aStream nextPutAll: 'loads: #('.
-			self loads do: [ :str | aStream nextPutAll: str printString , ' ' ].
-			aStream nextPut: $).
-			hasProjectPackage ifTrue: [ aStream nextPut: $; ] ].
-	hasProjectPackage ifTrue: [
-			| hasRepo |
-			hasRepo := self hasRepository.
-			hasRepo ifTrue: [
-					| repos |
-					repos := self repositories map values.
-					repos size = 1
-						ifTrue: [
-								fromShortCut
-									ifTrue: [
-											hasClassName | hasLoads | hasPreLoadDoIt | hasPostLoadDoIt
-												ifTrue: [
-														aStream
-															cr;
-															tab: indent + 1 ]
-												ifFalse: [ aStream space ] ]
-									ifFalse: [
-											aStream
-												cr;
-												tab: indent + 1 ].
-								repos first configMethodCascadeOn: aStream lastCascade: true ]
-						ifFalse: [
-								aStream cr.
-								self repositories configMethodCascadeOn: aStream indent: indent ] ] ]
-]
-
-{ #category : 'printing' }
-MetacelloProjectSpec >> configMethodOn: aStream indent: indent [
-
-	aStream 
-		tab: indent;
-		nextPutAll: 'spec '; cr;
-		tab: indent + 1;
-		nextPutAll: 'name: ', self name printString, ';'.
-	self configMethodBodyOn: aStream indent: indent.
-	aStream nextPut: $.
-]
-
-{ #category : 'printing' }
-MetacelloProjectSpec >> configShortCutMethodOn: aStream member: aMember indent: indent [
-
-	| hasProjectPackage hasLoads hasClassName hasPreLoadDoIt hasPostLoadDoIt |
-	hasClassName := self hasClassName.
-	hasProjectPackage := self hasRepository or: [ hasClassName & (className ~= self name) ].
-	hasLoads := self loads isNotNil.
-	hasPreLoadDoIt := self preLoadDoIt isNotNil.
-	hasPostLoadDoIt := self postLoadDoIt isNotNil.
-	hasClassName | hasProjectPackage | hasLoads | hasPreLoadDoIt | hasPostLoadDoIt ifTrue: [
-			(aMember methodUpdateSelector == #copy: or: [ aMember methodUpdateSelector == #with: ])
-				ifTrue: [
-						aStream
-							nextPutAll: 'with: [';
-							cr ]
-				ifFalse: [
-						aStream
-							nextPutAll: 'overrides: [';
-							cr ].
-			aStream
-				tab: indent;
-				nextPutAll: 'spec'.
-			self configMethodBodyOn: aStream indent: indent fromShortCut: true.
-			aStream nextPutAll: ' ]'.
-			^ self ]
-]
-
 { #category : 'private' }
 MetacelloProjectSpec >> constructClassName [
 
@@ -266,12 +136,6 @@ MetacelloProjectSpec >> getRepositories [
     ^ repositories
 ]
 
-{ #category : 'printing' }
-MetacelloProjectSpec >> hasClassName [
-
-	^ className isNotNil and: [ className ~= self constructClassName ]
-]
-
 { #category : 'testing' }
 MetacelloProjectSpec >> hasLoadConflicts: aMetacelloProjectSpec [
   ^ (self hasNoLoadConflicts: aMetacelloProjectSpec) not
@@ -285,28 +149,6 @@ MetacelloProjectSpec >> hasNoLoadConflicts: aMetacelloProjectSpec [
 			  (self hasVersion and: [ aMetacelloProjectSpec hasVersion ]) and: [
 				  (self repositories isEmpty or: [ aMetacelloProjectSpec repositories isEmpty ]) or: [
 					  self repositories hasNoLoadConflicts: aMetacelloProjectSpec repositories ] ] ]
-]
-
-{ #category : 'testing' }
-MetacelloProjectSpec >> hasNonVersionStringField [
-
-	| hasProjectPackage |
-	self hasClassName ifTrue: [ ^ true ].
-
-	hasProjectPackage := self className ~= self name or: [ self hasRepository ].
-	hasProjectPackage ifTrue: [ ^ true ].
-
-	self loads ifNotNil: [ ^ true ].
-
-	self preLoadDoIt ifNotNil: [ ^ true ].
-	self postLoadDoIt ifNotNil: [ ^ true ].
-
-	^ false
-]
-
-{ #category : 'testing' }
-MetacelloProjectSpec >> hasRepository [
-    ^ self repositorySpecs notEmpty
 ]
 
 { #category : 'testing' }
@@ -501,6 +343,16 @@ MetacelloProjectSpec >> preLoadDoIt: aSymbol [
 	preLoadDoIt := aSymbol
 ]
 
+{ #category : 'printing' }
+MetacelloProjectSpec >> printOn: aStream [
+
+	super printOn: aStream.
+	aStream
+		nextPutAll: ' [';
+		nextPutAll: self baseName;
+		nextPutAll: ']'
+]
+
 { #category : 'accessing' }
 MetacelloProjectSpec >> project [
 
@@ -582,8 +434,9 @@ MetacelloProjectSpec >> repositoryDescriptions [
 
 { #category : 'querying' }
 MetacelloProjectSpec >> repositorySpecs [
-    repositories ifNil: [ ^ #() ].
-    ^ self repositories map values
+
+	repositories ifNil: [ ^ #(  ) ].
+	^ self repositories specs
 ]
 
 { #category : 'querying' }

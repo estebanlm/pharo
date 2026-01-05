@@ -1,9 +1,9 @@
 Class {
 	#name : 'MetacelloMergeMemberSpec',
 	#superclass : 'MetacelloMemberSpec',
-	#category : 'Metacello-Core-Members',
+	#category : 'Metacello-Core-Model',
 	#package : 'Metacello-Core',
-	#tag : 'Members'
+	#tag : 'Model'
 }
 
 { #category : 'actions' }
@@ -13,10 +13,4 @@ MetacelloMergeMemberSpec >> applyToMap: map [
 		at: self name
 		ifPresent: [ :aSpec | map at: self name put: (aSpec mergeSpec: self spec) ]
 		ifAbsent: [ map at: self name put: self spec copy ]
-]
-
-{ #category : 'accessing' }
-MetacelloMergeMemberSpec >> methodUpdateSelector [
-
-	^#with:
 ]

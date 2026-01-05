@@ -10,9 +10,9 @@ Class {
 		'preLoadDoIt',
 		'packagesSpec'
 	],
-	#category : 'Metacello-Core-Specs',
+	#category : 'Metacello-Core-Model',
 	#package : 'Metacello-Core',
-	#tag : 'Specs'
+	#tag : 'Model'
 }
 
 { #category : 'class initialization' }
@@ -34,135 +34,6 @@ MetacelloVersionSpec class >> project: aMetacelloProject [
 MetacelloVersionSpec >> acceptVisitor: aVisitor [
 	
 	^ aVisitor visitVersionSpec: self
-]
-
-{ #category : 'printing' }
-MetacelloVersionSpec >> configMethodOn: aStream for: spec selector: selector last: last indent: indent [
-
-	spec ifNil: [ ^ self ].
-	aStream
-		tab: indent;
-		nextPutAll: 'spec ' , selector , ' [';
-		cr.
-	spec configMethodOn: aStream indent: indent + 1.
-	aStream nextPutAll: ' ].'.
-	last ifFalse: [ aStream cr ]
-]
-
-{ #category : 'printing' }
-MetacelloVersionSpec >> configMethodOn: aStream indent: indent [
-
-	| spec hasRepositories hasPackageSpecs hasImport hasPreLoadDoIt hasPostLoadDoIt |
-	hasRepositories := (spec := self repositories) isNotNil and: [ spec list isEmpty not ].
-	hasImport := self import isNotNil.
-	hasPreLoadDoIt := self preLoadDoIt isNotNil.
-	hasPostLoadDoIt := self postLoadDoIt isNotNil.
-	hasPackageSpecs := false.
-	self packagesSpec list do: [ :member |
-			member spec
-				projectDo: [ :proj | member spec name ifNotNil: [ hasPackageSpecs := true ] ]
-				packageDo: [ :package | member spec name ifNotNil: [ hasPackageSpecs := true ] ]
-				groupDo: [ :group | member spec name ifNotNil: [ hasPackageSpecs := true ] ] ].
-	hasPreLoadDoIt ifTrue: [
-			self
-				configMethodValueOn: aStream
-				for: self preLoadDoIt
-				selector: 'preLoadDoIt:'
-				last: (hasRepositories | hasPackageSpecs | hasImport | hasPostLoadDoIt) not
-				indent: indent ].
-	hasPostLoadDoIt ifTrue: [
-			self
-				configMethodValueOn: aStream
-				for: self postLoadDoIt
-				selector: 'postLoadDoIt:'
-				last: (hasRepositories | hasPackageSpecs | hasImport) not
-				indent: indent ].
-	hasImport ifTrue: [
-			self
-				configMethodValueOn: aStream
-				for: self import
-				selector: 'import:'
-				last: (hasRepositories | hasPackageSpecs) not
-				indent: indent ].
-	hasRepositories ifTrue: [
-			spec map values size = 1
-				ifTrue: [
-						aStream
-							tab: indent;
-							nextPutAll: 'spec repository: ';
-							nextPutAll: spec map values first description printString;
-							nextPutAll: '.'.
-						hasPackageSpecs ifTrue: [ aStream cr ] ]
-				ifFalse: [
-						self
-							configMethodOn: aStream
-							for: spec
-							selector: 'repositories:'
-							last: hasPackageSpecs not
-							indent: indent ] ].
-	self configPackagesSpecMethodOn: aStream indent: indent
-]
-
-{ #category : 'printing' }
-MetacelloVersionSpec >> configMethodValueOn: aStream for: spec selector: selector last: last indent: indent [
-
-	| valuePrintString |
-	valuePrintString := spec value isSymbol
-		                    ifTrue: [ '#' , spec value asString printString ]
-		                    ifFalse: [ spec value printString ].
-	aStream
-		tab: indent;
-		nextPutAll: 'spec ' , selector , ' ' , valuePrintString , '.'.
-	last ifFalse: [ aStream cr ]
-]
-
-{ #category : 'printing' }
-MetacelloVersionSpec >> configPackagesSpecMethodOn: aStream indent: indent [
-
-	| projectSpecs packageSpecs groupSpecs |
-	projectSpecs := OrderedCollection new.
-	packageSpecs := OrderedCollection new.
-	groupSpecs := OrderedCollection new.
-	self packagesSpec list do: [ :member |
-			member spec
-				projectDo: [ :proj | member spec name ifNotNil: [ projectSpecs add: member ] ]
-				packageDo: [ :package | member spec name ifNotNil: [ packageSpecs add: member ] ]
-				groupDo: [ :group | member spec name ifNotNil: [ groupSpecs add: member ] ] ].
-	projectSpecs isEmpty ifFalse: [
-			aStream
-				tab: indent;
-				nextPutAll: 'spec '.
-			projectSpecs size > 1 ifTrue: [
-					aStream
-						cr;
-						tab: indent + 1 ].
-			1 to: projectSpecs size do: [ :index |
-					(projectSpecs at: index) configMethodCascadeOn: aStream last: index == projectSpecs size indent: indent + 1.
-					index ~= projectSpecs size ifTrue: [ aStream tab: indent + 1 ] ] ].
-	packageSpecs isEmpty ifFalse: [
-			projectSpecs isEmpty ifFalse: [ aStream cr ].
-			aStream
-				tab: indent;
-				nextPutAll: 'spec '.
-			packageSpecs size > 1 ifTrue: [
-					aStream
-						cr;
-						tab: indent + 1 ].
-			1 to: packageSpecs size do: [ :index |
-					(packageSpecs at: index) configMethodCascadeOn: aStream last: index == packageSpecs size indent: indent + 1.
-					index ~= packageSpecs size ifTrue: [ aStream tab: indent + 1 ] ] ].
-	groupSpecs isEmpty ifFalse: [
-			projectSpecs isEmpty not | packageSpecs isEmpty not ifTrue: [ aStream cr ].
-			aStream
-				tab: indent;
-				nextPutAll: 'spec '.
-			groupSpecs size > 1 ifTrue: [
-					aStream
-						cr;
-						tab: indent + 1 ].
-			1 to: groupSpecs size do: [ :index |
-					(groupSpecs at: index) configMethodCascadeOn: aStream last: index == groupSpecs size indent: indent + 1.
-					index ~= groupSpecs size ifTrue: [ aStream tab: indent + 1 ] ] ]
 ]
 
 { #category : 'enumerating' }
@@ -435,6 +306,16 @@ MetacelloVersionSpec >> preLoadDoIt: aSymbol [
 	preLoadDoIt := aSymbol
 ]
 
+{ #category : 'printing' }
+MetacelloVersionSpec >> printOn: aStream [
+
+	super printOn: aStream.
+	aStream
+		nextPutAll: ' [';
+		nextPutAll: self project label;
+		nextPutAll: ']'
+]
+
 { #category : 'accessing' }
 MetacelloVersionSpec >> project [
 
@@ -513,7 +394,7 @@ MetacelloVersionSpec >> repository: aString username: username password: passwor
 { #category : 'loading' }
 MetacelloVersionSpec >> repositorySpecs [
 
-	^self repositories map values
+	^ self repositories specs
 ]
 
 { #category : 'accessing' }
