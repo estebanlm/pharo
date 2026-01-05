@@ -91,7 +91,9 @@ MetacelloAbstractPackageSpec >> includes [
 { #category : 'accessing' }
 MetacelloAbstractPackageSpec >> includes: aCollection [
 
-	aCollection setIncludesInMetacelloPackage: self
+	includes := aCollection isString
+		            ifTrue: [ { aCollection } ]
+		            ifFalse: [ aCollection asArray ]
 ]
 
 { #category : 'private' }
@@ -133,8 +135,8 @@ MetacelloAbstractPackageSpec >> mergeSpec: anotherSpec [
 	| newSpec map |
 	newSpec := super mergeSpec: anotherSpec.
 	map := anotherSpec mergeMap.
-	(map at: #requires) ifNotNil: [ :anotherRequires | newSpec setRequires: self requires , anotherRequires ].
-	(map at: #includes) ifNotNil: [ :anotherIncludes | newSpec setIncludes: self includes , anotherIncludes ].
+	(map at: #requires) ifNotNil: [ :anotherRequires | newSpec requires: self requires , anotherRequires ].
+	(map at: #includes) ifNotNil: [ :anotherIncludes | newSpec includes: self includes , anotherIncludes ].
 	^ newSpec
 ]
 
@@ -202,7 +204,9 @@ MetacelloAbstractPackageSpec >> requires [
 { #category : 'accessing' }
 MetacelloAbstractPackageSpec >> requires: aCollection [
 
-	aCollection setRequiresInMetacelloPackage: self
+	requires := aCollection isString
+		            ifTrue: [ { aCollection } ]
+		            ifFalse: [ aCollection asArray ]
 ]
 
 { #category : 'private' }
@@ -225,18 +229,6 @@ MetacelloAbstractPackageSpec >> resolveToLoadableSpec [
 MetacelloAbstractPackageSpec >> resolveToPackagesAndProjectsIn: aVersionSpec [
 
 	^ self subclassResponsibility
-]
-
-{ #category : 'private' }
-MetacelloAbstractPackageSpec >> setIncludes: aCollection [
-
-	includes := aCollection
-]
-
-{ #category : 'private' }
-MetacelloAbstractPackageSpec >> setRequires: aCollection [
-
-	requires := aCollection
 ]
 
 { #category : 'private' }

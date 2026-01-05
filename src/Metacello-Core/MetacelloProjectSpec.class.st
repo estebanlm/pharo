@@ -356,7 +356,10 @@ MetacelloProjectSpec >> loads [
 { #category : 'accessing' }
 MetacelloProjectSpec >> loads: aCollection [
 
-	aCollection setLoadsInMetacelloProject: self
+	self shouldBeMutable.
+	loads := aCollection isString
+		         ifTrue: [ { aCollection } ]
+		         ifFalse: [ aCollection asArray ]
 ]
 
 { #category : 'scripting' }
@@ -607,12 +610,6 @@ MetacelloProjectSpec >> resetProjectPackage [
 MetacelloProjectSpec >> resolveToLoadableSpec [
 
 	^self copy
-]
-
-{ #category : 'private' }
-MetacelloProjectSpec >> setLoads: aCollection [
-    self shouldBeMutable.
-    loads := aCollection
 ]
 
 { #category : 'mutability' }
