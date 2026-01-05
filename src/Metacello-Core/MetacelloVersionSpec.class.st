@@ -37,32 +37,6 @@ MetacelloVersionSpec >> acceptVisitor: aVisitor [
 ]
 
 { #category : 'printing' }
-MetacelloVersionSpec >> configMethodBasicOn: aStream last: last indent: indent [
-
-	| values lastIndex lastBlock |
-	last
-		ifTrue: [ "need to calculate last statement with a value"
-				values := {
-					          self preLoadDoIt.
-					          self postLoadDoIt }.
-				1 to: values size do: [ :index | (values at: index) ifNotNil: [ lastIndex := index ] ].
-				lastBlock := [ :arg | arg = lastIndex ] ]
-		ifFalse: [ lastBlock := [ :arg | false ] ].
-	self
-		configMethodValueOn: aStream
-		for: self preLoadDoIt
-		selector: 'preLoadDoIt:'
-		last: (lastBlock value: 1)
-		indent: indent.
-	self
-		configMethodValueOn: aStream
-		for: self postLoadDoIt
-		selector: 'postLoadDoIt:'
-		last: (lastBlock value: 2)
-		indent: indent
-]
-
-{ #category : 'printing' }
 MetacelloVersionSpec >> configMethodOn: aStream for: spec selector: selector last: last indent: indent [
 
 	spec ifNil: [ ^ self ].
@@ -78,16 +52,31 @@ MetacelloVersionSpec >> configMethodOn: aStream for: spec selector: selector las
 { #category : 'printing' }
 MetacelloVersionSpec >> configMethodOn: aStream indent: indent [
 
-	| spec hasRepositories hasPackageSpecs hasImport |
+	| spec hasRepositories hasPackageSpecs hasImport hasPreLoadDoIt hasPostLoadDoIt |
 	hasRepositories := (spec := self repositories) isNotNil and: [ spec list isEmpty not ].
 	hasImport := self import isNotNil.
+	hasPreLoadDoIt := self preLoadDoIt isNotNil.
+	hasPostLoadDoIt := self postLoadDoIt isNotNil.
 	hasPackageSpecs := false.
 	self packagesSpec list do: [ :member |
 			member spec
 				projectDo: [ :proj | member spec name ifNotNil: [ hasPackageSpecs := true ] ]
 				packageDo: [ :package | member spec name ifNotNil: [ hasPackageSpecs := true ] ]
 				groupDo: [ :group | member spec name ifNotNil: [ hasPackageSpecs := true ] ] ].
-	self configMethodBasicOn: aStream last: (hasRepositories | hasPackageSpecs | hasImport) not indent: indent.
+	hasPreLoadDoIt ifTrue: [
+			self
+				configMethodValueOn: aStream
+				for: self preLoadDoIt
+				selector: 'preLoadDoIt:'
+				last: (hasRepositories | hasPackageSpecs | hasImport | hasPostLoadDoIt) not
+				indent: indent ].
+	hasPostLoadDoIt ifTrue: [
+			self
+				configMethodValueOn: aStream
+				for: self postLoadDoIt
+				selector: 'postLoadDoIt:'
+				last: (hasRepositories | hasPackageSpecs | hasImport) not
+				indent: indent ].
 	hasImport ifTrue: [
 			self
 				configMethodValueOn: aStream
@@ -118,7 +107,6 @@ MetacelloVersionSpec >> configMethodOn: aStream indent: indent [
 MetacelloVersionSpec >> configMethodValueOn: aStream for: spec selector: selector last: last indent: indent [
 
 	| valuePrintString |
-	spec ifNil: [ ^ self ].
 	valuePrintString := spec value isSymbol
 		                    ifTrue: [ '#' , spec value asString printString ]
 		                    ifFalse: [ spec value printString ].
@@ -255,6 +243,12 @@ MetacelloVersionSpec >> groups [
 	^ groups
 ]
 
+{ #category : 'testing' }
+MetacelloVersionSpec >> hasImports [
+
+	^ self import isNotNil or: [ self importArray isNotNil ]
+]
+
 { #category : 'accessing' }
 MetacelloVersionSpec >> import [
     ^ importName
@@ -262,7 +256,8 @@ MetacelloVersionSpec >> import [
 
 { #category : 'accessing' }
 MetacelloVersionSpec >> import: aString [
-  importName := aString
+
+	importName := aString
 ]
 
 { #category : 'accessing' }
@@ -275,7 +270,8 @@ MetacelloVersionSpec >> import: aString provides: anArray [
 
 { #category : 'accessing' }
 MetacelloVersionSpec >> importArray [
-  ^ importArray
+
+	^ importArray
 ]
 
 { #category : 'printing' }
@@ -381,50 +377,6 @@ MetacelloVersionSpec >> packageNames [
 MetacelloVersionSpec >> packageSpecsInLoadOrder [
 
 	^ self packagesSpec packageSpecsInLoadOrderFor: self
-]
-
-{ #category : 'querying' }
-MetacelloVersionSpec >> packageSpecsInLoadOrderForMap: packageMap [
-
-	| loadOrder pkgs packageNames importNames importSpec importProjectSpecs importProjectNameMap |
-	loadOrder := self packageSpecsInLoadOrder.
-	importNames := (packageNames := (packageMap values collect: [ :pkg |
-		                                 pkg name ]) asSet) copy.
-	(self import isNil and: [ self importArray isNil ]) ifTrue: [
-		^ loadOrder select: [ :pkg | packageNames includes: pkg name ] ].
-	loadOrder do: [ :pkg | importNames remove: pkg name ifAbsent: [  ] ].
-	pkgs := OrderedCollection new.
-	importProjectSpecs := Dictionary new.
-	importProjectNameMap := Dictionary new.
-	importArray ifNotNil: [
-		loadOrder do: [ :pkg |
-			importArray do: [ :assoc |
-				assoc key = pkg name ifTrue: [
-					importProjectSpecs at: pkg name put: pkg.
-					(assoc value select: [ :each | importNames includes: each ]) do: [
-						:each |
-						(importProjectNameMap
-							 at: pkg name
-							 ifAbsent: [ importProjectNameMap at: pkg name put: Set new ])
-							add: each ] ] ] ] ].
-	self import ifNotNil: [
-		loadOrder do: [ :pkg |
-			pkg name = self import ifTrue: [
-				importProjectSpecs at: pkg name put: pkg.
-				importProjectNameMap at: pkg name put: importNames ] ] ].
-	loadOrder do: [ :pkg |
-		(packageNames includes: pkg name) ifTrue: [ pkgs add: pkg ].
-		importProjectSpecs
-			at: pkg name
-			ifPresent: [ :importProjectSpec | "insert the imports at this point"
-				(importProjectNameMap at: pkg name ifAbsent: [ #(  ) ]) do: [
-					:importedName |
-					pkgs add: (importSpec := importProjectSpec copy
-							               name: importedName;
-							               mergeImportLoads: { importedName };
-							               yourself).
-					importSpec projectReference name: importedName ] ] ].
-	^ pkgs
 ]
 
 { #category : 'accessing' }
@@ -562,36 +514,6 @@ MetacelloVersionSpec >> repository: aString username: username password: passwor
 MetacelloVersionSpec >> repositorySpecs [
 
 	^self repositories map values
-]
-
-{ #category : 'loading' }
-MetacelloVersionSpec >> resolveToLoadableSpecs: aRequiredCollection [
-
-	| packageMap required managedRequirements map |
-	packageMap := Dictionary new.
-	required := aRequiredCollection copy.
-	managedRequirements := Set new.
-	map := self packagesSpec map.
-	[ required isEmpty ] whileFalse: [
-			| newReqd |
-			newReqd := Set new.
-			required do: [ :req |
-					| loadableSpec |
-					loadableSpec := self packageNamed: req forMap: map ifAbsent: [ ^ self error: 'Name not found: ' , req ]. "If the loadable spec is a Group we ignore it."
-					loadableSpec resolveToLoadableSpec ifNotNil: [ :resolvedSpec | packageMap at: loadableSpec name put: resolvedSpec ].
-					newReqd addAll: loadableSpec requires.
-					newReqd addAll: loadableSpec includes ].
-			managedRequirements addAll: required.
-			newReqd removeAllFoundIn: managedRequirements.
-			required := newReqd ].
-	^ packageMap
-]
-
-{ #category : 'accessing' }
-MetacelloVersionSpec >> setImport: anArray [
-  importArray := importArray
-    ifNil: [ anArray ]
-    ifNotNil: [ importArray , anArray ]
 ]
 
 { #category : 'accessing' }

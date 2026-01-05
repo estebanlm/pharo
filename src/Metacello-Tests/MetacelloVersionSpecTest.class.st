@@ -130,13 +130,13 @@ MetacelloVersionSpecTest >> testVersionSpec2 [
 				 name: 'Platform';
 				 includes: 'Core';
 				 yourself);
-		add: (self projectSpec
-				 name: 'Project';
-				 className: 'BaselineOfProjectA';
-				 loads: #( 'MyPackage' 'MyTests' );
-				 preLoadDoIt: #preLoadDoItB;
-				 postLoadDoIt: #postLoadDoItB;
-				 yourself);
+		add: (MetacelloProjectReferenceSpec projectReference: (self projectSpec
+					  name: 'Project';
+					  className: 'BaselineOfProjectA';
+					  loads: #( 'MyPackage' 'MyTests' );
+					  preLoadDoIt: #preLoadDoItB;
+					  postLoadDoIt: #postLoadDoItB;
+					  yourself));
 		yourself.
 	repository := version repositories map at: '/opt/gemstone/repository' ifAbsent: [ self assert: false ].
 	self assert: repository type equals: 'directory'.

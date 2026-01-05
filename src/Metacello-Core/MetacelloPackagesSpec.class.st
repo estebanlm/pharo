@@ -9,7 +9,7 @@ Class {
 { #category : 'actions' }
 MetacelloPackagesSpec >> add: aSpec [
 
-	aSpec addToMetacelloPackages: self
+	self addMemberForSpec: aSpec
 ]
 
 { #category : 'accessing' }

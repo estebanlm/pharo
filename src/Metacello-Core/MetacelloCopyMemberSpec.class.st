@@ -10,14 +10,14 @@ Class {
 }
 
 { #category : 'actions' }
-MetacelloCopyMemberSpec >> applyAdd: addBlock copy: copyBlock merge: mergeBlock remove: removeBlock [
-    copyBlock value: self
-]
+MetacelloCopyMemberSpec >> applyToMap: map [
 
-{ #category : 'actions' }
-MetacelloCopyMemberSpec >> applyToList: aListSpec [
-
-	aListSpec copy: self
+	map
+		at: self sourceName
+		ifPresent: [ :aSpec |
+				aSpec aboutToCopy.
+				map at: self name put: (aSpec copy mergeSpec: self spec copy) ]
+		ifAbsent: [ self error: 'Source spec named ' , self sourceName printString , ' not found' ]
 ]
 
 { #category : 'accessing' }

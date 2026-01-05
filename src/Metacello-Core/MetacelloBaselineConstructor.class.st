@@ -13,10 +13,9 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'root',
-		'attributeOrder',
-		'configuration',
 		'project',
-		'attributeMap'
+		'attributeMap',
+		'baseline'
 	],
 	#category : 'Metacello-Core-Constructors',
 	#package : 'Metacello-Core',
@@ -38,21 +37,9 @@ MetacelloBaselineConstructor class >> on: aConfig project: aProject [
 ]
 
 { #category : 'accessing' }
-MetacelloBaselineConstructor >> addAttribute: anAttribute [
-
-	self attributeOrder add: anAttribute
-]
-
-{ #category : 'accessing' }
 MetacelloBaselineConstructor >> attributeMap [
 
-	^ attributeMap ifNil: [ attributeMap := Dictionary new ]
-]
-
-{ #category : 'accessing' }
-MetacelloBaselineConstructor >> attributeOrder [
-
-	^ attributeOrder ifNil: [ attributeOrder := OrderedCollection new ]
+	^ attributeMap
 ]
 
 { #category : 'api - old' }
@@ -63,11 +50,16 @@ MetacelloBaselineConstructor >> author: aBlockOrString [
 		'The option #author: will not do anything anymore in Pharo 14+. This option can be removed in it is in an attribute for Pharo 14+ or ignored if this is for a different platform. Reason: The author metadata was used with SmalltalkHub but not this information is already managed by git or other CVS.'
 ]
 
-{ #category : 'api' }
-MetacelloBaselineConstructor >> baseline: aString [
-	"Alias to make baselines more explicits and backward compatible"
+{ #category : 'accessing' }
+MetacelloBaselineConstructor >> baseline [
 
-	self project: aString
+	^ baseline
+]
+
+{ #category : 'accessing' }
+MetacelloBaselineConstructor >> baseline: aBaselineOf [
+
+	baseline := aBaselineOf
 ]
 
 { #category : 'api' }
@@ -98,29 +90,11 @@ MetacelloBaselineConstructor >> className: aString [
 	self root className: aString
 ]
 
-{ #category : 'accessing' }
-MetacelloBaselineConstructor >> configuration [
-
-	^configuration
-]
-
-{ #category : 'accessing' }
-MetacelloBaselineConstructor >> configuration: aConfig [
-
-	configuration := aConfig
-]
-
 { #category : 'api - old' }
 MetacelloBaselineConstructor >> configuration: aString with: aBlock [
 
 	MetacelloNotification signal:
 		'The option #configuration:with: will not do anything anymore in Pharo 14+. This option can be removed in it is in an attribute for Pharo 14+ or ignored if this is for a different platform. Reason: This option was here for configurations but not baselines. Since we cannot load configurations anymore in Pharo, it is been removed.'
-]
-
-{ #category : 'accessing' }
-MetacelloBaselineConstructor >> configurationClass [
-
-	^self configuration class
 ]
 
 { #category : 'api - old' }
@@ -134,7 +108,7 @@ MetacelloBaselineConstructor >> description: aBlockOrString [
 { #category : 'private' }
 MetacelloBaselineConstructor >> evaluatePragma: pragma [
 
-	self configuration perform: pragma methodSelector with: self
+	self baseline perform: pragma methodSelector with: self
 ]
 
 { #category : 'pragma extraction' }
@@ -159,9 +133,7 @@ MetacelloBaselineConstructor >> for: attributeListOrSymbol do: aBlock [
 
 	(attributeListOrSymbol isSymbol
 		 ifTrue: [ { attributeListOrSymbol } ]
-		 ifFalse: [ attributeListOrSymbol ]) do: [ :attribute |
-		(self attributeMap at: attribute ifAbsentPut: [ OrderedCollection new ]) add: aBlock.
-		self addAttribute: attribute ]
+		 ifFalse: [ attributeListOrSymbol ]) do: [ :attribute | (self attributeMap at: attribute ifAbsentPut: [ OrderedCollection new ]) add: aBlock ]
 ]
 
 { #category : 'api - old' }
@@ -226,6 +198,13 @@ MetacelloBaselineConstructor >> includes: anObject [
 	self root includes: anObject
 ]
 
+{ #category : 'initialization' }
+MetacelloBaselineConstructor >> initialize [
+
+	super initialize.
+	attributeMap := Dictionary new
+]
+
 { #category : 'api' }
 MetacelloBaselineConstructor >> loads: aStringOrCollection [
 
@@ -247,19 +226,19 @@ MetacelloBaselineConstructor >> name: anObject [
 ]
 
 { #category : 'initialization' }
-MetacelloBaselineConstructor >> on: aConfig project: aProject [
+MetacelloBaselineConstructor >> on: aBaseline project: aProject [
 
 	| pragma versionSpec |
 	project := aProject.
-	self configuration: aConfig.
-	pragma := self extractBaselinePragmaFor: aConfig class.
+	self baseline: aBaseline.
+	pragma := self extractBaselinePragmaFor: aBaseline class.
 	versionSpec := MetacelloVersionSpec project: self project.
 	self root: versionSpec.
 	self evaluatePragma: pragma.
 	self project attributes do: [ :attribute |
 		(self attributeMap at: attribute ifAbsent: [ ]) ifNotNil: [ :blockList | blockList do: [ :block | self with: versionSpec during: block ] ] ].
 	self project version: versionSpec.
-	self project configuration: aConfig
+	self project configuration: aBaseline
 ]
 
 { #category : 'api - old' }

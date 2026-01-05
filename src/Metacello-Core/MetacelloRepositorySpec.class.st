@@ -27,12 +27,6 @@ MetacelloRepositorySpec >> acceptVisitor: aVisitor [
 	self error: 'Should not be visitable..'
 ]
 
-{ #category : 'adding' }
-MetacelloRepositorySpec >> addToMetacelloRepositories: aMetacelloRepositoriesSpec [
-
-	aMetacelloRepositoriesSpec addMemberForSpec: self
-]
-
 { #category : 'mc support' }
 MetacelloRepositorySpec >> canUpgradeTo: aMetacelloRepositorySpec [
   self description = aMetacelloRepositorySpec description

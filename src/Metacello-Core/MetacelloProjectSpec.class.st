@@ -48,14 +48,6 @@ MetacelloProjectSpec >> acceptVisitor: aVisitor [
 	^ aVisitor visitProjectSpec: self
 ]
 
-{ #category : 'adding' }
-MetacelloProjectSpec >> addToMetacelloPackages: aMetacelloPackagesSpec [
-
-	| spec |
-	spec := MetacelloProjectReferenceSpec projectReference: self copy.
-	aMetacelloPackagesSpec addMemberForSpec: spec
-]
-
 { #category : 'scripting' }
 MetacelloProjectSpec >> asProjectRegistration [
 
@@ -364,7 +356,10 @@ MetacelloProjectSpec >> loads [
 { #category : 'accessing' }
 MetacelloProjectSpec >> loads: aCollection [
 
-	aCollection setLoadsInMetacelloProject: self
+	self shouldBeMutable.
+	loads := aCollection isString
+		         ifTrue: [ { aCollection } ]
+		         ifFalse: [ aCollection asArray ]
 ]
 
 { #category : 'scripting' }
@@ -615,12 +610,6 @@ MetacelloProjectSpec >> resetProjectPackage [
 MetacelloProjectSpec >> resolveToLoadableSpec [
 
 	^self copy
-]
-
-{ #category : 'private' }
-MetacelloProjectSpec >> setLoads: aCollection [
-    self shouldBeMutable.
-    loads := aCollection
 ]
 
 { #category : 'mutability' }
