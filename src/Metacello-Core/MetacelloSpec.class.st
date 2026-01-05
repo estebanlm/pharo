@@ -1,9 +1,9 @@
 Class {
 	#name : 'MetacelloSpec',
 	#superclass : 'Object',
-	#category : 'Metacello-Core-Specs',
+	#category : 'Metacello-Core-Model',
 	#package : 'Metacello-Core',
-	#tag : 'Specs'
+	#tag : 'Model'
 }
 
 { #category : 'merging' }
@@ -12,12 +12,6 @@ MetacelloSpec >> aboutToCopy [
 
 { #category : 'visiting' }
 MetacelloSpec >> acceptVisitor: aVisitor [
-
-	self subclassResponsibility
-]
-
-{ #category : 'printing' }
-MetacelloSpec >> configMethodOn: aStream indent: indent [
 
 	self subclassResponsibility
 ]
@@ -54,12 +48,6 @@ MetacelloSpec >> mergeSpec: aSpec [
 MetacelloSpec >> nonOverridable [
 
 	^#()
-]
-
-{ #category : 'printing' }
-MetacelloSpec >> printOn: aStream [
-
-	self configMethodOn: aStream indent: 0
 ]
 
 { #category : 'validation' }

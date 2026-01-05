@@ -1,9 +1,9 @@
 Class {
 	#name : 'MetacelloRepositoriesSpec',
 	#superclass : 'MetacelloMemberListSpec',
-	#category : 'Metacello-Core-Specs',
+	#category : 'Metacello-Core-Model',
 	#package : 'Metacello-Core',
-	#tag : 'Specs'
+	#tag : 'Model'
 }
 
 { #category : 'actions' }
@@ -21,8 +21,8 @@ MetacelloRepositoriesSpec >> add: aStringOrSpec [
 MetacelloRepositoriesSpec >> canUpgradeTo: aMetacelloRepositoriesSpec [
 
 	| repositorySpecs anotherRepositorySpecs |
-	repositorySpecs := self map values sort: [ :a :b | a description <= b description ].
-	anotherRepositorySpecs := aMetacelloRepositoriesSpec map values sort: [ :a :b | a description <= b description ].
+	repositorySpecs := self specs sort: [ :a :b | a description <= b description ].
+	anotherRepositorySpecs := aMetacelloRepositoriesSpec specs sort: [ :a :b | a description <= b description ].
 	repositorySpecs size = anotherRepositorySpecs size ifFalse: [ ^ false ].
 	1 to: repositorySpecs size do: [ :index |
 			| repoSpec anotherRepoSpec |
@@ -34,49 +34,25 @@ MetacelloRepositoriesSpec >> canUpgradeTo: aMetacelloRepositoriesSpec [
 
 { #category : 'scripting' }
 MetacelloRepositoriesSpec >> compareEqual: aMetacelloProjectSpec [
-    | repositorySpecs anotherRepositorySpecs |
-    repositorySpecs := (self map values sort: [ :a :b | a description <= b description ])
-        collect: [ :each | each description ].
-    anotherRepositorySpecs := (aMetacelloProjectSpec map values sort: [ :a :b | a description <= b description ])
-        collect: [ :each | each description ].
-    ^ repositorySpecs = anotherRepositorySpecs
-]
 
-{ #category : 'printing' }
-MetacelloRepositoriesSpec >> configMethodCascadeOn: aStream indent: indent [
-
-	| repositorySpecs |
-	repositorySpecs := self map values sort: [ :a :b | a description <= b description ].
-	repositorySpecs size = 1
-		ifTrue: [ repositorySpecs first configMethodCascadeOn: aStream lastCascade: true ]
-		ifFalse: [
-			1 to: repositorySpecs size do: [ :index |
-				aStream tab: indent + 1.
-				(repositorySpecs at: index) configMethodCascadeOn: aStream lastCascade: index >= repositorySpecs size ] ]
-]
-
-{ #category : 'printing' }
-MetacelloRepositoriesSpec >> configMethodOn: aStream indent: indent [
-
-	aStream 
-		tab: indent; 
-		nextPutAll: 'spec';
-		cr.
-	self configMethodCascadeOn: aStream indent: indent
+	| repositorySpecs anotherRepositorySpecs |
+	repositorySpecs := (self specs sort: [ :a :b | a description <= b description ]) collect: [ :each | each description ].
+	anotherRepositorySpecs := (aMetacelloProjectSpec specs sort: [ :a :b | a description <= b description ]) collect: [ :each | each description ].
+	^ repositorySpecs = anotherRepositorySpecs
 ]
 
 { #category : 'scripting' }
 MetacelloRepositoriesSpec >> hasNoLoadConflicts: aMetacelloRepositoriesSpec [
 
 	| repositorySpecs anotherRepositorySpecs |
-	repositorySpecs := self map values sort: [ :a :b | a description <= b description ].
-	anotherRepositorySpecs := aMetacelloRepositoriesSpec map values sort: [ :a :b | a description <= b description ].
+	repositorySpecs := self specs sort: [ :a :b | a description <= b description ].
+	anotherRepositorySpecs := aMetacelloRepositoriesSpec specs sort: [ :a :b | a description <= b description ].
 	repositorySpecs size ~= anotherRepositorySpecs size ifTrue: [ ^ false ].
 	1 to: repositorySpecs size do: [ :index |
-		| repoSpec anotherRepoSpec |
-		repoSpec := repositorySpecs at: index.
-		anotherRepoSpec := anotherRepositorySpecs at: index.
-		(repoSpec hasNoLoadConflicts: anotherRepoSpec) ifFalse: [ ^ false ] ].
+			| repoSpec anotherRepoSpec |
+			repoSpec := repositorySpecs at: index.
+			anotherRepoSpec := anotherRepositorySpecs at: index.
+			(repoSpec hasNoLoadConflicts: anotherRepoSpec) ifFalse: [ ^ false ] ].
 	^ true
 ]
 

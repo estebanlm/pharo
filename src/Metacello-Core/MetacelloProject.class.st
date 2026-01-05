@@ -136,16 +136,11 @@ MetacelloProject >> pragmaKeywords [
 { #category : 'printing' }
 MetacelloProject >> printOn: aStream [
 
-	self configuration class printOn: aStream.
+	super printOn: aStream.
 	aStream nextPut: $(.
-	version
-		ifNil: [ aStream nextPutAll: 'No version yet' ]
-		ifNotNil: [
-				aStream nextPutAll: 'baseline'.
-				version spec projectLabel ifNotEmpty: [ :label | aStream nextPutAll: ' [' , label , ']' ].
-				aStream
-					nextPut: $,;
-					space ].
+	aStream nextPutAll: (version
+			 ifNil: [ 'No version yet' ]
+			 ifNotNil: [ self label ]).
 	aStream nextPut: $)
 ]
 

@@ -5,9 +5,9 @@ Class {
 		'list',
 		'memberMap'
 	],
-	#category : 'Metacello-Core-Members',
+	#category : 'Metacello-Core-Model',
 	#package : 'Metacello-Core',
-	#tag : 'Members'
+	#tag : 'Model'
 }
 
 { #category : 'testing' }
@@ -79,7 +79,7 @@ MetacelloMemberListSpec >> detect: aBlock ifNone: exceptionBlock [
 { #category : 'enumeration' }
 MetacelloMemberListSpec >> do: aBlock [
 
-	self map values do: aBlock
+	self specs do: aBlock
 ]
 
 { #category : 'testing' }
@@ -147,6 +147,17 @@ MetacelloMemberListSpec >> postCopy [
 	self clearMemberMap
 ]
 
+{ #category : 'printing' }
+MetacelloMemberListSpec >> printOn: aStream [
+
+	super printOn: aStream.
+	aStream nextPutAll: ' ['.
+	self specs
+		ifEmpty: [ aStream nextPutAll: 'Empty' ]
+		ifNotEmpty: [ :specs | specs do: [ :spec | aStream nextPutAll: spec name ] separatedBy: [ aStream nextPutAll: ', ' ] ].
+	aStream nextPutAll: ']'
+]
+
 { #category : 'actions' }
 MetacelloMemberListSpec >> remove: aSpec [
 
@@ -177,4 +188,11 @@ MetacelloMemberListSpec >> select: aBlock [
 MetacelloMemberListSpec >> specListDo: aBlock [
 
 	self list do: [:member |  aBlock value: member spec ]
+]
+
+{ #category : 'accessing' }
+MetacelloMemberListSpec >> specs [
+	"Return the list of specs I contains once all members are applied."
+
+	^ self map values
 ]

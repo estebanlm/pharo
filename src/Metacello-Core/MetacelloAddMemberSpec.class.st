@@ -1,19 +1,13 @@
 Class {
 	#name : 'MetacelloAddMemberSpec',
 	#superclass : 'MetacelloMemberSpec',
-	#category : 'Metacello-Core-Members',
+	#category : 'Metacello-Core-Model',
 	#package : 'Metacello-Core',
-	#tag : 'Members'
+	#tag : 'Model'
 }
 
 { #category : 'actions' }
 MetacelloAddMemberSpec >> applyToMap: map [
 
 	map at: self name put: self spec
-]
-
-{ #category : 'accessing' }
-MetacelloAddMemberSpec >> methodUpdateSelector [
-
-	^#overrides:
 ]

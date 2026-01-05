@@ -4,9 +4,9 @@ Class {
 	#instVars : [
 		'spec'
 	],
-	#category : 'Metacello-Core-Members',
+	#category : 'Metacello-Core-Model',
 	#package : 'Metacello-Core',
-	#tag : 'Members'
+	#tag : 'Model'
 }
 
 { #category : 'testing' }
@@ -35,36 +35,20 @@ MetacelloMemberSpec >> applyToMap: map [
 	self subclassResponsibility
 ]
 
-{ #category : 'printing' }
-MetacelloMemberSpec >> configMethodCascadeOn: aStream last: lastCascade indent: indent [
-
-	self spec 
-		configMethodCascadeOn: aStream 
-		member: self 
-		last: lastCascade 
-		indent: indent
-]
-
-{ #category : 'printing' }
-MetacelloMemberSpec >> configMethodOn: aStream indent: indent [
-
-	aStream
-		nextPutAll: self class name asString;
-		nextPutAll: ' member: ('.
-	self spec configMethodOn: aStream indent: indent.
-	aStream nextPutAll: ')'
-]
-
-{ #category : 'accessing' }
-MetacelloMemberSpec >> methodUpdateSelector [
-
-	^self subclassResponsibility
-]
-
 { #category : 'accessing' }
 MetacelloMemberSpec >> name [
 
 	^ self spec name
+]
+
+{ #category : 'printing' }
+MetacelloMemberSpec >> printOn: aStream [
+
+	super printOn: aStream.
+	aStream
+		nextPutAll: ' [';
+		nextPutAll: self name;
+		nextPutAll: ']'
 ]
 
 { #category : 'accessing' }
