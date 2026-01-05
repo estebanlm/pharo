@@ -26,7 +26,7 @@ Class {
 	#tag : 'SystemIntegration'
 }
 
-{ #category : 'initialization' }
+{ #category : 'class initialization' }
 CoASTHeuristicsResultSetBuilder class >> initialize [
 	"self initialize"
 	
@@ -38,7 +38,7 @@ CoASTHeuristicsResultSetBuilder class >> initialize [
 	
 ]
 
-{ #category : 'initialization' }
+{ #category : 'class initialization' }
 CoASTHeuristicsResultSetBuilder class >> initializeMessagesHeuristic [
 
 		MessageHeuristic :=  OrderedCollection <- {  
@@ -54,7 +54,7 @@ CoASTHeuristicsResultSetBuilder class >> initializeMessagesHeuristic [
 				                      CoUnknownMessageHeuristic new  }
 ]
 
-{ #category : 'initialization' }
+{ #category : 'class initialization' }
 CoASTHeuristicsResultSetBuilder class >> initializeMethodNodeHeuristic [
 
 	MethodNodeHeuristic := OrderedCollection <- {
@@ -62,13 +62,13 @@ CoASTHeuristicsResultSetBuilder class >> initializeMethodNodeHeuristic [
 		                       CoUnknownMessageHeuristic new } 
 ]
 
-{ #category : 'initialization' }
+{ #category : 'class initialization' }
 CoASTHeuristicsResultSetBuilder class >> initializeSymbolHeuristic [
 
 	SymbolsHeuristic := OrderedCollection <- { CoLiteralSymbolHeuristic new } 
 ]
 
-{ #category : 'initialization' }
+{ #category : 'class initialization' }
 CoASTHeuristicsResultSetBuilder class >> initializeVariablesHeuristic [
 
 	VariablesHeuristic := OrderedCollection <- {
