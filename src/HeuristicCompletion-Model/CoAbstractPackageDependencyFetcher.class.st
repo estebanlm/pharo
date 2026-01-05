@@ -33,10 +33,7 @@ CoAbstractPackageDependencyFetcher class >> dependencyCache [
 { #category : 'class initialization' }
 CoAbstractPackageDependencyFetcher class >> initialize [ 
 
-	self codeChangeAnnouncer weak 
-			when: PackageAdded send: #resetCache to: self;
-			when: PackageRenamed send: #resetCache to: self;
-			when: PackageRemoved send: #resetCache to: self
+	self codeChangeAnnouncer weak when: PackageAnnouncement send: #resetCache to: self
 ]
 
 { #category : 'class initialization' }
