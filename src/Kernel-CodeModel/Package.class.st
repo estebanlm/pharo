@@ -50,7 +50,9 @@ Class {
 		'extensionSelectors',
 		'name',
 		'organizer',
-		'tags'
+		'tags',
+		'importedExtensions',
+		'scopedSelectors'
 	],
 	#classVars : [
 		'Properties'
@@ -332,6 +334,12 @@ Package >> importProtocol: aProtocol forClass: aClass [
 		thenDo: [ :method | self addMethod: method ]
 ]
 
+{ #category : 'as yet unclassified' }
+Package >> importedExtensions [
+	
+	^ importedExtensions ifNil: [ importedExtensions := Set new ]
+]
+
 { #category : 'testing' }
 Package >> includesClass: aClass [
 	"Returns true if the receiver includes aClass in the classes that are defined within it: only class definition are considered - not class extensions"
@@ -430,6 +438,22 @@ Package >> linesOfCode [
 	"An approximate measure of lines of code.
 	Includes comments, but excludes blank lines."
 	^self methods inject: 0 into: [:sum :each | sum + each linesOfCode]
+]
+
+{ #category : 'lookup' }
+Package >> lookupSelector: aSymbol [
+
+	^ self lookupSelector: aSymbol ifPresent: [ :found | found ]
+]
+
+{ #category : 'lookup' }
+Package >> lookupSelector: aSymbol ifPresent: presentBlock [
+
+	^ presentBlock value: (self scopedSelectors at: aSymbol asSymbol ifAbsent: [
+		self importedExtensions do: [ :ext | 
+			ext package lookupSelector: aSymbol ifPresent: [ :found |
+				^ presentBlock value: found ] ].
+			aSymbol ])
 ]
 
 { #category : 'accessing' }

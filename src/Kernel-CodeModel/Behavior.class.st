@@ -627,19 +627,36 @@ Behavior >> compile: sourceCode classified: protocol withStamp: changeStamp noti
 Behavior >> compile: sourceCode classified: protocol withStamp: changeStamp notifying: requestor logSource: logSource [
 	"Return the selector of the compiled method"
 
-	| method |
-	sourceCode ifEmpty: [ Error signal: 'The source code should not be empty' ].
-	method := self compiler
-		          source: sourceCode;
-		          requestor: requestor;
-		          failBlock: (requestor ifNotNil: [ [ ^ nil ] ]);
-		          "no failblock if no requestor""compatibility: permit faulty code if no requestor"permitFaulty: requestor isNil;
-		          permitUndeclared: requestor isNil;
-		          protocol: protocol;
-		          changeStamp: changeStamp;
-		          logged: logSource;
-		          install.
+	^ self
+		compile: sourceCode
+		classified: protocol
+		withStamp: changeStamp
+		notifying: requestor
+		logSource: logSource
+		recompileDependencies: true
+]
 
+{ #category : 'compiling' }
+Behavior >> compile: sourceCode classified: protocol withStamp: changeStamp notifying: requestor logSource: logSource recompileDependencies: recompileDependencies [
+	"Return the selector of the compiled method"
+	| method compiler ast |
+
+	sourceCode ifEmpty: [ Error signal: 'The source code should not be empty' ].
+	compiler := self compiler
+		            source: sourceCode;
+		            requestor: requestor;
+		            failBlock: (requestor ifNotNil: [ [ ^ nil ] ]);
+		            "no failblock if no requestor"permitUndeclared: requestor isNil;
+		            "compatibility: permit undeclared if no requestor"protocol: protocol;
+		            changeStamp: changeStamp;
+		            logged: logSource.
+
+	ast := compiler parse.
+
+	ast sendNodes do: [ :send | 
+		send selector: (OCSelectorNode value: (self package lookupSelector: send selector)) ].
+
+	method := compiler install.
 	^ method selector
 ]
 
