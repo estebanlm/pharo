@@ -2,7 +2,6 @@ Class {
 	#name : 'FileManipulationTest',
 	#superclass : 'TestCase',
 	#instVars : [
-		'toDelete',
 		'firstFolder',
 		'secondFolder'
 	],
@@ -57,8 +56,7 @@ FileManipulationTest >> setUp [
 		               yourself.
 	secondFolder := (self root / 'Folder2') asFileReference
 		                ensureCreateDirectory;
-		                yourself.
-	toDelete := OrderedCollection new
+		                yourself
 ]
 
 { #category : 'running' }
