@@ -418,11 +418,9 @@ OCMessageNode >> selector [
 ]
 
 { #category : 'accessing' }
-OCMessageNode >> selector: aSelector [
+OCMessageNode >> selector: aSelectorNode [
 	keywordsPositions := nil.
-	selector := aSelector isString
-		ifTrue: [ OCSelectorNode value: aSelector ]
-		ifFalse: [ aSelector ].
+	selector := aSelectorNode.
 	selector parent: self
 ]
 

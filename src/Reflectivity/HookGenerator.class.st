@@ -106,20 +106,20 @@ HookGenerator >> hookFor: aLink [
 			(self hasOption: #optionInlineMetaObject for: aLink)
 				ifTrue: [OCLiteralNode value: aLink metaObject]
 				ifFalse: [OCMessageNode receiver: (OCLiteralNode value: aLink)
-											 selector: #metaObject ]].
+										selector: (OCSelectorNode value: #metaObject) ]].
 	arguments := self generateArguments: aLink.
 
 	hook := RFMessageNode
 		receiver: receiver
-		selector: aLink selector
+		selector: (OCSelectorNode value: aLink selector)
 		arguments: arguments.
 
 	(self hasOption: #optionOneShot for: aLink) ifTrue: [
-			hook := OCSequenceNode statements: {
-				OCMessageNode
-					receiver: (OCLiteralNode value: aLink)
-					selector: #uninstall.
-				hook }].
+		hook := OCSequenceNode statements: {
+			OCMessageNode
+				receiver: (OCLiteralNode value: aLink)
+				selector: (OCSelectorNode value: #uninstall).
+			hook }].
 	aLink hasCondition ifTrue: [hook := self wrapCondition: hook link: aLink].
 	(aLink hasMetaLevel or: [self hasOption: #optionMetalevel for: aLink]) ifTrue: [hook := self wrapInContext: hook link: aLink].
 
