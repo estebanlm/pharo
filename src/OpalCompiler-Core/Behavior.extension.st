@@ -19,17 +19,24 @@ Behavior >> compile: code [
 Behavior >> compile: selector from: oldClass [
 	"Compile the method associated with selector in the receiver's method dictionary."
 
-	| method newMethod |
+	| method newMethod compiler ast |
 	method := oldClass compiledMethodAt: selector.
-	newMethod := oldClass compiler
+	compiler := oldClass compiler
 		             source: method sourceCode;
 		             priorMethod: method;
 		             class: self;
 		             permitFaulty: true;
 		             "No need to log recompilation in the sources,
 					 	 We are going to reuse the original source pointer."
-		             logged: false;
-		             install.
+		             logged: false.
+	
+	ast := compiler parse.
+
+	ast sendNodes do: [ :send | 
+		send selector: (OCSelectorNode value: (self package lookupSelector: send selector)) ].
+
+	newMethod := compiler install.
+	
 	newMethod sourcePointer: method sourcePointer.
 	selector == newMethod selector ifFalse: [
 		self error: 'selector changed!' ]
