@@ -712,6 +712,12 @@ String >> asPluralBasedOn: aNumberOrCollection [
 ]
 
 { #category : 'converting' }
+String >> asSelector [
+	
+	^ self asSymbol
+]
+
+{ #category : 'converting' }
 String >> asSignedInteger [
 	"Returns the first signed integer it can find or nil."
 
@@ -2001,6 +2007,12 @@ String >> isOctetString [
 String >> isPatternVariable [
 
 	 ^self keywords anySatisfy: [:each | each first = $`]
+]
+
+{ #category : 'testing' }
+String >> isSelector [
+
+	^ true
 ]
 
 { #category : 'testing' }

@@ -147,6 +147,21 @@ Package >> codeChangeAnnouncer [
 	^ self environment codeChangeAnnouncer
 ]
 
+{ #category : 'as yet unclassified' }
+Package >> defineScopedSelector: aSymbol [
+
+	| found scopedSelector |
+	found := self lookupSelector: aSymbol asSymbol.
+	found == aSymbol ifFalse: [ ^ found ].
+
+	scopedSelector := ScopedSelector new
+		                  symbol: aSymbol;
+		                  owner: self;
+		                  yourself.
+	self scopedSelectors at: aSymbol asSymbol put: scopedSelector.
+	^ scopedSelector
+]
+
 { #category : 'accessing' }
 Package >> definedClassNames [
 	"Return the class names having methods defined in the receiver."
@@ -323,6 +338,13 @@ Package >> hierarchyRoots [
 
 	^ self definedClasses
 		select: [ :each | (each superclass isNil or: [ each superclass package ~~ self ]) and: [ each hasSubclasses ] ]
+]
+
+{ #category : 'as yet unclassified' }
+Package >> importExtension: anExtension [
+	
+	self importedExtensions add: anExtension.
+	anExtension addUserPackage: self
 ]
 
 { #category : 'private' }
@@ -749,6 +771,12 @@ Package >> roots [
 Package >> sanitizeName: aName [
 
 	^ aName trimBoth
+]
+
+{ #category : 'as yet unclassified' }
+Package >> scopedSelectors [
+	
+	^ scopedSelectors ifNil: [ scopedSelectors := IdentityDictionary new ]
 ]
 
 { #category : 'accessing' }
