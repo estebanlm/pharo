@@ -56,7 +56,9 @@ ReRenameClassRefactoring >> applicabilityPreconditions [
 		  (RBCondition withBlock: [
 			   self doesClassToBeRenamedExist and: [ self isNotMetaclass ] ]).
 		  self isValidClassName.
-		  self isNotGlobal }
+		  self isNotGlobal.
+		  ReIsNotSharedVariableCondition name: newName model: self model.
+		}
 ]
 
 { #category : 'initialization' }
