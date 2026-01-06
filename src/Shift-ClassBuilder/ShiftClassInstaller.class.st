@@ -22,7 +22,8 @@ Class {
 	#name : 'ShiftClassInstaller',
 	#superclass : 'Object',
 	#instVars : [
-		'builder'
+		'builder',
+		'packageOrganizer'
 	],
 	#category : 'Shift-ClassBuilder-Installer',
 	#package : 'Shift-ClassBuilder',
@@ -290,6 +291,12 @@ ShiftClassInstaller >> oldClass: anObject [
 	builder oldClass: anObject
 ]
 
+{ #category : 'accessing' }
+ShiftClassInstaller >> packageOrganizer [
+
+	^ builder installingEnvironment organization
+]
+
 { #category : 'building' }
 ShiftClassInstaller >> updateBindings: aBinding of: newClass [
 	newClass methods do: [ :e | e classBinding: aBinding ]
@@ -299,7 +306,8 @@ ShiftClassInstaller >> updateBindings: aBinding of: newClass [
 ShiftClassInstaller >> updatePackage: aClass [
 	"If the package is nil we leave the class unclassified"
 	builder package ifNotNil: [ :package | 
-		(aClass packageOrganizer
-			ensureTag: builder tag inPackage: package)
-				addClass: aClass ]
+		((self packageOrganizer
+			ensurePackage: package)
+				ensureTag: builder tag)
+					addClass: aClass ]
 ]
