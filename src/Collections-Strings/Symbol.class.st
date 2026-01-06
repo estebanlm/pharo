@@ -438,6 +438,20 @@ Symbol >> flushCache [
 	<primitive: 119>
 ]
 
+{ #category : 'converting' }
+Symbol >> handleDoesNotUnderstand: aMessage to: aReceiver [
+
+	<debuggerCompleteToSender>
+	| exception resumeValue |
+	(exception := MessageNotUnderstood new)
+		message: aMessage;
+		receiver: aReceiver.
+	resumeValue := exception signal.
+	^exception hasToResend
+		ifTrue: [aMessage sentTo: aReceiver]
+		ifFalse: [resumeValue]
+]
+
 { #category : 'announcements' }
 Symbol >> handlesAnnouncement: anAnnouncement [
 	"Anything else than the announcement identifier (in the case of symbol i.e. #foo for ... on: #foo send: #bar to: nil) will not
