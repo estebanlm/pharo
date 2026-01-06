@@ -5,76 +5,15 @@ Class {
 		'requires',
 		'includes'
 	],
-	#category : 'Metacello-Core-Specs',
+	#category : 'Metacello-Core-Model',
 	#package : 'Metacello-Core',
-	#tag : 'Specs'
+	#tag : 'Model'
 }
 
 { #category : 'testing' }
 MetacelloAbstractPackageSpec class >> isAbstract [
 
 	^ self = MetacelloAbstractPackageSpec
-]
-
-{ #category : 'printing' }
-MetacelloAbstractPackageSpec >> configMethodBodyOn: aStream hasName: hasName cascading: hasCascading indent: indent [
-
-	| hasRequires hasIncludes |
-	hasRequires := self requires isNotEmpty.
-	hasIncludes := self includes isNotEmpty.
-	hasRequires ifTrue: [
-			hasName | hasIncludes | hasCascading ifTrue: [
-					aStream
-						cr;
-						tab: indent ].
-			aStream nextPutAll: 'requires: #('.
-			self requires do: [ :str |
-					aStream
-						print: str;
-						nextPutAll: ' ' ].
-			hasIncludes | hasCascading
-				ifTrue: [ aStream nextPutAll: ');' ]
-				ifFalse: [ aStream nextPut: $) ] ].
-	hasIncludes ifTrue: [
-			hasName | hasRequires | hasCascading ifTrue: [
-					aStream
-						cr;
-						tab: indent ].
-			aStream nextPutAll: 'includes: #('.
-			self includes do: [ :str |
-					aStream
-						print: str;
-						nextPutAll: ' ' ].
-			hasCascading
-				ifTrue: [ aStream nextPutAll: ');' ]
-				ifFalse: [ aStream nextPut: $) ] ]
-]
-
-{ #category : 'printing' }
-MetacelloAbstractPackageSpec >> configMethodCascadeOn: aStream member: aMember last: lastCascade indent: indent [
-
-	self subclassResponsibility
-]
-
-{ #category : 'printing' }
-MetacelloAbstractPackageSpec >> configMethodOn: aStream for: aValue selector: selector cascading: cascading cascade: cascade indent: indent [
-
-	| valuePrintString |
-	aValue ifNil: [ ^ self ].
-	cascading ifTrue: [
-		aStream
-			cr;
-			tab: indent ].
-	valuePrintString := aValue value isSymbol
-		                    ifTrue: [ '#' , aValue value asString printString ]
-		                    ifFalse: [ aValue value printString ].
-	aStream nextPutAll: selector , valuePrintString.
-	cascade ifTrue: [ aStream nextPut: $; ]
-]
-
-{ #category : 'testing' }
-MetacelloAbstractPackageSpec >> hasRepository [
-    ^ false
 ]
 
 { #category : 'private' }
@@ -158,6 +97,16 @@ MetacelloAbstractPackageSpec >> postCopy [
 	super postCopy.
 	requires := requires copy.
 	includes := includes copy
+]
+
+{ #category : 'printing' }
+MetacelloAbstractPackageSpec >> printOn: aStream [
+
+	super printOn: aStream.
+	aStream
+		nextPutAll: ' [';
+		nextPutAll: self name;
+		nextPutAll: ']'
 ]
 
 { #category : 'visiting' }

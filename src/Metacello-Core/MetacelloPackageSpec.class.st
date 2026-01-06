@@ -8,9 +8,9 @@ Class {
 		'preLoadDoIt',
 		'postLoadDoIt'
 	],
-	#category : 'Metacello-Core-Specs',
+	#category : 'Metacello-Core-Model',
 	#package : 'Metacello-Core',
-	#tag : 'Specs'
+	#tag : 'Model'
 }
 
 { #category : 'instance creation' }
@@ -25,114 +25,6 @@ MetacelloPackageSpec class >> project: aMetacelloProject [
 MetacelloPackageSpec >> acceptVisitor: aVisitor [
 
 	^ aVisitor visitPackageSpec: self
-]
-
-{ #category : 'printing' }
-MetacelloPackageSpec >> configMethodBodyOn: aStream hasName: hasName indent: indent [
-
-	| hasRepositories hasPreLoadDoIt hasPostLoadDoIt hasRequiresOrIncludes |
-	hasRepositories := self repositorySpecs isNotEmpty.
-	hasPreLoadDoIt := self preLoadDoIt isNotNil.
-	hasPostLoadDoIt := self postLoadDoIt isNotNil.
-	hasRequiresOrIncludes := (self requires isEmpty and: [ self includes isEmpty ]) not.
-	hasRequiresOrIncludes ifTrue: [
-		self
-			configMethodBodyOn: aStream
-			hasName: hasName
-			cascading: hasRepositories | hasPreLoadDoIt | hasPostLoadDoIt
-			indent: indent ].
-	hasRepositories ifTrue: [
-		self repositorySpecs size > 1
-			ifTrue: [
-				hasName | hasPreLoadDoIt | hasPostLoadDoIt | hasRequiresOrIncludes ifTrue: [
-					aStream
-						cr;
-						tab: indent ].
-				aStream
-					nextPutAll: 'repositories: [';
-					cr;
-					tab: indent + 1;
-					nextPutAll: 'spec';
-					cr.
-				self repositories configMethodCascadeOn: aStream indent: indent + 1.
-				aStream nextPutAll: ' ]' ]
-			ifFalse: [
-				hasName | hasPreLoadDoIt | hasPostLoadDoIt | hasRequiresOrIncludes ifTrue: [
-					aStream
-						cr;
-						tab: indent ].
-				self repositories configMethodCascadeOn: aStream indent: indent ].
-		hasPreLoadDoIt | hasPostLoadDoIt ifTrue: [ aStream nextPut: $; ] ].
-	self
-		configMethodOn: aStream
-		for: self preLoadDoIt
-		selector: 'preLoadDoIt: '
-		cascading: hasName | hasRepositories | hasPostLoadDoIt | hasRequiresOrIncludes
-		cascade: hasPostLoadDoIt
-		indent: indent.
-	self
-		configMethodOn: aStream
-		for: self postLoadDoIt
-		selector: 'postLoadDoIt: '
-		cascading: hasName | hasRepositories | hasPreLoadDoIt | hasRequiresOrIncludes
-		cascade: false
-		indent: indent.
-	aStream nextPut: $.
-]
-
-{ #category : 'printing' }
-MetacelloPackageSpec >> configMethodCascadeOn: aStream member: aMember last: lastCascade indent: indent [
-
-	aMember methodUpdateSelector  == #remove:
-		ifTrue: [ aStream  nextPutAll: 'removePackage: ', self name printString ]
-		ifFalse: [ self configShortCutMethodBodyOn: aStream member: aMember indent: indent ].
-	lastCascade
-		ifTrue: [ aStream nextPut: $. ]
-		ifFalse: [ aStream nextPut: $;; cr ]
-]
-
-{ #category : 'printing' }
-MetacelloPackageSpec >> configMethodOn: aStream indent: indent [
-
-	| hasRepositories hasPreLoadDoIt hasPostLoadDoIt hasRequiresOrIncludes |
-	hasRepositories := self repositorySpecs isNotEmpty.
-	hasPreLoadDoIt := self preLoadDoIt isNotNil.
-	hasPostLoadDoIt := self postLoadDoIt isNotNil.
-	hasRequiresOrIncludes := (self requires isEmpty and: [ self includes isEmpty ]) not.
-	aStream
-		tab: indent;
-		nextPutAll: 'spec '.
-	hasRepositories | hasPreLoadDoIt | hasPostLoadDoIt | hasRequiresOrIncludes
-		ifTrue: [
-			aStream
-				cr;
-				tab: indent + 1;
-				nextPutAll: 'name: ' , self name printString;
-				nextPut: $;.
-			self configMethodBodyOn: aStream hasName: true indent: indent + 1 ]
-		ifFalse: [ aStream nextPutAll: 'name: ' , self name printString ]
-]
-
-{ #category : 'printing' }
-MetacelloPackageSpec >> configShortCutMethodBodyOn: aStream member: aMember indent: indent [
-
-	| hasRepositories hasPreLoadDoIt hasPostLoadDoIt hasRequiresOrIncludes |
-	hasRepositories := self repositorySpecs size > 0.
-	hasPreLoadDoIt := self preLoadDoIt isNotNil.
-	hasPostLoadDoIt := self postLoadDoIt isNotNil.
-	hasRequiresOrIncludes := (self requires isEmpty and: [ self includes isEmpty ]) not.
-	hasRepositories | hasPreLoadDoIt | hasPostLoadDoIt | hasRequiresOrIncludes ifTrue: [
-		aStream
-			nextPutAll: 'package: ' , self name printString , ' ';
-			nextPutAll: aMember methodUpdateSelector asString , ' [';
-			cr.
-		aStream
-			tab: indent + 1;
-			nextPutAll: 'spec '.
-		self configMethodBodyOn: aStream hasName: false indent: indent + 2.
-		aStream nextPutAll: ' ]'.
-		^ self ].
-	aStream nextPutAll: 'package: ' , self name printString
 ]
 
 { #category : 'loading' }
@@ -154,11 +46,6 @@ MetacelloPackageSpec >> getRepositories [
     "raw access to iv"
 
     ^ repositories
-]
-
-{ #category : 'testing' }
-MetacelloPackageSpec >> hasRepository [
-    ^ self repositorySpecs notEmpty
 ]
 
 { #category : 'private' }

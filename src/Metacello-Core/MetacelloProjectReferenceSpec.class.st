@@ -4,9 +4,9 @@ Class {
 	#instVars : [
 		'projectReference'
 	],
-	#category : 'Metacello-Core-Specs',
+	#category : 'Metacello-Core-Model',
 	#package : 'Metacello-Core',
-	#tag : 'Specs'
+	#tag : 'Model'
 }
 
 { #category : 'accessing' }
@@ -26,43 +26,6 @@ MetacelloProjectReferenceSpec >> aboutToCopy [
 MetacelloProjectReferenceSpec >> acceptVisitor: aVisitor [
 	
 	^ aVisitor visitProjectReference: self
-]
-
-{ #category : 'printing' }
-MetacelloProjectReferenceSpec >> configMethodCascadeOn: aStream member: aMember last: lastCascade indent: indent [
-
-	aMember methodUpdateSelector == #remove:
-		ifTrue: [ aStream nextPutAll: 'removeProject: ' , self name printString ]
-		ifFalse: [
-			self projectReference ifNil: [ ^ self ].
-			aStream nextPutAll: self projectLabel , ': ' , self projectName printString , ' '.
-			(aMember methodUpdateSelector == #copy: and: [ self projectReference hasNonVersionStringField ]) ifTrue: [
-				aStream nextPutAll: 'copyFrom: ' , aMember sourceName printString , ' ' ].
-			self projectReference configShortCutMethodOn: aStream member: aMember indent: indent + 1 ].
-	lastCascade
-		ifTrue: [ aStream nextPut: $. ]
-		ifFalse: [
-			aStream
-				nextPut: $;;
-				cr ]
-]
-
-{ #category : 'printing' }
-MetacelloProjectReferenceSpec >> configMethodOn: aStream indent: indent [
-
-	aStream 
-		tab: indent; nextPutAll: 'spec '; cr;
-		tab: indent + 1; nextPutAll: 'name: ', self name printString; nextPut: $;; cr;
-		tab: indent + 1; nextPutAll: 'projectReference: '; nextPut: $[; cr.
-	aStream 
-		tab: indent + 2; nextPutAll: 'spec'.
-	self projectReference ifNotNil: [ self projectReference configMethodBodyOn: aStream indent: indent + 2].
-	aStream nextPutAll: ' ].'
-]
-
-{ #category : 'testing' }
-MetacelloProjectReferenceSpec >> hasRepository [
-    ^ self projectReference hasRepository
 ]
 
 { #category : 'accessing' }
@@ -173,7 +136,7 @@ MetacelloProjectReferenceSpec >> repository: aStringOrMetacelloRepositorySpec [
 { #category : 'loading' }
 MetacelloProjectReferenceSpec >> repositorySpecs [
 
-	^self repositories map values
+	^ self repositories specs
 ]
 
 { #category : 'accessing' }
