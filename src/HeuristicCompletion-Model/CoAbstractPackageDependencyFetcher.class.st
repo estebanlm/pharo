@@ -30,7 +30,13 @@ CoAbstractPackageDependencyFetcher class >> dependencyCache [
 	^ Dependencies ifNil: [ Dependencies := Dictionary new ]
 ]
 
-{ #category : 'accessing' }
+{ #category : 'class initialization' }
+CoAbstractPackageDependencyFetcher class >> initialize [ 
+
+	self codeChangeAnnouncer weak when: PackageAnnouncement send: #resetCache to: self
+]
+
+{ #category : 'class initialization' }
 CoAbstractPackageDependencyFetcher class >> resetCache [
 	<script>
 	Dependencies := nil
