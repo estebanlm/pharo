@@ -93,6 +93,14 @@ ShiftClassBuilder >> allSlots [
 ]
 
 { #category : 'building' }
+ShiftClassBuilder >> beExtension [
+
+	self
+		superclass: nil;
+		metaSuperclass: Extension
+]
+
+{ #category : 'building' }
 ShiftClassBuilder >> build [
 
 	self tryToFillOldClass.
@@ -413,6 +421,11 @@ ShiftClassBuilder >> installingEnvironment: anObject [
 	installingEnvironment := anObject
 ]
 
+{ #category : 'testing' }
+ShiftClassBuilder >> isExtension [
+	^ self metaSuperclass isKindOf: Extension class
+]
+
 { #category : 'accessing' }
 ShiftClassBuilder >> isInRemake [
 
@@ -657,7 +670,7 @@ ShiftClassBuilder >> tryToFillOldClass [
 
 	oldClass ifNotNil: [ ^ self ].
 	name ifNil: [ ^ self ].
-	self oldClass: (self classNamed: self name)
+	self oldClass: (self installingEnvironment at: name ifAbsent: [ nil ])
 ]
 
 { #category : 'building' }
