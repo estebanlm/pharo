@@ -726,7 +726,8 @@ ClassDescription >> package: aPackage [
 { #category : 'accessing - packages' }
 ClassDescription >> package: aPackage tag: aTag [
 
-	^ (self packageOrganizer ensureTag: aTag inPackage: aPackage) addClass: self
+	self deprecated: 'Please use directly the package organizer'.
+	^ ((self packageOrganizer ensurePackage: aPackage) ensureTag: aTag) addClass: self
 ]
 
 { #category : 'accessing - packages' }

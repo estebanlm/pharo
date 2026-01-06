@@ -55,8 +55,9 @@ ReClassRepackagingChange >> changeString [
 { #category : 'private' }
 ReClassRepackagingChange >> generateChanges [
 
-	(self changeClass packageOrganizer ensureTag: tagName inPackage: packageName)
-		addClass: self
+	((self changeClass packageOrganizer ensurePackage: packageName)
+		ensureTag: tagName)
+			addClass: self
 ]
 
 { #category : 'accessing' }
