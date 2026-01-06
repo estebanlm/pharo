@@ -19,7 +19,12 @@ FileManipulationTest class >> isAbstract [
 { #category : 'private' }
 FileManipulationTest >> createFilesIn: root from: anArray [
 
-	^ self createFilesIn: root from: anArray withoutPrefix: root pathString
+	| dir path |
+	dir := (root / anArray first) createDirectory.
+	anArray allButFirstDo: [ :each |
+			each isArray
+				ifTrue: [ self createFilesIn: dir from: each ]
+				ifFalse: [ (path := dir / each) writeStreamDo: [ :stream | stream nextPutAll: each ] ] ]
 ]
 
 { #category : 'private' }
@@ -93,7 +98,7 @@ FileManipulationTest >> testDirectoryMoveTo [
 	self deny: src exists.
 	self assert: (dest / 'src') allChildren size equals: count.
 	self assert: f33 exists.
-	self assert: f33 contents equals: '/src/d11/d22/f33'
+	self assert: f33 contents equals: 'f33'
 ]
 
 { #category : 'tests' }
@@ -111,7 +116,7 @@ FileManipulationTest >> testDirectoryMoveToRename [
 	self deny: src exists.
 	self assert: dest allChildren size equals: count.
 	self assert: f33 exists.
-	self assert: f33 contents equals: '/src/d11/d22/f33'
+	self assert: f33 contents equals: 'f33'
 ]
 
 { #category : 'tests' }
