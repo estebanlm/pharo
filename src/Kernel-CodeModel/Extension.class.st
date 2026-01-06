@@ -31,9 +31,9 @@ Extension >> compile: sourceCode classified: protocol withStamp: changeStamp not
 	compiler := self compiler
 		            source: sourceCode;
 		            requestor: requestor;
-		            failBlock: (requestor ifNotNil: [ [ ^ nil ] ]);
-		            "no failblock if no requestor"permitUndeclared: requestor isNil;
-		            "compatibility: permit undeclared if no requestor"protocol: protocol;
+		            failBlock: (requestor ifNotNil: [ [ ^ nil ] ]); "no failblock if no requestor"
+						permitUndeclared: requestor isNil; "compatibility: permit undeclared if no requestor"
+						protocol: protocol;
 		            changeStamp: changeStamp;
 		            logged: logSource.
 
@@ -47,6 +47,7 @@ Extension >> compile: sourceCode classified: protocol withStamp: changeStamp not
 
 	methodCopyInExtendedClass := method copy.
 	methodCopyInExtendedClass methodClass: self extendedClass.
+	self extendedClass classify: scopedSelector under: protocol.
 	self extendedClass methodDict at: scopedSelector put: methodCopyInExtendedClass.
 
 	recompileDependencies ifTrue: [
