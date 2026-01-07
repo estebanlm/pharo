@@ -352,15 +352,6 @@ CompiledCode >> hasLiteral: literal [
 	^false
 ]
 
-{ #category : 'scanning' }
-CompiledCode >> hasLiteralReferenceTo: literalVariable [
-	"Answer whether this method accesses the LiteralVariable"
-	"we do not need to call readsRef: or #writesRef:, as if the variable
-	is stored as a Literal, it will be accessed. This check is much faster"
-
-	^ self hasLiteral: literalVariable
-]
-
 { #category : 'accessing - literals' }
 CompiledCode >> hasLiteralSuchThat: litBlock [
 	"Answer true if litBlock returns true for any literal in this method, even if embedded in array structure."
