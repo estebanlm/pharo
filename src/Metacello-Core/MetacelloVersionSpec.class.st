@@ -173,31 +173,23 @@ MetacelloVersionSpec >> mergeMap [
 	^ super mergeMap
 		  at: #preLoadDoIt put: preLoadDoIt;
 		  at: #postLoadDoIt put: postLoadDoIt;
-		  at: #packageList put: self packagesSpec;
-		  at: #repositories put: self repositories;
 		  yourself
 ]
 
 { #category : 'merging' }
 MetacelloVersionSpec >> mergeSpec: anotherSpec [
 
-	| newSpec map anotherPackages anotherRepositories |
+	| newSpec |
 	newSpec := super mergeSpec: anotherSpec.
-	map := anotherSpec mergeMap.
-	(anotherPackages := map at: #packageList) isEmpty not ifTrue: [
+	anotherSpec packagesSpec isEmpty not ifTrue: [
 			newSpec packagesSpec: (self packagesSpec isEmpty
-					 ifTrue: [ anotherPackages ]
-					 ifFalse: [ self packagesSpec mergeSpec: anotherPackages ]) ].
-	(anotherRepositories := map at: #repositories) isEmpty not ifTrue: [
+					 ifTrue: [ anotherSpec packagesSpec ]
+					 ifFalse: [ self packagesSpec mergeSpec: anotherSpec packagesSpec ]) ].
+	anotherSpec repositories isEmpty not ifTrue: [
 			newSpec repositories: (self repositories isEmpty
-					 ifTrue: [ anotherRepositories ]
-					 ifFalse: [ self repositories mergeSpec: anotherRepositories ]) ].
+					 ifTrue: [ anotherSpec repositories ]
+					 ifFalse: [ self repositories mergeSpec: anotherSpec repositories ]) ].
 	^ newSpec
-]
-
-{ #category : 'merging' }
-MetacelloVersionSpec >> nonOverridable [
-    ^ super nonOverridable , #(#'packageList' #'repositories')
 ]
 
 { #category : 'querying' }

@@ -54,21 +54,11 @@ MetacelloAbstractPackageSpec >> mergeIntoMetacelloPackages: aMetacelloPackagesSp
 ]
 
 { #category : 'merging' }
-MetacelloAbstractPackageSpec >> mergeMap [
-
-	| map |
-	map := super mergeMap.
-	map at: #includes put: includes.
-	^ map
-]
-
-{ #category : 'merging' }
 MetacelloAbstractPackageSpec >> mergeSpec: anotherSpec [
 
-	| newSpec map |
+	| newSpec |
 	newSpec := super mergeSpec: anotherSpec.
-	map := anotherSpec mergeMap.
-	(map at: #includes) ifNotNil: [ :anotherIncludes | newSpec includes: self includes , anotherIncludes ].
+	anotherSpec includes ifNotEmpty: [ :anotherIncludes | newSpec includes: self includes , anotherIncludes ].
 	^ newSpec
 ]
 
@@ -76,12 +66,6 @@ MetacelloAbstractPackageSpec >> mergeSpec: anotherSpec [
 MetacelloAbstractPackageSpec >> name [
 
 	^ self subclassResponsibility
-]
-
-{ #category : 'merging' }
-MetacelloAbstractPackageSpec >> nonOverridable [
-
-	^ #( includes )
 ]
 
 { #category : 'copying' }

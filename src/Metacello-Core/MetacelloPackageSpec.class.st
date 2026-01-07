@@ -72,8 +72,6 @@ MetacelloPackageSpec >> mergeMap [
 
 	| map |
 	map := super mergeMap.
-	map at: #requires put: requires.
-	map at: #repositories put: self repositories.
 	map at: #preLoadDoIt put: preLoadDoIt.
 	map at: #postLoadDoIt put: postLoadDoIt.
 	^ map
@@ -84,8 +82,8 @@ MetacelloPackageSpec >> mergeSpec: anotherSpec [
 
 	| newSpec anotherRepositories |
 	newSpec := super mergeSpec: anotherSpec.
-	(anotherSpec mergeMap at: #requires) ifNotNil: [ :anotherRequires | newSpec requires: self requires , anotherRequires ].
-	(anotherRepositories := anotherSpec mergeMap at: #repositories) notEmpty ifTrue: [
+	anotherSpec requires ifNotEmpty: [ :anotherRequires | newSpec requires: self requires , anotherRequires ].
+	(anotherRepositories := anotherSpec repositories) notEmpty ifTrue: [
 			newSpec repositories: (self repositories isEmpty
 					 ifTrue: [ anotherRepositories ]
 					 ifFalse: [ self repositories mergeSpec: anotherRepositories ]) ].
@@ -104,12 +102,6 @@ MetacelloPackageSpec >> name [
 MetacelloPackageSpec >> name: aString [
 
 	name := aString trim
-]
-
-{ #category : 'merging' }
-MetacelloPackageSpec >> nonOverridable [
-
-	^ super nonOverridable , #( repositories requires )
 ]
 
 { #category : 'loading' }
