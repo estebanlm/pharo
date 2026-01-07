@@ -1,7 +1,7 @@
 Extension { #name : 'CompiledCode' }
 
 { #category : '*Deprecated14-Kernel' }
-CompiledCode >> hasLiteralReferenceTo: literalVariable [
+CompiledCode >> accessesRef: literalVariable [
 	"Answer whether this method accesses the LiteralVariable"
 
 	"we do not need to call readsRef: or #writesRef:, as if the variable
