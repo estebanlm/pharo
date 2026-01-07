@@ -28,3 +28,10 @@ CompiledCode >> symbolic [
 		self isPrimitive ifTrue: [ self printPrimitiveOn: aStream ].
 		self symbolicBytecodes do: [ :each | each printOn: aStream ] separatedBy: [ aStream cr ] ]
 ]
+
+{ #category : '*Flashback-Decompiler' }
+CompiledCode >> symbolicBytecodes [
+	"Answer Collection that contains of all the byte codes in a method as an instance of SymbolicInstruction"
+
+	^SymbolicBytecodeBuilder decode: self
+]
