@@ -670,12 +670,6 @@ LogicalFont >> hasDistinctGlyphsForAll: asciiString [
 	^self realFont hasDistinctGlyphsForAll: asciiString
 ]
 
-{ #category : 'forwarded to realFont' }
-LogicalFont >> hasGlyphsForAll: asciiString [
-
-	^self realFont hasGlyphsForAll: asciiString
-]
-
 { #category : 'testing' }
 LogicalFont >> hasSubPixelAntiAliasing [
 	^ self realFont hasSubPixelAntiAliasing
