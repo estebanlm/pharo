@@ -6,8 +6,8 @@ I just ask scope basis objects for critiques
 Class {
 	#name : 'ClyAllBasisCritiqueQuery',
 	#superclass : 'ClyAllCritiqueQuery',
-	#category : 'Calypso-SystemPlugins-Critic-Queries',
-	#package : 'Calypso-SystemPlugins-Critic-Queries'
+	#category : 'Calypso-SystemPlugins-Critic-Browser',
+	#package : 'Calypso-SystemPlugins-Critic-Browser'
 }
 
 { #category : 'execution' }

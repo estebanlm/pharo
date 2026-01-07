@@ -7,8 +7,8 @@ I implement system changes processing and metadata collection logic.
 Class {
 	#name : 'ClyCritiqueQuery',
 	#superclass : 'ClyTypedQuery',
-	#category : 'Calypso-SystemPlugins-Critic-Queries',
-	#package : 'Calypso-SystemPlugins-Critic-Queries'
+	#category : 'Calypso-SystemPlugins-Critic-Browser',
+	#package : 'Calypso-SystemPlugins-Critic-Browser'
 }
 
 { #category : 'items type' }
