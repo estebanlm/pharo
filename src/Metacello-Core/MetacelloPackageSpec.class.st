@@ -2,6 +2,7 @@ Class {
 	#name : 'MetacelloPackageSpec',
 	#superclass : 'MetacelloAbstractPackageSpec',
 	#instVars : [
+		'requires',
 		'project',
 		'name',
 		'repositories',
@@ -65,10 +66,11 @@ MetacelloPackageSpec >> mergeMap [
 
 	| map |
 	map := super mergeMap.
+	map at: #requires put: requires.
 	map at: #repositories put: self repositories.
 	map at: #preLoadDoIt put: preLoadDoIt.
 	map at: #postLoadDoIt put: postLoadDoIt.
-	^map
+	^ map
 ]
 
 { #category : 'merging' }
@@ -76,6 +78,7 @@ MetacelloPackageSpec >> mergeSpec: anotherSpec [
 
 	| newSpec anotherRepositories |
 	newSpec := super mergeSpec: anotherSpec.
+	(anotherSpec mergeMap at: #requires) ifNotNil: [ :anotherRequires | newSpec requires: self requires , anotherRequires ].
 	(anotherRepositories := anotherSpec mergeMap at: #repositories) notEmpty ifTrue: [
 			newSpec repositories: (self repositories isEmpty
 					 ifTrue: [ anotherRepositories ]
@@ -100,7 +103,7 @@ MetacelloPackageSpec >> name: aString [
 { #category : 'merging' }
 MetacelloPackageSpec >> nonOverridable [
 
-	^super nonOverridable, #( repositories)
+	^ super nonOverridable , #( repositories requires )
 ]
 
 { #category : 'loading' }
@@ -114,6 +117,7 @@ MetacelloPackageSpec >> postCopy [
 
 	super postCopy.
 	repositories := repositories copy.
+	requires := requires copy
 ]
 
 { #category : 'querying' }
@@ -192,6 +196,26 @@ MetacelloPackageSpec >> repositoryDescriptions [
 MetacelloPackageSpec >> repositorySpecs [
 
 	^self repositories map values
+]
+
+{ #category : 'private' }
+MetacelloPackageSpec >> requiredSpecNamesForPackageOrdering: aVersionSpec [
+
+	^ (self specs: self requires forPackageOrdering: aVersionSpec) collect: [ :spec | spec name ]
+]
+
+{ #category : 'querying' }
+MetacelloPackageSpec >> requires [
+
+	^ requires ifNil: [ requires := #(  ) ]
+]
+
+{ #category : 'accessing' }
+MetacelloPackageSpec >> requires: aCollection [
+
+	requires := aCollection isString
+		            ifTrue: [ { aCollection } ]
+		            ifFalse: [ aCollection asArray ]
 ]
 
 { #category : 'private' }

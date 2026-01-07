@@ -2,7 +2,6 @@ Class {
 	#name : 'MetacelloAbstractPackageSpec',
 	#superclass : 'MetacelloSpec',
 	#instVars : [
-		'requires',
 		'includes'
 	],
 	#category : 'Metacello-Core-Model',
@@ -63,9 +62,8 @@ MetacelloAbstractPackageSpec >> mergeMap [
 
 	| map |
 	map := super mergeMap.
-	map at: #requires put: requires.
 	map at: #includes put: includes.
-	^map
+	^ map
 ]
 
 { #category : 'merging' }
@@ -74,7 +72,6 @@ MetacelloAbstractPackageSpec >> mergeSpec: anotherSpec [
 	| newSpec map |
 	newSpec := super mergeSpec: anotherSpec.
 	map := anotherSpec mergeMap.
-	(map at: #requires) ifNotNil: [ :anotherRequires | newSpec requires: self requires , anotherRequires ].
 	(map at: #includes) ifNotNil: [ :anotherIncludes | newSpec includes: self includes , anotherIncludes ].
 	^ newSpec
 ]
@@ -88,14 +85,13 @@ MetacelloAbstractPackageSpec >> name [
 { #category : 'merging' }
 MetacelloAbstractPackageSpec >> nonOverridable [
 
-	^#( includes requires )
+	^ #( includes )
 ]
 
 { #category : 'copying' }
 MetacelloAbstractPackageSpec >> postCopy [
 
 	super postCopy.
-	requires := requires copy.
 	includes := includes copy
 ]
 
@@ -135,27 +131,14 @@ MetacelloAbstractPackageSpec >> repositorySpecs [
 
 { #category : 'private' }
 MetacelloAbstractPackageSpec >> requiredSpecNamesForPackageOrdering: aVersionSpec [
-  ^ (self requiredSpecsForPackageOrdering: aVersionSpec)
-    collect: [ :spec | spec name ]
+
+	^ #(  )
 ]
 
-{ #category : 'private' }
-MetacelloAbstractPackageSpec >> requiredSpecsForPackageOrdering: aVersionSpec [
-  ^ self specs: self requires forPackageOrdering: aVersionSpec
-]
-
-{ #category : 'querying' }
+{ #category : 'testing' }
 MetacelloAbstractPackageSpec >> requires [
 
-	^ requires ifNil: [ requires := #(  ) ]
-]
-
-{ #category : 'accessing' }
-MetacelloAbstractPackageSpec >> requires: aCollection [
-
-	requires := aCollection isString
-		            ifTrue: [ { aCollection } ]
-		            ifFalse: [ aCollection asArray ]
+	^ #(  )
 ]
 
 { #category : 'private' }

@@ -139,12 +139,6 @@ MetacelloProjectReferenceSpec >> repositorySpecs [
 	^ self repositories specs
 ]
 
-{ #category : 'accessing' }
-MetacelloProjectReferenceSpec >> requires: aCollection [
-
-	self shouldNotImplement
-]
-
 { #category : 'private' }
 MetacelloProjectReferenceSpec >> resolveToLoadableSpec [
 
