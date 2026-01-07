@@ -10,6 +10,11 @@ Class {
 	#tag : 'Model'
 }
 
+{ #category : 'class initialization' }
+MetacelloPackagesSpec class >> initialize [ 
+	self deprecatedAliases: #(MetacelloMemberListSpec)
+]
+
 { #category : 'actions' }
 MetacelloPackagesSpec >> add: aSpec [
 
