@@ -9,7 +9,8 @@ CompiledCode >> accessesRef: literalVariable [
 
 	self
 		deprecated: 'Use #hasLiteral: instead since the name it more accurate'
-		transformWith: '`@rcv accessesRef: `@arg' -> '`@rcv hasLiteral: `@arg'
+		transformWith: '`@rcv accessesRef: `@arg' -> '`@rcv hasLiteral: `@arg'.
+	^ self hasLiteral: literalVariable 
 ]
 
 { #category : '*Deprecated14-Kernel' }
