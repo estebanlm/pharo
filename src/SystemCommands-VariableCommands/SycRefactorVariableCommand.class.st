@@ -55,5 +55,6 @@ SycRefactorVariableCommand >> execute [
 
 { #category : 'testing' }
 SycRefactorVariableCommand >> isComplexRefactoring [
-	^true
+
+	^ false
 ]

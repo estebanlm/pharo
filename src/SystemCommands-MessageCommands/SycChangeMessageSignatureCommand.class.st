@@ -85,7 +85,8 @@ SycChangeMessageSignatureCommand >> execute [
 
 { #category : 'testing' }
 SycChangeMessageSignatureCommand >> isComplexRefactoring [
-	^true
+
+	^ false
 ]
 
 { #category : 'accessing' }

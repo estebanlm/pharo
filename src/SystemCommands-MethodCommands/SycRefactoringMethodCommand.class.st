@@ -13,7 +13,8 @@ SycRefactoringMethodCommand >> execute [
 
 { #category : 'testing' }
 SycRefactoringMethodCommand >> isComplexRefactoring [
-	^true
+
+	^ false
 ]
 
 { #category : 'execution' }

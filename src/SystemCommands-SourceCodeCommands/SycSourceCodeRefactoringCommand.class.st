@@ -34,5 +34,5 @@ SycSourceCodeRefactoringCommand >> executeRefactoring: refactoring [
 
 { #category : 'testing' }
 SycSourceCodeRefactoringCommand >> isComplexRefactoring [
-	^ true
+	^ false
 ]
