@@ -101,9 +101,44 @@ CompiledCodeTest >> testFlag [
 
 { #category : 'tests - scanning' }
 CompiledCodeTest >> testHasLiteral [
+
+	| method |
+	method := self class compiler permitFaulty: true; compile: 'method
+		<pragma: #pragma>
+		test := 1+2.
+		self doIt: [
+		test := 1 - 2.
+		test := #(arrayInBlock).
+		self name ].
+		^#(#array) '.
+	"simpe case: normal send in the method itself"
+	self assert: (method hasLiteral: #doIt:).
+	"special selector in the method is not found"
+	self deny: (method hasLiteral: #+).
+	"special selector in the block not found, either"
+	self deny: (method hasLiteral: #-).
+	"normal selector in the block"
+	self assert: (method hasLiteral: #name).
+	"we do NOT into arrays, this is different to hasLiteralSuchThat:"
+	self flag: #FIXME. "LiteralScanningMissmatch"
+	self deny: (method hasLiteral: #array).
+	"we do not into arrays in Blocks. this is different to hasLiteralSuchThat:"
+	self flag: #FIXME. "LiteralScanningMissmatch"
+	self deny: (method hasLiteral: #arrayInBlock).
+	"pragmas are NOT covered."
+	self deny: (method hasLiteral: #pragma:).
+	"args of pragmas not found, too."
+	self deny: (method hasLiteral: #pragma).
+	"the method selector NOT"
+	self deny: (method hasLiteral: #method)
+]
+
+{ #category : 'tests - scanning' }
+CompiledCodeTest >> testHasLiteral2 [
+
 	| readMethod writeMethod classVar |
-	readMethod := SmalltalkImage class>>#compilerClass.
-	writeMethod := SmalltalkImage class>>#compilerClass:.
+	readMethod := SmalltalkImage class >> #compilerClass.
+	writeMethod := SmalltalkImage class >> #compilerClass:.
 	classVar := SmalltalkImage classVariableNamed: #CompilerClass.
 
 	self assert: (readMethod hasLiteral: classVar).
