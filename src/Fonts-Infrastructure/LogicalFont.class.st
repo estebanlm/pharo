@@ -544,11 +544,6 @@ LogicalFont >> emphasis: code [
 ]
 
 { #category : 'emphasis' }
-LogicalFont >> emphasisString [
-	^AbstractFont emphasisStringFor: emphasis
-]
-
-{ #category : 'emphasis' }
 LogicalFont >> emphasized: code [
 	| validCode newWeight newSlant answer validCodeMask |
 	"we only handle bold and italic here since underline/strikeout are drawn separately"
