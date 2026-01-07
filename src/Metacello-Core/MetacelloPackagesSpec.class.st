@@ -99,6 +99,12 @@ MetacelloPackagesSpec >> packageSpecsInLoadOrderFor: aVersionSpec [
 	^ orderedPackageSpecs , groupSpecs asOrderedCollection
 ]
 
+{ #category : 'removing' }
+MetacelloPackagesSpec >> remove: aSpec [
+
+	self addMember: (MetacelloRemoveMemberSpec spec: aSpec)
+]
+
 { #category : 'accessing' }
 MetacelloPackagesSpec >> slideIn: orderedSpecs spec: targetSpec baseIndex: baseIndex seen: seen firstTime: firstTime for: aVersionSpec [
 

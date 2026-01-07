@@ -10,12 +10,6 @@ Class {
 MetacelloSpec >> aboutToCopy [
 ]
 
-{ #category : 'visiting' }
-MetacelloSpec >> acceptVisitor: aVisitor [
-
-	self subclassResponsibility
-]
-
 { #category : 'printing' }
 MetacelloSpec >> label [
 

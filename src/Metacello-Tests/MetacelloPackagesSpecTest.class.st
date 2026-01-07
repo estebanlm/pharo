@@ -457,34 +457,36 @@ MetacelloPackagesSpecTest >> testMergeProjectB [
 
 { #category : 'tests' }
 MetacelloPackagesSpecTest >> testPackageMergeSpec [
+
 	| packageA packageB package repository |
 	packageA := self packageSpec
-		name: 'Package';
-		requires: 'AnotherPackage';
-		includes: 'IncludedPackage';
-		preLoadDoIt: #preLoadDoIt;
-		postLoadDoIt: #postLoadDoIt;
-		repository: 'http://example.com/repository' username: 'dkh' password: 'password';
-		repository: '/opt/gemstone/repository';
-		yourself.
+		            name: 'Package';
+		            requires: 'AnotherPackage';
+		            includes: 'IncludedPackage';
+		            preLoadDoIt: #preLoadDoIt;
+		            postLoadDoIt: #postLoadDoIt;
+		            repository: 'http://example.com/repository' username: 'dkh' password: 'password';
+		            repository: '/opt/gemstone/repository';
+		            yourself.
 	packageB := self packageSpec
-		name: 'Package';
-		requires: 'AndAnotherPackage';
-		includes: 'AndIncludedPackage';
-		repository: 'http://example.com/repository' username: 'DaleHenrichs' password: 'secret';
-		repository: '/opt/gemstone/repo';
-		yourself.
+		            name: 'Package';
+		            requires: 'AndAnotherPackage';
+		            includes: 'AndIncludedPackage';
+		            repository: 'http://example.com/repository' username: 'DaleHenrichs' password: 'secret';
+		            repository: '/opt/gemstone/repo';
+		            yourself.
+
 	package := packageA mergeSpec: packageB.
 	self assert: package name equals: 'Package'.
-	self assert: package requires equals: #('AnotherPackage' 'AndAnotherPackage').
-	self assert: package includes equals: #('IncludedPackage' 'AndIncludedPackage').
+	self assert: package requires equals: #( 'AnotherPackage' 'AndAnotherPackage' ).
+	self assert: package includes equals: #( 'IncludedPackage' 'AndIncludedPackage' ).
 	self assert: package preLoadDoIt value identicalTo: #preLoadDoIt.
 	self assert: package postLoadDoIt value identicalTo: #postLoadDoIt.
-	repository := package repositories map at: '/opt/gemstone/repository' ifAbsent: [ self assert: false ].
+	repository := package repositories repositoryNamed: '/opt/gemstone/repository' ifAbsent: [ self assert: false ].
 	self assert: repository type equals: 'directory'.
-	repository := package repositories map at: '/opt/gemstone/repo' ifAbsent: [ self assert: false ].
+	repository := package repositories repositoryNamed: '/opt/gemstone/repo' ifAbsent: [ self assert: false ].
 	self assert: repository type equals: 'directory'.
-	repository := package repositories map at: 'http://example.com/repository' ifAbsent: [ self assert: false ].
+	repository := package repositories repositoryNamed: 'http://example.com/repository' ifAbsent: [ self assert: false ].
 	self assert: repository type equals: 'http'.
 	self assert: repository username equals: 'DaleHenrichs'.
 	self assert: repository password equals: 'secret'
@@ -492,24 +494,25 @@ MetacelloPackagesSpecTest >> testPackageMergeSpec [
 
 { #category : 'tests' }
 MetacelloPackagesSpecTest >> testPackageSpec [
+
 	| package repository |
 	package := self packageSpec
-		name: 'Package';
-		requires: 'AnotherPackage';
-		includes: 'IncludedPackage';
-		preLoadDoIt: #preLoadDoIt;
-		postLoadDoIt: #postLoadDoIt;
-		repository: 'http://example.com/repository' username: 'dkh' password: 'password';
-		repository: '/opt/gemstone/repository';
-		yourself.
+		           name: 'Package';
+		           requires: 'AnotherPackage';
+		           includes: 'IncludedPackage';
+		           preLoadDoIt: #preLoadDoIt;
+		           postLoadDoIt: #postLoadDoIt;
+		           repository: 'http://example.com/repository' username: 'dkh' password: 'password';
+		           repository: '/opt/gemstone/repository';
+		           yourself.
 	self assert: package name equals: 'Package'.
-	self assert: package requires equals: #('AnotherPackage').
-	self assert: package includes equals: #('IncludedPackage').
+	self assert: package requires equals: #( 'AnotherPackage' ).
+	self assert: package includes equals: #( 'IncludedPackage' ).
 	self assert: package preLoadDoIt value identicalTo: #preLoadDoIt.
 	self assert: package postLoadDoIt value identicalTo: #postLoadDoIt.
-	repository := package repositories map at: '/opt/gemstone/repository' ifAbsent: [ self assert: false ].
+	repository := package repositories repositoryNamed: '/opt/gemstone/repository' ifAbsent: [ self assert: false ].
 	self assert: repository type equals: 'directory'.
-	repository := package repositories map at: 'http://example.com/repository' ifAbsent: [ self assert: false ].
+	repository := package repositories repositoryNamed: 'http://example.com/repository' ifAbsent: [ self assert: false ].
 	self assert: repository type equals: 'http'.
 	self assert: repository username equals: 'dkh'.
 	self assert: repository password equals: 'password'

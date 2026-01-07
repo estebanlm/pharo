@@ -185,10 +185,8 @@ MetacelloVersionSpec >> mergeSpec: anotherSpec [
 			newSpec packagesSpec: (self packagesSpec isEmpty
 					 ifTrue: [ anotherSpec packagesSpec ]
 					 ifFalse: [ self packagesSpec mergeSpec: anotherSpec packagesSpec ]) ].
-	anotherSpec repositories isEmpty not ifTrue: [
-			newSpec repositories: (self repositories isEmpty
-					 ifTrue: [ anotherSpec repositories ]
-					 ifFalse: [ self repositories mergeSpec: anotherSpec repositories ]) ].
+
+	newSpec repositories: (self repositories mergeSpec: anotherSpec repositories).
 	^ newSpec
 ]
 
@@ -386,7 +384,7 @@ MetacelloVersionSpec >> repository: aString username: username password: passwor
 { #category : 'loading' }
 MetacelloVersionSpec >> repositorySpecs [
 
-	^ self repositories specs
+	^ self repositories repositorySpecs
 ]
 
 { #category : 'accessing' }

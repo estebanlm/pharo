@@ -147,8 +147,8 @@ MetacelloProjectSpec >> hasNoLoadConflicts: aMetacelloProjectSpec [
 
 	^ self className = aMetacelloProjectSpec className and: [
 			  (self hasVersion and: [ aMetacelloProjectSpec hasVersion ]) and: [
-				  (self repositories isEmpty or: [ aMetacelloProjectSpec repositories isEmpty ]) or: [
-					  self repositories hasNoLoadConflicts: aMetacelloProjectSpec repositories ] ] ]
+					  (self repositories hasRepositories not or: [ aMetacelloProjectSpec repositories hasRepositories not ]) or: [
+						  self repositories hasNoLoadConflicts: aMetacelloProjectSpec repositories ] ] ]
 ]
 
 { #category : 'testing' }
@@ -277,7 +277,7 @@ MetacelloProjectSpec >> metacelloRegistrationHash [
 	hash := String stringHash: self preLoadDoIt asString initialHash: hash.
 	hash := String stringHash: self postLoadDoIt asString initialHash: hash.
 	hash := hash bitXor: loads hash.
-	^ hash bitXor: self repositories metacelloRegistrationHash
+	^ hash bitXor: (self repositories repositorySpecs collect: [ :each | each description ]) hash
 ]
 
 { #category : 'mutability' }
@@ -428,8 +428,7 @@ MetacelloProjectSpec >> repositoryDescriptions [
 { #category : 'querying' }
 MetacelloProjectSpec >> repositorySpecs [
 
-	repositories ifNil: [ ^ #(  ) ].
-	^ self repositories specs
+	^ self repositories repositorySpecs
 ]
 
 { #category : 'querying' }

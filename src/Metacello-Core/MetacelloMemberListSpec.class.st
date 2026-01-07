@@ -121,12 +121,6 @@ MetacelloMemberListSpec >> mergeSpec: anotherSpec [
 	^ newSpec
 ]
 
-{ #category : 'testing' }
-MetacelloMemberListSpec >> notEmpty [
-
-	^self list notEmpty
-]
-
 { #category : 'copying' }
 MetacelloMemberListSpec >> postCopy [
 
@@ -144,12 +138,6 @@ MetacelloMemberListSpec >> printOn: aStream [
 		ifEmpty: [ aStream nextPutAll: 'Empty' ]
 		ifNotEmpty: [ :specs | specs do: [ :spec | aStream nextPutAll: spec name ] separatedBy: [ aStream nextPutAll: ', ' ] ].
 	aStream nextPutAll: ']'
-]
-
-{ #category : 'removing' }
-MetacelloMemberListSpec >> remove: aSpec [
-
-	self addMember: (MetacelloRemoveMemberSpec spec: aSpec)
 ]
 
 { #category : 'enumeration' }
