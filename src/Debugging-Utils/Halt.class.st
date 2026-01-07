@@ -352,9 +352,3 @@ Halt >> manageTestProcessBy: aProcessMonitorTestService [
 
 	aProcessMonitorTestService passBackgroundFailures
 ]
-
-{ #category : 'handling' }
-Halt >> recordResultOf: aTestCase inHDTestReport: aHDTestReport [
-	
-	aHDTestReport recordError: self duringTest: aTestCase
-]
