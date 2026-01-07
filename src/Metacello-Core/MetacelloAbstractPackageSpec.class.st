@@ -15,11 +15,6 @@ MetacelloAbstractPackageSpec class >> isAbstract [
 	^ self = MetacelloAbstractPackageSpec
 ]
 
-{ #category : 'private' }
-MetacelloAbstractPackageSpec >> includeSpecNamesForPackageOrdering: aVersionSpec [
-  ^ self specs: self includesForPackageOrdering forPackageOrdering: aVersionSpec
-]
-
 { #category : 'querying' }
 MetacelloAbstractPackageSpec >> includes [
 
@@ -36,7 +31,8 @@ MetacelloAbstractPackageSpec >> includes: aCollection [
 
 { #category : 'private' }
 MetacelloAbstractPackageSpec >> includesForPackageOrdering [
-  ^ #()
+
+	^ #(  )
 ]
 
 { #category : 'querying' }
@@ -142,13 +138,9 @@ MetacelloAbstractPackageSpec >> requires [
 ]
 
 { #category : 'private' }
-MetacelloAbstractPackageSpec >> requiresSpecsForPackageOrdering: aVersionSpec [
-  ^ {self}
-]
-
-{ #category : 'private' }
 MetacelloAbstractPackageSpec >> resolveSpecsForPackageOrdering: aVersionSpec [
-  ^ {self}
+
+	^ { self }
 ]
 
 { #category : 'private' }
@@ -161,23 +153,6 @@ MetacelloAbstractPackageSpec >> resolveToLoadableSpec [
 MetacelloAbstractPackageSpec >> resolveToPackagesAndProjectsIn: aVersionSpec [
 
 	^ self subclassResponsibility
-]
-
-{ #category : 'private' }
-MetacelloAbstractPackageSpec >> specs: specNames forPackageOrdering: aVersionSpec [
-
-	| packageOrProjectSpecs |
-	packageOrProjectSpecs := Set new.
-	specNames do: [ :specName |
-			| spec |
-			"get project/group/package specs"
-			spec := aVersionSpec packageNamed: specName ifAbsent: [
-					        MetacelloNameNotDefinedError signal:
-						        'project group, or package named: ' , specName printString , ' not found when used in requires: or includes: field of package: '
-						        , self name printString , ' of ' , aVersionSpec projectLabel , '.'.
-					        nil "return nil if resumed" ].
-			spec ifNotNil: [ packageOrProjectSpecs addAll: (spec resolveSpecsForPackageOrdering: aVersionSpec) ] ].
-	^ packageOrProjectSpecs
 ]
 
 { #category : 'querying' }
