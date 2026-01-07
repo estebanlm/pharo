@@ -1,10 +1,27 @@
 Class {
 	#name : 'MetacelloPackagesSpec',
-	#superclass : 'MetacelloMemberListSpec',
+	#superclass : 'MetacelloSpec',
+	#instVars : [
+		'list',
+		'memberMap'
+	],
 	#category : 'Metacello-Core-Model',
 	#package : 'Metacello-Core',
 	#tag : 'Model'
 }
+
+{ #category : 'actions' }
+MetacelloPackagesSpec >> add: aSpec [
+
+	self addMember: (MetacelloAddMemberSpec spec: aSpec)
+]
+
+{ #category : 'adding' }
+MetacelloPackagesSpec >> addMember: aMember [
+
+	self list add: aMember.
+	self clearMemberMap
+]
 
 { #category : 'accessing' }
 MetacelloPackagesSpec >> applyIncludesTo: orderedSpecs for: pkgSpec firstTime: firstTime for: aVersionSpec [
@@ -28,12 +45,98 @@ MetacelloPackagesSpec >> applyIncludesTo: orderedSpecs for: pkgSpec firstTime: f
 	^ movedSpecs
 ]
 
+{ #category : 'private' }
+MetacelloPackagesSpec >> clearMemberMap [
+
+	memberMap := nil.
+]
+
+{ #category : 'enumeration' }
+MetacelloPackagesSpec >> collect: aBlock [ 
+	| newCollection |
+	newCollection :=OrderedCollection new.
+	self do: [:each | newCollection add: (aBlock value: each)].
+	^ newCollection
+]
+
 { #category : 'actions' }
 MetacelloPackagesSpec >> copy: specNamed to: spec [
 
 	self addMember: ((MetacelloCopyMemberSpec spec: spec)
 			 sourceName: specNamed;
 			 yourself)
+]
+
+{ #category : 'enumeration' }
+MetacelloPackagesSpec >> detect: aBlock [
+	"Evaluate aBlock with each of the receiver's elements as the argument. 
+	Answer the first element for which aBlock evaluates to true."
+
+	^ self detect: aBlock ifNone: [ self error: 'Object is not in the collection.' ]
+]
+
+{ #category : 'enumeration' }
+MetacelloPackagesSpec >> detect: aBlock ifNone: exceptionBlock [
+	"Evaluate aBlock with each of the receiver's elements as the argument.  
+	Answer the first element for which aBlock evaluates to true. If none  
+	evaluate to true, then evaluate the argument, exceptionBlock."
+
+	self
+		do: [ :each | 
+			(aBlock value: each)
+				ifTrue: [ ^ each ] ].
+	^ exceptionBlock value
+]
+
+{ #category : 'enumeration' }
+MetacelloPackagesSpec >> do: aBlock [
+
+	self specs do: aBlock
+]
+
+{ #category : 'testing' }
+MetacelloPackagesSpec >> isEmpty [
+
+	^self list isEmpty
+]
+
+{ #category : 'accessing' }
+MetacelloPackagesSpec >> list [
+
+	^ list ifNil: [ list := OrderedCollection new ]
+]
+
+{ #category : 'accessing' }
+MetacelloPackagesSpec >> list: aCollection [
+
+	list := aCollection.
+	self clearMemberMap
+]
+
+{ #category : 'accessing' }
+MetacelloPackagesSpec >> map [
+
+	| map |
+	memberMap ifNotNil: [ ^ memberMap ].
+	map := Dictionary new.
+	self list do: [ :member | member applyToMap: map ].
+	^ memberMap := map
+]
+
+{ #category : 'actions' }
+MetacelloPackagesSpec >> merge: aSpec [
+
+	self addMember: (MetacelloMergeMemberSpec spec: aSpec)
+]
+
+{ #category : 'merging' }
+MetacelloPackagesSpec >> mergeSpec: anotherSpec [
+
+	| newSpec |
+	newSpec := super mergeSpec: anotherSpec.
+	newSpec list: self list copy.
+	anotherSpec list do: [ :groupMember | newSpec addMember: groupMember ].
+	^ newSpec
 ]
 
 { #category : 'accessing' }
@@ -99,10 +202,37 @@ MetacelloPackagesSpec >> packageSpecsInLoadOrderFor: aVersionSpec [
 	^ orderedPackageSpecs , groupSpecs asOrderedCollection
 ]
 
+{ #category : 'copying' }
+MetacelloPackagesSpec >> postCopy [
+
+	super postCopy.
+	list := list copy.
+	self clearMemberMap
+]
+
+{ #category : 'printing' }
+MetacelloPackagesSpec >> printOn: aStream [
+
+	super printOn: aStream.
+	aStream nextPutAll: ' ['.
+	self specs
+		ifEmpty: [ aStream nextPutAll: 'Empty' ]
+		ifNotEmpty: [ :specs | specs do: [ :spec | aStream nextPutAll: spec name ] separatedBy: [ aStream nextPutAll: ', ' ] ].
+	aStream nextPutAll: ']'
+]
+
 { #category : 'removing' }
 MetacelloPackagesSpec >> remove: aSpec [
 
 	self addMember: (MetacelloRemoveMemberSpec spec: aSpec)
+]
+
+{ #category : 'enumeration' }
+MetacelloPackagesSpec >> select: aBlock [ 
+	| newCollection |
+	newCollection := OrderedCollection new.
+	self do: [:each | (aBlock value: each) ifTrue: [newCollection add: each]].
+	^newCollection
 ]
 
 { #category : 'accessing' }
@@ -194,4 +324,17 @@ MetacelloPackagesSpec >> sortPackageSpecs: orderedSpecs packageSpec: packageSpec
 				ifTrue: [ orderedSpecs add: packageSpec beforeIndex: packageIndex ]
 				ifFalse: [ orderedSpecs add: packageSpec afterIndex: targetIndex ] ].
 	^ moved
+]
+
+{ #category : 'enumeration' }
+MetacelloPackagesSpec >> specListDo: aBlock [
+
+	self list do: [:member |  aBlock value: member spec ]
+]
+
+{ #category : 'accessing' }
+MetacelloPackagesSpec >> specs [
+	"Return the list of specs I contains once all members are applied."
+
+	^ self map values
 ]

@@ -87,13 +87,6 @@ MetacelloRepositorySpec >> mergeMap [
 ]
 
 { #category : 'querying' }
-MetacelloRepositorySpec >> name [
-	"To be polymorphic with MetacelloAbstractPackageSpec"
-
-	^ self description
-]
-
-{ #category : 'querying' }
 MetacelloRepositorySpec >> password [
 
 	^ password ifNil: [ password := '' ]

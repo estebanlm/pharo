@@ -94,6 +94,17 @@ MetacelloRepositoriesSpec >> postCopy [
 	repositorySpecs := repositorySpecs copy
 ]
 
+{ #category : 'printing' }
+MetacelloRepositoriesSpec >> printOn: aStream [
+
+	super printOn: aStream.
+	aStream nextPutAll: ' ['.
+	self repositorySpecs
+		ifEmpty: [ aStream nextPutAll: 'Empty' ]
+		ifNotEmpty: [ :specs | specs do: [ :spec | aStream nextPutAll: spec description ] separatedBy: [ aStream nextPutAll: ', ' ] ].
+	aStream nextPutAll: ']'
+]
+
 { #category : 'actions' }
 MetacelloRepositoriesSpec >> repository: aStringOrSpec [
 
