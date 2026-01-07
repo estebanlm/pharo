@@ -14,7 +14,7 @@ MetacelloRepositoriesSpec >> add: aStringOrSpec [
 		        ifTrue: [ MetacelloRepositorySpec description: aStringOrSpec ]
 		        ifFalse: [ aStringOrSpec ].
 
-	self addMemberForSpec: spec
+	super add: spec
 ]
 
 { #category : 'scripting' }
@@ -56,21 +56,9 @@ MetacelloRepositoriesSpec >> hasNoLoadConflicts: aMetacelloRepositoriesSpec [
 	^ true
 ]
 
-{ #category : 'actions' }
-MetacelloRepositoriesSpec >> merge: aRepositorySpec [
-
-	aRepositorySpec mergeIntoMetacelloRepositories: self
-]
-
 { #category : 'scripting' }
 MetacelloRepositoriesSpec >> metacelloRegistrationHash [
     ^ ((self map values sort: [ :a :b | a description <= b description ]) collect: [ :each | each description ]) hash
-]
-
-{ #category : 'actions' }
-MetacelloRepositoriesSpec >> remove: aRepositorySpec [
-
-	aRepositorySpec removeFromMetacelloRepositories: self
 ]
 
 { #category : 'actions' }
@@ -82,10 +70,8 @@ MetacelloRepositoriesSpec >> repository: aStringOrSpec [
 { #category : 'actions' }
 MetacelloRepositoriesSpec >> repository: description username: username password: password [
 
-	| spec |
-	spec := (MetacelloRepositorySpec description: description)
-		        username: username;
-		        password: password;
-		        yourself.
-	self addMemberForSpec: spec
+	self add: ((MetacelloRepositorySpec description: description)
+			 username: username;
+			 password: password;
+			 yourself)
 ]

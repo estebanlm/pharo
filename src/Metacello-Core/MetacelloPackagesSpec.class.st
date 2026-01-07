@@ -6,12 +6,6 @@ Class {
 	#tag : 'Model'
 }
 
-{ #category : 'actions' }
-MetacelloPackagesSpec >> add: aSpec [
-
-	self addMemberForSpec: aSpec
-]
-
 { #category : 'accessing' }
 MetacelloPackagesSpec >> applyIncludesTo: orderedSpecs for: pkgSpec firstTime: firstTime for: aVersionSpec [
 
@@ -40,12 +34,6 @@ MetacelloPackagesSpec >> copy: specNamed to: spec [
 	self addMember: ((MetacelloCopyMemberSpec spec: spec)
 			 sourceName: specNamed;
 			 yourself)
-]
-
-{ #category : 'actions' }
-MetacelloPackagesSpec >> merge: aSpec [
-
-	aSpec mergeIntoMetacelloPackages: self
 ]
 
 { #category : 'accessing' }
@@ -109,12 +97,6 @@ MetacelloPackagesSpec >> packageSpecsInLoadOrderFor: aVersionSpec [
 			lastMovedSpecs := result.
 			firstTime := false ].
 	^ orderedPackageSpecs , groupSpecs asOrderedCollection
-]
-
-{ #category : 'actions' }
-MetacelloPackagesSpec >> remove: aSpec [
-
-	aSpec removeFromMetacelloPackages: self
 ]
 
 { #category : 'accessing' }

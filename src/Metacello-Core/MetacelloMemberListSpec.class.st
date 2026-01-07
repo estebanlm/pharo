@@ -25,7 +25,7 @@ MetacelloMemberListSpec >> acceptVisitor: aVisitor [
 { #category : 'actions' }
 MetacelloMemberListSpec >> add: aSpec [
 
-	self subclassResponsibility
+	self addMember: (MetacelloAddMemberSpec spec: aSpec)
 ]
 
 { #category : 'adding' }
@@ -33,12 +33,6 @@ MetacelloMemberListSpec >> addMember: aMember [
 
 	self list add: aMember.
 	self clearMemberMap
-]
-
-{ #category : 'adding' }
-MetacelloMemberListSpec >> addMemberForSpec: aSpec [
-
-	^ self addMember: (MetacelloAddMemberSpec spec: aSpec)
 ]
 
 { #category : 'private' }
@@ -114,13 +108,7 @@ MetacelloMemberListSpec >> map [
 { #category : 'actions' }
 MetacelloMemberListSpec >> merge: aSpec [
 
-	self subclassResponsibility
-]
-
-{ #category : 'adding' }
-MetacelloMemberListSpec >> mergeMemberForSpec: aSpec [
-
-	^ self addMember: (MetacelloMergeMemberSpec spec: aSpec)
+	self addMember: (MetacelloMergeMemberSpec spec: aSpec)
 ]
 
 { #category : 'merging' }
@@ -158,22 +146,10 @@ MetacelloMemberListSpec >> printOn: aStream [
 	aStream nextPutAll: ']'
 ]
 
-{ #category : 'actions' }
+{ #category : 'removing' }
 MetacelloMemberListSpec >> remove: aSpec [
 
-	self subclassResponsibility
-]
-
-{ #category : 'adding' }
-MetacelloMemberListSpec >> removeMemberForSpec: aSpec [
-
-	^ self addMember: (MetacelloRemoveMemberSpec spec: aSpec)
-]
-
-{ #category : 'adding' }
-MetacelloMemberListSpec >> removeMemberNamed: aString [
-
-	^ self addMember: (MetacelloRemoveMemberSpec named: aString)
+	self addMember: (MetacelloRemoveMemberSpec spec: aSpec)
 ]
 
 { #category : 'enumeration' }

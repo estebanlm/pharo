@@ -48,12 +48,6 @@ MetacelloAbstractPackageSpec >> label [
 ]
 
 { #category : 'merging' }
-MetacelloAbstractPackageSpec >> mergeIntoMetacelloPackages: aMetacelloPackagesSpec [
-
-	aMetacelloPackagesSpec mergeMemberForSpec: self
-]
-
-{ #category : 'merging' }
 MetacelloAbstractPackageSpec >> mergeSpec: anotherSpec [
 
 	| newSpec |
@@ -95,12 +89,6 @@ MetacelloAbstractPackageSpec >> projectDo: projectBlock packageDo: packageBlock 
 MetacelloAbstractPackageSpec >> referencedSpec [
 
 	^self
-]
-
-{ #category : 'removing' }
-MetacelloAbstractPackageSpec >> removeFromMetacelloPackages: aMetacelloPackagesSpec [
-
-	aMetacelloPackagesSpec removeMemberForSpec: self
 ]
 
 { #category : 'loading' }
