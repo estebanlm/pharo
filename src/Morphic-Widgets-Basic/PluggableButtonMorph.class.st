@@ -563,6 +563,12 @@ PluggableButtonMorph >> getStateSelector [
 	^ getStateSelector
 ]
 
+{ #category : 'accessing' }
+PluggableButtonMorph >> getStateSelector: aSelector [
+
+	getStateSelector := aSelector
+]
+
 { #category : 'event handling' }
 PluggableButtonMorph >> handlesKeyboard: evt [
 	"Answer true, we'll handle spacebar for pressing plus the usual
