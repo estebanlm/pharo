@@ -165,15 +165,6 @@ CompiledCode >> accessesField: varIndex [
 ]
 
 { #category : 'scanning' }
-CompiledCode >> accessesRef: literalVariable [
-	"Answer whether this method accesses the LiteralVariable"
-	"we do not need to call readsRef: or #writesRef:, as if the variable
-	is stored as a Literal, it will be accessed. This check is much faster"
-
-	^ self hasLiteral: literalVariable
-]
-
-{ #category : 'scanning' }
 CompiledCode >> accessesSlot: aSlot [
 	^aSlot isAccessedIn: self
 ]
@@ -359,6 +350,15 @@ CompiledCode >> hasLiteral: literal [
 		((lit := self literalAt: index) literalEqual: literal) ifTrue: [^true].
 		lit isEmbeddedBlock ifTrue: [ (lit hasLiteral: literal) ifTrue: [ ^true ] ]].
 	^false
+]
+
+{ #category : 'scanning' }
+CompiledCode >> hasLiteralReferenceTo: literalVariable [
+	"Answer whether this method accesses the LiteralVariable"
+	"we do not need to call readsRef: or #writesRef:, as if the variable
+	is stored as a Literal, it will be accessed. This check is much faster"
+
+	^ self hasLiteral: literalVariable
 ]
 
 { #category : 'accessing - literals' }

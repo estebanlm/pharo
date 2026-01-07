@@ -37,8 +37,8 @@ CompiledCodeTest >> testAccessesRef [
 	writeMethod := SmalltalkImage class>>#compilerClass:.
 	classVar := SmalltalkImage classVariableNamed: #CompilerClass.
 
-	self assert: (readMethod accessesRef: classVar).
-	self assert: (writeMethod accessesRef: classVar)
+	self assert: (readMethod hasLiteralReferenceTo: classVar).
+	self assert: (writeMethod hasLiteralReferenceTo: classVar)
 ]
 
 { #category : 'tests - testing' }
