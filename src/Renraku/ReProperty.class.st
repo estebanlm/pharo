@@ -10,8 +10,8 @@ Class {
 	#instVars : [
 		'sourceAnchor'
 	],
-	#category : 'Calypso-SystemPlugins-Critic-Browser',
-	#package : 'Calypso-SystemPlugins-Critic-Browser'
+	#category : 'Renraku',
+	#package : 'Renraku'
 }
 
 { #category : 'item convertation' }

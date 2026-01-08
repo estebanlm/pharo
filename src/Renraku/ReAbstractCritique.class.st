@@ -24,8 +24,8 @@ Class {
 		'rule',
 		'tinyHint'
 	],
-	#category : 'Calypso-SystemPlugins-Critic-Browser',
-	#package : 'Calypso-SystemPlugins-Critic-Browser'
+	#category : 'Renraku',
+	#package : 'Renraku'
 }
 
 { #category : 'item decoration' }
