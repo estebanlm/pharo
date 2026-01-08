@@ -29,8 +29,8 @@ Class {
 	#classVars : [
 		'SlowPluginsAreDisabled'
 	],
-	#category : 'Calypso-SystemPlugins-Critic-Browser',
-	#package : 'Calypso-SystemPlugins-Critic-Browser'
+	#category : 'Calypso-SystemQueries',
+	#package : 'Calypso-SystemQueries'
 }
 
 { #category : 'testing' }
