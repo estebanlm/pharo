@@ -9,8 +9,8 @@ HelpBrowser openOn: AnnouncementsHelp
 Class {
 	#name : 'Announcement',
 	#superclass : 'Object',
-	#category : 'Calypso-SystemPlugins-Critic-Browser',
-	#package : 'Calypso-SystemPlugins-Critic-Browser'
+	#category : 'Announcements-Core',
+	#package : 'Announcements-Core'
 }
 
 { #category : 'public' }
