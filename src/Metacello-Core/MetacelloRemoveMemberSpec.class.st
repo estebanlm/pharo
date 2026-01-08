@@ -1,25 +1,36 @@
 Class {
 	#name : 'MetacelloRemoveMemberSpec',
 	#superclass : 'MetacelloMemberSpec',
-	#category : 'Metacello-Core-Members',
+	#instVars : [
+		'name'
+	],
+	#category : 'Metacello-Core-Model',
 	#package : 'Metacello-Core',
-	#tag : 'Members'
+	#tag : 'Model'
 }
 
-{ #category : 'actions' }
-MetacelloRemoveMemberSpec >> applyAdd: addBlock copy: copyBlock merge: mergeBlock remove: removeBlock [
+{ #category : 'instance creation' }
+MetacelloRemoveMemberSpec class >> named: aString [
 
-	removeBlock value: self
+	^ self new
+		  name: aString;
+		  yourself
 ]
 
 { #category : 'actions' }
-MetacelloRemoveMemberSpec >> applyToList: aListSpec [
+MetacelloRemoveMemberSpec >> applyToMap: map [
 
-	aListSpec remove: self
+	map removeKey: self name ifAbsent: [ ]
 ]
 
 { #category : 'accessing' }
-MetacelloRemoveMemberSpec >> methodUpdateSelector [
+MetacelloRemoveMemberSpec >> name [
 
-	^#remove:
+	^ name ifNil: [ super name ]
+]
+
+{ #category : 'accessing' }
+MetacelloRemoveMemberSpec >> name: aString [
+
+	name := aString
 ]

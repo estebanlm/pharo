@@ -5,10 +5,22 @@ Class {
 		'list',
 		'memberMap'
 	],
-	#category : 'Metacello-Core-Members',
+	#category : 'Metacello-Core-Model',
 	#package : 'Metacello-Core',
-	#tag : 'Members'
+	#tag : 'Model'
 }
+
+{ #category : 'testing' }
+MetacelloMemberListSpec class >> isAbstract [
+
+	^ self = MetacelloMemberListSpec
+]
+
+{ #category : 'visiting' }
+MetacelloMemberListSpec >> acceptVisitor: aVisitor [
+
+	self error: 'Should not be visitable..'
+]
 
 { #category : 'actions' }
 MetacelloMemberListSpec >> add: aSpec [
@@ -23,6 +35,12 @@ MetacelloMemberListSpec >> addMember: aMember [
 	self clearMemberMap
 ]
 
+{ #category : 'adding' }
+MetacelloMemberListSpec >> addMemberForSpec: aSpec [
+
+	^ self addMember: (MetacelloAddMemberSpec spec: aSpec)
+]
+
 { #category : 'private' }
 MetacelloMemberListSpec >> clearMemberMap [
 
@@ -35,12 +53,6 @@ MetacelloMemberListSpec >> collect: aBlock [
 	newCollection :=OrderedCollection new.
 	self do: [:each | newCollection add: (aBlock value: each)].
 	^ newCollection
-]
-
-{ #category : 'actions' }
-MetacelloMemberListSpec >> copy: aMemberSpec [
-
-	self addMember: aMemberSpec
 ]
 
 { #category : 'enumeration' }
@@ -67,7 +79,7 @@ MetacelloMemberListSpec >> detect: aBlock ifNone: exceptionBlock [
 { #category : 'enumeration' }
 MetacelloMemberListSpec >> do: aBlock [
 
-	self map values do: aBlock
+	self specs do: aBlock
 ]
 
 { #category : 'testing' }
@@ -95,44 +107,8 @@ MetacelloMemberListSpec >> map [
 	| map |
 	memberMap ifNotNil: [ ^ memberMap ].
 	map := Dictionary new.
-	self list do: [ :member |
-		member
-			applyAdd: [ :memberSpec | self mapAdd: memberSpec into: map ]
-			copy: [ :memberSpec | self mapCopy: memberSpec into: map ]
-			merge: [ :memberSpec | self mapMerge: memberSpec into: map ]
-			remove: [ :memberSpec | self mapRemove: memberSpec into: map ] ].
-	memberMap := map.
-	^ memberMap
-]
-
-{ #category : 'private' }
-MetacelloMemberListSpec >> mapAdd: aMemberSpec into: map [
-	
-	map at: aMemberSpec name put: aMemberSpec spec
-]
-
-{ #category : 'private' }
-MetacelloMemberListSpec >> mapCopy: aMemberSpec into: map [
-
-	(map at: aMemberSpec sourceName ifAbsent: [  ])
-		ifNil: [ self error: 'Source spec named ' , aMemberSpec sourceName printString , ' not found' ]
-		ifNotNil: [ :spec |
-			spec aboutToCopy.
-			map at: aMemberSpec name put: (spec copy mergeSpec: aMemberSpec spec copy) ]
-]
-
-{ #category : 'private' }
-MetacelloMemberListSpec >> mapMerge: aMemberSpec into: map [
-
-	(map at: aMemberSpec name ifAbsent: [  ])
-		ifNotNil: [ :spec | map at: aMemberSpec name put: (spec mergeSpec: aMemberSpec spec) ]
-		ifNil: [ map at: aMemberSpec name put: aMemberSpec spec copy ]
-]
-
-{ #category : 'private' }
-MetacelloMemberListSpec >> mapRemove: aMemberSpec into: map [
-	
-	map removeKey: aMemberSpec name ifAbsent: []
+	self list do: [ :member | member applyToMap: map ].
+	^ memberMap := map
 ]
 
 { #category : 'actions' }
@@ -141,14 +117,20 @@ MetacelloMemberListSpec >> merge: aSpec [
 	self subclassResponsibility
 ]
 
+{ #category : 'adding' }
+MetacelloMemberListSpec >> mergeMemberForSpec: aSpec [
+
+	^ self addMember: (MetacelloMergeMemberSpec spec: aSpec)
+]
+
 { #category : 'merging' }
 MetacelloMemberListSpec >> mergeSpec: anotherSpec [
 
 	| newSpec |
 	newSpec := super mergeSpec: anotherSpec.
 	newSpec list: self list copy.
-	anotherSpec list do: [:groupMember | groupMember applyToList: newSpec ].
-	^newSpec
+	anotherSpec list do: [ :groupMember | newSpec addMember: groupMember ].
+	^ newSpec
 ]
 
 { #category : 'testing' }
@@ -165,10 +147,33 @@ MetacelloMemberListSpec >> postCopy [
 	self clearMemberMap
 ]
 
+{ #category : 'printing' }
+MetacelloMemberListSpec >> printOn: aStream [
+
+	super printOn: aStream.
+	aStream nextPutAll: ' ['.
+	self specs
+		ifEmpty: [ aStream nextPutAll: 'Empty' ]
+		ifNotEmpty: [ :specs | specs do: [ :spec | aStream nextPutAll: spec name ] separatedBy: [ aStream nextPutAll: ', ' ] ].
+	aStream nextPutAll: ']'
+]
+
 { #category : 'actions' }
 MetacelloMemberListSpec >> remove: aSpec [
 
 	self subclassResponsibility
+]
+
+{ #category : 'adding' }
+MetacelloMemberListSpec >> removeMemberForSpec: aSpec [
+
+	^ self addMember: (MetacelloRemoveMemberSpec spec: aSpec)
+]
+
+{ #category : 'adding' }
+MetacelloMemberListSpec >> removeMemberNamed: aString [
+
+	^ self addMember: (MetacelloRemoveMemberSpec named: aString)
 ]
 
 { #category : 'enumeration' }
@@ -183,4 +188,11 @@ MetacelloMemberListSpec >> select: aBlock [
 MetacelloMemberListSpec >> specListDo: aBlock [
 
 	self list do: [:member |  aBlock value: member spec ]
+]
+
+{ #category : 'accessing' }
+MetacelloMemberListSpec >> specs [
+	"Return the list of specs I contains once all members are applied."
+
+	^ self map values
 ]

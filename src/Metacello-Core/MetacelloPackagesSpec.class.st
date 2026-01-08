@@ -1,15 +1,15 @@
 Class {
 	#name : 'MetacelloPackagesSpec',
 	#superclass : 'MetacelloMemberListSpec',
-	#category : 'Metacello-Core-Specs',
+	#category : 'Metacello-Core-Model',
 	#package : 'Metacello-Core',
-	#tag : 'Specs'
+	#tag : 'Model'
 }
 
 { #category : 'actions' }
 MetacelloPackagesSpec >> add: aSpec [
 
-	aSpec addToMetacelloPackages: self
+	self addMemberForSpec: aSpec
 ]
 
 { #category : 'accessing' }
@@ -34,44 +34,12 @@ MetacelloPackagesSpec >> applyIncludesTo: orderedSpecs for: pkgSpec firstTime: f
 	^ movedSpecs
 ]
 
-{ #category : 'printing' }
-MetacelloPackagesSpec >> configMethodOn: aStream indent: indent [
-
-	| packageSpecs |
-	packageSpecs := self map values.
-	packageSpecs size = 0 ifTrue: [ ^aStream nextPutAll: 'spec add: []' ].
-	packageSpecs size = 1
-		ifTrue: [
-			aStream 
-				tab: indent; 
-				nextPutAll: 'spec add: ['; cr.
-			packageSpecs first configMethodOn: aStream indent: indent + 1.
-			aStream nextPut: $]; cr ]
-		ifFalse: [
-			aStream 
-				tab: indent; 
-				nextPutAll: 'spec'.
-			1 to: packageSpecs size do: [:index | | packageSpec |
-				packageSpec := packageSpecs at: index.
-				aStream 
-					tab: indent + 1;
-					nextPutAll: 'add: ['; cr.
-				packageSpec configMethodOn: aStream indent: indent + 2.
-				aStream nextPut: $].
-				index < packageSpecs size
-					ifTrue: [ aStream nextPut: $; ].
-				aStream cr ]]
-]
-
 { #category : 'actions' }
 MetacelloPackagesSpec >> copy: specNamed to: spec [
 
-	self addMember: 
-		(self copyMember 
-			name: spec name;
-			sourceName: specNamed;
-			spec: spec;
-			yourself)
+	self addMember: ((MetacelloCopyMemberSpec spec: spec)
+			 sourceName: specNamed;
+			 yourself)
 ]
 
 { #category : 'actions' }
@@ -202,49 +170,49 @@ MetacelloPackagesSpec >> sortPackageSpecs: orderedSpecs packageSpec: packageSpec
 	targetSpecNames := packageSpec requiredSpecNamesForPackageOrdering: aVersionSpec.
 	groupLoopDetected := groupLoops includes: packageSpec.
 	groupLoopDetected ifFalse: [
-		targetSpecNames do: [ :targetPackageOrProjectName |
-			targetPackage := orderedSpecs
-				                 detect: [ :each | each name = targetPackageOrProjectName ]
-				                 ifNone: [
-					                 MetacelloNameNotDefinedError signal:
-						                 'project group, or package named: ' , targetPackageOrProjectName printString
-						                 , ' not found when used in requires: or includes: field of package: ' , packageSpec name printString , ' for version: '
-						                 , aVersionSpec versionString , ' of ' , aVersionSpec projectLabel , '.'.
-					                 nil "return nil if resumed" ].
-			targetIndex := orderedSpecs indexOf: targetPackage.
-			(groupLoopDetected not and: [ packageIndex = targetIndex ]) ifTrue: [
-				self notify: 'A group loop has been detected. The package: ' , packageSpec name printString
-					, ' requires a group that includes itself. If you resume, the group loop will be ignored and details will be written to the system log.'.
-				groupLoopDetected := true.
-				groupLoops add: packageSpec.
-				MetacelloNotification signal: 'Package: ' , packageSpec name printString.
-				MetacelloNotification signal: 'Raw Requires:' level: 2.
-				packageSpec requires do: [ :each | MetacelloNotification signal: each asString level: 3 ].
-				MetacelloNotification signal: 'Package: ' , packageSpec name printString , ' has a group loop:'.
-				MetacelloNotification signal: 'Expanded Requires:' level: 2.
-				targetSpecNames do: [ :each | MetacelloNotification signal: each asString level: 3 ] ].
-			movePackage := movePackage or: [ packageIndex <= targetIndex ].
-			false ifTrue: [ "use for debugging non-obvious reference loops"
-				packageIndex < targetIndex ifTrue: [
-					MetacelloNotification signal: 'Moving ' , targetPackageOrProjectName , ' from ' , targetIndex printString , ' to ' , packageIndex printString ] ] ] ].
+			targetSpecNames do: [ :targetPackageOrProjectName |
+					targetPackage := orderedSpecs
+						                 detect: [ :each | each name = targetPackageOrProjectName ]
+						                 ifNone: [
+								                 MetacelloNameNotDefinedError signal:
+									                 'project group, or package named: ' , targetPackageOrProjectName printString
+									                 , ' not found when used in requires: or includes: field of package: ' , packageSpec name printString , ' of '
+									                 , aVersionSpec projectLabel , '.'.
+								                 nil "return nil if resumed" ].
+					targetIndex := orderedSpecs indexOf: targetPackage.
+					(groupLoopDetected not and: [ packageIndex = targetIndex ]) ifTrue: [
+							self notify: 'A group loop has been detected. The package: ' , packageSpec name printString
+								, ' requires a group that includes itself. If you resume, the group loop will be ignored and details will be written to the system log.'.
+							groupLoopDetected := true.
+							groupLoops add: packageSpec.
+							MetacelloNotification signal: 'Package: ' , packageSpec name printString.
+							MetacelloNotification signal: 'Raw Requires:' level: 2.
+							packageSpec requires do: [ :each | MetacelloNotification signal: each asString level: 3 ].
+							MetacelloNotification signal: 'Package: ' , packageSpec name printString , ' has a group loop:'.
+							MetacelloNotification signal: 'Expanded Requires:' level: 2.
+							targetSpecNames do: [ :each | MetacelloNotification signal: each asString level: 3 ] ].
+					movePackage := movePackage or: [ packageIndex <= targetIndex ].
+					false ifTrue: [ "use for debugging non-obvious reference loops"
+							packageIndex < targetIndex ifTrue: [
+								MetacelloNotification signal: 'Moving ' , targetPackageOrProjectName , ' from ' , targetIndex printString , ' to ' , packageIndex printString ] ] ] ].
 	groupLoopDetected ifTrue: [ "old implementation that does not resolve group names"
-		targetSpecNames := packageSpec requires.
-		targetSpecNames do: [ :targetPackageName |
-			targetPackage := orderedSpecs
-				                 detect: [ :each | each name = targetPackageName ]
-				                 ifNone: [  ].
-			targetIndex := orderedSpecs indexOf: targetPackage.
-			movePackage := movePackage or: [ packageIndex <= targetIndex ] ] ].
+			targetSpecNames := packageSpec requires.
+			targetSpecNames do: [ :targetPackageName |
+					targetPackage := orderedSpecs
+						                 detect: [ :each | each name = targetPackageName ]
+						                 ifNone: [ ].
+					targetIndex := orderedSpecs indexOf: targetPackage.
+					movePackage := movePackage or: [ packageIndex <= targetIndex ] ] ].
 	movePackage ifTrue: [
-		moved := true.
-		orderedSpecs remove: packageSpec ifAbsent: [ ^ self error: 'unexpected error removing package' ].
-		targetIndex := 0.
-		targetSpecNames do: [ :targetPackageOrProjectName |
-			(targetPackage := orderedSpecs
-				                  detect: [ :each | each name = targetPackageOrProjectName ]
-				                  ifNone: [  ]) ifNotNil: [ targetIndex := targetIndex max: (orderedSpecs indexOf: targetPackage) ] ].
-		targetIndex == 0
-			ifTrue: [ orderedSpecs add: packageSpec beforeIndex: packageIndex ]
-			ifFalse: [ orderedSpecs add: packageSpec afterIndex: targetIndex ] ].
+			moved := true.
+			orderedSpecs remove: packageSpec ifAbsent: [ ^ self error: 'unexpected error removing package' ].
+			targetIndex := 0.
+			targetSpecNames do: [ :targetPackageOrProjectName |
+					(targetPackage := orderedSpecs
+						                  detect: [ :each | each name = targetPackageOrProjectName ]
+						                  ifNone: [ ]) ifNotNil: [ targetIndex := targetIndex max: (orderedSpecs indexOf: targetPackage) ] ].
+			targetIndex == 0
+				ifTrue: [ orderedSpecs add: packageSpec beforeIndex: packageIndex ]
+				ifFalse: [ orderedSpecs add: packageSpec afterIndex: targetIndex ] ].
 	^ moved
 ]
