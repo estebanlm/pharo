@@ -80,13 +80,10 @@ MetacelloPackageSpec >> mergeMap [
 { #category : 'merging' }
 MetacelloPackageSpec >> mergeSpec: anotherSpec [
 
-	| newSpec anotherRepositories |
+	| newSpec |
 	newSpec := super mergeSpec: anotherSpec.
 	anotherSpec requires ifNotEmpty: [ :anotherRequires | newSpec requires: self requires , anotherRequires ].
-	(anotherRepositories := anotherSpec repositories) notEmpty ifTrue: [
-			newSpec repositories: (self repositories isEmpty
-					 ifTrue: [ anotherRepositories ]
-					 ifFalse: [ self repositories mergeSpec: anotherRepositories ]) ].
+	newSpec repositories: (self repositories mergeSpec: anotherSpec repositories).
 
 	anotherSpec name ifNotNil: [ newSpec name: anotherSpec name ].
 	^ newSpec
@@ -193,7 +190,7 @@ MetacelloPackageSpec >> repositoryDescriptions [
 { #category : 'loading' }
 MetacelloPackageSpec >> repositorySpecs [
 
-	^self repositories map values
+	^self repositories repositorySpecs
 ]
 
 { #category : 'private' }

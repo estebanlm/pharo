@@ -120,7 +120,7 @@ MetacelloProjectReferenceSpec >> repository: aStringOrMetacelloRepositorySpec [
 { #category : 'loading' }
 MetacelloProjectReferenceSpec >> repositorySpecs [
 
-	^ self repositories specs
+	^ self repositories repositorySpecs
 ]
 
 { #category : 'private' }
