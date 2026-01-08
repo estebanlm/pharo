@@ -61,7 +61,7 @@ MetacelloRepositoriesSpec >> hasNoLoadConflicts: aMetacelloRepositoriesSpec [
 ]
 
 { #category : 'testing' }
-MetacelloRepositoriesSpec >> hasRepositories [
+MetacelloRepositoriesSpec >> hasRepository [
 
 	^ self repositorySpecs isNotEmpty
 ]

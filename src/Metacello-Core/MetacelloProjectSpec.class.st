@@ -147,7 +147,7 @@ MetacelloProjectSpec >> hasNoLoadConflicts: aMetacelloProjectSpec [
 
 	^ self className = aMetacelloProjectSpec className and: [
 			  (self hasVersion and: [ aMetacelloProjectSpec hasVersion ]) and: [
-					  (self repositories hasRepositories not or: [ aMetacelloProjectSpec repositories hasRepositories not ]) or: [
+					  (self repositories hasRepository not or: [ aMetacelloProjectSpec repositories hasRepository not ]) or: [
 						  self repositories hasNoLoadConflicts: aMetacelloProjectSpec repositories ] ] ]
 ]
 
