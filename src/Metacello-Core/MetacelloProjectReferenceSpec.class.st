@@ -40,24 +40,14 @@ MetacelloProjectReferenceSpec >> mergeImportLoads: aLoadList [
 ]
 
 { #category : 'merging' }
-MetacelloProjectReferenceSpec >> mergeMap [
-
-	| map |
-	map := super mergeMap.
-	map at: #projectReference put: projectReference.
-	^map
-]
-
-{ #category : 'merging' }
 MetacelloProjectReferenceSpec >> mergeSpec: anotherSpec [
 
-	| newSpec map |
+	| newSpec |
 	newSpec := super mergeSpec: anotherSpec.
-	map := anotherSpec mergeMap.
-	(map at: #projectReference) ifNotNil: [ :anotherProjectReference |
-		newSpec projectReference: (newSpec projectReference
-				 ifNotNil: [ :reference | reference mergeSpec: anotherProjectReference ]
-				 ifNil: [ anotherProjectReference ]) ].
+	anotherSpec projectReference ifNotNil: [ :anotherProjectReference |
+			newSpec projectReference: (newSpec projectReference
+					 ifNotNil: [ :reference | reference mergeSpec: anotherProjectReference ]
+					 ifNil: [ anotherProjectReference ]) ].
 	^ newSpec
 ]
 
@@ -65,12 +55,6 @@ MetacelloProjectReferenceSpec >> mergeSpec: anotherSpec [
 MetacelloProjectReferenceSpec >> name [
 
 	^ self projectReference name
-]
-
-{ #category : 'merging' }
-MetacelloProjectReferenceSpec >> nonOverridable [
-
-	^super nonOverridable, #( projectReference )
 ]
 
 { #category : 'loading' }
@@ -137,12 +121,6 @@ MetacelloProjectReferenceSpec >> repository: aStringOrMetacelloRepositorySpec [
 MetacelloProjectReferenceSpec >> repositorySpecs [
 
 	^ self repositories specs
-]
-
-{ #category : 'accessing' }
-MetacelloProjectReferenceSpec >> requires: aCollection [
-
-	self shouldNotImplement
 ]
 
 { #category : 'private' }

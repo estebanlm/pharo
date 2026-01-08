@@ -230,7 +230,6 @@ MetacelloProjectSpec >> mergeMap [
 	map at: #loads put: loads.
 	map at: #preLoadDoIt put: preLoadDoIt.
 	map at: #postLoadDoIt put: postLoadDoIt.
-	map at: #repositories put: repositories.
 	^ map
 ]
 
@@ -262,10 +261,9 @@ MetacelloProjectSpec >> mergeScriptRepository: anotherSpec [
 { #category : 'merging' }
 MetacelloProjectSpec >> mergeSpec: anotherSpec [
 
-	| newSpec map |
+	| newSpec |
 	newSpec := super mergeSpec: anotherSpec.
-	map := anotherSpec mergeMap.
-	(map at: #repositories) ifNotNil: [ :anotherRepositories | newSpec mergeRepositoriesSpec: anotherRepositories ].
+	anotherSpec getRepositories ifNotNil: [ :anotherRepositories | newSpec mergeRepositoriesSpec: anotherRepositories ].
 	^ newSpec
 ]
 
@@ -299,11 +297,6 @@ MetacelloProjectSpec >> name: aString [
 	self shouldBeMutable.
 	name := aString trim.
 	self resetProjectPackage
-]
-
-{ #category : 'merging' }
-MetacelloProjectSpec >> nonOverridable [
-    ^ super nonOverridable , #(#'projectPackage' #'repositories')
 ]
 
 { #category : 'copying' }
