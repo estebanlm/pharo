@@ -133,7 +133,7 @@ PBBootstrap >> createHermesPackageListFiles [
 	"In order to not duplicate the packages to load by hermes in the baselines and in the build.sh file, we export the list of packages to load in files."
 
 	| toExport |
-	toExport := Dictionary withAll: {
+	toExport := Dictionary newFrom: {
 		            ('hermesAdditionalKernelPackages.txt' -> BaselineOfKernel additionalPackagesPackageNames).
 		            ('hermesCompilerPackages.txt' -> BaselineOfCompiler corePackageNames).
 		            ('hermesFileSystemPackages.txt' -> BaselineOfFileSystem corePackageNames).
