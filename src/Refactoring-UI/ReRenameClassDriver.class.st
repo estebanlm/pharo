@@ -39,7 +39,7 @@ ReRenameClassDriver >> browseMethods [
 		title: 'Methods containing references to a shared var that will shadow class reference after renaming'
 ]
 
-{ #category : 'configuration' }
+{ #category : 'execution' }
 ReRenameClassDriver >> defaultSelectDialog [
 
 	^ super defaultSelectDialog
