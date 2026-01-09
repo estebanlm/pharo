@@ -5,6 +5,6 @@ I am used to show broken critiques in full critiques list allowing to debug and 
 Class {
 	#name : 'ClyBrokenCritiqueTag',
 	#superclass : 'ClySimpleTag',
-	#category : 'Calypso-SystemPlugins-Critic-Queries',
-	#package : 'Calypso-SystemPlugins-Critic-Queries'
+	#category : 'Calypso-SystemPlugins-Critic-Browser',
+	#package : 'Calypso-SystemPlugins-Critic-Browser'
 }

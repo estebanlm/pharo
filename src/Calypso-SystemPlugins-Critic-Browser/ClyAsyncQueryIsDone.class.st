@@ -17,15 +17,19 @@ Class {
 	#instVars : [
 		'queryResult'
 	],
-	#category : 'Calypso-NavigationModel-Model',
-	#package : 'Calypso-NavigationModel',
-	#tag : 'Model'
+	#category : 'Calypso-SystemPlugins-Critic-Browser',
+	#package : 'Calypso-SystemPlugins-Critic-Browser'
 }
 
 { #category : 'instance creation' }
 ClyAsyncQueryIsDone class >> with: anAsyncQueryResult [
 	^self new
 		queryResult: anAsyncQueryResult
+]
+
+{ #category : 'critics' }
+ClyAsyncQueryIsDone >> affectsCritiques [
+	^false
 ]
 
 { #category : 'accessing' }

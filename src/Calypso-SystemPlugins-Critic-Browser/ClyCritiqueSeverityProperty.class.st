@@ -4,7 +4,9 @@ There are three of them: information, warning, error.
 
 You can get me from critique using: 
 	
-	ClyCrituqueSeverity of: aCritiques.
+```
+	ClyCritiqueSeverity of: aCritiques.
+```
 	
 I provide name and color for the UI. And I allow to sort critiques by severity using my method #isMoreImportantThan:. 
 
@@ -21,8 +23,8 @@ Class {
 		'name',
 		'color'
 	],
-	#category : 'Calypso-SystemPlugins-Critic-Queries',
-	#package : 'Calypso-SystemPlugins-Critic-Queries'
+	#category : 'Calypso-SystemPlugins-Critic-Browser',
+	#package : 'Calypso-SystemPlugins-Critic-Browser'
 }
 
 { #category : 'instance creation' }
