@@ -197,35 +197,30 @@ MetacelloVersionSpec >> packageNamed: aString [
 ]
 
 { #category : 'querying' }
-MetacelloVersionSpec >> packageNamed: aString forMap: map ifAbsent: absentBlock [
+MetacelloVersionSpec >> packageNamed: aString ifAbsent: absentBlock [
 
-	| importSpec |
+	| importSpec map |
+	map := self packagesSpec map.
 	^ map at: aString ifAbsent: [
-		  (self importArray isNotNil or: [ self import isNotNil ]) ifTrue: [ "expect the 'missing' name to be satisfied within context of imported project"
-			  importArray ifNotNil: [
-				  importArray do: [ :assoc |
-					  ((assoc value includes: aString) and: [ map includesKey: assoc key ]) ifTrue: [
-						  importSpec := (map at: assoc key)
-							                mergeImportLoads: { aString };
-							                yourself ] ].
-				  importSpec ifNotNil: [ ^ importSpec ] ].
-			  (importSpec isNil and: [ self import isNotNil ]) ifTrue: [
-				  ^ (map at: self import ifAbsent: absentBlock)
-					    mergeImportLoads: { aString };
-					    yourself ] ].
-		  (aString = 'default' or: [ aString = 'ALL' ])
-			  ifTrue: [
-				  self project groupSpec
-					  name: aString;
-					  includes: self packageNames;
-					  yourself ]
-			  ifFalse: [ absentBlock value ] ]
-]
-
-{ #category : 'querying' }
-MetacelloVersionSpec >> packageNamed: aString ifAbsent: aBlock [
-
-	^ self packageNamed: aString forMap: self packagesSpec map ifAbsent: aBlock
+			  (self importArray isNotNil or: [ self import isNotNil ]) ifTrue: [ "expect the 'missing' name to be satisfied within context of imported project"
+					  importArray ifNotNil: [
+							  importArray do: [ :assoc |
+									  ((assoc value includes: aString) and: [ map includesKey: assoc key ]) ifTrue: [
+											  importSpec := (map at: assoc key)
+												                mergeImportLoads: { aString };
+												                yourself ] ].
+							  importSpec ifNotNil: [ ^ importSpec ] ].
+					  (importSpec isNil and: [ self import isNotNil ]) ifTrue: [
+							  ^ (map at: self import ifAbsent: absentBlock)
+								    mergeImportLoads: { aString };
+								    yourself ] ].
+			  (aString = 'default' or: [ aString = 'ALL' ])
+				  ifTrue: [
+						  self project groupSpec
+							  name: aString;
+							  includes: self packageNames;
+							  yourself ]
+				  ifFalse: [ absentBlock value ] ]
 ]
 
 { #category : 'querying' }

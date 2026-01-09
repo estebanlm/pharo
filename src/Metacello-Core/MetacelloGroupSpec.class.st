@@ -97,21 +97,19 @@ MetacelloGroupSpec >> resolveToLoadableSpec [
 { #category : 'private' }
 MetacelloGroupSpec >> resolveToPackagesAndProjectsIn: aVersionSpec [
 
-	| packages |
-	packages := Dictionary new.
-	self resolveToPackagesIn: aVersionSpec into: packages visited: MetacelloVisitedPackages new.
-	^ packages values asOrderedCollection
+	^ self resolveToPackagesIn: aVersionSpec into: OrderedCollection new visited: OrderedCollection new
 ]
 
 { #category : 'private' }
 MetacelloGroupSpec >> resolveToPackagesIn: aVersionSpec into: packages visited: visited [
 
-	visited visit: self doing: [ :aSpec |
-			| map |
-			map := aVersionSpec packagesSpec map.
-			aSpec includes do: [ :pkgName |
-					(aVersionSpec packageNamed: pkgName forMap: map ifAbsent: [ ])
-						projectDo: [ :prj | packages at: prj name put: prj ]
-						packageDo: [ :pkg | packages at: pkg name put: pkg ]
-						groupDo: [ :grp | grp resolveToPackagesIn: aVersionSpec into: packages visited: visited ] ] ]
+	(visited includes: self name) ifTrue: [ ^ self ].
+
+	self includes do: [ :pkgName |
+			(aVersionSpec packageNamed: pkgName)
+				projectDo: [ :prj | packages add: prj ]
+				packageDo: [ :pkg | packages add: pkg ]
+				groupDo: [ :grp | grp resolveToPackagesIn: aVersionSpec into: packages visited: visited ] ].
+
+	^ packages
 ]
