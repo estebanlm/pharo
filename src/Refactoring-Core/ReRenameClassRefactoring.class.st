@@ -145,10 +145,6 @@ ReRenameClassRefactoring >> renameReferences [
 					            , ' already exists within the reference scope' ];
 		            yourself.
 	self model allReferencesToClass: class do: [ :method |
-		(method modelClass hierarchyDefinesVariable: newName) ifTrue: [
-			self refactoringError:
-				newName , ' is already defined in hierarchy of '
-				, method modelClass printString ].
 		(method compiledMethod
 			 ifNil: [ false ]
 			 ifNotNil: [ :m | m isFromTrait ]) ifFalse: [
