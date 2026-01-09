@@ -126,10 +126,10 @@ RBRenameClassRefactoringTest >> testRenameClassFromTrait [
 ]
 
 { #category : 'failure tests' }
-RBRenameClassRefactoringTest >> testSharedVariableNameExpectFailure [
+RBRenameClassRefactoringTest >> testSharedVariableNameExpectWarning [
 
-	self shouldFail:
-		(ReRenameClassRefactoring rename: self class name to: #Foo1)
+	self shouldWarn:
+		(ReRenameClassRefactoring rename: #ReClassToBeRenamed to: #SharedVariableWithRef)
 ]
 
 { #category : 'tests' }

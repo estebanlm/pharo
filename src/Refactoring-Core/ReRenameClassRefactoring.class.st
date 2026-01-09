@@ -57,8 +57,13 @@ ReRenameClassRefactoring >> applicabilityPreconditions [
 			   self doesClassToBeRenamedExist and: [ self isNotMetaclass ] ]).
 		  self isValidClassName.
 		  self isNotGlobal.
-		  ReIsNotSharedVariableCondition name: newName model: self model.
 		}
+]
+
+{ #category : 'preconditions' }
+ReRenameClassRefactoring >> breakingChangePreconditions [
+
+	^ { (ReSharedVariableShadowingClassNameCondition name: newName oldName: className model: self model) }
 ]
 
 { #category : 'initialization' }
