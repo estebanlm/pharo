@@ -14,8 +14,8 @@ Class {
 		'start',
 		'stop'
 	],
-	#category : 'Calypso-SystemPlugins-Critic-Queries',
-	#package : 'Calypso-SystemPlugins-Critic-Queries'
+	#category : 'Calypso-SystemPlugins-Critic-Browser',
+	#package : 'Calypso-SystemPlugins-Critic-Browser'
 }
 
 { #category : 'instance creation' }

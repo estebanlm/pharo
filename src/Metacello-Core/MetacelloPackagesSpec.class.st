@@ -162,10 +162,9 @@ MetacelloPackagesSpec >> packageSpecsInLoadOrderFor: aVersionSpec [
 			| spec |
 			spec := map at: member name ifAbsent: [ ].
 			(spec isNil or: [ orderedPackageSpecs includes: spec ]) ifFalse: [
-					spec
-						projectDo: [ :prjSpec | "specification order is the default order" orderedPackageSpecs add: prjSpec ]
-						packageDo: [ :pkgSpec | "specification order is the default order" orderedPackageSpecs add: pkgSpec ]
-						groupDo: [ :groupSpec | groupSpecs add: groupSpec ] ] ].
+					spec isGroupSpec
+						ifTrue: [ groupSpecs add: spec ]
+						ifFalse: [ orderedPackageSpecs add: spec ] ] ].
 	orderedPackageSpecs ifEmpty: [ ^ orderedPackageSpecs , groupSpecs asOrderedCollection ].
 	moved := true.
 	count := 0.
@@ -329,12 +328,6 @@ MetacelloPackagesSpec >> sortPackageSpecs: orderedSpecs packageSpec: packageSpec
 				ifTrue: [ orderedSpecs add: packageSpec beforeIndex: packageIndex ]
 				ifFalse: [ orderedSpecs add: packageSpec afterIndex: targetIndex ] ].
 	^ moved
-]
-
-{ #category : 'enumeration' }
-MetacelloPackagesSpec >> specListDo: aBlock [
-
-	self list do: [:member |  aBlock value: member spec ]
 ]
 
 { #category : 'accessing' }

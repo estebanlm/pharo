@@ -1,6 +1,6 @@
 Class {
 	#name : 'MetacelloProjectReferenceSpec',
-	#superclass : 'MetacelloAbstractPackageSpec',
+	#superclass : 'MetacelloLoadableSpec',
 	#instVars : [
 		'projectReference'
 	],
@@ -32,6 +32,12 @@ MetacelloProjectReferenceSpec >> acceptVisitor: aVisitor [
 MetacelloProjectReferenceSpec >> includes: aCollection [
 
 	self shouldNotImplement
+]
+
+{ #category : 'testing' }
+MetacelloProjectReferenceSpec >> isProjectReferenceSpec [
+
+	^ true
 ]
 
 { #category : 'importing' }
@@ -73,12 +79,6 @@ MetacelloProjectReferenceSpec >> postCopy [
 
 	super postCopy.
 	projectReference := projectReference copy.
-]
-
-{ #category : 'visiting' }
-MetacelloProjectReferenceSpec >> projectDo: projectBlock packageDo: packageBlock groupDo: groupBlock [
-
-	projectBlock value: self
 ]
 
 { #category : 'accessing' }

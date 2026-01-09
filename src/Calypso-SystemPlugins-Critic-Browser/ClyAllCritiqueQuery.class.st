@@ -1,5 +1,5 @@
 "
-I am abstract critique query which subclasses are supposed to return all critiques abailable from scope.
+I am abstract critique query which subclasses are supposed to return all critiques available from scope.
 It is possible to retrieve critiques differently from objects which are visible from scope.
 My subclasses define concrete way but all of them return all critiques without any extra condition.
 They should implement method: 
@@ -9,8 +9,8 @@ They should implement method:
 Class {
 	#name : 'ClyAllCritiqueQuery',
 	#superclass : 'ClyCritiqueQuery',
-	#category : 'Calypso-SystemPlugins-Critic-Queries',
-	#package : 'Calypso-SystemPlugins-Critic-Queries'
+	#category : 'Calypso-SystemPlugins-Critic-Browser',
+	#package : 'Calypso-SystemPlugins-Critic-Browser'
 }
 
 { #category : 'execution' }

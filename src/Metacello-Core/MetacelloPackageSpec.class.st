@@ -1,6 +1,6 @@
 Class {
 	#name : 'MetacelloPackageSpec',
-	#superclass : 'MetacelloAbstractPackageSpec',
+	#superclass : 'MetacelloLoadableSpec',
 	#instVars : [
 		'requires',
 		'project',
@@ -65,6 +65,12 @@ MetacelloPackageSpec >> info [
 	"test compatibility method"
 
 	^self
+]
+
+{ #category : 'testing' }
+MetacelloPackageSpec >> isPackageSpec [
+
+	^ true
 ]
 
 { #category : 'merging' }
@@ -151,12 +157,6 @@ MetacelloPackageSpec >> project [
 MetacelloPackageSpec >> project: aMetacelloProject [
 
 	project := aMetacelloProject
-]
-
-{ #category : 'visiting' }
-MetacelloPackageSpec >> projectDo: projectBlock packageDo: packageBlock groupDo: groupBlock [
-
-	packageBlock value: self
 ]
 
 { #category : 'querying' }
