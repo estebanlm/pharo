@@ -62,11 +62,7 @@ BaselineOf class >> deepPackagesOfGroupNamed: aName [
 	| allGroups projects group |
 
 	allGroups := self version groups.
-	projects := Array streamContents: [ :stream |
-		self version spec
-			specListProjectDo: [ :each | stream nextPut: each ] 
-			packageDo: [ :each | ] 
-			groupDo: [  :each | ] ].
+	projects := self version projects.
 	group := allGroups detect: [ :eachGroup | eachGroup name = aName ].
 	^ (group includes
 		collect: [ :each | 
