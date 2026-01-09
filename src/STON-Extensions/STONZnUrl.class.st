@@ -6,9 +6,8 @@ I am a ZnUrl.
 Class {
 	#name : 'STONZnUrl',
 	#superclass : 'ZnUrl',
-	#category : 'STON-Core-Reader',
-	#package : 'STON-Core',
-	#tag : 'Reader'
+	#category : 'STON-Extensions',
+	#package : 'STON-Extensions'
 }
 
 { #category : 'instance creation' }
