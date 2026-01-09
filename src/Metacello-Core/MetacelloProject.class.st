@@ -1,7 +1,7 @@
 "
-The **MetacelloMCBaselineProject**  is a wrapper for the **BaselineOf** version specification for file-based repositories.
+The **MetacelloProject**  is a wrapper for the **BaselineOf** version specification for file-based repositories.
 
-There is a single version in a **MetacelloMCBaselineProject**, named *'baseline'*.
+There is a single version in a **MetacelloProject**, named *'baseline'*.
 
 A typical **BaselineOf** is specification:
 
@@ -26,10 +26,9 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'repositoryDescription',
-		'versionNumberClass',
 		'loadType',
 		'projectAttributes',
-		'versionMap',
+		'version',
 		'configuration'
 	],
 	#category : 'Metacello-Core-Model',
@@ -41,7 +40,7 @@ Class {
 MetacelloProject class >> initialize [
 	"Deprecation added during the development of Pharo 14."
 
-	self deprecatedAliases: #( #MetacelloMCBaselineProject #MetacelloBaselineProject )
+	self deprecatedAliases: #( #MetacelloMCBaselineProject #MetacelloBaselineProject #MetacelloCypressBaselineProject )
 ]
 
 { #category : 'instance creation' }
@@ -58,32 +57,12 @@ MetacelloProject class >> on: aConfig [
 	^self basicNew configuration: aConfig; yourself
 ]
 
-{ #category : 'accessing' }
-MetacelloProject class >> singletonVersionName [
-    ^ 'baseline'
-]
-
-{ #category : 'scripting' }
-MetacelloProject >> asConfigurationProject [
-    ^ self
-]
-
 { #category : 'private' }
 MetacelloProject >> attributes [
 
 	^ (OrderedCollection with: #common)
 		  addAll: self platformAttributes;
 		  yourself
-]
-
-{ #category : 'spec classes' }
-MetacelloProject >> baselineOfProjectSpec [
-    ^ self baselineOfProjectSpecClass for: self
-]
-
-{ #category : 'spec classes' }
-MetacelloProject >> baselineOfProjectSpecClass [
-    ^ MetacelloBaselineOfProjectSpec
 ]
 
 { #category : 'accessing' }
@@ -110,7 +89,7 @@ MetacelloProject >> defaultPlatformAttributes [
 { #category : 'spec classes' }
 MetacelloProject >> groupSpec [
 
-	^ MetacelloGroupSpec for: self
+	^ MetacelloGroupSpec project: self
 ]
 
 { #category : 'accessing' }
@@ -133,41 +112,19 @@ MetacelloProject >> loadType: aSymbol [
 	loadType := aSymbol
 ]
 
-{ #category : 'private' }
-MetacelloProject >> lookupVersion: aVersionString ifAbsent: aBlock [
-	"please use version:...this is a private method"
-
-	^ self map at: aVersionString ifAbsent: [ ^ aBlock value ]
-]
-
-{ #category : 'accessing' }
-MetacelloProject >> map [
-	versionMap ifNil: [ ^ Dictionary new ].
-	^ versionMap
-]
-
-{ #category : 'accessing' }
-MetacelloProject >> map: aDictionary [
-
-	versionMap := aDictionary
-]
-
 { #category : 'spec classes' }
 MetacelloProject >> packageSpec [
 
-	^ MetacelloPackageSpec for: self
-]
-
-{ #category : 'spec classes' }
-MetacelloProject >> packagesSpec [
-
-	^ MetacelloPackagesSpec for: self
+	^ MetacelloPackageSpec project: self
 ]
 
 { #category : 'private' }
 MetacelloProject >> platformAttributes [
 
-	 ^self projectPlatformAttributes
+	| list |
+	list := OrderedCollection new.
+	self projectAttributes ifNotNil: [ :aBlock | list addAll: aBlock value ].
+	^ self defaultPlatformAttributes , list
 ]
 
 { #category : 'private' }
@@ -179,15 +136,11 @@ MetacelloProject >> pragmaKeywords [
 { #category : 'printing' }
 MetacelloProject >> printOn: aStream [
 
-	| label |
-	self configuration class printOn: aStream.
+	super printOn: aStream.
 	aStream nextPut: $(.
-	self versions do: [ :vrsn |
-		aStream nextPutAll: vrsn versionString.
-		vrsn spec ifNotNil: [ (label := vrsn spec projectLabel) isEmpty ifFalse: [ aStream nextPutAll: ' [' , label , ']' ] ].
-		aStream
-			nextPut: $,;
-			space ].
+	aStream nextPutAll: (version
+			 ifNil: [ 'No version yet' ]
+			 ifNotNil: [ self label ]).
 	aStream nextPut: $)
 ]
 
@@ -213,68 +166,23 @@ MetacelloProject >> projectAttributes: aList [
 MetacelloProject >> projectPackage [
 
 	self configuration class mcWorkingCopy ifNotNil: [ :workingCopy |
-		| pkgSpec repo |
-		pkgSpec := self packageSpec
-			           name: workingCopy packageName;
-			           yourself.
-		repo := workingCopy repositoryGroup repositories
-			        detect: [ :each | each ~~ MCCacheRepository default ]
-			        ifNone: [
-				        MetacelloNotification signal: 'Using cache repository for ' , self label , ' project package'.
-				        MCCacheRepository default ].
-		pkgSpec repository: (repo asRepositorySpecFor: self).
-		^ pkgSpec ].
+			| pkgSpec repo |
+			pkgSpec := self packageSpec
+				           name: workingCopy packageName;
+				           yourself.
+			repo := workingCopy repositoryGroup repositories
+				        detect: [ :each | each ~~ MCCacheRepository default ]
+				        ifNone: [
+						        MetacelloNotification signal: 'Using cache repository for ' , self label , ' project package'.
+						        MCCacheRepository default ].
+			pkgSpec repository: repo asRepositorySpec.
+			^ pkgSpec ].
 	^ nil
-]
-
-{ #category : 'private' }
-MetacelloProject >> projectPlatformAttributes [
-
-	| list aBlock |
-	list := OrderedCollection new.
-	(aBlock := self projectAttributes) ifNotNil: [ list addAll: aBlock value ].
-	^ self defaultPlatformAttributes , list
-]
-
-{ #category : 'spec classes' }
-MetacelloProject >> projectReferenceSpec [
-
-	^ MetacelloProjectReferenceSpec for: self
-]
-
-{ #category : 'spec classes' }
-MetacelloProject >> projectSpec [
-
-	^ MetacelloNamelessProjectSpec for: self
-]
-
-{ #category : 'spec classes' }
-MetacelloProject >> repositoriesSpec [
-
-	^self repositoriesSpecClass for: self
-]
-
-{ #category : 'spec classes' }
-MetacelloProject >> repositoriesSpecClass [
-
-	^MetacelloRepositoriesSpec
 ]
 
 { #category : 'accessing' }
 MetacelloProject >> repositoryDescription [
 	^ repositoryDescription
-]
-
-{ #category : 'spec classes' }
-MetacelloProject >> repositorySpec [
-
-	^self repositorySpecClass for: self
-]
-
-{ #category : 'spec classes' }
-MetacelloProject >> repositorySpecClass [
-
-	^MetacelloRepositorySpec
 ]
 
 { #category : 'development support' }
@@ -285,47 +193,13 @@ MetacelloProject >> setBaselineRepositoryDescription: aListOrRepositoryDescripti
 ]
 
 { #category : 'versions' }
-MetacelloProject >> singletonVersionName [
-    ^ self class singletonVersionName
-]
-
-{ #category : 'spec classes' }
-MetacelloProject >> valueHolderSpec [
-
-	^ MetacelloValueHolderSpec for: self
-]
-
-{ #category : 'versions' }
 MetacelloProject >> version [
-    ^ self version: self singletonVersionName
+
+	^ version
 ]
 
 { #category : 'versions' }
-MetacelloProject >> version: aVersionString [
+MetacelloProject >> version: aVersion [
 
-	^ self lookupVersion: aVersionString ifAbsent: [ (MetacelloVersionDoesNotExistError project: self project versionString: aVersionString) signal ]
-]
-
-{ #category : 'versions' }
-MetacelloProject >> versionNumberClass [
-
-	^ versionNumberClass ifNil: [ versionNumberClass := MetacelloVersionNumber ]
-]
-
-{ #category : 'versions' }
-MetacelloProject >> versionNumberClass: aClass [
-    versionNumberClass := aClass
-]
-
-{ #category : 'spec classes' }
-MetacelloProject >> versionSpec [
-
-	^ MetacelloVersionSpec for: self
-]
-
-{ #category : 'versions' }
-MetacelloProject >> versions [
-  ^ [ {(self version)} ]
-    on: MetacelloVersionDoesNotExistError
-    do: [ :ex | ^ #() ]
+	version := aVersion
 ]

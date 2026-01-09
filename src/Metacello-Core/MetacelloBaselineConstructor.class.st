@@ -13,10 +13,9 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'root',
-		'attributeOrder',
-		'configuration',
 		'project',
-		'attributeMap'
+		'attributeMap',
+		'baseline'
 	],
 	#category : 'Metacello-Core-Constructors',
 	#package : 'Metacello-Core',
@@ -38,80 +37,78 @@ MetacelloBaselineConstructor class >> on: aConfig project: aProject [
 ]
 
 { #category : 'accessing' }
-MetacelloBaselineConstructor >> addAttribute: anAttribute [
-
-	self attributeOrder add: anAttribute
-]
-
-{ #category : 'accessing' }
 MetacelloBaselineConstructor >> attributeMap [
 
-	^ attributeMap ifNil: [ attributeMap := Dictionary new ]
+	^ attributeMap
+]
+
+{ #category : 'api - old' }
+MetacelloBaselineConstructor >> author: aBlockOrString [
+	"Kept for compiatibility with other Smalltalk and old Pharo versions."
+
+	MetacelloNotification signal:
+		'The option #author: will not do anything anymore in Pharo 14+. This option can be removed in it is in an attribute for Pharo 14+ or ignored if this is for a different platform. Reason: The author metadata was used with SmalltalkHub but not this information is already managed by git or other CVS.'
 ]
 
 { #category : 'accessing' }
-MetacelloBaselineConstructor >> attributeOrder [
+MetacelloBaselineConstructor >> baseline [
 
-	^ attributeOrder ifNil: [ attributeOrder := OrderedCollection new ]
+	^ baseline
 ]
 
-{ #category : 'api' }
-MetacelloBaselineConstructor >> baseline: aString [
+{ #category : 'accessing' }
+MetacelloBaselineConstructor >> baseline: aBaselineOf [
 
-	| spec projectSpec |
-	projectSpec := self project baselineOfProjectSpec
-		               name: aString;
-		               className: 'BaselineOf' , aString;
-		               yourself.
-	spec := self project projectReferenceSpec
-		        name: aString;
-		        projectReference: projectSpec;
-		        yourself.
-	self root packages merge: spec.
-	^ projectSpec
+	baseline := aBaselineOf
 ]
 
 { #category : 'api' }
 MetacelloBaselineConstructor >> baseline: aString with: aBlock [
+	"Alias to make baselines more explicits and backward compatible"
 
-	self with: (self baseline: aString) during: aBlock
+	^ self project: aString with: aBlock
+]
+
+{ #category : 'api - old' }
+MetacelloBaselineConstructor >> blessing: aBlockOrString [
+	"Kept for compiatibility with other Smalltalk and old Pharo versions."
+
+	MetacelloNotification signal:
+		'The option #blessing: will not do anything anymore in Pharo 14+. This option can be removed in it is in an attribute for Pharo 14+ or ignored if this is for a different platform. Reason: The author metadata was used with SmalltalkHub but not this information is already managed by git or other CVS.'
 ]
 
 { #category : 'api' }
 MetacelloBaselineConstructor >> className: aString [
-	"Define className field of a project spec (MetacelloMCProjectSpec).
+	"Define className field of a project spec (MetacelloProjectSpec).
 	
 		spec project: 'CoolBrowser' with: [
-			spec className: 'ConfigurationOfCoolBrowser'. ].
+			spec className: 'BaselineOfCoolBrowser'. ].
 
-	The className field is OPTIONAL in the project spec. If omitted, the className will be created by prepending 'ConfigurationOf' to the project name.
+	The className field is OPTIONAL in the project spec. If omitted, the className will be created by prepending 'BaselineOf' to the project name.
 	 "
 
 	self root className: aString
 ]
 
-{ #category : 'accessing' }
-MetacelloBaselineConstructor >> configuration [
+{ #category : 'api - old' }
+MetacelloBaselineConstructor >> configuration: aString with: aBlock [
 
-	^configuration
+	MetacelloNotification signal:
+		'The option #configuration:with: will not do anything anymore in Pharo 14+. This option can be removed in it is in an attribute for Pharo 14+ or ignored if this is for a different platform. Reason: This option was here for configurations but not baselines. Since we cannot load configurations anymore in Pharo, it is been removed.'
 ]
 
-{ #category : 'accessing' }
-MetacelloBaselineConstructor >> configuration: aConfig [
+{ #category : 'api - old' }
+MetacelloBaselineConstructor >> description: aBlockOrString [
+	"Kept for compiatibility with other Smalltalk and old Pharo versions."
 
-	configuration := aConfig
-]
-
-{ #category : 'accessing' }
-MetacelloBaselineConstructor >> configurationClass [
-
-	^self configuration class
+	MetacelloNotification signal:
+		'The option #description: will not do anything anymore in Pharo 14+. This option can be removed in it is in an attribute for Pharo 14+ or ignored if this is for a different platform. Reason: The author metadata was used with SmalltalkHub but not this information is already managed by git or other CVS.'
 ]
 
 { #category : 'private' }
 MetacelloBaselineConstructor >> evaluatePragma: pragma [
 
-	self configuration perform: pragma methodSelector with: self
+	self baseline perform: pragma methodSelector with: self
 ]
 
 { #category : 'pragma extraction' }
@@ -122,37 +119,12 @@ MetacelloBaselineConstructor >> extractBaselinePragmaFor: aClass [
 		ifNotEmpty: [ :pragmas | pragmas first ]
 ]
 
-{ #category : 'api' }
+{ #category : 'api - old' }
 MetacelloBaselineConstructor >> file: aString [
-	"Define file field of a package spec (MetacelloPackageSpec) or project spec (MetacelloMCProjectSpec).
+	"Kept for compiatibility with other Smalltalk and old Pharo versions."
 
-	For a package spec, the file: field is optional in a baseline. In a baseline, the file field may be used to specify a package branch for the package:
-	
-		spec package: 'MyPackage' with: [
-			spec file: 'MyPackage.gemstone'. ]'.
-
-	The file: field is required in a version. In a version, the file field defines the explicit version of the package to be loaded:
-	
-		spec package: 'MyPackage' with: [
-			spec file: 'MyPackage.gemstone-dkh.1'. ]'.
-
-	The following may be used as a short cut for specifying the file field in a version:
-
-		spec package: 'MyPackage' with: 'MyPackage.gemstone-dkh.1'.
-
-	For a project spec, the file field specifies the name of the Monticello package that contains the configuration. If you are using the convention of 
-	naming the class and package usingthe  'ConfigurationOf' prefix, then there is no need to specify the file field:
-	
-		spec project: 'MyProject' with: [
-			spec file: 'ConfigurationMyProject'.
-
-	It should only be used when the package name for the configuration is different from the name of the project:
-
-		spec project: 'MyProject' with: [
-			spec file: 'MyProject-Metacello'.
-	 "
-
-	self root file: aString
+	MetacelloNotification signal:
+		'The option #file: will not do anything anymore in Pharo 14+. This option can be removed in it is in an attribute for Pharo 14+ or ignored if this is for a different platform. Reason: This option was here for configurations but not baselines. Since we cannot load configurations anymore in Pharo, it is been removed.'
 ]
 
 { #category : 'api' }
@@ -161,26 +133,20 @@ MetacelloBaselineConstructor >> for: attributeListOrSymbol do: aBlock [
 
 	(attributeListOrSymbol isSymbol
 		 ifTrue: [ { attributeListOrSymbol } ]
-		 ifFalse: [ attributeListOrSymbol ]) do: [ :attribute |
-		(self attributeMap at: attribute ifAbsentPut: [ OrderedCollection new ]) add: aBlock.
-		self addAttribute: attribute ]
+		 ifFalse: [ attributeListOrSymbol ]) do: [ :attribute | (self attributeMap at: attribute ifAbsentPut: [ OrderedCollection new ]) add: aBlock ]
 ]
 
-{ #category : 'api' }
+{ #category : 'api - old' }
 MetacelloBaselineConstructor >> for: attributeListOrSymbol version: aString [
-	"conditional symbolicVersion support"
 
-	(attributeListOrSymbol isSymbol
-		 ifTrue: [ { attributeListOrSymbol } ]
-		 ifFalse: [ attributeListOrSymbol ]) do: [ :attribute |
-		self attributeMap at: attribute put: aString.
-		self addAttribute: attribute ]
+	MetacelloNotification signal:
+		'The option #for:version: will not do anything anymore in Pharo 14+. This option can be removed in it is in an attribute for Pharo 14+ or ignored if this is for a different platform. Reason: This option was here for configurations but not baselines. Since we cannot load configurations anymore in Pharo, it is been removed.'
 ]
 
 { #category : 'api' }
 MetacelloBaselineConstructor >> group: aString overrides: aStringOrCollection [
 
-	self root packages add: (self project groupSpec
+	self root packagesSpec add: (self project groupSpec
 			 name: aString;
 			 includes: aStringOrCollection;
 			 yourself)
@@ -189,7 +155,7 @@ MetacelloBaselineConstructor >> group: aString overrides: aStringOrCollection [
 { #category : 'api' }
 MetacelloBaselineConstructor >> group: aString with: aStringOrCollection [
 
-	self root packages merge: (self project groupSpec
+	self root packagesSpec merge: (self project groupSpec
 			 name: aString;
 			 includes: aStringOrCollection;
 			 yourself)
@@ -232,6 +198,13 @@ MetacelloBaselineConstructor >> includes: anObject [
 	self root includes: anObject
 ]
 
+{ #category : 'initialization' }
+MetacelloBaselineConstructor >> initialize [
+
+	super initialize.
+	attributeMap := Dictionary new
+]
+
 { #category : 'api' }
 MetacelloBaselineConstructor >> loads: aStringOrCollection [
 
@@ -253,34 +226,32 @@ MetacelloBaselineConstructor >> name: anObject [
 ]
 
 { #category : 'initialization' }
-MetacelloBaselineConstructor >> on: aConfig project: aProject [
+MetacelloBaselineConstructor >> on: aBaseline project: aProject [
 
-	| pragma versionMap versionSpec |
-	self configuration: aConfig.
-	pragma := self extractBaselinePragmaFor: aConfig class.
-	self setProject: (aProject ifNil: [ MetacelloProject new ]).
-	versionSpec := self project versionSpec.
+	| pragma versionSpec |
+	project := aProject.
+	self baseline: aBaseline.
+	pragma := self extractBaselinePragmaFor: aBaseline class.
+	versionSpec := MetacelloVersionSpec project: self project.
 	self root: versionSpec.
 	self evaluatePragma: pragma.
-	versionMap := Dictionary new.
 	self project attributes do: [ :attribute |
 		(self attributeMap at: attribute ifAbsent: [ ]) ifNotNil: [ :blockList | blockList do: [ :block | self with: versionSpec during: block ] ] ].
-	versionSpec versionString: self project singletonVersionName.
-	versionMap at: versionSpec versionString put: versionSpec createVersion.
-	self project map: versionMap.
-	self project configuration: aConfig
+	self project version: versionSpec.
+	self project configuration: aBaseline
 ]
 
-{ #category : 'api' }
+{ #category : 'api - old' }
 MetacelloBaselineConstructor >> operator: anObject [
 
-	self root operator: anObject
+	MetacelloNotification signal:
+		'The option #operator: will not do anything anymore in Pharo 14+. This option can be removed in it is in an attribute for Pharo 14+ or ignored if this is for a different platform. Reason: This option was here for configurations but not baselines. Since we cannot load configurations anymore in Pharo, it is been removed.'
 ]
 
 { #category : 'api' }
 MetacelloBaselineConstructor >> package: aString [
 
-	self root packages add: (self project packageSpec
+	self root packagesSpec add: (self project packageSpec
 			 name: aString;
 			 yourself)
 ]
@@ -292,12 +263,12 @@ MetacelloBaselineConstructor >> package: aString overrides: aBlock [
 	spec := self project packageSpec
 		        name: aString;
 		        yourself.
-	self root packages add: spec.
+	self root packagesSpec add: spec.
 	self with: spec during: aBlock
 ]
 
 { #category : 'api' }
-MetacelloBaselineConstructor >> package: packageName with: aBlockOrString [
+MetacelloBaselineConstructor >> package: packageName with: aBlock [
 	"Define specification for package <packageName>.
 	 If <aBlockOrString> is a String (or Symbol), the String is expected to be a version (or symbolic version).
 	If <aBlockOrString> is a Block, the specifications in <aBlockOrString> are applied to the project:
@@ -305,7 +276,6 @@ MetacelloBaselineConstructor >> package: packageName with: aBlockOrString [
 		spec package: 'MyPackage' with: '1.0'.
 		
 		spec package: 'MyPackage' with: [
-			spec file:'MyPackage-dkh.1'.
 			spec repository: '/opt/gemstone/repository'.
 	 "
 
@@ -314,33 +284,28 @@ MetacelloBaselineConstructor >> package: packageName with: aBlockOrString [
 		        name: packageName;
 		        yourself.
 
-	aBlockOrString isString
-		ifTrue: [
-			spec file: aBlockOrString.
-			self root packages merge: spec ]
-		ifFalse: [
-			self root packages merge: spec.
-			self with: spec during: aBlockOrString ]
+	self root packagesSpec merge: spec.
+	aBlock isString
+		ifTrue: [ MetacelloNotification signal: 'Now #package:with: only takes a block as second parameter and not a string.' ]
+		ifFalse: [ self with: spec during: aBlock ]
 ]
 
 { #category : 'api' }
 MetacelloBaselineConstructor >> postLoadDoIt: aSymbol [
 
-	self validateDoItSelector: aSymbol.
 	self root postLoadDoIt: aSymbol
 ]
 
 { #category : 'api' }
 MetacelloBaselineConstructor >> preLoadDoIt: aSymbol [
 
-	self validateDoItSelector: aSymbol.
 	self root preLoadDoIt: aSymbol
 ]
 
 { #category : 'accessing' }
 MetacelloBaselineConstructor >> project [
 
-	^ project ifNil: [ project := self projectClass new ]
+	^ project ifNil: [ project := MetacelloProject new ]
 ]
 
 { #category : 'api' }
@@ -353,14 +318,9 @@ MetacelloBaselineConstructor >> project: aString [
 MetacelloBaselineConstructor >> project: aString copyFrom: oldSpecName with: aBlock [
 
 	| spec projectSpec |
-	projectSpec := self project projectSpec
-		               name: aString;
-		               yourself.
-	spec := self project projectReferenceSpec
-		        name: aString;
-		        projectReference: projectSpec;
-		        yourself.
-	self root packages copy: oldSpecName to: spec.
+	projectSpec := MetacelloProjectSpec named: aString.
+	spec := MetacelloProjectReferenceSpec projectReference: projectSpec.
+	self root packagesSpec copy: oldSpecName to: spec.
 	self with: projectSpec during: aBlock
 ]
 
@@ -368,36 +328,21 @@ MetacelloBaselineConstructor >> project: aString copyFrom: oldSpecName with: aBl
 MetacelloBaselineConstructor >> project: aString overrides: aBlock [
 
 	| spec projectSpec |
-	projectSpec := self project projectSpec
-		               name: aString;
-		               yourself.
-	spec := self project projectReferenceSpec
-		        name: aString;
-		        projectReference: projectSpec;
-		        yourself.
-	self root packages add: spec.
+	projectSpec := MetacelloProjectSpec named: aString.
+	spec := MetacelloProjectReferenceSpec projectReference: projectSpec.
+	self root packagesSpec add: spec.
 	self with: projectSpec during: aBlock
 ]
 
 { #category : 'api' }
 MetacelloBaselineConstructor >> project: aString with: aBlockOrString [
 
-	| projectSpec |
-	projectSpec := self project projectSpec
-		               name: aString;
-		               yourself.
-
-	self root packages merge: (self project projectReferenceSpec
-			 name: aString;
-			 projectReference: projectSpec;
-			 yourself).
+	| projectSpec spec |
+	projectSpec := MetacelloProjectSpec named: aString.
+	spec := MetacelloProjectReferenceSpec projectReference: projectSpec.
+	self root packagesSpec merge: spec.
 
 	self with: projectSpec during: aBlockOrString
-]
-
-{ #category : 'accessing' }
-MetacelloBaselineConstructor >> projectClass [
-    ^ MetacelloProject
 ]
 
 { #category : 'api' }
@@ -410,7 +355,7 @@ MetacelloBaselineConstructor >> projectPackage: aBlock [
 { #category : 'api' }
 MetacelloBaselineConstructor >> removeGroup: aString [
 
-	self root packages remove: (self project groupSpec
+	self root packagesSpec remove: (self project groupSpec
 			 name: aString;
 			 yourself)
 ]
@@ -418,7 +363,7 @@ MetacelloBaselineConstructor >> removeGroup: aString [
 { #category : 'api' }
 MetacelloBaselineConstructor >> removePackage: aString [
 
-	self root packages remove: (self project packageSpec
+	self root packagesSpec remove: (self project packageSpec
 			 name: aString;
 			 yourself)
 ]
@@ -426,9 +371,7 @@ MetacelloBaselineConstructor >> removePackage: aString [
 { #category : 'api' }
 MetacelloBaselineConstructor >> removeProject: aString [
 
-	self root packages remove: (self project projectReferenceSpec
-			 name: aString;
-			 yourself)
+	self root packagesSpec remove: (MetacelloProjectReferenceSpec projectReference: (self root packageNamed: aString))
 ]
 
 { #category : 'api' }
@@ -472,23 +415,28 @@ MetacelloBaselineConstructor >> root: aMetacelloSpec [
     root := aMetacelloSpec
 ]
 
-{ #category : 'accessing' }
-MetacelloBaselineConstructor >> setProject: aProject [
+{ #category : 'api - old' }
+MetacelloBaselineConstructor >> supplyingAnswers: aCollection [
+	"Kept for compiatibility with other Smalltalk and old Pharo versions."
 
-	project := aProject
+	MetacelloNotification signal:
+		'The option #supplyingAnswer: will not do anything anymore in Pharo 14+. This option can be removed in it is in an attribute for Pharo 14+ or ignored if this is for a different platform. Reason: The author metadata was used with SmalltalkHub but not this information is already managed by git or other CVS.'
 ]
 
-{ #category : 'validation' }
-MetacelloBaselineConstructor >> validateDoItSelector: anObject [
+{ #category : 'api - old' }
+MetacelloBaselineConstructor >> timestamp: aBlockOrStringOrDateAndTime [
+	"Kept for compiatibility with other Smalltalk and old Pharo versions."
 
-	anObject ifNil: [ ^ self ].
-	anObject isSymbol ifFalse: [ self error: 'Invalid message selector for doit: ' , anObject printString ]
+	MetacelloNotification signal:
+		'The option #timestamp: will not do anything anymore in Pharo 14+. This option can be removed in it is in an attribute for Pharo 14+ or ignored if this is for a different platform. Reason: The author metadata was used with SmalltalkHub but not this information is already managed by git or other CVS.'
 ]
 
-{ #category : 'api' }
-MetacelloBaselineConstructor >> value: anObject [
+{ #category : 'api - old' }
+MetacelloBaselineConstructor >> versionString: anObject [
+	"Kept for compiatibility with other Smalltalk and old Pharo versions."
 
-	self root value: anObject
+	MetacelloNotification signal:
+		'The option #versionString:: will not do anything anymore in Pharo 14+. This option can be removed in it is in an attribute for Pharo 14+ or ignored if this is for a different platform. Reason: This option was here for configurations but not baselines. Since we cannot load configurations anymore in Pharo, it is been removed.'
 ]
 
 { #category : 'private' }

@@ -128,18 +128,19 @@ PBBootstrap >> buildNumber: aBuildNumber [
 	buildNumber := aBuildNumber
 ]
 
-{ #category : 'package-names' }
+{ #category : 'preparation' }
 PBBootstrap >> createHermesPackageListFiles [
 	"In order to not duplicate the packages to load by hermes in the baselines and in the build.sh file, we export the list of packages to load in files."
 
 	| toExport |
-	toExport := Dictionary
-		            with: 'hermesAdditionalKernelPackages.txt' -> BaselineOfKernel additionalPackagesPackageNames
-		            with: 'hermesCompilerPackages.txt' -> BaselineOfCompiler corePackageNames
-		            with: 'hermesFileSystemPackages.txt' -> BaselineOfFileSystem corePackageNames
-		            with: 'hermesTraitsPackages.txt' -> BaselineOfTraits corePackageNames
-		            with: 'hermesMonticelloPackages.txt' -> BaselineOfMonticello corePackageNames
-		            with: 'hermesMetacelloPackages.txt' -> BaselineOfMetacello corePackageNames.
+	toExport := Dictionary withAll: {
+		            ('hermesAdditionalKernelPackages.txt' -> BaselineOfKernel additionalPackagesPackageNames).
+		            ('hermesCompilerPackages.txt' -> BaselineOfCompiler corePackageNames).
+		            ('hermesFileSystemPackages.txt' -> BaselineOfFileSystem corePackageNames).
+		            ('hermesTraitsPackages.txt' -> BaselineOfTraits corePackageNames).
+		            ('hermesMonticelloPackages.txt' -> BaselineOfMonticello corePackageNames).
+		            ('hermesMetacelloPackages.txt' -> BaselineOfMetacello corePackageNames).
+		            ('hermesSUnitPackages.txt' -> BaselineOfPharoBootstrap sUnitPackageNames) }.
 
 	toExport keysAndValuesDo: [ :fileName :packageNames |
 			self bootstrapCacheDirectory / fileName writeStreamDo: [ :stream |

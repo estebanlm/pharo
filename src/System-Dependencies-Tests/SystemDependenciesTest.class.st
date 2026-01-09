@@ -100,7 +100,7 @@ SystemDependenciesTest >> knownBasicToolsDependencies [
 	"ideally this list should be empty"
 
 	^ #( 'Athens-Cairo' 'Athens-Core' #'Commander-Core' #Reflectivity #'Reflectivity-Tools' #Shout 'HeuristicCompletion-Model'
-	     #VariablesLibrary #'Spec2-CommonWidgets' #'NewTools-Scopes' #'Traits-Tests' 'NewTools-Scopes' 'NewTools-Transcript' #'NewTools-FileBrowser' #EnlumineurFormatter )
+	     #VariablesLibrary #'Spec2-CommonWidgets' #'NewTools-Scopes' #'Traits-Tests' 'NewTools-Scopes' 'NewTools-Transcript' #'NewTools-FileBrowser' #EnlumineurFormatter 'Calypso-SystemTools-OldToolCompatibillity' )
 ]
 
 { #category : 'known dependencies' }
@@ -112,6 +112,13 @@ SystemDependenciesTest >> knownCompilerDependencies [
 
 { #category : 'known dependencies' }
 SystemDependenciesTest >> knownDebuggingDependencies [
+	"ideally this list should be empty"
+
+	^ #( #'Morphic-Core' #'System-Object Events' #'Tool-Base' )
+]
+
+{ #category : 'known dependencies' }
+SystemDependenciesTest >> knownDisplayDependencies [
 	"ideally this list should be empty"
 
 	^ #( #'Morphic-Core' #'System-Object Events' #'Tool-Base' )
@@ -244,12 +251,12 @@ SystemDependenciesTest >> testExternalDisplayDependencies [
 	| dependencies |
 
 	dependencies := self externalDependendiesOf: (
-		self _09sunitCoreLayerPackages,
+		self _10debuggingLayerPackages, 
 		BaselineOfUnifiedFFI allPackageNames,
 		BaselineOfThreadedFFI allPackageNames,
 		BaselineOfDisplay allPackageNames).
 
-	self assertEmpty: dependencies
+	self assert: dependencies equals: self knownDisplayDependencies
 ]
 
 { #category : 'tests' }
