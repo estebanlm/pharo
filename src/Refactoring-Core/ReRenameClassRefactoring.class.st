@@ -165,3 +165,10 @@ ReRenameClassRefactoring >> storeOn: aStream [
 		nextPutAll: newName;
 		nextPut: $)
 ]
+
+{ #category : 'preconditions' }
+ReRenameClassRefactoring >> violations [
+
+	^ self breakingChangePreconditions flatCollect: [ :each |
+		  each violator ]
+]
