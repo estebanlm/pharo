@@ -369,9 +369,3 @@ MetacelloVersionSpec >> spec [
 
 	^ self
 ]
-
-{ #category : 'enumerating' }
-MetacelloVersionSpec >> specListProjectDo: projectBlock packageDo: packageBlock groupDo: groupBlock [
-
-	self packagesSpec specListDo: [ :pkgSpec | pkgSpec projectDo: projectBlock packageDo: packageBlock groupDo: groupBlock ]
-]

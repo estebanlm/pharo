@@ -330,12 +330,6 @@ MetacelloPackagesSpec >> sortPackageSpecs: orderedSpecs packageSpec: packageSpec
 	^ moved
 ]
 
-{ #category : 'enumeration' }
-MetacelloPackagesSpec >> specListDo: aBlock [
-
-	self list do: [:member |  aBlock value: member spec ]
-]
-
 { #category : 'accessing' }
 MetacelloPackagesSpec >> specs [
 	"Return the list of specs I contains once all members are applied."
