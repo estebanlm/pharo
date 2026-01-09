@@ -41,13 +41,7 @@ MetacelloVersionSpec >> currentlyLoadedClassesInVersion [
 
 	| classes |
 	classes := Set new.
-	self
-		projectDo: [ :ignored |  ]
-		packageDo: [ :packageSpec |
-				([ packageSpec workingCopy ]
-					 on: Error
-					 do: [ :ex | ex return: nil ]) ifNotNil: [ :workingCopy | workingCopy systemPackage ifNotNil: [ :package | classes addAll: package classes ] ] ]
-		groupDo: [ :ignored |  ].
+	self packages do: [ :packageSpec | self class packageOrganizer packageNamed: packageSpec name ifPresent: [ :package | classes addAll: package classes ] ].
 	^ classes
 ]
 
@@ -108,10 +102,7 @@ MetacelloVersionSpec >> fetchRequiredFromArray: anArray withEngine: anEngine [
 MetacelloVersionSpec >> groups [
 	"Answers the list of groups associated with this version"
 
-	| groups |
-	groups := OrderedCollection new.
-	self projectDo: [ :ignored |  ] packageDo: [ :ignored |  ] groupDo: [ :grp | groups add: grp ].
-	^ groups
+	^ self packageSpecsInLoadOrder select: [ :spec | spec isGroupSpec ]
 ]
 
 { #category : 'testing' }
@@ -239,10 +230,7 @@ MetacelloVersionSpec >> packageSpecsInLoadOrder [
 MetacelloVersionSpec >> packages [
 	"Answers the list of packages associated with this version"
 
-	| packages |
-	packages := OrderedCollection new.
-	self projectDo: [ :ignored |  ] packageDo: [ :pkg | packages add: pkg ] groupDo: [ :ignored |  ].
-	^ packages
+	^ self packageSpecsInLoadOrder select: [ :spec | spec isPackageSpec ]
 ]
 
 { #category : 'accessing' }
@@ -313,12 +301,6 @@ MetacelloVersionSpec >> project: aMetacelloProject [
 	project := aMetacelloProject
 ]
 
-{ #category : 'enumerating' }
-MetacelloVersionSpec >> projectDo: projectBlock packageDo: packageBlock groupDo: groupBlock [
-
-	self packageSpecsInLoadOrder do: [ :pkgSpec | pkgSpec projectDo: projectBlock packageDo: packageBlock groupDo: groupBlock ]
-]
-
 { #category : 'accessing' }
 MetacelloVersionSpec >> projectLabel [
 
@@ -329,10 +311,9 @@ MetacelloVersionSpec >> projectLabel [
 MetacelloVersionSpec >> projects [
 	"Answers the list of projects associated with this version"
 
-	| projects |
-	projects := OrderedCollection new.
-	self projectDo: [ :prj | projects add: prj projectReference ] packageDo: [ :ignored |  ] groupDo: [ :ignored |  ].
-	^ projects
+	^ self packageSpecsInLoadOrder
+		  select: [ :spec | spec isProjectReferenceSpec ]
+		  thenCollect: [ :spec | spec projectReference ]
 ]
 
 { #category : 'private' }

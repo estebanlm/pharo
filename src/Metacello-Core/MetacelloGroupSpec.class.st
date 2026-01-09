@@ -29,6 +29,12 @@ MetacelloGroupSpec >> includeSpecNamesForPackageOrdering: aVersionSpec [
   ^ #()
 ]
 
+{ #category : 'testing' }
+MetacelloGroupSpec >> isGroupSpec [
+
+	^ true
+]
+
 { #category : 'merging' }
 MetacelloGroupSpec >> mergeSpec: anotherSpec [
 
@@ -53,9 +59,7 @@ MetacelloGroupSpec >> name: aString [
 { #category : 'loading' }
 MetacelloGroupSpec >> packageSpecsInLoadOrder [
 
-	^ (self project version spec packageSpecsInLoadOrder select: [ :each |
-		   self includes includes: each name ]) flatCollect: [ :e |
-		  e packageSpecsInLoadOrder ]
+	^ (self project version spec packageSpecsInLoadOrder select: [ :each | self includes includes: each name ]) flatCollect: [ :e | e packageSpecsInLoadOrder ]
 ]
 
 { #category : 'accessing' }
@@ -68,12 +72,6 @@ MetacelloGroupSpec >> project [
 MetacelloGroupSpec >> project: aMetacelloProject [
 
 	project := aMetacelloProject
-]
-
-{ #category : 'visiting' }
-MetacelloGroupSpec >> projectDo: projectBlock packageDo: packageBlock groupDo: groupBlock [
-
-	groupBlock value: self
 ]
 
 { #category : 'private' }
@@ -105,11 +103,12 @@ MetacelloGroupSpec >> resolveToPackagesIn: aVersionSpec into: packages visited: 
 
 	(visited includes: self name) ifTrue: [ ^ self ].
 
-	self includes do: [ :pkgName |
-			(aVersionSpec packageNamed: pkgName)
-				projectDo: [ :prj | packages add: prj ]
-				packageDo: [ :pkg | packages add: pkg ]
-				groupDo: [ :grp | grp resolveToPackagesIn: aVersionSpec into: packages visited: visited ] ].
+	self includes
+		collect: [ :specName | aVersionSpec packageNamed: specName ]
+		thenDo: [ :spec |
+				spec isGroupSpec
+					ifTrue: [ spec resolveToPackagesIn: aVersionSpec into: packages visited: visited ]
+					ifFalse: [ packages add: spec ] ].
 
 	^ packages
 ]

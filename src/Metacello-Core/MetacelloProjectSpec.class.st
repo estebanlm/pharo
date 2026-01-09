@@ -358,12 +358,6 @@ MetacelloProjectSpec >> project: aMetacelloProject [
 	project := aMetacelloProject
 ]
 
-{ #category : 'visiting' }
-MetacelloProjectSpec >> projectDo: projectBlock packageDo: packageBlock groupDo: groupBlock [
-
-	projectBlock value: self
-]
-
 { #category : 'printing' }
 MetacelloProjectSpec >> projectLabel [
 
