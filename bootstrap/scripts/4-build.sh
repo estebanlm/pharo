@@ -153,7 +153,7 @@ zip "${TRAITS_IMAGE_NAME}.zip" "${TRAITS_IMAGE_NAME}.image"
 echo $(date -u) "[Monticello] Bootstrap Monticello Core and Local repositories"
 
 ${VM} "${TRAITS_IMAGE_NAME}.image" save ${MC_BOOTSTRAP_IMAGE_NAME}
-${VM} "${MC_BOOTSTRAP_IMAGE_NAME}.image" loadHermes $(cat hermesMonticelloPackages.txt) --save --no-fail-on-undeclared
+${VM} "${MC_BOOTSTRAP_IMAGE_NAME}.image" loadHermes $(cat hermesMonticelloPackages.txt) --save
 ${VM} "${MC_BOOTSTRAP_IMAGE_NAME}.image" st ${BOOTSTRAP_REPOSITORY}/bootstrap/scripts/02-monticello-bootstrap/01-bootstrapMonticello.st --save --quit
 zip "${MC_BOOTSTRAP_IMAGE_NAME}.zip" ${MC_BOOTSTRAP_IMAGE_NAME}.*
 
