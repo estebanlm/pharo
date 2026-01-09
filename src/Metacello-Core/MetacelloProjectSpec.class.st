@@ -147,8 +147,8 @@ MetacelloProjectSpec >> hasNoLoadConflicts: aMetacelloProjectSpec [
 
 	^ self className = aMetacelloProjectSpec className and: [
 			  (self hasVersion and: [ aMetacelloProjectSpec hasVersion ]) and: [
-				  (self repositories isEmpty or: [ aMetacelloProjectSpec repositories isEmpty ]) or: [
-					  self repositories hasNoLoadConflicts: aMetacelloProjectSpec repositories ] ] ]
+					  (self repositories hasRepository not or: [ aMetacelloProjectSpec repositories hasRepository not ]) or: [
+						  self repositories hasNoLoadConflicts: aMetacelloProjectSpec repositories ] ] ]
 ]
 
 { #category : 'testing' }
@@ -230,7 +230,6 @@ MetacelloProjectSpec >> mergeMap [
 	map at: #loads put: loads.
 	map at: #preLoadDoIt put: preLoadDoIt.
 	map at: #postLoadDoIt put: postLoadDoIt.
-	map at: #repositories put: repositories.
 	^ map
 ]
 
@@ -262,10 +261,9 @@ MetacelloProjectSpec >> mergeScriptRepository: anotherSpec [
 { #category : 'merging' }
 MetacelloProjectSpec >> mergeSpec: anotherSpec [
 
-	| newSpec map |
+	| newSpec |
 	newSpec := super mergeSpec: anotherSpec.
-	map := anotherSpec mergeMap.
-	(map at: #repositories) ifNotNil: [ :anotherRepositories | newSpec mergeRepositoriesSpec: anotherRepositories ].
+	anotherSpec getRepositories ifNotNil: [ :anotherRepositories | newSpec mergeRepositoriesSpec: anotherRepositories ].
 	^ newSpec
 ]
 
@@ -279,7 +277,7 @@ MetacelloProjectSpec >> metacelloRegistrationHash [
 	hash := String stringHash: self preLoadDoIt asString initialHash: hash.
 	hash := String stringHash: self postLoadDoIt asString initialHash: hash.
 	hash := hash bitXor: loads hash.
-	^ hash bitXor: self repositories metacelloRegistrationHash
+	^ hash bitXor: (self repositories repositorySpecs collect: [ :each | each description ]) hash
 ]
 
 { #category : 'mutability' }
@@ -299,11 +297,6 @@ MetacelloProjectSpec >> name: aString [
 	self shouldBeMutable.
 	name := aString trim.
 	self resetProjectPackage
-]
-
-{ #category : 'merging' }
-MetacelloProjectSpec >> nonOverridable [
-    ^ super nonOverridable , #(#'projectPackage' #'repositories')
 ]
 
 { #category : 'copying' }
@@ -435,8 +428,7 @@ MetacelloProjectSpec >> repositoryDescriptions [
 { #category : 'querying' }
 MetacelloProjectSpec >> repositorySpecs [
 
-	repositories ifNil: [ ^ #(  ) ].
-	^ self repositories specs
+	^ self repositories repositorySpecs
 ]
 
 { #category : 'querying' }

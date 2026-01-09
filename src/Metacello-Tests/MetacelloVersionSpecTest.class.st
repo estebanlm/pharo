@@ -66,11 +66,11 @@ MetacelloVersionSpecTest >> testVersionMergeSpec2 [
 					  repository: '/opt/gemstone/repo';
 					  yourself)).
 	version := versionA mergeSpec: versionB.
-	repository := version repositories map at: '/opt/gemstone/repository' ifAbsent: [ self assert: false ].
+	repository := version repositories repositoryNamed: '/opt/gemstone/repository' ifAbsent: [ self assert: false ].
 	self assert: repository type equals: 'directory'.
-	repository := version repositories map at: '/opt/gemstone/repo' ifAbsent: [ self assert: false ].
+	repository := version repositories repositoryNamed: '/opt/gemstone/repo' ifAbsent: [ self assert: false ].
 	self assert: repository type equals: 'directory'.
-	repository := version repositories map at: 'http://example.com/repository' ifAbsent: [ self assert: false ].
+	repository := version repositories repositoryNamed: 'http://example.com/repository' ifAbsent: [ self assert: false ].
 	self assert: repository type equals: 'http'.
 	self assert: repository username equals: 'DaleHenrichs'.
 	self assert: repository password equals: 'secret'.
@@ -78,10 +78,10 @@ MetacelloVersionSpecTest >> testVersionMergeSpec2 [
 	self assert: package name equals: 'Package'.
 	projectReferenceSpec := version packagesSpec packageNamed: 'Project' ifAbsent: [ self assert: false ].
 	self assert: projectReferenceSpec projectName equals: 'Project'.
-	projectReferenceSpec repositories map at: '/opt/gemstone/repository' ifPresent: [ self assert: false ].
-	repository := projectReferenceSpec repositories map at: '/opt/gemstone/repo' ifAbsent: [ self assert: false ].
+	projectReferenceSpec repositories repositoryNamed: '/opt/gemstone/repository' ifPresent: [ self assert: false ].
+	repository := projectReferenceSpec repositories repositoryNamed: '/opt/gemstone/repo' ifAbsent: [ self assert: false ].
 	self assert: repository type equals: 'directory'.
-	repository := projectReferenceSpec repositories map at: 'http://example.com/repository' ifAbsent: [ self assert: false ].
+	repository := projectReferenceSpec repositories repositoryNamed: 'http://example.com/repository' ifAbsent: [ self assert: false ].
 	self assert: repository type equals: 'http'.
 	self assert: repository username equals: 'DaleHenrichs'.
 	self assert: repository password equals: 'secret'.
@@ -138,9 +138,9 @@ MetacelloVersionSpecTest >> testVersionSpec2 [
 					  postLoadDoIt: #postLoadDoItB;
 					  yourself));
 		yourself.
-	repository := version repositories map at: '/opt/gemstone/repository' ifAbsent: [ self assert: false ].
+	repository := version repositories repositoryNamed: '/opt/gemstone/repository' ifAbsent: [ self assert: false ].
 	self assert: repository type equals: 'directory'.
-	repository := version repositories map at: 'http://example.com/repository' ifAbsent: [ self assert: false ].
+	repository := version repositories repositoryNamed: 'http://example.com/repository' ifAbsent: [ self assert: false ].
 	self assert: repository type equals: 'http'.
 	self assert: repository username equals: 'dkh'.
 	self assert: repository password equals: 'password'.

@@ -1,15 +1,31 @@
 Class {
 	#name : 'MetacelloPackagesSpec',
-	#superclass : 'MetacelloMemberListSpec',
+	#superclass : 'MetacelloSpec',
+	#instVars : [
+		'list',
+		'memberMap'
+	],
 	#category : 'Metacello-Core-Model',
 	#package : 'Metacello-Core',
 	#tag : 'Model'
 }
 
+{ #category : 'class initialization' }
+MetacelloPackagesSpec class >> initialize [ 
+	self deprecatedAliases: #(MetacelloMemberListSpec)
+]
+
 { #category : 'actions' }
 MetacelloPackagesSpec >> add: aSpec [
 
-	self addMemberForSpec: aSpec
+	self addMember: (MetacelloAddMemberSpec spec: aSpec)
+]
+
+{ #category : 'adding' }
+MetacelloPackagesSpec >> addMember: aMember [
+
+	self list add: aMember.
+	self clearMemberMap
 ]
 
 { #category : 'accessing' }
@@ -34,6 +50,20 @@ MetacelloPackagesSpec >> applyIncludesTo: orderedSpecs for: pkgSpec firstTime: f
 	^ movedSpecs
 ]
 
+{ #category : 'private' }
+MetacelloPackagesSpec >> clearMemberMap [
+
+	memberMap := nil.
+]
+
+{ #category : 'enumeration' }
+MetacelloPackagesSpec >> collect: aBlock [ 
+	| newCollection |
+	newCollection :=OrderedCollection new.
+	self do: [:each | newCollection add: (aBlock value: each)].
+	^ newCollection
+]
+
 { #category : 'actions' }
 MetacelloPackagesSpec >> copy: specNamed to: spec [
 
@@ -42,10 +72,76 @@ MetacelloPackagesSpec >> copy: specNamed to: spec [
 			 yourself)
 ]
 
+{ #category : 'enumeration' }
+MetacelloPackagesSpec >> detect: aBlock [
+	"Evaluate aBlock with each of the receiver's elements as the argument. 
+	Answer the first element for which aBlock evaluates to true."
+
+	^ self detect: aBlock ifNone: [ self error: 'Object is not in the collection.' ]
+]
+
+{ #category : 'enumeration' }
+MetacelloPackagesSpec >> detect: aBlock ifNone: exceptionBlock [
+	"Evaluate aBlock with each of the receiver's elements as the argument.  
+	Answer the first element for which aBlock evaluates to true. If none  
+	evaluate to true, then evaluate the argument, exceptionBlock."
+
+	self
+		do: [ :each | 
+			(aBlock value: each)
+				ifTrue: [ ^ each ] ].
+	^ exceptionBlock value
+]
+
+{ #category : 'enumeration' }
+MetacelloPackagesSpec >> do: aBlock [
+
+	self specs do: aBlock
+]
+
+{ #category : 'testing' }
+MetacelloPackagesSpec >> isEmpty [
+
+	^self list isEmpty
+]
+
+{ #category : 'accessing' }
+MetacelloPackagesSpec >> list [
+
+	^ list ifNil: [ list := OrderedCollection new ]
+]
+
+{ #category : 'accessing' }
+MetacelloPackagesSpec >> list: aCollection [
+
+	list := aCollection.
+	self clearMemberMap
+]
+
+{ #category : 'accessing' }
+MetacelloPackagesSpec >> map [
+
+	| map |
+	memberMap ifNotNil: [ ^ memberMap ].
+	map := Dictionary new.
+	self list do: [ :member | member applyToMap: map ].
+	^ memberMap := map
+]
+
 { #category : 'actions' }
 MetacelloPackagesSpec >> merge: aSpec [
 
-	aSpec mergeIntoMetacelloPackages: self
+	self addMember: (MetacelloMergeMemberSpec spec: aSpec)
+]
+
+{ #category : 'merging' }
+MetacelloPackagesSpec >> mergeSpec: anotherSpec [
+
+	| newSpec |
+	newSpec := super mergeSpec: anotherSpec.
+	newSpec list: self list copy.
+	anotherSpec list do: [ :groupMember | newSpec addMember: groupMember ].
+	^ newSpec
 ]
 
 { #category : 'accessing' }
@@ -63,102 +159,120 @@ MetacelloPackagesSpec >> packageSpecsInLoadOrderFor: aVersionSpec [
 	orderedPackageSpecs := OrderedCollection new.
 	groupSpecs := Set new.
 	self list do: [ :member |
-		| spec |
-		spec := map at: member name ifAbsent: [  ].
-		(spec isNil or: [ orderedPackageSpecs includes: spec ]) ifFalse: [
-			spec
-				projectDo: [ :prjSpec | "specification order is the default order" orderedPackageSpecs add: prjSpec ]
-				packageDo: [ :pkgSpec | "specification order is the default order" orderedPackageSpecs add: pkgSpec ]
-				groupDo: [ :groupSpec | groupSpecs add: groupSpec ] ] ].
-	orderedPackageSpecs isEmpty ifTrue: [ ^ orderedPackageSpecs , groupSpecs asOrderedCollection ].
+			| spec |
+			spec := map at: member name ifAbsent: [ ].
+			(spec isNil or: [ orderedPackageSpecs includes: spec ]) ifFalse: [
+					spec
+						projectDo: [ :prjSpec | "specification order is the default order" orderedPackageSpecs add: prjSpec ]
+						packageDo: [ :pkgSpec | "specification order is the default order" orderedPackageSpecs add: pkgSpec ]
+						groupDo: [ :groupSpec | groupSpecs add: groupSpec ] ] ].
+	orderedPackageSpecs ifEmpty: [ ^ orderedPackageSpecs , groupSpecs asOrderedCollection ].
 	moved := true.
 	count := 0.
 	terminationLimit := orderedPackageSpecs size * 2.
 	groupLoops := IdentitySet new.
 	[ moved ] whileTrue: [
-		count := count + 1.
-		count > terminationLimit ifTrue: [ "Cheap termination hack - an APPARENT loop" self error: 'Apparent loop in before/after dependency definitions' ].
-		moved := false.
-		orderedPackageSpecs copy do: [ :packageSpec |
-			moved := moved or: [
-				         self
-					         sortPackageSpecs: orderedPackageSpecs
-					         packageSpec: packageSpec
-					         groupLoops: groupLoops
-					         for: aVersionSpec ] ] ].
+			count := count + 1.
+			count > terminationLimit ifTrue: [ "Cheap termination hack - an APPARENT loop" self error: 'Apparent loop in before/after dependency definitions' ].
+			moved := false.
+			orderedPackageSpecs copy do: [ :packageSpec |
+					moved := moved or: [
+							         self
+								         sortPackageSpecs: orderedPackageSpecs
+								         packageSpec: packageSpec
+								         groupLoops: groupLoops
+								         for: aVersionSpec ] ] ].
 	lastMovedSpecs := Set new.
 	moved := true.
 	count := 0.
-	specsWithIncludes := orderedPackageSpecs select: [ :pkgSpec | pkgSpec includesForPackageOrdering isEmpty not ].
+	specsWithIncludes := orderedPackageSpecs select: [ :pkgSpec | pkgSpec includesForPackageOrdering isNotEmpty ].
 	firstTime := true.
 	[ moved ] whileTrue: [
-		| result |
-		count := count + 1. "count > terminationLimit"
-		count > 14 ifTrue: [ "Cheap termination hack - an APPARENT loop" self error: 'Apparent loop in before/after dependency definitions' ].
-		moved := false.
-		result := Set new.
-		specsWithIncludes do: [ :packageSpec |
-			result addAll: (self
-					 applyIncludesTo: orderedPackageSpecs
-					 for: packageSpec
-					 firstTime: firstTime
-					 for: aVersionSpec) ].
-		result size = lastMovedSpecs size
-			ifTrue: [ result do: [ :name | (lastMovedSpecs includes: name) ifFalse: [ moved := true ] ] ]
-			ifFalse: [ moved := true ].
-		lastMovedSpecs := result.
-		firstTime := false ].
+			| result |
+			count := count + 1. "count > terminationLimit"
+			count > 14 ifTrue: [ "Cheap termination hack - an APPARENT loop" self error: 'Apparent loop in before/after dependency definitions' ].
+			moved := false.
+			result := Set new.
+			specsWithIncludes do: [ :packageSpec |
+					result addAll: (self
+							 applyIncludesTo: orderedPackageSpecs
+							 for: packageSpec
+							 firstTime: firstTime
+							 for: aVersionSpec) ].
+			result size = lastMovedSpecs size
+				ifTrue: [ result do: [ :name | (lastMovedSpecs includes: name) ifFalse: [ moved := true ] ] ]
+				ifFalse: [ moved := true ].
+			lastMovedSpecs := result.
+			firstTime := false ].
 	^ orderedPackageSpecs , groupSpecs asOrderedCollection
 ]
 
-{ #category : 'actions' }
+{ #category : 'copying' }
+MetacelloPackagesSpec >> postCopy [
+
+	super postCopy.
+	list := list copy.
+	self clearMemberMap
+]
+
+{ #category : 'printing' }
+MetacelloPackagesSpec >> printOn: aStream [
+
+	super printOn: aStream.
+	aStream nextPutAll: ' ['.
+	self specs
+		ifEmpty: [ aStream nextPutAll: 'Empty' ]
+		ifNotEmpty: [ :specs | specs do: [ :spec | aStream nextPutAll: spec name ] separatedBy: [ aStream nextPutAll: ', ' ] ].
+	aStream nextPutAll: ']'
+]
+
+{ #category : 'removing' }
 MetacelloPackagesSpec >> remove: aSpec [
 
-	aSpec removeFromMetacelloPackages: self
+	self addMember: (MetacelloRemoveMemberSpec spec: aSpec)
+]
+
+{ #category : 'enumeration' }
+MetacelloPackagesSpec >> select: aBlock [ 
+	| newCollection |
+	newCollection := OrderedCollection new.
+	self do: [:each | (aBlock value: each) ifTrue: [newCollection add: each]].
+	^newCollection
 ]
 
 { #category : 'accessing' }
 MetacelloPackagesSpec >> slideIn: orderedSpecs spec: targetSpec baseIndex: baseIndex seen: seen firstTime: firstTime for: aVersionSpec [
-  | targetIndex requiredSpecNames targetRequires targetRequiresIndexes minIndex baseSpec required |
-  (seen includes: targetSpec)
-    ifTrue: [ ^ false ].
-  targetIndex := orderedSpecs indexOf: targetSpec.
-  baseIndex >= targetIndex
-    ifTrue: [ ^ false ].
-  required := false.
-  baseSpec := orderedSpecs at: baseIndex.
-  baseIndex + 1 to: targetIndex - 1 do: [ :index | 
-    | spec |
-    spec := orderedSpecs at: index.
-    ((spec requiredSpecNamesForPackageOrdering: aVersionSpec)
-      includes: baseSpec name)
-      ifTrue: [ required := true ] ].
-  firstTime
-    ifFalse: [ 
-      required
-        ifFalse: [ ^ false ] ].
-  requiredSpecNames := targetSpec
-    requiredSpecNamesForPackageOrdering: aVersionSpec.
-  targetRequires := orderedSpecs
-    select: [ :spec | requiredSpecNames includes: spec name ].
-  targetRequiresIndexes := targetRequires
-    collect: [ :spec | orderedSpecs indexOf: spec ].
-  targetRequiresIndexes add: baseIndex.
-  minIndex := targetRequiresIndexes detectMax: [ :each | each ].
-  minIndex + 1 < targetIndex
-    ifTrue: [ 
-      orderedSpecs remove: targetSpec.
-      orderedSpecs add: targetSpec afterIndex: minIndex.
-      seen add: targetSpec ]
-    ifFalse: [ 
-      ^ self
-        slideIn: orderedSpecs
-        spec: (orderedSpecs at: minIndex)
-        baseIndex: 1
-        seen: seen
-        firstTime: firstTime
-        for: aVersionSpec ].
-  ^ true
+
+	| targetIndex requiredSpecNames targetRequires targetRequiresIndexes minIndex baseSpec required |
+	(seen includes: targetSpec) ifTrue: [ ^ false ].
+	targetIndex := orderedSpecs indexOf: targetSpec.
+	baseIndex >= targetIndex ifTrue: [ ^ false ].
+	required := false.
+	baseSpec := orderedSpecs at: baseIndex.
+	baseIndex + 1 to: targetIndex - 1 do: [ :index |
+			| spec |
+			spec := orderedSpecs at: index.
+			((spec requiredSpecNamesForPackageOrdering: aVersionSpec) includes: baseSpec name) ifTrue: [ required := true ] ].
+	firstTime ifFalse: [ required ifFalse: [ ^ false ] ].
+	requiredSpecNames := targetSpec requiredSpecNamesForPackageOrdering: aVersionSpec.
+	targetRequires := orderedSpecs select: [ :spec | requiredSpecNames includes: spec name ].
+	targetRequiresIndexes := targetRequires collect: [ :spec | orderedSpecs indexOf: spec ].
+	targetRequiresIndexes add: baseIndex.
+	minIndex := targetRequiresIndexes max.
+	minIndex + 1 < targetIndex
+		ifTrue: [
+				orderedSpecs remove: targetSpec.
+				orderedSpecs add: targetSpec afterIndex: minIndex.
+				seen add: targetSpec ]
+		ifFalse: [
+				^ self
+					  slideIn: orderedSpecs
+					  spec: (orderedSpecs at: minIndex)
+					  baseIndex: 1
+					  seen: seen
+					  firstTime: firstTime
+					  for: aVersionSpec ].
+	^ true
 ]
 
 { #category : 'private' }
@@ -215,4 +329,17 @@ MetacelloPackagesSpec >> sortPackageSpecs: orderedSpecs packageSpec: packageSpec
 				ifTrue: [ orderedSpecs add: packageSpec beforeIndex: packageIndex ]
 				ifFalse: [ orderedSpecs add: packageSpec afterIndex: targetIndex ] ].
 	^ moved
+]
+
+{ #category : 'enumeration' }
+MetacelloPackagesSpec >> specListDo: aBlock [
+
+	self list do: [:member |  aBlock value: member spec ]
+]
+
+{ #category : 'accessing' }
+MetacelloPackagesSpec >> specs [
+	"Return the list of specs I contains once all members are applied."
+
+	^ self map values
 ]

@@ -37,7 +37,7 @@ MetacelloRepositorySpecTest >> testRepositorySpec [
 		              password: 'password';
 		              type: 'directory';
 		              yourself.
-	self assert: repository name equals: repository description.
+	self assert: repository description equals: repository description.
 	self assert: repository description equals: '/opt/gemstone/repository'.
 	self assert: repository username equals: 'dkh'.
 	self assert: repository password equals: 'password'.

@@ -52,10 +52,10 @@ MetacelloProjectSpecTest >> testProjectMergeSpec2 [
 	self assert: project name equals: 'Project'.
 	self assert: project className equals: 'BaselineOfProjectB'.
 	self assert: project projectPackage name equals: project className.
-	project repositories map at: '/opt/gemstone/repository' ifPresent: [ self assert: false ].
-	repository := project repositories map at: '/opt/gemstone/repo' ifAbsent: [ self assert: false ].
+	project repositories repositoryNamed: '/opt/gemstone/repository' ifPresent: [ self assert: false ].
+	repository := project repositories repositoryNamed: '/opt/gemstone/repo' ifAbsent: [ self assert: false ].
 	self assert: repository type equals: 'directory'.
-	repository := project repositories map at: 'http://example.com/repository' ifAbsent: [ self assert: false ].
+	repository := project repositories repositoryNamed: 'http://example.com/repository' ifAbsent: [ self assert: false ].
 	self assert: repository type equals: 'http'.
 	self assert: repository username equals: 'DaleHenrichs'.
 	self assert: repository password equals: 'secret'
@@ -88,6 +88,7 @@ MetacelloProjectSpecTest >> testProjectSpec [
 
 { #category : 'tests' }
 MetacelloProjectSpecTest >> testProjectSpec2 [
+
 	| project repository |
 	project := self projectSpec.
 	project
@@ -99,9 +100,9 @@ MetacelloProjectSpecTest >> testProjectSpec2 [
 	self assert: project name equals: 'Project'.
 	self assert: project className equals: 'BaselineOfProject'.
 	self assert: project projectPackage name equals: project className.
-	repository := project repositories map at: '/opt/gemstone/repository' ifAbsent: [ self assert: false ].
+	repository := project repositories repositoryNamed: '/opt/gemstone/repository' ifAbsent: [ self assert: false ].
 	self assert: repository type equals: 'directory'.
-	repository := project repositories map at: 'http://example.com/repository' ifAbsent: [ self assert: false ].
+	repository := project repositories repositoryNamed: 'http://example.com/repository' ifAbsent: [ self assert: false ].
 	self assert: repository type equals: 'http'.
 	self assert: repository username equals: 'dkh'.
 	self assert: repository password equals: 'password'

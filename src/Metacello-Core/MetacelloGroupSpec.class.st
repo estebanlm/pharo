@@ -77,17 +77,6 @@ MetacelloGroupSpec >> projectDo: projectBlock packageDo: packageBlock groupDo: g
 ]
 
 { #category : 'private' }
-MetacelloGroupSpec >> requiredSpecsForPackageOrdering: aVersionSpec [
-  ^ #()
-]
-
-{ #category : 'accessing' }
-MetacelloGroupSpec >> requires: aCollection [
-
-	self shouldNotImplement
-]
-
-{ #category : 'private' }
 MetacelloGroupSpec >> resolveSpecsForPackageOrdering: aVersionSpec [
 	"expand the names in the group to a package or project"
 

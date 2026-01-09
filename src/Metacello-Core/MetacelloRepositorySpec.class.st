@@ -74,12 +74,6 @@ MetacelloRepositorySpec >> hasNoLoadConflicts: aMetacelloRepositorySpec [
 	^ false
 ]
 
-{ #category : 'private' }
-MetacelloRepositorySpec >> mergeIntoMetacelloRepositories: aMetacelloRepositoriesSpec [
-
-	aMetacelloRepositoriesSpec mergeMemberForSpec: self
-]
-
 { #category : 'merging' }
 MetacelloRepositorySpec >> mergeMap [
 
@@ -90,13 +84,6 @@ MetacelloRepositorySpec >> mergeMap [
 	map at: #username put: username.
 	map at: #password put: password.
 	^ map
-]
-
-{ #category : 'querying' }
-MetacelloRepositorySpec >> name [
-	"To be polymorphic with MetacelloAbstractPackageSpec"
-
-	^ self description
 ]
 
 { #category : 'querying' }
@@ -118,12 +105,6 @@ MetacelloRepositorySpec >> printOn: aStream [
 	aStream nextPutAll: ' ['.
 	self description ifEmpty: [ aStream nextPutAll: 'No description' ] ifNotEmpty: [ :string | aStream nextPutAll: string ].
 	aStream nextPutAll: ']'
-]
-
-{ #category : 'private' }
-MetacelloRepositorySpec >> removeFromMetacelloRepositories: aMetacelloRepositoriesSpec [
-
-	aMetacelloRepositoriesSpec removeMemberForSpec: self
 ]
 
 { #category : 'accessing' }
