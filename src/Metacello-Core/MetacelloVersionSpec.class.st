@@ -172,11 +172,7 @@ MetacelloVersionSpec >> mergeSpec: anotherSpec [
 
 	| newSpec |
 	newSpec := super mergeSpec: anotherSpec.
-	anotherSpec packagesSpec isEmpty not ifTrue: [
-			newSpec packagesSpec: (self packagesSpec isEmpty
-					 ifTrue: [ anotherSpec packagesSpec ]
-					 ifFalse: [ self packagesSpec mergeSpec: anotherSpec packagesSpec ]) ].
-
+	newSpec packagesSpec: (self packagesSpec mergeSpec: anotherSpec packagesSpec).
 	newSpec repositories: (self repositories mergeSpec: anotherSpec repositories).
 	^ newSpec
 ]
