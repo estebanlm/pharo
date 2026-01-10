@@ -56,14 +56,6 @@ MetacelloPackagesSpec >> clearMemberMap [
 	memberMap := nil.
 ]
 
-{ #category : 'enumeration' }
-MetacelloPackagesSpec >> collect: aBlock [ 
-	| newCollection |
-	newCollection :=OrderedCollection new.
-	self do: [:each | newCollection add: (aBlock value: each)].
-	^ newCollection
-]
-
 { #category : 'actions' }
 MetacelloPackagesSpec >> copy: specNamed to: spec [
 
@@ -72,37 +64,10 @@ MetacelloPackagesSpec >> copy: specNamed to: spec [
 			 yourself)
 ]
 
-{ #category : 'enumeration' }
-MetacelloPackagesSpec >> detect: aBlock [
-	"Evaluate aBlock with each of the receiver's elements as the argument. 
-	Answer the first element for which aBlock evaluates to true."
-
-	^ self detect: aBlock ifNone: [ self error: 'Object is not in the collection.' ]
-]
-
-{ #category : 'enumeration' }
-MetacelloPackagesSpec >> detect: aBlock ifNone: exceptionBlock [
-	"Evaluate aBlock with each of the receiver's elements as the argument.  
-	Answer the first element for which aBlock evaluates to true. If none  
-	evaluate to true, then evaluate the argument, exceptionBlock."
-
-	self
-		do: [ :each | 
-			(aBlock value: each)
-				ifTrue: [ ^ each ] ].
-	^ exceptionBlock value
-]
-
-{ #category : 'enumeration' }
-MetacelloPackagesSpec >> do: aBlock [
-
-	self specs do: aBlock
-]
-
 { #category : 'testing' }
 MetacelloPackagesSpec >> isEmpty [
 
-	^self list isEmpty
+	^ self loadableSpecs isEmpty
 ]
 
 { #category : 'accessing' }
@@ -116,6 +81,13 @@ MetacelloPackagesSpec >> list: aCollection [
 
 	list := aCollection.
 	self clearMemberMap
+]
+
+{ #category : 'accessing' }
+MetacelloPackagesSpec >> loadableSpecs [
+	"Return the list of specs I contains once all members are applied."
+
+	^ self map values
 ]
 
 { #category : 'accessing' }
@@ -147,21 +119,28 @@ MetacelloPackagesSpec >> mergeSpec: anotherSpec [
 { #category : 'accessing' }
 MetacelloPackagesSpec >> packageNamed: aString ifAbsent: aBlock [
 
-	^self map at: aString ifAbsent: aBlock
+	^ self loadableSpecs
+		  detect: [ :spec | spec name = aString ]
+		  ifNone: aBlock
+]
+
+{ #category : 'accessing' }
+MetacelloPackagesSpec >> packageNamed: aString ifPresent: aBlock [
+
+	^ self loadableSpecs
+		  detect: [ :spec | spec name = aString ]
+		  ifFound: aBlock
 ]
 
 { #category : 'accessing' }
 MetacelloPackagesSpec >> packageSpecsInLoadOrderFor: aVersionSpec [
 	"order only the packageSpecs and projectSpecs. groupSpec order does not matter"
 
-	| orderedPackageSpecs groupSpecs moved lastMovedSpecs count terminationLimit map specsWithIncludes firstTime groupLoops |
-	map := self map.
+	| orderedPackageSpecs groupSpecs moved lastMovedSpecs count terminationLimit specsWithIncludes firstTime groupLoops |
 	orderedPackageSpecs := OrderedCollection new.
 	groupSpecs := Set new.
-	self list do: [ :member |
-			| spec |
-			spec := map at: member name ifAbsent: [ ].
-			(spec isNil or: [ orderedPackageSpecs includes: spec ]) ifFalse: [
+	self loadableSpecs do: [ :spec |
+			(orderedPackageSpecs includes: spec) ifFalse: [
 					spec isGroupSpec
 						ifTrue: [ groupSpecs add: spec ]
 						ifFalse: [ orderedPackageSpecs add: spec ] ] ].
@@ -219,7 +198,7 @@ MetacelloPackagesSpec >> printOn: aStream [
 
 	super printOn: aStream.
 	aStream nextPutAll: ' ['.
-	self specs
+	self loadableSpecs
 		ifEmpty: [ aStream nextPutAll: 'Empty' ]
 		ifNotEmpty: [ :specs | specs do: [ :spec | aStream nextPutAll: spec name ] separatedBy: [ aStream nextPutAll: ', ' ] ].
 	aStream nextPutAll: ']'
@@ -229,14 +208,6 @@ MetacelloPackagesSpec >> printOn: aStream [
 MetacelloPackagesSpec >> remove: aSpec [
 
 	self addMember: (MetacelloRemoveMemberSpec spec: aSpec)
-]
-
-{ #category : 'enumeration' }
-MetacelloPackagesSpec >> select: aBlock [ 
-	| newCollection |
-	newCollection := OrderedCollection new.
-	self do: [:each | (aBlock value: each) ifTrue: [newCollection add: each]].
-	^newCollection
 ]
 
 { #category : 'accessing' }
@@ -328,11 +299,4 @@ MetacelloPackagesSpec >> sortPackageSpecs: orderedSpecs packageSpec: packageSpec
 				ifTrue: [ orderedSpecs add: packageSpec beforeIndex: packageIndex ]
 				ifFalse: [ orderedSpecs add: packageSpec afterIndex: targetIndex ] ].
 	^ moved
-]
-
-{ #category : 'accessing' }
-MetacelloPackagesSpec >> specs [
-	"Return the list of specs I contains once all members are applied."
-
-	^ self map values
 ]

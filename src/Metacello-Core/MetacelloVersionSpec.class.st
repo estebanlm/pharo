@@ -186,34 +186,34 @@ MetacelloVersionSpec >> packageNamed: aString [
 { #category : 'querying' }
 MetacelloVersionSpec >> packageNamed: aString ifAbsent: absentBlock [
 
-	| importSpec map |
-	map := self packagesSpec map.
-	^ map at: aString ifAbsent: [
-			  (self importArray isNotNil or: [ self import isNotNil ]) ifTrue: [ "expect the 'missing' name to be satisfied within context of imported project"
-					  importArray ifNotNil: [
-							  importArray do: [ :assoc |
-									  ((assoc value includes: aString) and: [ map includesKey: assoc key ]) ifTrue: [
-											  importSpec := (map at: assoc key)
-												                mergeImportLoads: { aString };
-												                yourself ] ].
-							  importSpec ifNotNil: [ ^ importSpec ] ].
-					  (importSpec isNil and: [ self import isNotNil ]) ifTrue: [
-							  ^ (map at: self import ifAbsent: absentBlock)
-								    mergeImportLoads: { aString };
-								    yourself ] ].
-			  (aString = 'default' or: [ aString = 'ALL' ])
-				  ifTrue: [
-						  self project groupSpec
-							  name: aString;
-							  includes: self packageNames;
-							  yourself ]
-				  ifFalse: [ absentBlock value ] ]
+	self packagesSpec packageNamed: aString ifPresent: [ :spec | ^ spec ].
+
+	self hasImports ifTrue: [ "expect the 'missing' name to be satisfied within context of imported project"
+			importArray ifNotNil: [
+					importArray do: [ :assoc |
+							(assoc value includes: aString) ifTrue: [
+									self packagesSpec packageNamed: assoc key ifPresent: [ :spec |
+											^ spec
+												  mergeImportLoads: { aString };
+												  yourself ] ] ] ].
+			self import ifNotNil: [
+					^ (self packagesSpec packageNamed: self import ifAbsent: absentBlock)
+						  mergeImportLoads: { aString };
+						  yourself ] ].
+
+	^ (#( 'default' 'ALL' ) includes: aString)
+		ifTrue: [
+				self project groupSpec
+					name: aString;
+					includes: self packageNames;
+					yourself ]
+		ifFalse: [ absentBlock value ]
 ]
 
 { #category : 'querying' }
 MetacelloVersionSpec >> packageNames [
 
-	^ self packagesSpec map keys asSet
+	^ self packagesSpec loadableSpecs collect: [ :spec | spec name ]
 ]
 
 { #category : 'querying' }
