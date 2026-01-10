@@ -111,7 +111,7 @@ MetacelloPackagesSpec >> map [
 
 	| map |
 	memberMap ifNotNil: [ ^ memberMap ].
-	map := Dictionary new.
+	map := OrderedDictionary new.
 	self list do: [ :member | member applyToMap: map ].
 	^ memberMap := map
 ]
