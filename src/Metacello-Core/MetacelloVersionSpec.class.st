@@ -50,7 +50,7 @@ MetacelloVersionSpec >> defaultPackageNames [
 	"if there is a package named 'default' (a group) then it defines the default package names,
 	 otherwise answer a list of all of the package names in this version"
 
-	self packagesSpec packageNamed: 'default' ifAbsent: [ ^ self packageNames ].
+	self packagesSpec loadableSpecNamed: 'default' ifAbsent: [ ^ self packageNames ].
 	^ #( 'default' )
 ]
 
@@ -186,28 +186,28 @@ MetacelloVersionSpec >> packageNamed: aString [
 { #category : 'querying' }
 MetacelloVersionSpec >> packageNamed: aString ifAbsent: absentBlock [
 
-	self packagesSpec packageNamed: aString ifPresent: [ :spec | ^ spec ].
+	self packagesSpec loadableSpecNamed: aString ifPresent: [ :spec | ^ spec ].
 
 	self hasImports ifTrue: [ "expect the 'missing' name to be satisfied within context of imported project"
 			importArray ifNotNil: [
 					importArray do: [ :assoc |
 							(assoc value includes: aString) ifTrue: [
-									self packagesSpec packageNamed: assoc key ifPresent: [ :spec |
+									self packagesSpec loadableSpecNamed: assoc key ifPresent: [ :spec |
 											^ spec
 												  mergeImportLoads: { aString };
 												  yourself ] ] ] ].
 			self import ifNotNil: [
-					^ (self packagesSpec packageNamed: self import ifAbsent: absentBlock)
+					^ (self packagesSpec loadableSpecNamed: self import ifAbsent: absentBlock)
 						  mergeImportLoads: { aString };
 						  yourself ] ].
 
 	^ (#( 'default' 'ALL' ) includes: aString)
-		ifTrue: [
-				self project groupSpec
-					name: aString;
-					includes: self packageNames;
-					yourself ]
-		ifFalse: [ absentBlock value ]
+		  ifTrue: [
+				  self project groupSpec
+					  name: aString;
+					  includes: self packageNames;
+					  yourself ]
+		  ifFalse: [ absentBlock value ]
 ]
 
 { #category : 'querying' }

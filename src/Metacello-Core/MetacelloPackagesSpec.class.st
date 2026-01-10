@@ -84,6 +84,22 @@ MetacelloPackagesSpec >> list: aCollection [
 ]
 
 { #category : 'accessing' }
+MetacelloPackagesSpec >> loadableSpecNamed: aString ifAbsent: aBlock [
+
+	^ self loadableSpecs
+		  detect: [ :spec | spec name = aString ]
+		  ifNone: aBlock
+]
+
+{ #category : 'accessing' }
+MetacelloPackagesSpec >> loadableSpecNamed: aString ifPresent: aBlock [
+
+	^ self loadableSpecs
+		  detect: [ :spec | spec name = aString ]
+		  ifFound: aBlock
+]
+
+{ #category : 'accessing' }
 MetacelloPackagesSpec >> loadableSpecs [
 	"Return the list of specs I contains once all members are applied."
 
@@ -114,22 +130,6 @@ MetacelloPackagesSpec >> mergeSpec: anotherSpec [
 	newSpec list: self list copy.
 	anotherSpec list do: [ :groupMember | newSpec addMember: groupMember ].
 	^ newSpec
-]
-
-{ #category : 'accessing' }
-MetacelloPackagesSpec >> packageNamed: aString ifAbsent: aBlock [
-
-	^ self loadableSpecs
-		  detect: [ :spec | spec name = aString ]
-		  ifNone: aBlock
-]
-
-{ #category : 'accessing' }
-MetacelloPackagesSpec >> packageNamed: aString ifPresent: aBlock [
-
-	^ self loadableSpecs
-		  detect: [ :spec | spec name = aString ]
-		  ifFound: aBlock
 ]
 
 { #category : 'accessing' }
