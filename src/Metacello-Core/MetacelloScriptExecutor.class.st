@@ -65,7 +65,10 @@ MetacelloScriptExecutor >> execute [
 				          options: self options copy;
 				          projectReferenceSpec: projectReferenceSpec;
 				          yourself.
-			engine perform: actionArg key withArguments: actionArg value.
+			[
+				self class codeSupportAnnouncer announce: (MetacelloExecutionStartAnnouncement executor: self).
+				engine perform: actionArg key withArguments: actionArg value ] ensure: [
+				self class codeSupportAnnouncer announce: (MetacelloExecutionEndAnnouncement executor: self) ].
 			engine root ifNotNil: [ :root | self roots add: root ] ].
 	^ (self singleRoot and: [ self roots size == 1 ])
 		  ifTrue: [ self roots first ]
