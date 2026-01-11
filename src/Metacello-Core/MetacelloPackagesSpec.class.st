@@ -86,17 +86,13 @@ MetacelloPackagesSpec >> list: aCollection [
 { #category : 'accessing' }
 MetacelloPackagesSpec >> loadableSpecNamed: aString ifAbsent: aBlock [
 
-	^ self loadableSpecs
-		  detect: [ :spec | spec name = aString ]
-		  ifNone: aBlock
+	^ self loadableSpecs detect: [ :spec | spec name = aString ] ifNone: aBlock
 ]
 
 { #category : 'accessing' }
 MetacelloPackagesSpec >> loadableSpecNamed: aString ifPresent: aBlock [
 
-	^ self loadableSpecs
-		  detect: [ :spec | spec name = aString ]
-		  ifFound: aBlock
+	^ self loadableSpecs detect: [ :spec | spec name = aString ] ifFound: aBlock
 ]
 
 { #category : 'accessing' }

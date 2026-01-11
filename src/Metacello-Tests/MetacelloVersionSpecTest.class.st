@@ -136,8 +136,7 @@ MetacelloVersionSpecTest >> testVersionSpec2 [
 					  loads: #( 'MyPackage' 'MyTests' );
 					  preLoadDoIt: #preLoadDoItB;
 					  postLoadDoIt: #postLoadDoItB;
-					  yourself));
-		yourself.
+					  yourself)).
 	repository := version repositories repositoryNamed: '/opt/gemstone/repository' ifAbsent: [ self assert: false ].
 	self assert: repository type equals: 'directory'.
 	repository := version repositories repositoryNamed: 'http://example.com/repository' ifAbsent: [ self assert: false ].
