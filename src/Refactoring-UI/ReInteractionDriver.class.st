@@ -23,10 +23,19 @@ Class {
 		'stoppedBeforeApplyingRefactoring',
 		'selectDialogForBreakingChanges'
 	],
+	#classInstVars : [
+		'shouldPreviewChanges'
+	],
 	#category : 'Refactoring-UI-Drivers',
 	#package : 'Refactoring-UI',
 	#tag : 'Drivers'
 }
+
+{ #category : 'accessing' }
+ReInteractionDriver class >> drivers [
+
+	^ self allSubclasses reject: [ :subclass | subclass isAbstract ]
+]
 
 { #category : 'testing' }
 ReInteractionDriver class >> isAbstract [
@@ -53,6 +62,45 @@ ReInteractionDriver class >> newApplication: anApplication [
 ReInteractionDriver class >> refactoringClass [
 
 	self subclassResponsibility
+]
+
+{ #category : 'settings' }
+ReInteractionDriver class >> refactoringsSettingsOn: aBuilder [
+
+	<systemsettings>
+	(aBuilder group: #Refactorings)
+		label: 'Refactorings';
+		description: 'Settings about the refactorings and transformations of Pharo.';
+		parent: #tools;
+		with: [
+				(aBuilder group: #Previews)
+					label: 'Preview changes';
+					description: 'A list of settings to declare for which refactoring the user wants a preview of the cnahges before applying them or not.';
+					with: [
+							self drivers do: [ :aDriver |
+										(aBuilder setting: aDriver name asSymbol)
+											label: 'Preview changes: ' , aDriver menuItemString;
+											selector: #shouldPreviewChanges;
+											default: self shouldPreviewChangesByDefault;
+											target: aDriver ] ] ]
+]
+
+{ #category : 'accessing' }
+ReInteractionDriver class >> shouldPreviewChanges [
+
+	^ shouldPreviewChanges ifNil: [ shouldPreviewChanges := self shouldPreviewChangesByDefault ]
+]
+
+{ #category : 'accessing' }
+ReInteractionDriver class >> shouldPreviewChanges: anObject [
+
+	shouldPreviewChanges := anObject
+]
+
+{ #category : 'accessing' }
+ReInteractionDriver class >> shouldPreviewChangesByDefault [
+
+	^ true
 ]
 
 { #category : 'accessing' }
@@ -212,10 +260,15 @@ ReInteractionDriver >> model: aRBBrowserEnvironment [
 { #category : 'execution' }
 ReInteractionDriver >> openPreviewWithChanges: changes [
 
-	^ (self previewPresenterClass newApplication: self application)
-		changesFrom: changes scopes: scopes;
-		refactoring: self refactoring;
-		openModal
+	| presenter |
+	presenter := (self previewPresenterClass newApplication: self application)
+		             changesFrom: changes scopes: scopes;
+		             refactoring: self refactoring;
+		             yourself.
+
+	self class shouldPreviewChanges
+		ifTrue: [ presenter openModal ]
+		ifFalse: [ presenter accept ]
 ]
 
 { #category : 'configuration' }
@@ -237,6 +290,12 @@ ReInteractionDriver >> previewPresenterClass: aClass [
 { #category : 'resources' }
 ReInteractionDriver >> refactoring [
 	^ refactoring
+]
+
+{ #category : 'displaying' }
+ReInteractionDriver >> refactoringClass [
+
+	^ self class refactoringClass
 ]
 
 { #category : 'utilities' }

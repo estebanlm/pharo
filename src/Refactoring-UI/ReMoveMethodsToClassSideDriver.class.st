@@ -54,8 +54,7 @@ ReMoveMethodsToClassSideDriver >> defaultSelectDialog [
 
 	^ super defaultSelectDialog
 		  title: 'Warning you may break your code';
-		  label:
-			  'One or more methods are already defined on the class side!';
+		  message: 'One or more methods are already defined on the class side!';
 		  items: self breakingChoices;
 		  display: [ :each | each description ];
 		  displayIcon: [ :each | self iconNamed: each systemIconName ];
