@@ -80,10 +80,10 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			spec group: 'MetacelloGroup' with: BaselineOfMetacello corePackageNames.
 
 			"Group of packages to load with Hermes."
-			spec group: 'ToLoadByHermes' with: { 'AdditionalPackages'. 'CompilerGroup'. 'FileSystemGroup'. 'TraitGroup'. 'MonticelloCore'. 'SUnitGroup' }.
+			spec group: 'ToLoadByHermes' with: { 'AdditionalPackages'. 'CompilerGroup'. 'FileSystemGroup'. 'TraitGroup'. 'MonticelloCore'. 'MetacelloGroup'. 'SUnitGroup' }.
 
 			"Group of packages to export as MCZ"
-			spec group: 'ToExportAsMCZ' with: { 'KernelGroup'. 'ToLoadByHermes'. 'MetacelloGroup' }. 
+			spec group: 'ToExportAsMCZ' with: { 'KernelGroup'. 'ToLoadByHermes' }. 
 			
 			"The next group is here for testing the minimal image"
 			spec group: 'SUnitGroup' with: #( 'Clap-Core' 'Clap-Commands-Pharo' 'Hermes-Extensions' 'Math-Operations-Extensions' 'System-Time' 'NumberParser' 'AST-Core' 'ParseTreeRewriter' 'Random-Core' 'System-NumberPrinting' 'Traits' 'Deprecation' 'SUnit-Core' 'SUnit-Basic-CLI' 'SUnit-Tests' 'Kernel-Tests' ) ]

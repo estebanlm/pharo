@@ -130,8 +130,7 @@ MCWorkingCopy class >> infoFromDictionary: aDictionary cache: cache [
 { #category : 'class initialization' }
 MCWorkingCopy class >> initialize [
 
-	registry ifNotNil: [ registry rehash ].
-	self registerForNotifications
+	registry ifNotNil: [ registry rehash ]
 ]
 
 { #category : 'system changes' }
@@ -162,6 +161,7 @@ MCWorkingCopy class >> packageRenamed: anAnnouncement [
 
 { #category : 'event registration' }
 MCWorkingCopy class >> registerForNotifications [
+	"We register Montciello during the bootstrap."
 
 	self
 		unregisterForNotifications;
