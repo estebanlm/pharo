@@ -119,7 +119,8 @@ PharoFilesOpener >> changesFileOrNilReadOnly: readOnly silent: silent [
 
 { #category : 'delegated' }
 PharoFilesOpener >> changesName [
-	^ Smalltalk changesName
+
+	^ Smalltalk changesFile basename
 ]
 
 { #category : 'helper' }

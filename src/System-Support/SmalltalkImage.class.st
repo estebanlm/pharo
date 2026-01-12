@@ -264,14 +264,6 @@ SmalltalkImage >> changeImagePathTo: aString [
 ]
 
 { #category : 'image, changes name' }
-SmalltalkImage >> changesName [
-	"Answer the name for the changes file corresponding to the image file name."
-	"Smalltalk changesName"
-
-	^ self changesFile fullName
-]
-
-{ #category : 'image, changes name' }
 SmalltalkImage >> changesSuffix [
 	^ 'changes'
 ]
