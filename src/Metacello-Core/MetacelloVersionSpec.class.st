@@ -41,13 +41,7 @@ MetacelloVersionSpec >> currentlyLoadedClassesInVersion [
 
 	| classes |
 	classes := Set new.
-	self
-		projectDo: [ :ignored |  ]
-		packageDo: [ :packageSpec |
-				([ packageSpec workingCopy ]
-					 on: Error
-					 do: [ :ex | ex return: nil ]) ifNotNil: [ :workingCopy | workingCopy systemPackage ifNotNil: [ :package | classes addAll: package classes ] ] ]
-		groupDo: [ :ignored |  ].
+	self packages do: [ :packageSpec | self class packageOrganizer packageNamed: packageSpec name ifPresent: [ :package | classes addAll: package classes ] ].
 	^ classes
 ]
 
@@ -56,7 +50,7 @@ MetacelloVersionSpec >> defaultPackageNames [
 	"if there is a package named 'default' (a group) then it defines the default package names,
 	 otherwise answer a list of all of the package names in this version"
 
-	self packagesSpec packageNamed: 'default' ifAbsent: [ ^ self packageNames ].
+	self packagesSpec loadableSpecNamed: 'default' ifAbsent: [ ^ self packageNames ].
 	^ #( 'default' )
 ]
 
@@ -108,10 +102,7 @@ MetacelloVersionSpec >> fetchRequiredFromArray: anArray withEngine: anEngine [
 MetacelloVersionSpec >> groups [
 	"Answers the list of groups associated with this version"
 
-	| groups |
-	groups := OrderedCollection new.
-	self projectDo: [ :ignored |  ] packageDo: [ :ignored |  ] groupDo: [ :grp | groups add: grp ].
-	^ groups
+	^ self packageSpecsInLoadOrder select: [ :spec | spec isGroupSpec ]
 ]
 
 { #category : 'testing' }
@@ -181,11 +172,7 @@ MetacelloVersionSpec >> mergeSpec: anotherSpec [
 
 	| newSpec |
 	newSpec := super mergeSpec: anotherSpec.
-	anotherSpec packagesSpec isEmpty not ifTrue: [
-			newSpec packagesSpec: (self packagesSpec isEmpty
-					 ifTrue: [ anotherSpec packagesSpec ]
-					 ifFalse: [ self packagesSpec mergeSpec: anotherSpec packagesSpec ]) ].
-
+	newSpec packagesSpec: (self packagesSpec mergeSpec: anotherSpec packagesSpec).
 	newSpec repositories: (self repositories mergeSpec: anotherSpec repositories).
 	^ newSpec
 ]
@@ -197,41 +184,36 @@ MetacelloVersionSpec >> packageNamed: aString [
 ]
 
 { #category : 'querying' }
-MetacelloVersionSpec >> packageNamed: aString forMap: map ifAbsent: absentBlock [
+MetacelloVersionSpec >> packageNamed: aString ifAbsent: absentBlock [
 
-	| importSpec |
-	^ map at: aString ifAbsent: [
-		  (self importArray isNotNil or: [ self import isNotNil ]) ifTrue: [ "expect the 'missing' name to be satisfied within context of imported project"
-			  importArray ifNotNil: [
-				  importArray do: [ :assoc |
-					  ((assoc value includes: aString) and: [ map includesKey: assoc key ]) ifTrue: [
-						  importSpec := (map at: assoc key)
-							                mergeImportLoads: { aString };
-							                yourself ] ].
-				  importSpec ifNotNil: [ ^ importSpec ] ].
-			  (importSpec isNil and: [ self import isNotNil ]) ifTrue: [
-				  ^ (map at: self import ifAbsent: absentBlock)
-					    mergeImportLoads: { aString };
-					    yourself ] ].
-		  (aString = 'default' or: [ aString = 'ALL' ])
-			  ifTrue: [
+	self packagesSpec loadableSpecNamed: aString ifPresent: [ :spec | ^ spec ].
+
+	self hasImports ifTrue: [ "expect the 'missing' name to be satisfied within context of imported project"
+			importArray ifNotNil: [
+					importArray do: [ :assoc |
+							(assoc value includes: aString) ifTrue: [
+									self packagesSpec loadableSpecNamed: assoc key ifPresent: [ :spec |
+											^ spec
+												  mergeImportLoads: { aString };
+												  yourself ] ] ] ].
+			self import ifNotNil: [
+					^ (self packagesSpec loadableSpecNamed: self import ifAbsent: absentBlock)
+						  mergeImportLoads: { aString };
+						  yourself ] ].
+
+	^ (#( 'default' 'ALL' ) includes: aString)
+		  ifTrue: [
 				  self project groupSpec
 					  name: aString;
 					  includes: self packageNames;
 					  yourself ]
-			  ifFalse: [ absentBlock value ] ]
-]
-
-{ #category : 'querying' }
-MetacelloVersionSpec >> packageNamed: aString ifAbsent: aBlock [
-
-	^ self packageNamed: aString forMap: self packagesSpec map ifAbsent: aBlock
+		  ifFalse: [ absentBlock value ]
 ]
 
 { #category : 'querying' }
 MetacelloVersionSpec >> packageNames [
 
-	^ self packagesSpec map keys asSet
+	^ self packagesSpec loadableSpecs collect: [ :spec | spec name ]
 ]
 
 { #category : 'querying' }
@@ -244,10 +226,7 @@ MetacelloVersionSpec >> packageSpecsInLoadOrder [
 MetacelloVersionSpec >> packages [
 	"Answers the list of packages associated with this version"
 
-	| packages |
-	packages := OrderedCollection new.
-	self projectDo: [ :ignored |  ] packageDo: [ :pkg | packages add: pkg ] groupDo: [ :ignored |  ].
-	^ packages
+	^ self packageSpecsInLoadOrder select: [ :spec | spec isPackageSpec ]
 ]
 
 { #category : 'accessing' }
@@ -318,12 +297,6 @@ MetacelloVersionSpec >> project: aMetacelloProject [
 	project := aMetacelloProject
 ]
 
-{ #category : 'enumerating' }
-MetacelloVersionSpec >> projectDo: projectBlock packageDo: packageBlock groupDo: groupBlock [
-
-	self packageSpecsInLoadOrder do: [ :pkgSpec | pkgSpec projectDo: projectBlock packageDo: packageBlock groupDo: groupBlock ]
-]
-
 { #category : 'accessing' }
 MetacelloVersionSpec >> projectLabel [
 
@@ -334,10 +307,9 @@ MetacelloVersionSpec >> projectLabel [
 MetacelloVersionSpec >> projects [
 	"Answers the list of projects associated with this version"
 
-	| projects |
-	projects := OrderedCollection new.
-	self projectDo: [ :prj | projects add: prj projectReference ] packageDo: [ :ignored |  ] groupDo: [ :ignored |  ].
-	^ projects
+	^ self packageSpecsInLoadOrder
+		  select: [ :spec | spec isProjectReferenceSpec ]
+		  thenCollect: [ :spec | spec projectReference ]
 ]
 
 { #category : 'private' }
@@ -392,10 +364,4 @@ MetacelloVersionSpec >> spec [
 	"To remove once Iceberg is fixed."
 
 	^ self
-]
-
-{ #category : 'enumerating' }
-MetacelloVersionSpec >> specListProjectDo: projectBlock packageDo: packageBlock groupDo: groupBlock [
-
-	self packagesSpec specListDo: [ :pkgSpec | pkgSpec projectDo: projectBlock packageDo: packageBlock groupDo: groupBlock ]
 ]

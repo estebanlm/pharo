@@ -74,9 +74,9 @@ MetacelloVersionSpecTest >> testVersionMergeSpec2 [
 	self assert: repository type equals: 'http'.
 	self assert: repository username equals: 'DaleHenrichs'.
 	self assert: repository password equals: 'secret'.
-	package := version packagesSpec packageNamed: 'Package' ifAbsent: [ self assert: false ].
+	package := version packagesSpec loadableSpecNamed: 'Package' ifAbsent: [ self assert: false ].
 	self assert: package name equals: 'Package'.
-	projectReferenceSpec := version packagesSpec packageNamed: 'Project' ifAbsent: [ self assert: false ].
+	projectReferenceSpec := version packagesSpec loadableSpecNamed: 'Project' ifAbsent: [ self assert: false ].
 	self assert: projectReferenceSpec projectName equals: 'Project'.
 	projectReferenceSpec repositories repositoryNamed: '/opt/gemstone/repository' ifPresent: [ self assert: false ].
 	repository := projectReferenceSpec repositories repositoryNamed: '/opt/gemstone/repo' ifAbsent: [ self assert: false ].
@@ -85,7 +85,7 @@ MetacelloVersionSpecTest >> testVersionMergeSpec2 [
 	self assert: repository type equals: 'http'.
 	self assert: repository username equals: 'DaleHenrichs'.
 	self assert: repository password equals: 'secret'.
-	group := version packagesSpec packageNamed: 'Platform' ifAbsent: [ self assert: false ].
+	group := version packagesSpec loadableSpecNamed: 'Platform' ifAbsent: [ self assert: false ].
 	self assert: (group includes includes: 'Core').
 	self assert: (group includes includes: 'Tests')
 ]
@@ -136,21 +136,19 @@ MetacelloVersionSpecTest >> testVersionSpec2 [
 					  loads: #( 'MyPackage' 'MyTests' );
 					  preLoadDoIt: #preLoadDoItB;
 					  postLoadDoIt: #postLoadDoItB;
-					  yourself));
-		yourself.
+					  yourself)).
 	repository := version repositories repositoryNamed: '/opt/gemstone/repository' ifAbsent: [ self assert: false ].
 	self assert: repository type equals: 'directory'.
 	repository := version repositories repositoryNamed: 'http://example.com/repository' ifAbsent: [ self assert: false ].
 	self assert: repository type equals: 'http'.
 	self assert: repository username equals: 'dkh'.
 	self assert: repository password equals: 'password'.
-	package := version packagesSpec packageNamed: 'Package' ifAbsent: [ self assert: false ].
+	package := version packagesSpec loadableSpecNamed: 'Package' ifAbsent: [ self assert: false ].
 	self assert: package name equals: 'Package'.
-	group := version packagesSpec packageNamed: 'Platform' ifAbsent: [ self assert: false ].
+	group := version packagesSpec loadableSpecNamed: 'Platform' ifAbsent: [ self assert: false ].
 	self assert: (group includes includes: 'Core').
-	projectReferenceSpec := version packagesSpec packageNamed: 'Project' ifAbsent: [ self assert: false ].
-	self assert: projectReferenceSpec projectName equals: 'Project'.
-	version projectDo: [ :prjct | prjct == projectReferenceSpec ] packageDo: [ :pkg | pkg == package ] groupDo: [ :grp | grp == group ]
+	projectReferenceSpec := version packagesSpec loadableSpecNamed: 'Project' ifAbsent: [ self assert: false ].
+	self assert: projectReferenceSpec projectName equals: 'Project'
 ]
 
 { #category : 'specs' }
