@@ -15,9 +15,8 @@ MCFileTreePackageStructureStWriter >> absentInitializers [
 
 { #category : 'visiting' }
 MCFileTreePackageStructureStWriter >> acceptVisitor: aVisitor forDefinitions: aCollection [
-	(MCDependencySorter sortItems: aCollection)
-		do: [ :ea | ea accept: aVisitor ]
-		displayingProgress: 'Writing definitions...'
+
+	(MCDependencySorter sortItems: aCollection) do: [ :ea | ea accept: aVisitor ]
 ]
 
 { #category : 'accessing' }
