@@ -2,8 +2,7 @@ Class {
 	#name : 'MetacelloPackagesSpec',
 	#superclass : 'MetacelloSpec',
 	#instVars : [
-		'list',
-		'memberMap'
+		'loadableSpecs'
 	],
 	#category : 'Metacello-Core-Model',
 	#package : 'Metacello-Core',
@@ -11,21 +10,19 @@ Class {
 }
 
 { #category : 'class initialization' }
-MetacelloPackagesSpec class >> initialize [ 
-	self deprecatedAliases: #(MetacelloMemberListSpec)
+MetacelloPackagesSpec class >> initialize [
+	"To remove later. Added in Pharo 14"
+
+	self deprecatedAliases: #( MetacelloMemberListSpec )
 ]
 
 { #category : 'actions' }
-MetacelloPackagesSpec >> add: aSpec [
+MetacelloPackagesSpec >> add: spec [
+	"We need to keep the order if we kind a spec that already has this name."
 
-	self addMember: (MetacelloAddMemberSpec spec: aSpec)
-]
+	loadableSpecs doWithIndex: [ :aSpec :index | aSpec name = spec name ifTrue: [ ^ loadableSpecs at: index put: spec ] ].
 
-{ #category : 'adding' }
-MetacelloPackagesSpec >> addMember: aMember [
-
-	self list add: aMember.
-	self clearMemberMap
+	loadableSpecs add: spec
 ]
 
 { #category : 'accessing' }
@@ -50,37 +47,28 @@ MetacelloPackagesSpec >> applyIncludesTo: orderedSpecs for: pkgSpec firstTime: f
 	^ movedSpecs
 ]
 
-{ #category : 'private' }
-MetacelloPackagesSpec >> clearMemberMap [
-
-	memberMap := nil.
-]
-
 { #category : 'actions' }
 MetacelloPackagesSpec >> copy: specNamed to: spec [
 
-	self addMember: ((MetacelloCopyMemberSpec spec: spec)
-			 sourceName: specNamed;
-			 yourself)
+	loadableSpecs
+		detect: [ :aSpec | aSpec name = specNamed ]
+		ifFound: [ :aSpec |
+				aSpec aboutToCopy.
+				loadableSpecs add: (aSpec copy mergeSpec: spec copy) ]
+		ifNone: [ self error: 'Source spec named ' , specNamed printString , ' not found' ]
+]
+
+{ #category : 'initialization' }
+MetacelloPackagesSpec >> initialize [
+
+	super initialize.
+	loadableSpecs := OrderedCollection new
 ]
 
 { #category : 'testing' }
 MetacelloPackagesSpec >> isEmpty [
 
 	^ self loadableSpecs isEmpty
-]
-
-{ #category : 'accessing' }
-MetacelloPackagesSpec >> list [
-
-	^ list ifNil: [ list := OrderedCollection new ]
-]
-
-{ #category : 'accessing' }
-MetacelloPackagesSpec >> list: aCollection [
-
-	list := aCollection.
-	self clearMemberMap
 ]
 
 { #category : 'accessing' }
@@ -97,25 +85,17 @@ MetacelloPackagesSpec >> loadableSpecNamed: aString ifPresent: aBlock [
 
 { #category : 'accessing' }
 MetacelloPackagesSpec >> loadableSpecs [
-	"Return the list of specs I contains once all members are applied."
 
-	^ self map values
-]
-
-{ #category : 'accessing' }
-MetacelloPackagesSpec >> map [
-
-	| map |
-	memberMap ifNotNil: [ ^ memberMap ].
-	map := OrderedDictionary new.
-	self list do: [ :member | member applyToMap: map ].
-	^ memberMap := map
+	^ loadableSpecs
 ]
 
 { #category : 'actions' }
-MetacelloPackagesSpec >> merge: aSpec [
+MetacelloPackagesSpec >> merge: spec [
+	"We need to keep the order if we kind a spec that already has this name."
 
-	self addMember: (MetacelloMergeMemberSpec spec: aSpec)
+	loadableSpecs doWithIndex: [ :aSpec :index | aSpec name = spec name ifTrue: [ ^ loadableSpecs at: index put: (aSpec mergeSpec: spec) ] ].
+
+	loadableSpecs add: spec
 ]
 
 { #category : 'merging' }
@@ -123,8 +103,7 @@ MetacelloPackagesSpec >> mergeSpec: anotherSpec [
 
 	| newSpec |
 	newSpec := super mergeSpec: anotherSpec.
-	newSpec list: self list copy.
-	anotherSpec list do: [ :groupMember | newSpec addMember: groupMember ].
+	anotherSpec loadableSpecs do: [ :spec | newSpec merge: spec copy ].
 	^ newSpec
 ]
 
@@ -185,8 +164,7 @@ MetacelloPackagesSpec >> packageSpecsInLoadOrderFor: aVersionSpec [
 MetacelloPackagesSpec >> postCopy [
 
 	super postCopy.
-	list := list copy.
-	self clearMemberMap
+	loadableSpecs := loadableSpecs copy
 ]
 
 { #category : 'printing' }
@@ -201,9 +179,11 @@ MetacelloPackagesSpec >> printOn: aStream [
 ]
 
 { #category : 'removing' }
-MetacelloPackagesSpec >> remove: aSpec [
+MetacelloPackagesSpec >> remove: spec [
 
-	self addMember: (MetacelloRemoveMemberSpec spec: aSpec)
+	loadableSpecs
+		detect: [ :aSpec | aSpec name = spec name ]
+		ifFound: [ :aSpec | loadableSpecs remove: aSpec ]
 ]
 
 { #category : 'accessing' }
