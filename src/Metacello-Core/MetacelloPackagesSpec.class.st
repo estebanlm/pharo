@@ -67,7 +67,7 @@ MetacelloPackagesSpec >> copy: specNamed to: spec [
 { #category : 'testing' }
 MetacelloPackagesSpec >> isEmpty [
 
-	^self list isEmpty
+	^ self loadableSpecs isEmpty
 ]
 
 { #category : 'accessing' }
@@ -107,7 +107,7 @@ MetacelloPackagesSpec >> map [
 
 	| map |
 	memberMap ifNotNil: [ ^ memberMap ].
-	map := Dictionary new.
+	map := OrderedDictionary new.
 	self list do: [ :member | member applyToMap: map ].
 	^ memberMap := map
 ]
@@ -132,14 +132,11 @@ MetacelloPackagesSpec >> mergeSpec: anotherSpec [
 MetacelloPackagesSpec >> packageSpecsInLoadOrderFor: aVersionSpec [
 	"order only the packageSpecs and projectSpecs. groupSpec order does not matter"
 
-	| orderedPackageSpecs groupSpecs moved lastMovedSpecs count terminationLimit map specsWithIncludes firstTime groupLoops |
-	map := self map.
+	| orderedPackageSpecs groupSpecs moved lastMovedSpecs count terminationLimit specsWithIncludes firstTime groupLoops |
 	orderedPackageSpecs := OrderedCollection new.
 	groupSpecs := Set new.
-	self list do: [ :member |
-			| spec |
-			spec := map at: member name ifAbsent: [ ].
-			(spec isNil or: [ orderedPackageSpecs includes: spec ]) ifFalse: [
+	self loadableSpecs do: [ :spec |
+			(orderedPackageSpecs includes: spec) ifFalse: [
 					spec isGroupSpec
 						ifTrue: [ groupSpecs add: spec ]
 						ifFalse: [ orderedPackageSpecs add: spec ] ] ].
