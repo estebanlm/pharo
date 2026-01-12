@@ -50,7 +50,7 @@ MetacelloRecordTarget >> listLoadableSpecsFrom: aVersionSpec [
 			requirementList do: [ :req |
 					| loadableSpec |
 					loadableSpec := aVersionSpec packageNamed: req ifAbsent: [ 
-						^ self error: 'Name not found: ' , req, ' in ', aVersionSpec asString ]. "If the loadable spec is a Group we ignore it."
+						^ self error: 'Name not found: ' , req, ' in ', aVersionSpec label ]. "If the loadable spec is a Group we ignore it."
 					loadableSpec resolveToLoadableSpec ifNotNil: [ :resolvedSpec | loadableSpecs add: resolvedSpec ].
 					newReqd addAll: loadableSpec requires.
 					newReqd addAll: loadableSpec includes ].
