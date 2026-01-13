@@ -70,10 +70,12 @@ ReInsertSuperclassDriver >> dialogTitleForClassSelection [
 { #category : 'configuration' }
 ReInsertSuperclassDriver >> instantiateRefactoring [
 
+	"self ensureSuperclassInModel."
 	^ (RBInsertNewClassRefactoring className: self subclass asString)
+		  model: model;
 		  superclass: superclassParent;
 		  subclasses: (superclassParent subclasses collect: [ :each | each name ]);
-		  packageName: self packageName; 
+		  packageName: self packageName;
 		  tagName: self tagName;
 		  comment: self comment;
 		  yourself
@@ -118,7 +120,8 @@ ReInsertSuperclassDriver >> runRefactoring [
 ReInsertSuperclassDriver >> scopes: refactoringScopes [
 
 	scopes := refactoringScopes.
-	model := self refactoringScopeOn: scopes last.
+
+	model := self refactoringScopeOn: scopes first.
 	superclass := model classObjectFor: superclass
 	
 ]
