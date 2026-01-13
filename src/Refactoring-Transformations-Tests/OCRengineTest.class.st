@@ -9,6 +9,51 @@ Class {
 	#tag : 'AST'
 }
 
+{ #category : 'tests - as' }
+OCRengineTest >> testAsReturnOnLastStatement [
+ 
+	| ast node result |
+	ast := OCParser parseMethod: 'test | x |
+        x := 1.
+        x + 2'.
+	node := ast body statements last. 
+	result := node asReturn.
+
+	self assert: result class equals: OCSequenceNode.
+	self assert: ast body statements last class equals: OCReturnNode.
+	self assert: ast body statements last value equals: node
+]
+
+{ #category : 'tests - as' }
+OCRengineTest >> testAsReturnOnSingleStatement [
+	"Test when there's only one statement in the sequence"
+
+	| ast node result |
+	ast := OCParser parseMethod: 'test 42'.
+	node := ast body statements first.
+	result := node asReturn.
+
+	self assert: ast body statements size equals: 1.
+	self assert: ast body statements first class equals: OCReturnNode 
+]
+
+{ #category : 'tests - as' }
+OCRengineTest >> testAsReturnWithNonSequenceParentShouldFail [
+
+	| ast node |
+	ast := OCParser parseMethod: 'test ^ 2 + 3'.
+	node := ast body statements first value.
+	self should: [ node asReturn ] raise: Error
+]
+
+{ #category : 'tests - as' }
+OCRengineTest >> testAsReturnWithoutParentShouldFail [
+
+	| node |
+	node := OCLiteralValueNode value: 42. "This node has no parent "
+	self should: [ node asReturn ] raise: Error
+]
+
 { #category : 'tests - defines' }
 OCRengineTest >> testExactNodeDefinesArg [
 
