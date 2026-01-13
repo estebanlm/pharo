@@ -213,7 +213,7 @@ MetacelloVersionSpec >> packageNamed: aString ifAbsent: absentBlock [
 { #category : 'querying' }
 MetacelloVersionSpec >> packageNames [
 
-	^ self packagesSpec map keys asSet
+	^ self packagesSpec loadableSpecs collect: [ :spec | spec name ]
 ]
 
 { #category : 'querying' }
