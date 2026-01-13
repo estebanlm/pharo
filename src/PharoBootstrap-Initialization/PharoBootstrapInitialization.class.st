@@ -47,12 +47,6 @@ Class {
 	#tag : 'Base'
 }
 
-{ #category : 'initialization' }
-PharoBootstrapInitialization class >> enableChangeLog [
-
-	ChangesLog registerInterestToSystemAnnouncement
-]
-
 { #category : 'fixing' }
 PharoBootstrapInitialization class >> fixExtensionMethods [
 
