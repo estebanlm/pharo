@@ -263,8 +263,10 @@ MetacelloBaselineConstructor >> package: aString overrides: aBlock [
 	spec := self project packageSpec
 		        name: aString;
 		        yourself.
-	self root packagesSpec add: spec.
-	self with: spec during: aBlock
+
+	self with: spec during: aBlock.
+
+	self root packagesSpec add: spec
 ]
 
 { #category : 'api' }
@@ -284,10 +286,11 @@ MetacelloBaselineConstructor >> package: packageName with: aBlock [
 		        name: packageName;
 		        yourself.
 
-	self root packagesSpec merge: spec.
 	aBlock isString
 		ifTrue: [ MetacelloNotification signal: 'Now #package:with: only takes a block as second parameter and not a string.' ]
-		ifFalse: [ self with: spec during: aBlock ]
+		ifFalse: [ self with: spec during: aBlock ].
+
+	self root packagesSpec merge: spec
 ]
 
 { #category : 'api' }
@@ -320,8 +323,9 @@ MetacelloBaselineConstructor >> project: aString copyFrom: oldSpecName with: aBl
 	| spec projectSpec |
 	projectSpec := MetacelloProjectSpec named: aString.
 	spec := MetacelloProjectReferenceSpec projectReference: projectSpec.
-	self root packagesSpec copy: oldSpecName to: spec.
-	self with: projectSpec during: aBlock
+	self with: projectSpec during: aBlock.
+
+	self root packagesSpec copy: oldSpecName to: spec
 ]
 
 { #category : 'api' }
@@ -330,8 +334,8 @@ MetacelloBaselineConstructor >> project: aString overrides: aBlock [
 	| spec projectSpec |
 	projectSpec := MetacelloProjectSpec named: aString.
 	spec := MetacelloProjectReferenceSpec projectReference: projectSpec.
+	self with: projectSpec during: aBlock.
 	self root packagesSpec add: spec.
-	self with: projectSpec during: aBlock
 ]
 
 { #category : 'api' }
@@ -340,9 +344,10 @@ MetacelloBaselineConstructor >> project: aString with: aBlockOrString [
 	| projectSpec spec |
 	projectSpec := MetacelloProjectSpec named: aString.
 	spec := MetacelloProjectReferenceSpec projectReference: projectSpec.
-	self root packagesSpec merge: spec.
 
-	self with: projectSpec during: aBlockOrString
+	self with: projectSpec during: aBlockOrString.
+
+	self root packagesSpec merge: spec
 ]
 
 { #category : 'api' }
