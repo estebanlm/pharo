@@ -83,12 +83,6 @@ SycChangeMessageSignatureCommand >> execute [
 	self executeRefactorings
 ]
 
-{ #category : 'testing' }
-SycChangeMessageSignatureCommand >> isComplexRefactoring [
-
-	^ false
-]
-
 { #category : 'accessing' }
 SycChangeMessageSignatureCommand >> originalMessage [
 	^ originalMessage

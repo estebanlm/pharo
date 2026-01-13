@@ -52,9 +52,3 @@ SycRefactorVariableCommand >> execute [
 
 	self executeRefactorings
 ]
-
-{ #category : 'testing' }
-SycRefactorVariableCommand >> isComplexRefactoring [
-
-	^ false
-]

@@ -205,12 +205,6 @@ SycRefactoringPreviewPresenter >> initializeWidgets [
 		setFocus
 ]
 
-{ #category : 'epicea support' }
-SycRefactoringPreviewPresenter >> isEpiceaInterestingJobOwner [
-
-	^ true
-]
-
 { #category : 'accessing' }
 SycRefactoringPreviewPresenter >> pickedChanges [
 	^ table items select: [ :item | selectedRefactorings at: item ]
