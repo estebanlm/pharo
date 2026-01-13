@@ -76,10 +76,12 @@ CoDependencyGlobalVariableFetcher >> entriesDo: aBlock [
 	dependentPackages do: [ :packageName |
 		dependentClassNames addAll: ((organizer packageNamed: packageName ifAbsent: [ ]) definedClasses collect: [ :each | each name ]) ].
 	dependentClassNames do: [ :depClassName |
-			(filter accepts: depClassName) ifTrue: [
+			
 					aBlock value: ((NECGlobalEntry contents: depClassName node: nil)
 							 fetcher: self;
-							 yourself) ] ] "In the past this fetcher was handling the global namespace search by removing the 
+							 yourself) ] 
+						
+	"In the past this fetcher was handling the global namespace search by removing the 
 	already seen classes from the namespace. In fact this is not needed because 
 	the heuristics handles the repettion of proposition. 
 	So here we default to the configuration and following fetcher."
