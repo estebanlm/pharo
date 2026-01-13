@@ -68,19 +68,19 @@ RGEnvironment >> ask [
 	^ queryInterface ifNil: [ queryInterface := RGEnvironmentQueryInterface for: self ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'enumerating' }
 RGEnvironment >> associationsDo: aBlock [
 
 	self bindings do: aBlock
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 RGEnvironment >> at: aSymbol [
 
 	^ self ask behaviorNamed: aSymbol
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 RGEnvironment >> at: aString ifAbsent: aBlockClosure [
 	^ (self bindingOf: aString)
 		ifNotNil: [:association | association value ]
@@ -123,7 +123,7 @@ RGEnvironment >> bindingOf: aSymbol [
 	^ result
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 RGEnvironment >> bindings [
 
 	"TODO:"
@@ -144,7 +144,7 @@ RGEnvironment >> child: aChildDefinition renamedFrom: oldName to: newName [
 	self queryInterface behaviorsDictionary at: newName asSymbol put: aChildDefinition
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 RGEnvironment >> classNamed: aString [
 	| association |
 	association := self bindingOf: aString.
@@ -680,7 +680,7 @@ RGEnvironment >> makeResolved [
 	globalVariables := self ask globalVariables markAsRingResolved
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing - class and trait names' }
 RGEnvironment >> nonClassNames [
 
 	"TODO:"
@@ -878,7 +878,7 @@ RGEnvironment >> removeUnusedPackages [
 			ifFalse: [ self removePackage: each ] ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'private' }
 RGEnvironment >> systemDictionary [
 	^ self
 ]
