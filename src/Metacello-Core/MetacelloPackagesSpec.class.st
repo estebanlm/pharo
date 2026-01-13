@@ -103,7 +103,7 @@ MetacelloPackagesSpec >> mergeSpec: anotherSpec [
 
 	| newSpec |
 	newSpec := super mergeSpec: anotherSpec.
-	anotherSpec loadableSpecs do: [ :spec | newSpec merge: spec copy ].
+	anotherSpec loadableSpecs do: [ :spec | newSpec merge: spec ].
 	^ newSpec
 ]
 
