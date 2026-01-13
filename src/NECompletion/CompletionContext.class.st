@@ -50,6 +50,7 @@ CompletionContext >> activateEntryAt: anIndex [
 
 { #category : 'accessing' }
 CompletionContext >> completionToken [
+
 	^ completionToken ifNil: [ ^ ''  ]
 ]
 
@@ -61,11 +62,13 @@ CompletionContext >> completionTokenStart [
 
 { #category : 'accessing' }
 CompletionContext >> engine [
+
 	^ engine
 ]
 
 { #category : 'initialization' }
 CompletionContext >> engine: aCompletionEngine class: aClass source: aString position: anInteger [
+
 	class := aClass.
 	source := aString.
 	position := anInteger.
@@ -78,21 +81,25 @@ CompletionContext >> engine: aCompletionEngine class: aClass source: aString pos
 
 { #category : 'accessing' }
 CompletionContext >> entries [
-	^entries ifNil: [entries := self initEntries ]
+
+	^ entries ifNil: [ entries := self initEntries ]
 ]
 
 { #category : 'entries' }
 CompletionContext >> entryCount [
+
 	^ self entries size
 ]
 
 { #category : 'testing' }
 CompletionContext >> hasEntries [
+
 	^ self entries isEmptyOrNil not
 ]
 
 { #category : 'testing' }
 CompletionContext >> hasMessage [
+
 	^ self message isNotNil
 ]
 
@@ -109,9 +116,10 @@ CompletionContext >> isScripting [
 
 { #category : 'accessing' }
 CompletionContext >> message [
-	^self hasEntries
-		ifFalse: ['no completions found']
-		ifTrue: [nil]
+
+	^ self hasEntries
+		ifFalse: [ 'no completions found' ]
+		ifTrue: [ nil ]
 ]
 
 { #category : 'action' }
@@ -131,6 +139,7 @@ CompletionContext >> node [
 
 { #category : 'parsing' }
 CompletionContext >> parseSource [
+
 	ast := class compiler
 		source: source;
 		isScripting: self isScripting;
@@ -153,6 +162,7 @@ CompletionContext >> sorter: anObject [
 { #category : 'accessing' }
 CompletionContext >> title [
 	"we only give a title if we know the type of the receiver of a message send"
+	
 	node isMessage ifFalse: [ ^'' ].
-	^node receiver propertyAt: #type ifPresent: #name ifAbsent: ''
+	^ node receiver propertyAt: #type ifPresent: [ #name ] ifAbsent: [ '' ]
 ]

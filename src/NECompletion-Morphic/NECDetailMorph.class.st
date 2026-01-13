@@ -33,6 +33,7 @@ NECDetailMorph >> bounds [
 
 { #category : 'drawing' }
 NECDetailMorph >> contentBounds [
+
 	| factor rectangle |
 	factor := self itemHeight.
 	rectangle := self bounds top: self bounds top + 3.
@@ -43,38 +44,43 @@ NECDetailMorph >> contentBounds [
 
 { #category : 'drawing' }
 NECDetailMorph >> defaultColor [
+
 	^ NECMenuMorph backgroundColor
 ]
 
 { #category : 'accessing' }
 NECDetailMorph >> descriptionBounds [
+
 	^ self contentBounds top: self contentBounds top + 30
 ]
 
 { #category : 'drawing' }
 NECDetailMorph >> drawArrowOn: aCanvas [
-	| point factor poligon |
+
+	| point factor polygon |
 	factor := self itemHeight.
 	point := arrowPosition.
-	poligon := OrderedCollection new.
-	poligon add: point.
-	poligon add: (point := point translateBy: (factor / 2) @ 0).
-	poligon add: (point := point translateBy: 0 @ (factor * -0.5)).
-	poligon add: (point := point translateBy: factor @ factor).
-	poligon add: (point := point translateBy: (factor * -1) @ factor).
-	poligon add: (point := point translateBy: 0 @ (factor * -0.5)).
-	poligon add: (point := point translateBy: (factor * -0.5) @ 0).
-	aCanvas drawPolygon: poligon fillStyle: self scrollColor
+	polygon := OrderedCollection new.
+	polygon add: point.
+	polygon add: (point := point translateBy: (factor / 2) @ 0).
+	polygon add: (point := point translateBy: 0 @ (factor * -0.5)).
+	polygon add: (point := point translateBy: factor @ factor).
+	polygon add: (point := point translateBy: (factor * -1) @ factor).
+	polygon add: (point := point translateBy: 0 @ (factor * -0.5)).
+	polygon add: (point := point translateBy: (factor * -0.5) @ 0).
+	aCanvas drawPolygon: polygon fillStyle: self scrollColor
 ]
 
 { #category : 'drawing' }
 NECDetailMorph >> drawOn: aCanvas [
+
 	super drawOn: aCanvas.
 	arrowPosition ifNotNil: [ self drawArrowOn: aCanvas ]
 ]
 
 { #category : 'accessing' }
 NECDetailMorph >> entryDescription: anECEntryDescription [
+
 	| categoryContents entryDescription |
 	entryDescription := anECEntryDescription.
 	title
@@ -116,11 +122,13 @@ NECDetailMorph >> initialize [
 
 { #category : 'drawing' }
 NECDetailMorph >> itemHeight [
+
 	^ NECMenuMorph itemHeight
 ]
 
 { #category : 'drawing' }
 NECDetailMorph >> messageFont [
+
 	^ NECMenuMorph messageFont
 ]
 
@@ -144,15 +152,18 @@ NECDetailMorph >> position: aPoint menuWidth: anInteger [
 
 { #category : 'private' }
 NECDetailMorph >> positionOnLeft: anInteger [
+
 	^ arrowPosition x - self class width - anInteger
 ]
 
 { #category : 'drawing' }
 NECDetailMorph >> scrollColor [
+
 	^ NECMenuMorph scrollColor
 ]
 
 { #category : 'accessing' }
 NECDetailMorph >> titleBounds [
+
 	^ self contentBounds top: self contentBounds top + 10
 ]

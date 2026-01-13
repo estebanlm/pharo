@@ -51,13 +51,17 @@ NECSelectorEntry >> findMethodAndDo: foundBlock ifAbsent: notfoundBlock [
 
 { #category : 'accessing' }
 NECSelectorEntry >> label [
+	| typeString |
 	node isMessage ifFalse: [ ^ '' ].
 
 	"I return whether the variable is a class or a method."
-	 ^node receiver
+	
+	typeString := node receiver
 		propertyAt: #type
 		ifPresent:  [ 'method' ]
-		ifAbsent:  [ 'class' ]
+		ifAbsent:  [ 'class' ].
+	self originDisplayed ifTrue: [ typeString := typeString , ' from: ', fetcher ].
+	^ typeString
 ]
 
 { #category : 'accessing' }
