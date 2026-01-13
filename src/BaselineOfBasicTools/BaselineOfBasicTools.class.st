@@ -40,10 +40,8 @@ BaselineOfBasicTools >> baseline: spec [
 
 			spec
 				baseline: 'Traits' with: [ spec loads: 'core-traits' from: repository ];
-				baseline: 'SUnit' with: [
-					"SUnit requires Debugging (Halt), but we cannot express that in metacello.
-					We trust that packages are loaded in declaring order"
-					spec loads: 'Core' from: repository ];
+				baseline: 'SUnit' with: [ spec loads: 'Core' from: repository ];
+				baseline: 'Debugging' with: [ spec loads: 'Core' from: repository ];
 				baseline: 'UnifiedFFI' with: [ spec repository: repository ];
 				baseline: 'ThreadedFFI' with: [ spec repository: repository ];
 				baseline: 'UIInfrastructure' with: [ spec repository: repository ];
@@ -51,9 +49,9 @@ BaselineOfBasicTools >> baseline: spec [
 				baseline: 'Reflectivity' with: [ spec repository: repository ];
 				baseline: 'DebugPoints' with: [ spec repository: repository ];
 				baseline: 'Athens' with: [
-					spec
-						loads: 'Cairo-core';
-						repository: repository ].
+						spec
+							loads: 'Cairo-core';
+							repository: repository ].
 			spec package: 'Tool-ExternalBrowser'.
 			spec baseline: 'EnlumineurFormatter' with: [
 					spec
