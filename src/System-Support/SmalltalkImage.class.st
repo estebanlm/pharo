@@ -129,12 +129,6 @@ SmalltalkImage >> arguments [
 ]
 
 { #category : 'private' }
-SmalltalkImage >> argumentsInclude: aString [
-
-	^ (self argumentsStartingAtIndex: 0) includes: aString
-]
-
-{ #category : 'private' }
 SmalltalkImage >> argumentsStartingAtIndex: anIndex [
 	"Answer an array with all the command line arguments"
 
