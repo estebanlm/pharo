@@ -221,7 +221,7 @@ SessionManager >> hasRegistered: handledId [
 	"handledId, in most cases, will be a class name"
 
 	^ self startupList
-			anySatisfy: [ :handler | handler handledId = handledId ]
+			anySatisfy: [ :handler | handler handlerId = handledId ]
 ]
 
 { #category : 'initialization' }
@@ -286,7 +286,7 @@ SessionManager >> register: aSessionHandler [
 
 { #category : 'registration' }
 SessionManager >> register: aSessionHandler inCategory: aCategory [
-	self unregisterHandler: aSessionHandler handledId.
+	self unregisterHandler: aSessionHandler handlerId.
 	aCategory
 		register: aSessionHandler
 		atPriority: aCategory defaultPriority
@@ -294,7 +294,7 @@ SessionManager >> register: aSessionHandler inCategory: aCategory [
 
 { #category : 'registration' }
 SessionManager >> register: aSessionHandler inCategory: aCategory atPriority: anInteger [
-	self unregisterHandler: aSessionHandler handledId.
+	self unregisterHandler: aSessionHandler handlerId.
 	aCategory
 		register: aSessionHandler
 		atPriority: anInteger
@@ -436,8 +436,12 @@ SessionManager >> unregisterClassNamed: aClassName [
 ]
 
 { #category : 'registration' }
-SessionManager >> unregisterHandler: anHandledId [
-	categories do: [ :each | each unregisterHandler: anHandledId ]
+SessionManager >> unregisterHandler: aHandlerId [
+
+	| found |
+	found := false.
+	categories do: [ :each | found := found or: [ each unregisterHandler: aHandlerId ] ].
+	found ifFalse: [ self error: 'Handler not found: ' , aHandlerId ]
 ]
 
 { #category : 'well-known categories' }

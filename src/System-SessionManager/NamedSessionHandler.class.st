@@ -22,7 +22,7 @@ NamedSessionHandler class >> forClassNamed: aClassName id: aString [
 ]
 
 { #category : 'accessing' }
-NamedSessionHandler >> handledId [
+NamedSessionHandler >> handlerId [
 
 	^ name
 ]
