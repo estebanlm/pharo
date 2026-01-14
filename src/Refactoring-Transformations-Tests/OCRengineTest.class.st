@@ -25,6 +25,23 @@ OCRengineTest >> testAsReturnOnLastStatement [
 ]
 
 { #category : 'tests - as' }
+OCRengineTest >> testAsReturnOnLastStatementInBlock [
+
+	| ast blockNode lastStatement result |
+	ast := OCParser parseMethod: 'test
+        true ifTrue: [ 
+            2 + 3 ]'.
+	blockNode := ast body statements first arguments first.
+	lastStatement := blockNode body statements last. "2 + 3"
+
+	result := lastStatement asReturn.
+
+	self assert: result class equals: OCSequenceNode.
+	self assert: blockNode body statements last class equals: OCReturnNode.
+	self assert: blockNode body statements last value equals: lastStatement
+]
+
+{ #category : 'tests - as' }
 OCRengineTest >> testAsReturnOnSingleStatement [
 	"Test when there's only one statement in the sequence"
 
