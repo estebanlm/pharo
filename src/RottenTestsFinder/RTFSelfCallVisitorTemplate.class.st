@@ -22,6 +22,11 @@ RTFSelfCallVisitorTemplate >> analyze [
 ]
 
 { #category : 'accessing' }
+RTFSelfCallVisitorTemplate >> considerClassesThat [
+	^ considerClassesThat
+]
+
+{ #category : 'accessing' }
 RTFSelfCallVisitorTemplate >> considerClassesThat: anObject [
 	considerClassesThat := anObject
 ]
@@ -51,6 +56,11 @@ RTFSelfCallVisitorTemplate >> preAnalysisHook: aMessageNode [
 RTFSelfCallVisitorTemplate >> selfClass: aClass [
 
 	selfClass := aClass 
+]
+
+{ #category : 'accessing' }
+RTFSelfCallVisitorTemplate >> selfSentMethods [
+	^ selfSentMethods
 ]
 
 { #category : 'private' }

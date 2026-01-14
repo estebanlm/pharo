@@ -35,11 +35,6 @@ RTFSelfCallInterpreter >> analyze [
 	callStack pop
 ]
 
-{ #category : 'accessing' }
-RTFSelfCallInterpreter >> considerClassesThat [
-	^ considerClassesThat
-]
-
 { #category : 'initialization' }
 RTFSelfCallInterpreter >> initialize [ 
 
@@ -63,11 +58,6 @@ RTFSelfCallInterpreter >> rootSelfCall [
 { #category : 'accessing' }
 RTFSelfCallInterpreter >> rootSelfCall: anObject [
 	rootSelfCall := anObject
-]
-
-{ #category : 'accessing' }
-RTFSelfCallInterpreter >> selfSentMethods [
-	^ selfSentMethods
 ]
 
 { #category : 'api' }
