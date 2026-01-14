@@ -8,8 +8,8 @@ Class {
 { #category : 'tests' }
 RBDriverTest >> testAllDriversHaveADisplayString [
 
-	self shouldnt: [ ReInteractionDriver drivers collect: [ :driver | driver menuItemString ] ] raise: Error.
+	self shouldnt: [ ReInteractionDriver drivers collect: [ :driver | driver driverName ] ] raise: Error.
 	ReInteractionDriver drivers collect: [ :driver |
-			self assert: driver menuItemString isString.
-			self assert: driver menuItemString isNotEmpty ]
+			self assert: driver driverName isString.
+			self assert: driver driverName isNotEmpty ]
 ]

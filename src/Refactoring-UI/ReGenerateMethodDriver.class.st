@@ -51,9 +51,9 @@ ReGenerateMethodDriver >> instantiateRefactoring [
 ]
 
 { #category : 'execution' }
-ReGenerateMethodDriver >> refactoringClass [ 
+ReGenerateMethodDriver >> refactoringClass [
 
-	^ self class refactoringClass
+	^ self subclassResponsibility
 ]
 
 { #category : 'execution' }

@@ -32,6 +32,12 @@ Class {
 }
 
 { #category : 'accessing' }
+ReInteractionDriver class >> driverName [
+
+	^ self subclassResponsibility
+]
+
+{ #category : 'accessing' }
 ReInteractionDriver class >> drivers [
 
 	^ self allSubclasses reject: [ :subclass | subclass isAbstract ]
@@ -47,7 +53,7 @@ ReInteractionDriver class >> isAbstract [
 ReInteractionDriver class >> menuItemString [
 	"Make sure that the user knows that this is a transformation by adding (T) in front of the menu item name."
 
-	^ self refactoringClass menuItemString
+	^ self driverName
 ]
 
 { #category : 'instance creation' }
@@ -56,12 +62,6 @@ ReInteractionDriver class >> newApplication: anApplication [
 	^ self new 
 		application: anApplication;
 		yourself
-]
-
-{ #category : 'displaying' }
-ReInteractionDriver class >> refactoringClass [
-
-	self subclassResponsibility
 ]
 
 { #category : 'settings' }
@@ -290,12 +290,6 @@ ReInteractionDriver >> previewPresenterClass: aClass [
 { #category : 'resources' }
 ReInteractionDriver >> refactoring [
 	^ refactoring
-]
-
-{ #category : 'displaying' }
-ReInteractionDriver >> refactoringClass [
-
-	^ self class refactoringClass
 ]
 
 { #category : 'utilities' }

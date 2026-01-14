@@ -12,14 +12,20 @@ Class {
 	#tag : 'Drivers'
 }
 
-{ #category : 'displaying' }
-ReGenerateEqualAndHashDriver class >> refactoringClass [
+{ #category : 'accessing' }
+ReGenerateEqualAndHashDriver class >> driverName [
 
-	^ ReGenerateEqualHashTransformation
+	^ 'Generate equal and hash'
 ]
 
 { #category : 'configuration' }
 ReGenerateEqualAndHashDriver >> dialogTitle [
 
 	^ 'Generate equal and hash methods'
+]
+
+{ #category : 'execution' }
+ReGenerateEqualAndHashDriver >> refactoringClass [
+
+	^ ReGenerateEqualHashTransformation
 ]

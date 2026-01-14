@@ -11,6 +11,12 @@ Class {
 	#tag : 'Drivers'
 }
 
+{ #category : 'testing' }
+ReClassInteractionDriver class >> isAbstract [
+
+	^ self = ReClassInteractionDriver
+]
+
 { #category : 'accessing' }
 ReClassInteractionDriver >> dialogTitleForClassSelection [
 

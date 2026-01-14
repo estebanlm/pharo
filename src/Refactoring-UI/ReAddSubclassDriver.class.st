@@ -17,6 +17,12 @@ Class {
 	#tag : 'Drivers'
 }
 
+{ #category : 'accessing' }
+ReAddSubclassDriver class >> driverName [
+
+	^ 'Add new subclass'
+]
+
 { #category : 'accessing - class hierarchy' }
 ReAddSubclassDriver class >> superclass: aClass [
 	"superclass is the class that acts as a reference. A new subclass will be inserted below"

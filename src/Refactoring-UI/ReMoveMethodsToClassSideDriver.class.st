@@ -9,6 +9,12 @@ Class {
 	#tag : 'Drivers'
 }
 
+{ #category : 'accessing' }
+ReMoveMethodsToClassSideDriver class >> driverName [
+
+	^ 'Move method(s) to class side'
+]
+
 { #category : 'initialization' }
 ReMoveMethodsToClassSideDriver class >> scopes: scopesList methods: aCollectionOfMethods [
 
