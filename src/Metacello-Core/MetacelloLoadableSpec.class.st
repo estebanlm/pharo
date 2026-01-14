@@ -11,7 +11,9 @@ Class {
 
 { #category : 'class initialization' }
 MetacelloLoadableSpec class >> initialize [
-	self deprecatedAliases: #(MetacelloAbstractPackageSpec)
+	"To remove later. Added in Pharo 14"
+
+	self deprecatedAliases: #( MetacelloAbstractPackageSpec )
 ]
 
 { #category : 'testing' }
