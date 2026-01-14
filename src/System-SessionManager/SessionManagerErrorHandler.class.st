@@ -20,10 +20,10 @@ SessionManagerErrorHandler >> handleError: anError log: shouldLog [
 
 	(anError isKindOf: Notification)
 		ifTrue: [ anError resume ]
-		ifFalse: [
-			anError freeze.
+		ifFalse: [ | frozen |
+			frozen := anError freeze.
 			self sessionManager addDeferredStartupAction: [
-				anError pass ] ]
+				frozen pass ] ]
 ]
 
 { #category : 'accessing' }
