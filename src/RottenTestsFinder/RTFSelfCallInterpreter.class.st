@@ -8,14 +8,10 @@ See:
 "
 Class {
 	#name : 'RTFSelfCallInterpreter',
-	#superclass : 'OCProgramNodeVisitor',
+	#superclass : 'RTFSelfCallVisitorTemplate',
 	#instVars : [
-		'selfClass',
-		'selfSentMethods',
-		'considerClassesThat',
 		'callStack',
-		'rootSelfCall',
-		'selfSentMethod'
+		'rootSelfCall'
 	],
 	#category : 'RottenTestsFinder-SelfInterpreter',
 	#package : 'RottenTestsFinder',
@@ -31,11 +27,12 @@ RTFSelfCallInterpreter class >> example [
 ]
 
 { #category : 'private' }
-RTFSelfCallInterpreter >> canMethodBeAdded [
+RTFSelfCallInterpreter >> analyze [
 
-	^ (considerClassesThat value: selfSentMethod methodClass) 
-		| selfSentMethod isPrimitive
-		| (selfSentMethods includes: selfSentMethod)
+	super analyze.
+	callStack push: callStack top subCalls last.
+	selfSentMethod ast acceptVisitor: self.
+	callStack pop
 ]
 
 { #category : 'accessing' }
@@ -43,16 +40,19 @@ RTFSelfCallInterpreter >> considerClassesThat [
 	^ considerClassesThat
 ]
 
-{ #category : 'accessing' }
-RTFSelfCallInterpreter >> considerClassesThat: anObject [
-	considerClassesThat := anObject
+{ #category : 'initialization' }
+RTFSelfCallInterpreter >> initialize [ 
+
+	super initialize.
+	callStack := Stack new
 ]
 
-{ #category : 'initialization' }
-RTFSelfCallInterpreter >> initialize [
-	super initialize.
-	selfSentMethods := OrderedCollection new.
-	callStack := Stack new
+{ #category : 'private' }
+RTFSelfCallInterpreter >> preAnalysisHook: aMessageNode [
+
+	| callNode |
+	callNode := RTFSelfCallNode astNode: aMessageNode compiledMethod: selfSentMethod.
+	callStack top addCall: callNode.
 ]
 
 { #category : 'accessing' }
@@ -85,46 +85,6 @@ RTFSelfCallInterpreter >> send: aSelector fromClass: aClass [
 { #category : 'private' }
 RTFSelfCallInterpreter >> setMethodFromNode: aMessageNode [
 
-	| lookupClass |
-	lookupClass := aMessageNode receiver isSuperVariable
-		               ifTrue: [ selfClass superclass ]
-		               ifFalse: [ selfClass ].
-
-	selfSentMethod := lookupClass lookupSelector: aMessageNode selector.
+	super setMethodFromNode: aMessageNode.
 	selfSentMethod class = RTFMethodTracer ifTrue: [ selfSentMethod := selfSentMethod method ]
-]
-
-{ #category : 'visiting' }
-RTFSelfCallInterpreter >> visitMessageNode: aMessageNode [
-
-	^ self visitMessageNode: aMessageNode ifMissingMethod: [
-			Warning signal: ('#{1} can not be found in {2} nor in any super class.' format: {
-						 aMessageNode selector.
-						 selfClass name }).
-			^ self ]
-]
-
-{ #category : 'visiting' }
-RTFSelfCallInterpreter >> visitMessageNode: aMessageNode ifMissingMethod: aBlock [
-
-	| callNode |
-	self visitNodes: aMessageNode.
-	(aMessageNode receiver isSelfVariable or: [ aMessageNode receiver isSuperVariable ]) ifFalse: [ ^ self ].
-	self setMethodFromNode: aMessageNode.
-	selfSentMethod ifNil: [
-			aBlock value. ^ self ].
-	callNode := RTFSelfCallNode astNode: aMessageNode compiledMethod: selfSentMethod.
-	callStack top addCall: callNode.
-	self canMethodBeAdded ifFalse: [ ^ self ].
-	selfSentMethods add: selfSentMethod.
-	callStack push: callNode.
-	selfSentMethod ast acceptVisitor: self.
-	callStack pop
-]
-
-{ #category : 'visiting' }
-RTFSelfCallInterpreter >> visitNodes: aMessageNode [
-
-	aMessageNode receiver acceptVisitor: self.
-	aMessageNode arguments do: [ :each | each acceptVisitor: self ]
 ]
