@@ -69,22 +69,16 @@ MetacelloRepositoriesSpec >> hasRepository [
 { #category : 'actions' }
 MetacelloRepositoriesSpec >> merge: aSpec [
 
-	self
-		repositoryNamed: aSpec description
-		ifPresent: [ :spec |
-				repositorySpecs
-					remove: spec;
-					add: (spec mergeSpec: aSpec) ]
+	self repositoryNamed: aSpec description
+		ifPresent: [ :spec | spec mergeSpec: aSpec ]
 		ifAbsent: [ repositorySpecs add: aSpec ]
 ]
 
 { #category : 'merging' }
 MetacelloRepositoriesSpec >> mergeSpec: anotherSpec [
 
-	| newSpec |
-	newSpec := super mergeSpec: anotherSpec.
-	anotherSpec repositorySpecs do: [ :spec | newSpec merge: spec ].
-	^ newSpec
+	super mergeSpec: anotherSpec.
+	anotherSpec repositorySpecs do: [ :spec | self merge: spec ]
 ]
 
 { #category : 'copying' }

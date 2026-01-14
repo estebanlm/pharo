@@ -50,7 +50,7 @@ MetacelloVersionSpec >> defaultPackageNames [
 	"if there is a package named 'default' (a group) then it defines the default package names,
 	 otherwise answer a list of all of the package names in this version"
 
-	self packagesSpec packageNamed: 'default' ifAbsent: [ ^ self packageNames ].
+	self packagesSpec loadableSpecNamed: 'default' ifAbsent: [ ^ self packageNames ].
 	^ #( 'default' )
 ]
 
@@ -158,25 +158,6 @@ MetacelloVersionSpec >> loader: aMetacelloLoadTarget [
 	"nothing"
 ]
 
-{ #category : 'merging' }
-MetacelloVersionSpec >> mergeMap [
-
-	^ super mergeMap
-		  at: #preLoadDoIt put: preLoadDoIt;
-		  at: #postLoadDoIt put: postLoadDoIt;
-		  yourself
-]
-
-{ #category : 'merging' }
-MetacelloVersionSpec >> mergeSpec: anotherSpec [
-
-	| newSpec |
-	newSpec := super mergeSpec: anotherSpec.
-	newSpec packagesSpec: (self packagesSpec mergeSpec: anotherSpec packagesSpec).
-	newSpec repositories: (self repositories mergeSpec: anotherSpec repositories).
-	^ newSpec
-]
-
 { #category : 'querying' }
 MetacelloVersionSpec >> packageNamed: aString [
 
@@ -186,34 +167,34 @@ MetacelloVersionSpec >> packageNamed: aString [
 { #category : 'querying' }
 MetacelloVersionSpec >> packageNamed: aString ifAbsent: absentBlock [
 
-	| importSpec map |
-	map := self packagesSpec map.
-	^ map at: aString ifAbsent: [
-			  (self importArray isNotNil or: [ self import isNotNil ]) ifTrue: [ "expect the 'missing' name to be satisfied within context of imported project"
-					  importArray ifNotNil: [
-							  importArray do: [ :assoc |
-									  ((assoc value includes: aString) and: [ map includesKey: assoc key ]) ifTrue: [
-											  importSpec := (map at: assoc key)
-												                mergeImportLoads: { aString };
-												                yourself ] ].
-							  importSpec ifNotNil: [ ^ importSpec ] ].
-					  (importSpec isNil and: [ self import isNotNil ]) ifTrue: [
-							  ^ (map at: self import ifAbsent: absentBlock)
-								    mergeImportLoads: { aString };
-								    yourself ] ].
-			  (aString = 'default' or: [ aString = 'ALL' ])
-				  ifTrue: [
-						  self project groupSpec
-							  name: aString;
-							  includes: self packageNames;
-							  yourself ]
-				  ifFalse: [ absentBlock value ] ]
+	self packagesSpec loadableSpecNamed: aString ifPresent: [ :spec | ^ spec ].
+
+	self hasImports ifTrue: [ "expect the 'missing' name to be satisfied within context of imported project"
+			importArray ifNotNil: [
+					importArray do: [ :assoc |
+							(assoc value includes: aString) ifTrue: [
+									self packagesSpec loadableSpecNamed: assoc key ifPresent: [ :spec |
+											^ spec
+												  mergeImportLoads: { aString };
+												  yourself ] ] ] ].
+			self import ifNotNil: [
+					^ (self packagesSpec loadableSpecNamed: self import ifAbsent: absentBlock)
+						  mergeImportLoads: { aString };
+						  yourself ] ].
+
+	^ (#( 'default' 'ALL' ) includes: aString)
+		  ifTrue: [
+				  self project groupSpec
+					  name: aString;
+					  includes: self packageNames;
+					  yourself ]
+		  ifFalse: [ absentBlock value ]
 ]
 
 { #category : 'querying' }
 MetacelloVersionSpec >> packageNames [
 
-	^ self packagesSpec map keys asSet
+	^ self packagesSpec loadableSpecs collect: [ :spec | spec name ]
 ]
 
 { #category : 'querying' }

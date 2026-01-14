@@ -11,7 +11,9 @@ Class {
 
 { #category : 'class initialization' }
 MetacelloLoadableSpec class >> initialize [
-	self deprecatedAliases: #(MetacelloAbstractPackageSpec)
+	"To remove later. Added in Pharo 14"
+
+	self deprecatedAliases: #( MetacelloAbstractPackageSpec )
 ]
 
 { #category : 'testing' }
@@ -65,10 +67,8 @@ MetacelloLoadableSpec >> label [
 { #category : 'merging' }
 MetacelloLoadableSpec >> mergeSpec: anotherSpec [
 
-	| newSpec |
-	newSpec := super mergeSpec: anotherSpec.
-	anotherSpec includes ifNotEmpty: [ :anotherIncludes | newSpec includes: self includes , anotherIncludes ].
-	^ newSpec
+	super mergeSpec: anotherSpec.
+	anotherSpec includes ifNotEmpty: [ :anotherIncludes | self includes: self includes , anotherIncludes ]
 ]
 
 { #category : 'querying' }

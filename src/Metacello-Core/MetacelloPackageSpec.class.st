@@ -86,13 +86,11 @@ MetacelloPackageSpec >> mergeMap [
 { #category : 'merging' }
 MetacelloPackageSpec >> mergeSpec: anotherSpec [
 
-	| newSpec |
-	newSpec := super mergeSpec: anotherSpec.
-	anotherSpec requires ifNotEmpty: [ :anotherRequires | newSpec requires: self requires , anotherRequires ].
-	newSpec repositories: (self repositories mergeSpec: anotherSpec repositories).
+	super mergeSpec: anotherSpec.
+	anotherSpec requires ifNotEmpty: [ :anotherRequires | self requires: self requires , anotherRequires ].
+	self repositories: (self repositories mergeSpec: anotherSpec repositories).
 
-	anotherSpec name ifNotNil: [ newSpec name: anotherSpec name ].
-	^ newSpec
+	anotherSpec name ifNotNil: [ self name: anotherSpec name ]
 ]
 
 { #category : 'querying' }
