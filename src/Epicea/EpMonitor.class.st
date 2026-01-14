@@ -50,7 +50,9 @@ EpMonitor class >> hasCurrent [
 
 { #category : 'class initialization' }
 EpMonitor class >> initialize [
-	SessionManager default registerToolClassNamed: self name
+
+	SessionManager default registerToolClassNamed: self name.
+	self shouldLogMetacelloLoading: false
 ]
 
 { #category : 'accessing' }

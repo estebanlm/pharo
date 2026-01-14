@@ -158,25 +158,6 @@ MetacelloVersionSpec >> loader: aMetacelloLoadTarget [
 	"nothing"
 ]
 
-{ #category : 'merging' }
-MetacelloVersionSpec >> mergeMap [
-
-	^ super mergeMap
-		  at: #preLoadDoIt put: preLoadDoIt;
-		  at: #postLoadDoIt put: postLoadDoIt;
-		  yourself
-]
-
-{ #category : 'merging' }
-MetacelloVersionSpec >> mergeSpec: anotherSpec [
-
-	| newSpec |
-	newSpec := super mergeSpec: anotherSpec.
-	newSpec packagesSpec: (self packagesSpec mergeSpec: anotherSpec packagesSpec).
-	newSpec repositories: (self repositories mergeSpec: anotherSpec repositories).
-	^ newSpec
-]
-
 { #category : 'querying' }
 MetacelloVersionSpec >> packageNamed: aString [
 

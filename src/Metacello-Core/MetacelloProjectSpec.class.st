@@ -250,16 +250,12 @@ MetacelloProjectSpec >> mergeScriptRepository: anotherSpec [
 
 { #category : 'merging' }
 MetacelloProjectSpec >> mergeSpec: anotherSpec [
-
-	| newSpec |
-	newSpec := super mergeSpec: anotherSpec.
-	anotherSpec getRepositories ifNotNil: [ :anotherRepositories |
-		"anotherRepositories wins ... there can ever only be one repository for the 
-   baseline to load from
+	"anotherRepositories wins ... there can ever only be one repository for the baseline to load from
 		
 		https://github.com/dalehenrich/metacello-work/issues/251"
-		newSpec repositories: anotherRepositories ].
-	^ newSpec
+
+	super mergeSpec: anotherSpec.
+	anotherSpec getRepositories ifNotNil: [ :anotherRepositories | self repositories: anotherRepositories ]
 ]
 
 { #category : 'scripting' }

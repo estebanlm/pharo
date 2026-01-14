@@ -17,11 +17,6 @@ MetacelloProjectReferenceSpec class >> projectReference: aMetacelloProjectSpec [
 		  yourself
 ]
 
-{ #category : 'merging' }
-MetacelloProjectReferenceSpec >> aboutToCopy [
-    self projectReference className
-]
-
 { #category : 'visiting' }
 MetacelloProjectReferenceSpec >> acceptVisitor: aVisitor [
 	
@@ -48,13 +43,9 @@ MetacelloProjectReferenceSpec >> mergeImportLoads: aLoadList [
 { #category : 'merging' }
 MetacelloProjectReferenceSpec >> mergeSpec: anotherSpec [
 
-	| newSpec |
-	newSpec := super mergeSpec: anotherSpec.
-	anotherSpec projectReference ifNotNil: [ :anotherProjectReference |
-			newSpec projectReference: (newSpec projectReference
-					 ifNotNil: [ :reference | reference mergeSpec: anotherProjectReference ]
-					 ifNil: [ anotherProjectReference ]) ].
-	^ newSpec
+	super mergeSpec: anotherSpec.
+	self projectReference className. "Before merging the reference, we need to launch the defensive strategy of the class name."
+	self projectReference: (self projectReference mergeSpec: anotherSpec projectReference)
 ]
 
 { #category : 'querying' }
