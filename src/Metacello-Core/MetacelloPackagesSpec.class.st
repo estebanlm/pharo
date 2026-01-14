@@ -52,9 +52,7 @@ MetacelloPackagesSpec >> copy: specNamed to: spec [
 
 	loadableSpecs
 		detect: [ :aSpec | aSpec name = specNamed ]
-		ifFound: [ :aSpec |
-				aSpec aboutToCopy.
-				loadableSpecs add: (aSpec copy mergeSpec: spec copy) ]
+		ifFound: [ :aSpec | loadableSpecs add: (aSpec copy mergeSpec: spec) ]
 		ifNone: [ self error: 'Source spec named ' , specNamed printString , ' not found' ]
 ]
 
@@ -93,18 +91,10 @@ MetacelloPackagesSpec >> loadableSpecs [
 MetacelloPackagesSpec >> merge: spec [
 	"We need to keep the order if we kind a spec that already has this name."
 
-	loadableSpecs doWithIndex: [ :aSpec :index | aSpec name = spec name ifTrue: [ ^ loadableSpecs at: index put: (aSpec mergeSpec: spec) ] ].
-
-	loadableSpecs add: spec
-]
-
-{ #category : 'merging' }
-MetacelloPackagesSpec >> mergeSpec: anotherSpec [
-
-	| newSpec |
-	newSpec := super mergeSpec: anotherSpec.
-	anotherSpec loadableSpecs do: [ :spec | newSpec merge: spec ].
-	^ newSpec
+	loadableSpecs
+		detect: [ :aSpec | aSpec name = spec name ]
+		ifFound: [ :aSpec | aSpec mergeSpec: spec ]
+		ifNone: [ loadableSpecs add: spec ]
 ]
 
 { #category : 'accessing' }

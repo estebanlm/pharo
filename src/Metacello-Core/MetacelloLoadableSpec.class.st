@@ -67,10 +67,8 @@ MetacelloLoadableSpec >> label [
 { #category : 'merging' }
 MetacelloLoadableSpec >> mergeSpec: anotherSpec [
 
-	| newSpec |
-	newSpec := super mergeSpec: anotherSpec.
-	anotherSpec includes ifNotEmpty: [ :anotherIncludes | newSpec includes: self includes , anotherIncludes ].
-	^ newSpec
+	super mergeSpec: anotherSpec.
+	anotherSpec includes ifNotEmpty: [ :anotherIncludes | self includes: self includes , anotherIncludes ]
 ]
 
 { #category : 'querying' }

@@ -38,10 +38,8 @@ MetacelloGroupSpec >> isGroupSpec [
 { #category : 'merging' }
 MetacelloGroupSpec >> mergeSpec: anotherSpec [
 
-	| newSpec |
-	newSpec := super mergeSpec: anotherSpec.
-	anotherSpec name ifNotNil: [ :aName | newSpec name: aName ].
-	^ newSpec
+	super mergeSpec: anotherSpec.
+	anotherSpec name ifNotNil: [ :aName | self name: aName ]
 ]
 
 { #category : 'querying' }

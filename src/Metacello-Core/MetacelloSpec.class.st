@@ -6,10 +6,6 @@ Class {
 	#tag : 'Model'
 }
 
-{ #category : 'merging' }
-MetacelloSpec >> aboutToCopy [
-]
-
 { #category : 'printing' }
 MetacelloSpec >> label [
 
@@ -34,13 +30,10 @@ MetacelloSpec >> mergeMap [
 { #category : 'merging' }
 MetacelloSpec >> mergeSpec: aSpec [
 
-	| newSpec |
 	aSpec class = self class ifFalse: [
 			self error:
 				'The project spec ' , self label , ' has incompatible specs. ' , aSpec class name asString , ' and ' , self class name asString , ' are not compatible.' ].
-	newSpec := self copy.
-	aSpec mergeMap keysAndValuesDo: [ :key :value | value ifNotNil: [ newSpec instVarNamed: key asString put: value ] ].
-	^ newSpec
+	aSpec mergeMap keysAndValuesDo: [ :key :value | value ifNotNil: [ self instVarNamed: key asString put: value ] ]
 ]
 
 { #category : 'validation' }
