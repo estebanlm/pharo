@@ -2,12 +2,12 @@ Extension { #name : 'MCVersionReader' }
 
 { #category : '*MonticelloFileServices' }
 MCVersionReader class >> fileReaderServicesForFile: fullName suffix: suffix [
+
 	<fileService>
-	self subclassesDo:[:class |
-	^ ((suffix = class extension) or: [ suffix = '*' ])
-		ifTrue: [class services]
-		ifFalse: [Array new: 0]]
-		
+	^ self allSubclasses flatCollect: [ :class |
+			  (class isAbstract not and: [ suffix = class extension or: [ suffix = '*' ] ])
+				  ifTrue: [ class services ]
+				  ifFalse: [ #(  ) ] ]
 ]
 
 { #category : '*MonticelloFileServices' }
