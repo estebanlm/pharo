@@ -5,7 +5,6 @@ Class {
 		'class',
 		'variable',
 		'selector',
-		'subclassesNotDefiningVar',
 		'notMultipleTempOccurences',
 		'noReadBeforeWritten'
 	],
@@ -25,7 +24,6 @@ ReConvertTemporaryToInstanceVariableDriver >> breakingChoices [
 
 	| items |
 	items := OrderedCollection new.
-	subclassesNotDefiningVar check ifFalse: [ items add: (ReBrowseClassReferencesChoice new driver: self) ].
 	noReadBeforeWritten check ifFalse: [ items add: (ReBrowseMethodChoice new driver: self) ].
 	notMultipleTempOccurences check ifFalse: [
 			items add: (ReBrowseMethodsChoice new
@@ -52,12 +50,6 @@ ReConvertTemporaryToInstanceVariableDriver >> browseMethods [
 ReConvertTemporaryToInstanceVariableDriver >> browseMethodsDescription [
 
 	^ 'Browse all methods containing a temporary variable with the same name'
-]
-
-{ #category : 'actions' }
-ReConvertTemporaryToInstanceVariableDriver >> browseReferences [
-
-	(application toolNamed: #browser) browseClasses: (class allSubclasses select: [ :cls | cls hasInstVarNamed: variable ])
 ]
 
 { #category : 'instance creation' }
@@ -97,20 +89,11 @@ ReConvertTemporaryToInstanceVariableDriver >> instantiateRefactoring [
 ReConvertTemporaryToInstanceVariableDriver >> labelBasedOnBreakingChanges [
 
 	^ String streamContents: [ :stream |
-			  subclassesNotDefiningVar check ifFalse: [
-					  subclassesNotDefiningVar violationMessageOn: stream.
-					  stream cr ].
 			  notMultipleTempOccurences violationMessageOn: stream.
 			  stream cr.
 			  noReadBeforeWritten violationMessageOn: stream.
 			  stream cr.
 			  stream nextPutAll: 'Select a strategy' ]
-]
-
-{ #category : 'actions' }
-ReConvertTemporaryToInstanceVariableDriver >> pushUpInstanceVariableAndRemoveTemp [
-
-	
 ]
 
 { #category : 'execution' }
@@ -121,7 +104,7 @@ ReConvertTemporaryToInstanceVariableDriver >> runRefactoring [
 			self informConditions: conditions.
 			^ false ].
 	self setBreakingChangesPreconditions.
-	subclassesNotDefiningVar check & notMultipleTempOccurences check & noReadBeforeWritten check
+	notMultipleTempOccurences check & noReadBeforeWritten check
 		ifTrue: [ self applyChanges ]
 		ifFalse: [ self handleBreakingChanges ]
 ]
@@ -138,7 +121,6 @@ ReConvertTemporaryToInstanceVariableDriver >> scopes: aScope class: aClass selec
 { #category : 'initialization' }
 ReConvertTemporaryToInstanceVariableDriver >> setBreakingChangesPreconditions [
 
-	subclassesNotDefiningVar := refactoring preconditionNoSubclassDefinesVar.
 	notMultipleTempOccurences := refactoring preconditionNoMultipleTempOccurences.
-	noReadBeforeWritten := refactoring preconditionNoReadBeforeWritten
+	noReadBeforeWritten := refactoring preconditionNoReadBeforeWritten 
 ]
