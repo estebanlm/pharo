@@ -334,7 +334,7 @@ SHRBTextStyler class >> darkStyleTable [
 ]
 
 { #category : 'styles' }
-SHRBTextStyler class >> defaultStyleTable [
+SHRBTextStyler class >> defaultStyleTableSelector [
 	"Answer the selector identifying the default style table"
 
  	^ #blueStyleTable
@@ -513,7 +513,8 @@ SHRBTextStyler class >> solarizedStyleTable [
 { #category : 'accessing' }
 SHRBTextStyler class >> styleTable [
 
-	^ styleTable ifNil: [ styleTable := self perform: self styleTableSelector ]
+	^ styleTable ifNil: [ 
+		styleTable := self perform: self styleTableSelector ]
 ]
 
 { #category : 'accessing' }
@@ -556,7 +557,7 @@ SHRBTextStyler class >> styleTablePragmas [
 { #category : 'accessing' }
 SHRBTextStyler class >> styleTableSelector [
 
-	^ styleTableSelector ifNil: [ styleTableSelector := self defaultStyleTable ]
+	^ styleTableSelector ifNil: [ styleTableSelector := self defaultStyleTableSelector ]
 ]
 
 { #category : 'accessing' }
