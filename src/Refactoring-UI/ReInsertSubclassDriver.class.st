@@ -9,7 +9,8 @@ Class {
 	#instVars : [
 		'superclass',
 		'subclass',
-		'comment'
+		'comment',
+		'beSibling'
 	],
 	#category : 'Refactoring-UI-Drivers',
 	#package : 'Refactoring-UI',
@@ -38,6 +39,12 @@ ReInsertSubclassDriver class >> superclass: aClass packageNames: packages [
 ]
 
 { #category : 'accessing' }
+ReInsertSubclassDriver >> beSibling [
+
+	beSibling := true
+]
+
+{ #category : 'accessing' }
 ReInsertSubclassDriver >> comment [
 
 	^ comment
@@ -53,6 +60,13 @@ ReInsertSubclassDriver >> comment: aString [
 ReInsertSubclassDriver >> dialogTitleForClassSelection [
 
 	^ 'Insert subclass of ', superclass name
+]
+
+{ #category : 'initialization' }
+ReInsertSubclassDriver >> initialize [
+
+	super initialize.
+	beSibling := false
 ]
 
 { #category : 'configuration' }
@@ -113,7 +127,8 @@ ReInsertSubclassDriver >> runRefactoring [
 ReInsertSubclassDriver >> scopes: refactoringScopes [
 
 	scopes := refactoringScopes.
-	model := self refactoringScopeOn: scopes last.
+
+	model := self refactoringScopeOn: scopes first.
 	superclass := model classObjectFor: superclass
 
 ]
@@ -133,8 +148,10 @@ ReInsertSubclassDriver >> subclass: aClass [
 { #category : 'accessing' }
 ReInsertSubclassDriver >> subclasses [
 	"the subclasses are the subclasses of the superclass because we want to insert a new class between the superclass and the subclasses"
-	
-	^ superclass subclasses
+
+	^ beSibling
+		  ifTrue: [ #(  ) ]
+		  ifFalse: [ superclass subclasses ]
 ]
 
 { #category : 'accessing' }
