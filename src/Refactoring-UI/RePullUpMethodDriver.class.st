@@ -30,6 +30,12 @@ Class {
 	#tag : 'Drivers'
 }
 
+{ #category : 'accessing' }
+RePullUpMethodDriver class >> driverName [
+
+	^ 'Pull up method(s)'
+]
+
 { #category : 'initialization' }
 RePullUpMethodDriver class >> model: model scopes: refactoringScopes pullUpMethods: methods [
 

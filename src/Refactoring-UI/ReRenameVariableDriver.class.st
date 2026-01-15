@@ -15,6 +15,12 @@ Class {
 	#tag : 'Drivers'
 }
 
+{ #category : 'testing' }
+ReRenameVariableDriver class >> isAbstract [
+
+	^ self = ReRenameVariableDriver
+]
+
 { #category : 'private' }
 ReRenameVariableDriver >> informError: cond [
 

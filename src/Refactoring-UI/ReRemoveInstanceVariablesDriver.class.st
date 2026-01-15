@@ -13,6 +13,12 @@ Class {
 	#tag : 'Drivers'
 }
 
+{ #category : 'accessing' }
+ReRemoveInstanceVariablesDriver class >> driverName [
+
+	^ 'Remove instance variable(s)'
+]
+
 { #category : 'execution' }
 ReRemoveInstanceVariablesDriver >> breakingChoices [
 

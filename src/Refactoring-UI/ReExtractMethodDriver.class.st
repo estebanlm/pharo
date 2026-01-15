@@ -15,10 +15,11 @@ Class {
 	#tag : 'Drivers'
 }
 
-{ #category : 'displaying' }
-ReExtractMethodDriver class >> refactoringClass [
+{ #category : 'accessing' }
+ReExtractMethodDriver class >> driverName [
+	"I'm not sure we should keep the `no occurences`? In the future this driver should probably manage all options"
 
-	^ ReCompositeExtractMethodRefactoring
+	^ 'Extract method (no occurrences)'
 ]
 
 { #category : 'execution' }
@@ -112,10 +113,7 @@ ReExtractMethodDriver >> instantiateRefactoring [
 	"here we do not fully configure the refactoring because we are missing information such as the signature.
 	Since we want to let the refactoring validate input we need to create it upfront then configure later."
 
-	^ self class refactoringClass new 
-		extract: body 
-		from: sourceMethod selector 
-		in: class name
+	^ ReCompositeExtractMethodRefactoring new extract: body from: sourceMethod selector in: class name
 ]
 
 { #category : 'configuration' }

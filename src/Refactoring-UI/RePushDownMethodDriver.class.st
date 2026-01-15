@@ -26,6 +26,12 @@ Class {
 	#tag : 'Drivers'
 }
 
+{ #category : 'accessing' }
+RePushDownMethodDriver class >> driverName [
+
+	^ 'Push down method(s)'
+]
+
 { #category : 'initialization' }
 RePushDownMethodDriver class >> model: aRBNamespace scopes: refactoringScopes pushDownMethods: methods [
 

@@ -22,6 +22,12 @@ Class {
 	#tag : 'Drivers'
 }
 
+{ #category : 'accessing' }
+RePushDownMethodInSomeClassesDriver class >> driverName [
+
+	^ 'Push down method(s) in some classes'
+]
+
 { #category : 'execution' }
 RePushDownMethodInSomeClassesDriver >> gatherUserInput [
 

@@ -32,6 +32,12 @@ ReDuplicateClassDriver class >> className: aClassName [
 		yourself
 ]
 
+{ #category : 'accessing' }
+ReDuplicateClassDriver class >> driverName [
+
+	^ 'Duplicate class'
+]
+
 { #category : 'private' }
 ReDuplicateClassDriver >> acceptClassRequest: dialog [
 

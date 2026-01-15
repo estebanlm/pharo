@@ -16,6 +16,12 @@ Class {
 	#tag : 'Drivers'
 }
 
+{ #category : 'accessing' }
+ReRenameMethodDriver class >> driverName [
+
+	^ 'Rename method'
+]
+
 { #category : 'execution' }
 ReRenameMethodDriver >> breakingChoices [
 
