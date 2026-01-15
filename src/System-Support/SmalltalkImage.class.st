@@ -129,12 +129,6 @@ SmalltalkImage >> arguments [
 ]
 
 { #category : 'private' }
-SmalltalkImage >> argumentsInclude: aString [
-
-	^ (self argumentsStartingAtIndex: 0) includes: aString
-]
-
-{ #category : 'private' }
 SmalltalkImage >> argumentsStartingAtIndex: anIndex [
 	"Answer an array with all the command line arguments"
 
@@ -1237,26 +1231,6 @@ SmalltalkImage >> removeEmptyMessageCategories [
 	self packageOrganizer removeEmptyPackagesAndTags
 ]
 
-{ #category : 'shrinking' }
-SmalltalkImage >> removeSelector: descriptor [
-	"Safely remove a selector from a class (or metaclass). If the
-	class or the method doesn't exist anymore, never mind and
-	answer nil.
-	This method should be used instead of 'Class removeSelector:
-	#method' to omit global class references."
-	| class sel |
-	class := self
-				at: descriptor first
-				ifAbsent: [^ nil].
-	(descriptor size > 2 and: [descriptor second == #class])
-		ifTrue:
-			[class := class class.
-			sel := descriptor third]
-		ifFalse:
-			[sel := descriptor second].
-	^ class removeSelector: sel
-]
-
 { #category : 'class and trait names' }
 SmalltalkImage >> renameClass: aClass from: oldName [
 	"Rename the class, aClass, to have the title newName."
@@ -1489,28 +1463,6 @@ SmalltalkImage >> stripImageExtensionFrom: aString [
 	[answer isNil not and: [(answer endsWith: imageExtension) or: [answer endsWith: delimitedImageExtension]]]
 		whileTrue: [answer := answer copyUpToLast: File extensionDelimiter].
 	^answer
-]
-
-{ #category : 'system attributes' }
-SmalltalkImage >> supportsQueueingFinalization [
-	"Determine whether the VM queues individual weak arrays for finalization, instead
-	 of signalling the finalization semaphore once for all arrays and having the
-	 WeakRegistry mechanism finalize all weak arrays, whether they need to or not.
-	 This flag persists across snapshots, stored in the image header."
-	"SmalltalkImage current supportsQueueingFinalization"
-
-	^ ((self vm parameterAt: 48) bitAnd: 16) = 16
-]
-
-{ #category : 'system attributes' }
-SmalltalkImage >> supportsQueueingFinalization: aBoolean [
-	"Determine whether the VM queues individual weak arrays for finalization, instead
-	 of signalling the finalization semaphore once for all arrays and having the
-	 WeakRegistry mechanism finalize all weak arrays, whether they need to or not.
-	 This flag persists across snapshots, stored in the image header."
-	"SmalltalkImage current supportsQueueingFinalization: true"
-
-	self vm parameterAt: 48 put: ((self vm parameterAt: 48) bitClear: 16) + (aBoolean ifTrue: [16] ifFalse: [0])
 ]
 
 { #category : 'class and trait names' }

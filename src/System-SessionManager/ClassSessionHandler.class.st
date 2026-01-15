@@ -21,7 +21,7 @@ ClassSessionHandler class >> forClassNamed: aClassName [
 ]
 
 { #category : 'accessing' }
-ClassSessionHandler >> handledId [
+ClassSessionHandler >> handlerId [
 	^ registeredClassName
 ]
 
