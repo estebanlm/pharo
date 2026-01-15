@@ -41,9 +41,13 @@ RTFSelfCallVisitorTemplate >> initialize [
 { #category : 'private' }
 RTFSelfCallVisitorTemplate >> isMethodAnalyzable [
 
-	^ (considerClassesThat value: selfSentMethod methodClass) 
-		| selfSentMethod isPrimitive
-		| (selfSentMethods includes: selfSentMethod)
+	(considerClassesThat value: selfSentMethod methodClass)
+		ifFalse: [ ^ false ].
+	selfSentMethod isPrimitive
+		ifTrue: [ ^ false ].
+	(selfSentMethods includes: selfSentMethod)
+		ifTrue: [ ^ false ].
+	^ true
 ]
 
 { #category : 'private' }
