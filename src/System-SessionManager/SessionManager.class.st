@@ -294,10 +294,11 @@ SessionManager >> register: aSessionHandler inCategory: aCategory [
 
 { #category : 'registration' }
 SessionManager >> register: aSessionHandler inCategory: aCategory atPriority: anInteger [
-	self unregisterHandler: aSessionHandler handlerId.
-	aCategory
-		register: aSessionHandler
-		atPriority: anInteger
+
+	self
+		unregisterHandler: aSessionHandler handlerId
+		ifAbsent: [ "To have a clean registration" ].
+	aCategory register: aSessionHandler atPriority: anInteger
 ]
 
 { #category : 'registration' }
@@ -438,10 +439,16 @@ SessionManager >> unregisterClassNamed: aClassName [
 { #category : 'registration' }
 SessionManager >> unregisterHandler: aHandlerId [
 
+	^ self unregisterHandler: aHandlerId ifAbsent: [ self error: 'Handler not found: ' , aHandlerId ]
+]
+
+{ #category : 'registration' }
+SessionManager >> unregisterHandler: aHandlerId ifAbsent: aBlock [
+
 	| found |
 	found := false.
 	categories do: [ :each | found := found or: [ each unregisterHandler: aHandlerId ] ].
-	found ifFalse: [ self error: 'Handler not found: ' , aHandlerId ]
+	found ifFalse: aBlock
 ]
 
 { #category : 'well-known categories' }
