@@ -55,11 +55,6 @@ MetacelloProjectSpec >> asProjectRegistration [
 	^ MetacelloProjectRegistration projectSpec: self
 ]
 
-{ #category : 'scripting' }
-MetacelloProjectSpec >> asProjectSpec [
-    ^ self
-]
-
 { #category : 'accessing' }
 MetacelloProjectSpec >> baseName [
 	^ MetacelloScriptEngine baseNameOf: self className
@@ -388,9 +383,10 @@ MetacelloProjectSpec >> repositories [
 
 { #category : 'accessing' }
 MetacelloProjectSpec >> repositories: anObject [
-    self shouldBeMutable.
-    repositories := anObject.
-    self resetProjectPackage
+
+	self shouldBeMutable.
+	repositories := anObject.
+	self resetProjectPackage
 ]
 
 { #category : 'accessing' }
