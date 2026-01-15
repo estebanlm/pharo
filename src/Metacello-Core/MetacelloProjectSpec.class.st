@@ -10,7 +10,8 @@ Class {
 		'repositories',
 		'postLoadDoIt',
 		'className',
-		'mutable'
+		'mutable',
+		'strict'
 	],
 	#category : 'Metacello-Core-Model',
 	#package : 'Metacello-Core',
@@ -447,6 +448,18 @@ MetacelloProjectSpec >> shouldBeMutable [
 
 	self isMutable ifTrue: [ ^ self ].
 	self error: 'Not allowed to modify an immutable object'
+]
+
+{ #category : 'accessing' }
+MetacelloProjectSpec >> strict [
+	
+	^ strict
+]
+
+{ #category : 'accessing' }
+MetacelloProjectSpec >> strict: aBoolean [
+	
+	strict := aBoolean
 ]
 
 { #category : 'scripting' }

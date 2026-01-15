@@ -248,6 +248,11 @@ MetacelloPackageSpec >> specs: specNames forPackageOrdering: aVersionSpec [
 ]
 
 { #category : 'accessing' }
+MetacelloPackageSpec >> strict: aBoolean [ 
+	strict := aBoolean
+]
+
+{ #category : 'accessing' }
 MetacelloPackageSpec >> workingCopy [
 	"Answer a working copy, or nil if the package is not loaded."
 

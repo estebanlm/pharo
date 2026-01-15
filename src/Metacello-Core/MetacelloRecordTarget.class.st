@@ -169,7 +169,7 @@ MetacelloRecordTarget >> visitProjectReference: aMetacelloProjectReferenceSpec [
 
 	projectReferenceToLoad ensureProjectLoadedWithEngine: engine.
 	"Propagate the strictness to the dependency as defined in the dependent before loading"
-	projectReferenceToLoad project strict: projectReferenceToLoad strict.
+	projectReferenceToLoad project version strict: projectReferenceToLoad strict.
 	
 	requiredArray := registered loadListForVersion: projectReferenceToLoad version.
 	projectReferenceToLoad version
