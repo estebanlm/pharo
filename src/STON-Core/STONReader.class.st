@@ -616,7 +616,7 @@ STONReader >> stringStreamContents: block [
 	stringStream ifNil: [
 		stringStream := (String new: 32) writeStream ].
 	
-	stringStream collection isWideString 
+	stringStream originalContents isWideString 
 		ifTrue: [ stringStream := (String new: 32) writeStream ]  
 		ifFalse: [ stringStream reset ].
 	
