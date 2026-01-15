@@ -38,7 +38,7 @@ ReInsertSubclassDriver class >> superclass: aClass packageNames: packages [
 		yourself
 ]
 
-{ #category : 'accessing' }
+{ #category : 'configuration' }
 ReInsertSubclassDriver >> beSibling [
 
 	beSibling := true
