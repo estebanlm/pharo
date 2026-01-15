@@ -18,6 +18,12 @@ ReGenerateEqualAndHashDriver class >> driverName [
 	^ 'Generate equal and hash'
 ]
 
+{ #category : 'accessing' }
+ReGenerateEqualAndHashDriver class >> shouldPreviewChangesByDefault [
+
+	^ false
+]
+
 { #category : 'configuration' }
 ReGenerateEqualAndHashDriver >> dialogTitle [
 

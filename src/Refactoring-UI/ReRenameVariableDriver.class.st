@@ -21,6 +21,12 @@ ReRenameVariableDriver class >> isAbstract [
 	^ self = ReRenameVariableDriver
 ]
 
+{ #category : 'accessing' }
+ReRenameVariableDriver class >> shouldPreviewChangesByDefault [
+
+	^ false
+]
+
 { #category : 'private' }
 ReRenameVariableDriver >> informError: cond [
 
