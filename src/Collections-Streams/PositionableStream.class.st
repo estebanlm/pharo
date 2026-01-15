@@ -103,6 +103,12 @@ PositionableStream >> boolean: aBoolean [
 	self nextPut: (aBoolean ifTrue: [1] ifFalse: [0])
 ]
 
+{ #category : 'accessing' }
+PositionableStream >> collection [
+
+	^ collection
+]
+
 { #category : 'private' }
 PositionableStream >> collectionSpecies [
 	"Answer the species of collection into which the receiver can stream"
