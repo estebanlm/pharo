@@ -81,6 +81,6 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			"Group of packages to export as MCZ"
 			spec group: 'ToExportAsMCZ' with: { 'KernelGroup'. 'ToLoadByHermes' }. 
 			
-			"The next group is here for testing the minimal image"
-			spec group: 'SUnitGroup' with: #( 'Clap-Core' 'Clap-Commands-Pharo' 'Hermes-Extensions' 'Math-Operations-Extensions' 'System-Time' 'NumberParser' 'AST-Core' 'ParseTreeRewriter' 'Random-Core' 'System-NumberPrinting' 'Traits' 'Deprecation' 'SUnit-Core' 'SUnit-Basic-CLI' 'SUnit-Tests' 'Kernel-Tests' 'Debugging-Utils' ) ]
+			"The next group is here for testing the minimal image. The packages needs to be in the loading order!"
+			spec group: 'SUnitGroup' with: #( 'Clap-Core' 'Clap-Commands-Pharo' 'Hermes-Extensions' 'Math-Operations-Extensions' 'System-Time' 'NumberParser' 'AST-Core' 'ParseTreeRewriter' 'Random-Core' 'System-NumberPrinting' 'Traits' 'Debugging-Utils' 'Deprecation' 'SUnit-Core'  'SUnit-Basic-CLI' 'SUnit-Tests' 'Kernel-Tests' ) ]
 ]
