@@ -31,7 +31,7 @@ ErrorHandlerSessionHandler class >> uniqueInstance [
 ]
 
 { #category : 'accessing' }
-ErrorHandlerSessionHandler >> handledId [
+ErrorHandlerSessionHandler >> handlerId [
 	^ self class name
 ]
 

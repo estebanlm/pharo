@@ -14,6 +14,12 @@ Class {
 	#tag : 'Drivers'
 }
 
+{ #category : 'accessing' }
+RePushUpVariableDriver class >> driverName [
+
+	^ 'Push up variable'
+]
+
 { #category : 'configuration' }
 RePushUpVariableDriver >> instantiateRefactoring [
 

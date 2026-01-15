@@ -11,14 +11,20 @@ Class {
 	#tag : 'Drivers'
 }
 
-{ #category : 'displaying' }
-ReGeneratePrintOnDriver class >> refactoringClass [
+{ #category : 'accessing' }
+ReGeneratePrintOnDriver class >> driverName [
 
-	^ ReGeneratePrintOnTransformation 
+	^ 'Generate printOn:'
 ]
 
 { #category : 'configuration' }
 ReGeneratePrintOnDriver >> dialogTitle [ 
 
 	^ 'Generate printOn: method'
+]
+
+{ #category : 'execution' }
+ReGeneratePrintOnDriver >> refactoringClass [
+
+	^ ReGeneratePrintOnTransformation 
 ]

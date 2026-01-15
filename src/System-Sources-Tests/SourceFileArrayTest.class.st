@@ -136,6 +136,7 @@ SourceFileArrayTest >> testForkedWrite [
 			theFile cr.
 			position := theFile position.
 			(ChunkWriteStream on: theFile) nextPut: originalString.
+			position
 		] onSuccess: [ :sourcePointer | "Ignore" ] onFail: [ "Ignore" ].
 
 		testSemaphore signal
@@ -238,8 +239,8 @@ SourceFileArrayTest >> testWriteSourceWritesInGivenSourceFileArray [
 	| fs array |
 	fs := FileSystem memory.
 	array := SourceFileArray new.
-	array changesFileStream: (SourceFile lookupFileNamed: 'changes.chunk' potentialLocations: { fs root }) tryOpen.
-	array sourcesFileStream: (SourceFile lookupFileNamed: 'sources.chunk' potentialLocations: { fs root }) tryOpen.
+	array changesFileStream: (SourceFile createFileNamed: fs root / 'changes.chunk' version: ChunkFileFormatParserV200) tryOpen.
+	array sourcesFileStream: (SourceFile createFileNamed: fs root / 'sources.chunk' version: ChunkFileFormatParserV200) tryOpen.
 
 	array
 		writeChangesDuring: [ :file |
@@ -251,7 +252,7 @@ some source!
 		onSuccess: [ :sourcePointer | "continue with assertions" ]
 		onFail: [ "fail the test" self fail ].
 
-	self assert: (fs / 'changes.chunk') contents equals: '
+	self assert: (fs / 'changes.chunk') contents equals: '"VERSION:2.0.0"!
 !some preamble!
 some source!
  !'
@@ -264,8 +265,8 @@ SourceFileArrayTest >> testWriteSourceWritesInGivenSourceFileArrayWithFlushDefer
 	fs := FileSystem memory.
 	array := SourceFileArray new.
 	array
-		changesFileStream: (SourceFile lookupFileNamed: 'changes.chunk' potentialLocations: { fs root }) tryOpen;
-		sourcesFileStream: (SourceFile lookupFileNamed: 'sources.chunk' potentialLocations: { fs root }) tryOpen;
+		changesFileStream: (SourceFile createFileNamed: fs root / 'changes.chunk' version: ChunkFileFormatParserV200) tryOpen;
+		sourcesFileStream: (SourceFile createFileNamed: fs root / 'sources.chunk' version: ChunkFileFormatParserV200) tryOpen;
 		deferFlushDuring: [
 				array
 					writeChangesDuring: [ :file |
@@ -276,7 +277,7 @@ some source!
 							file position ]
 					onSuccess: [ :sourcePointer | "continue with assertions" ]
 					onFail: [ "fail the test" self fail ] ].
-	self assert: (fs / 'changes.chunk') contents equals: '
+	self assert: (fs / 'changes.chunk') contents equals: '"VERSION:2.0.0"!
 !some preamble!
 some source!
  !'
@@ -288,14 +289,10 @@ SourceFileArrayTest >> testWriteToBufferedStream [
 	| fs array |
 	fs := FileSystem memory.
 	array := SourceFileArray new.
+	
+	array changesFileStream: (SourceFile createFileNamed: fs root / 'changes.chunk' version: ChunkFileFormatParserV200) tryOpen.
+	array sourcesFileStream: (SourceFile createFileNamed: fs root / 'sources.chunk' version: ChunkFileFormatParserV200) tryOpen.
 
-	array changesFileStream: (SourceFileCharacterReadWriteStream
-			 on: (SourceFileBufferedReadWriteStream on: (fs binaryWriteStreamOn: (fs / 'changes.chunk') path))
-			 encoding: #utf8).
-
-	array sourcesFileStream: (SourceFileCharacterReadWriteStream
-			 on: (SourceFileBufferedReadWriteStream on: (fs binaryWriteStreamOn: (fs / 'sources.chunk') path))
-			 encoding: #utf8).
 	array
 		writeChangesDuring: [ :file |
 				file nextPutAll: '
@@ -306,7 +303,7 @@ some source!
 		onSuccess: [ :sourcePointer | "continue with assertions" ]
 		onFail: [ "fail the test" self fail ].
 
-	self assert: (fs / 'changes.chunk') contents equals: '
+	self assert: (fs / 'changes.chunk') contents equals: '"VERSION:2.0.0"!
 !some preamble!
 some source!
  !'
@@ -318,15 +315,18 @@ SourceFileArrayTest >> testWriteToChangesFileInGivenSourceFileArray [
 	| fs array |
 	fs := FileSystem memory.
 	array := SourceFileArray new.
-	array changesFileStream: (SourceFile lookupFileNamed: 'changes.chunk' potentialLocations: { fs root }) tryOpen.
-	array sourcesFileStream: (SourceFile lookupFileNamed: 'sources.chunk' potentialLocations: { fs root }) tryOpen.
-	array writeChangesDuring: [ :changesFile |
+	array changesFileStream: (SourceFile createFileNamed: fs root / 'changes.chunk' version: ChunkFileFormatParserV200) tryOpen.
+	array sourcesFileStream: (SourceFile createFileNamed: fs root / 'sources.chunk' version: ChunkFileFormatParserV200) tryOpen.
+	array writeChangesDuring: [ :changesFile | | position |
+			position := changesFile position.
 			changesFile
 				cr;
 				cr.
 			(ChunkWriteStream on: changesFile) nextPut: 'test'.
-			changesFile cr ] onSuccess: [ :sourcePointer | "Ignore" ] onFail: [ "Ignore" ].
-	self assert: (fs / 'changes.chunk') contents equals: '
+			changesFile cr.
+			position. ] onSuccess: [ :sourcePointer | "Ignore" ] onFail: [ "Ignore" ].
+	self assert: (fs / 'changes.chunk') contents equals: '"VERSION:2.0.0"!
 
-test!'
+test!
+'
 ]

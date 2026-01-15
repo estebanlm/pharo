@@ -22,6 +22,12 @@ ReGenerateMethodDriver class >> defaultSelectDialog [
 	^ DefaultSelectDialog ifNil: [ SpSelectMultipleDialog new ]
 ]
 
+{ #category : 'testing' }
+ReGenerateMethodDriver class >> isAbstract [
+
+	^ self = ReGenerateMethodDriver
+]
+
 { #category : 'execution' }
 ReGenerateMethodDriver >> configureRefactoring [
 
@@ -45,9 +51,9 @@ ReGenerateMethodDriver >> instantiateRefactoring [
 ]
 
 { #category : 'execution' }
-ReGenerateMethodDriver >> refactoringClass [ 
+ReGenerateMethodDriver >> refactoringClass [
 
-	^ self class refactoringClass
+	^ self subclassResponsibility
 ]
 
 { #category : 'execution' }

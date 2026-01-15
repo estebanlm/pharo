@@ -334,9 +334,11 @@ Context >> temporaryVariableNamed: aName [
 { #category : '*Debugging-Core' }
 Context >> temporaryVariableNames [
 
-	"If this context did not yet execute, consider the initial PC"
+	"If the context is suspended on a send, we want to highlight the send.
+	However, the context already executed the send, and the PC advanced to the next instruction.
+	Thus, we want the instruction previously executed!"
 	| suspendedPC |
-	suspendedPC := self pc max: self method initialPC.
+	suspendedPC := self executedPC max: self method initialPC.
 	^ self method debugInfo variableNamesAt: suspendedPC
 ]
 

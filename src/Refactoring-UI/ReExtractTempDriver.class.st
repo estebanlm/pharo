@@ -11,6 +11,12 @@ Class {
 	#tag : 'Drivers'
 }
 
+{ #category : 'accessing' }
+ReExtractTempDriver class >> driverName [
+
+	^ 'Extract to temporary'
+]
+
 { #category : 'instance creation' }
 ReExtractTempDriver >> extract: anInterval from: aSelector in: aClass [
 

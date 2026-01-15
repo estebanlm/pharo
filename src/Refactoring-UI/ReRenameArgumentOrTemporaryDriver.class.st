@@ -16,6 +16,12 @@ Class {
 	#tag : 'Drivers'
 }
 
+{ #category : 'accessing' }
+ReRenameArgumentOrTemporaryDriver class >> driverName [
+
+	^ 'Rename argument or temporary variable'
+]
+
 { #category : 'configuration' }
 ReRenameArgumentOrTemporaryDriver >> instantiateRefactoring [
 

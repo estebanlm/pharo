@@ -14,6 +14,12 @@ Class {
 	#tag : 'Drivers'
 }
 
+{ #category : 'accessing' }
+ReConvertTemporaryToInstanceVariableDriver class >> driverName [
+
+	^ 'Convert to instance variable'
+]
+
 { #category : 'execution' }
 ReConvertTemporaryToInstanceVariableDriver >> breakingChoices [
 

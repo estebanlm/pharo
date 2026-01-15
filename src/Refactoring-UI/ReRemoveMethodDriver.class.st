@@ -13,6 +13,12 @@ Class {
 	#tag : 'Drivers'
 }
 
+{ #category : 'accessing' }
+ReRemoveMethodDriver class >> driverName [
+
+	^ 'Remove method(s)'
+]
+
 { #category : 'execution' }
 ReRemoveMethodDriver >> breakingChoices [
 

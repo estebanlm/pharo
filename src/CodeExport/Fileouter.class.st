@@ -26,8 +26,9 @@ Fileouter class >> fileoutPackage: aPackage [
 { #category : 'API - configuration' }
 Fileouter >> addFullClass: aClass [
 
-	behaviors add: aClass.
-	methods addAll: aClass localMethods
+	behaviors add: aClass instanceSide.
+	methods addAll: aClass instanceSide localMethods.
+	methods addAll: aClass classSide localMethods.	
 ]
 
 { #category : 'API - configuration' }

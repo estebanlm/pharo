@@ -13,6 +13,12 @@ Class {
 	#tag : 'Drivers'
 }
 
+{ #category : 'accessing' }
+ReRemoveSharedVariablesDriver class >> driverName [
+
+	^ 'Remove shared variable(s)'
+]
+
 { #category : 'execution' }
 ReRemoveSharedVariablesDriver >> breakingChoices [
 

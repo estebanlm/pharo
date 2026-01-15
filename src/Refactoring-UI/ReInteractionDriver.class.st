@@ -23,10 +23,25 @@ Class {
 		'stoppedBeforeApplyingRefactoring',
 		'selectDialogForBreakingChanges'
 	],
+	#classInstVars : [
+		'shouldPreviewChanges'
+	],
 	#category : 'Refactoring-UI-Drivers',
 	#package : 'Refactoring-UI',
 	#tag : 'Drivers'
 }
+
+{ #category : 'accessing' }
+ReInteractionDriver class >> driverName [
+
+	^ self subclassResponsibility
+]
+
+{ #category : 'accessing' }
+ReInteractionDriver class >> drivers [
+
+	^ self allSubclasses reject: [ :subclass | subclass isAbstract ]
+]
 
 { #category : 'testing' }
 ReInteractionDriver class >> isAbstract [
@@ -38,7 +53,7 @@ ReInteractionDriver class >> isAbstract [
 ReInteractionDriver class >> menuItemString [
 	"Make sure that the user knows that this is a transformation by adding (T) in front of the menu item name."
 
-	^ self refactoringClass menuItemString
+	^ self driverName
 ]
 
 { #category : 'instance creation' }
@@ -49,10 +64,43 @@ ReInteractionDriver class >> newApplication: anApplication [
 		yourself
 ]
 
-{ #category : 'displaying' }
-ReInteractionDriver class >> refactoringClass [
+{ #category : 'settings' }
+ReInteractionDriver class >> refactoringsSettingsOn: aBuilder [
 
-	self subclassResponsibility
+	<systemsettings>
+	(aBuilder group: #Refactorings)
+		label: 'Refactorings';
+		description: 'Settings about the refactorings and transformations of Pharo.';
+		parent: #tools;
+		with: [
+				(aBuilder group: #Previews)
+					label: 'Preview changes';
+					description: 'A list of settings to declare for which refactoring the user wants a preview of the cnahges before applying them or not.';
+					with: [
+							self drivers do: [ :aDriver |
+										(aBuilder setting: aDriver name asSymbol)
+											label: 'Preview changes: ' , aDriver menuItemString;
+											selector: #shouldPreviewChanges;
+											default: self shouldPreviewChangesByDefault;
+											target: aDriver ] ] ]
+]
+
+{ #category : 'accessing' }
+ReInteractionDriver class >> shouldPreviewChanges [
+
+	^ shouldPreviewChanges ifNil: [ shouldPreviewChanges := self shouldPreviewChangesByDefault ]
+]
+
+{ #category : 'accessing' }
+ReInteractionDriver class >> shouldPreviewChanges: anObject [
+
+	shouldPreviewChanges := anObject
+]
+
+{ #category : 'accessing' }
+ReInteractionDriver class >> shouldPreviewChangesByDefault [
+
+	^ true
 ]
 
 { #category : 'accessing' }
@@ -212,10 +260,15 @@ ReInteractionDriver >> model: aRBBrowserEnvironment [
 { #category : 'execution' }
 ReInteractionDriver >> openPreviewWithChanges: changes [
 
-	^ (self previewPresenterClass newApplication: self application)
-		changesFrom: changes scopes: scopes;
-		refactoring: self refactoring;
-		openModal
+	| presenter |
+	presenter := (self previewPresenterClass newApplication: self application)
+		             changesFrom: changes scopes: scopes;
+		             refactoring: self refactoring;
+		             yourself.
+
+	self class shouldPreviewChanges
+		ifTrue: [ presenter openModal ]
+		ifFalse: [ presenter accept ]
 ]
 
 { #category : 'configuration' }
