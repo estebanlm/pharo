@@ -114,7 +114,7 @@ Class {
 { #category : 'class initialization' }
 SessionManager class >> classRemoved: classRemoved [
 
-	self default unregisterClassNamed: classRemoved classRemoved name
+	self default unregisterHandler: classRemoved classRemoved name ifAbsent: [ "Ignore" ]
 ]
 
 { #category : 'class initialization' }
