@@ -29,11 +29,12 @@ SessionManagerUnregistrationTest >> testCanUnregisterClass [
 ]
 
 { #category : 'tests' }
-SessionManagerUnregistrationTest >> testUnregisterUnknownClassDoesNotFail [
+SessionManagerUnregistrationTest >> testUnregisterUnknownClass [
 
+	| absent |
+	absent := false.
 	sessionManager registerSystemClassNamed: #Foo.
-	sessionManager unregisterClassNamed: #Bar.
-	self
-		assert: (sessionManager startupList collect: [:each | each handlerId])
-		equals: #( Foo )
+	sessionManager unregisterHandler: #Bar ifAbsent: [ absent := true ].
+	
+	self assert: absent
 ]
