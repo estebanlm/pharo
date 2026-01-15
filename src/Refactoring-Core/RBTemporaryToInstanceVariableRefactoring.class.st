@@ -114,7 +114,6 @@ RBTemporaryToInstanceVariableRefactoring >> applicabilityPreconditions [
 RBTemporaryToInstanceVariableRefactoring >> breakingChangePreconditions [
 
 	^ {
-		  self preconditionNoSubclassDefinesVar.
 		  self preconditionNoMultipleTempOccurences.
 		  self preconditionNoReadBeforeWritten }
 ]
@@ -151,16 +150,6 @@ RBTemporaryToInstanceVariableRefactoring >> preconditionNoReadBeforeWritten [
 ]
 
 { #category : 'preconditions' }
-RBTemporaryToInstanceVariableRefactoring >> preconditionNoSubclassDefinesVar [
-
-	^ RBCondition
-		  withBlock: [ (class allSubclasses anySatisfy: [ :cls | cls definesInstanceVariable: temporaryVariableName asString ]) not ]
-		  errorString:
-			  ('One or more subclasses of <1p> already defines an<n>instance variable with the same name.'
-				   expandMacrosWith: class name)
-]
-
-{ #category : 'preconditions' }
 RBTemporaryToInstanceVariableRefactoring >> preconditions [
 
 	^ self applicabilityPreconditions & self breakingChangePreconditions
@@ -176,7 +165,11 @@ RBTemporaryToInstanceVariableRefactoring >> prepareForExecution [
 RBTemporaryToInstanceVariableRefactoring >> privateTransform [
 
 	self removeTemporaryOfClass: class.
-	class addInstanceVariable: temporaryVariableName
+	class allSubclasses do: [ :cls |
+			(cls definesInstanceVariable: temporaryVariableName)
+				ifTrue: [ cls removeInstanceVariable: temporaryVariableName ]
+				ifFalse: [ self removeTemporaryOfClass: cls ] ].
+	class addInstanceVariable: temporaryVariableName 
 ]
 
 { #category : 'removing' }
