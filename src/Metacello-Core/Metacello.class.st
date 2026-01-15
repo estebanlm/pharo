@@ -215,9 +215,15 @@ Metacello >> baseline: projectName [
 ]
 
 { #category : 'api options' }
+Metacello >> beStrict [
+
+	self beStrict: true
+]
+
+{ #category : 'api options' }
 Metacello >> beStrict: aBoolean [
 
-	self addStatement: #beStrict: args: { aBoolean }
+	self scriptExecutor beStrict: aBoolean
 ]
 
 { #category : 'api repository shortcuts' }

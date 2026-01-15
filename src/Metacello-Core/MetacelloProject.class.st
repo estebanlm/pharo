@@ -174,6 +174,12 @@ MetacelloProject >> setBaselineRepositoryDescription: aListOrRepositoryDescripti
 	repositoryDescription := aListOrRepositoryDescriptions
 ]
 
+{ #category : 'accessing' }
+MetacelloProject >> strict [
+	
+	^ version strict
+]
+
 { #category : 'versions' }
 MetacelloProject >> version [
 

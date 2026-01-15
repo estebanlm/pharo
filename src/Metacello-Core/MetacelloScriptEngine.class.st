@@ -36,6 +36,10 @@ MetacelloScriptEngine >> do: aBlock required: required commitIfSuccess: aBoolean
 						projectSpec loads: required.
 						projectSpec ensureProjectLoadedWithEngine: self.
 						versionSpec := projectSpec project version.
+						"Propagate the strictness to the project
+						as declared by the user"
+						versionSpec strict: self strict.
+	
 						requiredArray := projectSpec loadListForVersion: versionSpec.
 						self root: (aBlock value: versionSpec value: requiredArray value: projectSpec) ] ]
 		commitIfSuccess: aBoolean
