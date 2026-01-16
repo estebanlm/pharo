@@ -64,9 +64,10 @@ CompletionEngine >> closeMenu [
 
 { #category : 'replacement' }
 CompletionEngine >> completionToken [
-
 	"Return the word just before the caret"
-	^ (self editor text copyFrom: self completionTokenStart to: self editor caret - 1) asString
+	^ (self editor text 
+			copyFrom: self completionTokenStart 
+			to: self editor caret - 1) asString
 ]
 
 { #category : 'replacement' }
@@ -108,7 +109,8 @@ CompletionEngine >> contextClass: aClass [
 CompletionEngine >> createContext [
 
 	| class |
-	class := editor model ifNotNil: [ :model | model selectedClassOrMetaClass ].
+	class := editor model 
+		ifNotNil: [ :model | model selectedClassOrMetaClass ].
 	^ self contextClass
 		engine: self
 		class: class
