@@ -40,7 +40,9 @@ MCMethodDefinitionTest >> secondExtensionPackageName [
 MCMethodDefinitionTest >> setUp [
 
 	super setUp.
+	self testingEnvironment: SystemEnvironment new.
 	loader := MCPackageLoader new.
+	loader targetEnvironment: testingEnvironment.
 ]
 
 { #category : 'running' }
@@ -66,7 +68,7 @@ MCMethodDefinitionTest >> testCannotLoad [
 		do: [ :error |
 			self
 				assert: error messageText
-				equals: 'key #NoSuchClass not found in SystemEnvironment' ].
+				equals: 'Class not found: #NoSuchClass' ].
 	self assertEmpty: (SystemNavigation new allImplementorsOf: #kjahs87)
 ]
 
@@ -116,7 +118,7 @@ MCMethodDefinitionTest >> testCannotLoadUndeclaredInStrictMode [
 	self fail ]
 		on: OCCodeError
 		do: [ :error |
-			self assert: error messageText equals: 'Undeclared variable' ]
+			self assert: error messageText equals: 'Undeclared variable named UNDECLARED in kjahs87' ]
 ]
 
 { #category : 'testing' }
@@ -142,6 +144,10 @@ MCMethodDefinitionTest >> testLoadAndUnload [
 
 	| definition mockClass mockClassInstance |
 	mockClass := self mockClass.
+	testingEnvironment
+		at: mockClass name
+		put: mockClass.
+	
 	mockClassInstance := mockClass new.
 	mockClass compile: 'one ^ 1'.
 	definition := self
