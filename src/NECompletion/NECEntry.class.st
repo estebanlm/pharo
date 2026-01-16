@@ -77,11 +77,12 @@ NECEntry >> browse [
 
 { #category : 'accessing' }
 NECEntry >> contents [
-	^contents
+	^ contents
 ]
 
 { #category : 'accessing' }
 NECEntry >> contents: aString node: aNode [
+
 	contents := aString.
 	node := aNode
 ]

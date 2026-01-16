@@ -33,6 +33,7 @@ NECSelectorEntry >> browse [
 
 { #category : 'private' }
 NECSelectorEntry >> findMethodAndDo: foundBlock ifAbsent: notfoundBlock [
+
 	| theClass result implementors |
 	theClass := node isMessage
 		ifTrue: [ node receiver propertyAt: #type ifAbsent: nil ]
@@ -49,19 +50,43 @@ NECSelectorEntry >> findMethodAndDo: foundBlock ifAbsent: notfoundBlock [
 	^ foundBlock value: result
 ]
 
+{ #category : 'private' }
+NECSelectorEntry >> implementorsDescription: aSymbol [
+	| implementors output |
+	output := WriteStream on: String new.
+	implementors := self systemNavigation allImplementorsOf: aSymbol.
+	implementors isEmpty 
+		ifTrue: [ ^ NECEntryDescription
+			label: self emptyLabel 
+			title: '(no implementors)'
+			description: 'This is just a symbol.' ].
+
+	implementors do: [ :each |
+		output
+			nextPutAll: each methodClass printString;
+			cr ].
+	
+	^ NECEntryDescription
+		label: self label
+		title: '(Implementors)'
+		description: output contents
+]
+
 { #category : 'accessing' }
 NECSelectorEntry >> label [
-	| typeString |
-	node isMessage ifFalse: [ ^ '' ].
 
-	"I return whether the variable is a class or a method."
-	
-	typeString := node receiver
+	node isMessage ifFalse: [ ^ '' ].
+	^ super label.
+]
+
+{ #category : 'accessing' }
+NECSelectorEntry >> rawLabel [
+
+	^ self node receiver
 		propertyAt: #type
 		ifPresent:  [ 'method' ]
-		ifAbsent:  [ 'class' ].
-	self originDisplayed ifTrue: [ typeString := typeString , ' from: ', fetcher ].
-	^ typeString
+		ifAbsent:  [ 'class' ]
+
 ]
 
 { #category : 'accessing' }
