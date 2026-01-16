@@ -36,7 +36,7 @@ MCMethodDefinitionTest >> secondExtensionPackageName [
 	^ 'MonticelloTestsSecondExtensionMockPackage-override'
 ]
 
-{ #category : 'testing' }
+{ #category : 'running' }
 MCMethodDefinitionTest >> setUp [
 
 	super setUp.
