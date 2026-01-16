@@ -27,18 +27,16 @@ MetacelloScriptEngine >> do: aBlock required: required commitIfSuccess: aBoolean
 	MetacelloProjectRegistration
 		copyRegistryDuring: [
 				self handleNotificationsForAction: [
-						| versionSpec projectSpec requiredArray |
-						self validateProjectSpec.
-						[ projectSpec := (self lookupProjectSpecFor: self projectSpec) copy ]
+						| versionSpec projectSpec2 requiredArray |
+						[ projectSpec2 := (self lookupProjectSpecFor: self projectSpec) copy ]
 							on: MetacelloAllowProjectUpgrade
 							do: [ :notification | notification resume: notification newProjectRegistration ].
 
-						projectSpec loads: required.
-						projectSpec ensureProjectLoadedWithEngine: self.
-						versionSpec := projectSpec project version.
-	
-						requiredArray := projectSpec loadListForVersion: versionSpec.
-						self root: (aBlock value: versionSpec value: requiredArray value: projectSpec) ] ]
+						projectSpec2 loads: required.
+						projectSpec2 ensureProjectLoadedWithEngine: self.
+						versionSpec := projectSpec2 project version.
+						requiredArray := projectSpec2 loadListForVersion: versionSpec.
+						self root: (aBlock value: versionSpec value: requiredArray value: projectSpec2) ] ]
 		commitIfSuccess: aBoolean
 ]
 
@@ -54,7 +52,7 @@ MetacelloScriptEngine >> doLoadProjectSpecFrom: aMetacelloPackageSpec [
 MetacelloScriptEngine >> fetch: required [
 
 	^ self
-		  do: [ :versionSpec :requiredArray :projectSpec | versionSpec doFetchRequiredFromArray: requiredArray withEngine: self ]
+		  do: [ :versionSpec :requiredArray :projectSpec2 | versionSpec doFetchRequiredFromArray: requiredArray withEngine: self ]
 		  required: required
 		  commitIfSuccess: false
 ]
@@ -67,7 +65,6 @@ MetacelloScriptEngine >> get [
 		copyRegistryDuring: [
 				self handleNotificationsForAction: [
 						| spec projectPackage |
-						self validateProjectSpec.
 						spec := self projectSpec.
 						projectPackage := spec projectPackage.
 						projectPackage repositorySpecs do: [ :repoSpec | repoSpec createRepository flushForScriptGet ].
@@ -168,27 +165,27 @@ MetacelloScriptEngine >> initialize [
 
 { #category : 'actions api' }
 MetacelloScriptEngine >> list [
-  self validateProjectSpec.
-  self root: self projectSpec
+
+	self root: self projectSpec
 ]
 
 { #category : 'actions api' }
 MetacelloScriptEngine >> load: required [
 
 	self
-		do: [ :versionSpec :requiredArray :projectSpec |
+		do: [ :versionSpec :requiredArray :projectSpec2 |
 				| result |
 				result := versionSpec doLoadRequiredFromArray: requiredArray withEngine: self.
 				self root: result.
 				MetacelloProjectRegistration
-					registrationForProjectSpec: projectSpec
+					registrationForProjectSpec: projectSpec2
 					ifPresent: [ :existing1 |
 							existing1 copyOnWrite: [ :existingCopy |
 									existingCopy
 										loadedInImage: true;
-										merge: projectSpec asProjectRegistration ] ]
+										merge: projectSpec2 asProjectRegistration ] ]
 					ifAbsent: [
-							projectSpec asProjectRegistration
+							projectSpec2 asProjectRegistration
 								loadedInImage: true;
 								registerProject ] ]
 		required: required
@@ -211,7 +208,6 @@ MetacelloScriptEngine >> lock [
 	| spec |
 	MetacelloProjectRegistration
 		copyRegistryDuring: [
-				self validateProjectSpec.
 				spec := self projectSpec.
 				MetacelloProjectRegistration
 					registrationForProjectSpec: spec
@@ -275,7 +271,7 @@ MetacelloScriptEngine >> projectSpec: aSpec [
 MetacelloScriptEngine >> record: required [
 
 	^ self
-		  do: [ :versionSpec :requiredArray :projectSpec | versionSpec doRecordRequiredFromArray: requiredArray withEngine: self ]
+		  do: [ :versionSpec :requiredArray :projectSpec2 | versionSpec doRecordRequiredFromArray: requiredArray withEngine: self ]
 		  required: required
 		  commitIfSuccess: false
 ]
@@ -284,7 +280,6 @@ MetacelloScriptEngine >> record: required [
 MetacelloScriptEngine >> register [
 
 	| spec |
-	self validateProjectSpec.
 	spec := self projectSpec.
 	MetacelloProjectRegistration
 		registrationForProjectSpec: spec
@@ -336,7 +331,6 @@ MetacelloScriptEngine >> unlock [
 	| spec |
 	MetacelloProjectRegistration
 		copyRegistryDuring: [
-				self validateProjectSpec.
 				spec := self projectSpec.
 				MetacelloProjectRegistration
 					registrationForProjectSpec: spec
@@ -349,14 +343,7 @@ MetacelloScriptEngine >> unlock [
 MetacelloScriptEngine >> unregister [
 
 	| spec |
-	self validateProjectSpec.
 	spec := self projectSpec.
 	MetacelloProjectRegistration registrationForProjectSpec: spec ifPresent: [ :existing | existing unregisterProject ].
 	self root: spec
-]
-
-{ #category : 'project lookup' }
-MetacelloScriptEngine >> validateProjectSpec [
-
-	self projectSpec lookForIssues
 ]

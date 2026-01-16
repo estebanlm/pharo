@@ -200,13 +200,6 @@ MetacelloProjectSpec >> loads: aCollection [
 		         ifFalse: [ aCollection asArray ]
 ]
 
-{ #category : 'scripting' }
-MetacelloProjectSpec >> lookForIssues [
-
-	self name ifNil: [ MetacelloValidationFailure signal: 'Name field required' ].
-	self className ifNil: [ MetacelloValidationFailure signal: 'ClassName field required' ]
-]
-
 { #category : 'importing' }
 MetacelloProjectSpec >> mergeImportLoads: aLoadList [
 
