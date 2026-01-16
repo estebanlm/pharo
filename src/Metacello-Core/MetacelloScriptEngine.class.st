@@ -46,9 +46,7 @@ MetacelloScriptEngine >> do: aBlock required: required commitIfSuccess: aBoolean
 MetacelloScriptEngine >> doLoadProjectSpecFrom: aMetacelloPackageSpec [
 
 	self loader
-		loadAtomicPackageDirectives: { (MetacelloDirective
-				 loadPackage: aMetacelloPackageSpec
-				 repositorySpecs: aMetacelloPackageSpec repositorySpecs) }
+		loadAtomicPackageDirectives: { (MetacelloPackageLoadDirective spec: aMetacelloPackageSpec) }
 		engine: self
 ]
 

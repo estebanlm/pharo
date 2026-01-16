@@ -77,17 +77,8 @@ MetacelloMonticelloLoader >> loadProject: aMetacelloProjectSpec engine: anEngine
 		at: aMetacelloProjectSpec className
 		ifPresent: [ :found | ^ found ].
 
-	(self lookupProjectClassNamed:
-		 aMetacelloProjectSpec className) ifNil: [
-		self
-			loadAtomicPackageDirectives: { (MetacelloDirective
-					 loadPackage: (MetacelloPackageSpec new
-							  name: aMetacelloProjectSpec className;
-							  repositories: aMetacelloProjectSpec repositories;
-							  yourself)
-					 repositorySpecs:
-					 aMetacelloProjectSpec repositorySpecs) }
-			engine: anEngine ].
+	(self lookupProjectClassNamed: aMetacelloProjectSpec className) ifNil: [
+		self loadAtomicPackageDirectives: { (MetacelloPackageLoadDirective spec: aMetacelloProjectSpec projectPackage) } engine: anEngine ].
 
 	projectClass := self lookupProjectClassNamed:  aMetacelloProjectSpec className asSymbol.
 	projectClassInstance := projectClass new.

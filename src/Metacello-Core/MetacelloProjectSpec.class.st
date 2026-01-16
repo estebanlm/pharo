@@ -357,7 +357,7 @@ MetacelloProjectSpec >> projectPackage [
 
 	^ projectPackage ifNil: [
 			  self className ifNil: [ ^ nil ].
-			  projectPackage := self project packageSpec
+			  projectPackage := MetacelloPackageSpec new
 				                    name: self className;
 				                    repositories: self getRepositories;
 				                    yourself ]
