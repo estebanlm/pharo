@@ -15,7 +15,7 @@ MetacelloLoadTarget >> actionLabel [
 { #category : 'accessing' }
 MetacelloLoadTarget >> baselineFor: aDirective [
 
-	^ aDirective spec project configuration
+	^ aDirective spec project baseline
 ]
 
 { #category : 'accessing' }

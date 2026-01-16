@@ -14,8 +14,7 @@ Class {
 	#instVars : [
 		'root',
 		'project',
-		'attributeMap',
-		'baseline'
+		'attributeMap'
 	],
 	#category : 'Metacello-Core-Constructors',
 	#package : 'Metacello-Core',
@@ -50,23 +49,19 @@ MetacelloBaselineConstructor >> author: aBlockOrString [
 		'The option #author: will not do anything anymore in Pharo 14+. This option can be removed in it is in an attribute for Pharo 14+ or ignored if this is for a different platform. Reason: The author metadata was used with SmalltalkHub but not this information is already managed by git or other CVS.'
 ]
 
-{ #category : 'accessing' }
-MetacelloBaselineConstructor >> baseline [
-
-	^ baseline
-]
-
-{ #category : 'accessing' }
-MetacelloBaselineConstructor >> baseline: aBaselineOf [
-
-	baseline := aBaselineOf
-]
-
 { #category : 'api' }
 MetacelloBaselineConstructor >> baseline: aString with: aBlock [
 	"Alias to make baselines more explicits and backward compatible"
 
 	^ self project: aString with: aBlock
+]
+
+{ #category : 'pragma extraction' }
+MetacelloBaselineConstructor >> baselineMethodIn: aClass [
+
+	^ (Pragma allNamed: #baseline from: aClass to: BaselineOf)
+		ifEmpty: [ self error: 'No #baseline pragma found' ]
+		ifNotEmpty: [ :pragmas | pragmas first methodSelector ]
 ]
 
 { #category : 'api - old' }
@@ -103,20 +98,6 @@ MetacelloBaselineConstructor >> description: aBlockOrString [
 
 	MetacelloNotification signal:
 		'The option #description: will not do anything anymore in Pharo 14+. This option can be removed in it is in an attribute for Pharo 14+ or ignored if this is for a different platform. Reason: The author metadata was used with SmalltalkHub but not this information is already managed by git or other CVS.'
-]
-
-{ #category : 'private' }
-MetacelloBaselineConstructor >> evaluatePragma: pragma [
-
-	self baseline perform: pragma methodSelector with: self
-]
-
-{ #category : 'pragma extraction' }
-MetacelloBaselineConstructor >> extractBaselinePragmaFor: aClass [
-
-	^ (Pragma allNamed: #baseline in: aClass)
-		ifEmpty: [ self error: 'No #baseline pragma found' ]
-		ifNotEmpty: [ :pragmas | pragmas first ]
 ]
 
 { #category : 'api - old' }
@@ -228,17 +209,15 @@ MetacelloBaselineConstructor >> name: anObject [
 { #category : 'initialization' }
 MetacelloBaselineConstructor >> on: aBaseline project: aProject [
 
-	| pragma versionSpec |
+	| versionSpec |
 	project := aProject.
-	self baseline: aBaseline.
-	pragma := self extractBaselinePragmaFor: aBaseline class.
+	self project baseline: aBaseline.
 	versionSpec := MetacelloVersionSpec project: self project.
 	self root: versionSpec.
-	self evaluatePragma: pragma.
+	aBaseline perform: (self baselineMethodIn: aBaseline class) with: self.
 	self project attributes do: [ :attribute |
 		(self attributeMap at: attribute ifAbsent: [ ]) ifNotNil: [ :blockList | blockList do: [ :block | self with: versionSpec during: block ] ] ].
-	self project version: versionSpec.
-	self project configuration: aBaseline
+	self project version: versionSpec
 ]
 
 { #category : 'api - old' }
