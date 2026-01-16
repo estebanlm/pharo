@@ -35,7 +35,7 @@ Class {
 
 { #category : 'accessing' }
 CompletionEngine class >> contextClass [
-	^ContextClass ifNil: [ CompletionContext ]
+	^ContextClass ifNil: [ CoCompletionContext ]
 ]
 
 { #category : 'accessing' }
