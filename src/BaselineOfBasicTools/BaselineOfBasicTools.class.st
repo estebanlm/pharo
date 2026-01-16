@@ -225,7 +225,7 @@ BaselineOfBasicTools >> postload: loader package: packageSpec [
 	"Next line is added in Pharo14 and should be removed in Pharo 15 or 16 or even 17"
 	FileException deprecatedAliases: { #FileSystemError }.
 
-	RubSmalltalkEditor completionEngineClass: CoCompletionEngine.
+	
 
 	Initialized := true
 ]
