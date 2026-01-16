@@ -49,6 +49,12 @@ MetacelloBaselineConstructor >> author: aBlockOrString [
 		'The option #author: will not do anything anymore in Pharo 14+. This option can be removed in it is in an attribute for Pharo 14+ or ignored if this is for a different platform. Reason: The author metadata was used with SmalltalkHub but not this information is already managed by git or other CVS.'
 ]
 
+{ #category : 'baselines' }
+MetacelloBaselineConstructor >> baseline: aString [
+
+	self baseline: aString with: [ ]
+]
+
 { #category : 'api' }
 MetacelloBaselineConstructor >> baseline: aString with: aBlock [
 	"Alias to make baselines more explicits and backward compatible"

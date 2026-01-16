@@ -76,7 +76,6 @@ MetacelloPackageLoadDirective >> shouldLoadStrict [
 	^ spec shouldLoadStrict
 ]
 
-
 { #category : 'accessing' }
 MetacelloPackageLoadDirective >> title [
 
