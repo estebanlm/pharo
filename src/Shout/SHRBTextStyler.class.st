@@ -81,8 +81,8 @@ SHRBTextStyler class >> blueStyleTable [
 	"
 	<styleTable: 'Blue'>
 
-			"(symbol color [emphasisSymbolOrArray [textStyleName [pixelHeight]]])"
- ^ #(
+	"(symbol color [emphasisSymbolOrArray [textStyleName [pixelHeight]]])"
+ 	^ #(
 			(default 								black)
 			(invalid 									red)
 
@@ -399,6 +399,15 @@ SHRBTextStyler class >> newAttributesForStyleTableNamed: aString [
 ]
 
 { #category : 'initialization' }
+SHRBTextStyler class >> reset [
+	<script>
+
+	styleTable := nil.
+	styleTableSelector := nil.
+	textAttributes := nil
+]
+
+{ #category : 'initialization' }
 SHRBTextStyler class >> resetTextAttributesCaches [
 
 	<script>
@@ -513,8 +522,14 @@ SHRBTextStyler class >> solarizedStyleTable [
 { #category : 'accessing' }
 SHRBTextStyler class >> styleTable [
 
+	'=========================== styleTable' crTrace.
+	styleTable crTrace. 
+	self styleTableSelector crTrace.
+	
 	^ styleTable ifNil: [ 
-		styleTable := self perform: self styleTableSelector ]
+		styleTable := self perform: self styleTableSelector.
+		styleTable crTrace.
+		styleTable ]
 ]
 
 { #category : 'accessing' }
