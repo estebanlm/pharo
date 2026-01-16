@@ -25,6 +25,12 @@ ReRemoveClassDriver class >> driverName [
 	^ 'Remove class(es)'
 ]
 
+{ #category : 'accessing' }
+ReRemoveClassDriver class >> shouldPreviewChangesByDefault [
+
+	^ false
+]
+
 { #category : 'execution' }
 ReRemoveClassDriver >> breakingChoices [
 

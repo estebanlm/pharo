@@ -19,6 +19,12 @@ ReRemoveSharedVariablesDriver class >> driverName [
 	^ 'Remove shared variable(s)'
 ]
 
+{ #category : 'accessing' }
+ReRemoveSharedVariablesDriver class >> shouldPreviewChangesByDefault [
+
+	^ false
+]
+
 { #category : 'execution' }
 ReRemoveSharedVariablesDriver >> breakingChoices [
 
