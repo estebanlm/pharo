@@ -68,12 +68,6 @@ MetacelloMonticelloLoader >> loadAtomicPackageDirectives: packageDirectives engi
 ]
 
 { #category : 'loading' }
-MetacelloMonticelloLoader >> loadPackageDirective: aMetacelloPackageLoadDirective [
-
-	self loadAtomicPackageDirectives: { aMetacelloPackageLoadDirective }
-]
-
-{ #category : 'loading' }
 MetacelloMonticelloLoader >> loadProject: aMetacelloProjectSpec engine: anEngine [
 	"Loads the project BaselineOf and creates a project from it"
 	"There is no need at loading a project twice as long as it has the same version."
