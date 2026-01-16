@@ -3,12 +3,11 @@ I build a selfcall tree from a class and a selector.
 
 The self call tree is as big as possible. That is to say, if calls are made in conditional blocks, they are taken in account independently from the value of the conditional.
 
-See:
-	self example
+See: the method #example.
 "
 Class {
-	#name : 'RTFSelfCallInterpreter',
-	#superclass : 'RTFSelfCallVisitorTemplate',
+	#name : 'RTFSelfCallStackBuilder',
+	#superclass : 'RTFSelfCallVisitorInterpreter',
 	#instVars : [
 		'callStack',
 		'rootSelfCall'
@@ -19,15 +18,15 @@ Class {
 }
 
 { #category : 'example' }
-RTFSelfCallInterpreter class >> example [
-	^ RTFSelfCallInterpreter new
+RTFSelfCallStackBuilder class >> example [
+	^ RTFSelfCallStackBuilder new
 		considerClassesThat: [ :class | class inheritsFrom: Collection ];
 		send: #select: fromClass: OrderedCollection;
 		rootSelfCall
 ]
 
 { #category : 'private' }
-RTFSelfCallInterpreter >> analyze [
+RTFSelfCallStackBuilder >> analyze [
 
 	super analyze.
 	callStack push: callStack top subCalls last.
@@ -36,14 +35,21 @@ RTFSelfCallInterpreter >> analyze [
 ]
 
 { #category : 'initialization' }
-RTFSelfCallInterpreter >> initialize [ 
+RTFSelfCallStackBuilder >> initialize [ 
 
 	super initialize.
 	callStack := Stack new
 ]
 
 { #category : 'private' }
-RTFSelfCallInterpreter >> preAnalysisHook: aMessageNode [
+RTFSelfCallStackBuilder >> lookupMethodFromNode: aMessageNode [
+
+	super lookupMethodFromNode: aMessageNode.
+	selfSentMethod class = RTFMethodTracer ifTrue: [ selfSentMethod := selfSentMethod method ]
+]
+
+{ #category : 'private' }
+RTFSelfCallStackBuilder >> preAnalysisHook: aMessageNode [
 
 	| callNode |
 	callNode := RTFSelfCallNode astNode: aMessageNode compiledMethod: selfSentMethod.
@@ -51,17 +57,17 @@ RTFSelfCallInterpreter >> preAnalysisHook: aMessageNode [
 ]
 
 { #category : 'accessing' }
-RTFSelfCallInterpreter >> rootSelfCall [
+RTFSelfCallStackBuilder >> rootSelfCall [
 	^ rootSelfCall
 ]
 
 { #category : 'accessing' }
-RTFSelfCallInterpreter >> rootSelfCall: anObject [
+RTFSelfCallStackBuilder >> rootSelfCall: anObject [
 	rootSelfCall := anObject
 ]
 
 { #category : 'api' }
-RTFSelfCallInterpreter >> send: aSelector fromClass: aClass [
+RTFSelfCallStackBuilder >> send: aSelector fromClass: aClass [
 
 	| method |
 	selfClass := aClass.
@@ -70,11 +76,4 @@ RTFSelfCallInterpreter >> send: aSelector fromClass: aClass [
 	callStack push: (RTFSelfCallRootNode compiledMethod: method).
 	method ast acceptVisitor: self.
 	rootSelfCall := callStack pop
-]
-
-{ #category : 'private' }
-RTFSelfCallInterpreter >> setMethodFromNode: aMessageNode [
-
-	super setMethodFromNode: aMessageNode.
-	selfSentMethod class = RTFMethodTracer ifTrue: [ selfSentMethod := selfSentMethod method ]
 ]

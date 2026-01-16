@@ -2,7 +2,7 @@
 I provide a template to ve overridden for visiting messages nodes sent to self
 "
 Class {
-	#name : 'RTFSelfCallVisitorTemplate',
+	#name : 'RTFSelfCallVisitorInterpreter',
 	#superclass : 'OCProgramNodeVisitor',
 	#instVars : [
 		'selfClass',
@@ -16,30 +16,30 @@ Class {
 }
 
 { #category : 'private' }
-RTFSelfCallVisitorTemplate >> analyze [
+RTFSelfCallVisitorInterpreter >> analyze [
 
 	selfSentMethods add: selfSentMethod.
 ]
 
 { #category : 'accessing' }
-RTFSelfCallVisitorTemplate >> considerClassesThat [
+RTFSelfCallVisitorInterpreter >> considerClassesThat [
 	^ considerClassesThat
 ]
 
 { #category : 'accessing' }
-RTFSelfCallVisitorTemplate >> considerClassesThat: anObject [
+RTFSelfCallVisitorInterpreter >> considerClassesThat: anObject [
 	considerClassesThat := anObject
 ]
 
 { #category : 'initialization' }
-RTFSelfCallVisitorTemplate >> initialize [
+RTFSelfCallVisitorInterpreter >> initialize [
 
 	super initialize.
 	selfSentMethods := OrderedCollection new.
 ]
 
 { #category : 'private' }
-RTFSelfCallVisitorTemplate >> isMethodAnalyzable [
+RTFSelfCallVisitorInterpreter >> isMethodAnalyzable [
 
 	(considerClassesThat value: selfSentMethod methodClass)
 		ifFalse: [ ^ false ].
@@ -51,24 +51,7 @@ RTFSelfCallVisitorTemplate >> isMethodAnalyzable [
 ]
 
 { #category : 'private' }
-RTFSelfCallVisitorTemplate >> preAnalysisHook: aMessageNode [
-
-	^ self
-]
-
-{ #category : 'accessing' }
-RTFSelfCallVisitorTemplate >> selfClass: aClass [
-
-	selfClass := aClass 
-]
-
-{ #category : 'accessing' }
-RTFSelfCallVisitorTemplate >> selfSentMethods [
-	^ selfSentMethods
-]
-
-{ #category : 'private' }
-RTFSelfCallVisitorTemplate >> setMethodFromNode: aMessageNode [
+RTFSelfCallVisitorInterpreter >> lookupMethodFromNode: aMessageNode [
 
 	| lookupClass |
 	lookupClass := aMessageNode receiver isSuperVariable
@@ -78,8 +61,25 @@ RTFSelfCallVisitorTemplate >> setMethodFromNode: aMessageNode [
 	selfSentMethod := lookupClass lookupSelector: aMessageNode selector
 ]
 
+{ #category : 'private' }
+RTFSelfCallVisitorInterpreter >> preAnalysisHook: aMessageNode [
+
+	^ self
+]
+
+{ #category : 'accessing' }
+RTFSelfCallVisitorInterpreter >> selfClass: aClass [
+
+	selfClass := aClass 
+]
+
+{ #category : 'accessing' }
+RTFSelfCallVisitorInterpreter >> selfSentMethods [
+	^ selfSentMethods
+]
+
 { #category : 'visiting' }
-RTFSelfCallVisitorTemplate >> visitMessageNode: aMessageNode [
+RTFSelfCallVisitorInterpreter >> visitMessageNode: aMessageNode [
 
 	^ self visitMessageNode: aMessageNode ifMissingMethod: [
 			Warning signal: ('#{1} can not be found in {2} nor in any super class.' format: {
@@ -89,13 +89,13 @@ RTFSelfCallVisitorTemplate >> visitMessageNode: aMessageNode [
 ]
 
 { #category : 'visiting' }
-RTFSelfCallVisitorTemplate >> visitMessageNode: aMessageNode ifMissingMethod: aBlock [
+RTFSelfCallVisitorInterpreter >> visitMessageNode: aMessageNode ifMissingMethod: aBlock [
 
 	self visitNodes: aMessageNode.
 	(aMessageNode receiver isSelfVariable 
 		or: [ aMessageNode receiver isSuperVariable ]) 
 			ifFalse: [ ^ self ].
-	self setMethodFromNode: aMessageNode.
+	self lookupMethodFromNode: aMessageNode.
 	selfSentMethod ifNil: [
 			aBlock value.
 			^ self ].
@@ -105,7 +105,7 @@ RTFSelfCallVisitorTemplate >> visitMessageNode: aMessageNode ifMissingMethod: aB
 ]
 
 { #category : 'visiting' }
-RTFSelfCallVisitorTemplate >> visitNodes: aMessageNode [
+RTFSelfCallVisitorInterpreter >> visitNodes: aMessageNode [
 
 	aMessageNode receiver acceptVisitor: self.
 	aMessageNode arguments do: [ :each | each acceptVisitor: self ]
