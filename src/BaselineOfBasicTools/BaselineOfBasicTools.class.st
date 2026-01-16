@@ -228,7 +228,7 @@ BaselineOfBasicTools >> postload: loader package: packageSpec [
 
 
 	CompletionSorter register.
-	RubSmalltalkEditor completionEngineClass: CompletionEngine.
+	RubSmalltalkEditor completionEngineClass: CoCompletionEngine.
 
 	Initialized := true
 ]
