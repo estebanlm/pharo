@@ -225,6 +225,22 @@ CoASTHeuristicsResultSetBuilder >> variablesHeuristic: aHeuristic [
 ]
 
 { #category : 'visiting' }
+CoASTHeuristicsResultSetBuilder >> visitArrayNode: aNode [
+
+	^ self
+		configureFetcherForNode: aNode
+		usingHeuristicAvoidingRepetitions: self variablesHeuristic
+]
+
+{ #category : 'visiting' }
+CoASTHeuristicsResultSetBuilder >> visitBlockNode: aNode [
+
+	^ self
+		configureFetcherForNode: aNode
+		usingHeuristicAvoidingRepetitions: self variablesHeuristic
+]
+
+{ #category : 'visiting' }
 CoASTHeuristicsResultSetBuilder >> visitLiteralValueNode: aNode [
 
 	completionContext completionToken ifEmpty: [ ^ super visitLiteralValueNode: aNode ].
@@ -248,6 +264,22 @@ CoASTHeuristicsResultSetBuilder >> visitMethodNode: aMethodNode [
 	completionContext completionToken ifEmpty: [ ^ super visitMethodNode: aMethodNode ].
 
 	^ self configureFetcherForNode: aMethodNode usingHeuristicAvoidingRepetitions: self methodNodesHeuristic
+]
+
+{ #category : 'visiting' }
+CoASTHeuristicsResultSetBuilder >> visitReturnNode: aNode [
+
+	^ self
+		configureFetcherForNode: aNode
+		usingHeuristicAvoidingRepetitions: self variablesHeuristic
+]
+
+{ #category : 'visiting' }
+CoASTHeuristicsResultSetBuilder >> visitSequenceNode: aNode [
+
+	^ self
+		configureFetcherForNode: aNode
+		usingHeuristicAvoidingRepetitions: self variablesHeuristic
 ]
 
 { #category : 'visiting' }
