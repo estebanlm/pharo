@@ -136,7 +136,11 @@ MetacelloRecordTarget >> visitPackageSpec: aMetacelloPackageSpec [
 
 	| directive packageRepositorySpecs |
 	packageRepositorySpecs := aMetacelloPackageSpec repositorySpecs ifEmpty: [ currentRepositorySpecs ].
-	directive := MetacelloDirective loadPackage: aMetacelloPackageSpec repositorySpecs: packageRepositorySpecs.
+
+	directive := (MetacelloPackageLoadDirective spec: aMetacelloPackageSpec)
+		             repositorySpecs: packageRepositorySpecs;
+		             yourself.
+
 	(self specBuilder currentLoadDirective includes: directive) ifTrue: [ ^ self ].
 
 	self preLoad: aMetacelloPackageSpec.
@@ -163,13 +167,18 @@ MetacelloRecordTarget >> visitProjectReference: aMetacelloProjectReferenceSpec [
 	registered := registration projectSpec.
 
 	(registered compareEqual: projectReferenceToLoad) ifFalse: [ "counts as override, only if they differ in some aspect"
-			override := registered copy.
-			override mergeScriptLoads: projectReferenceToLoad.
-			projectReferenceToLoad := override ].
+		override := registered copy.
+		override mergeScriptLoads: projectReferenceToLoad.
+		projectReferenceToLoad := override ].
 
 	projectReferenceToLoad ensureProjectLoadedWithEngine: engine.
-	requiredArray := projectReferenceToLoad loadListForVersion: projectReferenceToLoad version.
-	projectReferenceToLoad version recordRequiredFromArray: requiredArray withEngine: engine.
+	"Propagate the strictness to the dependency as defined in the dependent before loading"
+	projectReferenceToLoad project version strict: projectReferenceToLoad strict.
+	
+	requiredArray := registered loadListForVersion: projectReferenceToLoad version.
+	projectReferenceToLoad version
+		recordRequiredFromArray: requiredArray
+		withEngine: engine.
 	registration registerProject
 ]
 

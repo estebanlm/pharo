@@ -15,7 +15,7 @@ MetacelloLoadTarget >> actionLabel [
 { #category : 'accessing' }
 MetacelloLoadTarget >> baselineFor: aDirective [
 
-	^ aDirective spec project configuration
+	^ aDirective spec project baseline
 ]
 
 { #category : 'accessing' }
@@ -45,7 +45,9 @@ MetacelloLoadTarget >> visitLinearLoadDirective: aMetacelloLinearLoadDirective [
 { #category : 'visiting' }
 MetacelloLoadTarget >> visitPackageLoadDirective: aMetacelloPackageLoadDirective [
 
-	engine loader loadPackageDirective: aMetacelloPackageLoadDirective
+	engine loader
+		loadAtomicPackageDirectives: { aMetacelloPackageLoadDirective }
+		engine: engine
 ]
 
 { #category : 'visiting' }

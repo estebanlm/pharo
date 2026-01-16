@@ -334,7 +334,8 @@ CompiledMethod >> isDeprecated [
 
 	^ (self sendsAnySelectorOf:
 		   #( #deprecated: #deprecated:transformWith: #deprecated:transformWith:when: #deprecated:on:in: #deprecated:on:in:transformWith:
-		      #deprecated:on:in:transformWith:when: )) or: [ self methodClass isDeprecated or: [ self package ifNotNil: [ :package | package isDeprecated ] ] ]
+		      #deprecated:on:in:transformWith:when: )) or: [
+		  self methodClass isDeprecated or: [ self package notNil and: [ self package isDeprecated ] ] ]
 ]
 
 { #category : 'testing' }

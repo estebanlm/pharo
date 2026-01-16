@@ -10,12 +10,6 @@ Class {
 }
 
 { #category : 'instance creation' }
-MetacelloDirective class >> loadPackage: aPackageSpec repositorySpecs: externalReference [
-
-	^ MetacelloPackageLoadDirective new spec: aPackageSpec repositorySpecs: externalReference
-]
-
-{ #category : 'instance creation' }
 MetacelloDirective class >> postLoadSpec: packageOrVersionSpec [
 
 	^ MetacelloPostLoadDirective new spec: packageOrVersionSpec
@@ -25,6 +19,14 @@ MetacelloDirective class >> postLoadSpec: packageOrVersionSpec [
 MetacelloDirective class >> preLoadSpec: packageOrVersionSpec [
 
 	^ MetacelloPreLoadDirective new spec: packageOrVersionSpec
+]
+
+{ #category : 'accessing' }
+MetacelloDirective class >> spec: aSpec [
+
+	^ self new
+		  spec: aSpec;
+		  yourself
 ]
 
 { #category : 'visiting' }
