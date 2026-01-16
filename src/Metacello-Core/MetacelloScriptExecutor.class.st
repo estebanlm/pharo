@@ -69,7 +69,7 @@ MetacelloScriptExecutor >> execute [
 			| engine |
 			engine := MetacelloScriptEngine new
 				          options: self options copy;
-				          projectReferenceSpec: projectReferenceSpec;
+				          projectSpec: projectReferenceSpec;
 				          yourself.
 			[
 				self class codeSupportAnnouncer announce: (MetacelloExecutionStartAnnouncement executor: self).

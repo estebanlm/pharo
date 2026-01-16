@@ -136,7 +136,11 @@ MetacelloRecordTarget >> visitPackageSpec: aMetacelloPackageSpec [
 
 	| directive packageRepositorySpecs |
 	packageRepositorySpecs := aMetacelloPackageSpec repositorySpecs ifEmpty: [ currentRepositorySpecs ].
-	directive := MetacelloDirective loadPackage: aMetacelloPackageSpec repositorySpecs: packageRepositorySpecs.
+
+	directive := (MetacelloPackageLoadDirective spec: aMetacelloPackageSpec)
+		             repositorySpecs: packageRepositorySpecs;
+		             yourself.
+
 	(self specBuilder currentLoadDirective includes: directive) ifTrue: [ ^ self ].
 
 	self preLoad: aMetacelloPackageSpec.

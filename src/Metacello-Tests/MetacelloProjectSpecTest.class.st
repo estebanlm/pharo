@@ -65,15 +65,14 @@ MetacelloProjectSpecTest >> testProjectMergeSpec2 [
 MetacelloProjectSpecTest >> testProjectSpec [
 
 	| project |
-	project := self projectSpec.
-	project
-		name: 'Project';
-		className: 'BaselineOfProject';
-		loads: 'MyPackage';
-		loads: #( 'MyPackage' 'MyTests' );
-		preLoadDoIt: #preLoadDoIt;
-		postLoadDoIt: #postLoadDoIt;
-		yourself.
+	project := self projectSpec
+		           name: 'Project';
+		           className: 'BaselineOfProject';
+		           loads: 'MyPackage';
+		           loads: #( 'MyPackage' 'MyTests' );
+		           preLoadDoIt: #preLoadDoIt;
+		           postLoadDoIt: #postLoadDoIt;
+		           yourself.
 	self assert: project name equals: 'Project'.
 	self assert: project className equals: 'BaselineOfProject'.
 	self assert: project loads equals: #( 'MyPackage' 'MyTests' ).
@@ -90,13 +89,12 @@ MetacelloProjectSpecTest >> testProjectSpec [
 MetacelloProjectSpecTest >> testProjectSpec2 [
 
 	| project repository |
-	project := self projectSpec.
-	project
-		name: 'Project';
-		className: 'BaselineOfProject';
-		repository: 'http://example.com/repository' username: 'dkh' password: 'password';
-		repository: '/opt/gemstone/repository';
-		yourself.
+	project := self projectSpec
+		           name: 'Project';
+		           className: 'BaselineOfProject';
+		           repository: 'http://example.com/repository' username: 'dkh' password: 'password';
+		           repository: '/opt/gemstone/repository';
+		           yourself.
 	self assert: project name equals: 'Project'.
 	self assert: project className equals: 'BaselineOfProject'.
 	self assert: project projectPackage name equals: project className.
