@@ -10,7 +10,6 @@ Class {
 		'repositories',
 		'postLoadDoIt',
 		'className',
-		'mutable',
 		'strict'
 	],
 	#category : 'Metacello-Core-Model',
@@ -78,7 +77,6 @@ MetacelloProjectSpec >> className [
 { #category : 'accessing' }
 MetacelloProjectSpec >> className: aString [
 
-	self shouldBeMutable.
 	className := aString.
 	self resetProjectPackage
 ]
@@ -100,15 +98,6 @@ MetacelloProjectSpec >> constructClassName [
 	^ 'BaselineOf' , self name
 ]
 
-{ #category : 'mutability' }
-MetacelloProjectSpec >> copyForRegistration: aMetacelloProjectRegistration onWrite: aBlock [
-
-	| copy |
-	copy := aMetacelloProjectRegistration projectSpec copy.
-	aBlock value: copy.
-	aMetacelloProjectRegistration projectSpec: copy
-]
-
 { #category : 'accessing' }
 MetacelloProjectSpec >> currentlyLoadedClassesInVersion [
 
@@ -120,7 +109,7 @@ MetacelloProjectSpec >> currentlyLoadedClassesInVersion [
 MetacelloProjectSpec >> ensureProjectLoadedWithEngine: anEngine [
 	"Ensure that the MetacelloProject version is built (We downloaded the baseline and we executed it to build a MetacelloVersion"
 
-	(self hasVersion and: [ (self isMutable and: [ anEngine ignoreImage ]) not ]) ifTrue: [ ^ self ].
+	(self hasVersion and: [ anEngine ignoreImage not ]) ifTrue: [ ^ self ].
 
 	project := anEngine loader loadProject: self engine: anEngine
 ]
@@ -153,23 +142,12 @@ MetacelloProjectSpec >> hasVersion [
 	^ self version isNotNil
 ]
 
-{ #category : 'mutability' }
-MetacelloProjectSpec >> immutable [
-    mutable := false
-]
-
 { #category : 'scripting' }
 MetacelloProjectSpec >> isLocked [
 
   ^ self registration 
 	ifNotNil: [ :aRegistration | aRegistration locked ]
 	ifNil: [ false ]
-]
-
-{ #category : 'mutability' }
-MetacelloProjectSpec >> isMutable [
-
-	^ mutable ifNil: [ ^ true ]
 ]
 
 { #category : 'printing' }
@@ -194,7 +172,6 @@ MetacelloProjectSpec >> loads [
 { #category : 'accessing' }
 MetacelloProjectSpec >> loads: aCollection [
 
-	self shouldBeMutable.
 	loads := aCollection isString
 		         ifTrue: [ { aCollection } ]
 		         ifFalse: [ aCollection asArray ]
@@ -225,11 +202,10 @@ MetacelloProjectSpec >> mergeMap [
 { #category : 'scripting' }
 MetacelloProjectSpec >> mergeScriptLoads: aSpec [
 
-	self shouldBeMutable.
 	aSpec loads ifNotNil: [ :otherLoads |
-		self loads
-			ifNil: [ loads := otherLoads ]
-			ifNotNil: [ loads := (loads , otherLoads) asSet asArray ] ]
+			self loads
+				ifNil: [ loads := otherLoads ]
+				ifNotNil: [ loads := (loads , otherLoads) asSet asArray ] ]
 ]
 
 { #category : 'scripting' }
@@ -260,11 +236,6 @@ MetacelloProjectSpec >> metacelloRegistrationHash [
 	^ hash bitXor: (self repositories repositorySpecs collect: [ :each | each description ]) hash
 ]
 
-{ #category : 'mutability' }
-MetacelloProjectSpec >> mutable [
-    mutable := true
-]
-
 { #category : 'querying' }
 MetacelloProjectSpec >> name [
 
@@ -274,7 +245,6 @@ MetacelloProjectSpec >> name [
 { #category : 'accessing' }
 MetacelloProjectSpec >> name: aString [
 
-	self shouldBeMutable.
 	name := aString trim.
 	self resetProjectPackage
 ]
@@ -283,7 +253,6 @@ MetacelloProjectSpec >> name: aString [
 MetacelloProjectSpec >> postCopy [
 
 	super postCopy.
-	mutable := nil.
 	repositories := repositories copy.
 	projectPackage := nil
 ]
@@ -297,7 +266,6 @@ MetacelloProjectSpec >> postLoadDoIt [
 { #category : 'accessing' }
 MetacelloProjectSpec >> postLoadDoIt: aSymbol [
 
-	self shouldBeMutable.
 	self validateDoItSelector: aSymbol.
 	postLoadDoIt := aSymbol
 ]
@@ -311,7 +279,6 @@ MetacelloProjectSpec >> preLoadDoIt [
 { #category : 'accessing' }
 MetacelloProjectSpec >> preLoadDoIt: aSymbol [
 
-	self shouldBeMutable.
 	self validateDoItSelector: aSymbol.
 	preLoadDoIt := aSymbol
 ]
@@ -377,7 +344,6 @@ MetacelloProjectSpec >> repositories [
 { #category : 'accessing' }
 MetacelloProjectSpec >> repositories: anObject [
 
-	self shouldBeMutable.
 	repositories := anObject.
 	self resetProjectPackage
 ]
@@ -430,13 +396,6 @@ MetacelloProjectSpec >> resetProjectPackage [
 MetacelloProjectSpec >> resolveToLoadableSpec [
 
 	^self copy
-]
-
-{ #category : 'mutability' }
-MetacelloProjectSpec >> shouldBeMutable [
-
-	self isMutable ifTrue: [ ^ self ].
-	self error: 'Not allowed to modify an immutable object'
 ]
 
 { #category : 'accessing' }

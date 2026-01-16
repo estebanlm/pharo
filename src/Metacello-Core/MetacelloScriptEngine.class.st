@@ -72,12 +72,7 @@ MetacelloScriptEngine >> get [
 						self root: (Smalltalk at: spec className asSymbol) project.
 						MetacelloProjectRegistration
 							registrationForProjectSpec: spec
-							ifPresent: [ :existing |
-									existing copyOnWrite: [ :existingCopy |
-											spec copyForRegistration: existingCopy onWrite: [ :specCopy |
-													specCopy
-														ifNil: [ existingCopy merge: spec asProjectRegistration ]
-														ifNotNil: [ specCopy mergeScriptRepository: spec ] ] ] ]
+							ifPresent: [ :existing | existing projectSpec repositories: spec repositories ]
 							ifAbsent: [ spec asProjectRegistration registerProject ] ] ]
 		commitIfSuccess: true
 ]
@@ -127,10 +122,9 @@ MetacelloScriptEngine >> handleProjectSpecLoaded: aProjectSpec [
 	MetacelloProjectRegistration
 		registrationForProjectSpec: aProjectSpec
 		ifPresent: [ :existing | "unconditionally merge new with existing (updates registration)"
-				existing copyOnWrite: [ :existingCopy |
-						existingCopy
-							loadedInImage: true;
-							merge: aProjectSpec asProjectRegistration ] ]
+				existing
+					loadedInImage: true;
+					merge: aProjectSpec asProjectRegistration ]
 		ifAbsent: [
 				aProjectSpec asProjectRegistration
 					loadedInImage: true;
@@ -179,11 +173,10 @@ MetacelloScriptEngine >> load: required [
 				self root: result.
 				MetacelloProjectRegistration
 					registrationForProjectSpec: projectSpec2
-					ifPresent: [ :existing1 |
-							existing1 copyOnWrite: [ :existingCopy |
-									existingCopy
-										loadedInImage: true;
-										merge: projectSpec2 asProjectRegistration ] ]
+					ifPresent: [ :existing |
+							existing
+								loadedInImage: true;
+								merge: projectSpec2 asProjectRegistration ]
 					ifAbsent: [
 							projectSpec2 asProjectRegistration
 								loadedInImage: true;
@@ -212,14 +205,9 @@ MetacelloScriptEngine >> lock [
 				MetacelloProjectRegistration
 					registrationForProjectSpec: spec
 					ifPresent: [ :existing |
-							existing copyOnWrite: [ :existingCopy |
-									existingCopy locked: true.
-									spec copyForRegistration: existingCopy onWrite: [ :specCopy |
-											specCopy
-												ifNil: [ existingCopy merge: spec asProjectRegistration ]
-												ifNotNil: [
-														specCopy mergeScriptRepository: spec.
-														spec := specCopy ] ] ] ]
+							existing locked: true. "We need to merge the repositories"
+							existing projectSpec repositories: spec repositories.
+							spec := existing projectSpec ]
 					ifAbsent: [
 							spec asProjectRegistration
 								locked: true;
@@ -283,7 +271,7 @@ MetacelloScriptEngine >> register [
 	spec := self projectSpec.
 	MetacelloProjectRegistration
 		registrationForProjectSpec: spec
-		ifPresent: [ :existing | existing copyOnWrite: [ :existingCopy | existingCopy merge: spec asProjectRegistration ] ]
+		ifPresent: [ :existing | existing merge: spec asProjectRegistration ]
 		ifAbsent: [ spec asProjectRegistration registerProject ].
 	self root: spec
 ]
@@ -332,9 +320,7 @@ MetacelloScriptEngine >> unlock [
 	MetacelloProjectRegistration
 		copyRegistryDuring: [
 				spec := self projectSpec.
-				MetacelloProjectRegistration
-					registrationForProjectSpec: spec
-					ifPresent: [ :existing | existing copyOnWrite: [ :existingCopy | existingCopy locked: false ] ].
+				MetacelloProjectRegistration registrationForProjectSpec: spec ifPresent: [ :existing | existing locked: false ].
 				self root: spec ]
 		commitIfSuccess: true
 ]
