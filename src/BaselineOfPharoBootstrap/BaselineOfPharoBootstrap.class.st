@@ -41,12 +41,6 @@ BaselineOfPharoBootstrap class >> packagesToExportWithHermes [
 	^ self packagesRecursiveIn: 'ToLoadByHermes'
 ]
 
-{ #category : 'accessing' }
-BaselineOfPharoBootstrap class >> sUnitPackageNames [
-
-	^ self packagesOfGroupNamed: #SUnitGroup
-]
-
 { #category : 'baselines' }
 BaselineOfPharoBootstrap >> baseline: spec [
 
@@ -60,13 +54,6 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			BaselineOfMonticello corePackageNames do: [ :package | spec package: package ].
 			BaselineOfMetacello corePackageNames do: [ :package | spec package: package ].
 
-			spec package: 'Random-Core'.
-			spec package: 'SUnit-Core'.
-			spec package: 'SUnit-Tests'.
-			spec package: 'Debugging-Utils'.
-			spec package: 'SUnit-Basic-CLI'.
-			spec package: 'Kernel-Tests'.
-			
 			spec group: 'KernelGroup' with: BaselineOfKernel corePackageNames.
 			spec group: 'AdditionalPackages' with: BaselineOfKernel additionalPackagesPackageNames.
 			spec group: 'CompilerGroup' with: BaselineOfCompiler corePackageNames.
@@ -76,11 +63,8 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			spec group: 'MetacelloGroup' with: BaselineOfMetacello corePackageNames.
 
 			"Group of packages to load with Hermes."
-			spec group: 'ToLoadByHermes' with: { 'AdditionalPackages'. 'CompilerGroup'. 'FileSystemGroup'. 'TraitGroup'. 'MonticelloCore'. 'SUnitGroup' . 'MetacelloGroup' }.
+			spec group: 'ToLoadByHermes' with: { 'AdditionalPackages'. 'CompilerGroup'. 'FileSystemGroup'. 'TraitGroup'. 'MonticelloCore' . 'MetacelloGroup' }.
 
 			"Group of packages to export as MCZ"
-			spec group: 'ToExportAsMCZ' with: { 'KernelGroup'. 'ToLoadByHermes' }. 
-			
-			"The next group is here for testing the minimal image. The packages needs to be in the loading order!"
-			spec group: 'SUnitGroup' with: #( 'Clap-Core' 'Clap-Commands-Pharo' 'Hermes-Extensions' 'Math-Operations-Extensions' 'System-Time' 'NumberParser' 'AST-Core' 'ParseTreeRewriter' 'Random-Core' 'System-NumberPrinting' 'Traits' 'Debugging-Utils' 'Deprecation' 'SUnit-Core'  'SUnit-Basic-CLI' 'SUnit-Tests' 'Kernel-Tests' ) ]
+			spec group: 'ToExportAsMCZ' with: { 'KernelGroup'. 'ToLoadByHermes' } ]
 ]
