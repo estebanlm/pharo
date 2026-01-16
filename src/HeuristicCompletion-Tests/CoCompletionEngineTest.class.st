@@ -32,19 +32,6 @@ CoCompletionEngineTest >> newCompletionEngine [
 	^ CoCompletionEngine new
 ]
 
-{ #category : 'running' }
-CoCompletionEngineTest >> setUp [
-	super setUp.
-	oldSort := CompletionContext sorterClass.
-	CompletionContext sorterClass: NoSorter.
-]
-
-{ #category : 'running' }
-CoCompletionEngineTest >> tearDown [
-	CompletionContext sorterClass: oldSort.
-	super tearDown.	
-]
-
 { #category : 'tests - interaction' }
 CoCompletionEngineTest >> testCmdCtrlLeft [
 

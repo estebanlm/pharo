@@ -18,6 +18,9 @@ Class {
 		'filter',
 		'sorter'
 	],
+	#classVars : [
+		'SorterClass'
+	],
 	#category : 'HeuristicCompletion-Model-Core',
 	#package : 'HeuristicCompletion-Model',
 	#tag : 'Core'
@@ -57,7 +60,7 @@ CoResultSet >> fetch: anInteger [
 
 	| newResults |
 	newResults := fetcher next: anInteger.
-	results addAll: (sorter sortCompletionList: newResults)
+	results addAll: "(sorter sortCompletionList:" newResults
 ]
 
 { #category : 'fetching' }
@@ -119,7 +122,7 @@ CoResultSet >> initialize [
 	super initialize.
 	results := OrderedCollection new.
 	filter := CoFilter empty.
-	sorter := CompletionContext sorterClass new
+	
 ]
 
 { #category : 'testing' }

@@ -105,7 +105,7 @@ CompletionContext >> hasMessage [
 
 { #category : 'entries' }
 CompletionContext >> initEntries [
-
+	self halt.
 	^ sorter sortCompletionList: (node completionEntries: position)
 ]
 
