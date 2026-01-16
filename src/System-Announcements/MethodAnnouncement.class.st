@@ -58,7 +58,9 @@ MethodAnnouncement >> methodPackage [
 
 { #category : 'accessing' }
 MethodAnnouncement >> packagesAffected [
-	^{self methodPackage}
+
+	self methodPackage ifNil: [ ^ #(  ) ].
+	^ { self methodPackage }
 ]
 
 { #category : 'accessing' }
