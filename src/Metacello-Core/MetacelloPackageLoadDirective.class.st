@@ -63,6 +63,12 @@ MetacelloPackageLoadDirective >> repositorySpecs [
 	^ repositorySpecs
 ]
 
+{ #category : 'asserting' }
+MetacelloPackageLoadDirective >> shouldLoadStrict [
+	
+	^ spec shouldLoadStrict
+]
+
 { #category : 'initialization' }
 MetacelloPackageLoadDirective >> spec: aPackageSpec repositorySpecs: anExternalReference [
 

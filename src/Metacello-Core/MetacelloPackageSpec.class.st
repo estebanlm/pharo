@@ -7,7 +7,8 @@ Class {
 		'name',
 		'repositories',
 		'preLoadDoIt',
-		'postLoadDoIt'
+		'postLoadDoIt',
+		'strict'
 	],
 	#category : 'Metacello-Core-Model',
 	#package : 'Metacello-Core',
@@ -223,6 +224,12 @@ MetacelloPackageSpec >> resolveToPackagesIn: aVersionSpec visited: visited [
 	^{ self }
 ]
 
+{ #category : 'asserting' }
+MetacelloPackageSpec >> shouldLoadStrict [
+
+	^ strict ifNil: [ project ifNotNil: [ :p | p strict ] ]
+]
+
 { #category : 'private' }
 MetacelloPackageSpec >> specs: specNames forPackageOrdering: aVersionSpec [
 
@@ -238,6 +245,11 @@ MetacelloPackageSpec >> specs: specNames forPackageOrdering: aVersionSpec [
 					        nil "return nil if resumed" ].
 			spec ifNotNil: [ packageOrProjectSpecs addAll: (spec resolveSpecsForPackageOrdering: aVersionSpec) ] ].
 	^ packageOrProjectSpecs
+]
+
+{ #category : 'accessing' }
+MetacelloPackageSpec >> strict: aBoolean [ 
+	strict := aBoolean
 ]
 
 { #category : 'accessing' }

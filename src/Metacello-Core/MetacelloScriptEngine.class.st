@@ -36,6 +36,7 @@ MetacelloScriptEngine >> do: aBlock required: required commitIfSuccess: aBoolean
 						projectSpec loads: required.
 						projectSpec ensureProjectLoadedWithEngine: self.
 						versionSpec := projectSpec project version.
+	
 						requiredArray := projectSpec loadListForVersion: versionSpec.
 						self root: (aBlock value: versionSpec value: requiredArray value: projectSpec) ] ]
 		commitIfSuccess: aBoolean
@@ -44,9 +45,11 @@ MetacelloScriptEngine >> do: aBlock required: required commitIfSuccess: aBoolean
 { #category : 'project lookup' }
 MetacelloScriptEngine >> doLoadProjectSpecFrom: aMetacelloPackageSpec [
 
-	self loader loadPackageDirective: (MetacelloDirective
-			 loadPackage: aMetacelloPackageSpec
-			 repositorySpecs: aMetacelloPackageSpec repositorySpecs)
+	self loader
+		loadAtomicPackageDirectives: { (MetacelloDirective
+				 loadPackage: aMetacelloPackageSpec
+				 repositorySpecs: aMetacelloPackageSpec repositorySpecs) }
+		engine: self
 ]
 
 { #category : 'actions api' }
@@ -320,6 +323,12 @@ MetacelloScriptEngine >> root: anObject [
 { #category : 'accessing' }
 MetacelloScriptEngine >> specBuilder [
 	^ specBuilder
+]
+
+{ #category : 'accessing' }
+MetacelloScriptEngine >> strict [
+	
+	^ self options at: #'strict' ifAbsent: [ false ]
 ]
 
 { #category : 'actions api' }

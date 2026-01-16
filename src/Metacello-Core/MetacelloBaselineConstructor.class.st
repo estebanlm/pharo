@@ -420,6 +420,12 @@ MetacelloBaselineConstructor >> root: aMetacelloSpec [
     root := aMetacelloSpec
 ]
 
+{ #category : 'accessing' }
+MetacelloBaselineConstructor >> strict: aBoolean [
+	
+	root strict: aBoolean
+]
+
 { #category : 'api - old' }
 MetacelloBaselineConstructor >> supplyingAnswers: aCollection [
 	"Kept for compiatibility with other Smalltalk and old Pharo versions."

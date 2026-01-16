@@ -32,12 +32,18 @@ MetacelloMonticelloLoader >> initialize [
 ]
 
 { #category : 'loading' }
-MetacelloMonticelloLoader >> loadAtomicPackageDirectives: packageDirectives [
+MetacelloMonticelloLoader >> loadAtomicPackageDirectives: packageDirectives engine: theEngine [
 	"Each package directive can specify many repositorySpecs.
 	Find the first one that defines the package (assumming they all are equivalent) and use that."
 
-	| model references |
+	| model references strictnesses strictness |
 	model := MCVersionLoader new.
+
+	strictnesses := packageDirectives collect: [ :e | e shouldLoadStrict ] as: Set.
+	self assert: strictnesses size = 1 description: 'Cannot load atomically packages with different strictness policies'.
+	strictness := strictnesses anyOne.
+	"If not specified explicitly, use the default one defined in the engine"
+	model isStrict: (strictness ifNil: [ theEngine strict ]).
 
 	references := packageDirectives collect: [ :e |
 		| repository |
@@ -62,15 +68,8 @@ MetacelloMonticelloLoader >> loadAtomicPackageDirectives: packageDirectives [
 ]
 
 { #category : 'loading' }
-MetacelloMonticelloLoader >> loadPackageDirective: aMetacelloPackageLoadDirective [
-
-	self loadAtomicPackageDirectives: { aMetacelloPackageLoadDirective }
-]
-
-{ #category : 'loading' }
-MetacelloMonticelloLoader >> loadProject: aMetacelloProjectSpec [
+MetacelloMonticelloLoader >> loadProject: aMetacelloProjectSpec engine: anEngine [
 	"Loads the project BaselineOf and creates a project from it"
-
 	"There is no need at loading a project twice as long as it has the same version."
 
 	| projectClass projectClassInstance project |
@@ -80,13 +79,15 @@ MetacelloMonticelloLoader >> loadProject: aMetacelloProjectSpec [
 
 	(self lookupProjectClassNamed:
 		 aMetacelloProjectSpec className) ifNil: [
-		self loadPackageDirective: (MetacelloDirective
-				 loadPackage: (MetacelloPackageSpec new
-						  name: aMetacelloProjectSpec className;
-						  repositories: aMetacelloProjectSpec repositories;
-						  yourself)
-				 repositorySpecs:
-				 aMetacelloProjectSpec repositorySpecs) ].
+		self
+			loadAtomicPackageDirectives: { (MetacelloDirective
+					 loadPackage: (MetacelloPackageSpec new
+							  name: aMetacelloProjectSpec className;
+							  repositories: aMetacelloProjectSpec repositories;
+							  yourself)
+					 repositorySpecs:
+					 aMetacelloProjectSpec repositorySpecs) }
+			engine: anEngine ].
 
 	projectClass := self lookupProjectClassNamed:  aMetacelloProjectSpec className asSymbol.
 	projectClassInstance := projectClass new.

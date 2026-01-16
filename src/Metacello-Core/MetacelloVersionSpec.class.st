@@ -8,7 +8,8 @@ Class {
 		'postLoadDoIt',
 		'importName',
 		'preLoadDoIt',
-		'packagesSpec'
+		'packagesSpec',
+		'strict'
 	],
 	#category : 'Metacello-Core-Model',
 	#package : 'Metacello-Core',
@@ -345,4 +346,16 @@ MetacelloVersionSpec >> spec [
 	"To remove once Iceberg is fixed."
 
 	^ self
+]
+
+{ #category : 'accessing' }
+MetacelloVersionSpec >> strict [
+
+	^ strict
+]
+
+{ #category : 'accessing' }
+MetacelloVersionSpec >> strict: aBoolean [
+
+	strict := aBoolean
 ]
