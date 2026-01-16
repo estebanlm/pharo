@@ -796,6 +796,17 @@ Character >> isTitlecaseLetter [
 ]
 
 { #category : 'testing' }
+Character >> isTokenish [
+	"Answer whether the receiver is a valid token-character -- letter, digit, underscore, or colon."
+	"$' tokenish >>> false"
+	"$: tokenish >>> true"
+	"${ tokenish >>> false"
+	"Character space tokenish >>> false"
+
+	^ self isLetter or: [ self isDigit or: [ self = $_ or: [ self = $: ] ] ]
+]
+
+{ #category : 'testing' }
 Character >> isUppercase [
 
 	^ self characterSet isUppercase: self
@@ -888,10 +899,19 @@ Character >> to: other [
 { #category : 'testing' }
 Character >> tokenish [
 	"Answer whether the receiver is a valid token-character -- letter, digit, underscore, or colon."
+
 	"$' tokenish >>> false"
+
 	"$: tokenish >>> true"
+
 	"${ tokenish >>> false"
+
 	"Character space tokenish >>> false"
+
+	self
+		deprecated: 'Use isTokenish instead of current one'
+		on: '16 January 2026'
+		in: 'Pharo-14.0.0+SNAPSHOT.build.420.sha.9acc5cddfcf712ffa4ef3e8c38a605655501fded (64 Bit)'.
 
 	^ self isLetter or: [ self isDigit or: [ self = $_ or: [ self = $: ] ] ]
 ]
