@@ -15,8 +15,7 @@ Class {
 	#instVars : [
 		'results',
 		'fetcher',
-		'filter',
-		'sorter'
+		'filter'
 	],
 	#classVars : [
 		'SorterClass'
@@ -40,6 +39,20 @@ CoResultSet class >> onContext: aCompletionContext fetcher: aFetcher [
 	^ self new
 		fetcher: aFetcher;
 		yourself
+]
+
+{ #category : 'instance creation' }
+CoResultSet class >> sorterClass [
+
+
+	^ SorterClass
+]
+
+{ #category : 'instance creation' }
+CoResultSet class >> sorterClass: aClass [
+	"not sure that we will keep it. 
+	For now we do not use it."
+	SorterClass := aClass
 ]
 
 { #category : 'accessing' }
