@@ -267,7 +267,7 @@ SystemNavigation >> allSentMessagesInClass: aClass [
 	^ sent
 ]
 
-{ #category : 'package ' }
+{ #category : 'package' }
 SystemNavigation >> allSentMessagesInClass: aClass do: aBlock [
 	"Answer the set of selectors which are sent somewhere in the system."
 	aClass methodsDo: [:method | "Include all sels, but not if sent by self"
