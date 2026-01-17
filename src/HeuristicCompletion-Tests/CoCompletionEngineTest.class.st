@@ -15,21 +15,9 @@ CoCompletionEngineTest class >> shouldInheritSelectors [
 	^ true
 ]
 
-{ #category : 'accessing' }
-CoCompletionEngineTest >> doItContext [
-
-	^ nil
-]
-
 { #category : 'testing' }
 CoCompletionEngineTest >> hasBindingOf: aSymbol [
 	^ false
-]
-
-{ #category : 'running' }
-CoCompletionEngineTest >> newCompletionEngine [
-
-	^ CoCompletionEngine new
 ]
 
 { #category : 'tests - interaction' }
