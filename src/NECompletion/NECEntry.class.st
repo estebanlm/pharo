@@ -138,7 +138,7 @@ NECEntry >> node: anObject [
 	node := anObject
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 NECEntry >> originDisplayed [
 
 	^ OriginDisplayed ifNil: [ OriginDisplayed := false ]
