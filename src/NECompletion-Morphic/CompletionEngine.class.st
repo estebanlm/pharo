@@ -35,17 +35,20 @@ Class {
 
 { #category : 'accessing' }
 CompletionEngine class >> contextClass [
-	^ContextClass ifNil: [ CoCompletionContext ]
+
+	^ ContextClass ifNil: [ CoCompletionContext ]
 ]
 
 { #category : 'accessing' }
 CompletionEngine class >> contextClass: aClass [
+
 	ContextClass := aClass
 ]
 
 { #category : 'accessing' }
 CompletionEngine class >> isCompletionEnabled [
-	^NECPreferences enabled
+
+	^ NECPreferences enabled
 ]
 
 { #category : 'private' }
