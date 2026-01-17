@@ -122,7 +122,7 @@ NECEntry >> label [
 
 	| typeString |
 	typeString := self rawLabel.
-	self originDisplayed ifTrue: [ typeString := typeString , ' from: ', self fetcher ].
+	self originDisplayed ifTrue: [ typeString := typeString , ' from: ', self fetcher asString ].
 	^ typeString
 ]
 
