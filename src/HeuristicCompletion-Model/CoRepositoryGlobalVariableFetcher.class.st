@@ -27,5 +27,5 @@ CoRepositoryGlobalVariableFetcher >> entriesDo: aBlock [
 			(packageNamePart , '*' match: packageName) ifTrue: [
 				friendClassNames addAll: ((organizer packageNamed: packageName ifAbsent: [ ]) definedClasses collect: [ :each | each name ]) ] ].
 
-	friendClassNames do: [ :friend | (filter accepts: friend) ifTrue: [ aBlock value: (NECGlobalEntry contents: friend node: nil) ] ]
+	friendClassNames do: [ :friend | aBlock value: (NECGlobalEntry contents: friend node: nil) ]
 ]

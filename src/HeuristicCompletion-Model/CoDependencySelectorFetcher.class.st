@@ -23,8 +23,8 @@ CoDependencySelectorFetcher >> entriesDo: aBlock [
 	dependentPackages do: [ :pkgName | self treatPackageNamed: pkgName into: dependentSelectors ].
 
 	dependentSelectors do: [ :sel |
-			(filter accepts: sel) ifTrue: [
+	
 					aBlock value: ((NECSelectorEntry contents: sel node: astNode)
 							 fetcher: self;
-							 yourself) ] ]
+							 yourself) ] 
 ]

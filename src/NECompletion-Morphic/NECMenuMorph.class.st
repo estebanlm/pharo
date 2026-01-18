@@ -317,6 +317,8 @@ NECMenuMorph >> drawLine: index on: aCanvas rectangle: rectangle [
 	preString := preString <= 0
 		ifFalse: [ string first: preString - 1 ]
 		ifTrue: [ String empty ].
+		
+	"shout is using the symbol to select the color so we pass a symbol"
 	type := necEntry hightlightSymbol.
 	font := self selectFont: type.
 	index = self selectedIndex
