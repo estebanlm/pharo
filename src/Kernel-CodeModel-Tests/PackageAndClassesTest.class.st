@@ -41,7 +41,7 @@ PackageAndClassesTest >> testAddExtensionProtocol [
 	self assert: (self organizer hasPackage: #Yyyyy)
 ]
 
-{ #category : 'tests - op' }
+{ #category : 'tests - operations on protocols' }
 PackageAndClassesTest >> testAddNewProtocolDoesNothing [
 	"test that by adding a protocol, nothing change from Package point of vue."
 
