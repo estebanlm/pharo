@@ -33,6 +33,7 @@ DummyUIManager >> chooseFrom: labelList values: valueList lines: linesArray titl
 { #category : 'ui requests' }
 DummyUIManager >> confirm: queryString [
 
+	self deprecated: 'Use ConfirmationRequest signal: instead.'.
 	self error: 'No user response possible'
 ]
 

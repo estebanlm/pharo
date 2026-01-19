@@ -412,15 +412,12 @@ SpIconPacksFetchPresenter >> selectedIconPacks [
 
 { #category : 'initialization' }
 SpIconPacksFetchPresenter >> setCurrentIconPack [
-	
-	| selectedIconsPack |
 
-	(self confirm: 'Are you sure to replace the current icon pack?')
-		ifFalse: [ ^ self ].
+	| selectedIconsPack |
+	(ConfirmationRequest signal: 'Are you sure to replace the current icon pack?') ifFalse: [ ^ self ].
 	selectedIconsPack := availableIconPacksPresenter selectedItem.
 	selectedIconsPack beCurrent.
-	self inform:
-		'Current Icons Pack updated to: ' , selectedIconsPack name
+	self inform: 'Current Icons Pack updated to: ' , selectedIconsPack name
 ]
 
 { #category : 'callbacks' }
