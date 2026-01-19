@@ -18,6 +18,7 @@ Class {
 	#classInstVars : [
 		'formatIncompleteIdentifiers',
 		'styleTable',
+		'styleTableSelector',
 		'textAttributes'
 	],
 	#category : 'Shout-Styling',
@@ -80,8 +81,8 @@ SHRBTextStyler class >> blueStyleTable [
 	"
 	<styleTable: 'Blue'>
 
-			"(symbol color [emphasisSymbolOrArray [textStyleName [pixelHeight]]])"
- ^ #(
+	"(symbol color [emphasisSymbolOrArray [textStyleName [pixelHeight]]])"
+ 	^ #(
 			(default 								black)
 			(invalid 									red)
 
@@ -162,7 +163,7 @@ SHRBTextStyler class >> darkBlueStyleTable [
 	<styleTable: 'DarkBlue'>
 
 			"(symbol color [emphasisSymbolOrArray [textStyleName [pixelHeight]]])"
- ^ #(
+ 	^ #(
 			(default 								white)
 			(invalid 								'FF8A80') 
 
@@ -333,15 +334,10 @@ SHRBTextStyler class >> darkStyleTable [
 ]
 
 { #category : 'styles' }
-SHRBTextStyler class >> defaultStyleTable [
-	"color can be a valid argument to Color class>>colorFrom: , or nil to
-	use the editor text color.
-	Multiple emphases can be specified using an array e.g. #(bold italic).
-	If emphasis is not specified, #normal will be used.
-	if pixel height is not specified , then the editor font size will be used.
-	"
+SHRBTextStyler class >> defaultStyleTableSelector [
+	"Answer the selector identifying the default style table"
 
- 	^ self blueStyleTable
+ 	^ #blueStyleTable
 ]
 
 { #category : 'styles' }
@@ -400,6 +396,15 @@ SHRBTextStyler class >> newAttributesForStyleTableNamed: aString [
 	
 	table := self styleTableNamed: aString.
 	^ self newAttributesForStyleTable: (table ifNil: [ self styleTable ])
+]
+
+{ #category : 'initialization' }
+SHRBTextStyler class >> reset [
+	<script>
+
+	styleTable := nil.
+	styleTableSelector := nil.
+	textAttributes := nil
 ]
 
 { #category : 'initialization' }
@@ -516,8 +521,15 @@ SHRBTextStyler class >> solarizedStyleTable [
 
 { #category : 'accessing' }
 SHRBTextStyler class >> styleTable [
-	^ styleTable 
-		ifNil: [styleTable := self defaultStyleTable]
+
+	'=========================== styleTable' crTrace.
+	styleTable crTrace. 
+	self styleTableSelector crTrace.
+	
+	^ styleTable ifNil: [ 
+		styleTable := self perform: self styleTableSelector.
+		styleTable crTrace.
+		styleTable ]
 ]
 
 { #category : 'accessing' }
@@ -555,6 +567,19 @@ SHRBTextStyler class >> styleTablePragmas [
 		  allNamed: #styleTable:
 		  from: self class
 		  to: SHRBTextStyler class
+]
+
+{ #category : 'accessing' }
+SHRBTextStyler class >> styleTableSelector [
+
+	^ styleTableSelector ifNil: [ styleTableSelector := self defaultStyleTableSelector ]
+]
+
+{ #category : 'accessing' }
+SHRBTextStyler class >> styleTableSelector: aSelector [
+
+	styleTableSelector := aSelector.
+	self styleTable: (self perform: styleTableSelector)
 ]
 
 { #category : 'styles' }
