@@ -216,6 +216,6 @@ BaselineOfPharo >> postload: loader package: packageSpec [
 		'Removing credential.' traceCr ].
 
 	"Open the WelcomeBrowser as last step"
-	"(self class environment classNamed: #StWelcomeBrowser)
-		ifNotNil: [ :aClass | aClass openForRelease ]"
+	(self class environment classNamed: #StWelcomeBrowser)
+		ifNotNil: [ :aClass | aClass openForRelease ]
 ]
