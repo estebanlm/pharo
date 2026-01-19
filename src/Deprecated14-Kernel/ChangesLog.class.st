@@ -7,9 +7,6 @@ But you can have your own instance and log whatever you want.
 Class {
 	#name : 'ChangesLog',
 	#superclass : 'Object',
-	#classVars : [
-		'DefaultInstance'
-	],
 	#category : 'Deprecated14-Kernel',
 	#package : 'Deprecated14-Kernel'
 }
