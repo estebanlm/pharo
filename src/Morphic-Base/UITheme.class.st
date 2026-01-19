@@ -89,7 +89,11 @@ UITheme class >> current: aUITheme [
 	SystemProgressMorph reset. "reset to use new fill styles"
 	ScrollBarMorph initializeImagesCache. "reset to use new arrows"
 
-	self class environment at: #SHPreferences ifPresent: [ :shPreferences | shPreferences setStyleTable: aUITheme shStyleTable ].
+	self class environment 
+		at: #SHPreferences 
+		ifPresent: [ :shPreferences | 
+			aUITheme shStyleTable 
+				ifNotNil: [ :aName | shPreferences styleTableSelector: aName ] ].
 
 	self class environment at: #PolymorphSystemSettings ifPresent: [ :polymorphSystemSettings | polymorphSystemSettings desktopColor: aUITheme desktopColor ].
 
@@ -4103,8 +4107,8 @@ UITheme >> shStyleTable [
 	"Styling depends on shout. If it is not present, means there is no style
 	 table to apply"
 	^ (self class environment classNamed: #SHRBTextStyler)
-		ifNotNil: [ :aClass | aClass perform: self shStyleTableName ]
-		ifNil: [ #() ]
+		ifNotNil: [ :aClass | self shStyleTableName ]
+		ifNil: [ nil ]
 ]
 
 { #category : 'accessing' }
