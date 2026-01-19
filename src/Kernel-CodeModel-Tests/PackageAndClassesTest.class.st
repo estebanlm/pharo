@@ -60,7 +60,6 @@ PackageAndClassesTest >> testAddNewProtocolDoesNothing [
 
 { #category : 'tests' }
 PackageAndClassesTest >> testAddNewProtocolNameIsTrimmedByBothSides [
-	"test that by adding a protocol, nothing change from Package point of vue."
 
 	| xPackage class |
 	xPackage := self ensureXPackage.
