@@ -13,6 +13,18 @@ Class {
 	#tag : 'Drivers'
 }
 
+{ #category : 'accessing' }
+ReRemoveMethodDriver class >> driverName [
+
+	^ 'Remove method(s)'
+]
+
+{ #category : 'accessing' }
+ReRemoveMethodDriver class >> shouldPreviewChangesByDefault [
+
+	^ false
+]
+
 { #category : 'execution' }
 ReRemoveMethodDriver >> breakingChoices [
 

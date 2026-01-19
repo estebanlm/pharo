@@ -26,8 +26,8 @@ CoRepositorySelectorFetcher >> entriesDo: aBlock [
 		(packageNamePart , '*' match: eachPackageName) ifTrue: [ self treatPackageNamed: eachPackageName into: friendSelectors ] ].
 
 	friendSelectors do: [ :sel |
-			(filter accepts: sel) ifTrue: [
+			
 					aBlock value: ((NECSelectorEntry contents: sel node: astNode)
 							 fetcher: self;
-							 yourself) ] ]
+							 yourself) ] 
 ]

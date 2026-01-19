@@ -7,7 +7,8 @@ Class {
 		'name',
 		'repositories',
 		'preLoadDoIt',
-		'postLoadDoIt'
+		'postLoadDoIt',
+		'strict'
 	],
 	#category : 'Metacello-Core-Model',
 	#package : 'Metacello-Core',
@@ -86,13 +87,11 @@ MetacelloPackageSpec >> mergeMap [
 { #category : 'merging' }
 MetacelloPackageSpec >> mergeSpec: anotherSpec [
 
-	| newSpec |
-	newSpec := super mergeSpec: anotherSpec.
-	anotherSpec requires ifNotEmpty: [ :anotherRequires | newSpec requires: self requires , anotherRequires ].
-	newSpec repositories: (self repositories mergeSpec: anotherSpec repositories).
+	super mergeSpec: anotherSpec.
+	anotherSpec requires ifNotEmpty: [ :anotherRequires | self requires: self requires , anotherRequires ].
+	self repositories: (self repositories mergeSpec: anotherSpec repositories).
 
-	anotherSpec name ifNotNil: [ newSpec name: anotherSpec name ].
-	^ newSpec
+	anotherSpec name ifNotNil: [ self name: anotherSpec name ]
 ]
 
 { #category : 'querying' }
@@ -225,6 +224,12 @@ MetacelloPackageSpec >> resolveToPackagesIn: aVersionSpec visited: visited [
 	^{ self }
 ]
 
+{ #category : 'asserting' }
+MetacelloPackageSpec >> shouldLoadStrict [
+
+	^ strict ifNil: [ project ifNotNil: [ :p | p strict ] ]
+]
+
 { #category : 'private' }
 MetacelloPackageSpec >> specs: specNames forPackageOrdering: aVersionSpec [
 
@@ -240,6 +245,11 @@ MetacelloPackageSpec >> specs: specNames forPackageOrdering: aVersionSpec [
 					        nil "return nil if resumed" ].
 			spec ifNotNil: [ packageOrProjectSpecs addAll: (spec resolveSpecsForPackageOrdering: aVersionSpec) ] ].
 	^ packageOrProjectSpecs
+]
+
+{ #category : 'accessing' }
+MetacelloPackageSpec >> strict: aBoolean [ 
+	strict := aBoolean
 ]
 
 { #category : 'accessing' }

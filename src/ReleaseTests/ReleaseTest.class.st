@@ -230,7 +230,7 @@ ReleaseTest >> testKeyClassesArePresentInStartupList [
 	| keyClasses registeredHandlers |
 	keyClasses := #(#Delay #ProcessorScheduler #Stdio #OSPlatform #DiskStore #FinalizationProcess).
 	registeredHandlers := SessionManager default startupList
-		collect: [:each | each handledId].
+		collect: [:each | each handlerId].
 
 	keyClasses do:	[ :className |
 		self assert: (registeredHandlers includes: className).
@@ -511,7 +511,7 @@ ReleaseTest >> testShouldFileLocatorBeBeforeSystemSettingsPersistenceInStartupLi
 	"This test documents issue https://pharo.manuscript.com/f/cases/17721"
 
 	| startupList settingsIndex |
-	startupList := (SessionManager default startupList collect: [:each | each handledId]).
+	startupList := (SessionManager default startupList collect: [:each | each handlerId]).
 	settingsIndex := startupList indexOf: #SystemSettingsPersistence.
 	settingsIndex > 0
 		ifTrue: [ self should: [ (startupList indexOf: #FileLocator) < (startupList indexOf: #SystemSettingsPersistence) ] ]
@@ -522,7 +522,7 @@ ReleaseTest >> testShouldWorldMorphBeAfterFontClassesInStartupList [
 	"This test documents issue https://pharo.manuscript.com/f/cases/17834"
 	"The Startup of he WorldMorph is now done in the UIManagerHandler"
 	| startupList |
-	startupList := (SessionManager default startupList collect: [:each | each handledId]).
+	startupList := (SessionManager default startupList collect: [:each | each handlerId]).
 	#(StrikeFont LogicalFont FreeTypeSettings FreeTypeCache)
 		do: [ :fontClass |
 			self should: [ (startupList indexOf: #ErrorHandlerSessionHandler) > (startupList indexOf: #SystemSettingsPersistence) ] ]
@@ -573,7 +573,7 @@ ReleaseTest >> testThatThereAreNoSelectorsRemainingThatAreSentButNotImplemented 
 	                    'RBTransformationDummyRuleTest class>>#rewrite:methods:name:' 'RBTransformationRuleTestData class>>#initializeAfterLoad1'
 	                    'RBTransformationRuleTestData class>>#rewrite:methods:name:' 'RGChunkImporter>>#visitDoItChunk:' 'ReSentNotImplementedRuleTest>>#sampleMethod'
 	                    'RubSegmentMorph>>#intersects:' 'SpTreeColumn>>#rowMorphFor:' 'SpUIThemeDecoratorTest>>#testDoesNotUnderstand'
-	                    'SpWindowPresenter>>#notify:' 'SpMorphicBackend>>#executeSaveFileDialog:' ).
+	                    'SpWindowPresenter>>#notify:' 'SpMorphicBackend>>#executeSaveFileDialog:' 'MCMethodDefinitionTest>>#testLoadInvalidCodeInLegacyMode' ).
 
 	violations := (SystemNavigation default allSentButNotImplementedSelectors collect: [ :method | method printString ]) asOrderedCollection.
 	"This next line is to ignore this for SmalltalkCI and not make external Pharo projects fail :("

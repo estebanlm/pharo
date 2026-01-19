@@ -3,7 +3,7 @@ A MCVersionLoader is responsible for loading a given version.
 "
 Class {
 	#name : 'MCVersionLoader',
-	#superclass : 'Object',
+	#superclass : 'MCAbstractLoader',
 	#instVars : [
 		'versions'
 	],
@@ -63,6 +63,8 @@ MCVersionLoader >> basicLoad [
 	loader := versions size > 1
 		          ifTrue: [ MCMultiPackageLoader new ]
 		          ifFalse: [ MCPackageLoader new ].
+	loader isStrict: self isStrict.
+
 	versions do: [ :ea |
 		loader updatePackage: ea package withSnapshot: ea snapshot ].
 

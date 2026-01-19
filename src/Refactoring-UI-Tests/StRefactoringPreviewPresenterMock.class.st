@@ -20,6 +20,12 @@ StRefactoringPreviewPresenterMock class >> withChanges: changes scopes: aCollect
 	^ self new withChanges: changes scopes: aCollection 
 ]
 
+{ #category : 'visiting' }
+StRefactoringPreviewPresenterMock >> accept [
+
+
+]
+
 { #category : 'accessing' }
 StRefactoringPreviewPresenterMock >> application: aStPharoApplication [ 
 

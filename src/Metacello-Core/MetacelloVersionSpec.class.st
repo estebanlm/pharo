@@ -8,7 +8,8 @@ Class {
 		'postLoadDoIt',
 		'importName',
 		'preLoadDoIt',
-		'packagesSpec'
+		'packagesSpec',
+		'strict'
 	],
 	#category : 'Metacello-Core-Model',
 	#package : 'Metacello-Core',
@@ -158,25 +159,6 @@ MetacelloVersionSpec >> loader: aMetacelloLoadTarget [
 	"nothing"
 ]
 
-{ #category : 'merging' }
-MetacelloVersionSpec >> mergeMap [
-
-	^ super mergeMap
-		  at: #preLoadDoIt put: preLoadDoIt;
-		  at: #postLoadDoIt put: postLoadDoIt;
-		  yourself
-]
-
-{ #category : 'merging' }
-MetacelloVersionSpec >> mergeSpec: anotherSpec [
-
-	| newSpec |
-	newSpec := super mergeSpec: anotherSpec.
-	newSpec packagesSpec: (self packagesSpec mergeSpec: anotherSpec packagesSpec).
-	newSpec repositories: (self repositories mergeSpec: anotherSpec repositories).
-	^ newSpec
-]
-
 { #category : 'querying' }
 MetacelloVersionSpec >> packageNamed: aString [
 
@@ -213,7 +195,7 @@ MetacelloVersionSpec >> packageNamed: aString ifAbsent: absentBlock [
 { #category : 'querying' }
 MetacelloVersionSpec >> packageNames [
 
-	^ self packagesSpec map keys asSet
+	^ self packagesSpec loadableSpecs collect: [ :spec | spec name ]
 ]
 
 { #category : 'querying' }
@@ -364,4 +346,16 @@ MetacelloVersionSpec >> spec [
 	"To remove once Iceberg is fixed."
 
 	^ self
+]
+
+{ #category : 'accessing' }
+MetacelloVersionSpec >> strict [
+
+	^ strict
+]
+
+{ #category : 'accessing' }
+MetacelloVersionSpec >> strict: aBoolean [
+
+	strict := aBoolean
 ]

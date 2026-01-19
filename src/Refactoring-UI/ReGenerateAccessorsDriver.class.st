@@ -15,10 +15,10 @@ Class {
 	#tag : 'Drivers'
 }
 
-{ #category : 'displaying' }
-ReGenerateAccessorsDriver class >> refactoringClass [
+{ #category : 'accessing' }
+ReGenerateAccessorsDriver class >> driverName [
 
-	^ ReCreateAccessorsForVariableTransformation
+	^ 'Generate accessors'
 ]
 
 { #category : 'configuration' }
@@ -28,6 +28,12 @@ ReGenerateAccessorsDriver >> configureRefactoring [
 		               model: model;
 		               refactorings: (selectedVariables collect: [ :eachSlot | self refactoringForSlot: eachSlot ]);
 		               yourself
+]
+
+{ #category : 'execution' }
+ReGenerateAccessorsDriver >> refactoringClass [
+
+	^ ReCreateAccessorsForVariableTransformation
 ]
 
 { #category : 'initialization' }

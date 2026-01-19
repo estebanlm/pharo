@@ -70,7 +70,7 @@ ReInsertSubclassDriverTest >> testInsertSubclassInADifferentPackage [
 	driver 
 		superclass: self superclassToAddSubclass;
 		scopes: { testingEnvironment };
-		packageName: ReAddSubclassDriver packageName;	
+		packageName: RBAbstractClass packageName;	
 		subclass: self newSubclassName.
 	
 	rbClass := driver superclass.
@@ -92,5 +92,5 @@ ReInsertSubclassDriverTest >> testInsertSubclassInADifferentPackage [
 
 	self
 		assert: driver refactoring changes changes first package
-		equals: ReAddSubclassDriver packageName
+		equals: RBAbstractClass packageName
 ]

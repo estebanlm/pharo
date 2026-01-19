@@ -44,6 +44,12 @@ MetacelloScriptExecutor >> baselineArg: anObject [
 	baselineArg := anObject
 ]
 
+{ #category : 'configuration' }
+MetacelloScriptExecutor >> beStrict: aBoolean [
+
+	self options at: #strict put: aBoolean
+]
+
 { #category : 'args' }
 MetacelloScriptExecutor >> classNameArg [
     ^ classNameArg
@@ -63,7 +69,7 @@ MetacelloScriptExecutor >> execute [
 			| engine |
 			engine := MetacelloScriptEngine new
 				          options: self options copy;
-				          projectReferenceSpec: projectReferenceSpec;
+				          projectSpec: projectReferenceSpec;
 				          yourself.
 			[
 				self class codeSupportAnnouncer announce: (MetacelloExecutionStartAnnouncement executor: self).

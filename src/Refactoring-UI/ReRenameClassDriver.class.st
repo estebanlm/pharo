@@ -11,6 +11,12 @@ Class {
 	#tag : 'Drivers'
 }
 
+{ #category : 'accessing' }
+ReRenameClassDriver class >> driverName [
+
+	^ 'Rename class'
+]
+
 { #category : 'instance creation' }
 ReRenameClassDriver class >> rename: oldName [
 	

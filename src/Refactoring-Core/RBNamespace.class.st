@@ -697,15 +697,16 @@ RBNamespace >> repackage: aClass in: aPackage tag: aTag [
 RBNamespace >> reparentClasses: aRBClassCollection to: newClass [
 
 	aRBClassCollection do: [ :aClass |
-		self defineClass: [ :aBuilder |
-			aBuilder
-				superclassName: newClass name;
-				name: aClass name;
-				slots: aClass instanceVariableNames;
-				sharedVariables: aClass classVariableNames;
-				sharedPools: aClass sharedPoolNames;
-				package: aClass packageName;
-				tag: aClass tagName ] ]
+			self defineClass: [ :aBuilder |
+					aBuilder
+						superclassName: newClass name;
+						name: aClass name;
+						slots: aClass instanceVariableNames;
+						sharedVariables: aClass classVariableNames;
+						sharedPools: aClass sharedPoolNames;
+						package: aClass packageName;
+						tag: aClass tagName;
+						classSlots: aClass classSide instanceVariableNames ] ]
 ]
 
 { #category : 'accessing' }

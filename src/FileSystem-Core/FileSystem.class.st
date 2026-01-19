@@ -75,12 +75,6 @@ FileSystem >> accessTimeOf: aResolvable [
 ]
 
 { #category : 'public' }
-FileSystem >> beReadOnly [
-
-	store := store asReadOnlyStore
-]
-
-{ #category : 'public' }
 FileSystem >> beWritable [
 
 	store := store asWritableStore

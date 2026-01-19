@@ -50,5 +50,5 @@ CoTransitiveDependencyGlobalVariableFetcher >> entriesDo: aBlock [
 			                       acc ].
 
 	dependentClassNames do: [ :className |
-		(filter accepts: className) ifTrue: [ aBlock value: (NECGlobalEntry contents: className node: nil) ] ]
+		aBlock value: (NECGlobalEntry contents: className node: nil) ]
 ]

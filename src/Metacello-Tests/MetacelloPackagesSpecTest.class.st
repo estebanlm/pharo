@@ -7,26 +7,7 @@ Class {
 }
 
 { #category : 'tests' }
-MetacelloPackagesSpecTest >> testAddGroupA [
-	"used by MetacelloBaselineConstructor>>group:overrides:"
-
-	| packages group |
-	packages := MetacelloPackagesSpec new.
-	packages add: (self groupSpec
-			 name: 'Platform';
-			 includes: 'Core';
-			 yourself).
-	packages add: (self groupSpec
-			 name: 'Platform';
-			 includes: 'Tests';
-			 yourself).
-	group := packages loadableSpecNamed: 'Platform' ifAbsent: [ self assert: false ].
-	self deny: (group includes includes: 'Core').
-	self assert: (group includes includes: 'Tests')
-]
-
-{ #category : 'tests' }
-MetacelloPackagesSpecTest >> testAddGroupB [
+MetacelloPackagesSpecTest >> testAddGroup [
 	"used by MetacelloBaselineConstructor>>group:overrides:"
 
 	| packages group |
@@ -74,32 +55,6 @@ MetacelloPackagesSpecTest >> testAddPackageA [
 MetacelloPackagesSpecTest >> testAddPackageB [
 	"used by MetacelloBaselineConstructor>>package: and MetacelloBaselineConstructor>>package:overrides:"
 
-	| packages package |
-	packages := MetacelloPackagesSpec new.
-	packages add: (self packageSpec
-			 name: 'Package';
-			 requires: 'AnotherPackage';
-			 includes: 'IncludedPackage';
-			 preLoadDoIt: #preLoadDoIt;
-			 postLoadDoIt: #postLoadDoIt;
-			 yourself).
-	packages add: (self packageSpec
-			 name: 'Package';
-			 requires: 'AndAnotherPackage';
-			 includes: 'AndIncludedPackage';
-			 yourself).
-	package := packages loadableSpecNamed: 'Package' ifAbsent: [ self assert: false ].
-	self assert: package name equals: 'Package'.
-	self assert: package requires equals: #( 'AndAnotherPackage' ).
-	self assert: package includes equals: #( 'AndIncludedPackage' ).
-	self assert: package preLoadDoIt value identicalTo: nil.
-	self assert: package postLoadDoIt value identicalTo: nil
-]
-
-{ #category : 'tests' }
-MetacelloPackagesSpecTest >> testAddPackageC [
-	"used by MetacelloBaselineConstructor>>package: and MetacelloBaselineConstructor>>package:overrides:"
-
 	| packages |
 	packages := MetacelloPackagesSpec new.
 	packages add: (self packageSpec
@@ -117,7 +72,7 @@ MetacelloPackagesSpecTest >> testAddPackageC [
 ]
 
 { #category : 'tests' }
-MetacelloPackagesSpecTest >> testAddPackageD [
+MetacelloPackagesSpecTest >> testAddPackageC [
 	"used by MetacelloBaselineConstructor>>package: and MetacelloBaselineConstructor>>package:overrides:"
 
 	| packages |
@@ -129,41 +84,7 @@ MetacelloPackagesSpecTest >> testAddPackageD [
 ]
 
 { #category : 'tests' }
-MetacelloPackagesSpecTest >> testAddProjectA [
-	"used by MetacelloBaselineConstructor>>project:overrides:"
-
-	| packages project projectReferenceSpec |
-	packages := MetacelloPackagesSpec new.
-	packages add: (MetacelloProjectReferenceSpec projectReference: (self projectSpec
-				  name: 'Project';
-				  className: 'BaselineOfProjectA';
-				  loads: #( 'MyPackage' 'MyTests' );
-				  preLoadDoIt: #preLoadDoItB;
-				  postLoadDoIt: #postLoadDoItB;
-				  yourself)).
-	packages add: (MetacelloProjectReferenceSpec projectReference: (self projectSpec
-				  name: 'Project';
-				  className: 'BaselineOfProject';
-				  loads: #( 'MyPackage' );
-				  preLoadDoIt: #preLoadDoIt;
-				  postLoadDoIt: #postLoadDoIt;
-				  yourself)).
-	projectReferenceSpec := packages loadableSpecNamed: 'Project' ifAbsent: [ self assert: false ].
-	self assert: projectReferenceSpec projectName equals: 'Project'.
-	self should: [ projectReferenceSpec includes: #(  ) ] raise: Error.
-	self should: [ projectReferenceSpec requires: #(  ) ] raise: Error.
-	self assert: projectReferenceSpec isProjectReferenceSpec.
-	project := projectReferenceSpec referencedSpec.
-	self assert: project name equals: 'Project'.
-	self assert: project className equals: 'BaselineOfProject'.
-	self assert: project loads equals: #( 'MyPackage' ).
-	self assert: project preLoadDoIt value identicalTo: #preLoadDoIt.
-	self assert: project postLoadDoIt value identicalTo: #postLoadDoIt.
-	self assert: project class equals: MetacelloProjectSpec
-]
-
-{ #category : 'tests' }
-MetacelloPackagesSpecTest >> testAddProjectB [
+MetacelloPackagesSpecTest >> testAddProject [
 	"used by MetacelloBaselineConstructor>>project:overrides:"
 
 	| packages project projectReferenceSpec |
@@ -275,26 +196,7 @@ MetacelloPackagesSpecTest >> testCopyToProject [
 ]
 
 { #category : 'tests' }
-MetacelloPackagesSpecTest >> testMergeGroupA [
-	"used by MetacelloBaselineConstructor>>group:with:"
-
-	| packages group |
-	packages := MetacelloPackagesSpec new.
-	packages add: (self groupSpec
-			 name: 'Platform';
-			 includes: 'Core';
-			 yourself).
-	packages merge: (self groupSpec
-			 name: 'Platform';
-			 includes: 'Tests';
-			 yourself).
-	group := packages loadableSpecNamed: 'Platform' ifAbsent: [ self assert: false ].
-	self assert: (group includes includes: 'Core').
-	self assert: (group includes includes: 'Tests')
-]
-
-{ #category : 'tests' }
-MetacelloPackagesSpecTest >> testMergeGroupB [
+MetacelloPackagesSpecTest >> testMergeGroup [
 	"used by MetacelloBaselineConstructor>>group:with:"
 
 	| packages group |
@@ -342,32 +244,6 @@ MetacelloPackagesSpecTest >> testMergePackageA [
 MetacelloPackagesSpecTest >> testMergePackageB [
 	"used by MetacelloBaselineConstructor>>package:with:"
 
-	| packages package |
-	packages := MetacelloPackagesSpec new.
-	packages add: (self packageSpec
-			 name: 'Package';
-			 requires: 'AnotherPackage';
-			 includes: 'IncludedPackage';
-			 preLoadDoIt: #preLoadDoIt;
-			 postLoadDoIt: #postLoadDoIt;
-			 yourself).
-	packages merge: (self packageSpec
-			 name: 'Package';
-			 requires: 'AndAnotherPackage';
-			 includes: 'AndIncludedPackage';
-			 yourself).
-	package := packages loadableSpecNamed: 'Package' ifAbsent: [ self assert: false ].
-	self assert: package name equals: 'Package'.
-	self assert: package requires equals: #( 'AnotherPackage' 'AndAnotherPackage' ).
-	self assert: package includes equals: #( 'IncludedPackage' 'AndIncludedPackage' ).
-	self assert: package preLoadDoIt value identicalTo: #preLoadDoIt.
-	self assert: package postLoadDoIt value identicalTo: #postLoadDoIt
-]
-
-{ #category : 'tests' }
-MetacelloPackagesSpecTest >> testMergePackageD [
-	"used by MetacelloBaselineConstructor>>package:with:"
-
 	| packages |
 	packages := MetacelloPackagesSpec new.
 	packages
@@ -383,40 +259,6 @@ MetacelloPackagesSpecTest >> testMergePackageD [
 
 { #category : 'tests' }
 MetacelloPackagesSpecTest >> testMergeProjectA [
-	"used by MetacelloBaselineConstructor>>project:with:"
-
-	| packages project projectReferenceSpec referenceSpec |
-	packages := MetacelloPackagesSpec new.
-	project := self projectSpec
-		           name: 'Project';
-		           className: 'BaselineOfProjectA';
-		           loads: #( 'MyPackage' 'MyTests' );
-		           preLoadDoIt: #preLoadDoItB;
-		           postLoadDoIt: #postLoadDoItB;
-		           yourself.
-	referenceSpec := MetacelloProjectReferenceSpec projectReference: project.
-	packages add: referenceSpec.
-	project := self projectSpec
-		           name: 'Project';
-		           className: 'BaselineOfProject';
-		           loads: #( 'MyPackage' );
-		           preLoadDoIt: #preLoadDoIt;
-		           postLoadDoIt: #postLoadDoIt;
-		           yourself.
-	referenceSpec := MetacelloProjectReferenceSpec projectReference: project.
-	packages merge: referenceSpec.
-	projectReferenceSpec := packages loadableSpecNamed: 'Project' ifAbsent: [ self assert: false ].
-	project := projectReferenceSpec referencedSpec.
-	self assert: project name equals: 'Project'.
-	self assert: project className equals: 'BaselineOfProject'.
-	self assert: project loads equals: #( 'MyPackage' ).
-	self assert: project preLoadDoIt value identicalTo: #preLoadDoIt.
-	self assert: project postLoadDoIt value identicalTo: #postLoadDoIt.
-	self assert: project class equals: MetacelloProjectSpec
-]
-
-{ #category : 'tests' }
-MetacelloPackagesSpecTest >> testMergeProjectB [
 	"used by MetacelloBaselineConstructor>>project:with:"
 
 	| packages project projectReferenceSpec referenceSpec |
@@ -607,7 +449,7 @@ MetacelloPackagesSpecTest >> testRemoveGroupC [
 ]
 
 { #category : 'tests' }
-MetacelloPackagesSpecTest >> testRemovePackageA [
+MetacelloPackagesSpecTest >> testRemovePackage [
 	"used by MetacelloBaselineConstructor>>removePackage:"
 
 	| packages removed |
@@ -628,96 +470,7 @@ MetacelloPackagesSpecTest >> testRemovePackageA [
 ]
 
 { #category : 'tests' }
-MetacelloPackagesSpecTest >> testRemovePackageB [
-	"used by MetacelloBaselineConstructor>>removePackage:"
-
-	| packages removed |
-	packages := MetacelloPackagesSpec new.
-	packages add: (self packageSpec
-			 name: 'Package';
-			 requires: 'AnotherPackage';
-			 includes: 'IncludedPackage';
-			 preLoadDoIt: #preLoadDoIt;
-			 postLoadDoIt: #postLoadDoIt;
-			 yourself).
-	packages remove: (self packageSpec
-			 name: 'Package';
-			 yourself).
-	removed := false.
-	packages loadableSpecNamed: 'Package' ifAbsent: [ removed := true ].
-	self assert: removed
-]
-
-{ #category : 'tests' }
-MetacelloPackagesSpecTest >> testRemovePackageC [
-	"used by MetacelloBaselineConstructor>>removePackage:"
-
-	| packages removed |
-	packages := MetacelloPackagesSpec new.
-	packages add: (self packageSpec
-			 name: 'Package';
-			 requires: 'AnotherPackage';
-			 includes: 'IncludedPackage';
-			 preLoadDoIt: #preLoadDoIt;
-			 postLoadDoIt: #postLoadDoIt;
-			 yourself).
-	packages remove: (self packageSpec
-			 name: 'Package';
-			 yourself).
-	removed := false.
-	packages loadableSpecNamed: 'Package' ifAbsent: [ removed := true ].
-	self assert: removed
-]
-
-{ #category : 'tests' }
-MetacelloPackagesSpecTest >> testRemovePackageD [
-	"used by MetacelloBaselineConstructor>>removePackage:"
-
-	| packages removed |
-	packages := MetacelloPackagesSpec new.
-	packages add: (self packageSpec
-			 name: 'Package';
-			 requires: 'AnotherPackage';
-			 includes: 'IncludedPackage';
-			 preLoadDoIt: #preLoadDoIt;
-			 postLoadDoIt: #postLoadDoIt;
-			 yourself).
-	packages remove: (self packageSpec
-			 name: 'Package';
-			 yourself).
-	removed := false.
-	packages loadableSpecNamed: 'Package' ifAbsent: [ removed := true ].
-	self assert: removed
-]
-
-{ #category : 'tests' }
-MetacelloPackagesSpecTest >> testRemoveProjectA [
-	"used by MetacelloBaselineConstructor>>removeProject:"
-
-	| packages project projectReferenceSpec removed |
-	packages := MetacelloPackagesSpec new.
-	packages add: (MetacelloProjectReferenceSpec projectReference: (self projectSpec
-				  name: 'Project';
-				  className: 'BaselineOfProject';
-				  loads: #( 'MyPackage' );
-				  preLoadDoIt: #preLoadDoIt;
-				  postLoadDoIt: #postLoadDoIt;
-				  yourself)).
-	projectReferenceSpec := packages loadableSpecNamed: 'Project' ifAbsent: [ self assert: false ].
-	project := projectReferenceSpec referencedSpec.
-	self assert: project name equals: 'Project'.
-	self assert: project className equals: 'BaselineOfProject'.
-	self assert: project loads equals: #( 'MyPackage' ).
-	self assert: project preLoadDoIt value identicalTo: #preLoadDoIt.
-	self assert: project postLoadDoIt value identicalTo: #postLoadDoIt.
-	packages remove: (MetacelloProjectReferenceSpec projectReference: project).
-	removed := false.
-	packages loadableSpecNamed: 'Project' ifAbsent: [ removed := true ].
-	self assert: removed
-]
-
-{ #category : 'tests' }
-MetacelloPackagesSpecTest >> testRemoveProjectB [
+MetacelloPackagesSpecTest >> testRemoveProject [
 	"used by MetacelloBaselineConstructor>>removeProject:"
 
 	| packages project projectReferenceSpec removed |
