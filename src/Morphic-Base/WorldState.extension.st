@@ -33,9 +33,9 @@ WorldState class >> browseWorldMenuOn: aBuilder [
 
 { #category : '*Morphic-Base' }
 WorldState class >> cleanUpImage [
-
 	"Give the user a chance to bail"
-	(self confirm: 'Cleanup will destroy change sets and more.
+
+	(ConfirmationRequest signal: 'Cleanup will destroy change sets and more.
 Are you sure you want to proceed?') ifFalse: [ ^ self ].
 	^ Smalltalk cleanUp: true
 ]
