@@ -35,7 +35,6 @@ Class {
 		'LowSpaceProcess',
 		'LowSpaceSemaphore',
 		'MemoryHogs',
-		'SourceFileVersionString',
 		'SpecialSelectors',
 		'Tools'
 	],
