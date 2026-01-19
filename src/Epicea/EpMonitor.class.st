@@ -102,18 +102,21 @@ EpMonitor class >> shouldLogMetacelloLoading [
 
 { #category : 'asserting' }
 EpMonitor class >> shouldLogMetacelloLoading: aBoolean [
-	"If it is false, we register to Metacello announcement to disable Epicea."
+	"If it is false, we register to Metacello announcement to disable Epicea.
+	
+	We save the old value in a stack because one project can load multiple other. If we keep only one value, we will lose the original value."
 
-	| oldValue |
+	| oldValues |
 	self codeSupportAnnouncer unsubscribe: self.
 
+	oldValues := Stack new.
 	aBoolean ifFalse: [
 			self codeSupportAnnouncer weak
 				when: MetacelloExecutionStartAnnouncement do: [
-						oldValue := self current isEnabled.
+						oldValues push: self current isEnabled.
 						self current disable ]
 				for: self;
-				when: MetacelloExecutionEndAnnouncement do: [ self current enabled: oldValue ] for: self ]
+				when: MetacelloExecutionEndAnnouncement do: [ self current enabled: oldValues pop ] for: self ]
 ]
 
 { #category : 'asserting' }
