@@ -73,7 +73,7 @@ ClassDescription >> addProtocol: aProtocol [
 
 	(self hasProtocol: aProtocol) ifTrue: [ ^ self protocolNamed: protocolName ].
 
-	protocol := Protocol named: protocolName class: self.
+	protocol := Protocol named: protocolName trimBoth class: self.
 
 	oldProtocols := self protocolNames copy.
 
