@@ -41,7 +41,7 @@ PackageAndClassesTest >> testAddExtensionProtocol [
 	self assert: (self organizer hasPackage: #Yyyyy)
 ]
 
-{ #category : 'tests - operations on protocols' }
+{ #category : 'tests' }
 PackageAndClassesTest >> testAddNewProtocolDoesNothing [
 	"test that by adding a protocol, nothing change from Package point of vue."
 
@@ -56,6 +56,18 @@ PackageAndClassesTest >> testAddNewProtocolDoesNothing [
 	self assert: (class >> #newMethod) package equals: xPackage.
 	self deny: (class >> #newMethod) isExtension.
 	self assertEmpty: xPackage extensionMethods
+]
+
+{ #category : 'tests' }
+PackageAndClassesTest >> testAddNewProtocolNameIsTrimmedByBothSides [
+	"test that by adding a protocol, nothing change from Package point of vue."
+
+	| xPackage class |
+	xPackage := self ensureXPackage.
+	class := self newClassNamed: 'NewClass' in: xPackage.
+	self createMethodNamed: 'newMethod' inClass: class asExtensionOf: xPackage.
+	class classify: #newMethod under: ' accessing '.
+	self assert: (class >> #newMethod) protocolName equals: 'accessing'
 ]
 
 { #category : 'tests' }
