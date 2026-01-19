@@ -14,16 +14,14 @@ MetacelloFetchTarget >> actionLabel [
 
 { #category : 'visiting' }
 MetacelloFetchTarget >> visitAtomicLoadDirective: aMetacelloAtomicLoadDirective [
-	
-	aMetacelloAtomicLoadDirective loadDirectives do: [ :dir |
-		dir acceptVisitor: self ]
+
+	aMetacelloAtomicLoadDirective loadDirectives do: [ :dir | dir acceptVisitor: self ]
 ]
 
 { #category : 'visiting' }
 MetacelloFetchTarget >> visitLinearLoadDirective: aMetacelloLinearLoadDirective [
 
-	aMetacelloLinearLoadDirective loadDirectives do: [ :dir |
-		dir acceptVisitor: self ]
+	aMetacelloLinearLoadDirective loadDirectives do: [ :dir | dir acceptVisitor: self ]
 ]
 
 { #category : 'visiting' }

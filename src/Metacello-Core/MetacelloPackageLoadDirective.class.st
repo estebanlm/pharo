@@ -47,12 +47,6 @@ MetacelloPackageLoadDirective >> packageName [
 ]
 
 { #category : 'accessing' }
-MetacelloPackageLoadDirective >> packages [
-	
-	^ { spec }
-]
-
-{ #category : 'accessing' }
 MetacelloPackageLoadDirective >> repository [
 
 	^self repositorySpecs repository
@@ -79,5 +73,5 @@ MetacelloPackageLoadDirective >> shouldLoadStrict [
 { #category : 'accessing' }
 MetacelloPackageLoadDirective >> title [
 
-	^'load'
+	^ 'load'
 ]

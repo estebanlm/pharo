@@ -102,15 +102,13 @@ MetacelloRecordTarget >> packageSpecsInLoadOrderFrom: aVersionSpec [
 { #category : 'doits' }
 MetacelloRecordTarget >> postLoad: packageOrVersionSpec [
 
-	(MetacelloDirective postLoadSpec: packageOrVersionSpec) addTo:
-		self specBuilder currentLoadDirective
+	(MetacelloPostLoadDirective spec: packageOrVersionSpec) addTo: self specBuilder currentLoadDirective
 ]
 
 { #category : 'doits' }
 MetacelloRecordTarget >> preLoad: packageOrVersionSpec [
 
-	(MetacelloDirective preLoadSpec: packageOrVersionSpec) addTo:
-		self specBuilder currentLoadDirective
+	(MetacelloPreLoadDirective spec: packageOrVersionSpec) addTo: self specBuilder currentLoadDirective
 ]
 
 { #category : 'accessing' }
