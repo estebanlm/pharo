@@ -83,16 +83,16 @@ MCVersionLoader >> checkForModificationsIfCancel: cancelBlock ifMerge: mergeBloc
 
 { #category : 'checking' }
 MCVersionLoader >> confirmMissingDependency: aDependency [
+
 	| name |
 	name := aDependency versionInfo name.
-	(self confirm: 'Can''t find dependency ', name, '. ignore?')
-		ifFalse: [self error: 'Can''t find dependency ', name]
+	(ConfirmationRequest signal: 'Can''t find dependency ' , name , '. ignore?') ifFalse: [ self error: 'Can''t find dependency ' , name ]
 ]
 
 { #category : 'checking' }
 MCVersionLoader >> depAgeIsOk: aDependency [
-	^ aDependency isOlder not 
-		or: [self confirm: 'load older dependency ', aDependency versionInfo name , '?']
+
+	^ aDependency isOlder not or: [ ConfirmationRequest signal: 'load older dependency ' , aDependency versionInfo name , '?' ]
 ]
 
 { #category : 'private' }

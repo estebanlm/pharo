@@ -430,12 +430,8 @@ SystemNavigation >> removeClass: aClass [
 	classToRemove := aClass instanceSide.
 	className := classToRemove name.
 	message := self removeClassMessageFor: className.
-	(result := self confirm: message)
-		ifTrue: [
-			classToRemove subclasses notEmpty
-				ifTrue: [
-					(self confirm: 'class has subclasses: ' , message)
-						ifFalse: [ ^ false ] ].
+	(result := ConfirmationRequest signal: message) ifTrue: [
+			classToRemove subclasses ifNotEmpty: [ (ConfirmationRequest signal: 'Class has subclasses: ' , message) ifFalse: [ ^ false ] ].
 			classToRemove removeFromSystem ].
 	^ result
 ]
