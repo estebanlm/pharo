@@ -153,7 +153,7 @@ Object >> inform: aString [
 	The most simple way to replace the usage of #inform: is to use `InformativeNotification signal: aString`. 
 	But if you have access to a spec application or presenter you can use the #inform: implemented on those instead.'
 		transformWith: '`@rcv inform: `@arg' -> 'InformativeNotification signal: `@arg'.
-	aString isEmptyOrNil ifFalse: [ UIManager default inform: aString ]
+	InformativeNotification signal: aString
 ]
 
 { #category : '*Deprecated14' }
