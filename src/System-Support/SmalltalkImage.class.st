@@ -1361,7 +1361,7 @@ SmalltalkImage >> snapshot: save andQuit: quit [
 { #category : 'image, changes name' }
 SmalltalkImage >> sourceFileVersionString [
 
-	^ SourceFileVersionString
+	^ SourceFileVersionString ifNil: [ SourceFileVersionString := ('Pharo{1}.{2}-{3}bit-{4}' format: {SystemVersion current major asString. SystemVersion current minor asString. ((Smalltalk vm wordSize = 4) ifTrue: [32] ifFalse: [64]). SystemVersion current commitHashShort asString}) ]
 ]
 
 { #category : 'private' }
@@ -1373,7 +1373,7 @@ SmalltalkImage >> sourceFileVersionString: aString [
 { #category : 'image, changes name' }
 SmalltalkImage >> sourcesFile [
 	"Answer the full path to the version-stable source code"
-	^ self imageDirectory / (SourceFileVersionString , '.', self sourcesSuffix)
+	^ self imageDirectory / (self sourceFileVersionString , '.', self sourcesSuffix)
 ]
 
 { #category : 'image, changes name' }

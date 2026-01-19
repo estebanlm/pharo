@@ -58,7 +58,7 @@ PharoSourcesCondenser >> newSourceNamed: aString [
 	originalSourcesFile := self originalFile resolve asFileReference.
 	Smalltalk sourceFileVersionString: aString.
 	newSourcesFile := Smalltalk sourcesFile asFileReference.
-
+	newSourceFile ensureDelete.
 	originalSourcesFile copyTo: newSourcesFile.
 	"Use the new sources file"
 	Smalltalk openSourceFiles
