@@ -32,6 +32,13 @@ MetacelloProjectRegistration class >> registrationForClassNamed: aClassName ifAb
 	^ MetacelloProjectRegistry registry registrationNamed: aClassName ifPresent: [ :registration | registration ] ifAbsent: absentBlock
 ]
 
+{ #category : 'registration' }
+MetacelloProjectRegistration class >> registry [
+	"To deprecate once Iceberg is updated"
+
+	^ MetacelloProjectRegistry registry
+]
+
 { #category : 'comparing' }
 MetacelloProjectRegistration >> = aRegistration [
 

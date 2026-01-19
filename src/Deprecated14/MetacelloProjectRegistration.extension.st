@@ -44,15 +44,6 @@ MetacelloProjectRegistration class >> registrationForProjectSpec: aProjectSpec i
 ]
 
 { #category : '*Deprecated14' }
-MetacelloProjectRegistration class >> registry [
-
-	self
-		deprecated: 'The registry should be accessed via MetacelloProjectRegistry and not MetacelloProjectRegistration.'
-		transformWith: '`@rcv registry' -> 'MetacelloProjectRegistry registry'.
-	^ MetacelloProjectRegistry registry
-]
-
-{ #category : '*Deprecated14' }
 MetacelloProjectRegistration class >> registry: aMetacelloProjectRegistry [
 
 	self
