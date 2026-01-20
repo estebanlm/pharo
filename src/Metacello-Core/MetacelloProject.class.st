@@ -115,12 +115,6 @@ MetacelloProject >> platformAttributes [
 	^ self defaultPlatformAttributes , list
 ]
 
-{ #category : 'private' }
-MetacelloProject >> pragmaKeywords [
-
-	^#(version:attribute: blessing:attribute: description:attribute: required:attribute: groups:attribute: doits:attribute: projectPackage:attribute: packages:attribute: repositories:attribute: )
-]
-
 { #category : 'printing' }
 MetacelloProject >> printOn: aStream [
 

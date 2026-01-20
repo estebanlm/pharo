@@ -522,14 +522,8 @@ SHRBTextStyler class >> solarizedStyleTable [
 { #category : 'accessing' }
 SHRBTextStyler class >> styleTable [
 
-	'=========================== styleTable' crTrace.
-	styleTable crTrace. 
-	self styleTableSelector crTrace.
-	
 	^ styleTable ifNil: [ 
-		styleTable := self perform: self styleTableSelector.
-		styleTable crTrace.
-		styleTable ]
+		styleTable := self perform: self styleTableSelector ]
 ]
 
 { #category : 'accessing' }
