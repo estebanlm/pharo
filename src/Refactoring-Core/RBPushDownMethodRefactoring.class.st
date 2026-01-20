@@ -74,6 +74,7 @@ RBPushDownMethodRefactoring >> breakingChangePreconditions [
 		  with: self preconditionIsAbstract
 		  with: self preconditionSubclassesDontSendSuper
 		  with: self preconditionSubclassesDirectlyDefines
+		  with: self preconditionMethodsReferToSelector
 ]
 
 { #category : 'transforming' }
@@ -87,6 +88,14 @@ RBPushDownMethodRefactoring >> classes: aCollection [
 RBPushDownMethodRefactoring >> preconditionIsAbstract [
 
 	^ ReClassesAreAbstractCondition new classes: { class }
+]
+
+{ #category : 'as yet unclassified' }
+RBPushDownMethodRefactoring >> preconditionMethodsReferToSelector [
+
+	^ ReMethodsReferToSelectorCondition new
+		  class: class
+		  selectors: selectors
 ]
 
 { #category : 'preconditions' }
