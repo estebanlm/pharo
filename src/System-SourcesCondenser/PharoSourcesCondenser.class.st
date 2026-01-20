@@ -56,10 +56,16 @@ PharoSourcesCondenser >> newSourceNamed: aString [
 
 	"Create a copy with the new name"
 	originalSourcesFile := self originalFile resolve asFileReference.
+	originalSourcesFile traceCr.
 	PharoFilesOpener sourceFileVersionString: aString.
 	newSourcesFile := self originalFile.
+	newSourcesFile traceCr.
 
 	newSourcesFile ensureDelete.
+	
+	originalSourcesFile traceCr.
+	newSourcesFile traceCr.
+	
 	originalSourcesFile copyTo: newSourcesFile.
 	"Use the new sources file"
 	Smalltalk openSourceFiles
