@@ -221,6 +221,7 @@ BaselineOfBasicTools >> postload: loader package: packageSpec [
 	OCIRPopIntoRemoteTemp deprecatedAliases: { #IRPopIntoRemoteTemp }.
 	OCIRStoreRemoteTemp deprecatedAliases: { #IRStoreRemoteTemp }.
 	OCIRInstruction deprecatedAliases: { #IRInstruction }.
+	OCASTCache deprecatedAliases: { #ASTCache }.
 	
 	"Next line is added in Pharo14 and should be removed in Pharo 15 or 16 or even 17"
 	FileException deprecatedAliases: { #FileSystemError }.
