@@ -60,3 +60,17 @@ RBPushDownMethodParametrizedTest >> testPushDownMethodThatReferencesPoolDictiona
 		self assert: (each parseTreeForSelector: #junk) equals: parseTree.
 		self assert: (each definesPoolDictionary: 'TextConstants' asSymbol) ]
 ]
+
+{ #category : 'tests' }
+RBPushDownMethodParametrizedTest >> testPushDownMethodWithSubclassesThatDefinesSelector [
+
+	| refactoring class |
+	refactoring := self createRefactoringWithArguments: {
+			               #( #isEmpty ).
+			               'RBLintRuleTestData' }.
+	self proceedThroughWarning: [ self executeRefactoring: refactoring ].
+	class := refactoring model classNamed: #RBLintRuleTestData.
+	class subclasses do: [ :each |
+			self assert: (each parseTreeForSelector: #isEmpty) equals: (self parseMethod: 'isEmpty
+	self subclassResponsibility') ]
+]

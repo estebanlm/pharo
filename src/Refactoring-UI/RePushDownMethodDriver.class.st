@@ -19,7 +19,8 @@ Class {
 		'class',
 		'methodSelectionPresenterClass',
 		'subclassesSendSuper',
-		'isAbstract'
+		'isAbstract',
+		'superclassAlreadyDefines'
 	],
 	#category : 'Refactoring-UI-Drivers',
 	#package : 'Refactoring-UI',
@@ -43,10 +44,10 @@ RePushDownMethodDriver >> breakingChoices [
 
 	| choices |
 	choices := OrderedCollection new.
-	choices add: (RePushDownMethodTransformationChoice new driver: self).
-	subclassesSendSuper isFalse ifTrue: [
-		choices add: (ReBrowseSubclassSuperSendsChoice new driver: self) ].
-	^ choices 
+
+	subclassesSendSuper isFalse ifTrue: [ choices add: (ReBrowseSubclassSuperSendsChoice new driver: self) ].
+	superclassAlreadyDefines isFalse ifTrue: [ choices add: (RePushDownMethodTransformationChoice new driver: self) ].
+	^ choices
 ]
 
 { #category : 'actions' }
@@ -70,13 +71,8 @@ RePushDownMethodDriver >> changes [
 RePushDownMethodDriver >> configureAndRunRefactoring [
 
 	self configureRefactoring.
-
-	refactoring failedApplicabilityPreconditions ifNotEmpty: [
-		^ self inform: 'The shared variable does not exist' ].
 	self setBreakingChangesPreconditions.
-	refactoring failedBreakingChangePreconditions
-		ifEmpty: [ self applyChanges ]
-		ifNotEmpty: [ self handleBreakingChanges ]
+	refactoring failedBreakingChangePreconditions ifEmpty: [ self applyChanges ] ifNotEmpty: [ self handleBreakingChanges ]
 ]
 
 { #category : 'configuration' }
@@ -110,13 +106,16 @@ RePushDownMethodDriver >> instantiateRefactoring [
 RePushDownMethodDriver >> labelBasedOnBreakingChanges [
 
 	^ String streamContents: [ :stream |
-		  isAbstract isFalse ifTrue: [
-			  isAbstract violationMessageOn: stream.
-			  stream cr ].
-		  subclassesSendSuper isFalse ifTrue: [
-			  subclassesSendSuper violationMessageOn: stream.
-			  stream cr ].
-		  stream nextPutAll: 'Select a strategy' ]
+			  isAbstract isFalse ifTrue: [
+					  isAbstract violationMessageOn: stream.
+					  stream cr ].
+			  subclassesSendSuper isFalse ifTrue: [
+					  subclassesSendSuper violationMessageOn: stream.
+					  stream cr ].
+			  superclassAlreadyDefines isFalse ifTrue: [
+					  superclassAlreadyDefines violationMessageOn: stream.
+					  stream cr ].
+			  stream nextPutAll: 'Select a strategy' ]
 ]
 
 { #category : 'for mocks' }
@@ -172,8 +171,9 @@ RePushDownMethodDriver >> selectMethods [
 ]
 
 { #category : 'initialization' }
-RePushDownMethodDriver >> setBreakingChangesPreconditions [ 
+RePushDownMethodDriver >> setBreakingChangesPreconditions [
 
 	isAbstract := refactoring preconditionIsAbstract.
-	subclassesSendSuper := refactoring preconditionSubclassesDontSendSuper
+	subclassesSendSuper := refactoring preconditionSubclassesDontSendSuper.
+	superclassAlreadyDefines := refactoring preconditionSuperclassAlreadyDefines
 ]
