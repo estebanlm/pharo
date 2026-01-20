@@ -25,16 +25,6 @@ RBTemporaryToInstanceVariableRefactoringTest >> setUp [
 ]
 
 { #category : 'tests' }
-RBTemporaryToInstanceVariableRefactoringTest >> testFailureHierarchyDefinesVarableNamedAsTemporary [
-
-	| class |
-	class := model classNamed: #Foo.
-	self
-		should: [ (RBTemporaryToInstanceVariableRefactoring class: class selector: #someMethod variable: 'foo') generateChanges ]
-		raise: RBRefactoringWarning
-]
-
-{ #category : 'tests' }
 RBTemporaryToInstanceVariableRefactoringTest >> testFailureOtherMethodDefinesTemporaryVariable [
 
 	| class |

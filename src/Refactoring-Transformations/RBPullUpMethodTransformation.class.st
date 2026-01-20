@@ -117,16 +117,16 @@ RBPullUpMethodTransformation >> checkInstVars [
 
 { #category : 'preconditions' }
 RBPullUpMethodTransformation >> checkInstVarsFor: aSelector [
-	class instanceVariableNames do:
-			[:each |
-			((class whichSelectorsReferToInstanceVariable: each) includes: aSelector) ifTrue:
-					[ (self confirm: ('<1p> refers to #<2s> which is defined in <3p>. Do you want pull up variable #<2s> also?' expandMacrosWith: aSelector
-								with: each
-								with: class))
+
+	class instanceVariableNames do: [ :each |
+			((class whichSelectorsReferToInstanceVariable: each) includes: aSelector) ifTrue: [
+					(ConfirmationRequest signal:
+						 ('<1p> refers to #<2s> which is defined in <3p>. Do you want pull up variable #<2s> also?' expandMacrosWith: aSelector with: each with: class))
 						ifTrue: [ self previousTransformations add: (self pullUpVariable: each) ]
-						ifFalse: [ self refactoringWarning: 'You are about to pull your method without the instance variable it uses.
+						ifFalse: [
+								self refactoringWarning: 'You are about to pull your method without the instance variable it uses.
 						It will bring the system is an inconsistent state. But this may be what you want.
-						So do you want to pull up anyway?' ] ]]
+						So do you want to pull up anyway?' ] ] ]
 ]
 
 { #category : 'preconditions' }

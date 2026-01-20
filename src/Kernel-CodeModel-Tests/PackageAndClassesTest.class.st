@@ -59,6 +59,17 @@ PackageAndClassesTest >> testAddNewProtocolDoesNothing [
 ]
 
 { #category : 'tests' }
+PackageAndClassesTest >> testAddNewProtocolNameIsTrimmedByBothSides [
+
+	| xPackage class |
+	xPackage := self ensureXPackage.
+	class := self newClassNamed: 'NewClass' in: xPackage.
+	self createMethodNamed: 'newMethod' inClass: class asExtensionOf: xPackage.
+	class classify: #newMethod under: ' accessing '.
+	self assert: (class >> #newMethod) protocolName equals: 'accessing'
+]
+
+{ #category : 'tests' }
 PackageAndClassesTest >> testClassAddition [
 
 	| xPackage a1 |
