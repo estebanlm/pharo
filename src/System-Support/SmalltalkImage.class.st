@@ -35,7 +35,6 @@ Class {
 		'LowSpaceProcess',
 		'LowSpaceSemaphore',
 		'MemoryHogs',
-		'SourceFileVersionString',
 		'SpecialSelectors',
 		'Tools'
 	],
@@ -1356,35 +1355,6 @@ SmalltalkImage >> signalLowSpace [
 SmalltalkImage >> snapshot: save andQuit: quit [
 	DefaultExecutionEnvironment beActiveDuring:
 		 [^SessionManager default snapshot: save andQuit: quit]
-]
-
-{ #category : 'image, changes name' }
-SmalltalkImage >> sourceFileVersionString [
-
-	^ SourceFileVersionString
-]
-
-{ #category : 'private' }
-SmalltalkImage >> sourceFileVersionString: aString [
-
-	SourceFileVersionString := aString
-]
-
-{ #category : 'image, changes name' }
-SmalltalkImage >> sourcesFile [
-	"Answer the full path to the version-stable source code"
-	^ self imageDirectory / (SourceFileVersionString , '.', self sourcesSuffix)
-]
-
-{ #category : 'image, changes name' }
-SmalltalkImage >> sourcesName [
-	"Answer the full path to the version-stable source code"
-	^ self sourcesFile fullName
-]
-
-{ #category : 'image, changes name' }
-SmalltalkImage >> sourcesSuffix [
-	^ 'sources'
 ]
 
 { #category : 'memory space' }

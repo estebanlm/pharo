@@ -8,7 +8,8 @@ Class {
 		'shouldInformAboutReadOnlyChanges'
 	],
 	#classVars : [
-		'Default'
+		'Default',
+		'SourceFileVersionString'
 	],
 	#category : 'System-Sources-Utilities',
 	#package : 'System-Sources',
@@ -23,6 +24,39 @@ PharoFilesOpener class >> default [
 { #category : 'class initialization' }
 PharoFilesOpener class >> reset [
 	Default := nil
+]
+
+{ #category : 'image, changes name' }
+PharoFilesOpener class >> sourceFileVersionString [
+	"We need to check if we really need this value as default value.."
+
+	^ SourceFileVersionString ifNil: [ SourceFileVersionString := 'PharoV60' ]
+]
+
+{ #category : 'image, changes name' }
+PharoFilesOpener class >> sourceFileVersionString: aString [
+
+	SourceFileVersionString := aString
+]
+
+{ #category : 'accessing' }
+PharoFilesOpener class >> sourcesFile [
+	"Answer the full path to the version-stable source code"
+
+	^ (FileLocator imageDirectory / (self sourceFileVersionString , '.' , self sourcesSuffix)) asFileReference
+]
+
+{ #category : 'accessing' }
+PharoFilesOpener class >> sourcesName [
+	"Answer the full path to the version-stable source code"
+
+	^ self sourcesFile fullName
+]
+
+{ #category : 'accessing' }
+PharoFilesOpener class >> sourcesSuffix [
+
+	^ 'sources'
 ]
 
 { #category : 'messages' }
@@ -200,9 +234,9 @@ PharoFilesOpener >> sourcesFileOrNil [
 		ifFalse: [ sources ]
 ]
 
-{ #category : 'delegated' }
+{ #category : 'accessing' }
 PharoFilesOpener >> sourcesName [
-	^ Smalltalk sourcesName
+	^ self class sourcesName
 ]
 
 { #category : 'public' }
