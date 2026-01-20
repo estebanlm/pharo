@@ -35,7 +35,6 @@ Class {
 		'LowSpaceProcess',
 		'LowSpaceSemaphore',
 		'MemoryHogs',
-		'SourceFileVersionString',
 		'SpecialSelectors',
 		'Tools'
 	],
@@ -1357,36 +1356,6 @@ SmalltalkImage >> snapshot: save andQuit: quit [
 	DefaultExecutionEnvironment beActiveDuring:
 		 [^SessionManager default snapshot: save andQuit: quit]
 ]
-
-{ #category : 'image, changes name' }
-SmalltalkImage >> sourceFileVersionString [
-
-	^ SourceFileVersionString ifNil: [ SourceFileVersionString := ('Pharo{1}.{2}-{3}bit-{4}' format: {SystemVersion current major asString. SystemVersion current minor asString. ((Smalltalk vm wordSize = 4) ifTrue: [32] ifFalse: [64]). SystemVersion current commitHashShort asString}) ]
-]
-
-{ #category : 'private' }
-SmalltalkImage >> sourceFileVersionString: aString [
-
-	SourceFileVersionString := aString
-]
-
-{ #category : 'image, changes name' }
-SmalltalkImage >> sourcesFile [
-	"Answer the full path to the version-stable source code"
-	^ self imageDirectory / (self sourceFileVersionString , '.', self sourcesSuffix)
-]
-
-{ #category : 'image, changes name' }
-SmalltalkImage >> sourcesName [
-	"Answer the full path to the version-stable source code"
-	^ self sourcesFile fullName
-]
-
-{ #category : 'image, changes name' }
-SmalltalkImage >> sourcesSuffix [
-	^ 'sources'
-]
-
 { #category : 'memory space' }
 SmalltalkImage >> spaceLeftAfterGarbageCollection [
 	"Return a string describing the amount of memory available"

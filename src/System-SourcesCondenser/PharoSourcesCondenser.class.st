@@ -56,8 +56,9 @@ PharoSourcesCondenser >> newSourceNamed: aString [
 
 	"Create a copy with the new name"
 	originalSourcesFile := self originalFile resolve asFileReference.
-	Smalltalk sourceFileVersionString: aString.
-	newSourcesFile := Smalltalk sourcesFile asFileReference.
+	PharoFilesOpener sourceFileVersionString: aString.
+	newSourcesFile := self originalFile.
+
 	newSourceFile ensureDelete.
 	originalSourcesFile copyTo: newSourcesFile.
 	"Use the new sources file"
@@ -66,7 +67,8 @@ PharoSourcesCondenser >> newSourceNamed: aString [
 
 { #category : 'accessing' }
 PharoSourcesCondenser >> originalFile [
-	^ Smalltalk sourcesFile asFileReference
+
+	^ PharoFilesOpener sourcesFile
 ]
 
 { #category : 'private - testing' }
