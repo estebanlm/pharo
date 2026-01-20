@@ -166,8 +166,6 @@ ProcessMonitorTestServiceTest >> testDoesNotRaiseForkedProcessFailureWhenFailure
 ProcessMonitorTestServiceTest >> testDoesNotRaiseForkedProcessFailureWhenFailuresWerePassedAndProcessCompletes [
 
 	| process |
-	self flag: 'it fails runKernelTests on bootstrap image due to Process bug #6745'.
-	self skip.
 	process := self fork: [ testService suspendBackgroundFailure: Error new ].
 
 	testService passBackgroundFailures.
@@ -400,8 +398,6 @@ ProcessMonitorTestServiceTest >> testIsTestProcessFailed [
 { #category : 'tests' }
 ProcessMonitorTestServiceTest >> testPassBackgroundFailuresWhenSuspensionLogicIsDisabled [
 	| process error errorWasPassed |
-	self flag: 'it fails runKernelTests on bootstrap image due to Process bug #6745'.
-	self skip.
 	errorWasPassed := false.
 	error := Error new messageText: 'test error'.
 	process := self fork: [ Processor activeProcess suspend. error signal ].

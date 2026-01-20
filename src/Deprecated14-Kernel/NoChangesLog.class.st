@@ -16,26 +16,13 @@ To get back to the normal situation, execute
 Class {
 	#name : 'NoChangesLog',
 	#superclass : 'ChangesLog',
-	#category : 'System-Sources-Changes-Log',
-	#package : 'System-Sources',
-	#tag : 'Changes-Log'
+	#category : 'Deprecated14-Kernel',
+	#package : 'Deprecated14-Kernel'
 }
 
 { #category : 'singleton' }
 NoChangesLog class >> install [
 
-	self reset.
-	DefaultInstance := self new
-]
-
-{ #category : 'logging' }
-NoChangesLog >> logChange: aStringOrText [
-
-	"Do not log anything"
-]
-
-{ #category : 'event-listening' }
-NoChangesLog >> logClassAdded: announcement [
-
-	"Do not log anything"
+	self flag: #todoSource. "Add the deprecation message"
+	self deprecated: ''
 ]

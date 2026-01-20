@@ -1356,6 +1356,7 @@ SmalltalkImage >> snapshot: save andQuit: quit [
 	DefaultExecutionEnvironment beActiveDuring:
 		 [^SessionManager default snapshot: save andQuit: quit]
 ]
+
 { #category : 'memory space' }
 SmalltalkImage >> spaceLeftAfterGarbageCollection [
 	"Return a string describing the amount of memory available"
