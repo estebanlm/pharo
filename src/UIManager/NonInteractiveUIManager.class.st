@@ -106,7 +106,8 @@ NonInteractiveUIManager >> chooseOrRequestFrom: labelList values: valueList line
 { #category : 'ui requests' }
 NonInteractiveUIManager >> confirm: queryString [
 
-	^  self nonInteractiveWarning: 'Confirming: ', queryString
+	self deprecated: 'Use ConfirmationRequest signal: instead.'.
+	^ self nonInteractiveWarning: 'Confirming: ' , queryString
 ]
 
 { #category : 'ui requests' }
