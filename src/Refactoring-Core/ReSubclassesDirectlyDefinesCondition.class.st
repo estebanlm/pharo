@@ -41,9 +41,9 @@ ReSubclassesDirectlyDefinesCondition >> violators [
 	violators ifNotNil: [ ^ violators ].
 	violators := Dictionary new.
 
-	class selectors do: [ :selector |
+	selectors do: [ :selector |
 			class subclasses do: [ :subclass |
-					(subclass selectors includes: selector ) ifTrue: [
+					(subclass selectors includes: selector) ifTrue: [
 							violators
 								at: subclass
 								ifPresent: [ :methods | methods add: (subclass methodFor: selector) ]

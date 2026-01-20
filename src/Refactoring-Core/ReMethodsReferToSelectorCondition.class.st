@@ -37,13 +37,11 @@ ReMethodsReferToSelectorCondition >> violators [
 
 	violators ifNotNil: [ ^ violators ].
 	violators := Dictionary new.
-
-	class methods do: [ :caller |
-			| tree |
-			tree := caller parseTree.
-			tree ifNil: [ ^ self ].
-			tree selector ~= caller selector ifTrue: [
-				violators at: tree selector ifPresent: [ :callers | callers add: caller ] ifAbsentPut: [ OrderedCollection with: caller ] ] ].
-
+	selectors do: [ :selector |
+			class methods do: [ :caller |
+					| tree |
+					tree := caller compiledMethod.
+					(tree sendsSelector: selector) ifTrue: [
+						violators at: #selector ifPresent: [ :callers | callers add: caller ] ifAbsentPut: [ OrderedCollection with: caller ] ] ] ].
 	^ violators
 ]
