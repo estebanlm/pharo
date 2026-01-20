@@ -73,7 +73,7 @@ RBPushDownMethodRefactoring >> breakingChangePreconditions [
 	^ OrderedCollection
 		  with: self preconditionIsAbstract
 		  with: self preconditionSubclassesDontSendSuper
-		  with: self preconditionSuperclassAlreadyDefines
+		  with: self preconditionSubclassesDirectlyDefines
 ]
 
 { #category : 'transforming' }
@@ -90,17 +90,17 @@ RBPushDownMethodRefactoring >> preconditionIsAbstract [
 ]
 
 { #category : 'preconditions' }
+RBPushDownMethodRefactoring >> preconditionSubclassesDirectlyDefines [
+
+	^ ReSubclassesDirectlyDefinesCondition new class: class selectors: selectors
+]
+
+{ #category : 'preconditions' }
 RBPushDownMethodRefactoring >> preconditionSubclassesDontSendSuper [
 
 	^ ReSubclassesDontSendSuperCondition new
 		  class: class
 		  selectors: selectors
-]
-
-{ #category : 'preconditions' }
-RBPushDownMethodRefactoring >> preconditionSuperclassAlreadyDefines [
-
-	^ ReSuperclassAlreadyDefinesCondition new class: class selectors: selectors
 ]
 
 { #category : 'preconditions' }

@@ -2,7 +2,7 @@
 I'm a condition that checks if any subclass of given class redefines any given selector
 "
 Class {
-	#name : 'ReSuperclassAlreadyDefinesCondition',
+	#name : 'ReSubclassesDirectlyDefinesCondition',
 	#superclass : 'ReMethodsCondition',
 	#instVars : [
 		'class',
@@ -14,14 +14,14 @@ Class {
 }
 
 { #category : 'initialization' }
-ReSuperclassAlreadyDefinesCondition >> class: aRBClass selectors: aCollection [
+ReSubclassesDirectlyDefinesCondition >> class: aRBClass selectors: aCollection [
 
 	class := aRBClass.
 	selectors := aCollection
 ]
 
 { #category : 'displaying' }
-ReSuperclassAlreadyDefinesCondition >> violationMessageOn: aStream [
+ReSubclassesDirectlyDefinesCondition >> violationMessageOn: aStream [
 
 	self violators keysAndValuesDo: [ :cls :methods |
 			aStream
@@ -36,7 +36,7 @@ ReSuperclassAlreadyDefinesCondition >> violationMessageOn: aStream [
 ]
 
 { #category : 'accessing' }
-ReSuperclassAlreadyDefinesCondition >> violators [
+ReSubclassesDirectlyDefinesCondition >> violators [
 
 	violators ifNotNil: [ ^ violators ].
 	violators := Dictionary new.

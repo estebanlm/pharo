@@ -62,15 +62,25 @@ RBPushDownMethodParametrizedTest >> testPushDownMethodThatReferencesPoolDictiona
 ]
 
 { #category : 'tests' }
-RBPushDownMethodParametrizedTest >> testPushDownMethodWithSubclassesThatDefinesSelector [
+RBPushDownMethodParametrizedTest >> testPushDownMethodWithSubclassOfSubclassThatDefinesSelector [
 
-	| refactoring class |
+	| refactoring class subclass |
 	refactoring := self createRefactoringWithArguments: {
-			               #( #isEmpty ).
+			               #( #resetResult ).
 			               'RBLintRuleTestData' }.
 	self proceedThroughWarning: [ self executeRefactoring: refactoring ].
 	class := refactoring model classNamed: #RBLintRuleTestData.
-	class subclasses do: [ :each |
-			self assert: (each parseTreeForSelector: #isEmpty) equals: (self parseMethod: 'isEmpty
-	self subclassResponsibility') ]
+	subclass := refactoring model classNamed: #RBTransformationRuleTestData.
+	self assert: (subclass parseTreeForSelector: #resetResult) equals: (self parseMethod: 'resetResult
+	builder := ReChangeManager changeFactory compositeRefactoryChange')
+]
+
+{ #category : 'tests' }
+RBPushDownMethodParametrizedTest >> testPushDownMethodWithSubclassesThatDefinesSelector [
+
+	| refactoring |
+	refactoring := self createRefactoringWithArguments: {
+			               #( #isEmpty ).
+			               'RBLintRuleTestData' }.
+	self shouldWarn: refactoring 
 ]

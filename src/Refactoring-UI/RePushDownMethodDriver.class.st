@@ -20,7 +20,7 @@ Class {
 		'methodSelectionPresenterClass',
 		'subclassesSendSuper',
 		'isAbstract',
-		'superclassAlreadyDefines'
+		'subclassDirectlyDefines'
 	],
 	#category : 'Refactoring-UI-Drivers',
 	#package : 'Refactoring-UI',
@@ -46,7 +46,7 @@ RePushDownMethodDriver >> breakingChoices [
 	choices := OrderedCollection new.
 
 	subclassesSendSuper isFalse ifTrue: [ choices add: (ReBrowseSubclassSuperSendsChoice new driver: self) ].
-	superclassAlreadyDefines isFalse ifTrue: [ choices add: (RePushDownMethodTransformationChoice new driver: self) ].
+	subclassDirectlyDefines isFalse ifTrue: [ choices add: (RePushDownMethodTransformationChoice new driver: self) ].
 	^ choices
 ]
 
@@ -112,8 +112,8 @@ RePushDownMethodDriver >> labelBasedOnBreakingChanges [
 			  subclassesSendSuper isFalse ifTrue: [
 					  subclassesSendSuper violationMessageOn: stream.
 					  stream cr ].
-			  superclassAlreadyDefines isFalse ifTrue: [
-					  superclassAlreadyDefines violationMessageOn: stream.
+			  subclassDirectlyDefines isFalse ifTrue: [
+					  subclassDirectlyDefines violationMessageOn: stream.
 					  stream cr ].
 			  stream nextPutAll: 'Select a strategy' ]
 ]
@@ -175,5 +175,5 @@ RePushDownMethodDriver >> setBreakingChangesPreconditions [
 
 	isAbstract := refactoring preconditionIsAbstract.
 	subclassesSendSuper := refactoring preconditionSubclassesDontSendSuper.
-	superclassAlreadyDefines := refactoring preconditionSuperclassAlreadyDefines
+	subclassDirectlyDefines := refactoring preconditionSubclassesDirectlyDefines
 ]
