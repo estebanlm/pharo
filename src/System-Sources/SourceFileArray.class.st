@@ -61,13 +61,18 @@ SourceFileArray class >> initialize [
 { #category : 'system startup' }
 SourceFileArray class >> shutDown: isImageClosing [
 
-	isImageClosing ifTrue: [ self default close ]
+	isImageClosing ifTrue: [
+			self default
+				unsubscribeToAnnouncements;
+				close ]
 ]
 
 { #category : 'system startup' }
 SourceFileArray class >> startUp: resuming [
 
-	resuming ifTrue: [ Smalltalk openSourceFiles ]
+	resuming ifTrue: [
+			self default registerToAnnouncements.
+			Smalltalk openSourceFiles ]
 ]
 
 { #category : 'accessing' }
@@ -264,6 +269,33 @@ SourceFileArray >> logChange: aStringOrText [
 		onFail: [ "Ignore" ]
 ]
 
+{ #category : 'event-listening' }
+SourceFileArray >> logClassAdded: announcement [
+
+	self newWriter
+		successBlock: [ :sourcePointer | "Ignore" ];
+		failBlock: [ "Ignore" ];
+		writeClassDefinition: announcement classAdded definitionString
+]
+
+{ #category : 'event-listening' }
+SourceFileArray >> logClassRenamed: announcement [
+
+	self logChange: '(Smalltalk globals at: #' , announcement oldName , ') rename: #' , announcement newName
+]
+
+{ #category : 'event-listening' }
+SourceFileArray >> logMethodRemoved: announcement [
+
+	self logChange: announcement methodClass name , ' removeSelector: #' , announcement selector
+]
+
+{ #category : 'event-listening' }
+SourceFileArray >> logRemovedClassAnnouncement: announcement [
+
+	self logChange: 'Smalltalk globals removeClassNamed: #' , announcement classRemoved name
+]
+
 { #category : 'public - string writing' }
 SourceFileArray >> newWriter [
 
@@ -391,6 +423,16 @@ SourceFileArray >> readStreamAtFileIndex: index atPosition: position ifPresent: 
     ^ result
 ]
 
+{ #category : 'private' }
+SourceFileArray >> registerToAnnouncements [
+
+	self class codeChangeAnnouncer weak
+		when: ClassAdded send: #logClassAdded: to: self;
+		when: ClassRemoved send: #logRemovedClassAnnouncement: to: self;
+		when: ClassRenamed send: #logClassRenamed: to: self;
+		when: MethodRemoved send: #logMethodRemoved: to: self
+]
+
 { #category : 'printing' }
 SourceFileArray >> reportString [
 
@@ -504,6 +546,12 @@ SourceFileArray >> timeStampFromPreamble: preamble for: sourceDataPointers [
 			stream upTo: $'.
 			stamp := stream upTo: $' ] ].
 	^ stamp
+]
+
+{ #category : 'private' }
+SourceFileArray >> unsubscribeToAnnouncements [
+
+	self class codeChangeAnnouncer unsubscribe: self
 ]
 
 { #category : 'private' }
