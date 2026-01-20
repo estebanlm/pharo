@@ -56,15 +56,11 @@ PharoSourcesCondenser >> newSourceNamed: aString [
 
 	"Create a copy with the new name"
 	originalSourcesFile := self originalFile resolve asFileReference.
-	originalSourcesFile traceCr.
 	PharoFilesOpener sourceFileVersionString: aString.
 	newSourcesFile := self originalFile.
-	newSourcesFile traceCr.
-
-	newSourcesFile ensureDelete.
 	
-	originalSourcesFile traceCr.
-	newSourcesFile traceCr.
+	"If the condensed file is the new file, don't do anything."
+	originalSourcesFile = newSourcesFile ifTrue: [ ^ self ].
 	
 	originalSourcesFile copyTo: newSourcesFile.
 	"Use the new sources file"
