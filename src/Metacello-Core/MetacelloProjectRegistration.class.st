@@ -4,45 +4,12 @@ Class {
 	#instVars : [
 		'loadedInImage',
 		'locked',
-		'versionString',
 		'projectSpec'
-	],
-	#classVars : [
-		'Registry'
 	],
 	#category : 'Metacello-Core-Registry',
 	#package : 'Metacello-Core',
 	#tag : 'Registry'
 }
-
-{ #category : 'accessing' }
-MetacelloProjectRegistration class >> baselineClasses [
-    "Return a set of the Metacello baseline classes that have been loaded into the image."
-
-    "self baselineClasses"
-
-    ^ BaselineOf allSubclasses
-]
-
-{ #category : 'mutability' }
-MetacelloProjectRegistration class >> copyRegistryDuring: aBlock commitIfSuccess: aBoolean [
-	"install copy of registry for duration of <aBlock> execution."
-
-	"registrations will be copied on write during <aBlock> execution."
-
-	"if <aBlock> does not return control to this context, revert to the original
-	version of the registry. Otherwise leave the new copy installed."
-
-	| oldRegistry newRegistry |
-	oldRegistry := self registry.
-	newRegistry := self registry copy.
-	self registry: newRegistry.
-	aBlock ensure: [ "install old version of registry"
-		newRegistry := self registry. "see https://github.com/dalehenrich/metacello-work/issues/210"
-		self registry: oldRegistry ].
-
-	aBoolean ifTrue: [ self registry: newRegistry ]
-]
 
 { #category : 'instance creation' }
 MetacelloProjectRegistration class >> projectSpec: aProjectSpec [
@@ -54,58 +21,22 @@ MetacelloProjectRegistration class >> projectSpec: aProjectSpec [
 
 { #category : 'querying' }
 MetacelloProjectRegistration class >> projectSpecForClassNamed: aClassName ifAbsent: absentBlock [
-    ^ self registry projectSpecForClassNamed: aClassName ifAbsent: absentBlock
-]
 
-{ #category : 'accessing' }
-MetacelloProjectRegistration class >> projectSpecs [
-
-	^ self registry baselineProjectSpecs
+	^ MetacelloProjectRegistry registry projectSpecForClassNamed: aClassName ifAbsent: absentBlock
 ]
 
 { #category : 'registration' }
 MetacelloProjectRegistration class >> registrationForClassNamed: aClassName ifAbsent: absentBlock [
+	"This method should not be used but is kept for SmalltalkCI compatibility. Use the same one on MetacelloProjectRegistry."
 
-	^ self registry registrationForClassNamed: aClassName ifAbsent: absentBlock
+	^ MetacelloProjectRegistry registry registrationNamed: aClassName ifPresent: [ :registration | registration ] ifAbsent: absentBlock
 ]
 
-{ #category : 'querying' }
-MetacelloProjectRegistration class >> registrationForProjectSpec: aProjectSpec ifPresent: presentBlock [
-
-	^ self registrationForProjectSpec: aProjectSpec ifPresent: presentBlock ifAbsent: [ ]
-]
-
-{ #category : 'querying' }
-MetacelloProjectRegistration class >> registrationForProjectSpec: aProjectSpec ifPresent: presentBlock ifAbsent: absentBlock [
-
-	^ self registry registrationFor: aProjectSpec ifPresent: presentBlock ifAbsent: absentBlock
-]
-
-{ #category : 'accessing' }
+{ #category : 'registration' }
 MetacelloProjectRegistration class >> registry [
+	"To deprecate once Iceberg is updated"
 
-	^ Registry ifNil: [ Registry := MetacelloProjectRegistry new ]
-]
-
-{ #category : 'accessing' }
-MetacelloProjectRegistration class >> registry: aMetacelloProjectRegistry [
-    Registry := aMetacelloProjectRegistry
-]
-
-{ #category : 'accessing' }
-MetacelloProjectRegistration class >> resetRegistry [
-
-	<script>
-	Registry := nil
-]
-
-{ #category : 'accessing' }
-MetacelloProjectRegistration class >> useRegistry: aRegistry during: aBlock [
-
-	| oldRegistry |
-	oldRegistry := Registry.
-	Registry := MetacelloProjectRegistry new.
-	[ aBlock value ] ensure: [ Registry := oldRegistry ]
+	^ MetacelloProjectRegistry registry
 ]
 
 { #category : 'comparing' }
@@ -126,10 +57,16 @@ MetacelloProjectRegistration >> canUpgradeTo: aProjectRegistration [
 	^ projectSpec canUpgradeTo: aProjectRegistration projectSpec
 ]
 
+{ #category : 'introspection' }
+MetacelloProjectRegistration >> className [
+
+	^ self projectSpec className
+]
+
 { #category : 'accessing' }
 MetacelloProjectRegistration >> currentVersionString [
 
-	^ projectSpec repositoryVersionString
+	^ self versionString
 ]
 
 { #category : 'accessing' }
@@ -137,13 +74,6 @@ MetacelloProjectRegistration >> currentlyLoadedClassesInProject [
 	"Used by SmalltalkCI."
 
 	^ self projectSpec currentlyLoadedClassesInVersion asSet
-]
-
-{ #category : 'initialization' }
-MetacelloProjectRegistration >> ensureVersionString: anObject [
-	"set versionString, only if it does not already have avalue"
-
-	versionString ifNil: [ self versionString: anObject ]
 ]
 
 { #category : 'testing' }
@@ -155,11 +85,7 @@ MetacelloProjectRegistration >> hasLoadConflicts: aProjectRegistration [
 { #category : 'comparing' }
 MetacelloProjectRegistration >> hash [
 
-	^ String
-		  stringHash: (projectSpec
-				   ifNil: [ nil hash ]
-				   ifNotNil: [ :project | project metacelloRegistrationHash ])
-		  initialHash: 0
+	^ String stringHash: projectSpec metacelloRegistrationHash initialHash: 0
 ]
 
 { #category : 'accessing' }
@@ -184,14 +110,6 @@ MetacelloProjectRegistration >> locked [
 MetacelloProjectRegistration >> locked: anObject [
 
 	locked := anObject
-]
-
-{ #category : 'accessing' }
-MetacelloProjectRegistration >> merge: aProjectRegistration [
-	" ... merge is done when a spec has been loaded into the image"
-
-	projectSpec := aProjectRegistration projectSpec.
-	versionString := projectSpec repositoryVersionString
 ]
 
 { #category : 'printing' }
@@ -238,9 +156,9 @@ MetacelloProjectRegistration >> projectVersion [
 
 { #category : 'registration' }
 MetacelloProjectRegistration >> registerProject [
-    "unconditionally register <newRegistration> ... use with care"
+	"unconditionally register <newRegistration> ... use with care"
 
-    self class registry registerProjectRegistration: self
+	MetacelloProjectRegistry registry registerProjectRegistration: self
 ]
 
 { #category : 'accessing' }
@@ -251,7 +169,8 @@ MetacelloProjectRegistration >> repositoryDescriptions [
 
 { #category : 'registration' }
 MetacelloProjectRegistration >> unregisterProject [
-    self class registry unregisterProjectRegistration: self
+
+	MetacelloProjectRegistry registry unregisterProjectRegistration: self
 ]
 
 { #category : 'accessing' }
@@ -263,11 +182,5 @@ MetacelloProjectRegistration >> versionInfo [
 { #category : 'accessing' }
 MetacelloProjectRegistration >> versionString [
 
-	^ versionString
-]
-
-{ #category : 'accessing' }
-MetacelloProjectRegistration >> versionString: anObject [
-
-	versionString := anObject
+	^ projectSpec repositoryVersionString
 ]

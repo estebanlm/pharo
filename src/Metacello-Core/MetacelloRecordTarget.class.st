@@ -102,15 +102,13 @@ MetacelloRecordTarget >> packageSpecsInLoadOrderFrom: aVersionSpec [
 { #category : 'doits' }
 MetacelloRecordTarget >> postLoad: packageOrVersionSpec [
 
-	(MetacelloDirective postLoadSpec: packageOrVersionSpec) addTo:
-		self specBuilder currentLoadDirective
+	(MetacelloPostLoadDirective spec: packageOrVersionSpec) addTo: self specBuilder currentLoadDirective
 ]
 
 { #category : 'doits' }
 MetacelloRecordTarget >> preLoad: packageOrVersionSpec [
 
-	(MetacelloDirective preLoadSpec: packageOrVersionSpec) addTo:
-		self specBuilder currentLoadDirective
+	(MetacelloPreLoadDirective spec: packageOrVersionSpec) addTo: self specBuilder currentLoadDirective
 ]
 
 { #category : 'accessing' }
@@ -160,8 +158,8 @@ MetacelloRecordTarget >> visitProjectReference: aMetacelloProjectReferenceSpec [
 			MetacelloNotification signal: 'Project is locked, skipping.'.
 			^ projectReferenceToLoad ].
 
-	registration := MetacelloProjectRegistration
-		                registrationForProjectSpec: projectReferenceToLoad
+	registration := MetacelloProjectRegistry
+		                registrationNamed: projectReferenceToLoad className
 		                ifPresent: [ :existing | engine resolvePresentProject: existing new: projectReferenceToLoad asProjectRegistration ]
 		                ifAbsent: [ projectReferenceToLoad asProjectRegistration ].
 	registered := registration projectSpec.
