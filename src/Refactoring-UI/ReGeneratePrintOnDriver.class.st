@@ -17,6 +17,12 @@ ReGeneratePrintOnDriver class >> driverName [
 	^ 'Generate printOn:'
 ]
 
+{ #category : 'accessing' }
+ReGeneratePrintOnDriver class >> shouldPreviewChangesByDefault [
+
+	^ false
+]
+
 { #category : 'configuration' }
 ReGeneratePrintOnDriver >> dialogTitle [ 
 

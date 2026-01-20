@@ -31,7 +31,7 @@ MetacelloPackageLoadDirective >> hash [
 { #category : 'printing' }
 MetacelloPackageLoadDirective >> label [
 
-	^ spec name , ' -- ', repositorySpecs first fullDescription
+	^ spec name , ' -- ' , self repositorySpecs first fullDescription
 ]
 
 { #category : 'enumerating' }
@@ -60,20 +60,20 @@ MetacelloPackageLoadDirective >> repository [
 
 { #category : 'accessing' }
 MetacelloPackageLoadDirective >> repositorySpecs [
-	^ repositorySpecs
+
+	^ repositorySpecs ifNil: [ repositorySpecs := self spec ifNotNil: [ self spec repositorySpecs ] ]
+]
+
+{ #category : 'accessing' }
+MetacelloPackageLoadDirective >> repositorySpecs: aSpec [
+
+	repositorySpecs := aSpec
 ]
 
 { #category : 'asserting' }
 MetacelloPackageLoadDirective >> shouldLoadStrict [
 	
 	^ spec shouldLoadStrict
-]
-
-{ #category : 'initialization' }
-MetacelloPackageLoadDirective >> spec: aPackageSpec repositorySpecs: anExternalReference [
-
-	self spec: aPackageSpec.
-	repositorySpecs := anExternalReference
 ]
 
 { #category : 'accessing' }

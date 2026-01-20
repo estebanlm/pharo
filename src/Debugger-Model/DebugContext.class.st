@@ -130,16 +130,15 @@ DebugContext >> locateClosureHomeWithContent: aText [
 	user to validate the new context. If closureHome is not found or the user does not
 	validate the new context, return nil. aText is the new content of the current context.
 	If the current context is not a BlockContext return it."
-	| closureHome |
 
+	| closureHome |
 	context isBlockContext ifTrue: [
-		closureHome := context activeHome.
-		closureHome ifNil: [
-			self blockNotFoundDialog: context homeMethod with: aText.
-		 	^ nil ].
-		 (self confirm: 'I will have to revert to the method from\which this block originated.  Is that OK?' withCRs)
-			ifFalse: [ ^ nil ].
-		^ closureHome].
+			closureHome := context activeHome.
+			closureHome ifNil: [
+					self blockNotFoundDialog: context homeMethod with: aText.
+					^ nil ].
+			(ConfirmationRequest signal: 'I will have to revert to the method from\which this block originated.  Is that OK?') ifFalse: [ ^ nil ].
+			^ closureHome ].
 
 	^ context
 ]

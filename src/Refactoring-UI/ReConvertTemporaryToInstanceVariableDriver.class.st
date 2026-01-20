@@ -19,6 +19,12 @@ ReConvertTemporaryToInstanceVariableDriver class >> driverName [
 	^ 'Convert to instance variable'
 ]
 
+{ #category : 'accessing' }
+ReConvertTemporaryToInstanceVariableDriver class >> shouldPreviewChangesByDefault [
+
+	^ false
+]
+
 { #category : 'execution' }
 ReConvertTemporaryToInstanceVariableDriver >> breakingChoices [
 

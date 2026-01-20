@@ -29,7 +29,7 @@ Class {
 		'loadType',
 		'projectAttributes',
 		'version',
-		'configuration'
+		'baseline'
 	],
 	#category : 'Metacello-Core-Model',
 	#package : 'Metacello-Core',
@@ -43,20 +43,6 @@ MetacelloProject class >> initialize [
 	self deprecatedAliases: #( #MetacelloMCBaselineProject #MetacelloBaselineProject #MetacelloCypressBaselineProject )
 ]
 
-{ #category : 'instance creation' }
-MetacelloProject class >> new [
-
-	| inst |
-	inst := self basicNew.
-	^inst configuration: inst; yourself
-]
-
-{ #category : 'instance creation' }
-MetacelloProject class >> on: aConfig [
-
-	^self basicNew configuration: aConfig; yourself
-]
-
 { #category : 'private' }
 MetacelloProject >> attributes [
 
@@ -66,13 +52,15 @@ MetacelloProject >> attributes [
 ]
 
 { #category : 'accessing' }
-MetacelloProject >> configuration [
-	^ configuration
+MetacelloProject >> baseline [
+
+	^ baseline
 ]
 
 { #category : 'accessing' }
-MetacelloProject >> configuration: anObject [
-	configuration := anObject
+MetacelloProject >> baseline: aBaseline [
+
+	baseline := aBaseline
 ]
 
 { #category : 'private' }
@@ -95,7 +83,7 @@ MetacelloProject >> groupSpec [
 { #category : 'accessing' }
 MetacelloProject >> label [
 
-	^self configuration class name
+	^ self baseline class name
 ]
 
 { #category : 'accessing' }

@@ -29,8 +29,8 @@ BaselineOfCompiler >> baseline: spec [
 				package: 'Collections-Stack';
 				package: 'CodeImport';
 				package: 'CodeImport-Commands';
-				package: 'DebugInfo';
 				package: 'OpalCompiler-Core';
+				package: 'DebugInfo';
 				package: 'ParseTreeRewriter';
 				package: 'Deprecation';
 

@@ -15,6 +15,16 @@ Object >> basicInspector [
 ]
 
 { #category : '*Deprecated14' }
+Object >> confirm: queryString [
+	"Put up a yes/no menu with caption queryString. Answer true if the
+	response is yes, false if no. This is a modal question--the user must
+	respond yes or no."
+
+	self deprecated: 'Use the ConfirmationRequest instead.' transformWith: '`@rcv confirm: `@arg' -> 'ConfirmationRequest signal: `@arg'.
+	^ ConfirmationRequest signal: queryString
+]
+
+{ #category : '*Deprecated14' }
 Object >> haltOnAccess [
 
 	self
@@ -132,6 +142,18 @@ Object >> haltOnceOnCallTo: aSelector [
 		transformWith: '`@receiver haltOnceOnCallTo: `@arg' -> '`@receiver breakOnceOnCallTo: `@arg'.
 
 	^ self breakOnceOnCallTo: aSelector
+]
+
+{ #category : '*Deprecated14' }
+Object >> inform: aString [
+	"Display a message for the user to read and then dismiss."
+
+	self
+		deprecated: 'This method will be removed of Object because the API should not hold UI interactions.
+	The most simple way to replace the usage of #inform: is to use `InformativeNotification signal: aString`. 
+	But if you have access to a spec application or presenter you can use the #inform: implemented on those instead.'
+		transformWith: '`@rcv inform: `@arg' -> 'InformativeNotification signal: `@arg'.
+	InformativeNotification signal: aString
 ]
 
 { #category : '*Deprecated14' }

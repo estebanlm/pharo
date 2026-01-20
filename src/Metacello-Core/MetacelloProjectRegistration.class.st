@@ -4,7 +4,6 @@ Class {
 	#instVars : [
 		'loadedInImage',
 		'locked',
-		'mutable',
 		'versionString',
 		'projectSpec'
 	],
@@ -127,18 +126,6 @@ MetacelloProjectRegistration >> canUpgradeTo: aProjectRegistration [
 	^ projectSpec canUpgradeTo: aProjectRegistration projectSpec
 ]
 
-{ #category : 'mutability' }
-MetacelloProjectRegistration >> copyOnWrite: aBlock [
-	"assume that only registered projects are immutable ... otherwise you'll get an error"
-
-	| copy |
-	self unregisterProject.
-	copy := self copy.
-	aBlock value: copy.
-	copy registerProject.
-	^ copy
-]
-
 { #category : 'accessing' }
 MetacelloProjectRegistration >> currentVersionString [
 
@@ -175,17 +162,6 @@ MetacelloProjectRegistration >> hash [
 		  initialHash: 0
 ]
 
-{ #category : 'mutability' }
-MetacelloProjectRegistration >> immutable [
-    mutable := false
-]
-
-{ #category : 'mutability' }
-MetacelloProjectRegistration >> isMutable [
-
-	^ mutable ifNil: [ mutable := true ]
-]
-
 { #category : 'accessing' }
 MetacelloProjectRegistration >> loadedInImage [
 
@@ -194,8 +170,8 @@ MetacelloProjectRegistration >> loadedInImage [
 
 { #category : 'accessing' }
 MetacelloProjectRegistration >> loadedInImage: anObject [
-    self shouldBeMutable.
-    loadedInImage := anObject
+
+	loadedInImage := anObject
 ]
 
 { #category : 'accessing' }
@@ -206,28 +182,16 @@ MetacelloProjectRegistration >> locked [
 
 { #category : 'accessing' }
 MetacelloProjectRegistration >> locked: anObject [
-    self shouldBeMutable.
-    locked := anObject
+
+	locked := anObject
 ]
 
 { #category : 'accessing' }
 MetacelloProjectRegistration >> merge: aProjectRegistration [
 	" ... merge is done when a spec has been loaded into the image"
 
-	self shouldBeMutable.
 	projectSpec := aProjectRegistration projectSpec.
 	versionString := projectSpec repositoryVersionString
-]
-
-{ #category : 'mutability' }
-MetacelloProjectRegistration >> mutable [
-    mutable := true
-]
-
-{ #category : 'copying' }
-MetacelloProjectRegistration >> postCopy [
-    super postCopy.
-    mutable := nil
 ]
 
 { #category : 'printing' }
@@ -263,7 +227,6 @@ MetacelloProjectRegistration >> projectSpec [
 { #category : 'accessing' }
 MetacelloProjectRegistration >> projectSpec: anObject [
 
-	self shouldBeMutable.
 	projectSpec := anObject
 ]
 
@@ -284,13 +247,6 @@ MetacelloProjectRegistration >> registerProject [
 MetacelloProjectRegistration >> repositoryDescriptions [
 
 	^ self projectSpec repositoryDescriptions
-]
-
-{ #category : 'mutability' }
-MetacelloProjectRegistration >> shouldBeMutable [
-
-	self isMutable ifTrue: [ ^ self ].
-	self error: 'Not allowed to modify an immutable object'
 ]
 
 { #category : 'registration' }
