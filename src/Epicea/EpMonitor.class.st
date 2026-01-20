@@ -116,7 +116,7 @@ EpMonitor class >> shouldLogMetacelloLoading: aBoolean [
 						oldValues push: self current isEnabled.
 						self current disable ]
 				for: self;
-				when: MetacelloExecutionEndAnnouncement do: [ self current enabled: oldValues pop ] for: self ]
+				when: MetacelloExecutionEndAnnouncement do: [ "old values can be empty during Epicea loading because we are already in a Metacello loading" oldValues ifNotEmpty: [ self current enabled: oldValues pop ] ] for: self ]
 ]
 
 { #category : 'asserting' }
