@@ -59,7 +59,7 @@ PharoSourcesCondenser >> newSourceNamed: aString [
 	PharoFilesOpener sourceFileVersionString: aString.
 	newSourcesFile := self originalFile.
 
-	newSourceFile ensureDelete.
+	newSourcesFile ensureDelete.
 	originalSourcesFile copyTo: newSourcesFile.
 	"Use the new sources file"
 	Smalltalk openSourceFiles
