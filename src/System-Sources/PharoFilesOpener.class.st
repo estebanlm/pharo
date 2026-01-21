@@ -29,7 +29,7 @@ PharoFilesOpener class >> reset [
 { #category : 'image, changes name' }
 PharoFilesOpener class >> sourceFileVersionString [
 
-	^ SourceFileVersionString ifNil: [ SourceFileVersionString := ('Pharo{1}.{2}-{3}bit-{4}' format: {SystemVersion current major asString. SystemVersion current minor asString. ((Smalltalk vm wordSize = 4) ifTrue: [32] ifFalse: [64]). SystemVersion current commitHashShort asString}) ]
+	^ SourceFileVersionString
 ]
 
 { #category : 'image, changes name' }
