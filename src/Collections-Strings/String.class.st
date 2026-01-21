@@ -1785,7 +1785,9 @@ String >> includesSubstring: aString caseSensitive: caseSensitive [
 	"('abcdefgh' includesSubstring: 'DE' caseSensitive: false) >>> true"
 	"('abcDefgh' includesSubstring: 'De' caseSensitive: true) >>> true"
 	"('abcDefgh' includesSubstring: 'DE' caseSensitive: true) >>> false"
-
+	
+	aString ifEmpty: [ ^ true ]. "Keep the same behavior than #includesSubstring:. If the string is empty, we consider we contain it."
+	
 	^ (self findString: aString startingAt: 1 caseSensitive: caseSensitive) > 0
 ]
 
