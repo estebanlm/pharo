@@ -52,7 +52,8 @@ Class {
 		'organizer',
 		'tags',
 		'importedExtensions',
-		'scopedSelectors'
+		'scopedSelectors',
+		'aliases'
 	],
 	#classVars : [
 		'Properties'
@@ -141,6 +142,22 @@ Package >> classesTaggedWith: aSymbol [
 	^ (self tagNamed: aSymbol ifAbsent: [ ^ #(  ) ]) classes
 ]
 
+{ #category : 'as yet unclassified' }
+Package >> cleanupExtendedBehaviors [
+	
+	"This package is about to be removed.
+	Remove the extensions defined by this package in all extended behaviors.
+	
+	CRITICAL: this both removes cached aliases AND removes normal extensions methods.
+	This package becomes unusable after this operation"
+	
+	scopedSelectors ifNil: [ ^ self ].
+
+	scopedSelectors do: [ :e |
+		e cleanupExtendedBehaviors ].
+	scopedSelectors := nil
+]
+
 { #category : 'accessing' }
 Package >> codeChangeAnnouncer [
 
@@ -150,10 +167,7 @@ Package >> codeChangeAnnouncer [
 { #category : 'as yet unclassified' }
 Package >> defineScopedSelector: aSymbol [
 
-	| found scopedSelector |
-	found := self lookupSelector: aSymbol asSymbol.
-	found == aSymbol ifFalse: [ ^ found ].
-
+	| scopedSelector |
 	scopedSelector := ScopedSelector new
 		                  symbol: aSymbol;
 		                  owner: self;
@@ -344,7 +358,12 @@ Package >> hierarchyRoots [
 Package >> importExtension: anExtension [
 	
 	self importedExtensions add: anExtension.
-	anExtension addUserPackage: self
+	anExtension addUserPackage: self.
+	
+	self importSelectors: anExtension methodDictionary keys.
+	
+	"Recompile dependencies, so they can see the extension"
+	self definedClasses do: [ :c | c compileAll ]
 ]
 
 { #category : 'private' }
@@ -354,6 +373,12 @@ Package >> importProtocol: aProtocol forClass: aClass [
 	(aClass methodsInProtocol: aProtocol)
 		reject: [ :method | method isFromTrait ]
 		thenDo: [ :method | self addMethod: method ]
+]
+
+{ #category : 'as yet unclassified' }
+Package >> importSelectors: aCollection [ 
+	
+	aCollection do: [ :e | self defineScopedSelector: e symbol ]
 ]
 
 { #category : 'as yet unclassified' }
@@ -414,6 +439,16 @@ Package >> initialize [
 	super initialize.
 	extensionSelectors := IdentityDictionary new.
 	tags := Set new
+]
+
+{ #category : 'as yet unclassified' }
+Package >> internScopedSelector: aSymbol [
+
+	| found |
+	found := self lookupSelector: aSymbol asSymbol.
+	found == aSymbol ifFalse: [ ^ found ].
+
+	^ self defineScopedSelector: aSymbol
 ]
 
 { #category : 'testing' }
@@ -651,7 +686,9 @@ Package >> removeFromSystem [
 
 	SourcesManager current deferFlushDuring: [
 			self tags copy do: [ :tag | tag removeFromSystem ].
-			self extensionMethods do: [ :method | method removeFromSystem ] ].
+			self extensionMethods do: [ :method | method removeFromSystem ]
+			self cleanupExtendedBehaviors.
+	].
 
 	self organizer unregisterPackage: self
 ]

@@ -19,27 +19,41 @@ Extension >> addUserPackage: aPackage [
 	aPackage methods do: [:m | m recompile ].
 ]
 
+{ #category : 'converting' }
+Extension >> asClassDefinition [
+
+	| definition |
+	definition := (MCExtensionDefinition named: self name)
+		              extendedClass: extendedClass name;
+		              packageName: self package name;
+		              comment: self comment.
+
+	"We do not export the tag if this is the root."
+	self packageTag ifNotNil: [ :tag | tag isRoot ifFalse: [ definition tagName: tag name ] ].
+
+	^ definition
+]
+
 { #category : 'initialization' }
 Extension >> compile: sourceCode classified: protocol withStamp: changeStamp notifying: requestor logSource: logSource recompileDependencies: recompileDependencies [
 	"Return the selector of the compiled method"
 
 	| method compiler ast scopedSelector selectorSymbol methodCopyInExtendedClass |
-	
-	(sourceCode beginsWith: 'methodSelectorAndArgumentNames')
-		ifTrue: [ self halt ].
-	
 	compiler := self compiler
 		            source: sourceCode;
 		            requestor: requestor;
 		            failBlock: (requestor ifNotNil: [ [ ^ nil ] ]); "no failblock if no requestor"
-						permitUndeclared: requestor isNil; "compatibility: permit undeclared if no requestor"
+						"compatibility: permit undeclared if no requestor"
+						permitFaulty: requestor isNil;
+						permitUndeclared: requestor isNil;
 						protocol: protocol;
 		            changeStamp: changeStamp;
 		            logged: logSource.
 
 	ast := compiler parse.
+
 	selectorSymbol := ast selector.
-	scopedSelector := self defineScopedSelector: selectorSymbol.
+	scopedSelector := self internScopedSelector: selectorSymbol.
 	ast selector: scopedSelector.
 	ast sendNodes do: [ :send | send selector: (OCSelectorNode value: (self package lookupSelector: send selector)) ].
 
@@ -48,7 +62,10 @@ Extension >> compile: sourceCode classified: protocol withStamp: changeStamp not
 	methodCopyInExtendedClass := method copy.
 	methodCopyInExtendedClass methodClass: self extendedClass.
 	self extendedClass classify: scopedSelector under: protocol.
+	
+	scopedSelector addExtendedBehavior: self extendedClass.
 	self extendedClass methodDict at: scopedSelector put: methodCopyInExtendedClass.
+	
 
 	recompileDependencies ifTrue: [
 			self package methods do: [ :m |
@@ -79,6 +96,12 @@ Extension >> extendedClass [
 Extension >> extendedClass: anObject [
 
 	extendedClass := anObject
+]
+
+{ #category : 'accessing' }
+Extension >> internScopedSelector: aSymbol [
+
+	^ self package internScopedSelector: aSymbol
 ]
 
 { #category : 'initialization' }

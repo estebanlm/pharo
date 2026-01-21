@@ -1278,12 +1278,12 @@ Context >> printOn: aStream [
 	"And the selector"
 	aStream nextPutAll: '>>'.
 	selector := self selector.
-	aStream nextPutAll: selector.
+	aStream nextPutAll: selector asString.
 
 	"Handle #doesNotUnderstand:"
 	selector = #doesNotUnderstand: ifFalse: [ ^ self ].
 	aStream space.
-	(self tempAt: 1) selector printOn: aStream
+	(self tempAt: 1) selector asString printOn: aStream
 ]
 
 { #category : 'printing' }
