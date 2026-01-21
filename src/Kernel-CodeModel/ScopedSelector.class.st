@@ -124,16 +124,25 @@ ScopedSelector >> lookupAliasedMethodOnReceiverClass: aClass lookupClass: lookup
 
 
 	[ theLookupClass notNil ] whileTrue: [
-		| allVisibleExtensions |
-		allVisibleExtensions := (owner definedClasses select: [ :e | e isKindOf: Extension ]) , owner importedExtensions.
-		allVisibleExtensions do: [ :e |
-			"Shouldn't we lookup in the hierarchy from theLookupClass up to Object?"
-				e extendedClass == theLookupClass ifTrue: [
-						^ {
-							  e extendedClass.
-							  (e lookupSelector: (e package lookupSelector: self symbol)) } ] ].
-		
-		theLookupClass := theLookupClass superclass ].
+			| allVisibleExtensions allVisibleExtensionsForThisClass |
+			allVisibleExtensions := (owner definedClasses select: [ :e | e isKindOf: Extension ]) , owner importedExtensions.
+
+			allVisibleExtensionsForThisClass := allVisibleExtensions select: [ :e | e extendedClass == theLookupClass ].
+			
+			"Prevent conflicts!"
+			allVisibleExtensionsForThisClass size <= 1
+				ifFalse: [ 
+					ExtensionConflict new
+						selector: self;
+						conflictingClass: theLookupClass;
+						signal ].
+			
+			allVisibleExtensionsForThisClass ifNotEmpty: [ :es |
+				^ {
+					  es anyOne extendedClass.
+					  (es anyOne lookupSelector: (es anyOne package lookupSelector: self symbol)) } ].
+
+			theLookupClass := theLookupClass superclass ].
 		
 	"We reached the top of the hierarchy and found no extensions, just look for the symbol"
 	foundMethod := (lookupClass ifNil: [ aClass ]) lookupSelector: self symbol.

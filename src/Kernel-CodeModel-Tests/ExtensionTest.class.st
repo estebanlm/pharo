@@ -210,6 +210,29 @@ ExtensionTest >> test12ExtensionsArePolymorphicBetweenThem [
 	self assert: (userInstance scopedUser: 'hola') equals: 10.
 ]
 
+{ #category : 'tests - semantic' }
+ExtensionTest >> test13ConflictingExtensionsThrowError [
+
+	| userInstance anotherExtensionOnObject |
+	definerPackage2 := Package named: 'Definer2'.
+	anotherExtensionOnObject := (Extension << #AnotherExtensionOnObject
+		extendedClass: Object;
+		installingEnvironment: environment;
+		package: definerPackage2) install.
+	
+	extensionOnObject compile: 'foo ^ 10'.
+	anotherExtensionOnObject compile: 'foo ^ 42'.
+	userClass compile: 'scopedUser: anObject
+		^ anObject foo'.
+
+	userPackage importExtension: extensionOnObject.
+	userPackage importExtension: anotherExtensionOnObject.
+	userInstance := userClass new.
+
+	self should: [(userInstance scopedUser: 1)] raise: ExtensionConflict with: [ :ex | self assert: ex messageText equals: 'Conflict extending #foo in Object' ].
+	
+]
+
 { #category : 'tests - runtime' }
 ExtensionTest >> test13ExtensionDoesNotDefineAliasBeforeSend [
 
