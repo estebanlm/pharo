@@ -56,7 +56,7 @@ RePushDownMethodDriver >> browseMethods [
 
 	| violators |
 	violators := refersToSelector violators.
-	(application toolNamed: #messageList) browse: (violators flatCollect: #yourself)
+	(application toolNamed: #messageList) browse: (violators flatCollect: [ :v | v collect: #compiledMethod ])
 ]
 
 { #category : 'actions' }

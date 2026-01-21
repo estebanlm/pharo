@@ -39,9 +39,7 @@ ReMethodsReferToSelectorCondition >> violators [
 	violators := Dictionary new.
 	selectors do: [ :selector |
 			class methods do: [ :caller |
-					| method |
-					method := caller compiledMethod.
-					(method sendsSelector: selector) ifTrue: [
-						violators at: selector ifPresent: [ :callers | callers add: method ] ifAbsentPut: [ OrderedCollection with: method ] ] ] ].
+					(caller refersToSymbol: selector) ifTrue: [
+						violators at: selector ifPresent: [ :callers | callers add: caller ] ifAbsentPut: [ OrderedCollection with: caller ] ] ] ].
 	^ violators
 ]
