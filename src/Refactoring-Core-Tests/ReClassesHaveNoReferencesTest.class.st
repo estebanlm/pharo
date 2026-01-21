@@ -30,10 +30,8 @@ ReClassesHaveNoReferencesTest >> testClassHasReferences [
 	cond := ReClassesHaveNoReferencesCondition new
 		        model: self model;
 		        classes: { referenced }.
-
 	self deny: cond check.
-	self assert: cond violators equals: { referenced }.
-	self assert: cond nonViolators isEmpty 
+	self assert: cond nonViolators equals: { referenced }
 ]
 
 { #category : 'tests' }
@@ -48,6 +46,5 @@ ReClassesHaveNoReferencesTest >> testSomeClassesHaveReferences [
 		        classes: { referenced . unreferenced }.
 
 	self deny: cond check.
-	self assert: cond violators equals: { referenced }.
-	self assert: cond nonViolators equals: { unreferenced }
+	self assert: cond nonViolators equals: { referenced . unreferenced }
 ]

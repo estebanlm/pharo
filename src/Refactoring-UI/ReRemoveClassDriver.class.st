@@ -51,8 +51,8 @@ ReRemoveClassDriver >> breakingChoices [
 { #category : 'actions' }
 ReRemoveClassDriver >> browseReferences [
 
-	haveNoReferences violators keysAndValuesDo: [ :violator :references |
-		(application toolNamed: #messageList) browse: (references collect: [ :ref | ref compiledMethod ]) ] 
+	haveNoReferences violators do: [ :references |
+		(application toolNamed: #messageList) browse: (references collect: [ :ref | ref compiledMethod ]) ]
 ]
 
 { #category : 'actions' }
