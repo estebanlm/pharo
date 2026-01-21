@@ -13,3 +13,43 @@ SmalltalkImage >> isInteractiveGraphic [
 	self deprecated: 'Use #isInteractive instead.' transformWith: '`@rcv isInteractiveGraphic' -> '`@rcv isInteractive'.
 	^ self isInteractive
 ]
+
+{ #category : '*Deprecated14-Kernel' }
+SmalltalkImage >> sourceFileVersionString [
+
+	self deprecated: 'This got delegated to the PharoFilesOpener.' transformWith: '`@rcv sourceFileVersionString' -> 'PharoFilesOpener sourceFileVersionString'.
+
+	^ PharoFilesOpener sourceFileVersionString
+]
+
+{ #category : '*Deprecated14-Kernel' }
+SmalltalkImage >> sourceFileVersionString: aString [
+
+	self
+		deprecated: 'This got delegated to the PharoFilesOpener.'
+		transformWith: '`@rcv sourceFileVersionString: `@arg' -> 'PharoFilesOpener sourceFileVersionString: `@arg'.
+	PharoFilesOpener sourceFileVersionString: aString
+]
+
+{ #category : '*Deprecated14-Kernel' }
+SmalltalkImage >> sourcesFile [
+
+	self deprecated: 'This got delegated to the PharoFilesOpener.' transformWith: '`@rcv sourceFile' -> 'PharoFilesOpener sourcesFile'.
+
+	^ PharoFilesOpener sourcesFile
+]
+
+{ #category : '*Deprecated14-Kernel' }
+SmalltalkImage >> sourcesName [
+
+	self deprecated: 'This got delegated to the PharoFilesOpener.' transformWith: '`@rcv sourceName' -> 'PharoFilesOpener sourcesName'.
+
+	^ PharoFilesOpener sourcesName
+]
+
+{ #category : '*Deprecated14-Kernel' }
+SmalltalkImage >> sourcesSuffix [
+
+	self deprecated: 'This got delegated to the PharoFilesOpener.' transformWith: '`@rcv sourcesSuffix' -> 'PharoFilesOpener sourcesSuffix'.
+	^ PharoFilesOpener sourcesSuffix
+]

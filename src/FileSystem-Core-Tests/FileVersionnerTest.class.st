@@ -281,9 +281,7 @@ FileVersionnerTest >> testNextVersionOf10Is11 [
 	vers := NewFileVersionner from: ddb10.
 	vers useBasenameNumberExtension.
 	self assert: ddb10 fullName equals: '/dir/BD.10.md'.
-	self 
-		assert: vers nextVersionFileReference fullName
-		equals: '/dir/BD.11.md' asFileReference fullName
+	self assert: vers nextVersionFileReference fullName equals: '/dir/BD.11.md'
 ]
 
 { #category : 'tests - next version' }

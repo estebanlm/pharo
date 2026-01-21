@@ -134,13 +134,12 @@ PBBootstrap >> createHermesPackageListFiles [
 
 	| toExport |
 	toExport := Dictionary newFrom: {
-		            ('hermesAdditionalKernelPackages.txt' -> BaselineOfKernel additionalPackagesPackageNames).
-		            ('hermesCompilerPackages.txt' -> BaselineOfCompiler corePackageNames).
-		            ('hermesFileSystemPackages.txt' -> BaselineOfFileSystem corePackageNames).
-		            ('hermesTraitsPackages.txt' -> BaselineOfTraits corePackageNames).
-		            ('hermesMonticelloPackages.txt' -> BaselineOfMonticello corePackageNames).
-		            ('hermesMetacelloPackages.txt' -> BaselineOfMetacello corePackageNames).
-		            ('hermesSUnitPackages.txt' -> BaselineOfPharoBootstrap sUnitPackageNames) }.
+			            ('hermesAdditionalKernelPackages.txt' -> BaselineOfKernel additionalPackagesPackageNames).
+			            ('hermesCompilerPackages.txt' -> BaselineOfCompiler corePackageNames).
+			            ('hermesFileSystemPackages.txt' -> BaselineOfFileSystem corePackageNames).
+			            ('hermesTraitsPackages.txt' -> BaselineOfTraits corePackageNames).
+			            ('hermesMonticelloPackages.txt' -> BaselineOfMonticello corePackageNames).
+			            ('hermesMetacelloPackages.txt' -> BaselineOfMetacello corePackageNames) }.
 
 	toExport keysAndValuesDo: [ :fileName :packageNames |
 			self bootstrapCacheDirectory / fileName writeStreamDo: [ :stream |
