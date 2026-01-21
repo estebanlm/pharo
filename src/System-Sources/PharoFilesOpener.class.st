@@ -28,9 +28,8 @@ PharoFilesOpener class >> reset [
 
 { #category : 'image, changes name' }
 PharoFilesOpener class >> sourceFileVersionString [
-	"We need to check if we really need this value as default value.."
 
-	^ SourceFileVersionString ifNil: [ SourceFileVersionString := 'PharoV60' ]
+	^ SourceFileVersionString
 ]
 
 { #category : 'image, changes name' }
