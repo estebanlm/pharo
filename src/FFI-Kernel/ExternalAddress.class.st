@@ -81,6 +81,11 @@ ExternalAddress class >> new: n [
 		ifFalse: [self shouldNotImplement]
 ]
 
+{ #category : 'instance creation' }
+ExternalAddress class >> null [
+	^ self new
+]
+
 { #category : 'system startup' }
 ExternalAddress class >> startUp: resuming [
 	"If starting the image afresh all external addresses should be zero.
