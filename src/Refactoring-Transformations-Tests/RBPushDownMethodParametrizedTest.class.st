@@ -62,6 +62,16 @@ RBPushDownMethodParametrizedTest >> testPushDownMethodThatReferencesPoolDictiona
 ]
 
 { #category : 'tests' }
+RBPushDownMethodParametrizedTest >> testPushDownMethodWithMethodThatRefersToSelector [
+
+	| refactoring |
+	refactoring := self createRefactoringWithArguments: {
+			               #( #problemCount ).
+			               'RBLintRuleTestData' }.
+	self shouldWarn: refactoring 
+]
+
+{ #category : 'tests' }
 RBPushDownMethodParametrizedTest >> testPushDownMethodWithSubclassOfSubclassThatDefinesSelector [
 
 	| refactoring class subclass |

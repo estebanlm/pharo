@@ -20,7 +20,8 @@ Class {
 		'methodSelectionPresenterClass',
 		'subclassesSendSuper',
 		'isAbstract',
-		'subclassDirectlyDefines'
+		'subclassDirectlyDefines',
+		'refersToSelector'
 	],
 	#category : 'Refactoring-UI-Drivers',
 	#package : 'Refactoring-UI',
@@ -44,10 +45,18 @@ RePushDownMethodDriver >> breakingChoices [
 
 	| choices |
 	choices := OrderedCollection new.
-
+	choices add: (RePushDownMethodTransformationChoice new driver: self).
 	subclassesSendSuper isFalse ifTrue: [ choices add: (ReBrowseSubclassSuperSendsChoice new driver: self) ].
-	subclassDirectlyDefines isFalse ifTrue: [ choices add: (RePushDownMethodTransformationChoice new driver: self) ].
+	refersToSelector isFalse ifTrue: [ choices add: (ReBrowseMethodsChoice new driver: self) ].
 	^ choices
+]
+
+{ #category : 'actions' }
+RePushDownMethodDriver >> browseMethods [
+
+	| violators |
+	violators := refersToSelector violators.
+	(application toolNamed: #messageList) browse: (violators flatCollect: #yourself)
 ]
 
 { #category : 'actions' }
@@ -115,6 +124,9 @@ RePushDownMethodDriver >> labelBasedOnBreakingChanges [
 			  subclassDirectlyDefines isFalse ifTrue: [
 					  subclassDirectlyDefines violationMessageOn: stream.
 					  stream cr ].
+			  refersToSelector isFalse ifTrue: [
+					  refersToSelector violationMessageOn: stream.
+					  stream cr ].
 			  stream nextPutAll: 'Select a strategy' ]
 ]
 
@@ -175,5 +187,6 @@ RePushDownMethodDriver >> setBreakingChangesPreconditions [
 
 	isAbstract := refactoring preconditionIsAbstract.
 	subclassesSendSuper := refactoring preconditionSubclassesDontSendSuper.
-	subclassDirectlyDefines := refactoring preconditionSubclassesDirectlyDefines
+	subclassDirectlyDefines := refactoring preconditionSubclassesDirectlyDefines.
+	refersToSelector := refactoring preconditionMethodsReferToSelector
 ]

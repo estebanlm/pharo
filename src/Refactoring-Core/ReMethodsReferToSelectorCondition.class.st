@@ -39,9 +39,9 @@ ReMethodsReferToSelectorCondition >> violators [
 	violators := Dictionary new.
 	selectors do: [ :selector |
 			class methods do: [ :caller |
-					| tree |
-					tree := caller compiledMethod.
-					(tree sendsSelector: selector) ifTrue: [
-						violators at: #selector ifPresent: [ :callers | callers add: caller ] ifAbsentPut: [ OrderedCollection with: caller ] ] ] ].
+					| method |
+					method := caller compiledMethod.
+					(method sendsSelector: selector) ifTrue: [
+						violators at: selector ifPresent: [ :callers | callers add: method ] ifAbsentPut: [ OrderedCollection with: method ] ] ] ].
 	^ violators
 ]
