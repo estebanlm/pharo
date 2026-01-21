@@ -90,7 +90,7 @@ RBPushDownMethodRefactoring >> preconditionIsAbstract [
 	^ ReClassesAreAbstractCondition new classes: { class }
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'preconditions' }
 RBPushDownMethodRefactoring >> preconditionMethodsReferToSelector [
 
 	^ ReMethodsReferToSelectorCondition new
