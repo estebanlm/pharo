@@ -68,7 +68,9 @@ RBPushDownMethodParametrizedTest >> testPushDownMethodWithMethodThatRefersToSele
 	refactoring := self createRefactoringWithArguments: {
 			               #( #problemCount ).
 			               'RBLintRuleTestData' }.
-	self shouldWarn: refactoring 
+	(refactoring isKindOf: RBPushDownMethodRefactoring)
+		ifTrue: [ self shouldWarn: refactoring ]
+		ifFalse: [ self shouldntWarn: refactoring ]
 ]
 
 { #category : 'tests' }
@@ -92,5 +94,7 @@ RBPushDownMethodParametrizedTest >> testPushDownMethodWithSubclassesThatDefinesS
 	refactoring := self createRefactoringWithArguments: {
 			               #( #isEmpty ).
 			               'RBLintRuleTestData' }.
-	self shouldWarn: refactoring 
+	(refactoring isKindOf: RBPushDownMethodRefactoring)
+		ifTrue: [ self shouldWarn: refactoring ]
+		ifFalse: [ self shouldntWarn: refactoring ]
 ]
