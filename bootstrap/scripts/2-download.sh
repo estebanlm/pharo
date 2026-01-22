@@ -54,11 +54,6 @@ if [ ! -e "${BOOTSTRAP_DOWNLOADS}/bootstrapImage.zip" ]; then
 	download_to https://github.com/guillep/PharoBootstrap/releases/download/v1.7.10/bootstrapImage.zip ${BOOTSTRAP_DOWNLOADS}/bootstrapImage.zip
 fi 
 
-# checking for PharoV60.sources
-if [ ! -e "${BOOTSTRAP_DOWNLOADS}/PharoV60.sources.zip" ]; then
-	download_to http://files.pharo.org/sources/PharoV60.sources.zip ${BOOTSTRAP_DOWNLOADS}/PharoV60.sources.zip
-fi
-
 # checking for icons
 # update the commit hash as soon as you need a new version of the icons to be loaded
 if [ ! -e "${BOOTSTRAP_DOWNLOADS}/idea11.zip" ]; then
@@ -73,12 +68,6 @@ fi
 if [ ! -e "./Pharo.image" ]; then
     cd ${BOOTSTRAP_CACHE}
 	unzip -u ${BOOTSTRAP_DOWNLOADS}/bootstrapImage.zip -d .
-fi
-
-# PharoV6 sources
-if [ ! -e "${BOOTSTRAP_CACHE}/PharoV60.sources" ]; then
-    cd ${BOOTSTRAP_CACHE}
-	unzip -u ${BOOTSTRAP_DOWNLOADS}/PharoV60.sources.zip -d ${BOOTSTRAP_CACHE}
 fi
 
 # Icons

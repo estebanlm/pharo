@@ -158,18 +158,14 @@ SourceFileArray >> ensureOpen [
 	Close them before re-opening them."
 
 	| aSourcesFile aChangesFile |
-
 	self close.
 
 	aSourcesFile := PharoFilesOpener default sourcesFileOrNil.
 	aChangesFile := PharoFilesOpener default changesFileOrNil.
 
-	aChangesFile ifNil: [
-		aChangesFile := PharoFilesOpener default changesFileOrNilReadOnly: true silent: false ].
+	aChangesFile ifNil: [ aChangesFile := PharoFilesOpener default changesFileOrNilReadOnly: true ].
 
-	files := Array
-		with: aSourcesFile
-		with: aChangesFile.
+	files := Array with: aSourcesFile with: aChangesFile.
 
 	readOnlyQueue := SharedQueue new
 ]
