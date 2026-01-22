@@ -372,7 +372,7 @@ EDEmergencyDebugger >> emergencyDebug: aDebugSession [
 	[ self debug: aDebugSession ]
 		on: Error
 		do: [ :err |
-			DebuggerEmmergencyLogger new
+			DebuggerEmergencyLogger new
 				logError: err
 				forSession: aDebugSession ]
 ]
