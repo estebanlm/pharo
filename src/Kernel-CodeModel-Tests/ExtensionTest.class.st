@@ -263,6 +263,102 @@ ExtensionTest >> test14DefinerAndUserSelectorAreNotTheSame [
 	self deny: definerScopedSelector == userScopedSelector
 ]
 
+{ #category : 'tests - semantic' }
+ExtensionTest >> test14ExtensionSuperSends [
+
+	| userInstance extensionOnInteger |
+	extensionOnInteger := (Extension << #ExtensionOfInteger
+		extendedClass: Integer;
+		installingEnvironment: environment;
+		package: definerPackage) install.
+	
+	extensionOnObject compile: 'foo ^ 10'.
+	extensionOnInteger compile: 'foo ^ super foo + 1'.
+	userClass compile: 'scopedUser: anObject
+		^ anObject foo'.
+
+	userPackage importExtension: extensionOnObject.
+	userPackage importExtension: extensionOnInteger.
+	userInstance := userClass new.
+
+	self assert: (userInstance scopedUser: 1) equals: 11.
+	self assert: (userInstance scopedUser: 'hola') equals: 10.
+]
+
+{ #category : 'tests - semantic' }
+ExtensionTest >> test15ExtensionsInHierarchySubclassBindingFirst [
+
+	| userInstance extensionOnInteger |
+	extensionOnInteger := (Extension << #ExtensionOfInteger
+		extendedClass: Integer;
+		installingEnvironment: environment;
+		package: definerPackage) install.
+	
+	extensionOnObject compile: 'foo ^ 10'.
+	extensionOnInteger compile: 'foo ^ 42'.
+	userClass compile: 'scopedUser: anObject
+		^ anObject foo'.
+
+	userPackage importExtension: extensionOnObject.
+	userPackage importExtension: extensionOnInteger.
+	userInstance := userClass new.
+
+	self assert: (userInstance scopedUser: 1) equals: 42.
+	self assert: (userInstance scopedUser: 'hola') equals: 10.
+
+]
+
+{ #category : 'tests - semantic' }
+ExtensionTest >> test15ExtensionsInHierarchySuperclassBindingFirst [
+
+	| userInstance extensionOnInteger |
+	extensionOnInteger := (Extension << #ExtensionOfInteger
+		extendedClass: Integer;
+		installingEnvironment: environment;
+		package: definerPackage) install.
+	
+	extensionOnObject compile: 'foo ^ 10'.
+	extensionOnInteger compile: 'foo ^ 42'.
+	userClass compile: 'scopedUser: anObject
+		^ anObject foo'.
+
+	userPackage importExtension: extensionOnObject.
+	userPackage importExtension: extensionOnInteger.
+	userInstance := userClass new.
+
+	self assert: (userInstance scopedUser: 'hola') equals: 10.
+	self assert: (userInstance scopedUser: 1) equals: 42.
+]
+
+{ #category : 'tests - semantic' }
+ExtensionTest >> test15ExtensionsWithIsolatedSuperSends [
+
+	| userInstance extensionOnInteger superSenderSelector |
+	definerPackage2 := Package named: 'Definer2'.
+	extensionOnInteger := (Extension << #ExtensionOfInteger
+		extendedClass: Integer;
+		installingEnvironment: environment;
+		package: definerPackage2) install.
+	
+	extensionOnObject compile: 'foo ^ 10'.
+	superSenderSelector := extensionOnInteger compile: 'foo ^ super foo + 1'.
+	userClass compile: 'scopedUser: anObject
+		^ anObject foo'.
+
+	userPackage importExtension: extensionOnObject.
+	userPackage importExtension: extensionOnInteger.
+	userInstance := userClass new.
+
+	self assert: (userInstance scopedUser: 'hola') equals: 10.
+	
+	self should: [userInstance scopedUser: 1] raise: MessageNotUnderstood with: [ :dnu |
+		self assert: dnu receiver equals: 1.
+		self assert: dnu message selector equals: (extensionOnInteger package lookupSelector: #foo).
+		"I don't like the sender sender sender"
+		self assert: dnu signalerContext sender sender sender method == (Integer >> superSenderSelector) ]
+
+]
+
 { #category : 'tests - runtime' }
 ExtensionTest >> test15LookupAliasedSelectorInUserReturnsExtensionMethod [
 

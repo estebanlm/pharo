@@ -42,6 +42,48 @@ ScopedSelector >> beginsWith: aString [
 	^ self asString beginsWith: aString
 ]
 
+{ #category : 'accessing' }
+ScopedSelector >> bindAliasIn: aClass [
+
+	| allVisibleExtensions theExtension theExtensionSelector theExtensionMethod allVisibleExtensionsForThisClass |
+	allVisibleExtensions := (owner definedClasses select: [ :e | e isKindOf: Extension ]) , owner importedExtensions.
+	allVisibleExtensionsForThisClass := allVisibleExtensions select: [ :e | e extendedClass == aClass ].
+	
+	allVisibleExtensionsForThisClass ifEmpty: [ 
+		| theAliasedMethod |
+		"No extensions for this class.
+		Check if there is a local global method, and alias it if possible"
+		(aClass methodDict includesKey: self symbol)
+			ifFalse: [ ^ self ].
+
+		theAliasedMethod := aClass methodDict at: self symbol.		
+		self addExtendedBehavior: aClass.
+		aClass methodDict at: self put: theAliasedMethod.
+		^ self ].
+	
+	"Prevent conflicts!"
+	allVisibleExtensionsForThisClass size <= 1
+		ifFalse: [ 
+			ExtensionConflict new
+				selector: self;
+				conflictingClass: aClass;
+				signal ].
+	
+	theExtension := allVisibleExtensionsForThisClass anyOne.
+	
+	theExtensionSelector := theExtension package lookupSelector: self symbol.
+	theExtensionMethod := theExtension extendedClass methodDict at: theExtensionSelector.
+	
+	self addExtendedBehavior: theExtension extendedClass.
+	theExtension extendedClass methodDict at: self put: theExtensionMethod
+]
+
+{ #category : 'accessing' }
+ScopedSelector >> bindAliasesInSubclassesOf: aClass [
+
+	aClass withAllSubclassesDo: [ :classToBind | self bindAliasIn: classToBind ]
+]
+
 { #category : 'as yet unclassified' }
 ScopedSelector >> cleanupExtendedBehaviors [
 
@@ -66,21 +108,20 @@ ScopedSelector >> flushCache [
 { #category : 'accessing' }
 ScopedSelector >> handleDoesNotUnderstand: aMessage to: aReceiver [
 
-	| aliasedMethodLookupResult aliasedMethod aliasedMethodOwner |
 	"Lookup failed on a scoped send to a non-extended class.
 	We should lookup an aliased method, and activate it."
 	
-	aliasedMethodLookupResult := self lookupAliasedMethodOnReceiverClass: aReceiver class lookupClass: aMessage lookupClass.
+	| aliasPair aliasOwner aliasMethod |
+	aliasPair := self lookupAliasedMethodOnReceiverClass: aReceiver class lookupClass: aMessage lookupClass.
 	
-	"If this is a real DNU, redispatch the DNU using the symbol"
-	aliasedMethodLookupResult ifNil: [
-		^ aMessage selector symbol handleDoesNotUnderstand: aMessage to: aReceiver ].
+	"This looks like a real DNU"
+	aliasPair ifNil: [
+		^ self symbol handleDoesNotUnderstand: aMessage to: aReceiver ].
 	
-	aliasedMethodOwner := aliasedMethodLookupResult first.
-	aliasedMethod := aliasedMethodLookupResult second.
-	self addExtendedBehavior: aliasedMethodOwner.
-	aliasedMethodOwner methodDict at: aMessage selector put: aliasedMethod.
-
+	aliasOwner := aliasPair first.
+	aliasMethod := aliasPair second.
+	self bindAliasesInSubclassesOf: aliasOwner.
+	
 	^ aMessage sentTo: aReceiver
 ]
 
@@ -117,30 +158,20 @@ ScopedSelector >> lookupAliasedMethodOnReceiverClass: aClass [
 { #category : 'accessing' }
 ScopedSelector >> lookupAliasedMethodOnReceiverClass: aClass lookupClass: lookupClass [
 
-	| theLookupClass foundMethod |
+	| allVisibleExtensions theLookupClass foundMethod |
 	"I'm looking for aliases: methods that we imported or are global.
 	Let's look up recursively starting at aClass/lookupClass"
 	theLookupClass := lookupClass ifNil: [ aClass ].
 
 
+	allVisibleExtensions := (owner definedClasses select: [ :e | e isKindOf: Extension ]) , owner importedExtensions.
 	[ theLookupClass notNil ] whileTrue: [
-			| allVisibleExtensions allVisibleExtensionsForThisClass |
-			allVisibleExtensions := (owner definedClasses select: [ :e | e isKindOf: Extension ]) , owner importedExtensions.
-
+			| allVisibleExtensionsForThisClass |
 			allVisibleExtensionsForThisClass := allVisibleExtensions select: [ :e | e extendedClass == theLookupClass ].
-			
-			"Prevent conflicts!"
-			allVisibleExtensionsForThisClass size <= 1
-				ifFalse: [ 
-					ExtensionConflict new
-						selector: self;
-						conflictingClass: theLookupClass;
-						signal ].
-			
 			allVisibleExtensionsForThisClass ifNotEmpty: [ :es |
 				^ {
 					  es anyOne extendedClass.
-					  (es anyOne lookupSelector: (es anyOne package lookupSelector: self symbol)) } ].
+					  (es anyOne extendedClass lookupSelector: (es anyOne package lookupSelector: self symbol)) } ].
 
 			theLookupClass := theLookupClass superclass ].
 		
