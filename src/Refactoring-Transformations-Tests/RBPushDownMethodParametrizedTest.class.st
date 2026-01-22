@@ -62,6 +62,19 @@ RBPushDownMethodParametrizedTest >> testPushDownMethodThatReferencesPoolDictiona
 ]
 
 { #category : 'tests' }
+RBPushDownMethodParametrizedTest >> testPushDownMethodWithAllSubclassesDefinesSelectorRemovesMethod [
+
+	| refactoring class |
+	refactoring := self createRefactoringWithArguments: {
+			               #( #isEmpty ).
+			               'RBLintRuleTestData' }.
+	class := refactoring model classNamed: #RBLintRuleTestData.
+	self assert: (class directlyDefinesMethod: #isEmpty).
+	self proceedThroughWarning: [ self executeRefactoring: refactoring ].
+	self deny: (class directlyDefinesMethod: #isEmpty)
+]
+
+{ #category : 'tests' }
 RBPushDownMethodParametrizedTest >> testPushDownMethodWithMethodThatRefersToSelector [
 
 	| refactoring |

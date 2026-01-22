@@ -75,6 +75,7 @@ RBPushDownMethodRefactoring >> breakingChangePreconditions [
 		  with: self preconditionSubclassesDontSendSuper
 		  with: self preconditionSubclassesDirectlyDefines
 		  with: self preconditionMethodsReferToSelector
+		  with: self preconditionAllSubclassesDirectlyDefines
 ]
 
 { #category : 'transforming' }
@@ -95,7 +96,7 @@ RBPushDownMethodRefactoring >> preconditionMethodsReferToSelector [
 
 	^ ReMethodsReferToSelectorCondition new
 		  class: class
-		  selectors: selectors
+		  selectors: selectors 
 ]
 
 { #category : 'preconditions' }

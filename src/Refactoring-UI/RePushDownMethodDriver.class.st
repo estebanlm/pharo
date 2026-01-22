@@ -21,7 +21,8 @@ Class {
 		'subclassesSendSuper',
 		'isAbstract',
 		'subclassDirectlyDefines',
-		'refersToSelector'
+		'refersToSelector',
+		'allSubclassesDirectlyDefines'
 	],
 	#category : 'Refactoring-UI-Drivers',
 	#package : 'Refactoring-UI',
@@ -48,6 +49,7 @@ RePushDownMethodDriver >> breakingChoices [
 	choices add: (RePushDownMethodTransformationChoice new driver: self).
 	subclassesSendSuper isFalse ifTrue: [ choices add: (ReBrowseSubclassSuperSendsChoice new driver: self) ].
 	refersToSelector isFalse ifTrue: [ choices add: (ReBrowseMethodsChoice new driver: self) ].
+	allSubclassesDirectlyDefines isFalse ifTrue: [ choices add: (ReRemoveSuperclassMethodChoice new driver: self) ].
 	^ choices
 ]
 
@@ -127,6 +129,9 @@ RePushDownMethodDriver >> labelBasedOnBreakingChanges [
 			  refersToSelector isFalse ifTrue: [
 					  refersToSelector violationMessageOn: stream.
 					  stream cr ].
+			  allSubclassesDirectlyDefines isFalse ifTrue: [
+					  allSubclassesDirectlyDefines violationMessageOn: stream.
+					  stream cr ].
 			  stream nextPutAll: 'Select a strategy' ]
 ]
 
@@ -156,6 +161,16 @@ RePushDownMethodDriver >> model: aRBNamespace scopes: refactoringScopes pushDown
 RePushDownMethodDriver >> pushDownMethods [
 
 	self openPreviewWithChanges: refactoring pushDownMethodChanges 
+]
+
+{ #category : 'removing' }
+RePushDownMethodDriver >> removeSuperclassMethod [
+
+	| selectorsToRemove |
+	selectorsToRemove := allSubclassesDirectlyDefines violators values flatCollect: [ :v | v collect: #selector ].
+	selectorsToRemove := selectorsToRemove asSet.
+	selectorsToRemove do: [ :each | refactoring generateChangesFor: (RBRemoveMethodTransformation selector: each from: class) ].
+	self openPreviewWithChanges: refactoring changes
 ]
 
 { #category : 'execution' }
@@ -188,5 +203,6 @@ RePushDownMethodDriver >> setBreakingChangesPreconditions [
 	isAbstract := refactoring preconditionIsAbstract.
 	subclassesSendSuper := refactoring preconditionSubclassesDontSendSuper.
 	subclassDirectlyDefines := refactoring preconditionSubclassesDirectlyDefines.
-	refersToSelector := refactoring preconditionMethodsReferToSelector
+	refersToSelector := refactoring preconditionMethodsReferToSelector.
+	allSubclassesDirectlyDefines := refactoring preconditionAllSubclassesDirectlyDefines 
 ]
