@@ -10,8 +10,8 @@ Part of Zinc HTTP Components.
 Class {
 	#name : 'ZnFileRetrieveContents',
 	#superclass : 'ZnUrlOperation',
-	#category : 'Zinc-Resource-Meta-Core',
-	#package : 'Zinc-Resource-Meta-Core'
+	#category : 'Zinc-HTTP',
+	#package : 'Zinc-HTTP'
 }
 
 { #category : 'accessing' }
