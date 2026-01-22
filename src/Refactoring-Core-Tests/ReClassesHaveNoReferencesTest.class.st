@@ -24,14 +24,18 @@ ReClassesHaveNoReferencesTest >> testClassHasNoReferences [
 { #category : 'tests' }
 ReClassesHaveNoReferencesTest >> testClassHasReferences [
 
-	| referenced cond |
+	| referenced cond violator |
 	referenced := self model classNamed: #MyClassARoot.
-
 	cond := ReClassesHaveNoReferencesCondition new
 		        model: self model;
 		        classes: { referenced }.
 	self deny: cond check.
-	self assert: cond nonViolators equals: { referenced }
+
+	self assert: cond violators size equals: 1.
+
+	violator := cond violators first.
+	self assert: violator selector equals: #accessingSuperclass.
+	self assert: violator methodClass name equals: #MySubAccessingSuperclassState
 ]
 
 { #category : 'tests' }
