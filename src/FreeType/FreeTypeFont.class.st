@@ -649,11 +649,6 @@ FreeTypeFont >> mode41GlyphOf: aCharacter colorValue: aColorValue mono: monoBool
 				scale: scale ]
 ]
 
-{ #category : 'measuring' }
-FreeTypeFont >> pixelSize [
-	^pixelSize ifNil:[pixelSize := super pixelSize rounded]
-]
-
 { #category : 'notifications' }
 FreeTypeFont >> pixelsPerInchChanged [
 	"the TextStyle pixels per inch setting has changed"
