@@ -15,7 +15,8 @@ Class {
 		'stageName',
 		'progressFileName',
 		'progressStream',
-		'shouldSerializeError'
+		'shouldSerializeError',
+		'isErrorBeenLogged'
 	],
 	#classVars : [
 		'CurrentStageName',
@@ -135,7 +136,7 @@ HDTestReport >> initialize [
 	progressFileName := 'progress.log'.
 	stageName := self class currentStageName.
 	nodeName := self calculateNodeName.
-	
+	isErrorBeenLogged := false
 ]
 
 { #category : 'initialization' }
@@ -175,13 +176,19 @@ HDTestReport >> progressFileName: anObject [
 ]
 
 { #category : 'running' }
-HDTestReport >> recordError: anError duringTest: aTestCase [ 
+HDTestReport >> recordError: anError duringTest: aTestCase [
+	"The #isErrorBeenLogged is here to avoid inifinit loop if we have an error in the printing"
 
-	aTestCase shouldPass ifFalse: [ ^self ].
-	suiteErrors := suiteErrors + 1.
-				
-	self writeError: anError of: aTestCase.
-	self serializeError: anError of: aTestCase.
+	aTestCase shouldPass ifFalse: [ ^ self ].
+	isErrorBeenLogged ifTrue: [ "If we get here this means we already tried to handle the error but it failed. So let's do a simpler printing"
+		^ self writeUnhadledError: anError of: aTestCase ].
+
+	isErrorBeenLogged := true.
+	[
+		suiteErrors := suiteErrors + 1.
+
+		self writeError: anError of: aTestCase.
+		self serializeError: anError of: aTestCase ] ensure: [ isErrorBeenLogged := false ]
 ]
 
 { #category : 'running' }
@@ -479,4 +486,34 @@ HDTestReport >> writeExceptionStack: anException of: aTestCase [
 HDTestReport >> writeFailure: aTestFailure of: aTestCase [
 
 	self writeException: aTestFailure of: aTestCase asNode: 'failure'
+]
+
+{ #category : 'private' }
+HDTestReport >> writeUnhadledError: anError of: aTestCase [
+	"We get here if we got an error trying to repport an error"
+
+	| encodedErrorName encodedErrorDescription |
+	stream
+		tab;
+		tab;
+		nextPutAll: '<error type="'.
+	encodedErrorName := self encode: anError class name.
+	encodedErrorDescription := self encode: (anError messageText ifNil: [ anError description ]).
+	stream
+		nextPutAll: encodedErrorName;
+		nextPutAll: '" message="';
+		nextPutAll: encodedErrorDescription;
+		nextPutAll: '">';
+		lf;
+		nextPutAll: encodedErrorName;
+		lf.
+	encodedErrorDescription ifNotEmpty: [
+			stream
+				nextPutAll: encodedErrorDescription;
+				lf ].
+	stream
+		tab;
+		tab;
+		nextPutAll: '</error>';
+		lf
 ]
