@@ -65,7 +65,6 @@ RePullUpMethodDriver >> breakingChoices [
 		choices add: (RePushUpInstanceVariableChoice new driver: self) ].
 	choices add: (RePullUpMethodTransformationChoice new driver: self).
 	notOverrides isFalse ifTrue: [ 
-		notOverrides violators.
 		choices add: (ReBrowseMethodOverridesChoice new 
 			driver: self;
 			description: 'Browse overriden method(s)')  ].
@@ -78,8 +77,7 @@ RePullUpMethodDriver >> browseOverrides [
 
 	| overrides |
 	overrides := notOverrides violators collect: [ :sel | superclass methodNamed: sel ].
-	
-	overrides do: [ :method | method browse ]
+	(application toolNamed: #messageList) browse: overrides
 ]
 
 { #category : 'actions' }
@@ -104,26 +102,15 @@ RePullUpMethodDriver >> changes [
 { #category : 'execution' }
 RePullUpMethodDriver >> configureAndRunRefactoring [
 
-	self configureRefactoring.
-
+	self configureRefactoring. 
 	"Pay attention that the applicability preconditions do  not include checking the superclass for a 
 	method with the same name because during an interaction we when to let the user the possibility to 
 	do actions to handle this specific case. This is why similarly method in direct superclass is checked 
 	but in the breaking change precondtions."
-	refactoring failedApplicabilityPreconditions ifNotEmpty: [
-		^ self alertFailedPreconditions ].
-	
+	refactoring failedApplicabilityPreconditions ifNotEmpty: [ ^ self alertFailedPreconditions ].
+
 	self setBreakingChangesPreconditions.
-	refactoring failedBreakingChangePreconditions
-		ifEmpty: [ self applyChanges ]
-		ifNotEmpty: [ 
-			| res |
-			res := self handleBreakingChanges.
-			res ifTrue: [  self applyChanges ] ]
-		
-	"applying the changes blindly after handleBreakingChanges is not 
-	good because the user may have press cancel. 
-	and in such a case we should cancel the complete flow."
+	refactoring failedBreakingChangePreconditions ifEmpty: [ self applyChanges ] ifNotEmpty: [ self handleBreakingChanges ]
 ]
 
 { #category : 'execution' }
