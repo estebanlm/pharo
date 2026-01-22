@@ -162,11 +162,10 @@ ${VM} "${MC_BOOTSTRAP_IMAGE_NAME}.image" save ${METACELLO_IMAGE_NAME}
 echo "Loading packages: $(cat hermesMetacelloPackages.txt)"
 ${VM} "${METACELLO_IMAGE_NAME}.image" loadHermes $(cat hermesMetacelloPackages.txt) --save --no-fail-on-undeclared
 ${VM} "${METACELLO_IMAGE_NAME}.image" st ${BOOTSTRAP_REPOSITORY}/bootstrap/scripts/4-build-scripts/03-bootstrapMonticello.st --save --quit
-${VM} "${METACELLO_IMAGE_NAME}.image" perform --save PharoBootstrapInitialization enableChangeLog # From now on the change log will be registered.
 git clone https://github.com/pharo-vcs/tonel.git -b "Pharo${PHARO_MAJOR}" "${BOOTSTRAP_CACHE}/tonel"
 ${VM} "${METACELLO_IMAGE_NAME}.image" metacello install --save --signalErrorOnWarning "filetree://${BOOTSTRAP_CACHE}/tonel" Tonel --groups core
 #We need the next line because we will reload Tonel from github and this could cause some trouble later
-${VM} "${METACELLO_IMAGE_NAME}.image" "${IMAGE_FLAGS}" eval --save "MetacelloProjectRegistration resetRegistry"
+${VM} "${METACELLO_IMAGE_NAME}.image" "${IMAGE_FLAGS}" eval --save "MetacelloProjectRegistry resetRegistry"
 zip "${METACELLO_IMAGE_NAME}.zip" ${METACELLO_IMAGE_NAME}.*
 
 echo $(date -u) "[Pharo] Reloading rest of packages"
@@ -202,9 +201,6 @@ echo "${PHARO_SHORT_VERSION}" > pharo.version
 
 # clean bak sources files
 rm -f *.bak
-
-# delete Pharo60 sources files
-rm PharoV60.sources*
 
 PHARO_SOURCES_PREFIX=$(echo "${PHARO_NAME_PREFIX}" | cut -d'-' -f 1 | cut -d'.' -f 1-2)
 zip "${PHARO_IMAGE_NAME}.zip" ${PHARO_IMAGE_NAME}.* ${PHARO_SOURCES_PREFIX}*.sources pharo.version

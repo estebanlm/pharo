@@ -317,16 +317,12 @@ DebugSession >> recompileMethodTo: text inContext: aContext notifying: aNotifyer
 	| newMethod recompilationContext canRewind |
 	canRewind := (self isContextPostMortem: self interruptedContext) not.
 	(recompilationContext := (self createModelForContext: aContext) locateClosureHomeWithContent: text) ifNil: [ ^ false ].
-	canRewind
-		ifFalse: [ (self confirm: 'Can not rewind post mortem context for new method.\ Accept anyway ?' withCRs) or: [ ^ false ] ].
+	canRewind ifFalse: [ (ConfirmationRequest signal: 'Can not rewind post mortem context for new method.\ Accept anyway ?' withCRs) or: [ ^ false ] ].
 
 	newMethod := (self createModelForContext: recompilationContext) recompileCurrentMethodTo: text notifying: aNotifyer.
 	newMethod ifNil: [ ^ false ].
 
-	(self isContextPostMortem: self interruptedContext)
-		ifFalse: [ self rewindContextToMethod: newMethod fromContext: recompilationContext ].
-
-	"Use an alarm instead of triggering the notification directly, as the content of
+	(self isContextPostMortem: self interruptedContext) ifFalse: [ self rewindContextToMethod: newMethod fromContext: recompilationContext ]. "Use an alarm instead of triggering the notification directly, as the content of
 	the editor can still be unaccepted. "
 	self installAlarm: #contextChanged.
 	^ true

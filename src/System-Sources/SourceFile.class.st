@@ -2,10 +2,10 @@ Class {
 	#name : 'SourceFile',
 	#superclass : 'Object',
 	#instVars : [
-		'path',
 		'stream',
 		'potentialLocations',
-		'formatVersionClass'
+		'formatVersionClass',
+		'fileName'
 	],
 	#category : 'System-Sources-Sources',
 	#package : 'System-Sources',
@@ -23,12 +23,12 @@ SourceFile class >> createFileNamed: aFileReference version: aVersion [
 ]
 
 { #category : 'instance creation' }
-SourceFile class >> lookupFileNamed: aPath potentialLocations: locations [
+SourceFile class >> lookupFileNamed: aString potentialLocations: locations [
 
 	^ self new
-		path: aPath;
-		potentialLocations: locations;
-		yourself
+		  fileName: aString;
+		  potentialLocations: locations;
+		  yourself
 ]
 
 { #category : 'testing' }
@@ -120,6 +120,18 @@ SourceFile >> exporterClass [
 ]
 
 { #category : 'accessing' }
+SourceFile >> fileName [
+
+	^ fileName
+]
+
+{ #category : 'accessing' }
+SourceFile >> fileName: aString [
+
+	fileName := aString
+]
+
+{ #category : 'accessing' }
 SourceFile >> flush [
 
 	(stream isNil or: [ stream isReadOnly ])
@@ -148,7 +160,7 @@ SourceFile >> formatVersion [
 { #category : 'accessing' }
 SourceFile >> fullName [
 
-	^ path asString
+	^ self fileName asString
 ]
 
 { #category : 'accessing' }
@@ -194,14 +206,13 @@ SourceFile >> isReadOnly [
 { #category : 'streaming' }
 SourceFile >> newSourceStreamReadOnly: readOnly [
 
-	| basename newStream |
+	| newStream |
 	
-	basename := path asFileReference basename.
 	readOnly ifFalse: [
 			potentialLocations do: [ :each |
 					[
 						newStream := SourceFileCharacterReadWriteStream
-							             on: (SourceFileBufferedReadWriteStream on: (each asFileReference / basename) unbufferedBinaryWriteStream)
+							             on: (SourceFileBufferedReadWriteStream on: (each asFileReference / self fileName) unbufferedBinaryWriteStream)
 							             encoding: 'utf8'.
 						^ newStream ]
 						on: Error
@@ -211,7 +222,7 @@ SourceFile >> newSourceStreamReadOnly: readOnly [
 	We need to create the encoding and buffering streams manually because we need a read write stream."
 	potentialLocations do: [ :each |
 			  [
-				  newStream := ZnCharacterReadStream on: (each asFileReference / basename) binaryReadStream encoding: 'utf8'.
+				  newStream := ZnCharacterReadStream on: (each asFileReference / self fileName) binaryReadStream encoding: 'utf8'.
 				  ^ newStream ]
 				  on: Error
 				  do: [ ] ].
@@ -264,16 +275,6 @@ SourceFile >> nextPutAll: aString [
 ]
 
 { #category : 'accessing' }
-SourceFile >> path [
-	^ path
-]
-
-{ #category : 'accessing' }
-SourceFile >> path: aPath [
-	path := aPath
-]
-
-{ #category : 'accessing' }
 SourceFile >> peek [
 
 	^ stream peek
@@ -316,9 +317,9 @@ SourceFile >> printOn: aStream [
 { #category : 'accessing' }
 SourceFile >> readOnlyCopy [
 
-	^ (self species lookupFileNamed: path potentialLocations: potentialLocations)
-		tryOpenReadOnly: true;
-		yourself
+	^ (self species lookupFileNamed: self fileName potentialLocations: potentialLocations)
+		  tryOpenReadOnly: true;
+		  yourself
 ]
 
 { #category : 'initialization' }

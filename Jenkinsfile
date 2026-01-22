@@ -27,29 +27,29 @@ def shell(params){
     else sh(params)
 }
 
-def runTests(architecture, prefix=''){
+def runTests(architecture){
   cleanWs()
   dir(env.STAGE_NAME) {
     try {
         unstash "bootstrap${architecture}"
-        shell "bash -c 'bootstrap/scripts/run${prefix}Tests.sh ${architecture} ${env.STAGE_NAME}${prefix}'"
-        junit allowEmptyResults: true, testResults: "${env.STAGE_NAME}${prefix}*.xml"
+        shell "bash -c 'bootstrap/scripts/runTests.sh ${architecture} ${env.STAGE_NAME}'"
+        junit allowEmptyResults: true, testResults: "${env.STAGE_NAME}*.xml"
     } finally {
-        archiveArtifacts allowEmptyArchive: true, artifacts: "${env.STAGE_NAME}${prefix}*.xml", fingerprint: true
+        archiveArtifacts allowEmptyArchive: true, artifacts: "${env.STAGE_NAME}*.xml", fingerprint: true
         archiveArtifacts allowEmptyArchive: true, artifacts: "*.fuel", fingerprint: true
         // I am archiving the logs to check for crashes and errors.
         if(fileExists('PharoDebug.log')){
-            shell "mv PharoDebug.log PharoDebug-${env.STAGE_NAME}${prefix}.log"
-            archiveArtifacts allowEmptyArchive: true, artifacts: "PharoDebug-${env.STAGE_NAME}${prefix}.log", fingerprint: true
+            shell "mv PharoDebug.log PharoDebug-${env.STAGE_NAME}.log"
+            archiveArtifacts allowEmptyArchive: true, artifacts: "PharoDebug-${env.STAGE_NAME}.log", fingerprint: true
         }
         if(fileExists('crash.dmp')){
-            shell "mv crash.dmp crash-${env.STAGE_NAME}${prefix}.dmp"
-            archiveArtifacts allowEmptyArchive: true, artifacts: "crash-${env.STAGE_NAME}${prefix}.dmp", fingerprint: true
+            shell "mv crash.dmp crash-${env.STAGE_NAME}.dmp"
+            archiveArtifacts allowEmptyArchive: true, artifacts: "crash-${env.STAGE_NAME}.dmp", fingerprint: true
         }
         if(fileExists('progress.log')){
-            shell "mv progress.log progress-${env.STAGE_NAME}${prefix}.log"
-            shell "cat progress-${env.STAGE_NAME}${prefix}.log"
-            archiveArtifacts allowEmptyArchive: true, artifacts: "progress-${env.STAGE_NAME}${prefix}.log", fingerprint: true
+            shell "mv progress.log progress-${env.STAGE_NAME}.log"
+            shell "cat progress-${env.STAGE_NAME}.log"
+            archiveArtifacts allowEmptyArchive: true, artifacts: "progress-${env.STAGE_NAME}.log", fingerprint: true
         }
     }
   }
@@ -260,7 +260,6 @@ try{
             stage("Tests-${platform}-${architecture}") {
               timeout(35) {
                 runTests(architecture)
-                runTests(architecture, "Kernel")
               }
             }
           }

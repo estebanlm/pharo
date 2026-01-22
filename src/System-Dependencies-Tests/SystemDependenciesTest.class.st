@@ -293,15 +293,6 @@ SystemDependenciesTest >> testExternalMetacelloCoreDependencies [
 ]
 
 { #category : 'tests' }
-SystemDependenciesTest >> testExternalMinimalImageWithSUnitDependencies [
-
-	| dependencies |
-	dependencies := self externalDependendiesOf: self _05traitsLayerPackages , BaselineOfPharoBootstrap sUnitPackageNames.
-
-	self assertEmpty: dependencies
-]
-
-{ #category : 'tests' }
 SystemDependenciesTest >> testExternalMonticelloCoreDependencies [
 
 	self assertEmpty: (self externalDependendiesOf: self _06monticelloCoreLayerPackages)

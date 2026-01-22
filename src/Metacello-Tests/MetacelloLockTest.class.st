@@ -9,7 +9,7 @@ Class {
 { #category : 'private' }
 MetacelloLockTest >> performTest [
 
-	MetacelloProjectRegistration useRegistry: MetacelloProjectRegistry new during: [ super performTest ]
+	MetacelloProjectRegistry useRegistry: MetacelloProjectRegistry new during: [ super performTest ]
 ]
 
 { #category : 'accessing' }
@@ -21,7 +21,7 @@ MetacelloLockTest >> project [
 { #category : 'tests' }
 MetacelloLockTest >> testLoadLockedWillNotIncludeLockedPackages [
 	"Using record as a way to determine which packages will be loaded"
-
+	| packages |
 	Metacello new
 		baseline: 'TestToLock2';
 		repository: 'http://repo.com';
@@ -30,7 +30,9 @@ MetacelloLockTest >> testLoadLockedWillNotIncludeLockedPackages [
 		baseline: 'TestToLock2';
 		repository: 'http://repo.com';
 		lock.
-	self assertCollection: ((self project version recordWithEngine: MetacelloScriptEngine new) packages collect: #name) hasSameElements: #( 'Package1' )
+		
+	packages := (self project version recordWithEngine: MetacelloScriptEngine new)  loadDirectives collect: [ :directive | directive spec ].
+	self assertCollection: (packages collect: #name) hasSameElements: #( 'Package1' )
 ]
 
 { #category : 'tests' }
@@ -41,5 +43,5 @@ MetacelloLockTest >> testRegisterProject [
 		repository: 'http://repo.com';
 		register.
 
-	self assertCollection: (MetacelloProjectRegistration registry projectSpecs collect: #name) includesAny: #( 'TestToLock2' )
+	self assertCollection: (MetacelloProjectRegistry projects collect: #name) includesAny: #( 'TestToLock2' )
 ]

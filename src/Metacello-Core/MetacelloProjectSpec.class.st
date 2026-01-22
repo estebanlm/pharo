@@ -56,7 +56,8 @@ MetacelloProjectSpec >> asProjectRegistration [
 
 { #category : 'accessing' }
 MetacelloProjectSpec >> baseName [
-	^ MetacelloScriptEngine baseNameOf: self className
+
+	^ self className withoutPrefix: 'BaselineOf'
 ]
 
 { #category : 'scripting' }
@@ -101,7 +102,7 @@ MetacelloProjectSpec >> constructClassName [
 { #category : 'accessing' }
 MetacelloProjectSpec >> currentlyLoadedClassesInVersion [
 
-	self version ifNotNil: [ :vrsn | ^ vrsn spec currentlyLoadedClassesInVersion ].
+	self version ifNotNil: [ :vrsn | ^ vrsn currentlyLoadedClassesInVersion ].
 	^ #(  )
 ]
 
@@ -145,9 +146,7 @@ MetacelloProjectSpec >> hasVersion [
 { #category : 'scripting' }
 MetacelloProjectSpec >> isLocked [
 
-  ^ self registration 
-	ifNotNil: [ :aRegistration | aRegistration locked ]
-	ifNil: [ false ]
+	^ MetacelloProjectRegistry registrationNamed: self className ifPresent: [ :existing | existing locked ] ifAbsent: [ false ]
 ]
 
 { #category : 'printing' }
@@ -160,7 +159,7 @@ MetacelloProjectSpec >> label [
 MetacelloProjectSpec >> loadListForVersion: vrsn [
 
 	^ (self loads isNil or: [ self loads isEmpty ])
-		  ifTrue: [ vrsn spec defaultPackageNames ]
+		  ifTrue: [ vrsn defaultPackageNames ]
 		  ifFalse: [ self loads ]
 ]
 
@@ -329,12 +328,6 @@ MetacelloProjectSpec >> projectReference [
 	^ self
 ]
 
-{ #category : 'scripting' }
-MetacelloProjectSpec >> registration [
-
-	^ MetacelloProjectRegistration registrationForProjectSpec: self ifPresent: [ :existing | existing ]
-]
-
 { #category : 'accessing' }
 MetacelloProjectSpec >> repositories [
 
@@ -413,7 +406,7 @@ MetacelloProjectSpec >> strict: aBoolean [
 { #category : 'scripting' }
 MetacelloProjectSpec >> unregisterProject [
 
-	^ MetacelloProjectRegistration registrationForProjectSpec: self ifPresent: [ :existing | existing unregisterProject ]
+	^ MetacelloProjectRegistry registrationNamed: self className ifPresent: [ :existing | existing unregisterProject ]
 ]
 
 { #category : 'querying' }

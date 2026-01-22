@@ -47,12 +47,6 @@ Class {
 	#tag : 'Base'
 }
 
-{ #category : 'initialization' }
-PharoBootstrapInitialization class >> enableChangeLog [
-
-	ChangesLog registerInterestToSystemAnnouncement
-]
-
 { #category : 'fixing' }
 PharoBootstrapInitialization class >> fixExtensionMethods [
 
@@ -153,7 +147,6 @@ PharoBootstrapInitialization class >> initializeCommandLineHandlerAndErrorHandli
 	PackageConflictError initialize.
 
 	'Initializing sources' traceCr.
-	Smalltalk sourceFileVersionString: 'PharoV60'.
 	(Smalltalk class classVariableNamed: 'LastImagePath') value: Smalltalk imagePath. "set the default value"
 	SourceFileArray initialize.
 
