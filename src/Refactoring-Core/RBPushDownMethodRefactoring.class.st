@@ -86,6 +86,14 @@ RBPushDownMethodRefactoring >> classes: aCollection [
 ]
 
 { #category : 'preconditions' }
+RBPushDownMethodRefactoring >> preconditionAllSubclassesDirectlyDefines [
+
+	^ ReAllSubclassesDirectlyDefinesCondition new
+		  class: class
+		  selectors: selectors 
+]
+
+{ #category : 'preconditions' }
 RBPushDownMethodRefactoring >> preconditionIsAbstract [
 
 	^ ReClassesAreAbstractCondition new classes: { class }
