@@ -58,7 +58,10 @@ PharoSourcesCondenser >> newSourceNamed: aString [
 	originalSourcesFile := self originalFile resolve asFileReference.
 	PharoFilesOpener sourceFileVersionString: aString.
 	newSourcesFile := self originalFile.
-
+	
+	"If the condensed file is the new file, don't do anything."
+	originalSourcesFile = newSourcesFile ifTrue: [ ^ self ].
+	
 	originalSourcesFile copyTo: newSourcesFile.
 	"Use the new sources file"
 	Smalltalk openSourceFiles
