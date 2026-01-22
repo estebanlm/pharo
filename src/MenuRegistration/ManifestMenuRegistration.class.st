@@ -8,3 +8,10 @@ Class {
 	#package : 'MenuRegistration',
 	#tag : 'Manifest'
 }
+
+{ #category : 'meta-data - dependency analyser' }
+ManifestMenuRegistration class >> manuallyResolvedDependencies [
+
+	<ignoreForCoverage>
+	^ #(#'System-Localization')
+]

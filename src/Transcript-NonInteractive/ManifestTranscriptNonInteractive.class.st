@@ -13,5 +13,5 @@ Class {
 ManifestTranscriptNonInteractive class >> manuallyResolvedDependencies [
 
 	<ignoreForCoverage>
-	^ #(#'Kernel-CodeModel' #'System-Support')
+	^ #(#'Kernel-CodeModel' #'Transcript-NonInteractive' #'System-Support')
 ]
