@@ -796,6 +796,21 @@ Character >> isTitlecaseLetter [
 ]
 
 { #category : 'testing' }
+Character >> isTokenish [
+	"Answer whether the receiver is a valid token-character -- letter, digit, underscore, or colon."
+
+	"$' isTokenish >>> false"
+
+	"$: isTokenish >>> true"
+
+	"${ isTokenish >>> false"
+
+	"Character space isTokenish >>> false"
+
+	^ self isLetter or: [ self isDigit or: [ self = $_ or: [ self = $: ] ] ]
+]
+
+{ #category : 'testing' }
 Character >> isUppercase [
 
 	^ self characterSet isUppercase: self
@@ -888,10 +903,18 @@ Character >> to: other [
 { #category : 'testing' }
 Character >> tokenish [
 	"Answer whether the receiver is a valid token-character -- letter, digit, underscore, or colon."
+
 	"$' tokenish >>> false"
+
 	"$: tokenish >>> true"
+
 	"${ tokenish >>> false"
+
 	"Character space tokenish >>> false"
+
+	self
+		deprecated: 'Use isTokenish instead.'
+		transformWith: '`@rcv tokenish' -> '`@rcv isTokenish'.
 
 	^ self isLetter or: [ self isDigit or: [ self = $_ or: [ self = $: ] ] ]
 ]
