@@ -211,6 +211,22 @@ ReleaseTest >> testExplicitRequirementMethodsShouldBeImplementedInTheirUsers [
 	self assertValidLintRule: ReExplicitRequirementMethodsRule new
 ]
 
+{ #category : 'tests - variables' }
+ReleaseTest >> testInitializeSlotsAreUseful [
+	"When a class has a slot that needs initialization, an #initializeSlots: method call is added to the initialize method. But sometimes we remove the slots without removing the initialization. This test checkes it"
+
+	| senders violators |
+	senders := #initializeSlots: senders select: [ :method | method selector = #initialize ]. "A sender is wrong if the class has no slots to initialize and its subclasses don't have such slots."
+
+	violators := senders reject: [ :sender |
+			             | class |
+			             class := sender methodClass.
+			             (class allSlots anySatisfy: [ :slot | slot wantsInitialization ]) or: [
+				             class hasSubclasses and: [ class subclasses allSatisfy: [ :subclass | subclass slots anySatisfy: [ :slot | slot wantsInitialization ] ] ] ] ].
+
+	self assertEmpty: violators
+]
+
 { #category : 'tests' }
 ReleaseTest >> testInstanceSideMethodsWithNilKeyInLastLiteral [
 	| instanceSideMethodsWithNilKeyInLastLiteral |
