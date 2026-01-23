@@ -19,7 +19,10 @@ Class {
 		'class',
 		'methodSelectionPresenterClass',
 		'subclassesSendSuper',
-		'isAbstract'
+		'isAbstract',
+		'subclassDirectlyDefines',
+		'refersToSelector',
+		'allSubclassesDirectlyDefines'
 	],
 	#category : 'Refactoring-UI-Drivers',
 	#package : 'Refactoring-UI',
@@ -44,9 +47,18 @@ RePushDownMethodDriver >> breakingChoices [
 	| choices |
 	choices := OrderedCollection new.
 	choices add: (RePushDownMethodTransformationChoice new driver: self).
-	subclassesSendSuper isFalse ifTrue: [
-		choices add: (ReBrowseSubclassSuperSendsChoice new driver: self) ].
-	^ choices 
+	subclassesSendSuper isFalse ifTrue: [ choices add: (ReBrowseSubclassSuperSendsChoice new driver: self) ].
+	refersToSelector isFalse ifTrue: [ choices add: (ReBrowseMethodsChoice new driver: self) ].
+	allSubclassesDirectlyDefines isFalse ifTrue: [ choices add: (ReRemoveSuperclassMethodChoice new driver: self) ].
+	^ choices
+]
+
+{ #category : 'actions' }
+RePushDownMethodDriver >> browseMethods [
+
+	| violators |
+	violators := refersToSelector violators.
+	(application toolNamed: #messageList) browse: (violators flatCollect: [ :v | v collect: #compiledMethod ])
 ]
 
 { #category : 'actions' }
@@ -70,13 +82,8 @@ RePushDownMethodDriver >> changes [
 RePushDownMethodDriver >> configureAndRunRefactoring [
 
 	self configureRefactoring.
-
-	refactoring failedApplicabilityPreconditions ifNotEmpty: [
-		^ self inform: 'The shared variable does not exist' ].
 	self setBreakingChangesPreconditions.
-	refactoring failedBreakingChangePreconditions
-		ifEmpty: [ self applyChanges ]
-		ifNotEmpty: [ self handleBreakingChanges ]
+	refactoring failedBreakingChangePreconditions ifEmpty: [ self applyChanges ] ifNotEmpty: [ self handleBreakingChanges ]
 ]
 
 { #category : 'configuration' }
@@ -110,13 +117,22 @@ RePushDownMethodDriver >> instantiateRefactoring [
 RePushDownMethodDriver >> labelBasedOnBreakingChanges [
 
 	^ String streamContents: [ :stream |
-		  isAbstract isFalse ifTrue: [
-			  isAbstract violationMessageOn: stream.
-			  stream cr ].
-		  subclassesSendSuper isFalse ifTrue: [
-			  subclassesSendSuper violationMessageOn: stream.
-			  stream cr ].
-		  stream nextPutAll: 'Select a strategy' ]
+			  isAbstract isFalse ifTrue: [
+					  isAbstract violationMessageOn: stream.
+					  stream cr ].
+			  subclassesSendSuper isFalse ifTrue: [
+					  subclassesSendSuper violationMessageOn: stream.
+					  stream cr ].
+			  subclassDirectlyDefines isFalse ifTrue: [
+					  subclassDirectlyDefines violationMessageOn: stream.
+					  stream cr ].
+			  refersToSelector isFalse ifTrue: [
+					  refersToSelector violationMessageOn: stream.
+					  stream cr ].
+			  allSubclassesDirectlyDefines isFalse ifTrue: [
+					  allSubclassesDirectlyDefines violationMessageOn: stream.
+					  stream cr ].
+			  stream nextPutAll: 'Select a strategy' ]
 ]
 
 { #category : 'for mocks' }
@@ -147,6 +163,16 @@ RePushDownMethodDriver >> pushDownMethods [
 	self openPreviewWithChanges: refactoring pushDownMethodChanges 
 ]
 
+{ #category : 'removing' }
+RePushDownMethodDriver >> removeSuperclassMethod [
+
+	| selectorsToRemove |
+	selectorsToRemove := allSubclassesDirectlyDefines violators values flatCollect: [ :v | v collect: #selector ].
+	selectorsToRemove := selectorsToRemove asSet.
+	selectorsToRemove do: [ :each | refactoring generateChangesFor: (RBRemoveMethodTransformation selector: each from: class) ].
+	self openPreviewWithChanges: refactoring changes
+]
+
 { #category : 'execution' }
 RePushDownMethodDriver >> runRefactoring [
 
@@ -172,8 +198,11 @@ RePushDownMethodDriver >> selectMethods [
 ]
 
 { #category : 'initialization' }
-RePushDownMethodDriver >> setBreakingChangesPreconditions [ 
+RePushDownMethodDriver >> setBreakingChangesPreconditions [
 
 	isAbstract := refactoring preconditionIsAbstract.
-	subclassesSendSuper := refactoring preconditionSubclassesDontSendSuper
+	subclassesSendSuper := refactoring preconditionSubclassesDontSendSuper.
+	subclassDirectlyDefines := refactoring preconditionSubclassesDirectlyDefines.
+	refersToSelector := refactoring preconditionMethodsReferToSelector.
+	allSubclassesDirectlyDefines := refactoring preconditionAllSubclassesDirectlyDefines 
 ]

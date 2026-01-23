@@ -70,7 +70,7 @@ ClassDescription >> addProtocol: aProtocol [
 
 	| oldProtocols protocol protocolName |
 	protocolName := aProtocol isString ifTrue: [ aProtocol trimBoth ] ifFalse: [ aProtocol name ].
-
+	protocolName ifEmpty: [ protocolName := Protocol unclassified ].
 	(self hasProtocol: protocolName) ifTrue: [ ^ self protocolNamed: protocolName ].
 
 	protocol := Protocol named: protocolName class: self.
