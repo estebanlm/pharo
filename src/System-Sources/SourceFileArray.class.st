@@ -268,10 +268,7 @@ SourceFileArray >> logChange: aStringOrText [
 { #category : 'event-listening' }
 SourceFileArray >> logClassAdded: announcement [
 
-	self newWriter
-		successBlock: [ :sourcePointer | "Ignore" ];
-		failBlock: [ "Ignore" ];
-		writeClassDefinition: announcement classAdded definitionString
+	self newWriter writeClassDefinition: announcement classAdded definitionString
 ]
 
 { #category : 'event-listening' }
@@ -568,11 +565,9 @@ SourceFileArray >> writeChangesDuring: aBlock onSuccess: successBlock onFail: fa
 SourceFileArray >> writeComment: aString stamp: aStamp of: aClass [
 
 	self newWriter
-		metadata: ' ';
 		timestamp: aStamp;
 		prior: (aClass commentSourcePointer ifNil: [ 0 ]);
 		successBlock: [ :newSourcePointer | aClass commentSourcePointer: newSourcePointer ];
-		failBlock: [ "ignore" ];
 		writeComment: aString ofClass: aClass
 ]
 
