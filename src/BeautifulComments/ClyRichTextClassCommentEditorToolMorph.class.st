@@ -97,7 +97,7 @@ ClyRichTextClassCommentEditorToolMorph >> printContext [
 { #category : 'event handling' }
 ClyRichTextClassCommentEditorToolMorph >> reactToRubTextAreaDoubleClick: anEvent [
 
-	self toggleMode
+	self switchToEditMode
 ]
 
 { #category : 'initialization' }
