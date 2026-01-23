@@ -36,10 +36,8 @@ SycPushDownMethodCommand >> description [
 { #category : 'execution' }
 SycPushDownMethodCommand >> executeRefactorings [
 
-	(RePushDownMethodDriver
-		model: model
-		scopes: refactoringScopes
-		pushDownMethods: methods) runRefactoring
+	^ ((RePushDownMethodDriver newApplication: self application) model: model scopes: refactoringScopes pushDownMethods: methods)
+		  runRefactoring
 ]
 
 { #category : 'execution' }
