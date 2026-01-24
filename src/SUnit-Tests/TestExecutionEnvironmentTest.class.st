@@ -293,6 +293,15 @@ TestExecutionEnvironmentTest >> testIsMainTestProcessFailed [
 ]
 
 { #category : 'tests' }
+TestExecutionEnvironmentTest >> testMaxTimeForTestCannotBeTooShort [
+	"The maximum time limit of a test cannot be inferior to 0.5second because a watchdog process of the test is running in testing environment with high timing priority which requires a sleep time to time to allow other processed to run. If the watch dog does not have the time to sleep, the image will crash."
+
+	self should: [ executionEnvironment maxTimeForTest: 0 second ] raise: Error.
+	self should: [ executionEnvironment maxTimeForTest: -1 second ] raise: Error.
+	self shouldnt: [ executionEnvironment maxTimeForTest: 1 second ] raise: Error
+]
+
+{ #category : 'tests' }
 TestExecutionEnvironmentTest >> testNotifyOnlyEnabledTestServices [
 	| testService2 testService3 |
 	testService disable.
