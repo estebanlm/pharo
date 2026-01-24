@@ -1053,12 +1053,10 @@ SmalltalkImage >> openLog [
 { #category : 'sources, change log' }
 SmalltalkImage >> openSourceFiles [
 
+	self imagePath = LastImagePath ifFalse: [ "Reset the author full name to blank when the image gets moved" LastImagePath := self imagePath ].
 
-	self imagePath = LastImagePath ifFalse: [ "Reset the author full name to blank when the image gets moved"
-		LastImagePath := self imagePath ].
-
-	SourceFiles class ensureSourceFilesCreated.
-	SourceFiles ensureOpen
+	SourceFileArray ensureSourceFilesCreated.
+	SourceFileArray default ensureOpen
 ]
 
 { #category : 'system attribute' }
