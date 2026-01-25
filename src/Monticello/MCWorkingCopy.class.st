@@ -81,9 +81,7 @@ MCWorkingCopy class >> ensureForPackageNamed: aPackageName [
 { #category : 'accessing' }
 MCWorkingCopy class >> ensureForPackageNamed: aPackageName packageOrganizer: aPackageOrganizer [
 
-	^ (self hasPackageNamed: aPackageName)
-		  ifTrue: [ self forPackageNamed: aPackageName ]
-		  ifFalse: [ self registerPackage: (MCPackage named: aPackageName) packageOrganizer: aPackageOrganizer ]
+	^ self forPackageNamed: aPackageName ifNone: [ self registerPackage: (MCPackage named: aPackageName) packageOrganizer: aPackageOrganizer ]
 ]
 
 { #category : 'accessing' }
