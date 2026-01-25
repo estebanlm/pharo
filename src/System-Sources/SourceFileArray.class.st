@@ -38,13 +38,6 @@ SourceFileArray class >> default: anInstance [
 	Default := anInstance
 ]
 
-{ #category : 'system startup' }
-SourceFileArray class >> ensureSourceFilesCreated [
-	
-	PharoFilesOpener default locateSources ensureSourceFileCreated.
-	PharoFilesOpener default locateChanges ensureSourceFileCreated.
-]
-
 { #category : 'class initialization' }
 SourceFileArray class >> initialize [
 
@@ -56,6 +49,15 @@ SourceFileArray class >> initialize [
 	"This next line is to add a deprecated global variable. The deprecation happened in Pharo 14 development. We can remove it completly in the future."
 	self class environment at: #SourceFiles put: self default.
 	(self class environment bindingOf: #SourceFiles) isDeprecated: true
+]
+
+{ #category : 'initialization' }
+SourceFileArray class >> reset [
+
+	<script>
+	self default
+		close;
+		openSourceFiles
 ]
 
 { #category : 'system startup' }
@@ -168,6 +170,13 @@ SourceFileArray >> ensureOpen [
 	files := Array with: aSourcesFile with: aChangesFile.
 
 	readOnlyQueue := SharedQueue new
+]
+
+{ #category : 'system startup' }
+SourceFileArray >> ensureSourceFilesCreated [
+	
+	PharoFilesOpener default locateSources ensureSourceFileCreated.
+	PharoFilesOpener default locateChanges ensureSourceFileCreated.
 ]
 
 { #category : 'accessing' }
@@ -295,6 +304,14 @@ SourceFileArray >> newWriter [
 	^ SourceFileWriter new
 		  sourceFile: self;
 		  yourself
+]
+
+{ #category : 'sources, change log' }
+SourceFileArray >> openSourceFiles [
+
+	self
+		ensureSourceFilesCreated;
+		ensureOpen
 ]
 
 { #category : 'public - string reading' }

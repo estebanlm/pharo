@@ -201,20 +201,13 @@ SmalltalkImage >> backupImageInFileNamed: aFileReference [
 
 	[
 		"change to the new image name "
-		self
-			changeImagePathTo: imageFile fullName;
-			closeSourceFiles;
-			openSourceFiles.  "so SNAPSHOT appears in new changes file"
-
+		self changeImagePathTo: imageFile fullName.
 		snapshotReturn := self snapshot: true andQuit: false.
 	] ensure: [
 		snapshotReturn isImageStarting ifFalse: [
 			"unlike #saveImageInFileNamed: we do NOT continue in the new image"
 			"switch back to the old image"
-			self
-				changeImagePathTo: previousFullImageName;
-				closeSourceFiles;
-				openSourceFiles ]].
+			self changeImagePathTo: previousFullImageName ] ].
 
 	^ snapshotReturn
 ]
@@ -260,7 +253,8 @@ SmalltalkImage >> bytesLeft: aBool [
 SmalltalkImage >> changeImagePathTo: aString [
 
 	self imagePath: aString.
-	LastImagePath := self imagePath
+	LastImagePath := self imagePath.
+	SourceFileArray reset
 ]
 
 { #category : 'image, changes name' }
@@ -1055,8 +1049,7 @@ SmalltalkImage >> openSourceFiles [
 
 	self imagePath = LastImagePath ifFalse: [ "Reset the author full name to blank when the image gets moved" LastImagePath := self imagePath ].
 
-	SourceFileArray ensureSourceFilesCreated.
-	SourceFileArray default ensureOpen
+	SourceFileArray default openSourceFiles
 ]
 
 { #category : 'system attribute' }
@@ -1303,15 +1296,12 @@ SmalltalkImage >> saveImageInFileNamed: aFile [
 	Note: This method does not save the .changes file, use #saveAs:"
 
 	| imageFile |
-
-	imageFile := aFile  asFileReference.
+	imageFile := aFile asFileReference.
 	imageFile parent ensureCreateDirectory.
 
-	^self
-		changeImagePathTo: imageFile fullName;
-		closeSourceFiles;
-		openSourceFiles;  "so SNAPSHOT appears in new changes file"
-		snapshot: true andQuit: false
+	^ self
+		  changeImagePathTo: imageFile fullName;
+		  snapshot: true andQuit: false
 ]
 
 { #category : 'saving' }
