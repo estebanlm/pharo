@@ -71,6 +71,12 @@ SmalltalkImage class >> new [
 	self error: 'Use current'
 ]
 
+{ #category : 'system startup' }
+SmalltalkImage class >> startUp: imageStarting [
+
+	imageStarting ifTrue: [ self current updateLastImagePath ]
+]
+
 { #category : 'image' }
 SmalltalkImage class >> wordSize [
 	^ Smalltalk vm wordSize
@@ -363,7 +369,7 @@ SmalltalkImage >> closeLog: logger [
 SmalltalkImage >> closeSourceFiles [
 	"Shut down the source files if appropriate."
 
-	SourceFileArray default close
+	SourceFileArray default closeSourceFiles
 ]
 
 { #category : 'system attribute' }
@@ -1044,14 +1050,6 @@ SmalltalkImage >> openLog [
 		encoding: 'utf8')] on: FileException do: [ NullStream new ]
 ]
 
-{ #category : 'sources, change log' }
-SmalltalkImage >> openSourceFiles [
-
-	self imagePath = LastImagePath ifFalse: [ "Reset the author full name to blank when the image gets moved" LastImagePath := self imagePath ].
-
-	SourceFileArray default openSourceFiles
-]
-
 { #category : 'system attribute' }
 SmalltalkImage >> optionAt: i [
 	"Answer the i-th option of the command line, or nil if not so many options."
@@ -1434,6 +1432,12 @@ SmalltalkImage >> unregisterExternalObject: anObject [
 	"Unregister the given object in the external objects array. Do nothing if it isn't registered."
 
 	ExternalSemaphoreTable unregisterExternalObject: anObject
+]
+
+{ #category : 'image' }
+SmalltalkImage >> updateLastImagePath [
+
+	LastImagePath := self imagePath
 ]
 
 { #category : 'accessing' }

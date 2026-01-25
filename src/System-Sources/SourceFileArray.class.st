@@ -56,25 +56,20 @@ SourceFileArray class >> reset [
 
 	<script>
 	self default
-		close;
+		closeSourceFiles;
 		openSourceFiles
 ]
 
 { #category : 'system startup' }
 SourceFileArray class >> shutDown: isImageClosing [
 
-	isImageClosing ifTrue: [
-			self default
-				unsubscribeToAnnouncements;
-				close ]
+	isImageClosing ifTrue: [ self default closeSourceFiles ]
 ]
 
 { #category : 'system startup' }
 SourceFileArray class >> startUp: resuming [
 
-	resuming ifTrue: [
-			self default registerToAnnouncements.
-			Smalltalk openSourceFiles ]
+	resuming ifTrue: [ self default openSourceFiles ]
 ]
 
 { #category : 'accessing' }
@@ -90,16 +85,6 @@ SourceFileArray >> changesFileStream: aStream [
 	^ files at: 2 put: aStream
 ]
 
-{ #category : 'public - file system operations' }
-SourceFileArray >> close [
-
-	| oldFiles |
-	oldFiles := files.
-	files := Array new: 2.
-	self closeFileArray: oldFiles.
-	self emptyReadStreamsQueue
-]
-
 { #category : 'private' }
 SourceFileArray >> closeFileArray: anArray [
 
@@ -108,6 +93,17 @@ SourceFileArray >> closeFileArray: anArray [
 		thenDo: [ :file | file close ].
 
 	^ anArray
+]
+
+{ #category : 'public - file system operations' }
+SourceFileArray >> closeSourceFiles [
+
+	| oldFiles |
+	oldFiles := files.
+	files := Array new: 2.
+	self closeFileArray: oldFiles.
+	self emptyReadStreamsQueue.
+	self unsubscribeToAnnouncements
 ]
 
 { #category : 'private' }
@@ -160,7 +156,7 @@ SourceFileArray >> ensureOpen [
 	Close them before re-opening them."
 
 	| aSourcesFile aChangesFile |
-	self close.
+	self closeSourceFiles.
 
 	aSourcesFile := PharoFilesOpener default sourcesFileOrNil.
 	aChangesFile := PharoFilesOpener default changesFileOrNil.
@@ -306,12 +302,13 @@ SourceFileArray >> newWriter [
 		  yourself
 ]
 
-{ #category : 'sources, change log' }
+{ #category : 'public - file system operations' }
 SourceFileArray >> openSourceFiles [
 
 	self
 		ensureSourceFilesCreated;
-		ensureOpen
+		ensureOpen;
+		registerToAnnouncements
 ]
 
 { #category : 'public - string reading' }
