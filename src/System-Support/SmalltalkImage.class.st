@@ -225,13 +225,10 @@ SmalltalkImage >> backupTo: newNameWithoutSuffix [
 	Results:
 		true  when continuing in the new session
 		false for the current session"
-	(SourceFileArray default changesFileStream isNil or: [ SourceFileArray default changesFileStream closed ])
-    ifFalse: [
-		self
-			closeSourceFiles; "so copying the changes file will always work"
-			saveChangesInFileNamed: (self fullNameForChangesNamed: newNameWithoutSuffix)].
 
-	^self backupImageInFileNamed: (self fullNameForImageNamed: newNameWithoutSuffix)
+	SourceFileArray default copyChangesTo: newNameWithoutSuffix.
+
+	^ self backupImageInFileNamed: (self fullNameForImageNamed: newNameWithoutSuffix)
 ]
 
 { #category : 'to clean later' }
@@ -261,11 +258,6 @@ SmalltalkImage >> changeImagePathTo: aString [
 	self imagePath: aString.
 	LastImagePath := self imagePath.
 	SourceFileArray reset
-]
-
-{ #category : 'image, changes name' }
-SmalltalkImage >> changesSuffix [
-	^ 'changes'
 ]
 
 { #category : 'class and trait names' }
@@ -363,13 +355,6 @@ SmalltalkImage >> closeLog: logger [
 	we should delegate to it at some point "
 
 	logger ifNotNil: [ logger close ]
-]
-
-{ #category : 'sources, change log' }
-SmalltalkImage >> closeSourceFiles [
-	"Shut down the source files if appropriate."
-
-	SourceFileArray default closeSourceFiles
 ]
 
 { #category : 'system attribute' }
@@ -535,12 +520,6 @@ SmalltalkImage >> extractParameters [
 ]
 
 { #category : 'image, changes name' }
-SmalltalkImage >> fileForChangesNamed: aString [
-
-	^(self imageDirectory resolve: aString), self changesSuffix
-]
-
-{ #category : 'image, changes name' }
 SmalltalkImage >> fileForImageNamed: aString [
 
 	^(self imageDirectory resolve: aString), self imageSuffix
@@ -609,12 +588,6 @@ SmalltalkImage >> flushClassNameCache [
 	"Force recomputation of the cached list of class names."
 
 	globals flushClassNameCache
-]
-
-{ #category : 'image, changes name' }
-SmalltalkImage >> fullNameForChangesNamed: aString [
-
-	^(self fileForChangesNamed: aString) fullName
 ]
 
 { #category : 'image, changes name' }
@@ -1247,11 +1220,7 @@ SmalltalkImage >> saveAs: newNameWithoutSuffix [
 		false for the current session "
 
 	newNameWithoutSuffix ifNil: [ ^ self ].
-  (SourceFileArray default changesFileStream isNil or: [ SourceFileArray default changesFileStream closed ])
-    ifFalse: [
-		self closeSourceFiles.
-		self saveChangesInFileNamed: (self fullNameForChangesNamed: newNameWithoutSuffix)
-		"so copying the changes file will always work" ].
+	SourceFileArray default copyChangesTo: newNameWithoutSuffix.
 
 	^ self saveImageInFileNamed: (self fullNameForImageNamed: newNameWithoutSuffix)
 ]
@@ -1262,29 +1231,9 @@ SmalltalkImage >> saveAsNewVersion [
 
 	"SmalltalkImage current saveAsNewVersion"
 
-	| newImageFile strippedName |
-	newImageFile := self imageFile nextVersion.
-	(newImageFile withExtension: self changesSuffix) ifExists: [ :newChangesFile |
-			^ InformativeNotification signal: 'There is already .changes file of the desired name,
-' , newChangesFile fullName , '
-curiously already present, even though there is
-no corresponding .' , self imageSuffix , ' file.   Please remedy
-manually and then repeat your request.' ].
-
-	strippedName := self stripImageExtensionFrom: newImageFile fullName.
+	| strippedName |
+	strippedName := self stripImageExtensionFrom: self imageFile nextVersion fullName.
 	^ self saveAs: strippedName
-]
-
-{ #category : 'saving' }
-SmalltalkImage >> saveChangesInFileNamed: aString [
-	| changesFile |
-	changesFile := aString asFileReference.
-	changesFile parent ensureCreateDirectory.
-	"Ensure that the destination file is not the same as the original one"
-	(Smalltalk changesFile absolutePath = changesFile absolutePath)
-		ifFalse: [
-			changesFile deleteIfAbsent: [  ].
-			Smalltalk changesFile copyTo: changesFile ]
 ]
 
 { #category : 'saving' }
@@ -1315,11 +1264,6 @@ SmalltalkImage >> shortImageName [
 	"SmalltalkImage current shortImageName"
 
 	^ self imageFile basename
-]
-
-{ #category : 'snapshot and quit' }
-SmalltalkImage >> shutDown [
-	^ self closeSourceFiles
 ]
 
 { #category : 'memory space' }

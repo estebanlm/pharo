@@ -118,6 +118,16 @@ SourceFileArray >> commentTimeStampAt: sourcePointer [
 ]
 
 { #category : 'private' }
+SourceFileArray >> copyChangesTo: newNameWithoutSuffix [
+	
+	(self changesFileStream isNil or: [ self changesFileStream closed ])
+    ifFalse: [
+		self
+			closeSourceFiles; "so copying the changes file will always work"
+			saveChangesInFileNamed: (self fullNameForChangesNamed: newNameWithoutSuffix)].
+]
+
+{ #category : 'private' }
 SourceFileArray >> createReadOnlyFiles [
 	| readOnly |
 	readOnly := {
@@ -191,6 +201,12 @@ SourceFileArray >> fileAt: index ifAbsent: aBlock [
 	^ files at: index ifAbsent: aBlock
 ]
 
+{ #category : 'private' }
+SourceFileArray >> fileForChangesNamed: aString [
+
+	^ (Smalltalk imageDirectory resolve: aString) , 'changes'
+]
+
 { #category : 'private - sourcepointer conversion' }
 SourceFileArray >> fileIndexFromSourcePointer: anInteger [
 	"Return the index of the source file which contains the source chunk addressed by anInteger"
@@ -234,6 +250,12 @@ SourceFileArray >> forceChangesToDisk [
 	changesFile close.
 	changesFile tryOpen.
 	changesFile setToEnd
+]
+
+{ #category : 'private' }
+SourceFileArray >> fullNameForChangesNamed: aString [
+
+	^ (self fileForChangesNamed: aString) fullName
 ]
 
 { #category : 'public - string reading' }
@@ -447,6 +469,18 @@ SourceFileArray >> reportString [
 		{ self sourcesFileStream. self changesFileStream }
 			do: [:each | each ifNotNil: [
 				aStream nextPutAll: each printString; cr ] ] ]
+]
+
+{ #category : 'private' }
+SourceFileArray >> saveChangesInFileNamed: aString [
+
+	| changesFile |
+	changesFile := aString asFileReference.
+	changesFile parent ensureCreateDirectory.
+	"Ensure that the destination file is not the same as the original one"
+	FileLocator changes absolutePath = changesFile absolutePath ifFalse: [
+			changesFile deleteIfAbsent: [ ].
+			FileLocator changes copyTo: changesFile ]
 ]
 
 { #category : 'public - string reading' }
