@@ -78,3 +78,9 @@ SycReplaceMessageCommand >> refactoringClass [
 
 	^ RBReplaceMessageSendTransformation
 ]
+
+{ #category : 'execution' }
+SycReplaceMessageCommand >> resultMessageSelector [
+
+	^ newSelector selector
+]
