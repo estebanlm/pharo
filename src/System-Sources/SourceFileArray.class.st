@@ -119,12 +119,11 @@ SourceFileArray >> commentTimeStampAt: sourcePointer [
 
 { #category : 'private' }
 SourceFileArray >> copyChangesTo: newNameWithoutSuffix [
-	
-	(self changesFileStream isNil or: [ self changesFileStream closed ])
-    ifFalse: [
-		self
-			closeSourceFiles; "so copying the changes file will always work"
-			saveChangesInFileNamed: (self fullNameForChangesNamed: newNameWithoutSuffix)].
+
+	self isChangesFileInUse ifTrue: [
+			self
+				closeSourceFiles;
+				saveChangesInFileNamed: (self fullNameForChangesNamed: newNameWithoutSuffix) ]
 ]
 
 { #category : 'private' }
@@ -270,6 +269,12 @@ SourceFileArray >> initialize [
 
 	readOnlyQueue := SharedQueue new.
 	flushChanges := true
+]
+
+{ #category : 'testing' }
+SourceFileArray >> isChangesFileInUse [
+
+	^ self changesFileStream isNotNil or: [ self changesFileStream closed not ]
 ]
 
 { #category : 'public - file system operations' }
