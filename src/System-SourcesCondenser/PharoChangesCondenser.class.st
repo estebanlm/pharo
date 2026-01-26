@@ -98,7 +98,7 @@ PharoChangesCondenser >> installNewChangesFile [
 	self backupOldChanges.
 	self originalFile ensureDelete.
 	newChangesFile moveTo: self originalFile.
-	Smalltalk openSourceFiles
+	SourceFileArray reset
 ]
 
 { #category : 'helper' }
@@ -115,7 +115,8 @@ PharoChangesCondenser >> nextCommentChunkDo: aBlock [
 
 { #category : 'accessing' }
 PharoChangesCondenser >> originalFile [
-	^ Smalltalk changesFile asFileReference
+
+	^ FileLocator changes asFileReference
 ]
 
 { #category : 'initialization' }
@@ -191,7 +192,8 @@ PharoChangesCondenser >> swapSourcePointers [
 
 { #category : 'accessing' }
 PharoChangesCondenser >> temporaryFile [
-	^ (Smalltalk changesFile, 'new') nextVersion
+
+	^ (FileLocator changes , 'new') nextVersion
 ]
 
 { #category : 'private - 1 writing' }
