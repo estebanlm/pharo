@@ -6,16 +6,6 @@ Class {
 	#tag : 'Model'
 }
 
-{ #category : 'merging' }
-MetacelloSpec >> aboutToCopy [
-]
-
-{ #category : 'visiting' }
-MetacelloSpec >> acceptVisitor: aVisitor [
-
-	self subclassResponsibility
-]
-
 { #category : 'printing' }
 MetacelloSpec >> label [
 
@@ -29,6 +19,10 @@ MetacelloSpec >> mergeImportLoads: aLoadList [
 
 { #category : 'merging' }
 MetacelloSpec >> mergeMap [
+	"I am here to help the automatic merging of the simplest IVars.
+	
+	I am used by #mergeSpec:. I should have ivar names as key and objects as values. During the merge, if the values are not nil, I'll set directly the the values in the vars of the new spec without going throught the setters.
+	This is useful for all fields that do not need an explicit merging."
 
 	^ Dictionary new
 ]
@@ -36,18 +30,10 @@ MetacelloSpec >> mergeMap [
 { #category : 'merging' }
 MetacelloSpec >> mergeSpec: aSpec [
 
-	| newSpec nonOverridable |
-	self validateMergeForSpec: aSpec.
-	newSpec := self copy.
-	nonOverridable := self nonOverridable.
-	aSpec mergeMap keysAndValuesDo: [ :key :value | (nonOverridable includes: key) ifFalse: [ value ifNotNil: [ newSpec instVarNamed: key asString put: value ] ] ].
-	^ newSpec
-]
-
-{ #category : 'merging' }
-MetacelloSpec >> nonOverridable [
-
-	^#()
+	aSpec class = self class ifFalse: [
+			self error:
+				'The project spec ' , self label , ' has incompatible specs. ' , aSpec class name asString , ' and ' , self class name asString , ' are not compatible.' ].
+	aSpec mergeMap keysAndValuesDo: [ :key :value | value ifNotNil: [ self instVarNamed: key asString put: value ] ]
 ]
 
 { #category : 'validation' }
@@ -56,12 +42,4 @@ MetacelloSpec >> validateDoItSelector: anObject [
 	anObject ifNil: [ ^ self ].
 	anObject isSymbol ifFalse: [ self error: 'Invalid message selector for doit: ' , anObject printString ].
 	anObject precedence == 0 ifTrue: [ self error: 'Invalid selector for doit: ' , anObject printString ]
-]
-
-{ #category : 'merging' }
-MetacelloSpec >> validateMergeForSpec: aSpec [
-
-	aSpec class = self class ifFalse: [
-			self error:
-				'The project spec ' , self label , ' has incompatible specs. ' , aSpec class name asString , ' and ' , self class name asString , ' are not compatible.' ]
 ]

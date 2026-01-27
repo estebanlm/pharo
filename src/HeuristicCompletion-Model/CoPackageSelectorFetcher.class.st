@@ -74,10 +74,10 @@ CoPackageSelectorFetcher >> packageLocalSelectors: aBlock [
 	package definedClasses do: [ :cls | selectors addAll: cls selectors ].
 	selectors addAll: package extensionSelectors.
 	selectors do: [ :sel |
-			(filter accepts: sel) ifTrue: [
+			
 					aBlock value: ((NECSelectorEntry contents: sel node: astNode)
 							 fetcher: self;
-							 yourself) ] ].
+							 yourself) ].
 	^ selectors size
 ]
 

@@ -29,6 +29,13 @@ Class {
 FileSystem class >> initialize [
 	"The initialization is done here because the startup of SourceFileArray needs to use the File system to work."
 
+	PharoFilesOpener sourceFileVersionString: ('Pharo{1}.{2}-{3}bit-{4}' format: {
+				 SystemVersion current major asString.
+				 SystemVersion current minor asString.
+				 (Smalltalk vm wordSize = 4
+					  ifTrue: [ 32 ]
+					  ifFalse: [ 64 ]).
+				 SystemVersion current commitHashShort asString }).
 	SessionManager default registerSystemClassNamed: #SourceFileArray
 ]
 
@@ -72,12 +79,6 @@ FileSystem >> accessTimeOf: aResolvable [
 	"Returns the access date of aResolvable"
 
 	^ store accessTimeOf: (self resolve: aResolvable)
-]
-
-{ #category : 'public' }
-FileSystem >> beReadOnly [
-
-	store := store asReadOnlyStore
 ]
 
 { #category : 'public' }

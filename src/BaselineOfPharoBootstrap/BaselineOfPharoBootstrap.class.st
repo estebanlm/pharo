@@ -41,22 +41,11 @@ BaselineOfPharoBootstrap class >> packagesToExportWithHermes [
 	^ self packagesRecursiveIn: 'ToLoadByHermes'
 ]
 
-{ #category : 'accessing' }
-BaselineOfPharoBootstrap class >> sUnitPackageNames [
-
-	^ self packagesOfGroupNamed: #SUnitGroup
-]
-
 { #category : 'baselines' }
 BaselineOfPharoBootstrap >> baseline: spec [
 
 	<baseline>
 	spec for: #common do: [
-			spec package: 'Random-Core'.
-			spec package: 'SUnit-Core'.
-			spec package: 'SUnit-Tests'.
-			spec package: 'Kernel-Tests'.
-			spec package: 'SUnit-Basic-CLI'.
 			BaselineOfKernel corePackageNames do: [ :package | spec package: package ].
 			BaselineOfKernel additionalPackagesPackageNames do: [ :package | spec package: package ].
 			BaselineOfCompiler corePackageNames do: [ :package | spec package: package ].
@@ -66,25 +55,16 @@ BaselineOfPharoBootstrap >> baseline: spec [
 			BaselineOfMetacello corePackageNames do: [ :package | spec package: package ].
 
 			spec group: 'KernelGroup' with: BaselineOfKernel corePackageNames.
-
 			spec group: 'AdditionalPackages' with: BaselineOfKernel additionalPackagesPackageNames.
-
 			spec group: 'CompilerGroup' with: BaselineOfCompiler corePackageNames.
-
 			spec group: 'FileSystemGroup' with: BaselineOfFileSystem corePackageNames.
-
 			spec group: 'TraitGroup' with: BaselineOfTraits corePackageNames.
-
 			spec group: 'MonticelloCore' with: BaselineOfMonticello corePackageNames.
-
 			spec group: 'MetacelloGroup' with: BaselineOfMetacello corePackageNames.
 
 			"Group of packages to load with Hermes."
-			spec group: 'ToLoadByHermes' with: { 'AdditionalPackages'. 'CompilerGroup'. 'FileSystemGroup'. 'TraitGroup'. 'MonticelloCore'. 'SUnitGroup' }.
+			spec group: 'ToLoadByHermes' with: { 'AdditionalPackages'. 'CompilerGroup'. 'FileSystemGroup'. 'TraitGroup'. 'MonticelloCore' . 'MetacelloGroup' }.
 
 			"Group of packages to export as MCZ"
-			spec group: 'ToExportAsMCZ' with: { 'KernelGroup'. 'ToLoadByHermes'. 'MetacelloGroup' }. 
-			
-			"The next group is here for testing the minimal image"
-			spec group: 'SUnitGroup' with: #( 'Clap-Core' 'Clap-Commands-Pharo' 'Hermes-Extensions' 'Math-Operations-Extensions' 'System-Time' 'NumberParser' 'AST-Core' 'ParseTreeRewriter' 'Random-Core' 'System-NumberPrinting' 'Traits' 'Deprecation' 'SUnit-Core' 'SUnit-Basic-CLI' 'SUnit-Tests' 'Kernel-Tests' ) ]
+			spec group: 'ToExportAsMCZ' with: { 'KernelGroup'. 'ToLoadByHermes' } ]
 ]

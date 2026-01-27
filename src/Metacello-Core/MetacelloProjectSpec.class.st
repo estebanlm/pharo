@@ -10,7 +10,7 @@ Class {
 		'repositories',
 		'postLoadDoIt',
 		'className',
-		'mutable'
+		'strict'
 	],
 	#category : 'Metacello-Core-Model',
 	#package : 'Metacello-Core',
@@ -54,14 +54,10 @@ MetacelloProjectSpec >> asProjectRegistration [
 	^ MetacelloProjectRegistration projectSpec: self
 ]
 
-{ #category : 'scripting' }
-MetacelloProjectSpec >> asProjectSpec [
-    ^ self
-]
-
 { #category : 'accessing' }
 MetacelloProjectSpec >> baseName [
-	^ MetacelloScriptEngine baseNameOf: self className
+
+	^ self className withoutPrefix: 'BaselineOf'
 ]
 
 { #category : 'scripting' }
@@ -82,7 +78,6 @@ MetacelloProjectSpec >> className [
 { #category : 'accessing' }
 MetacelloProjectSpec >> className: aString [
 
-	self shouldBeMutable.
 	className := aString.
 	self resetProjectPackage
 ]
@@ -104,19 +99,10 @@ MetacelloProjectSpec >> constructClassName [
 	^ 'BaselineOf' , self name
 ]
 
-{ #category : 'mutability' }
-MetacelloProjectSpec >> copyForRegistration: aMetacelloProjectRegistration onWrite: aBlock [
-
-	| copy |
-	copy := aMetacelloProjectRegistration projectSpec copy.
-	aBlock value: copy.
-	aMetacelloProjectRegistration projectSpec: copy
-]
-
 { #category : 'accessing' }
 MetacelloProjectSpec >> currentlyLoadedClassesInVersion [
 
-	self version ifNotNil: [ :vrsn | ^ vrsn spec currentlyLoadedClassesInVersion ].
+	self version ifNotNil: [ :vrsn | ^ vrsn currentlyLoadedClassesInVersion ].
 	^ #(  )
 ]
 
@@ -124,9 +110,9 @@ MetacelloProjectSpec >> currentlyLoadedClassesInVersion [
 MetacelloProjectSpec >> ensureProjectLoadedWithEngine: anEngine [
 	"Ensure that the MetacelloProject version is built (We downloaded the baseline and we executed it to build a MetacelloVersion"
 
-	(self hasVersion and: [ (self isMutable and: [ anEngine ignoreImage ]) not ]) ifTrue: [ ^ self ].
+	(self hasVersion and: [ anEngine ignoreImage not ]) ifTrue: [ ^ self ].
 
-	project := anEngine loader loadProject: self
+	project := anEngine loader loadProject: self engine: anEngine
 ]
 
 { #category : 'accessing' }
@@ -147,8 +133,8 @@ MetacelloProjectSpec >> hasNoLoadConflicts: aMetacelloProjectSpec [
 
 	^ self className = aMetacelloProjectSpec className and: [
 			  (self hasVersion and: [ aMetacelloProjectSpec hasVersion ]) and: [
-				  (self repositories isEmpty or: [ aMetacelloProjectSpec repositories isEmpty ]) or: [
-					  self repositories hasNoLoadConflicts: aMetacelloProjectSpec repositories ] ] ]
+					  (self repositories hasRepository not or: [ aMetacelloProjectSpec repositories hasRepository not ]) or: [
+						  self repositories hasNoLoadConflicts: aMetacelloProjectSpec repositories ] ] ]
 ]
 
 { #category : 'testing' }
@@ -157,23 +143,10 @@ MetacelloProjectSpec >> hasVersion [
 	^ self version isNotNil
 ]
 
-{ #category : 'mutability' }
-MetacelloProjectSpec >> immutable [
-    mutable := false
-]
-
 { #category : 'scripting' }
 MetacelloProjectSpec >> isLocked [
 
-  ^ self registration 
-	ifNotNil: [ :aRegistration | aRegistration locked ]
-	ifNil: [ false ]
-]
-
-{ #category : 'mutability' }
-MetacelloProjectSpec >> isMutable [
-
-	^ mutable ifNil: [ ^ true ]
+	^ MetacelloProjectRegistry registrationNamed: self className ifPresent: [ :existing | existing locked ] ifAbsent: [ false ]
 ]
 
 { #category : 'printing' }
@@ -186,7 +159,7 @@ MetacelloProjectSpec >> label [
 MetacelloProjectSpec >> loadListForVersion: vrsn [
 
 	^ (self loads isNil or: [ self loads isEmpty ])
-		  ifTrue: [ vrsn spec defaultPackageNames ]
+		  ifTrue: [ vrsn defaultPackageNames ]
 		  ifFalse: [ self loads ]
 ]
 
@@ -198,17 +171,9 @@ MetacelloProjectSpec >> loads [
 { #category : 'accessing' }
 MetacelloProjectSpec >> loads: aCollection [
 
-	self shouldBeMutable.
 	loads := aCollection isString
 		         ifTrue: [ { aCollection } ]
 		         ifFalse: [ aCollection asArray ]
-]
-
-{ #category : 'scripting' }
-MetacelloProjectSpec >> lookForIssues [
-
-	self name ifNil: [ MetacelloValidationFailure signal: 'Name field required' ].
-	self className ifNil: [ MetacelloValidationFailure signal: 'ClassName field required' ]
 ]
 
 { #category : 'importing' }
@@ -230,28 +195,16 @@ MetacelloProjectSpec >> mergeMap [
 	map at: #loads put: loads.
 	map at: #preLoadDoIt put: preLoadDoIt.
 	map at: #postLoadDoIt put: postLoadDoIt.
-	map at: #repositories put: repositories.
 	^ map
-]
-
-{ #category : 'merging' }
-MetacelloProjectSpec >> mergeRepositoriesSpec: anotherRepositories [
-	"anotherRepositories wins ... there can ever only be one repository for the 
-   baseline to load from"
-
-	"https://github.com/dalehenrich/metacello-work/issues/251"
-
-	self repositories: anotherRepositories
 ]
 
 { #category : 'scripting' }
 MetacelloProjectSpec >> mergeScriptLoads: aSpec [
 
-	self shouldBeMutable.
 	aSpec loads ifNotNil: [ :otherLoads |
-		self loads
-			ifNil: [ loads := otherLoads ]
-			ifNotNil: [ loads := (loads , otherLoads) asSet asArray ] ]
+			self loads
+				ifNil: [ loads := otherLoads ]
+				ifNotNil: [ loads := (loads , otherLoads) asSet asArray ] ]
 ]
 
 { #category : 'scripting' }
@@ -261,12 +214,12 @@ MetacelloProjectSpec >> mergeScriptRepository: anotherSpec [
 
 { #category : 'merging' }
 MetacelloProjectSpec >> mergeSpec: anotherSpec [
+	"anotherRepositories wins ... there can ever only be one repository for the baseline to load from
+		
+		https://github.com/dalehenrich/metacello-work/issues/251"
 
-	| newSpec map |
-	newSpec := super mergeSpec: anotherSpec.
-	map := anotherSpec mergeMap.
-	(map at: #repositories) ifNotNil: [ :anotherRepositories | newSpec mergeRepositoriesSpec: anotherRepositories ].
-	^ newSpec
+	super mergeSpec: anotherSpec.
+	anotherSpec getRepositories ifNotNil: [ :anotherRepositories | self repositories: anotherRepositories ]
 ]
 
 { #category : 'scripting' }
@@ -279,12 +232,7 @@ MetacelloProjectSpec >> metacelloRegistrationHash [
 	hash := String stringHash: self preLoadDoIt asString initialHash: hash.
 	hash := String stringHash: self postLoadDoIt asString initialHash: hash.
 	hash := hash bitXor: loads hash.
-	^ hash bitXor: self repositories metacelloRegistrationHash
-]
-
-{ #category : 'mutability' }
-MetacelloProjectSpec >> mutable [
-    mutable := true
+	^ hash bitXor: (self repositories repositorySpecs collect: [ :each | each description ]) hash
 ]
 
 { #category : 'querying' }
@@ -296,21 +244,14 @@ MetacelloProjectSpec >> name [
 { #category : 'accessing' }
 MetacelloProjectSpec >> name: aString [
 
-	self shouldBeMutable.
 	name := aString trim.
 	self resetProjectPackage
-]
-
-{ #category : 'merging' }
-MetacelloProjectSpec >> nonOverridable [
-    ^ super nonOverridable , #(#'projectPackage' #'repositories')
 ]
 
 { #category : 'copying' }
 MetacelloProjectSpec >> postCopy [
 
 	super postCopy.
-	mutable := nil.
 	repositories := repositories copy.
 	projectPackage := nil
 ]
@@ -324,7 +265,6 @@ MetacelloProjectSpec >> postLoadDoIt [
 { #category : 'accessing' }
 MetacelloProjectSpec >> postLoadDoIt: aSymbol [
 
-	self shouldBeMutable.
 	self validateDoItSelector: aSymbol.
 	postLoadDoIt := aSymbol
 ]
@@ -338,7 +278,6 @@ MetacelloProjectSpec >> preLoadDoIt [
 { #category : 'accessing' }
 MetacelloProjectSpec >> preLoadDoIt: aSymbol [
 
-	self shouldBeMutable.
 	self validateDoItSelector: aSymbol.
 	preLoadDoIt := aSymbol
 ]
@@ -365,12 +304,6 @@ MetacelloProjectSpec >> project: aMetacelloProject [
 	project := aMetacelloProject
 ]
 
-{ #category : 'visiting' }
-MetacelloProjectSpec >> projectDo: projectBlock packageDo: packageBlock groupDo: groupBlock [
-
-	projectBlock value: self
-]
-
 { #category : 'printing' }
 MetacelloProjectSpec >> projectLabel [
 
@@ -383,7 +316,7 @@ MetacelloProjectSpec >> projectPackage [
 
 	^ projectPackage ifNil: [
 			  self className ifNil: [ ^ nil ].
-			  projectPackage := self project packageSpec
+			  projectPackage := MetacelloPackageSpec new
 				                    name: self className;
 				                    repositories: self getRepositories;
 				                    yourself ]
@@ -395,12 +328,6 @@ MetacelloProjectSpec >> projectReference [
 	^ self
 ]
 
-{ #category : 'scripting' }
-MetacelloProjectSpec >> registration [
-
-	^ MetacelloProjectRegistration registrationForProjectSpec: self ifPresent: [ :existing | existing ]
-]
-
 { #category : 'accessing' }
 MetacelloProjectSpec >> repositories [
 
@@ -409,9 +336,9 @@ MetacelloProjectSpec >> repositories [
 
 { #category : 'accessing' }
 MetacelloProjectSpec >> repositories: anObject [
-    self shouldBeMutable.
-    repositories := anObject.
-    self resetProjectPackage
+
+	repositories := anObject.
+	self resetProjectPackage
 ]
 
 { #category : 'accessing' }
@@ -435,8 +362,7 @@ MetacelloProjectSpec >> repositoryDescriptions [
 { #category : 'querying' }
 MetacelloProjectSpec >> repositorySpecs [
 
-	repositories ifNil: [ ^ #(  ) ].
-	^ self repositories specs
+	^ self repositories repositorySpecs
 ]
 
 { #category : 'querying' }
@@ -465,17 +391,22 @@ MetacelloProjectSpec >> resolveToLoadableSpec [
 	^self copy
 ]
 
-{ #category : 'mutability' }
-MetacelloProjectSpec >> shouldBeMutable [
+{ #category : 'accessing' }
+MetacelloProjectSpec >> strict [
+	
+	^ strict
+]
 
-	self isMutable ifTrue: [ ^ self ].
-	self error: 'Not allowed to modify an immutable object'
+{ #category : 'accessing' }
+MetacelloProjectSpec >> strict: aBoolean [
+	
+	strict := aBoolean
 ]
 
 { #category : 'scripting' }
 MetacelloProjectSpec >> unregisterProject [
 
-	^ MetacelloProjectRegistration registrationForProjectSpec: self ifPresent: [ :existing | existing unregisterProject ]
+	^ MetacelloProjectRegistry registrationNamed: self className ifPresent: [ :existing | existing unregisterProject ]
 ]
 
 { #category : 'querying' }

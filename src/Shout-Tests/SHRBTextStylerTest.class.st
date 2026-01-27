@@ -26,3 +26,31 @@ SHRBTextStylerTest >> testStyleForBackgroundColor [
 		assert: ((table at: #style3) detect: [ :each | each class = TextBackgroundColor ]) color 
 		equals: (Color fromHexString: '0F0000')
 ]
+
+{ #category : 'tests' }
+SHRBTextStylerTest >> testStyleTableSelector [
+	| oldSelector |
+
+	oldSelector := SHRBTextStyler styleTableSelector.
+	"Is not nil, but I actually don't know which one it is"
+	self assert: oldSelector isNotNil. 
+	
+	[ 	
+		#(
+			(blueStyleTable 'Blue')
+			(darkBlueStyleTable 'DarkBlue')
+			(darkStyleTable 'Dark')
+			(solarizedStyleTable 'Solarized')
+			(tangoStyleTable 'Tango')
+			(vintageStyleTable 'Vintage')
+		) do: [ :eachPair |
+			SHRBTextStyler styleTableSelector: eachPair first.
+			self assert: SHRBTextStyler styleTableSelector equals: eachPair first.
+			"check comment (as an example) has same attributes" 
+			self 
+				assert: ((SHRBTextStyler initialTextAttributes) at: #comment) first color
+				equals: ((SHRBTextStyler newAttributesForStyleTableNamed: eachPair second) at: #comment) first color ] ]
+	ensure: [
+		"restore active style"
+		SHRBTextStyler styleTableSelector: oldSelector ]
+]

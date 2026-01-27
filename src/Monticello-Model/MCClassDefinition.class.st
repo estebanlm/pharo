@@ -331,15 +331,38 @@ MCClassDefinition >> layoutClassName [
 ]
 
 { #category : 'installing' }
-MCClassDefinition >> load [
-	self loadInEnvironment: nil
-]
+MCClassDefinition >> loadWithLoader: aLoader [
 
-{ #category : 'installing' }
-MCClassDefinition >> loadInEnvironment: anEnvironment [
-
-	self createClassInEnvironment: anEnvironment
-
+	| superClass targetEnvironment |
+	name = #Context
+		ifTrue: [
+			Context comment = comment ifFalse: [
+				Context comment: comment stamp: self commentStamp ] ]
+		ifFalse: [
+			superClass := superclassName = #nil ifFalse: [
+				              self class environment at: superclassName ].
+			targetEnvironment := aLoader targetEnvironment ifNil: [ superClass environment ].
+			[
+			self class classInstaller make: [ :builder |
+				builder
+					superclass: superClass;
+					name: name;
+					layoutClass: (ObjectLayout layoutForType: type);
+					slots: self instanceVariables;
+					sharedVariables: self classVariables;
+					sharedPoolsFromString: self sharedPoolsString;
+					classSlots: self classInstanceVariables;
+					traitComposition: self traitCompositionCompiled;
+					classTraitComposition: self classTraitCompositionCompiled;
+					comment: comment stamp: self commentStamp;
+					package: self packageName;
+					tag: self tagName;
+					environment: targetEnvironment ] ]
+				on: Warning , DuplicatedVariableError
+				do: [ :ex |
+					aLoader isStrict
+						ifTrue: [ ex pass ]
+						ifFalse: [ ex resume ] ] ]
 ]
 
 { #category : 'accessing' }

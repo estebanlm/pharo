@@ -83,9 +83,7 @@ BaselineOfIDE >> baseline: spec [
 		"
 		spec baseline: 'Shout' with: [ spec repository: repository ].
 		spec baseline: 'OSWindow' with: [ spec repository: repository ].
-		spec
-			baseline: 'EmergencyDebugger'
-			with: [ spec repository: repository ].
+		
 
 		self load: 'Epicea' group: 'Browsers' spec: spec.
 
@@ -232,7 +230,7 @@ BaselineOfIDE >> microdown: spec [
 	spec baseline: 'Microdown' with: [ 
 		spec 
 			repository: (self classNamed: #BaselineOfPharo) microdownRepository;
-			loads: #('RichText' 'Tests' 'ForPharo') ]
+			loads: #('RichText' 'ForPharo') ]
 ]
 
 { #category : 'baselines - dependencies' }

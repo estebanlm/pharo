@@ -388,22 +388,13 @@ Class >> comment: aString [
 Class >> comment: aString stamp: aStamp [
 	"Store the comment, aString or Text or RemoteString, associated with the class we are organizing.  Empty string gets stored only if had a non-empty one before."
 
-	| pointer oldComment oldStamp |
+	| oldComment oldStamp |
 	oldComment := self comment.
 	oldStamp := self commentStamp.
 
 	aString string = oldComment string ifTrue: [ ^ self ].
 
-	pointer := self commentSourcePointer ifNil: [ 0 ].
-
-	SourceFileArray default newWriter
-		metadata: ' ';
-		timestamp: aStamp;
-		prior: pointer;
-		successBlock: [ :newSourcePointer | self commentSourcePointer: newSourcePointer ];
-		failBlock: [ "ignore" ];
-		writeComment: aString
-		ofClass: self.
+	SourceFileArray default writeComment: aString stamp: aStamp  of: self.
 
 	self codeChangeAnnouncer
 		class: self
@@ -442,15 +433,6 @@ Class >> commonSuperclassWith: aClass [
 	"return the next common superclass between me and aClass. If I am the superclass of aClass, that is me"
 	<reflection: 'Class structural inspection - Iterating and querying hierarchy'>
 	^ self withAllSuperclasses detect: [ :class | (aClass allSuperclasses includes: class) ] ifNone: nil
-]
-
-{ #category : 'compiling' }
-Class >> compileAllFrom: oldClass [
-	"Recompile all the methods in the receiver's method dictionary (not the
-	subclasses). Also recompile the methods in the metaclass."
-
-	super compileAllFrom: oldClass.
-	self classSide compileAllFrom: oldClass classSide
 ]
 
 { #category : 'copying' }

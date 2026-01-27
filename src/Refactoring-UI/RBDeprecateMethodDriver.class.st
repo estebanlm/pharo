@@ -28,6 +28,12 @@ RBDeprecateMethodDriver class >> deprecateMethod: aString in: aClass scopes: aCo
 	^ self new deprecateMethod: aString in: aClass  scopes: aCollection
 ]
 
+{ #category : 'accessing' }
+RBDeprecateMethodDriver class >> driverName [
+
+	^ 'Deprecate method'
+]
+
 { #category : 'initialization' }
 RBDeprecateMethodDriver >> deprecateMethod: aSelector in: aClass scopes: aCollection [
 

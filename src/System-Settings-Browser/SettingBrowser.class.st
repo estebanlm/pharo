@@ -412,26 +412,18 @@ SettingBrowser >> exportAllSettings: actions by: groupSize withBasename: aString
 SettingBrowser >> exportSettings [
 
 	| nodes actions |
-
 	nodes := self treeHolder nodeList.
-	[: job | 
-		| title  |
+	[ :job |
+		| title |
 		title := 'Exporting settings'.
 		job title: title.
-		1 to: nodes size do: [ : each |
-			actions := nodes collectWithIndex: [ : e : i |
-			job
-				progress: i;
-				title: (String streamContents: [:s |
-					s << title << ' (' << (e item label) << ')']).			
-				e item exportSettingAction ] ] 
-	]  asJob run.
+		1 to: nodes size do: [ :each |
+				actions := nodes collectWithIndex: [ :e :i |
+						           job progress: i title: (String streamContents: [ :s | s << title << ' (' << e item label << ')' ]).
+						           e item exportSettingAction ] ] ] asJob run.
 
-	actions := actions reject: [:e | e isNil ].
-	self 
-		exportAllSettings: actions 
-		by: 50 
-		withBasename: 'exported_settings'
+	actions := actions reject: [ :e | e isNil ].
+	self exportAllSettings: actions by: 50 withBasename: 'exported_settings'
 ]
 
 { #category : 'export' }
@@ -548,10 +540,12 @@ SettingBrowser >> menuEmptyList: aTreeNode [
 
 { #category : 'menu' }
 SettingBrowser >> menuSetToDefault: aTreeNode [
+
 	| v |
-	(v := aTreeNode settingDeclaration) hasDefault
-		ifTrue: [(self confirm: 'Set to default value ?' translated)
-				ifTrue: [v setToDefault. self updateList]]
+	(v := aTreeNode settingDeclaration) hasDefault ifTrue: [
+			(ConfirmationRequest signal: 'Set to default value ?') ifTrue: [
+					v setToDefault.
+					self updateList ] ]
 ]
 
 { #category : 'user interface' }
@@ -647,9 +641,10 @@ SettingBrowser >> selection: aSelectionHolder [
 
 { #category : 'menu' }
 SettingBrowser >> setAllToDefault [
-	(self confirm: 'Set all to default value?' translated) ifTrue: [
-		self treeHolder nodeList do: [:node | node item hasDefault ifTrue: [node item setToDefault]].
-		self updateList]
+
+	(ConfirmationRequest signal: 'Set all to default value?') ifTrue: [
+			self treeHolder nodeList do: [ :node | node item hasDefault ifTrue: [ node item setToDefault ] ].
+			self updateList ]
 ]
 
 { #category : 'accessing' }

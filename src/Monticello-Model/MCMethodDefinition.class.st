@@ -213,24 +213,27 @@ MCMethodDefinition >> isOverrideMethod [
 ]
 
 { #category : 'installing' }
-MCMethodDefinition >> load [
+MCMethodDefinition >> loadWithLoader: aLoader [
 
-	self loadInEnvironment: self class environment
-]
+	| method actualClass |
+	actualClass := self actualClassIn: aLoader targetEnvironment.
 
-{ #category : 'installing' }
-MCMethodDefinition >> loadInEnvironment: anEnvironment [
+	actualClass ifNil: [ Error signal: 'Class not found: ' , className printString ].
 
-	| method |
-	method := (self actualClassIn: anEnvironment) compiler
+	method := actualClass compiler
 		          protocol: category;
 		          changeStamp: timeStamp;
-		          permitUndeclared: true;
+		          permitUndeclared: aLoader isStrict not;
+		          permitFaulty: aLoader isStrict not;
 		          install: source.
 
-	method selector = selector ifTrue: [ ^ self ].
-	"This can happen if we provide a selector that does not match the source code. I (Cyril Ferlicot) personnaly do not like that. I would prefer even that the MCMethodDefinition would not have a selector variable at all. But this is used in some places of the system :("
-	Warning signal: ('Monticello: Selector missmatch. Got {1}, expected {2} for class {3}.' format: { method selector. selector. self actualClass name }).
+	method selector = selector ifTrue: [ ^ self ]. "This can happen if we provide a selector that does not match the source code. I (Cyril Ferlicot) personnaly do not like that. I would prefer even that the MCMethodDefinition would not have a selector variable at all. But this is used in some places of the system :("
+	(aLoader isStrict
+		 ifTrue: [ Error ]
+		 ifFalse: [ Warning ]) signal: ('Monticello: Selector missmatch. Got {1}, expected {2} for class {3}.' format: {
+				 method selector.
+				 selector.
+				 className }).
 	selector := method selector
 ]
 
@@ -296,12 +299,17 @@ MCMethodDefinition >> selector: aString [
 
 { #category : 'comparing' }
 MCMethodDefinition >> sortKey [
-	^ sortKey
-		ifNil: [ sortKey := self className , '.'
-				,
-					(self classIsMeta
-						ifTrue: [ 'meta' ]
-						ifFalse: [ 'nonmeta' ]) , '.' , self selector ]
+
+	^ sortKey ifNil: [
+			  sortKey := Symbol streamContents: [ :aStream |
+					             aStream
+						             nextPutAll: self className;
+						             nextPut: $.;
+						             nextPutAll: (self classIsMeta
+								              ifTrue: [ 'meta' ]
+								              ifFalse: [ 'nonmeta' ]);
+						             nextPut: $.;
+						             nextPutAll: self selector ] ]
 ]
 
 { #category : 'accessing' }

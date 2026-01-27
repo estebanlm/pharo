@@ -69,9 +69,9 @@ ClassDescription >> addInstVarNamed: aString [
 ClassDescription >> addProtocol: aProtocol [
 
 	| oldProtocols protocol protocolName |
-	protocolName := aProtocol isString ifTrue: [ aProtocol ] ifFalse: [ aProtocol name ].
-
-	(self hasProtocol: aProtocol) ifTrue: [ ^ self protocolNamed: protocolName ].
+	protocolName := aProtocol isString ifTrue: [ aProtocol trimBoth ] ifFalse: [ aProtocol name ].
+	protocolName ifEmpty: [ protocolName := Protocol unclassified ].
+	(self hasProtocol: protocolName) ifTrue: [ ^ self protocolNamed: protocolName ].
 
 	protocol := Protocol named: protocolName class: self.
 

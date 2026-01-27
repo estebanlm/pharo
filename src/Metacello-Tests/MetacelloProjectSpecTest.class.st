@@ -52,10 +52,10 @@ MetacelloProjectSpecTest >> testProjectMergeSpec2 [
 	self assert: project name equals: 'Project'.
 	self assert: project className equals: 'BaselineOfProjectB'.
 	self assert: project projectPackage name equals: project className.
-	project repositories map at: '/opt/gemstone/repository' ifPresent: [ self assert: false ].
-	repository := project repositories map at: '/opt/gemstone/repo' ifAbsent: [ self assert: false ].
+	project repositories repositoryNamed: '/opt/gemstone/repository' ifPresent: [ self assert: false ].
+	repository := project repositories repositoryNamed: '/opt/gemstone/repo' ifAbsent: [ self assert: false ].
 	self assert: repository type equals: 'directory'.
-	repository := project repositories map at: 'http://example.com/repository' ifAbsent: [ self assert: false ].
+	repository := project repositories repositoryNamed: 'http://example.com/repository' ifAbsent: [ self assert: false ].
 	self assert: repository type equals: 'http'.
 	self assert: repository username equals: 'DaleHenrichs'.
 	self assert: repository password equals: 'secret'
@@ -65,15 +65,14 @@ MetacelloProjectSpecTest >> testProjectMergeSpec2 [
 MetacelloProjectSpecTest >> testProjectSpec [
 
 	| project |
-	project := self projectSpec.
-	project
-		name: 'Project';
-		className: 'BaselineOfProject';
-		loads: 'MyPackage';
-		loads: #( 'MyPackage' 'MyTests' );
-		preLoadDoIt: #preLoadDoIt;
-		postLoadDoIt: #postLoadDoIt;
-		yourself.
+	project := self projectSpec
+		           name: 'Project';
+		           className: 'BaselineOfProject';
+		           loads: 'MyPackage';
+		           loads: #( 'MyPackage' 'MyTests' );
+		           preLoadDoIt: #preLoadDoIt;
+		           postLoadDoIt: #postLoadDoIt;
+		           yourself.
 	self assert: project name equals: 'Project'.
 	self assert: project className equals: 'BaselineOfProject'.
 	self assert: project loads equals: #( 'MyPackage' 'MyTests' ).
@@ -81,27 +80,27 @@ MetacelloProjectSpecTest >> testProjectSpec [
 	self assert: project postLoadDoIt value identicalTo: #postLoadDoIt.
 	self should: [ project includes: #(  ) ] raise: Error.
 	self should: [ project requires: #(  ) ] raise: Error.
-	project projectDo: [ :prjct | self assert: project identicalTo: prjct ] packageDo: [ :ignored | self assert: false ] groupDo: [ :ignored | self assert: false ].
+	self assert: project class equals: MetacelloProjectSpec.
 	self should: [ project preLoadDoIt: '' ] raise: Error.
 	self should: [ project postLoadDoIt: '' ] raise: Error
 ]
 
 { #category : 'tests' }
 MetacelloProjectSpecTest >> testProjectSpec2 [
+
 	| project repository |
-	project := self projectSpec.
-	project
-		name: 'Project';
-		className: 'BaselineOfProject';
-		repository: 'http://example.com/repository' username: 'dkh' password: 'password';
-		repository: '/opt/gemstone/repository';
-		yourself.
+	project := self projectSpec
+		           name: 'Project';
+		           className: 'BaselineOfProject';
+		           repository: 'http://example.com/repository' username: 'dkh' password: 'password';
+		           repository: '/opt/gemstone/repository';
+		           yourself.
 	self assert: project name equals: 'Project'.
 	self assert: project className equals: 'BaselineOfProject'.
 	self assert: project projectPackage name equals: project className.
-	repository := project repositories map at: '/opt/gemstone/repository' ifAbsent: [ self assert: false ].
+	repository := project repositories repositoryNamed: '/opt/gemstone/repository' ifAbsent: [ self assert: false ].
 	self assert: repository type equals: 'directory'.
-	repository := project repositories map at: 'http://example.com/repository' ifAbsent: [ self assert: false ].
+	repository := project repositories repositoryNamed: 'http://example.com/repository' ifAbsent: [ self assert: false ].
 	self assert: repository type equals: 'http'.
 	self assert: repository username equals: 'dkh'.
 	self assert: repository password equals: 'password'

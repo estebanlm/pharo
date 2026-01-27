@@ -6,6 +6,13 @@ Class {
 	#tag : 'Specs'
 }
 
+{ #category : 'baselines' }
+MetacelloAbstractSpecTest >> baseline: spec [
+
+	<baseline>
+	
+]
+
 { #category : 'specs' }
 MetacelloAbstractSpecTest >> groupSpec [
 
@@ -21,7 +28,7 @@ MetacelloAbstractSpecTest >> packageSpec [
 { #category : 'accessing' }
 MetacelloAbstractSpecTest >> project [
 
-	^ (MetacelloStubConstructor on: self) project
+	^ (MetacelloBaselineConstructor on: self) project
 ]
 
 { #category : 'specs' }

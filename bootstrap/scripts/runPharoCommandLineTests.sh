@@ -21,7 +21,6 @@ find ${CACHE}
 # I will use the name of the image to determine the vm version (because file name is in the format Pharo7.0.0-rc1)
 #
 # WARNING: I'm assuming CACHE=bootstrap-cache
-# WARNING: If you change this, you will need to change "runKernelTests.sh" too
 #
 TEST_NAME_PREFIX=$(basename `find ${CACHE} -name "Pharo*.zip" | head -n 1` | cut -d'-' -f 1-2)
 

@@ -18,15 +18,6 @@ Class {
 	#tag : 'Scripts'
 }
 
-{ #category : 'baselines' }
-MetacelloScriptExecutor class >> baselineNameFrom: baseName [
-	"Return the fully-qualified configuration class name."
-
-	^ (baseName indexOfSubCollection: 'BaselineOf') > 0
-		  ifTrue: [ baseName ]
-		  ifFalse: [ 'BaselineOf' , baseName ]
-]
-
 { #category : 'execution' }
 MetacelloScriptExecutor >> applyArgsToProjectSpec: aProjectSpec [
     classNameArg ifNotNil: [ aProjectSpec className: classNameArg ].
@@ -42,6 +33,12 @@ MetacelloScriptExecutor >> baselineArg [
 { #category : 'args' }
 MetacelloScriptExecutor >> baselineArg: anObject [
 	baselineArg := anObject
+]
+
+{ #category : 'configuration' }
+MetacelloScriptExecutor >> beStrict: aBoolean [
+
+	self options at: #strict put: aBoolean
 ]
 
 { #category : 'args' }
@@ -63,9 +60,12 @@ MetacelloScriptExecutor >> execute [
 			| engine |
 			engine := MetacelloScriptEngine new
 				          options: self options copy;
-				          projectReferenceSpec: projectReferenceSpec;
+				          projectSpec: projectReferenceSpec;
 				          yourself.
-			engine perform: actionArg key withArguments: actionArg value.
+			[
+				self class codeSupportAnnouncer announce: (MetacelloExecutionStartAnnouncement executor: self).
+				engine perform: actionArg key withArguments: actionArg value ] ensure: [
+				self class codeSupportAnnouncer announce: (MetacelloExecutionEndAnnouncement executor: self) ].
 			engine root ifNotNil: [ :root | self roots add: root ] ].
 	^ (self singleRoot and: [ self roots size == 1 ])
 		  ifTrue: [ self roots first ]
@@ -77,7 +77,7 @@ MetacelloScriptExecutor >> executeString: aString do: projectSpecBlock [
 
 	| projectSpec |
 	singleRoot ifNil: [ self singleRoot: true ].
-	projectSpec := MetacelloProjectRegistration projectSpecForClassNamed: (self class baselineNameFrom: aString) ifAbsent: [ ].
+	projectSpec := MetacelloProjectRegistration projectSpecForClassNamed: aString ifAbsent: [ ].
 
 	(self shouldBeExecutedFor: projectSpec) ifTrue: [ projectSpecBlock value: (self applyArgsToProjectSpec: projectSpec copy) ]
 ]

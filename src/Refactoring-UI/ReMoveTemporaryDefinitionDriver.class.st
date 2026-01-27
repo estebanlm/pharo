@@ -15,6 +15,12 @@ Class {
 	#tag : 'Drivers'
 }
 
+{ #category : 'accessing' }
+ReMoveTemporaryDefinitionDriver class >> driverName [
+
+	^ 'Move temporary definition'
+]
+
 { #category : 'resources' }
 ReMoveTemporaryDefinitionDriver >> configureRefactoring [
 

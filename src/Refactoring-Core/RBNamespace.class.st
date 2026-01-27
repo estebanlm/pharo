@@ -642,22 +642,30 @@ RBNamespace >> removeProtocolNamed: aString in: aClass [
 { #category : 'changes' }
 RBNamespace >> renameClass: aRBClass to: aSymbol around: aBlock [
 
-	| change value dict |
+	| change value dict oldChanges |
 	change := changeFactory renameClass: aRBClass to: aSymbol.
-	self perform: aBlock onlyWithChange: change.
+	changes addChange: change.
+	oldChanges := changes.
+	aBlock ensure: [ changes := oldChanges ].
 	self flushCaches.
+
 	dict := (newClasses includesKey: aRBClass name)
 		        ifTrue: [ newClasses ]
 		        ifFalse: [ changedClasses ].
+
 	self markAsRemoved: aRBClass name.
 	self unmarkAsRemoved: aSymbol.
+
 	value := dict at: aRBClass name.
 	dict removeKey: aRBClass name.
 	dict at: aSymbol put: value.
+
 	value first name: aSymbol.
 	value last name: aSymbol.
+
 	value first subclasses do: [ :each | each superclass: value first ].
 	value last subclasses do: [ :each | each superclass: value last ].
+
 	^ change
 ]
 
@@ -697,15 +705,16 @@ RBNamespace >> repackage: aClass in: aPackage tag: aTag [
 RBNamespace >> reparentClasses: aRBClassCollection to: newClass [
 
 	aRBClassCollection do: [ :aClass |
-		self defineClass: [ :aBuilder |
-			aBuilder
-				superclassName: newClass name;
-				name: aClass name;
-				slots: aClass instanceVariableNames;
-				sharedVariables: aClass classVariableNames;
-				sharedPools: aClass sharedPoolNames;
-				package: aClass packageName;
-				tag: aClass tagName ] ]
+			self defineClass: [ :aBuilder |
+					aBuilder
+						superclassName: newClass name;
+						name: aClass name;
+						slots: aClass instanceVariableNames;
+						sharedVariables: aClass classVariableNames;
+						sharedPools: aClass sharedPoolNames;
+						package: aClass packageName;
+						tag: aClass tagName;
+						classSlots: aClass classSide instanceVariableNames ] ]
 ]
 
 { #category : 'accessing' }

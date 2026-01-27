@@ -97,7 +97,7 @@ ContextDebuggingInfoTest >> testTempNamedAtTheEndOfOptimizedBlock [
 			Processor activeProcess suspend ] ] fork.
 	s wait.
 	
-	self deny: (process suspendedContext temporaryVariableNames includes: #i)
+	self assert: (process suspendedContext temporaryVariableNames includes: #i)
 ]
 
 { #category : 'tests' }

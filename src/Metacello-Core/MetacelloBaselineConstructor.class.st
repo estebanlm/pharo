@@ -14,8 +14,7 @@ Class {
 	#instVars : [
 		'root',
 		'project',
-		'attributeMap',
-		'baseline'
+		'attributeMap'
 	],
 	#category : 'Metacello-Core-Constructors',
 	#package : 'Metacello-Core',
@@ -50,23 +49,28 @@ MetacelloBaselineConstructor >> author: aBlockOrString [
 		'The option #author: will not do anything anymore in Pharo 14+. This option can be removed in it is in an attribute for Pharo 14+ or ignored if this is for a different platform. Reason: The author metadata was used with SmalltalkHub but not this information is already managed by git or other CVS.'
 ]
 
-{ #category : 'accessing' }
-MetacelloBaselineConstructor >> baseline [
+{ #category : 'baselines' }
+MetacelloBaselineConstructor >> baseline: aString [
 
-	^ baseline
-]
-
-{ #category : 'accessing' }
-MetacelloBaselineConstructor >> baseline: aBaselineOf [
-
-	baseline := aBaselineOf
+	self baseline: aString with: [ ]
 ]
 
 { #category : 'api' }
 MetacelloBaselineConstructor >> baseline: aString with: aBlock [
-	"Alias to make baselines more explicits and backward compatible"
+	"Alias to make baselines more explicits and backward compatible.
+	
+	I allow to decalre a dependency to a project. The string will be the project name. In the block some things can be set such as the repository, the things to load (using #loads:) and other parameters.
+	By default if the #className is not defined, it will use BaselineOf{nameOfTheProject}."
 
 	^ self project: aString with: aBlock
+]
+
+{ #category : 'pragma extraction' }
+MetacelloBaselineConstructor >> baselineMethodIn: aClass [
+
+	^ (Pragma allNamed: #baseline from: aClass to: BaselineOf)
+		ifEmpty: [ self error: 'No #baseline pragma found' ]
+		ifNotEmpty: [ :pragmas | pragmas first methodSelector ]
 ]
 
 { #category : 'api - old' }
@@ -105,20 +109,6 @@ MetacelloBaselineConstructor >> description: aBlockOrString [
 		'The option #description: will not do anything anymore in Pharo 14+. This option can be removed in it is in an attribute for Pharo 14+ or ignored if this is for a different platform. Reason: The author metadata was used with SmalltalkHub but not this information is already managed by git or other CVS.'
 ]
 
-{ #category : 'private' }
-MetacelloBaselineConstructor >> evaluatePragma: pragma [
-
-	self baseline perform: pragma methodSelector with: self
-]
-
-{ #category : 'pragma extraction' }
-MetacelloBaselineConstructor >> extractBaselinePragmaFor: aClass [
-
-	^ (Pragma allNamed: #baseline in: aClass)
-		ifEmpty: [ self error: 'No #baseline pragma found' ]
-		ifNotEmpty: [ :pragmas | pragmas first ]
-]
-
 { #category : 'api - old' }
 MetacelloBaselineConstructor >> file: aString [
 	"Kept for compiatibility with other Smalltalk and old Pharo versions."
@@ -129,7 +119,9 @@ MetacelloBaselineConstructor >> file: aString [
 
 { #category : 'api' }
 MetacelloBaselineConstructor >> for: attributeListOrSymbol do: aBlock [
-	"conditional version support"
+	"conditional version support.
+	
+	The block will be executed only if the attribute list has one attribute matches an attribute of the current load."
 
 	(attributeListOrSymbol isSymbol
 		 ifTrue: [ { attributeListOrSymbol } ]
@@ -145,6 +137,7 @@ MetacelloBaselineConstructor >> for: attributeListOrSymbol version: aString [
 
 { #category : 'api' }
 MetacelloBaselineConstructor >> group: aString overrides: aStringOrCollection [
+	"Define a groupe to replace an existing group"
 
 	self root packagesSpec add: (self project groupSpec
 			 name: aString;
@@ -154,6 +147,7 @@ MetacelloBaselineConstructor >> group: aString overrides: aStringOrCollection [
 
 { #category : 'api' }
 MetacelloBaselineConstructor >> group: aString with: aStringOrCollection [
+	"Adds the dependencies as parameter to the group named `aString`. If the group does not yet exist, it will be created."
 
 	self root packagesSpec merge: (self project groupSpec
 			 name: aString;
@@ -173,6 +167,8 @@ MetacelloBaselineConstructor >> import: aStringOrCollection [
 		spec baseline: 'Sample' with: [ spec repository: 'github://dalehenrich/sample:master/repository' ].
 		spec baseline: 'Example' with: [ spec repository: 'github://dalehenrich/example:master/repository' ].
 		spec import: #('Sample' 'Example')]	
+		
+		This can be used when we declare projects at the root and import them in some subsections (using `for:do:`).
 	 "
 
 	self root import: aStringOrCollection
@@ -207,6 +203,9 @@ MetacelloBaselineConstructor >> initialize [
 
 { #category : 'api' }
 MetacelloBaselineConstructor >> loads: aStringOrCollection [
+	"Define the list of loadable specs to load. 
+	
+	This is sued when declaring a dependency to another project. It is possible to not load the full project but to load only a subset."
 
 	self root loads: aStringOrCollection
 ]
@@ -228,17 +227,15 @@ MetacelloBaselineConstructor >> name: anObject [
 { #category : 'initialization' }
 MetacelloBaselineConstructor >> on: aBaseline project: aProject [
 
-	| pragma versionSpec |
+	| versionSpec |
 	project := aProject.
-	self baseline: aBaseline.
-	pragma := self extractBaselinePragmaFor: aBaseline class.
+	self project baseline: aBaseline.
 	versionSpec := MetacelloVersionSpec project: self project.
 	self root: versionSpec.
-	self evaluatePragma: pragma.
+	aBaseline perform: (self baselineMethodIn: aBaseline class) with: self.
 	self project attributes do: [ :attribute |
 		(self attributeMap at: attribute ifAbsent: [ ]) ifNotNil: [ :blockList | blockList do: [ :block | self with: versionSpec during: block ] ] ].
-	self project version: versionSpec.
-	self project configuration: aBaseline
+	self project version: versionSpec
 ]
 
 { #category : 'api - old' }
@@ -250,6 +247,7 @@ MetacelloBaselineConstructor >> operator: anObject [
 
 { #category : 'api' }
 MetacelloBaselineConstructor >> package: aString [
+	"Decalre a package to load"
 
 	self root packagesSpec add: (self project packageSpec
 			 name: aString;
@@ -258,13 +256,16 @@ MetacelloBaselineConstructor >> package: aString [
 
 { #category : 'api' }
 MetacelloBaselineConstructor >> package: aString overrides: aBlock [
+	"Replace the declaration of a package and its dependencies by this new declaration"
 
 	| spec |
 	spec := self project packageSpec
 		        name: aString;
 		        yourself.
-	self root packagesSpec add: spec.
-	self with: spec during: aBlock
+
+	self with: spec during: aBlock.
+
+	self root packagesSpec add: spec
 ]
 
 { #category : 'api' }
@@ -277,6 +278,8 @@ MetacelloBaselineConstructor >> package: packageName with: aBlock [
 		
 		spec package: 'MyPackage' with: [
 			spec repository: '/opt/gemstone/repository'.
+			
+	If the package declaration already exists, merge the two declarations.
 	 "
 
 	| spec |
@@ -284,20 +287,23 @@ MetacelloBaselineConstructor >> package: packageName with: aBlock [
 		        name: packageName;
 		        yourself.
 
-	self root packagesSpec merge: spec.
 	aBlock isString
 		ifTrue: [ MetacelloNotification signal: 'Now #package:with: only takes a block as second parameter and not a string.' ]
-		ifFalse: [ self with: spec during: aBlock ]
+		ifFalse: [ self with: spec during: aBlock ].
+
+	self root packagesSpec merge: spec
 ]
 
 { #category : 'api' }
 MetacelloBaselineConstructor >> postLoadDoIt: aSymbol [
+	"The symbol should match a method name in the baseline. This method will be executed after the loading of the spec."
 
 	self root postLoadDoIt: aSymbol
 ]
 
 { #category : 'api' }
 MetacelloBaselineConstructor >> preLoadDoIt: aSymbol [
+	"The symbol should match a method name in the baseline. This method will be executed before the loading of the spec (but after the fetching phase)."
 
 	self root preLoadDoIt: aSymbol
 ]
@@ -310,39 +316,61 @@ MetacelloBaselineConstructor >> project [
 
 { #category : 'api' }
 MetacelloBaselineConstructor >> project: aString [
+	"Allow to declare a dependency to a project. This version without a #with: argument is seldom used"
 
 	self project: aString with: [ ]
 ]
 
 { #category : 'api' }
 MetacelloBaselineConstructor >> project: aString copyFrom: oldSpecName with: aBlock [
+	"I allow to copy a dependency declaration and to adapt it.
+	Typically I'll be used to load different groups of a project. 
+	
+	Example:
+	
+	spec project: 'Toto' with: [
+		spec
+			repository: 'uri';
+			loads: #(Core)
+		].
+	
+	spec project: 'TotoTests' copyFrom: 'Toto' with: [ spec loads: #(Tests) ].
+	
+	spec package: 'Model' with: [ spec requires: 'Toto' ].
+	spec package: 'Model-Tests' with: [ spec requires: #(Model TotoTests) ]"
 
 	| spec projectSpec |
 	projectSpec := MetacelloProjectSpec named: aString.
 	spec := MetacelloProjectReferenceSpec projectReference: projectSpec.
-	self root packagesSpec copy: oldSpecName to: spec.
-	self with: projectSpec during: aBlock
+	self with: projectSpec during: aBlock.
+
+	self root packagesSpec copy: oldSpecName to: spec
 ]
 
 { #category : 'api' }
 MetacelloBaselineConstructor >> project: aString overrides: aBlock [
+	"Override a project declaration"
 
 	| spec projectSpec |
 	projectSpec := MetacelloProjectSpec named: aString.
 	spec := MetacelloProjectReferenceSpec projectReference: projectSpec.
-	self root packagesSpec add: spec.
-	self with: projectSpec during: aBlock
+	self with: projectSpec during: aBlock.
+	self root packagesSpec add: spec
 ]
 
 { #category : 'api' }
 MetacelloBaselineConstructor >> project: aString with: aBlockOrString [
+	"I am used to declare a dependency on a project.
+	I allow to decalre a dependency to a project. The string will be the project name. In the block some things can be set such as the repository, the things to load (using #loads:) and other parameters.
+	By default if the #className is not defined, it will use BaselineOf{nameOfTheProject}."
 
 	| projectSpec spec |
 	projectSpec := MetacelloProjectSpec named: aString.
 	spec := MetacelloProjectReferenceSpec projectReference: projectSpec.
-	self root packagesSpec merge: spec.
 
-	self with: projectSpec during: aBlockOrString
+	self with: projectSpec during: aBlockOrString.
+
+	self root packagesSpec merge: spec
 ]
 
 { #category : 'api' }
@@ -413,6 +441,12 @@ MetacelloBaselineConstructor >> root [
 { #category : 'accessing' }
 MetacelloBaselineConstructor >> root: aMetacelloSpec [
     root := aMetacelloSpec
+]
+
+{ #category : 'accessing' }
+MetacelloBaselineConstructor >> strict: aBoolean [
+	
+	root strict: aBoolean
 ]
 
 { #category : 'api - old' }

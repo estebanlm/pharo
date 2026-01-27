@@ -12,7 +12,7 @@ Class {
 { #category : 'accessing' }
 StRefactoringAddClassPresenterTest >> newPresenter [
 
-	^ StRefactoringAddClassPresenter on: (ReAddSubclassDriver basicNew
+	^ StRefactoringAddClassPresenter on: (ReInsertSubclassDriver basicNew
 			   superclass: Object;
 			   yourself)
 ]

@@ -1,6 +1,6 @@
 Class {
 	#name : 'MetacelloGroupSpec',
-	#superclass : 'MetacelloAbstractPackageSpec',
+	#superclass : 'MetacelloLoadableSpec',
 	#instVars : [
 		'project',
 		'name'
@@ -29,13 +29,17 @@ MetacelloGroupSpec >> includeSpecNamesForPackageOrdering: aVersionSpec [
   ^ #()
 ]
 
+{ #category : 'testing' }
+MetacelloGroupSpec >> isGroupSpec [
+
+	^ true
+]
+
 { #category : 'merging' }
 MetacelloGroupSpec >> mergeSpec: anotherSpec [
 
-	| newSpec |
-	newSpec := super mergeSpec: anotherSpec.
-	anotherSpec name ifNotNil: [ :aName | newSpec name: aName ].
-	^ newSpec
+	super mergeSpec: anotherSpec.
+	anotherSpec name ifNotNil: [ :aName | self name: aName ]
 ]
 
 { #category : 'querying' }
@@ -53,9 +57,7 @@ MetacelloGroupSpec >> name: aString [
 { #category : 'loading' }
 MetacelloGroupSpec >> packageSpecsInLoadOrder [
 
-	^ (self project version spec packageSpecsInLoadOrder select: [ :each |
-		   self includes includes: each name ]) flatCollect: [ :e |
-		  e packageSpecsInLoadOrder ]
+	^ (self project version packageSpecsInLoadOrder select: [ :each | self includes includes: each name ]) flatCollect: [ :e | e packageSpecsInLoadOrder ]
 ]
 
 { #category : 'accessing' }
@@ -68,23 +70,6 @@ MetacelloGroupSpec >> project [
 MetacelloGroupSpec >> project: aMetacelloProject [
 
 	project := aMetacelloProject
-]
-
-{ #category : 'visiting' }
-MetacelloGroupSpec >> projectDo: projectBlock packageDo: packageBlock groupDo: groupBlock [
-
-	groupBlock value: self
-]
-
-{ #category : 'private' }
-MetacelloGroupSpec >> requiredSpecsForPackageOrdering: aVersionSpec [
-  ^ #()
-]
-
-{ #category : 'accessing' }
-MetacelloGroupSpec >> requires: aCollection [
-
-	self shouldNotImplement
 ]
 
 { #category : 'private' }
@@ -108,21 +93,20 @@ MetacelloGroupSpec >> resolveToLoadableSpec [
 { #category : 'private' }
 MetacelloGroupSpec >> resolveToPackagesAndProjectsIn: aVersionSpec [
 
-	| packages |
-	packages := Dictionary new.
-	self resolveToPackagesIn: aVersionSpec into: packages visited: MetacelloVisitedPackages new.
-	^ packages values asOrderedCollection
+	^ self resolveToPackagesIn: aVersionSpec into: OrderedCollection new visited: OrderedCollection new
 ]
 
 { #category : 'private' }
 MetacelloGroupSpec >> resolveToPackagesIn: aVersionSpec into: packages visited: visited [
 
-	visited visit: self doing: [ :aSpec |
-			| map |
-			map := aVersionSpec packagesSpec map.
-			aSpec includes do: [ :pkgName |
-					(aVersionSpec packageNamed: pkgName forMap: map ifAbsent: [ ])
-						projectDo: [ :prj | packages at: prj name put: prj ]
-						packageDo: [ :pkg | packages at: pkg name put: pkg ]
-						groupDo: [ :grp | grp resolveToPackagesIn: aVersionSpec into: packages visited: visited ] ] ]
+	(visited includes: self name) ifTrue: [ ^ self ].
+
+	self includes
+		collect: [ :specName | aVersionSpec packageNamed: specName ]
+		thenDo: [ :spec |
+				spec isGroupSpec
+					ifTrue: [ spec resolveToPackagesIn: aVersionSpec into: packages visited: visited ]
+					ifFalse: [ packages add: spec ] ].
+
+	^ packages
 ]

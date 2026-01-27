@@ -418,12 +418,6 @@ OSSDL2BackendWindow >> initWithHandle: aHandle attributes: attributes [
 	self fetchDPI
 ]
 
-{ #category : 'initialization' }
-OSSDL2BackendWindow >> initialize [
-	super initialize.
-	self class initializeSlots: self
-]
-
 { #category : 'text input' }
 OSSDL2BackendWindow >> isTextInputActive [
 	"See https://wiki.libsdl.org/SDL_IsTextInputActive"

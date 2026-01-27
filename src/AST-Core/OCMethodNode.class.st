@@ -136,6 +136,12 @@ OCMethodNode >> allDefinedVariables [
 ]
 
 { #category : 'iterating' }
+OCMethodNode >> allMessageNodes [
+
+	^ self allChildren select: [ :aNode | aNode isMessage ]
+]
+
+{ #category : 'iterating' }
 OCMethodNode >> allSequenceNodes [
 
 	^ self allChildren select: #isSequence

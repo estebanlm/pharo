@@ -98,7 +98,7 @@ PharoChangesCondenser >> installNewChangesFile [
 	self backupOldChanges.
 	self originalFile ensureDelete.
 	newChangesFile moveTo: self originalFile.
-	Smalltalk openSourceFiles
+	SourceFileArray reset
 ]
 
 { #category : 'helper' }
@@ -115,7 +115,8 @@ PharoChangesCondenser >> nextCommentChunkDo: aBlock [
 
 { #category : 'accessing' }
 PharoChangesCondenser >> originalFile [
-	^ Smalltalk changesFile asFileReference
+
+	^ FileLocator changes asFileReference
 ]
 
 { #category : 'initialization' }
@@ -181,18 +182,18 @@ PharoChangesCondenser >> swapSourcePointerOfMethod: method [
 
 { #category : 'private - 2 swapping' }
 PharoChangesCondenser >> swapSourcePointers [
-	job
-		title: 'Swapping source pointers';
-		currentValue: 0.
+
+	job currentValue: 0 title: 'Swapping source pointers'.
 
 	Smalltalk allClassesAndTraitsDo: [ :classOrTrait |
-		job increment.
-		self swapSourcePointerOfClassOrTrait: classOrTrait ]
+			job increment.
+			self swapSourcePointerOfClassOrTrait: classOrTrait ]
 ]
 
 { #category : 'accessing' }
 PharoChangesCondenser >> temporaryFile [
-	^ (Smalltalk changesFile, 'new') nextVersion
+
+	^ (FileLocator changes , 'new') nextVersion
 ]
 
 { #category : 'private - 1 writing' }

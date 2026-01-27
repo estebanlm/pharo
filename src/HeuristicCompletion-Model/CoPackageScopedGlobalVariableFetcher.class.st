@@ -47,11 +47,10 @@ CoPackageScopedGlobalVariableFetcher >> packageLocalClasses: aBlock [
 		homePackageClassNames add: cls name ].
 	
 	homePackageClassNames do: [ :closeClassName |
-			(filter accepts: closeClassName) ifTrue: [
 					aBlock value:
 						((NECGlobalEntry contents: closeClassName node: nil)
 							 fetcher: self;
-							 yourself) ] ].
+							 yourself) ].
 	
 	^ homePackageClassNames
 ]

@@ -13,6 +13,7 @@ Class {
 		'fetcher'
 	],
 	#classVars : [
+		'OriginDisplayed',
 		'SpaceAfterCompletion'
 	],
 	#category : 'NECompletion-Model',
@@ -23,6 +24,12 @@ Class {
 { #category : 'instance creation' }
 NECEntry class >> contents: aString node: aNode [
 	^ self new contents: aString node: aNode
+]
+
+{ #category : 'accessing' }
+NECEntry class >> originDisplayed: aBoolean [
+
+	OriginDisplayed := aBoolean
 ]
 
 { #category : 'accessing' }
@@ -57,6 +64,12 @@ NECEntry >> activateOn: aCompletionContext [
 	aCompletionContext replaceTokenInEditorWith: entryContents
 ]
 
+{ #category : 'matching' }
+NECEntry >> beginsWith: aString [
+
+	^ self contents beginsWith: aString
+]
+
 { #category : 'private' }
 NECEntry >> browse [
 	self subclassResponsibility
@@ -64,11 +77,12 @@ NECEntry >> browse [
 
 { #category : 'accessing' }
 NECEntry >> contents [
-	^contents
+	^ contents
 ]
 
 { #category : 'accessing' }
 NECEntry >> contents: aString node: aNode [
+
 	contents := aString.
 	node := aNode
 ]
@@ -92,8 +106,10 @@ NECEntry >> fetcher [
 
 { #category : 'accessing' }
 NECEntry >> fetcher: anObject [
-
-	fetcher := anObject
+	"We store the name of the fetcher as a string 
+	to ease debugging when a dynamic fetcher returns a item from another one more static."
+	
+	fetcher := anObject class name
 ]
 
 { #category : 'accessing' }
@@ -102,8 +118,30 @@ NECEntry >> hightlightSymbol [
 ]
 
 { #category : 'accessing' }
-NECEntry >> label [
-	^ 'unknown'
+NECEntry >> label [ 
+
+	| typeString |
+	typeString := self rawLabel.
+	self originDisplayed ifTrue: [ typeString := typeString , ' from: ', self fetcher asString ].
+	^ typeString
+]
+
+{ #category : 'accessing' }
+NECEntry >> node [
+
+	^ node
+]
+
+{ #category : 'accessing' }
+NECEntry >> node: anObject [
+
+	node := anObject
+]
+
+{ #category : 'accessing' }
+NECEntry >> originDisplayed [
+
+	^ OriginDisplayed ifNil: [ OriginDisplayed := false ]
 ]
 
 { #category : 'printing' }
@@ -117,4 +155,9 @@ NECEntry >> printOn: aStream [
 	self hightlightSymbol ifNotNil: [ aStream nextPutAll: self hightlightSymbol ].
 
 	aStream nextPut: $)
+]
+
+{ #category : 'accessing' }
+NECEntry >> rawLabel [
+	^ 'unknown'
 ]

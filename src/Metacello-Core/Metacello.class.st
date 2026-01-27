@@ -191,7 +191,8 @@ Metacello class >> image [
 
 { #category : 'instance creation' }
 Metacello class >> registrations [
-  ^ MetacelloProjectRegistration registry registrations
+
+	^ MetacelloProjectRegistry registry registrations
 ]
 
 { #category : 'instance creation' }
@@ -212,6 +213,18 @@ Metacello class >> scriptExecutorClass [
 Metacello >> baseline: projectName [
 
 	self scriptExecutor baselineArg: projectName
+]
+
+{ #category : 'api options' }
+Metacello >> beStrict [
+
+	self beStrict: true
+]
+
+{ #category : 'api options' }
+Metacello >> beStrict: aBoolean [
+
+	self scriptExecutor beStrict: aBoolean
 ]
 
 { #category : 'api repository shortcuts' }
@@ -375,11 +388,11 @@ Metacello >> onDowngradeUseIncoming [
 
 { #category : 'api options' }
 Metacello >> onDowngradeUseIncoming: projectNames [
-  self
-    onDowngrade: [ :ex :loaded :incoming | 
-      (projectNames includes: loaded baseName)
-        ifTrue: [ ex useIncoming ]
-        ifFalse: [ ex useLoaded ] ]
+
+	self onDowngrade: [ :ex :loaded :incoming |
+			(projectNames includes: loaded baseName)
+				ifTrue: [ ex useIncoming ]
+				ifFalse: [ ex useLoaded ] ]
 ]
 
 { #category : 'api options' }

@@ -14,9 +14,10 @@ Class {
 SycCmInsertSuperclassCommand2 >> executeRefactoring [
 	"The class name is necessary so the browser can select the new subclass"
 	
-	| driver |
+	| driver | 
 	driver := (ReInsertSuperclassDriver 
-		superclass: self targetClass
+		superclass: self targetClass 
+		superclassParent: self targetClass superclass
 		packageNames: self packageNames) scopes: refactoringScopes.
 	"Pay attention superclass meansthe class above which the new class was inserted"
 

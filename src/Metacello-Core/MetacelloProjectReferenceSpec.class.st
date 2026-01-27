@@ -1,6 +1,6 @@
 Class {
 	#name : 'MetacelloProjectReferenceSpec',
-	#superclass : 'MetacelloAbstractPackageSpec',
+	#superclass : 'MetacelloLoadableSpec',
 	#instVars : [
 		'projectReference'
 	],
@@ -17,11 +17,6 @@ MetacelloProjectReferenceSpec class >> projectReference: aMetacelloProjectSpec [
 		  yourself
 ]
 
-{ #category : 'merging' }
-MetacelloProjectReferenceSpec >> aboutToCopy [
-    self projectReference className
-]
-
 { #category : 'visiting' }
 MetacelloProjectReferenceSpec >> acceptVisitor: aVisitor [
 	
@@ -34,31 +29,23 @@ MetacelloProjectReferenceSpec >> includes: aCollection [
 	self shouldNotImplement
 ]
 
+{ #category : 'testing' }
+MetacelloProjectReferenceSpec >> isProjectReferenceSpec [
+
+	^ true
+]
+
 { #category : 'importing' }
 MetacelloProjectReferenceSpec >> mergeImportLoads: aLoadList [
     self projectReference mergeImportLoads: aLoadList
 ]
 
 { #category : 'merging' }
-MetacelloProjectReferenceSpec >> mergeMap [
-
-	| map |
-	map := super mergeMap.
-	map at: #projectReference put: projectReference.
-	^map
-]
-
-{ #category : 'merging' }
 MetacelloProjectReferenceSpec >> mergeSpec: anotherSpec [
 
-	| newSpec map |
-	newSpec := super mergeSpec: anotherSpec.
-	map := anotherSpec mergeMap.
-	(map at: #projectReference) ifNotNil: [ :anotherProjectReference |
-		newSpec projectReference: (newSpec projectReference
-				 ifNotNil: [ :reference | reference mergeSpec: anotherProjectReference ]
-				 ifNil: [ anotherProjectReference ]) ].
-	^ newSpec
+	super mergeSpec: anotherSpec.
+	self projectReference className. "Before merging the reference, we need to launch the defensive strategy of the class name."
+	self projectReference: (self projectReference mergeSpec: anotherSpec projectReference)
 ]
 
 { #category : 'querying' }
@@ -67,19 +54,12 @@ MetacelloProjectReferenceSpec >> name [
 	^ self projectReference name
 ]
 
-{ #category : 'merging' }
-MetacelloProjectReferenceSpec >> nonOverridable [
-
-	^super nonOverridable, #( projectReference )
-]
-
 { #category : 'loading' }
 MetacelloProjectReferenceSpec >> packageSpecsInLoadOrder [
 
 	| specs loadedSpecs loads |
-	specs := self projectReference version spec packageSpecsInLoadOrder.
-	loads := self projectReference loadListForVersion:
-		         self projectReference version.
+	specs := self projectReference version packageSpecsInLoadOrder.
+	loads := self projectReference loadListForVersion: self projectReference version.
 	loadedSpecs := specs select: [ :each | loads includes: each name ].
 	^ loadedSpecs flatCollect: [ :e | e packageSpecsInLoadOrder ]
 ]
@@ -89,12 +69,6 @@ MetacelloProjectReferenceSpec >> postCopy [
 
 	super postCopy.
 	projectReference := projectReference copy.
-]
-
-{ #category : 'visiting' }
-MetacelloProjectReferenceSpec >> projectDo: projectBlock packageDo: packageBlock groupDo: groupBlock [
-
-	projectBlock value: self
 ]
 
 { #category : 'accessing' }
@@ -136,13 +110,7 @@ MetacelloProjectReferenceSpec >> repository: aStringOrMetacelloRepositorySpec [
 { #category : 'loading' }
 MetacelloProjectReferenceSpec >> repositorySpecs [
 
-	^ self repositories specs
-]
-
-{ #category : 'accessing' }
-MetacelloProjectReferenceSpec >> requires: aCollection [
-
-	self shouldNotImplement
+	^ self repositories repositorySpecs
 ]
 
 { #category : 'private' }

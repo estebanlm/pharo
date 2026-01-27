@@ -80,7 +80,7 @@ StRefactoringPreviewPresenter >> changesFrom: aCompositeChange scopes: aCollecti
 { #category : 'action' }
 StRefactoringPreviewPresenter >> closeWindow [
 
-	self window close
+	self withWindowDo: [ :window | window close ]
 ]
 
 { #category : 'initialization' }

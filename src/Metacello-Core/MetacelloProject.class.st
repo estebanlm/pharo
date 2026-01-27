@@ -29,7 +29,7 @@ Class {
 		'loadType',
 		'projectAttributes',
 		'version',
-		'configuration'
+		'baseline'
 	],
 	#category : 'Metacello-Core-Model',
 	#package : 'Metacello-Core',
@@ -43,20 +43,6 @@ MetacelloProject class >> initialize [
 	self deprecatedAliases: #( #MetacelloMCBaselineProject #MetacelloBaselineProject #MetacelloCypressBaselineProject )
 ]
 
-{ #category : 'instance creation' }
-MetacelloProject class >> new [
-
-	| inst |
-	inst := self basicNew.
-	^inst configuration: inst; yourself
-]
-
-{ #category : 'instance creation' }
-MetacelloProject class >> on: aConfig [
-
-	^self basicNew configuration: aConfig; yourself
-]
-
 { #category : 'private' }
 MetacelloProject >> attributes [
 
@@ -66,13 +52,15 @@ MetacelloProject >> attributes [
 ]
 
 { #category : 'accessing' }
-MetacelloProject >> configuration [
-	^ configuration
+MetacelloProject >> baseline [
+
+	^ baseline
 ]
 
 { #category : 'accessing' }
-MetacelloProject >> configuration: anObject [
-	configuration := anObject
+MetacelloProject >> baseline: aBaseline [
+
+	baseline := aBaseline
 ]
 
 { #category : 'private' }
@@ -95,7 +83,7 @@ MetacelloProject >> groupSpec [
 { #category : 'accessing' }
 MetacelloProject >> label [
 
-	^self configuration class name
+	^ self baseline class name
 ]
 
 { #category : 'accessing' }
@@ -127,12 +115,6 @@ MetacelloProject >> platformAttributes [
 	^ self defaultPlatformAttributes , list
 ]
 
-{ #category : 'private' }
-MetacelloProject >> pragmaKeywords [
-
-	^#(version:attribute: blessing:attribute: description:attribute: required:attribute: groups:attribute: doits:attribute: projectPackage:attribute: packages:attribute: repositories:attribute: )
-]
-
 { #category : 'printing' }
 MetacelloProject >> printOn: aStream [
 
@@ -162,24 +144,6 @@ MetacelloProject >> projectAttributes: aList [
 	projectAttributes := aList
 ]
 
-{ #category : 'development support' }
-MetacelloProject >> projectPackage [
-
-	self configuration class mcWorkingCopy ifNotNil: [ :workingCopy |
-			| pkgSpec repo |
-			pkgSpec := self packageSpec
-				           name: workingCopy packageName;
-				           yourself.
-			repo := workingCopy repositoryGroup repositories
-				        detect: [ :each | each ~~ MCCacheRepository default ]
-				        ifNone: [
-						        MetacelloNotification signal: 'Using cache repository for ' , self label , ' project package'.
-						        MCCacheRepository default ].
-			pkgSpec repository: repo asRepositorySpec.
-			^ pkgSpec ].
-	^ nil
-]
-
 { #category : 'accessing' }
 MetacelloProject >> repositoryDescription [
 	^ repositoryDescription
@@ -190,6 +154,12 @@ MetacelloProject >> setBaselineRepositoryDescription: aListOrRepositoryDescripti
 	"set #version repositories to < aListOrRepositoryDescriptions>. Should be the directory where the BaselineOf is located."
 
 	repositoryDescription := aListOrRepositoryDescriptions
+]
+
+{ #category : 'accessing' }
+MetacelloProject >> strict [
+	
+	^ version strict
 ]
 
 { #category : 'versions' }

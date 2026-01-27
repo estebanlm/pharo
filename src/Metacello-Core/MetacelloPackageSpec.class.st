@@ -1,12 +1,14 @@
 Class {
 	#name : 'MetacelloPackageSpec',
-	#superclass : 'MetacelloAbstractPackageSpec',
+	#superclass : 'MetacelloLoadableSpec',
 	#instVars : [
+		'requires',
 		'project',
 		'name',
 		'repositories',
 		'preLoadDoIt',
-		'postLoadDoIt'
+		'postLoadDoIt',
+		'strict'
 	],
 	#category : 'Metacello-Core-Model',
 	#package : 'Metacello-Core',
@@ -49,6 +51,12 @@ MetacelloPackageSpec >> getRepositories [
 ]
 
 { #category : 'private' }
+MetacelloPackageSpec >> includeSpecNamesForPackageOrdering: aVersionSpec [
+
+	^ self specs: self includesForPackageOrdering forPackageOrdering: aVersionSpec
+]
+
+{ #category : 'private' }
 MetacelloPackageSpec >> includesForPackageOrdering [
   ^ self includes
 ]
@@ -60,29 +68,30 @@ MetacelloPackageSpec >> info [
 	^self
 ]
 
+{ #category : 'testing' }
+MetacelloPackageSpec >> isPackageSpec [
+
+	^ true
+]
+
 { #category : 'merging' }
 MetacelloPackageSpec >> mergeMap [
 
 	| map |
 	map := super mergeMap.
-	map at: #repositories put: self repositories.
 	map at: #preLoadDoIt put: preLoadDoIt.
 	map at: #postLoadDoIt put: postLoadDoIt.
-	^map
+	^ map
 ]
 
 { #category : 'merging' }
 MetacelloPackageSpec >> mergeSpec: anotherSpec [
 
-	| newSpec anotherRepositories |
-	newSpec := super mergeSpec: anotherSpec.
-	(anotherRepositories := anotherSpec mergeMap at: #repositories) notEmpty ifTrue: [
-			newSpec repositories: (self repositories isEmpty
-					 ifTrue: [ anotherRepositories ]
-					 ifFalse: [ self repositories mergeSpec: anotherRepositories ]) ].
+	super mergeSpec: anotherSpec.
+	anotherSpec requires ifNotEmpty: [ :anotherRequires | self requires: self requires , anotherRequires ].
+	self repositories: (self repositories mergeSpec: anotherSpec repositories).
 
-	anotherSpec name ifNotNil: [ newSpec name: anotherSpec name ].
-	^ newSpec
+	anotherSpec name ifNotNil: [ self name: anotherSpec name ]
 ]
 
 { #category : 'querying' }
@@ -97,12 +106,6 @@ MetacelloPackageSpec >> name: aString [
 	name := aString trim
 ]
 
-{ #category : 'merging' }
-MetacelloPackageSpec >> nonOverridable [
-
-	^super nonOverridable, #( repositories)
-]
-
 { #category : 'loading' }
 MetacelloPackageSpec >> packageSpecsInLoadOrder [
 
@@ -114,6 +117,7 @@ MetacelloPackageSpec >> postCopy [
 
 	super postCopy.
 	repositories := repositories copy.
+	requires := requires copy
 ]
 
 { #category : 'querying' }
@@ -154,12 +158,6 @@ MetacelloPackageSpec >> project: aMetacelloProject [
 	project := aMetacelloProject
 ]
 
-{ #category : 'visiting' }
-MetacelloPackageSpec >> projectDo: projectBlock packageDo: packageBlock groupDo: groupBlock [
-
-	packageBlock value: self
-]
-
 { #category : 'querying' }
 MetacelloPackageSpec >> repositories [
 
@@ -191,7 +189,27 @@ MetacelloPackageSpec >> repositoryDescriptions [
 { #category : 'loading' }
 MetacelloPackageSpec >> repositorySpecs [
 
-	^self repositories map values
+	^self repositories repositorySpecs
+]
+
+{ #category : 'private' }
+MetacelloPackageSpec >> requiredSpecNamesForPackageOrdering: aVersionSpec [
+
+	^ (self specs: self requires forPackageOrdering: aVersionSpec) collect: [ :spec | spec name ]
+]
+
+{ #category : 'querying' }
+MetacelloPackageSpec >> requires [
+
+	^ requires ifNil: [ requires := #(  ) ]
+]
+
+{ #category : 'accessing' }
+MetacelloPackageSpec >> requires: aCollection [
+
+	requires := aCollection isString
+		            ifTrue: [ { aCollection } ]
+		            ifFalse: [ aCollection asArray ]
 ]
 
 { #category : 'private' }
@@ -204,6 +222,34 @@ MetacelloPackageSpec >> resolveToPackagesAndProjectsIn: aVersionSpec [
 MetacelloPackageSpec >> resolveToPackagesIn: aVersionSpec visited: visited [
 
 	^{ self }
+]
+
+{ #category : 'asserting' }
+MetacelloPackageSpec >> shouldLoadStrict [
+
+	^ strict ifNil: [ project ifNotNil: [ :p | p strict ] ]
+]
+
+{ #category : 'private' }
+MetacelloPackageSpec >> specs: specNames forPackageOrdering: aVersionSpec [
+
+	| packageOrProjectSpecs |
+	packageOrProjectSpecs := Set new.
+	specNames do: [ :specName |
+			| spec |
+			"get project/group/package specs"
+			spec := aVersionSpec packageNamed: specName ifAbsent: [
+					        MetacelloNameNotDefinedError signal:
+						        'project group, or package named: ' , specName printString , ' not found when used in requires: or includes: field of package: '
+						        , self name printString , ' of ' , aVersionSpec projectLabel , '.'.
+					        nil "return nil if resumed" ].
+			spec ifNotNil: [ packageOrProjectSpecs addAll: (spec resolveSpecsForPackageOrdering: aVersionSpec) ] ].
+	^ packageOrProjectSpecs
+]
+
+{ #category : 'accessing' }
+MetacelloPackageSpec >> strict: aBoolean [ 
+	strict := aBoolean
 ]
 
 { #category : 'accessing' }
