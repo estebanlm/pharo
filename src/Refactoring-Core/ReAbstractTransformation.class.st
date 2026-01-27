@@ -103,8 +103,9 @@ ReAbstractTransformation >> buildParametersForSelector: aSelector [
 
 { #category : 'private' }
 ReAbstractTransformation >> buildSelectorString: aSelector [
+
 	aSelector numArgs = 0 ifTrue: [^aSelector].
-	^self buildSelectorString: aSelector
+	^ self buildSelectorString: aSelector
 		withPermuteMap: (1 to: aSelector numArgs)
 ]
 
@@ -417,12 +418,6 @@ ReAbstractTransformation >> refactoringWarning: aString [
 { #category : 'exceptions' }
 ReAbstractTransformation >> refactoringWarning: aString with: aBlock [
 	^ RBRefactoringWarning signal: aString with: aBlock
-]
-
-{ #category : 'requests' }
-ReAbstractTransformation >> requestImplementorToInline: implementorsCollection [
-	^(self options at: #implementorToInline) value: self
-		value: implementorsCollection
 ]
 
 { #category : 'requests' }
