@@ -200,12 +200,6 @@ SourceFileArray >> fileAt: index ifAbsent: aBlock [
 	^ files at: index ifAbsent: aBlock
 ]
 
-{ #category : 'private' }
-SourceFileArray >> fileForChangesNamed: aString [
-
-	^ (Smalltalk imageDirectory resolve: aString) , 'changes'
-]
-
 { #category : 'private - sourcepointer conversion' }
 SourceFileArray >> fileIndexFromSourcePointer: anInteger [
 	"Return the index of the source file which contains the source chunk addressed by anInteger"
@@ -254,7 +248,7 @@ SourceFileArray >> forceChangesToDisk [
 { #category : 'private' }
 SourceFileArray >> fullNameForChangesNamed: aString [
 
-	^ (self fileForChangesNamed: aString) fullName
+	^ ((Smalltalk imageDirectory resolve: aString) , 'changes') fullName
 ]
 
 { #category : 'public - string reading' }
@@ -384,7 +378,7 @@ SourceFileArray >> readOnlyDo: aBlock [
 	| copy |
 	copy := self readOnlyCopy.
 
-	^ [ aBlock value: copy ] ensure: [ copy close ]
+	^ [ aBlock value: copy ] ensure: [ copy closeSourceFiles ]
 ]
 
 { #category : 'private' }
