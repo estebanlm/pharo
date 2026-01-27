@@ -18,7 +18,7 @@ Class {
 	#tag : 'Model'
 }
 
-{ #category : 'displaying' }
+{ #category : 'printing' }
 ReTransformation >> changesToDisplayIn: aBrowser [
 
 	^ self changes changes
