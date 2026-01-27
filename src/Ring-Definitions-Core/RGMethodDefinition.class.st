@@ -606,7 +606,7 @@ RGMethodDefinition >> sourceCodeAtPointer [
 	"A RGMethodDefinition that was set as historical will retrieve the sourceCode using the sourcePointer"
 
 	^ self sourcePointer
-		  ifNotNil: [ SourceFileArray default sourceCodeAt: self sourcePointer ]
+		  ifNotNil: [ SourcesManager current sourceCodeAt: self sourcePointer ]
 		  ifNil: [ nil ]
 ]
 

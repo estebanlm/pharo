@@ -99,7 +99,7 @@ RGCommentDefinition >> contentAtPointer [
 	"A RGCommentDefinition may be created to point the sourceFile in which case it retrieves the class comment"
 
 	^ self sourcePointer
-		  ifNotNil: [ SourceFileArray default sourceCodeAt: self sourcePointer ]
+		  ifNotNil: [ SourcesManager current sourceCodeAt: self sourcePointer ]
 		  ifNil: [ '' ]
 ]
 

@@ -375,7 +375,7 @@ Class >> comment [
 
 	^ self commentSourcePointer
 		  ifNil: [ '' ]
-		  ifNotNil: [ :ptr | SourceFileArray default sourceCodeAt: ptr ]
+		  ifNotNil: [ :ptr | SourcesManager current sourceCodeAt: ptr ]
 ]
 
 { #category : 'accessing - comment' }

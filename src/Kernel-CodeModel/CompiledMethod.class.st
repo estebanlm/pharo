@@ -216,10 +216,13 @@ CompiledMethod >> getPreambleFrom: aFileStream at: position [
 { #category : 'source code management' }
 CompiledMethod >> getSourceFromFile [
 	"PLEASE Note: clients should always call #sourceCode"
+
 	"Read the source code from file, determining source file index and
 	file position from the last bytes of this method (size defined in #trailerSize)."
 
-	^ [ SourceFileArray default sourceCodeAt: self sourcePointer ] on: Error do: [ nil ]
+	^ [ SourcesManager current sourceCodeAt: self sourcePointer ]
+		  on: Error
+		  do: [ nil ]
 ]
 
 { #category : 'source code management' }
