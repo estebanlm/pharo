@@ -148,7 +148,7 @@ PharoBootstrapInitialization class >> initializeCommandLineHandlerAndErrorHandli
 
 	'Initializing sources' traceCr.
 	(Smalltalk class classVariableNamed: 'LastImagePath') value: Smalltalk imagePath. "set the default value"
-	SourceFileArray initialize.
+	FilesSourcesManager initialize.
 
 	'InitializingFFI' traceCr.
 	"FFI"

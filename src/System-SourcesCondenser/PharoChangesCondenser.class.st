@@ -43,7 +43,7 @@ PharoChangesCondenser >> basicCondense [
 { #category : 'public' }
 PharoChangesCondenser >> condense [
 
-	SourcesManager current class = SourceFileArray ifFalse: [ self error: 'The condenser can work only in the current source manager is the files manager.' ].
+	SourcesManager current class = FilesSourcesManager ifFalse: [ self error: 'The condenser can work only in the current source manager is the files manager.' ].
 	job := [
 		       newChangesFile writeStreamDo: [ :aStream |
 				       stream := aStream.

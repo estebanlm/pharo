@@ -13,7 +13,7 @@ Class {
 SourcesManager class >> current [
 
 	self flag: #sources. "Update"
-	^ Current ifNil: [ Current := SourceFileArray default ]
+	^ Current ifNil: [ Current := FilesSourcesManager default ]
 ]
 
 { #category : 'accessing' }
