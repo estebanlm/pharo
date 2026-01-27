@@ -50,32 +50,6 @@ OldPharoClassDefinitionPrinter >> basicMetaclassDefinitionString [
 		  self instanceVariablesOn: stream ]
 ]
 
-{ #category : 'internal' }
-OldPharoClassDefinitionPrinter >> basicTraitDefinitionString [
-
-	"Pay attention this definition is fragile in presence of complex slots. Use the public API i.e., classDefinitionString"
-
-	forClass instanceSide name == #Trait ifTrue: [
-		^ self classDefinitionString ].
-
-	^ String streamContents: [ :s |
-		  s
-			  nextPutAll: 'Trait named: ';
-			  nextPutAll: forClass name printString.
-		  self traitCompositionOn: s.
-		  self instanceVariablesOn: s.
-		  self packageOn: s ]
-]
-
-{ #category : 'internal' }
-OldPharoClassDefinitionPrinter >> basicTraitedMetaclassDefinitionString [
-
-	^ String streamContents: [:strm |
-			strm print: forClass.
-			self traitCompositionOn: strm.
-			self instanceVariablesOn: strm ]
-]
-
 { #category : 'public API' }
 OldPharoClassDefinitionPrinter >> classDefinitionString [
 
@@ -141,20 +115,4 @@ OldPharoClassDefinitionPrinter >> traitCompositionOn: stream [
 			crtab;
 			nextPutAll: 'uses: ';
 			nextPutAll: forClass traitCompositionString ]
-]
-
-{ #category : 'public API' }
-OldPharoClassDefinitionPrinter >> traitDefinitionString [
-
-	^ forClass needsSlotClassDefinition
-		ifTrue: [ (ClassDefinitionPrinter fluid for: forClass) traitDefinitionString ]
-		ifFalse: [ self basicTraitDefinitionString ]
-]
-
-{ #category : 'public API' }
-OldPharoClassDefinitionPrinter >> traitedMetaclassDefinitionString [
-
-	^ forClass needsSlotClassDefinition
-		ifTrue: [ (ClassDefinitionPrinter fluid for: forClass) traitedMetaclassDefinitionString ]
-		ifFalse: [ self basicTraitedMetaclassDefinitionString ]
 ]

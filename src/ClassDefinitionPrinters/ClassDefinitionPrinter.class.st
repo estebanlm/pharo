@@ -139,13 +139,3 @@ ClassDefinitionPrinter >> for: aClass [
 ClassDefinitionPrinter >> metaclassDefinitionString [
 	^ self subclassResponsibility
 ]
-
-{ #category : 'public api' }
-ClassDefinitionPrinter >> traitDefinitionString [
-	^ self subclassResponsibility
-]
-
-{ #category : 'accessing' }
-ClassDefinitionPrinter >> traitedMetaclassDefinitionString [
-	^ self subclassResponsibility
-]
