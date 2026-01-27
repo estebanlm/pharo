@@ -6,17 +6,16 @@ Class {
 	#tag : 'Parametrized'
 }
 
-{ #category : 'tests' }
-RBMoveMethodParametrizedTest class >> testParameters [
-	^ ParametrizedTestMatrix new
-		addCase: { #rbClass -> RBMoveMethodRefactoring };
-		addCase: { #rbClass -> RBMoveMethodTransformation };
-		yourself
-]
-
 { #category : 'accessing' }
 RBMoveMethodParametrizedTest >> constructor [
 	^ #selector:class:variable:
+]
+
+{ #category : 'running' }
+RBMoveMethodParametrizedTest >> setUp [ 
+
+	super setUp.
+	rbClass := RBMoveMethodRefactoring
 ]
 
 { #category : 'failure tests' }

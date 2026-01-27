@@ -269,19 +269,11 @@ ReAbstractTransformation >> generateChangesFor: aRefactoring [
 ]
 
 { #category : 'testing' }
-ReAbstractTransformation >> isValidSelector [
-	"Check I could be a valid selector (name of method).
-	 For checking if there is symbol like me used as a selector, see Symbol>>#isSelectorSymbol"
-
-	^ OCScanner isSelector: self
-]
-
-{ #category : 'testing' }
 ReAbstractTransformation >> isValidSelector: aString [
 	"Returns the boolean true if aString is a valid selector (name of method).
 	 For checking if there is symbol like me used as a selector, see Symbol>>#isSelectorSymbol"
 
-	"Pay attention RBCondition >> #isValidSelector is returning an Condition object."
+	"Pay attention RBCondition >> #isValidSelector is returning a Condition object."
 	^ OCScanner isSelector: aString
 ]
 
