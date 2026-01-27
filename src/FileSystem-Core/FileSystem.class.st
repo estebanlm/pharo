@@ -25,20 +25,6 @@ Class {
 	#tag : 'Public'
 }
 
-{ #category : 'class initialization' }
-FileSystem class >> initialize [
-	"The initialization is done here because the startup of SourceFileArray needs to use the File system to work."
-
-	PharoFilesOpener sourceFileVersionString: ('Pharo{1}.{2}-{3}bit-{4}' format: {
-				 SystemVersion current major asString.
-				 SystemVersion current minor asString.
-				 (Smalltalk vm wordSize = 4
-					  ifTrue: [ 32 ]
-					  ifFalse: [ 64 ]).
-				 SystemVersion current commitHashShort asString }).
-	SessionManager default registerSystemClassNamed: #FilesSourcesManager
-]
-
 { #category : 'system startup' }
 FileSystem class >> startUp: aBoolean [
 	"This is only here to deal with migration from older versions of

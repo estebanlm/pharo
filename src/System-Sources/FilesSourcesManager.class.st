@@ -488,6 +488,12 @@ FilesSourcesManager >> saveChangesInFileNamed: aString [
 			FileLocator changes copyTo: changesFile ]
 ]
 
+{ #category : 'system startup' }
+FilesSourcesManager >> shutDown [
+
+	self closeSourceFiles
+]
+
 { #category : 'public - string reading' }
 FilesSourcesManager >> sourceCodeAt: sourcePointer [
 	"Retrieves the source code for the pointer received as argument"
@@ -542,6 +548,12 @@ FilesSourcesManager >> sourcesFileStream [
 FilesSourcesManager >> sourcesFileStream: aStream [
 
 	^ files at: 1 put: aStream
+]
+
+{ #category : 'system startup' }
+FilesSourcesManager >> startUp [
+
+	self openSourceFiles
 ]
 
 { #category : 'public - string reading' }

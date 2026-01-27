@@ -22,6 +22,18 @@ SourcesManager class >> current: anObject [
 	Current := anObject
 ]
 
+{ #category : 'system startup' }
+SourcesManager class >> shutDown: isImageClosing [
+
+	isImageClosing ifTrue: [ self current shutDown ]
+]
+
+{ #category : 'system startup' }
+SourcesManager class >> startUp: resuming [
+
+	resuming ifTrue: [ self current startUp ]
+]
+
 { #category : 'accessing' }
 SourcesManager >> commentTimeStampAt: sourcePointer [
 
@@ -73,10 +85,24 @@ SourcesManager >> reset [
 	
 ]
 
+{ #category : 'system startup' }
+SourcesManager >> shutDown [
+	"Hook during image closing."
+
+	
+]
+
 { #category : 'accessing' }
 SourcesManager >> sourceCodeAt: sourcePointer [
 
 	^ self subclassResponsibility
+]
+
+{ #category : 'system startup' }
+SourcesManager >> startUp [
+	"Hook during image opening."
+
+	
 ]
 
 { #category : 'accessing' }

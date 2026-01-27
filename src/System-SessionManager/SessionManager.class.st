@@ -157,6 +157,7 @@ SessionManager class >> initializeKernelRegistrations [
 		registerSystemClassNamed: #FFIBackend atPriority: 60;
 		registerSystemClassNamed: #File atPriority: 90;
 		registerSystemClassNamed: #SmalltalkImage atPriority: 90;
+		registerSystemClassNamed: #SourcesManager; 
 		registerSystemClassNamed: #FinalizationProcess;
 		registerSystemClassNamed: #Stdio;
 		registerSystemClassNamed: #Symbol
