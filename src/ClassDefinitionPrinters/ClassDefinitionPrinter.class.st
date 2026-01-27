@@ -59,11 +59,20 @@ Class {
 		'forClass'
 	],
 	#classVars : [
+		'Customizers',
 		'DisplayEmptySlots'
 	],
 	#category : 'ClassDefinitionPrinters',
 	#package : 'ClassDefinitionPrinters'
 }
+
+{ #category : 'accessing' }
+ClassDefinitionPrinter class >> customizers [
+	"I can be use to add classes to me that will be able to print more informations to the class definition.
+	For example, when Traits are in the system, they can add a customizer to print themselves"
+
+	^ Customizers ifNil: [ Customizers := OrderedCollection new ]
+]
 
 { #category : 'configure' }
 ClassDefinitionPrinter class >> displayEmptySlots [
@@ -137,15 +146,5 @@ ClassDefinitionPrinter >> for: aClass [
 
 { #category : 'public api' }
 ClassDefinitionPrinter >> metaclassDefinitionString [
-	^ self subclassResponsibility
-]
-
-{ #category : 'public api' }
-ClassDefinitionPrinter >> traitDefinitionString [
-	^ self subclassResponsibility
-]
-
-{ #category : 'accessing' }
-ClassDefinitionPrinter >> traitedMetaclassDefinitionString [
 	^ self subclassResponsibility
 ]
