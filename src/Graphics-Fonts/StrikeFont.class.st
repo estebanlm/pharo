@@ -195,7 +195,7 @@ StrikeFont class >> new [
 
 	| newInstance |
 	
-	newInstance := self new.
+	newInstance := super new.
 	self registry add: newInstance.
 	^ newInstance
 ]
