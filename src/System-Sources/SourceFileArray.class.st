@@ -38,13 +38,6 @@ SourceFileArray class >> default: anInstance [
 	Default := anInstance
 ]
 
-{ #category : 'system startup' }
-SourceFileArray class >> ensureSourceFilesCreated [
-	
-	PharoFilesOpener default locateSources ensureSourceFileCreated.
-	PharoFilesOpener default locateChanges ensureSourceFileCreated.
-]
-
 { #category : 'class initialization' }
 SourceFileArray class >> initialize [
 
@@ -58,21 +51,25 @@ SourceFileArray class >> initialize [
 	(self class environment bindingOf: #SourceFiles) isDeprecated: true
 ]
 
+{ #category : 'initialization' }
+SourceFileArray class >> reset [
+
+	<script>
+	self default
+		closeSourceFiles;
+		openSourceFiles
+]
+
 { #category : 'system startup' }
 SourceFileArray class >> shutDown: isImageClosing [
 
-	isImageClosing ifTrue: [
-			self default
-				unsubscribeToAnnouncements;
-				close ]
+	isImageClosing ifTrue: [ self default closeSourceFiles ]
 ]
 
 { #category : 'system startup' }
 SourceFileArray class >> startUp: resuming [
 
-	resuming ifTrue: [
-			self default registerToAnnouncements.
-			Smalltalk openSourceFiles ]
+	resuming ifTrue: [ self default openSourceFiles ]
 ]
 
 { #category : 'accessing' }
@@ -88,16 +85,6 @@ SourceFileArray >> changesFileStream: aStream [
 	^ files at: 2 put: aStream
 ]
 
-{ #category : 'public - file system operations' }
-SourceFileArray >> close [
-
-	| oldFiles |
-	oldFiles := files.
-	files := Array new: 2.
-	self closeFileArray: oldFiles.
-	self emptyReadStreamsQueue
-]
-
 { #category : 'private' }
 SourceFileArray >> closeFileArray: anArray [
 
@@ -106,6 +93,17 @@ SourceFileArray >> closeFileArray: anArray [
 		thenDo: [ :file | file close ].
 
 	^ anArray
+]
+
+{ #category : 'public - file system operations' }
+SourceFileArray >> closeSourceFiles [
+
+	| oldFiles |
+	oldFiles := files.
+	files := Array new: 2.
+	self closeFileArray: oldFiles.
+	self emptyReadStreamsQueue.
+	self unsubscribeToAnnouncements
 ]
 
 { #category : 'private' }
@@ -117,6 +115,15 @@ SourceFileArray >> commentDataPointers [
 { #category : 'public - string reading' }
 SourceFileArray >> commentTimeStampAt: sourcePointer [
 	^self timeStampAt: sourcePointer for: self commentDataPointers
+]
+
+{ #category : 'private' }
+SourceFileArray >> copyChangesTo: newNameWithoutSuffix [
+
+	self isChangesFileInUse ifTrue: [
+			self
+				closeSourceFiles;
+				saveChangesInFileNamed: (self fullNameForChangesNamed: newNameWithoutSuffix) ]
 ]
 
 { #category : 'private' }
@@ -158,7 +165,7 @@ SourceFileArray >> ensureOpen [
 	Close them before re-opening them."
 
 	| aSourcesFile aChangesFile |
-	self close.
+	self closeSourceFiles.
 
 	aSourcesFile := PharoFilesOpener default sourcesFileOrNil.
 	aChangesFile := PharoFilesOpener default changesFileOrNil.
@@ -168,6 +175,13 @@ SourceFileArray >> ensureOpen [
 	files := Array with: aSourcesFile with: aChangesFile.
 
 	readOnlyQueue := SharedQueue new
+]
+
+{ #category : 'system startup' }
+SourceFileArray >> ensureSourceFilesCreated [
+	
+	PharoFilesOpener default locateSources ensureSourceFileCreated.
+	PharoFilesOpener default locateChanges ensureSourceFileCreated.
 ]
 
 { #category : 'accessing' }
@@ -184,6 +198,12 @@ SourceFileArray >> fileAt: index [
 { #category : 'private - accessing file streams' }
 SourceFileArray >> fileAt: index ifAbsent: aBlock [
 	^ files at: index ifAbsent: aBlock
+]
+
+{ #category : 'private' }
+SourceFileArray >> fileForChangesNamed: aString [
+
+	^ (Smalltalk imageDirectory resolve: aString) , 'changes'
 ]
 
 { #category : 'private - sourcepointer conversion' }
@@ -231,6 +251,12 @@ SourceFileArray >> forceChangesToDisk [
 	changesFile setToEnd
 ]
 
+{ #category : 'private' }
+SourceFileArray >> fullNameForChangesNamed: aString [
+
+	^ (self fileForChangesNamed: aString) fullName
+]
+
 { #category : 'public - string reading' }
 SourceFileArray >> getPreambleFrom: aSourceFileStream at: position [
 	^ aSourceFileStream getPreambleAt: position
@@ -243,6 +269,12 @@ SourceFileArray >> initialize [
 
 	readOnlyQueue := SharedQueue new.
 	flushChanges := true
+]
+
+{ #category : 'testing' }
+SourceFileArray >> isChangesFileInUse [
+
+	^ self changesFileStream isNotNil or: [ self changesFileStream closed not ]
 ]
 
 { #category : 'public - file system operations' }
@@ -295,6 +327,15 @@ SourceFileArray >> newWriter [
 	^ SourceFileWriter new
 		  sourceFile: self;
 		  yourself
+]
+
+{ #category : 'public - file system operations' }
+SourceFileArray >> openSourceFiles [
+
+	self
+		ensureSourceFilesCreated;
+		ensureOpen;
+		registerToAnnouncements
 ]
 
 { #category : 'public - string reading' }
@@ -433,6 +474,18 @@ SourceFileArray >> reportString [
 		{ self sourcesFileStream. self changesFileStream }
 			do: [:each | each ifNotNil: [
 				aStream nextPutAll: each printString; cr ] ] ]
+]
+
+{ #category : 'private' }
+SourceFileArray >> saveChangesInFileNamed: aString [
+
+	| changesFile |
+	changesFile := aString asFileReference.
+	changesFile parent ensureCreateDirectory.
+	"Ensure that the destination file is not the same as the original one"
+	FileLocator changes absolutePath = changesFile absolutePath ifFalse: [
+			changesFile deleteIfAbsent: [ ].
+			FileLocator changes copyTo: changesFile ]
 ]
 
 { #category : 'public - string reading' }
