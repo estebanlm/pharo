@@ -52,18 +52,6 @@ FilesSourcesManager class >> initialize [
 	self deprecatedAliases: #(SourceFileArray)
 ]
 
-{ #category : 'system startup' }
-FilesSourcesManager class >> shutDown: isImageClosing [
-
-	isImageClosing ifTrue: [ self default closeSourceFiles ]
-]
-
-{ #category : 'system startup' }
-FilesSourcesManager class >> startUp: resuming [
-
-	resuming ifTrue: [ self default openSourceFiles ]
-]
-
 { #category : 'accessing' }
 FilesSourcesManager >> changesFileStream [
 	"Answer the master .changes FileStream, with writing permissions."
@@ -296,6 +284,12 @@ FilesSourcesManager >> logClassAdded: announcement [
 ]
 
 { #category : 'event-listening' }
+FilesSourcesManager >> logClassRemoved: announcement [
+
+	self logChange: 'Smalltalk globals removeClassNamed: #' , announcement classRemoved name
+]
+
+{ #category : 'event-listening' }
 FilesSourcesManager >> logClassRenamed: announcement [
 
 	self logChange: '(Smalltalk globals at: #' , announcement oldName , ') rename: #' , announcement newName
@@ -307,27 +301,12 @@ FilesSourcesManager >> logMethodRemoved: announcement [
 	self logChange: announcement methodClass name , ' removeSelector: #' , announcement selector
 ]
 
-{ #category : 'event-listening' }
-FilesSourcesManager >> logRemovedClassAnnouncement: announcement [
-
-	self logChange: 'Smalltalk globals removeClassNamed: #' , announcement classRemoved name
-]
-
 { #category : 'public - string writing' }
 FilesSourcesManager >> newWriter [
 
 	^ SourceFileWriter new
 		  sourceFile: self;
 		  yourself
-]
-
-{ #category : 'public - file system operations' }
-FilesSourcesManager >> openSourceFiles [
-
-	self
-		ensureSourceFilesCreated;
-		ensureOpen;
-		registerToAnnouncements
 ]
 
 { #category : 'public - string reading' }
@@ -449,16 +428,6 @@ FilesSourcesManager >> readStreamAtFileIndex: index atPosition: position ifPrese
     ^ result
 ]
 
-{ #category : 'private' }
-FilesSourcesManager >> registerToAnnouncements [
-
-	self class codeChangeAnnouncer weak
-		when: ClassAdded send: #logClassAdded: to: self;
-		when: ClassRemoved send: #logRemovedClassAnnouncement: to: self;
-		when: ClassRenamed send: #logClassRenamed: to: self;
-		when: MethodRemoved send: #logMethodRemoved: to: self
-]
-
 { #category : 'printing' }
 FilesSourcesManager >> reportString [
 
@@ -472,8 +441,8 @@ FilesSourcesManager >> reportString [
 FilesSourcesManager >> reset [
 
 	self
-		closeSourceFiles;
-		openSourceFiles
+		shutDown;
+		startUp
 ]
 
 { #category : 'private' }
@@ -553,7 +522,10 @@ FilesSourcesManager >> sourcesFileStream: aStream [
 { #category : 'system startup' }
 FilesSourcesManager >> startUp [
 
-	self openSourceFiles
+	self
+		ensureSourceFilesCreated;
+		ensureOpen.
+	super startUp
 ]
 
 { #category : 'public - string reading' }
@@ -604,12 +576,6 @@ FilesSourcesManager >> timeStampFromPreamble: preamble for: sourceDataPointers [
 			stream upTo: $'.
 			stamp := stream upTo: $' ] ].
 	^ stamp
-]
-
-{ #category : 'private' }
-FilesSourcesManager >> unsubscribeToAnnouncements [
-
-	self class codeChangeAnnouncer unsubscribe: self
 ]
 
 { #category : 'private' }

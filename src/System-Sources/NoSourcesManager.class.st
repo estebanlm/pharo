@@ -25,6 +25,33 @@ NoSourcesManager >> isSourcesPresentInSystem [
 	^ false
 ]
 
+{ #category : 'event-listening' }
+NoSourcesManager >> logClassAdded: announcement [
+	"Nothing to do here"
+
+]
+
+{ #category : 'event-listening' }
+NoSourcesManager >> logClassRemoved: announcement [
+	"Nothing to do here"
+
+	
+]
+
+{ #category : 'event-listening' }
+NoSourcesManager >> logClassRenamed: announcement [
+	"Nothing to do here"
+
+	
+]
+
+{ #category : 'event-listening' }
+NoSourcesManager >> logMethodRemoved: announcement [
+	"Nothing to do here"
+
+	
+]
+
 { #category : 'accessing' }
 NoSourcesManager >> protocolAt: sourcePointer [
 
