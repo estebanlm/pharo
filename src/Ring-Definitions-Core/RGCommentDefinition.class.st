@@ -72,12 +72,6 @@ RGCommentDefinition >> category [
 	^self realClass category
 ]
 
-{ #category : 'source pointers' }
-RGCommentDefinition >> commentDataPointers [
-	"Retrieves the combination key to look for information of the receiver in the source file"
-	^'commentStamp:' -> #commentStamp:
-]
-
 { #category : 'accessing' }
 RGCommentDefinition >> content [
 
@@ -270,10 +264,7 @@ RGCommentDefinition >> stampAtPointer [
 	"A RGMethodDefinition may be created to point the sourceFile in which case it retrieves the stamp"
 
 	^ self sourcePointer
-		  ifNotNil: [
-			  SourceFileArray default
-				  timeStampAt: self sourcePointer
-				  for: self commentDataPointers ]
+		  ifNotNil: [ SourcesManager current commentTimeStampAt: self sourcePointer ]
 		  ifNil: [ nil ]
 ]
 

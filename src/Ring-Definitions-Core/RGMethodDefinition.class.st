@@ -262,11 +262,6 @@ RGMethodDefinition >> fullName [
 		ifAbsentPut: [ (self parentName, '>>', self selector) asSymbol ]
 ]
 
-{ #category : 'source pointers' }
-RGMethodDefinition >> getPreambleFrom: aFileStream at: position [
-	^ SourceFileArray default getPreambleFrom: aFileStream at: position
-]
-
 { #category : 'testing' }
 RGMethodDefinition >> hasStamp [
 
