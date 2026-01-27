@@ -25,6 +25,12 @@ Class {
 	#tag : 'Public'
 }
 
+{ #category : 'class initialization' }
+FileSystem class >> initialize [
+
+	FilesSourcesManager initialize
+]
+
 { #category : 'system startup' }
 FileSystem class >> startUp: aBoolean [
 	"This is only here to deal with migration from older versions of

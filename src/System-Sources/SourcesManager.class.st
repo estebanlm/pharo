@@ -9,17 +9,40 @@ Class {
 	#tag : 'Sources'
 }
 
+{ #category : 'query' }
+SourcesManager class >> beCurrent [
+
+	self isAbstract ifTrue: [ self error: 'Source manager cannot be abstract' ].
+
+	self current class = self ifTrue: [ ^ self ].
+
+	self current ifNotNil: [ self current shutDown ].
+	self current: self new.
+	self current startUp
+]
+
 { #category : 'accessing' }
 SourcesManager class >> current [
 
-	self flag: #sources. "Update"
-	^ Current ifNil: [ Current := FilesSourcesManager default ]
+	^ Current
 ]
 
 { #category : 'accessing' }
 SourcesManager class >> current: anObject [
 
 	Current := anObject
+]
+
+{ #category : 'class initialization' }
+SourcesManager class >> initialize [
+
+	NoSourcesManager beCurrent
+]
+
+{ #category : 'testing' }
+SourcesManager class >> isAbstract [
+
+	^ self = SourcesManager
 ]
 
 { #category : 'system startup' }
