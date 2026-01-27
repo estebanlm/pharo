@@ -100,7 +100,7 @@ StChangesBrowserPresenter >> initializePresenters [
 		            yourself.
 
 	changesTree
-		children: [ :node | (node whatToDisplayIn: self) copyWithout: node ];
+		children: [ :node | (node changesToDisplayIn: self) copyWithout: node ];
 		addColumn: (SpCompositeTableColumn
 				 with: ((SpCheckBoxTableColumn evaluated: [ :item | selectedItems includes: item ])
 						  onActivation: [ :item | selectedItems add: item ];
@@ -139,7 +139,7 @@ StChangesBrowserPresenter >> updateChanges [
 
 	"Later we could filter the shown changes depending on the selected scope"
 
-	changesTree roots: (aCompositeChange whatToDisplayIn: self).
+	changesTree roots: (aCompositeChange changesToDisplayIn: self).
 	selectedItems := Set withAll: changesTree roots
 ]
 

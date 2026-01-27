@@ -180,7 +180,7 @@ ReAbstractTransformation >> checkPreconditions [
 	self checkApplicabilityPreconditions
 ]
 
-{ #category : 'preconditions' }
+{ #category : 'condition definitions' }
 ReAbstractTransformation >> classExist [
 
 	| className |
@@ -216,7 +216,7 @@ ReAbstractTransformation >> copyOptionsFrom: aDictionary [
 	self options: dict
 ]
 
-{ #category : 'initialize' }
+{ #category : 'utilities' }
 ReAbstractTransformation >> defaultEnvironment [
 
 	^ RBBrowserEnvironment new
@@ -359,21 +359,23 @@ ReAbstractTransformation >> performChanges: aCompositeChange [
 		performCompositeChange: aCompositeChange
 ]
 
-{ #category : 'accessing' }
+{ #category : 'utilities' }
 ReAbstractTransformation >> poolVariableNamesFor: aClass [
+
 	| pools |
 	pools := Set new.
 	aClass withAllSuperclasses do:
-			[:each |
+			[ :each |
 			each allPoolDictionaryNames do:
-					[:pool |
+					[ :pool |
 					pools addAll: (self poolVariableNamesIn: pool asSymbol) ] ].
 	^pools
 ]
 
-{ #category : 'accessing' }
+{ #category : 'utilities' }
 ReAbstractTransformation >> poolVariableNamesIn: poolName [
-	^(self model classNamed: poolName) classPool keys
+
+	^ (self model classNamed: poolName) classPool keys
 ]
 
 { #category : 'preconditions' }
@@ -518,10 +520,4 @@ ReAbstractTransformation >> uniqueMethodNameFor: anInteger [
 	(Symbol findInterned: name) isNotNil]
 			whileTrue: [index := index + 1].
 	^name asSymbol
-]
-
-{ #category : 'printing' }
-ReAbstractTransformation >> whatToDisplayIn: aBrowser [
-
-	^ self changesToDisplayIn: aBrowser
 ]

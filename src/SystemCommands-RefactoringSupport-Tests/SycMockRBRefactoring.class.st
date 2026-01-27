@@ -41,8 +41,3 @@ SycMockRBRefactoring >> model [
 SycMockRBRefactoring >> model: aRBNamespace [
 	^ self
 ]
-
-{ #category : 'accessing' }
-SycMockRBRefactoring >> whatToDisplayIn: aBrowser [
-	^ self changesToDisplayIn: aBrowser
-]
