@@ -36,7 +36,7 @@ FileSystem class >> initialize [
 					  ifTrue: [ 32 ]
 					  ifFalse: [ 64 ]).
 				 SystemVersion current commitHashShort asString }).
-	SessionManager default registerSystemClassNamed: #SourceFileArray
+	SessionManager default registerSystemClassNamed: #FilesSourcesManager
 ]
 
 { #category : 'system startup' }

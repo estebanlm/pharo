@@ -1,7 +1,7 @@
-Extension { #name : 'SourceFileArray' }
+Extension { #name : 'FilesSourcesManager' }
 
 { #category : '*System-Changes' }
-SourceFileArray >> changeRecordsFor: aMethod [
+FilesSourcesManager >> changeRecordsFor: aMethod [
 
 	^ self
 		changeRecordsFrom: aMethod sourcePointer
@@ -10,7 +10,7 @@ SourceFileArray >> changeRecordsFor: aMethod [
 ]
 
 { #category : '*System-Changes' }
-SourceFileArray >> changeRecordsFrom: initialSourcePointer className: theNonMetaClassName isMeta: classIsMeta [
+FilesSourcesManager >> changeRecordsFrom: initialSourcePointer className: theNonMetaClassName isMeta: classIsMeta [
 	"Answer the ChangeRecords of a method or class comment, starting from the initialSourcePointer.
 	Most recent changes go first."
 
@@ -27,7 +27,7 @@ SourceFileArray >> changeRecordsFrom: initialSourcePointer className: theNonMeta
 ]
 
 { #category : '*System-Changes' }
-SourceFileArray >> changeRecordsFrom: initialSourcePointer className: theNonMetaClassName isMeta: classIsMeta do: aUnaryBlock [
+FilesSourcesManager >> changeRecordsFrom: initialSourcePointer className: theNonMetaClassName isMeta: classIsMeta do: aUnaryBlock [
 	"Evaluate aUnaryBlock with each of the ChangeRecords of a method or class comment, starting from the initialSourcePointer.
 	Most recent changes are evaluated first."
 

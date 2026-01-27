@@ -10,7 +10,7 @@ The use of bit 25 of the source pointer for file references permits backward com
 
 "
 Class {
-	#name : 'SourceFileArray',
+	#name : 'FilesSourcesManager',
 	#superclass : 'Object',
 	#instVars : [
 		'files',
@@ -27,19 +27,19 @@ Class {
 }
 
 { #category : 'accessing' }
-SourceFileArray class >> default [
+FilesSourcesManager class >> default [
 
 	^ Default
 ]
 
 { #category : 'accessing' }
-SourceFileArray class >> default: anInstance [
+FilesSourcesManager class >> default: anInstance [
 
 	Default := anInstance
 ]
 
 { #category : 'class initialization' }
-SourceFileArray class >> initialize [
+FilesSourcesManager class >> initialize [
 
 	"Guard since initializing twice would create bugs."
 	self default ifNotNil: [ ^ self ].
@@ -48,11 +48,12 @@ SourceFileArray class >> initialize [
 	
 	"This next line is to add a deprecated global variable. The deprecation happened in Pharo 14 development. We can remove it completly in the future."
 	self class environment at: #SourceFiles put: self default.
-	(self class environment bindingOf: #SourceFiles) isDeprecated: true
+	(self class environment bindingOf: #SourceFiles) isDeprecated: true.
+	self deprecatedAliases: #(SourceFileArray)
 ]
 
 { #category : 'initialization' }
-SourceFileArray class >> reset [
+FilesSourcesManager class >> reset [
 
 	<script>
 	self default
@@ -61,32 +62,32 @@ SourceFileArray class >> reset [
 ]
 
 { #category : 'system startup' }
-SourceFileArray class >> shutDown: isImageClosing [
+FilesSourcesManager class >> shutDown: isImageClosing [
 
 	isImageClosing ifTrue: [ self default closeSourceFiles ]
 ]
 
 { #category : 'system startup' }
-SourceFileArray class >> startUp: resuming [
+FilesSourcesManager class >> startUp: resuming [
 
 	resuming ifTrue: [ self default openSourceFiles ]
 ]
 
 { #category : 'accessing' }
-SourceFileArray >> changesFileStream [
+FilesSourcesManager >> changesFileStream [
 	"Answer the master .changes FileStream, with writing permissions."
 
 	^ files at: 2
 ]
 
 { #category : 'accessing' }
-SourceFileArray >> changesFileStream: aStream [
+FilesSourcesManager >> changesFileStream: aStream [
 
 	^ files at: 2 put: aStream
 ]
 
 { #category : 'private' }
-SourceFileArray >> closeFileArray: anArray [
+FilesSourcesManager >> closeFileArray: anArray [
 
 	anArray
 		reject: [ :file | file isNil ]
@@ -96,7 +97,7 @@ SourceFileArray >> closeFileArray: anArray [
 ]
 
 { #category : 'public - file system operations' }
-SourceFileArray >> closeSourceFiles [
+FilesSourcesManager >> closeSourceFiles [
 
 	| oldFiles |
 	oldFiles := files.
@@ -107,18 +108,18 @@ SourceFileArray >> closeSourceFiles [
 ]
 
 { #category : 'private' }
-SourceFileArray >> commentDataPointers [
+FilesSourcesManager >> commentDataPointers [
 	"Retrieves the combination key to look for comments in the source file"
 	^'commentStamp:' -> #commentStamp:
 ]
 
 { #category : 'public - string reading' }
-SourceFileArray >> commentTimeStampAt: sourcePointer [
+FilesSourcesManager >> commentTimeStampAt: sourcePointer [
 	^self timeStampAt: sourcePointer for: self commentDataPointers
 ]
 
 { #category : 'private' }
-SourceFileArray >> copyChangesTo: newNameWithoutSuffix [
+FilesSourcesManager >> copyChangesTo: newNameWithoutSuffix [
 
 	self isChangesFileInUse ifTrue: [
 			self
@@ -127,7 +128,7 @@ SourceFileArray >> copyChangesTo: newNameWithoutSuffix [
 ]
 
 { #category : 'private' }
-SourceFileArray >> createReadOnlyFiles [
+FilesSourcesManager >> createReadOnlyFiles [
 	| readOnly |
 	readOnly := {
 		self sourcesFileStream ifNotNil: [self sourcesFileStream readOnlyCopy].
@@ -137,7 +138,7 @@ SourceFileArray >> createReadOnlyFiles [
 ]
 
 { #category : 'public - string writing' }
-SourceFileArray >> deferFlushDuring: aBlock [
+FilesSourcesManager >> deferFlushDuring: aBlock [
 
 	"defer flushing the filestream until a block has been executed"
 
@@ -151,7 +152,7 @@ SourceFileArray >> deferFlushDuring: aBlock [
 ]
 
 { #category : 'public - file system operations' }
-SourceFileArray >> emptyReadStreamsQueue [
+FilesSourcesManager >> emptyReadStreamsQueue [
 
 	| oldQueue |
 	oldQueue := readOnlyQueue.
@@ -160,7 +161,7 @@ SourceFileArray >> emptyReadStreamsQueue [
 ]
 
 { #category : 'public - file system operations' }
-SourceFileArray >> ensureOpen [
+FilesSourcesManager >> ensureOpen [
 	"Ensure that the source and changes files are opened.
 	Close them before re-opening them."
 
@@ -178,36 +179,36 @@ SourceFileArray >> ensureOpen [
 ]
 
 { #category : 'system startup' }
-SourceFileArray >> ensureSourceFilesCreated [
+FilesSourcesManager >> ensureSourceFilesCreated [
 	
 	PharoFilesOpener default locateSources ensureSourceFileCreated.
 	PharoFilesOpener default locateChanges ensureSourceFileCreated.
 ]
 
 { #category : 'accessing' }
-SourceFileArray >> exporterClass [
+FilesSourcesManager >> exporterClass [
 
 	^ exporterClass ifNil: [ exporterClass := CodeExporterV100 ]
 ]
 
 { #category : 'private - accessing file streams' }
-SourceFileArray >> fileAt: index [
+FilesSourcesManager >> fileAt: index [
 	^ files at: index
 ]
 
 { #category : 'private - accessing file streams' }
-SourceFileArray >> fileAt: index ifAbsent: aBlock [
+FilesSourcesManager >> fileAt: index ifAbsent: aBlock [
 	^ files at: index ifAbsent: aBlock
 ]
 
 { #category : 'private' }
-SourceFileArray >> fileForChangesNamed: aString [
+FilesSourcesManager >> fileForChangesNamed: aString [
 
 	^ (Smalltalk imageDirectory resolve: aString) , 'changes'
 ]
 
 { #category : 'private - sourcepointer conversion' }
-SourceFileArray >> fileIndexFromSourcePointer: anInteger [
+FilesSourcesManager >> fileIndexFromSourcePointer: anInteger [
 	"Return the index of the source file which contains the source chunk addressed by anInteger"
 	"1 is sources file, 2 is changes file"
 
@@ -215,7 +216,7 @@ SourceFileArray >> fileIndexFromSourcePointer: anInteger [
 ]
 
 { #category : 'private - sourcepointer conversion' }
-SourceFileArray >> filePositionFromSourcePointer: anInteger [
+FilesSourcesManager >> filePositionFromSourcePointer: anInteger [
 	
 	"Return the position of the source chunk addressed by anInteger"
 	"The source pointer is composed of 63 bits offset + 1 bit of file identifier in the least significant bit.
@@ -225,7 +226,7 @@ SourceFileArray >> filePositionFromSourcePointer: anInteger [
 ]
 
 { #category : 'private' }
-SourceFileArray >> finishedReading: aReadOnlyFileArray from: aQueue [
+FilesSourcesManager >> finishedReading: aReadOnlyFileArray from: aQueue [
 
 	(aQueue == readOnlyQueue and: [ aQueue size < self readOnlyQueueLimit ])
 		ifTrue: [ aQueue nextPut: aReadOnlyFileArray ]
@@ -233,14 +234,14 @@ SourceFileArray >> finishedReading: aReadOnlyFileArray from: aQueue [
 ]
 
 { #category : 'public - file system operations' }
-SourceFileArray >> flushChangesFile [
+FilesSourcesManager >> flushChangesFile [
 
 	flushChanges ifFalse: [ ^ self ].
 	self changesFileStream ifNotNil: [:stream | stream flush]
 ]
 
 { #category : 'public - file system operations' }
-SourceFileArray >> forceChangesToDisk [
+FilesSourcesManager >> forceChangesToDisk [
 	"Ensure that the changes file has been fully written to disk by closing and re-opening it. This makes the system more robust in the face of a power failure or hard-reboot."
 
 	| changesFile |
@@ -252,18 +253,18 @@ SourceFileArray >> forceChangesToDisk [
 ]
 
 { #category : 'private' }
-SourceFileArray >> fullNameForChangesNamed: aString [
+FilesSourcesManager >> fullNameForChangesNamed: aString [
 
 	^ (self fileForChangesNamed: aString) fullName
 ]
 
 { #category : 'public - string reading' }
-SourceFileArray >> getPreambleFrom: aSourceFileStream at: position [
+FilesSourcesManager >> getPreambleFrom: aSourceFileStream at: position [
 	^ aSourceFileStream getPreambleAt: position
 ]
 
 { #category : 'initialization' }
-SourceFileArray >> initialize [
+FilesSourcesManager >> initialize [
 
 	files := Array new: 2.
 
@@ -272,13 +273,13 @@ SourceFileArray >> initialize [
 ]
 
 { #category : 'testing' }
-SourceFileArray >> isChangesFileInUse [
+FilesSourcesManager >> isChangesFileInUse [
 
 	^ self changesFileStream isNotNil or: [ self changesFileStream closed not ]
 ]
 
 { #category : 'public - file system operations' }
-SourceFileArray >> logChange: aStringOrText [
+FilesSourcesManager >> logChange: aStringOrText [
 	"Write the argument, aString, onto the changes file."
 
 	| aString |
@@ -298,31 +299,31 @@ SourceFileArray >> logChange: aStringOrText [
 ]
 
 { #category : 'event-listening' }
-SourceFileArray >> logClassAdded: announcement [
+FilesSourcesManager >> logClassAdded: announcement [
 
 	self newWriter writeClassDefinition: announcement classAdded definitionString
 ]
 
 { #category : 'event-listening' }
-SourceFileArray >> logClassRenamed: announcement [
+FilesSourcesManager >> logClassRenamed: announcement [
 
 	self logChange: '(Smalltalk globals at: #' , announcement oldName , ') rename: #' , announcement newName
 ]
 
 { #category : 'event-listening' }
-SourceFileArray >> logMethodRemoved: announcement [
+FilesSourcesManager >> logMethodRemoved: announcement [
 
 	self logChange: announcement methodClass name , ' removeSelector: #' , announcement selector
 ]
 
 { #category : 'event-listening' }
-SourceFileArray >> logRemovedClassAnnouncement: announcement [
+FilesSourcesManager >> logRemovedClassAnnouncement: announcement [
 
 	self logChange: 'Smalltalk globals removeClassNamed: #' , announcement classRemoved name
 ]
 
 { #category : 'public - string writing' }
-SourceFileArray >> newWriter [
+FilesSourcesManager >> newWriter [
 
 	^ SourceFileWriter new
 		  sourceFile: self;
@@ -330,7 +331,7 @@ SourceFileArray >> newWriter [
 ]
 
 { #category : 'public - file system operations' }
-SourceFileArray >> openSourceFiles [
+FilesSourcesManager >> openSourceFiles [
 
 	self
 		ensureSourceFilesCreated;
@@ -339,14 +340,14 @@ SourceFileArray >> openSourceFiles [
 ]
 
 { #category : 'public - string reading' }
-SourceFileArray >> protocolAt: sourcePointer [
+FilesSourcesManager >> protocolAt: sourcePointer [
 	"Answer the protocol for a given method, retrieved from the sources or changes file. Answer unfound protocol if no protocol is available"
 
 	^ self protocolAt: sourcePointer for: self sourceDataPointers
 ]
 
 { #category : 'public - string reading' }
-SourceFileArray >> protocolAt: sourcePointer for: sourceDataPointers [
+FilesSourcesManager >> protocolAt: sourcePointer for: sourceDataPointers [
 	"Answer the protocol for a given method, retrieved from the sources or changes file. Answer unfound protocol if no protocol is available."
 
 	| preamble protocol |
@@ -368,7 +369,7 @@ SourceFileArray >> protocolAt: sourcePointer for: sourceDataPointers [
 ]
 
 { #category : 'private - copying' }
-SourceFileArray >> readOnlyCopy [
+FilesSourcesManager >> readOnlyCopy [
 	"Answer a read only copy of self. The caller is responsible of closing it."
 
 	^ self species new
@@ -378,7 +379,7 @@ SourceFileArray >> readOnlyCopy [
 ]
 
 { #category : 'private - copying' }
-SourceFileArray >> readOnlyDo: aBlock [
+FilesSourcesManager >> readOnlyDo: aBlock [
 	"Value a block with a read only copy of self."
 
 	| copy |
@@ -388,7 +389,7 @@ SourceFileArray >> readOnlyDo: aBlock [
 ]
 
 { #category : 'private' }
-SourceFileArray >> readOnlyQueueLimit [
+FilesSourcesManager >> readOnlyQueueLimit [
 
 	"maximum number of read only file arrays to be held by the readOnlyQueue(SharedQueue)"
 
@@ -396,7 +397,7 @@ SourceFileArray >> readOnlyQueueLimit [
 ]
 
 { #category : 'private - accessing file streams' }
-SourceFileArray >> readStreamAt: sourcePointer ifPresent: presentBlock ifAbsent: absentBlock [
+FilesSourcesManager >> readStreamAt: sourcePointer ifPresent: presentBlock ifAbsent: absentBlock [
 
 	| index position |
 	sourcePointer ifNil: [ ^ absentBlock value ].
@@ -415,7 +416,7 @@ SourceFileArray >> readStreamAt: sourcePointer ifPresent: presentBlock ifAbsent:
 ]
 
 { #category : 'private - accessing file streams' }
-SourceFileArray >> readStreamAtFileIndex: index atPosition: position ifPresent: presentBlock ifAbsent: absentBlock [
+FilesSourcesManager >> readStreamAtFileIndex: index atPosition: position ifPresent: presentBlock ifAbsent: absentBlock [
 
    | queue stream rofa result file |
 
@@ -458,7 +459,7 @@ SourceFileArray >> readStreamAtFileIndex: index atPosition: position ifPresent: 
 ]
 
 { #category : 'private' }
-SourceFileArray >> registerToAnnouncements [
+FilesSourcesManager >> registerToAnnouncements [
 
 	self class codeChangeAnnouncer weak
 		when: ClassAdded send: #logClassAdded: to: self;
@@ -468,7 +469,7 @@ SourceFileArray >> registerToAnnouncements [
 ]
 
 { #category : 'printing' }
-SourceFileArray >> reportString [
+FilesSourcesManager >> reportString [
 
 	^ String streamContents: [ :aStream |
 		{ self sourcesFileStream. self changesFileStream }
@@ -477,7 +478,7 @@ SourceFileArray >> reportString [
 ]
 
 { #category : 'private' }
-SourceFileArray >> saveChangesInFileNamed: aString [
+FilesSourcesManager >> saveChangesInFileNamed: aString [
 
 	| changesFile |
 	changesFile := aString asFileReference.
@@ -489,7 +490,7 @@ SourceFileArray >> saveChangesInFileNamed: aString [
 ]
 
 { #category : 'public - string reading' }
-SourceFileArray >> sourceCodeAt: sourcePointer [
+FilesSourcesManager >> sourceCodeAt: sourcePointer [
 	"Retrieves the source code for the pointer received as argument"
 
 	^ self
@@ -499,7 +500,7 @@ SourceFileArray >> sourceCodeAt: sourcePointer [
 ]
 
 { #category : 'private' }
-SourceFileArray >> sourceDataPointers [
+FilesSourcesManager >> sourceDataPointers [
 	"Retrieves the combination key to look for information of the receiver in the source file"
 
 	"'Point methodsFor: ''point functions'' stamp: ''lr 7/4/2009 10:42'''."
@@ -508,7 +509,7 @@ SourceFileArray >> sourceDataPointers [
 ]
 
 { #category : 'private - sourcepointer conversion' }
-SourceFileArray >> sourcePointerFromFileIndex: index andPosition: position [
+FilesSourcesManager >> sourcePointerFromFileIndex: index andPosition: position [
 	"Return a sourcePointer encoding the given file index and position"
 
 	(index = 1 or: [index = 2])
@@ -520,7 +521,7 @@ SourceFileArray >> sourcePointerFromFileIndex: index andPosition: position [
 ]
 
 { #category : 'public - string reading' }
-SourceFileArray >> sourcedDataAt: sourcePointer [
+FilesSourcesManager >> sourcedDataAt: sourcePointer [
 
 	^ self
 		readStreamAt: sourcePointer
@@ -532,27 +533,27 @@ SourceFileArray >> sourcedDataAt: sourcePointer [
 ]
 
 { #category : 'accessing' }
-SourceFileArray >> sourcesFileStream [
+FilesSourcesManager >> sourcesFileStream [
 	"Answer the master .sources FileStream, with writing permissions."
 
 	^ files at: 1
 ]
 
 { #category : 'accessing' }
-SourceFileArray >> sourcesFileStream: aStream [
+FilesSourcesManager >> sourcesFileStream: aStream [
 
 	^ files at: 1 put: aStream
 ]
 
 { #category : 'public - string reading' }
-SourceFileArray >> timeStampAt: sourcePointer [
+FilesSourcesManager >> timeStampAt: sourcePointer [
 	"Answer the authoring time-stamp for the given method, retrieved from the sources or changes file. Answer the empty string if no time stamp is available."
 
 	^ self timeStampAt: sourcePointer for: self sourceDataPointers
 ]
 
 { #category : 'public - string reading' }
-SourceFileArray >> timeStampAt: sourcePointer for: sourceDataPointers [
+FilesSourcesManager >> timeStampAt: sourcePointer for: sourceDataPointers [
 	"Answer the authoring time-stamp for the given method, retrieved from the sources or changes file. Answer the empty string if no time stamp is available."
 
 	| preamble |
@@ -562,7 +563,7 @@ SourceFileArray >> timeStampAt: sourcePointer for: sourceDataPointers [
 ]
 
 { #category : 'public - string reading' }
-SourceFileArray >> timeStampFromPreamble: preamble for: sourceDataPointers [
+FilesSourcesManager >> timeStampFromPreamble: preamble for: sourceDataPointers [
 	"Answer the authoring time-stamp for the given method, retrieved from the sources or changes file. Answer the empty string if no time stamp is available."
 
 	| stamp index |
@@ -595,13 +596,13 @@ SourceFileArray >> timeStampFromPreamble: preamble for: sourceDataPointers [
 ]
 
 { #category : 'private' }
-SourceFileArray >> unsubscribeToAnnouncements [
+FilesSourcesManager >> unsubscribeToAnnouncements [
 
 	self class codeChangeAnnouncer unsubscribe: self
 ]
 
 { #category : 'private' }
-SourceFileArray >> writeChangesDuring: aBlock onSuccess: successBlock onFail: failBlock [
+FilesSourcesManager >> writeChangesDuring: aBlock onSuccess: successBlock onFail: failBlock [
 
 	| file |
 	file := self changesFileStream.
@@ -615,7 +616,7 @@ SourceFileArray >> writeChangesDuring: aBlock onSuccess: successBlock onFail: fa
 ]
 
 { #category : 'public - string writing' }
-SourceFileArray >> writeComment: aString stamp: aStamp of: aClass [
+FilesSourcesManager >> writeComment: aString stamp: aStamp of: aClass [
 
 	self newWriter
 		timestamp: aStamp;
@@ -625,7 +626,7 @@ SourceFileArray >> writeComment: aString stamp: aStamp of: aClass [
 ]
 
 { #category : 'public - string writing' }
-SourceFileArray >> writeSource: source of: aMethod withFooter: footer protocol: protocol timestamp: aTimestamp priorSourcePointer: priorSourcePointer [
+FilesSourcesManager >> writeSource: source of: aMethod withFooter: footer protocol: protocol timestamp: aTimestamp priorSourcePointer: priorSourcePointer [
 
 	self newWriter
 		metadata: footer;

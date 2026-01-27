@@ -150,7 +150,7 @@ CodeImporter >> file: aFileStream [
 { #category : 'evaluating' }
 CodeImporter >> flushChangesFile [
 
-	logSource ifTrue: [ SourceFileArray default forceChangesToDisk ]
+	logSource ifTrue: [ FilesSourcesManager default forceChangesToDisk ]
 ]
 
 { #category : 'initialization' }

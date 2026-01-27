@@ -94,11 +94,11 @@ PharoChangesCondenser >> initialize [
 { #category : 'private - 3 installing' }
 PharoChangesCondenser >> installNewChangesFile [
 
-	SourceFileArray default changesFileStream close.
+	FilesSourcesManager default changesFileStream close.
 	self backupOldChanges.
 	self originalFile ensureDelete.
 	newChangesFile moveTo: self originalFile.
-	SourceFileArray reset
+	FilesSourcesManager reset
 ]
 
 { #category : 'helper' }
@@ -134,20 +134,20 @@ PharoChangesCondenser >> reset [
 PharoChangesCondenser >> shouldCondenseMethod: aMethod [
 	"Only write methods with changes in the current file (not .sources)"
 
-	^ (SourceFileArray default fileIndexFromSourcePointer: aMethod sourcePointer) == 2
+	^ (FilesSourcesManager default fileIndexFromSourcePointer: aMethod sourcePointer) == 2
 ]
 
 { #category : 'private - 1 writing' }
 PharoChangesCondenser >> shouldWriteClassComment: commentRemoteString [
 
 	^ commentRemoteString notNil
-		and: [ (SourceFileArray default fileIndexFromSourcePointer: commentRemoteString) ~= 1 ]
+		and: [ (FilesSourcesManager default fileIndexFromSourcePointer: commentRemoteString) ~= 1 ]
 ]
 
 { #category : 'private - 2 swapping' }
 PharoChangesCondenser >> sourcePointerFor: remoteString [
 
-	^ SourceFileArray default sourcePointerFromFileIndex: remoteString first andPosition: remoteString second
+	^ FilesSourcesManager default sourcePointerFromFileIndex: remoteString first andPosition: remoteString second
 ]
 
 { #category : 'private - 2 swapping' }
