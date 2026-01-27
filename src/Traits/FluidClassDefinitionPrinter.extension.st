@@ -27,57 +27,42 @@ FluidClassDefinitionPrinter >> compactTraitDefinitionTemplateInPackage: aPackage
 FluidClassDefinitionPrinter >> expandedTraitClassDefinitionString [
 
 	^ String streamContents: [ :s |
-		  s nextPutAll: 'Trait << '.
-		  s nextPutAll: forClass name.
+			  s nextPutAll: 'Trait << '.
+			  s nextPutAll: forClass name.
 
-		  s crtab.
-		  s nextPutAll: 'traits: '.
-		  forClass hasTraitComposition
-			  ifTrue: [
-				  s
-					  nextPutAll: '{';
-					  nextPutAll: forClass traitCompositionString;
-					  nextPutAll: '};' ]
-			  ifFalse: [ s nextPutAll: '{};' ].
-		  s crtab.
-		  s nextPutAll: 'slots: '.
-		  self slotDefinitionsOn: s ]
+			  self class customizers do: [ :customizer | customizer extendedFluidClassDefinitionFor: forClass on: s ].
+			  s crtab.
+			  s nextPutAll: 'slots: '.
+			  self slotDefinitionsOn: s ]
 ]
 
 { #category : '*Traits' }
 FluidClassDefinitionPrinter >> expandedTraitDefinitionString [
 
 	^ String streamContents: [ :s |
-		  | tag |
-		  s nextPutAll: 'Trait'.
-		  self msgAndClassNameOn: s.
+			  | tag |
+			  s nextPutAll: 'Trait'.
+			  self msgAndClassNameOn: s.
 
-		  s crtab.
-		  s nextPutAll: 'traits: '.
-		  forClass hasTraitComposition
-			  ifTrue: [
-				  s
-					  nextPutAll: '{';
-					  nextPutAll: forClass traitCompositionString;
-					  nextPutAll: '};' ]
-			  ifFalse: [ s nextPutAll: '{};' ].
-		  self slotsOn: s.
-		  s crtab.
 
-		  forClass packageTag ifNotNil: [ :t |
-			  tag := t name.
-			  tag = forClass package name ifFalse: [
-				  s
-					  nextPutAll: 'tag: ';
-					  nextPut: $';
-					  nextPutAll: tag asString;
-					  nextPutAll: ''';'.
-				  s crtab ] ].
+			  self class customizers do: [ :customizer | customizer extendedFluidClassDefinitionFor: forClass on: s ].
+			  self slotsOn: s.
+			  s crtab.
 
-		  s
-			  nextPutAll: 'package: ''';
-			  nextPutAll: forClass package name;
-			  nextPutAll: '''' ]
+			  forClass packageTag ifNotNil: [ :t |
+					  tag := t name.
+					  tag = forClass package name ifFalse: [
+							  s
+								  nextPutAll: 'tag: ';
+								  nextPut: $';
+								  nextPutAll: tag asString;
+								  nextPutAll: ''';'.
+							  s crtab ] ].
+
+			  s
+				  nextPutAll: 'package: ''';
+				  nextPutAll: forClass package name;
+				  nextPutAll: '''' ]
 ]
 
 { #category : '*Traits' }
@@ -89,7 +74,7 @@ FluidClassDefinitionPrinter >> expandedTraitedMetaclassDefinitionString [
 			nextPutAll: forClass superclass name;
 			nextPutAll: ' << ';
 			nextPutAll: forClass name.
-		self traitsOn: strm.
+		self class customizers do: [ :customizer | customizer fluidClassDefinitionFor: forClass on: strm ].
 		self lastSlotsOn: strm]
 ]
 
@@ -99,7 +84,7 @@ FluidClassDefinitionPrinter >> traitDefinitionString [
 	^ String streamContents: [ :strm |
 			strm nextPutAll: 'Trait'.
 			self msgAndClassNameOn: strm.
-			self traitsOn: strm.
+			self class customizers do: [ :customizer | customizer fluidClassDefinitionFor: forClass on: strm ].
 
 		   forClass slots ifNotEmpty: [ self slotsOn: strm ].
 			self tagOn: strm.
@@ -136,6 +121,7 @@ FluidClassDefinitionPrinter >> traitedMetaclassDefinitionString [
 			nextPutAll: forClass superclass name;
 			nextPutAll: ' << ';
 			nextPutAll: forClass name.
-		self lastTraitsOn: strm.
+		
+		self class customizers do: [ :customizer | customizer fluidMetaclassDefinitionFor: forClass on: strm ].
 		forClass slots ifNotEmpty: [ self lastSlotsOn: strm ]]
 ]

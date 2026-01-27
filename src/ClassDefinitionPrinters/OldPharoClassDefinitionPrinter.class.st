@@ -12,8 +12,13 @@ Class {
 }
 
 { #category : 'internal' }
-OldPharoClassDefinitionPrinter >> basicClassDefinitionString [
+OldPharoClassDefinitionPrinter >> applyCustomizersOn: stream [
 
+	self class customizers do: [ :customizer | customizer oldClassDefinitionFor: forClass on: stream ]
+]
+
+{ #category : 'internal' }
+OldPharoClassDefinitionPrinter >> basicClassDefinitionString [
 	"Pay attention this definition is fragile in presence of complex slots. Use the public API i.e., classDefinitionString"
 
 	| stream |
@@ -24,19 +29,19 @@ OldPharoClassDefinitionPrinter >> basicClassDefinitionString [
 	stream
 		nextPutAll: forClass kindOfSubclass;
 		store: forClass name.
-	self traitCompositionOn: stream.
+	self applyCustomizersOn: stream.
 	self instanceVariablesOn: stream.
 	self classVariablesOn: stream.
 	self poolOn: stream.
 	self packageOn: stream.
 	forClass superclass ifNil: [
-		stream
-			nextPutAll: '.';
-			cr.
-		stream nextPutAll: forClass name.
-		stream
-			space;
-			nextPutAll: 'superclass: nil' ].
+			stream
+				nextPutAll: '.';
+				cr.
+			stream nextPutAll: forClass name.
+			stream
+				space;
+				nextPutAll: 'superclass: nil' ].
 	^ stream contents
 ]
 
@@ -105,14 +110,4 @@ OldPharoClassDefinitionPrinter >> poolOn: stream [
 			crtab;
 			nextPutAll: 'poolDictionaries: ';
 			store: poolString ]
-]
-
-{ #category : 'low-level elements' }
-OldPharoClassDefinitionPrinter >> traitCompositionOn: stream [
-
-	forClass hasTraitComposition ifTrue: [
-		stream
-			crtab;
-			nextPutAll: 'uses: ';
-			nextPutAll: forClass traitCompositionString ]
 ]

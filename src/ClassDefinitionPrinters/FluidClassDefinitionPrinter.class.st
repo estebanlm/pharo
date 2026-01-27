@@ -52,7 +52,7 @@ FluidClassDefinitionPrinter >> classDefinitionString [
 		  forClass classLayout isFixedLayout
 				ifFalse: [ self layoutOn: s ].
 
-			self traitsOn: s.
+			self class customizers do: [ :customizer | customizer fluidClassDefinitionFor: forClass on: s ].
 			self class displayEmptySlots
 				ifTrue: [ self slotsOn: s ]
 		  		ifFalse: [forClass slots ifNotEmpty: [ self slotsOn: s ]].
@@ -135,56 +135,43 @@ FluidClassDefinitionPrinter >> compactClassDefinitionTemplateInPackage: aPackage
 FluidClassDefinitionPrinter >> expandedDefinitionString [
 
 	^ String streamContents: [ :s | "in case of ProtoObject"
-		  forClass superclass
-			  ifNil: [ s nextPutAll: 'nil' ]
-			  ifNotNil: [ s nextPutAll: forClass superclass name ].
-		  self msgAndClassNameOn: s.
-		  self layoutOn: s.
-		  s crtab.
-		  s nextPutAll: 'traits: '.
-		  forClass hasTraitComposition
-			  ifTrue: [
-				  s
-					  nextPutAll: '{';
-					  nextPutAll: forClass traitCompositionString;
-					  nextPutAll: '};' ]
-			  ifFalse: [ s nextPutAll: '{};' ].
-		  self slotsOn: s.
-		  self sharedVariablesOn: s.
-		  self sharedPoolsOn: s.
-		  forClass packageTag isRoot
-			  ifTrue: [
-				  s
-					  crtab;
-					  nextPutAll: 'tag: '''';' ]
-			  ifFalse: [ self tagOn: s ].
-		  self packageOn: s ]
+			  forClass superclass
+				  ifNil: [ s nextPutAll: 'nil' ]
+				  ifNotNil: [ s nextPutAll: forClass superclass name ].
+			  self msgAndClassNameOn: s.
+			  self layoutOn: s.
+
+			  self class customizers do: [ :customizer | customizer extendedFluidClassDefinitionFor: forClass on: s ].
+			  self slotsOn: s.
+			  self sharedVariablesOn: s.
+			  self sharedPoolsOn: s.
+			  forClass packageTag isRoot
+				  ifTrue: [
+						  s
+							  crtab;
+							  nextPutAll: 'tag: '''';' ]
+				  ifFalse: [ self tagOn: s ].
+			  self packageOn: s ]
 ]
 
 { #category : 'expanded double dispatch API' }
 FluidClassDefinitionPrinter >> expandedMetaclassDefinitionString [
 
 	^ String streamContents: [ :s |
-		  forClass soleInstance = ProtoObject
-			  ifTrue: [ "we are on the class of ProtoObject class.
+			  forClass soleInstance = ProtoObject
+				  ifTrue: [ "we are on the class of ProtoObject class.
 				Yes this is strange but the fluid printer is printing
 				this."
-				  s nextPutAll: 'Class class << ProtoObject class' ]
-			  ifFalse: [
-				  s nextPutAll: forClass superclass name.
-				  s nextPutAll: ' << '.
-				  s nextPutAll: forClass name ].
-		  s crtab.
-		  forClass hasTraitComposition
-			  ifTrue: [
-				  s
-					  nextPutAll: 'traits: ';
-					  nextPutAll: forClass traitCompositionString;
-					  nextPutAll: ';' ]
-			  ifFalse: [ s nextPutAll: 'traits: {};' ].
-		  s crtab.
-		  s nextPutAll: 'slots: '.
-		  self slotDefinitionsOn: s ]
+					  s nextPutAll: 'Class class << ProtoObject class' ]
+				  ifFalse: [
+						  s nextPutAll: forClass superclass name.
+						  s nextPutAll: ' << '.
+						  s nextPutAll: forClass name ].
+
+			  self class customizers do: [ :customizer | customizer extendedFluidClassDefinitionFor: forClass on: s ].
+			  s crtab.
+			  s nextPutAll: 'slots: '.
+			  self slotDefinitionsOn: s ]
 ]
 
 { #category : 'elementary operations' }
@@ -193,19 +180,6 @@ FluidClassDefinitionPrinter >> lastSlotsOn: s [
 	s crtab.
 	s nextPutAll: 'slots: '.
 	self slotDefinitionsOn: s
-]
-
-{ #category : 'elementary operations' }
-FluidClassDefinitionPrinter >> lastTraitsOn: strm [
-	"uses: can the last part of a definition so watch out for terminating ;"
-
-	forClass hasTraitComposition ifTrue: [
-		strm
-			crtab;
-			nextPutAll: 'traits: {';
-			nextPutAll: forClass traitCompositionString;
-			nextPutAll: '}'.
-	forClass slots	ifNotEmpty: [ strm nextPutAll: ';' ] ]
 ]
 
 { #category : 'elementary operations' }
@@ -233,7 +207,7 @@ FluidClassDefinitionPrinter >> metaclassDefinitionString [
 									nextPutAll: 'Class class << ';
 									nextPutAll: forClass name ] ]
 			ifNil: [ strm nextPutAll: 'ProtoObject ' ].
-		self lastTraitsOn: strm.
+		self class customizers do: [ :customizer | customizer fluidMetaclassDefinitionFor: forClass on: strm ].
 		self class displayEmptySlots
 				ifTrue: [ self lastSlotsOn: strm ]
 		  		ifFalse: [forClass slots ifNotEmpty: [ self lastSlotsOn: strm ]]]
@@ -363,18 +337,4 @@ FluidClassDefinitionPrinter >> testClassDefinitionTemplateInPackage: aPackageNam
 			  nextPutAll: ''' ;';
 			  crtab;
 			  nextPutAll: 'package: ''' , aPackageName , '''' ]
-]
-
-{ #category : 'elementary operations' }
-FluidClassDefinitionPrinter >> traitsOn: strm [
-	"uses: can the last part of a definition so watch out for terminating ;"
-
-	forClass hasTraitComposition ifTrue: [
-		"forClass traitComposition innerClass = TEmpty ifTrue: [ ^ self ]."
-		"isEmpty traitComposition should probably moved to Trait."
-		strm
-			crtab;
-			nextPutAll: 'traits: {';
-			nextPutAll: forClass traitCompositionString;
-			nextPutAll: '};' ]
 ]
