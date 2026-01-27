@@ -55,7 +55,7 @@ TraitClassDefinitionCustomizer class >> fluidMetaclassDefinitionFor: forClass on
 { #category : 'class initialization' }
 TraitClassDefinitionCustomizer class >> initialize [
 
-	ClassDefinitionPrinter customizers add: self
+	ClassDefinitionPrinter addCustomizer: self
 ]
 
 { #category : 'internal' }

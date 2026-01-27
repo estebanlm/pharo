@@ -67,6 +67,12 @@ Class {
 }
 
 { #category : 'accessing' }
+ClassDefinitionPrinter class >> addCustomizer: aClass [
+
+	(self customizers includes: aClass) ifFalse: [ self customizers add: aClass ]
+]
+
+{ #category : 'accessing' }
 ClassDefinitionPrinter class >> customizers [
 	"I can be use to add classes to me that will be able to print more informations to the class definition.
 	For example, when Traits are in the system, they can add a customizer to print themselves"
