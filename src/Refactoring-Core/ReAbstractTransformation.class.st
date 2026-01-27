@@ -102,16 +102,6 @@ ReAbstractTransformation >> buildParametersForSelector: aSelector [
 ]
 
 { #category : 'private' }
-ReAbstractTransformation >> buildParamtersForSelector: aSelector [
-	| params |
-	params := OrderedCollection new. 
-	1 
-		to: aSelector numArgs 
-		do: [ :i | params add: 'param', i asString ].
-	^ params 
-]
-
-{ #category : 'private' }
 ReAbstractTransformation >> buildSelectorString: aSelector [
 	aSelector numArgs = 0 ifTrue: [^aSelector].
 	^self buildSelectorString: aSelector
