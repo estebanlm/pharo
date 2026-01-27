@@ -47,9 +47,6 @@ ReAbstractTransformation class >> initializeRefactoringOptions [
 		at: #variableTypes
 		put: [ :ref :types :selected | self error: #variableTypes ];
 
-		at: #extractAssignment
-		put: [ :ref :varName | self error: #extractAssignment ];
-
 		at: #shouldNotCreateExtraBindings
 		put: [ :ref :string | self error: #shouldNotCreateExtraBindings ];
 
@@ -461,11 +458,6 @@ ReAbstractTransformation >> setOption: aSymbol toUse: aBlock [
 	dict == self class refactoringOptions ifTrue: [dict := dict copy].
 	dict at: aSymbol put: aBlock.
 	self options: dict
-]
-
-{ #category : 'requests' }
-ReAbstractTransformation >> shouldExtractAssignmentTo: aString [
-	^(self options at: #extractAssignment) value: self value: aString
 ]
 
 { #category : 'requests' }
