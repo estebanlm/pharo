@@ -394,7 +394,7 @@ Class >> comment: aString stamp: aStamp [
 
 	aString string = oldComment string ifTrue: [ ^ self ].
 
-	SourceFileArray default writeComment: aString stamp: aStamp  of: self.
+	SourcesManager current writeComment: aString stamp: aStamp  of: self.
 
 	self codeChangeAnnouncer
 		class: self
@@ -419,7 +419,7 @@ Class >> commentStamp [
 
 	^ self commentSourcePointer
 		  ifNil: [ '' ]
-		  ifNotNil: [:sourcePointer | SourceFileArray default commentTimeStampAt: sourcePointer ]
+		  ifNotNil: [ :sourcePointer | SourcesManager current commentTimeStampAt: sourcePointer ]
 ]
 
 { #category : 'accessing - comment' }

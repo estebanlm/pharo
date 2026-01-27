@@ -204,10 +204,10 @@ SourceFileArrayTest >> testProtocol [
 	| okCm notOkCm |
 	okCm := Point >> #dotProduct:.
 	self assert: ((SourceFileArray default sourcedDataAt: okCm sourcePointer) beginsWith: 'Point methodsFor: ''point functions''').
-	self assert: (SourceFileArray default protocolAt: okCm sourcePointer) equals: 'point functions'.
+	self assert: (SourcesManager current protocolAt: okCm sourcePointer) equals: 'point functions'.
 
 	notOkCm := Behavior >> #superclass.
-	self assert: (SourceFileArray default protocolAt: notOkCm sourcePointer) equals: 'accessing - class hierarchy'
+	self assert: (SourcesManager current protocolAt: notOkCm sourcePointer) equals: 'accessing - class hierarchy'
 ]
 
 { #category : 'tests' }

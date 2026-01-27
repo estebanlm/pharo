@@ -550,7 +550,7 @@ RGMethodDefinition >> protocolAtPointer [
 	"A RGMethodDefinition that was set as historical will retrieve the protocol using the sourcePointer"
 
 	^ self sourcePointer
-		  ifNotNil: [ SourceFileArray default protocolAt: self sourcePointer ]
+		  ifNotNil: [ SourcesManager current protocolAt: self sourcePointer ]
 		  ifNil: [ nil ]
 ]
 
@@ -647,7 +647,7 @@ RGMethodDefinition >> stampAtPointer [
 	"A RGMethodDefinition that was set as historical will retrieve the stamp using the sourcePointer"
 
 	^ self sourcePointer
-		  ifNotNil: [ SourceFileArray default timeStampAt: self sourcePointer ]
+		  ifNotNil: [ SourcesManager current timeStampAt: self sourcePointer ]
 		  ifNil: [ nil ]
 ]
 

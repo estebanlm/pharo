@@ -209,11 +209,6 @@ CompiledMethod >> flushCache [
 ]
 
 { #category : 'source code management' }
-CompiledMethod >> getPreambleFrom: aFileStream at: position [
-	^ SourceFileArray default getPreambleFrom: aFileStream at: position
-]
-
-{ #category : 'source code management' }
 CompiledMethod >> getSourceFromFile [
 	"PLEASE Note: clients should always call #sourceCode"
 
