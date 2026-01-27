@@ -40,10 +40,7 @@ ReAbstractTransformation class >> initializeRefactoringOptions [
 
 		at: #methodName
 		put: [ :methodName :ref | self error: #methodName ];
-
-		at: #selfArgumentName
-		put: [ :ref | self error: #selfArgumentName ];
-
+		
 		at: #selectVariableToMoveTo
 		put: [ :ref :class :selector | self error: #selectVariableToMoveTo ];
 

@@ -40,9 +40,7 @@ RBMoveMethodParametrizedTest >> testMoveMethodIntoArgument [
 	self proceedThroughWarning:
 		[ refactoring := self createRefactoringWithArguments:
 				{ #checkMethod: . RBTransformationRuleTestData . 'aSmalllintContext' }.
-		self
-			setupSelfArgumentNameFor: refactoring
-			toReturn: 'transformationRule'.
+		refactoring selfArgumentName:  'transformationRule'.
 		self
 			setupVariableTypesFor: refactoring
 			toReturn: (Array with: (refactoring model classNamed: #RBSmalllintContext)).
@@ -99,9 +97,7 @@ RBMoveMethodParametrizedTest >> testMoveMethodIntoClassVariable [
 	self proceedThroughWarning:
 		[ refactoring := self createRefactoringWithArguments:
 				{ #checkMethod: . RBTransformationRuleTestData . 'RecursiveSelfRule'}.
-		self
-			setupSelfArgumentNameFor: refactoring
-			toReturn: 'transformationRule'.
+		refactoring selfArgumentName: 'transformationRule'.
 		self
 			setupVariableTypesFor: refactoring
 			toReturn: (Array with: (refactoring model classNamed: #OCParseTreeSearcher)).
@@ -134,9 +130,7 @@ RBMoveMethodParametrizedTest >> testMoveMethodIntoInstanceVariable [
 	self proceedThroughWarning:
 		[ refactoring := self createRefactoringWithArguments:
 			  { #checkMethod: . RBTransformationRuleTestData . 'rewriteRule' }.
-		self
-			setupSelfArgumentNameFor: refactoring
-			toReturn: 'transformationRule'.
+		refactoring selfArgumentName:'transformationRule'.
 		self
 			setupVariableTypesFor: refactoring
 			toReturn: (Array with: (refactoring model classNamed: #OCParseTreeRewriter)).
@@ -169,9 +163,7 @@ RBMoveMethodParametrizedTest >> testMoveMethodThatReferencesPoolDictionary [
 	self proceedThroughWarning:
 		[ refactoring := self createRefactoringWithArguments:
 			  { #junk . RBLintRuleTestData . RBClassDataForRefactoringTest name }.
-		self
-			setupSelfArgumentNameFor: refactoring
-			toReturn: 'transformationRule'.
+		refactoring selfArgumentName: 'transformationRule'.
 		self
 			setupVariableTypesFor: refactoring
 			toReturn: (Array with: (refactoring model classNamed: RBClassDataForRefactoringTest class name asSymbol)).
