@@ -18,8 +18,8 @@ Class {
 		'flushChanges',
 		'exporterClass'
 	],
-	#category : 'System-Sources-Sources',
-	#package : 'System-Sources',
+	#category : 'System-Sources-Files-Sources',
+	#package : 'System-Sources-Files',
 	#tag : 'Sources'
 }
 
