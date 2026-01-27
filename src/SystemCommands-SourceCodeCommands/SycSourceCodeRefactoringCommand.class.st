@@ -27,7 +27,7 @@ SycSourceCodeRefactoringCommand >> execute [
 { #category : 'private' }
 SycSourceCodeRefactoringCommand >> executeRefactoring: refactoring [
 
-	[ refactoring execute ]
+	[ refactoring first execute ]
 		on: RBRefactoringError
 		do: [ :e | self morphicUIManager alert: e messageText ]
 ]

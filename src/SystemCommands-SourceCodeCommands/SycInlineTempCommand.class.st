@@ -19,10 +19,10 @@ SycInlineTempCommand >> asRefactorings [
 	assignment := sourceNode methodNode assignmentNodes
 		detect: [:each | each variable = sourceNode ].
 
-	^ RBInlineTemporaryRefactoring
+	^ { RBInlineTemporaryRefactoring
 		inline: assignment sourceInterval
 		from: method selector
-		in: method origin 
+		in: method origin }
 ]
 
 { #category : 'accessing' }

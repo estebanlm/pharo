@@ -21,7 +21,7 @@ SycExtractSetUpCommand >> asRefactorings [
 		from: method selector
 		in: method origin.
 	
-	^ refactoring 
+	^ { refactoring }
 ]
 
 { #category : 'accessing' }

@@ -36,7 +36,7 @@ SycExtractMethodAndOccurrencesCommand >> asRefactorings [
 		               from: method selector
 		               in: method origin.
 	self setUpOptionsOf: refactoring.
-	^ refactoring 
+	^ { refactoring }
 ]
 
 { #category : 'accessing' }
