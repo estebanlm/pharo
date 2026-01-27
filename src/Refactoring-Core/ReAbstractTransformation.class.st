@@ -417,11 +417,6 @@ ReAbstractTransformation >> requestMethodNameFor: aMethodName [
 	^(self options at: #methodName) cull: aMethodName cull: self
 ]
 
-{ #category : 'requests' }
-ReAbstractTransformation >> requestSelfArgumentName [
-	^(self options at: #selfArgumentName) value: self
-]
-
 { #category : 'utilities' }
 ReAbstractTransformation >> safeMethodNameFor: aClass basedOn: aString [
 	"Creates an unused method name containing aString"
