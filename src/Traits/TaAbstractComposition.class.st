@@ -341,7 +341,7 @@ TaAbstractComposition >> isNotEmpty [
 { #category : 'operations' }
 TaAbstractComposition >> isSourcesPresentInSystem [
 
-	^ self class environment at: #SourceFileArray ifPresent: [ :class | class default isNotNil ] ifAbsent: [ false ]
+	^ SourcesManager current isSourcesPresentInSystem
 ]
 
 { #category : 'testing' }

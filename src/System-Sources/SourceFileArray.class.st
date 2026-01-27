@@ -51,15 +51,6 @@ SourceFileArray class >> initialize [
 	(self class environment bindingOf: #SourceFiles) isDeprecated: true
 ]
 
-{ #category : 'initialization' }
-SourceFileArray class >> reset [
-
-	<script>
-	self default
-		closeSourceFiles;
-		openSourceFiles
-]
-
 { #category : 'system startup' }
 SourceFileArray class >> shutDown: isImageClosing [
 
@@ -118,15 +109,6 @@ SourceFileArray >> commentTimeStampAt: sourcePointer [
 ]
 
 { #category : 'private' }
-SourceFileArray >> copyChangesTo: newNameWithoutSuffix [
-
-	self isChangesFileInUse ifTrue: [
-			self
-				closeSourceFiles;
-				saveChangesInFileNamed: (self fullNameForChangesNamed: newNameWithoutSuffix) ]
-]
-
-{ #category : 'private' }
 SourceFileArray >> createReadOnlyFiles [
 	| readOnly |
 	readOnly := {
@@ -157,6 +139,18 @@ SourceFileArray >> emptyReadStreamsQueue [
 	oldQueue := readOnlyQueue.
 	readOnlyQueue := SharedQueue new.
 	oldQueue flushAllSuchThat: [ :each | self closeFileArray: each. true]
+]
+
+{ #category : 'public - file system operations' }
+SourceFileArray >> ensureFlushing [
+	"Ensure that the changes file has been fully written to disk by closing and re-opening it. This makes the system more robust in the face of a power failure or hard-reboot."
+
+	| changesFile |
+	changesFile := self changesFileStream ifNil: [ ^ self ].
+	changesFile isReadOnly ifFalse: [ changesFile flush ].
+	changesFile close.
+	changesFile tryOpen.
+	changesFile setToEnd
 ]
 
 { #category : 'public - file system operations' }
@@ -233,18 +227,6 @@ SourceFileArray >> flushChangesFile [
 	self changesFileStream ifNotNil: [:stream | stream flush]
 ]
 
-{ #category : 'public - file system operations' }
-SourceFileArray >> forceChangesToDisk [
-	"Ensure that the changes file has been fully written to disk by closing and re-opening it. This makes the system more robust in the face of a power failure or hard-reboot."
-
-	| changesFile |
-	changesFile := self changesFileStream ifNil: [ ^ self ].
-	changesFile isReadOnly ifFalse: [ changesFile flush ].
-	changesFile close.
-	changesFile tryOpen.
-	changesFile setToEnd
-]
-
 { #category : 'private' }
 SourceFileArray >> fullNameForChangesNamed: aString [
 
@@ -254,6 +236,15 @@ SourceFileArray >> fullNameForChangesNamed: aString [
 { #category : 'public - string reading' }
 SourceFileArray >> getPreambleFrom: aSourceFileStream at: position [
 	^ aSourceFileStream getPreambleAt: position
+]
+
+{ #category : 'private' }
+SourceFileArray >> imageMovedWithNewName: newNameWithoutSuffix [
+
+	self isChangesFileInUse ifTrue: [
+			self
+				closeSourceFiles;
+				saveChangesInFileNamed: (self fullNameForChangesNamed: newNameWithoutSuffix) ]
 ]
 
 { #category : 'initialization' }
@@ -269,6 +260,12 @@ SourceFileArray >> initialize [
 SourceFileArray >> isChangesFileInUse [
 
 	^ self changesFileStream isNotNil or: [ self changesFileStream closed not ]
+]
+
+{ #category : 'testing' }
+SourceFileArray >> isSourcesPresentInSystem [
+
+	^ true
 ]
 
 { #category : 'public - file system operations' }
@@ -468,6 +465,14 @@ SourceFileArray >> reportString [
 		{ self sourcesFileStream. self changesFileStream }
 			do: [:each | each ifNotNil: [
 				aStream nextPutAll: each printString; cr ] ] ]
+]
+
+{ #category : 'initialization' }
+SourceFileArray >> reset [
+
+	self
+		closeSourceFiles;
+		openSourceFiles
 ]
 
 { #category : 'private' }

@@ -12,10 +12,29 @@ NoSourcesManager >> commentTimeStampAt: sourcePointer [
 	^ ''
 ]
 
+{ #category : 'copying' }
+NoSourcesManager >> imageMovedWithNewName: newNameWithoutSuffix [
+	"Nothing to do here"
+
+	
+]
+
+{ #category : 'testing' }
+NoSourcesManager >> isSourcesPresentInSystem [
+
+	^ false
+]
+
 { #category : 'accessing' }
 NoSourcesManager >> protocolAt: sourcePointer [
 
 	^ 'unfound protocol'
+]
+
+{ #category : 'querying' }
+NoSourcesManager >> reportString [
+
+	^ 'No source manager.'
 ]
 
 { #category : 'accessing' }

@@ -42,14 +42,15 @@ PharoChangesCondenser >> basicCondense [
 
 { #category : 'public' }
 PharoChangesCondenser >> condense [
+
+	SourcesManager current class = SourceFileArray ifFalse: [ self error: 'The condenser can work only in the current source manager is the files manager.' ].
 	job := [
-		newChangesFile writeStreamDo: [ :aStream |
-			  stream := aStream.
-			  self basicCondense ].
-  		self
-        installNewChangesFile;
-  		  reset
-    ] asJob.
+		       newChangesFile writeStreamDo: [ :aStream |
+				       stream := aStream.
+				       self basicCondense ].
+		       self
+			       installNewChangesFile;
+			       reset ] asJob.
 
 	job
 		title: 'Condensing Changes';
@@ -94,11 +95,11 @@ PharoChangesCondenser >> initialize [
 { #category : 'private - 3 installing' }
 PharoChangesCondenser >> installNewChangesFile [
 
-	SourceFileArray default changesFileStream close.
+	SourcesManager current changesFileStream close.
 	self backupOldChanges.
 	self originalFile ensureDelete.
 	newChangesFile moveTo: self originalFile.
-	SourceFileArray reset
+	SourcesManager current reset
 ]
 
 { #category : 'helper' }
@@ -134,20 +135,19 @@ PharoChangesCondenser >> reset [
 PharoChangesCondenser >> shouldCondenseMethod: aMethod [
 	"Only write methods with changes in the current file (not .sources)"
 
-	^ (SourceFileArray default fileIndexFromSourcePointer: aMethod sourcePointer) == 2
+	^ (SourcesManager current fileIndexFromSourcePointer: aMethod sourcePointer) == 2
 ]
 
 { #category : 'private - 1 writing' }
 PharoChangesCondenser >> shouldWriteClassComment: commentRemoteString [
 
-	^ commentRemoteString notNil
-		and: [ (SourceFileArray default fileIndexFromSourcePointer: commentRemoteString) ~= 1 ]
+	^ commentRemoteString isNotNil and: [ (SourcesManager current fileIndexFromSourcePointer: commentRemoteString) ~= 1 ]
 ]
 
 { #category : 'private - 2 swapping' }
 PharoChangesCondenser >> sourcePointerFor: remoteString [
 
-	^ SourceFileArray default sourcePointerFromFileIndex: remoteString first andPosition: remoteString second
+	^ SourcesManager current sourcePointerFromFileIndex: remoteString first andPosition: remoteString second
 ]
 
 { #category : 'private - 2 swapping' }

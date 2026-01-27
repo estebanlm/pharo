@@ -28,10 +28,49 @@ SourcesManager >> commentTimeStampAt: sourcePointer [
 	^ self subclassResponsibility
 ]
 
+{ #category : 'public - string writing' }
+SourcesManager >> deferFlushDuring: aBlock [
+	"If a specific implementation of SourcesManager is using a flush system, I can be overriden to defer the flushing during a block."
+
+	aBlock value
+]
+
+{ #category : 'public - file system operations' }
+SourcesManager >> ensureFlushing [
+	"Ensure the sources manager flush its streams, if it has some"
+
+	
+]
+
+{ #category : 'copying' }
+SourcesManager >> imageMovedWithNewName: newNameWithoutSuffix [
+	"I am called when the image is relocated in case the source manager needs to update itself following the change."
+
+	self subclassResponsibility
+]
+
+{ #category : 'testing' }
+SourcesManager >> isSourcesPresentInSystem [
+
+	^ self subclassResponsibility
+]
+
 { #category : 'accessing' }
 SourcesManager >> protocolAt: sourcePointer [
 
 	^ self subclassResponsibility
+]
+
+{ #category : 'querying' }
+SourcesManager >> reportString [
+
+	^ self subclassResponsibility
+]
+
+{ #category : 'initialization' }
+SourcesManager >> reset [
+
+	
 ]
 
 { #category : 'accessing' }
