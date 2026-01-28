@@ -13,8 +13,3 @@ SmalltalkImage >> platform [
 
 	^ self os
 ]
-
-{ #category : '*System-Platforms' }
-SmalltalkImage >> platformName [
-	^ self os platformName
-]
