@@ -252,17 +252,15 @@ SystemNavigation >> browseMessageList: messageList name: labelString autoSelect:
 
 { #category : '*Tool-Base' }
 SystemNavigation >> browseMessageList: messageList name: labelString autoSelect: autoSelectString refreshingBlock: aBlock [
-
 	"Create and schedule a MessageSet browser on the message list."
 
 	| methods |
 	"Do not show trait methods"
 	methods := messageList reject: [ :each | each isFromTrait ].
-	methods isEmpty ifTrue: [
-		^ InformativeNotification signal: 'There are no ' , String cr , labelString ].
+	methods isEmpty ifTrue: [ ^ InformativeNotification signal: 'There are no ' , String cr , labelString ].
 
 	^ (self tools toolNamed: #messageList) new
-		  messages: methods;
+		  methods: methods;
 		  title: labelString;
 		  autoSelect: autoSelectString;
 		  refreshingBlock: aBlock;

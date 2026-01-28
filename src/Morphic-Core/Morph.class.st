@@ -183,6 +183,13 @@ Morph class >> shortcutsHandler: anObject [
 	ShortcutsHandler := anObject
 ]
 
+{ #category : 'accessing' }
+Morph class >> theme [
+	"Answer the ui theme that provides controls."
+
+	^ Smalltalk ui theme
+]
+
 { #category : 'dropping/grabbing' }
 Morph >> aboutToBeGrabbedBy: aHand [
 	"The receiver is being grabbed by a hand.

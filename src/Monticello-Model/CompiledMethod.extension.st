@@ -7,7 +7,7 @@ CompiledMethod >> asMCMethodDefinition [
 	^ MCMethodDefinition
 		  className: self methodClass instanceSide name
 		  classIsMeta: self isClassSide
-		  selector: self selector
+		  selector: self selector asSymbol
 		  category: self protocolName
 		  sourcePointer: self sourcePointer
 		  source: self sourceCode

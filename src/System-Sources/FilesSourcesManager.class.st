@@ -385,7 +385,7 @@ FilesSourcesManager >> readOnlyDo: aBlock [
 	| copy |
 	copy := self readOnlyCopy.
 
-	^ [ aBlock value: copy ] ensure: [ copy close ]
+	^ [ aBlock value: copy ] ensure: [ copy closeSourceFiles ]
 ]
 
 { #category : 'private' }

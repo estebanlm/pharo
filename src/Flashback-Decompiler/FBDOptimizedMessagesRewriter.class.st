@@ -48,43 +48,43 @@ FBDOptimizedMessagesRewriter >> areArgumentsBlocks: msgNode [
 
 { #category : 'converting' }
 FBDOptimizedMessagesRewriter >> convertToAnd: msgNode [
-	msgNode selector: #and:.
+	msgNode selector: (OCSelectorNode value: #and:).
 	msgNode arguments: {msgNode arguments first}
 ]
 
 { #category : 'converting' }
 FBDOptimizedMessagesRewriter >> convertToIfFalse: msgNode [
-	msgNode selector: #ifFalse:.
+	msgNode selector: (OCSelectorNode value: #ifFalse:).
 	msgNode arguments: {msgNode arguments second}
 ]
 
 { #category : 'converting' }
 FBDOptimizedMessagesRewriter >> convertToIfNil: msgNode [
-	msgNode selector: #ifNil:.
+	msgNode selector: (OCSelectorNode value: #ifNil:).
 	msgNode arguments: {msgNode arguments first}
 ]
 
 { #category : 'converting' }
 FBDOptimizedMessagesRewriter >> convertToIfNilIfNotNil: msgNode [
 	msgNode receiver: msgNode receiver receiver.
-	msgNode selector: #ifNil:ifNotNil:
+	msgNode selector: (OCSelectorNode value: #ifNil:ifNotNil:)
 ]
 
 { #category : 'converting' }
 FBDOptimizedMessagesRewriter >> convertToIfNotNil: msgNode [
-	msgNode selector: #ifNotNil:.
+	msgNode selector: (OCSelectorNode value: #ifNotNil:).
 	msgNode arguments: {msgNode arguments last}
 ]
 
 { #category : 'converting' }
 FBDOptimizedMessagesRewriter >> convertToIfTrue: msgNode [
-	msgNode selector: #ifTrue:.
+	msgNode selector: (OCSelectorNode value: #ifTrue:).
 	msgNode arguments: {msgNode arguments first}
 ]
 
 { #category : 'converting' }
 FBDOptimizedMessagesRewriter >> convertToOr: msgNode [
-	msgNode selector: #or:.
+	msgNode selector: (OCSelectorNode value: #or:).
 	msgNode arguments: {msgNode arguments second}
 ]
 
@@ -103,7 +103,7 @@ FBDOptimizedMessagesRewriter >> convertWhileTrueToToByDo: msgNode start: start e
 			arguments := {end . incrValue . loopBlock} ].
 	msgNode
 		receiver: start;
-		selector: selector;
+		selector: (OCSelectorNode value: selector);
 		arguments: arguments.
 	self removeTempFromSequence: msgNode parent temp: incrVar.
 	msgNode parent removeNode: assignement
@@ -126,7 +126,7 @@ FBDOptimizedMessagesRewriter >> handleIfFalse: msgNode [
 	(self isIfNilIfNotNil: msgNode)
 		ifTrue: [
 			msgNode receiver: msgNode receiver receiver.
-			msgNode selector: #ifNotNil: ]
+			msgNode selector: (OCSelectorNode value: #ifNotNil:) ]
 ]
 
 { #category : 'handling' }
@@ -142,7 +142,7 @@ FBDOptimizedMessagesRewriter >> handleIfTrue: msgNode [
 	(self isIfNilIfNotNil: msgNode)
 		ifTrue: [
 			msgNode receiver: msgNode receiver receiver.
-			msgNode selector: #ifNil: ]
+			msgNode selector: (OCSelectorNode value: #ifNil:) ]
 ]
 
 { #category : 'handling' }

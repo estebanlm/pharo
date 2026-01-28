@@ -13,5 +13,5 @@ Class {
 ManifestRingDefinitionsCore class >> manuallyResolvedDependencies [
 
 	<ignoreForCoverage>
-	^ #(#'Collections-Abstract')
+	^ #(#'SUnit-Core' #'Collections-Abstract')
 ]

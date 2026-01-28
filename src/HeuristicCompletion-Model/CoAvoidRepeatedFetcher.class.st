@@ -26,14 +26,14 @@ CoAvoidRepeatedFetcher >> entriesDo: aBlock [
 			(self hasAlreadyReturned: elem)
 				ifFalse: [
 					"As the NECEntry does not know how to compare I will enter the content as symbol"
-					elements add: elem contents asSymbol.
+					elements add: elem contents.
 					aBlock value: elem ] ]
 ]
 
 { #category : 'accessing' }
 CoAvoidRepeatedFetcher >> hasAlreadyReturned: anEntry [
 
-	^ elements includes: anEntry contents asSymbol
+	^ elements includes: anEntry contents
 ]
 
 { #category : 'initialization' }

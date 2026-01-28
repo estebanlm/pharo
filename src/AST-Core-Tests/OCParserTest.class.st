@@ -1103,7 +1103,7 @@ OCParserTest >> testModifying [
 				removeAll: #('a' 'b' 'd');
 				yourself).
 	tree := self parserClass parseExpression: 'self foo: 0'.
-	tree selector: #+.
+	tree selector: (OCSelectorNode value: #+).
 	self compare: tree to: (self parserClass parseExpression: 'self + 0')
 ]
 

@@ -120,7 +120,8 @@ PharoFilesOpener >> informCannotLocateSources [
 
 	| msg |
 	msg := self cannotLocateMsg.
-	Smalltalk os isMacOS ifTrue: [
+	OSPlatform current isMacOS
+	ifTrue: [
 			msg := msg , '
 Make sure the sources file is not an Alias.' ].
 	self inform: msg withRef: 'the sources file named ' , self sourcesName
