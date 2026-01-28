@@ -48,7 +48,7 @@ TraitClassDefinitionCustomizer class >> fluidMetaclassDefinitionFor: forClass on
 				crtab;
 				nextPutAll: 'traits: {';
 				nextPutAll: forClass traitCompositionString;
-				nextPutAll: '};'.
+				nextPutAll: '}'.
 			forClass slots ifNotEmpty: [ stream nextPutAll: ';' ] ]
 ]
 
