@@ -43,7 +43,7 @@ SystemVersionTest >> testCommitHashShort [
 SystemVersionTest >> testDoNotBreakSmalltalkVersion [
 	"TODO: This one might be yellow when we still set the suffix with build nr and hash from the outside."
 
-	self checkIsCompatibleWithResultOfVersionMessage: Smalltalk version
+	self checkIsCompatibleWithResultOfVersionMessage: SystemVersion current version
 ]
 
 { #category : 'tests' }
@@ -217,13 +217,6 @@ SystemVersionTest >> testPrintString [
 		('Pharo-7.0+alpha.build.2.sha.368dcda1b1ba81215fb7355cfc1e901d45395bd8' -> 'Pharo-7.0.0+alpha.build.2.sha.368dcda1b1ba81215fb7355cfc1e901d45395bd8').
 		('Pharo-7.0.89+alpha.build.2.sha.368dcda1b1ba81215fb7355cfc1e901d45395bd8' -> 'Pharo-7.0.89+alpha.build.2.sha.368dcda1b1ba81215fb7355cfc1e901d45395bd8') }
 		do: [ :each | self assert: ((self versionFromString: each key) printString beginsWith: each value) ]
-]
-
-{ #category : 'tests - compatibility' }
-SystemVersionTest >> testSmalltalkVersionEqualsCurrentVersion [
-	"TODO: This one might be yellow when we still set the suffix with build nr and hash from the outside."
-
-	self assert: Smalltalk version equals: SystemVersion current version
 ]
 
 { #category : 'tests' }
