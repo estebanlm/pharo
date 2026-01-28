@@ -76,7 +76,7 @@ BaselineOfFonts >> loadBitmapDejaVuSans [
 { #category : 'actions' }
 BaselineOfFonts >> loadBitmapFontFamily: familyName sizes: pointSizes [
 	| fonts fileName directoryReference |
-	directoryReference := (Smalltalk os environment
+	directoryReference := (OSEnvironment current
 		                       at: 'BOOTSTRAP_REPOSITORY'
 		                       ifAbsent: [ FileSystem workingDirectory ])
 		                      asFileReference / 'resources' / 'fonts'.
