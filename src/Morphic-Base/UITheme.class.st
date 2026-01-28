@@ -747,11 +747,15 @@ UITheme >> chooseDirectoryIn: aThemedMorph title: title path: path [
 	"Answer the result of a file dialog with the given title, choosing directories only."
 
 	| dialog |
-	dialog := self directoryDialogWindowClass new
-		          defaultFolder: (path ifNil: [ StFileSystemModel defaultDirectory ]);
-		          title: (title ifNil: [ 'Choose Directory' translated ]);
-		          openModal;
-		          yourself.
+	dialog := self directoryDialogWindowClass new.
+
+	path ifNotNil: [ dialog defaultFolder: path ].
+
+	dialog
+		title: (title ifNil: [ 'Choose Directory' translated ]);
+		openModal;
+		yourself.
+
 
 	^ dialog cancelled
 		  ifTrue: [ nil ]
