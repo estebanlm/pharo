@@ -468,8 +468,8 @@ SmalltalkImage >> extractMinusParameters [
 
 	args := OrderedCollection new.
 
-	str := self getSystemAttribute: (index := 2).
-	[ str isNil ] whileFalse: [ args add: str. str := self getSystemAttribute: (index := index + 1) ].
+	str := self vm getSystemAttribute: (index := 2).
+	[ str isNil ] whileFalse: [ args add: str. str := self vm getSystemAttribute: (index := index + 1) ].
 
 	^ self extractMinusParametersFrom: args
 ]

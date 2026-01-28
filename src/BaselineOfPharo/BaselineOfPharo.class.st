@@ -209,7 +209,7 @@ BaselineOfPharo >> baseline: spec [
 BaselineOfPharo >> postload: loader package: packageSpec [
 	"If we added a github token for the build, we remove it."
 
-	Smalltalk os environment at: #GITHUB_TOKEN ifPresent: [ :token |
+	OSEnvironment current at: #GITHUB_TOKEN ifPresent: [ :token |
 		| credential |
 		credential := (self classNamed: #IceCredentialStore) current plaintextCredentialForHostname: 'github.com'.
 		credential password = token ifTrue: [ (self classNamed: #IceCredentialStore) current removePlainTextCredential: credential ].

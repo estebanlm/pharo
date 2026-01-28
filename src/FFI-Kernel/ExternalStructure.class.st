@@ -308,13 +308,12 @@ ExternalStructure class >> fromHandle: aHandle [
 
 { #category : 'system startup' }
 ExternalStructure class >> install [
-	"Resuming the image on another architecture may require a re-compilation of structure layout."
+
 	| newPlatform |
-	newPlatform := Smalltalk platformName.
-	PreviousPlatform = newPlatform
-		ifFalse:
-			[self recompileStructures.
-			PreviousPlatform := newPlatform]
+	newPlatform := OSPlatform current platformName.
+	PreviousPlatform = newPlatform ifTrue: [ ^ self ].
+	self recompileStructures.
+	PreviousPlatform := newPlatform
 ]
 
 { #category : 'compiling' }

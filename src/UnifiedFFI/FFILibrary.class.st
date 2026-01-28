@@ -89,7 +89,7 @@ FFILibrary >> ffiLibraryName [
 
 { #category : 'accessing' }
 FFILibrary >> libraryName [
-	^ Smalltalk platform ffiLibraryName: self
+	^ OSPlatform current ffiLibraryName: self
 ]
 
 { #category : 'accessing - platform' }
