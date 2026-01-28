@@ -7,6 +7,13 @@ SmalltalkImage >> os [
 	^ OSPlatform current
 ]
 
+{ #category : '*System-Platforms' }
+SmalltalkImage >> platform [
+	"Answer the object to query about os."
+
+	^ OSPlatform current
+]
+
 { #category : '*Deprecated14' }
 SmalltalkImage >> platformName [
 
