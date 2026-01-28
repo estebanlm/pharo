@@ -186,7 +186,8 @@ RBMoveMethodRefactoring >> getArgumentNameForSelf [
 	
 	self needsToReplaceSelfReferences ifFalse: [^self].
 
-	[ selfVariableName := self requestSelfArgumentName.
+	
+	"[ selfVariableName := self requestSelfArgumentName.
 	(self checkInstanceVariableName: selfVariableName in: class)
 		ifTrue:
 			[self verifyTemporaryVariableDoesNotOverride
@@ -201,7 +202,7 @@ RBMoveMethodRefactoring >> getArgumentNameForSelf [
 						expandMacros.
 			selfVariableName := nil].
 	selfVariableName isNil]
-			whileTrue: []
+			whileTrue: []"
 ]
 
 { #category : 'private - accessing' }

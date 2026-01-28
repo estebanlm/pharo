@@ -70,6 +70,7 @@ RBMoveMethodParametrizedTest >> testMoveMethodIntoArgument [
 
 { #category : 'tests' }
 RBMoveMethodParametrizedTest >> testMoveMethodIntoClass [
+
 	| refactoring class |
 	(model classFor: Object) compile: 'aTestMethodName ^ OrderedCollection new addAll: (1 to: 100); yourself' classified: #test.
 
@@ -80,7 +81,9 @@ RBMoveMethodParametrizedTest >> testMoveMethodIntoClass [
 		setupMethodNameFor: refactoring
 		toReturn: #oneToOneHundred
 		withArguments: #().
-	refactoring setOption: #variableTypes toUse: [ :ref :initialTypes :selectedTypes | selectedTypes ].
+	refactoring 
+		setOption: #variableTypes 
+		toUse: [ :ref :initialTypes :selectedTypes | selectedTypes ].
 	self executeRefactoring: refactoring.
 	class := refactoring model classNamed: #Object.
 	self
