@@ -121,12 +121,6 @@ WorldState >> startStepping: aMorph at: scheduledTime selector: aSelector argume
 ]
 
 { #category : '*Morphic-Base' }
-WorldState >> startThenBrowseMessageTally [
-
-	self class startThenBrowseMessageTally
-]
-
-{ #category : '*Morphic-Base' }
 WorldState class >> systemOn: aBuilder [
 
 	<worldMenu>

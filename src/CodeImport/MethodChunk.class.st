@@ -58,7 +58,6 @@ MethodChunk >> importFor: requestor logSource: logSource [
 	self existsBehavior ifFalse: [ self handleMissingBehavior ].
 
 	^ (self targetClass compiler
-		   permitUndeclared: true;
 		   protocol: protocol;
 		   changeStamp: stamp;
 		   logged: logSource;

@@ -66,7 +66,7 @@ OCMethodNode class >> errorMethodNode: selector errorMessage: messageText [
 	| message |
 	message := OCMessageNode
 		receiver: OCVariableNode selfNode
-		selector: #error:
+		selector: (OCSelectorNode value: #error:)
 		arguments: {OCLiteralNode value: messageText}.
 	^ self
 		selector: selector

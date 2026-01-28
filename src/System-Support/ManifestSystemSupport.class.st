@@ -11,7 +11,9 @@ Class {
 
 { #category : 'meta-data - dependency analyser' }
 ManifestSystemSupport class >> manuallyResolvedDependencies [
-	^ #(#'System-Platforms')
+
+	<ignoreForCoverage>
+	^ #(#'Transcript-NonInteractive' #'System-Platforms')
 ]
 
 { #category : 'code-critics' }

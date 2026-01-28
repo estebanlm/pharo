@@ -649,7 +649,7 @@ FreeTypeFont >> mode41GlyphOf: aCharacter colorValue: aColorValue mono: monoBool
 				scale: scale ]
 ]
 
-{ #category : 'measuring' }
+{ #category : 'accessing' }
 FreeTypeFont >> pixelSize [
 	^pixelSize ifNil:[pixelSize := super pixelSize rounded]
 ]
