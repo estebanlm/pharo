@@ -939,7 +939,7 @@ UITheme >> configureWindowLabelAreaFor: aWindow [
 
 	| macOSLayout addCloseBox addCollapseExpandBoxes addMenuBox padding paddingStep |
 	macOSLayout := self labelAreaLayout = #macOS
-		or: [ self labelAreaLayout = #platformDependent and: Smalltalk os isMacOS ].
+		or: [ self labelAreaLayout = #platformDependent and: OSPlatform current isMacOS ].
 	addCloseBox := [ aWindow hasCloseBox ifTrue: [aWindow addCloseBox ] ].
 	addCollapseExpandBoxes := [
 		aWindow hasCollapseBox ifTrue: [aWindow addCollapseBox ].
