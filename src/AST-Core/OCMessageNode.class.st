@@ -325,7 +325,7 @@ OCMessageNode >> removeNode: aNode [
 OCMessageNode >> renameSelector: newSelector andArguments: varNodeCollection [
 	self
 		arguments: varNodeCollection;
-		selector: newSelector
+		selector: (OCSelectorNode value: newSelector)
 ]
 
 { #category : 'private - replacing' }
