@@ -155,7 +155,7 @@ RBInlineMethodRefactoring >> checkSuperMessages [
 
 { #category : 'accessing' }
 RBInlineMethodRefactoring >> classOfTheMethodToInline [
-	self halt.
+	
 	^ classOfTheMethodToInline
 		  ifNil: [
 			  classOfTheMethodToInline := (sourceMessage receiver name
