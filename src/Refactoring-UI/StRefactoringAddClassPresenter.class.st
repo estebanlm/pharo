@@ -93,7 +93,7 @@ StRefactoringAddClassPresenter >> initializePresenters [
 
 	self
 		acceptLabel: 'Create';
-		validateAnswer: self validateAnswerBlock;
+		"validateAnswer: [ self validateInputsAndFeedback ];"
 		initializeFocus
 ]
 
