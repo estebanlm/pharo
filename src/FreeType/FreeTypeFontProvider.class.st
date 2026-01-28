@@ -291,11 +291,11 @@ FreeTypeFontProvider >> macOSXFolderDirectories [
 
 { #category : 'file paths' }
 FreeTypeFontProvider >> platformAbsoluteDirectories [
-	Smalltalk os isWindows
+	OSPlatform current isWindows
 		ifTrue: [ ^ self winFontDirectories ].
-	Smalltalk os isUnix
+	OSPlatform current isUnix
 		ifTrue: [ ^ self unixFontDirectories ].
-	Smalltalk os isMacOSX
+	OSPlatform current isMacOSX
 		ifTrue: [ ^ self macOSXFolderDirectories ].
 	^ {}
 ]
