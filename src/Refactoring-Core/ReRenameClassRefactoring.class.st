@@ -154,18 +154,6 @@ ReRenameClassRefactoring >> renameReferences [
 				using: replacer ] ]
 ]
 
-{ #category : 'storing' }
-ReRenameClassRefactoring >> storeOn: aStream [
-	aStream nextPut: $(.
-	self class storeOn: aStream.
-	aStream nextPutAll: ' rename: '.
-	class storeOn: aStream.
-	aStream
-		nextPutAll: ' to: #';
-		nextPutAll: newName;
-		nextPut: $)
-]
-
 { #category : 'preconditions' }
 ReRenameClassRefactoring >> violations [
 

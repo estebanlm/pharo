@@ -183,17 +183,6 @@ RBPushDownMethodRefactoring >> selectors: aList [
 	selectors := aList
 ]
 
-{ #category : 'storing' }
-RBPushDownMethodRefactoring >> storeOn: aStream [
-	aStream nextPut: $(.
-	self class storeOn: aStream.
-	aStream nextPutAll: ' pushDown: '.
-	selectors asArray storeOn: aStream.
-	aStream nextPutAll: ' from: '.
-	class storeOn: aStream.
-	aStream nextPut: $)
-]
-
 { #category : 'preconditions' }
 RBPushDownMethodRefactoring >> targetClass [
 	^ class

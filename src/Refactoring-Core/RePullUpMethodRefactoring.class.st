@@ -284,17 +284,6 @@ RePullUpMethodRefactoring >> selectors: aList [
 	selectors := aList
 ]
 
-{ #category : 'storing' }
-RePullUpMethodRefactoring >> storeOn: aStream [
-	aStream nextPut: $(.
-	self class storeOn: aStream.
-	aStream nextPutAll: ' pullUp: '.
-	selectors asArray storeOn: aStream.
-	aStream nextPutAll: ' from: '.
-	class storeOn: aStream.
-	aStream nextPut: $)
-]
-
 { #category : 'initialization' }
 RePullUpMethodRefactoring >> superClass: anObject [
 	(anObject allSubclasses includes: class realClass )

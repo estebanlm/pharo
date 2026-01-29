@@ -176,26 +176,6 @@ RBAddParameterTransformation >> senders [
 	^ senders
 ]
 
-{ #category : 'storing' }
-RBAddParameterTransformation >> storeOn: aStream [
-	aStream nextPut: $(.
-	self class storeOn: aStream.
-	aStream
-		nextPutAll: ' addParameterToMethod: #';
-		nextPutAll: oldSelector;
-		nextPutAll: ' in: '.
-	class storeOn: aStream.
-	aStream
-		nextPutAll: ' newSelector: #';
-		nextPutAll: newSelector;
-		nextPutAll: ' permutation: ';
-		nextPutAll: permutation asString;
-		nextPutAll: ' newArgs: '''.
-	newArgs storeOn: aStream.
-	aStream
-		nextPutAll: ''')'
-]
-
 { #category : 'adding' }
 RBAddParameterTransformation >> verifyInitializationExpressionOf: initializer [
 	| tree |
