@@ -144,6 +144,12 @@ RePullUpMethodRefactoring >> preconditionNoReferencesToSharedVars [
 ]
 
 { #category : 'preconditions' }
+RePullUpMethodRefactoring >> preconditionNoSuperclassDefiner [
+
+	^ ReNoSuperclassDefinesCondition new class: class targetSuperclass: targetSuperclass selectors: selectors
+]
+
+{ #category : 'preconditions' }
 RePullUpMethodRefactoring >> preconditionNoSupersendsReceived [
 
 	^ ReMethodsHaveNoSuperCallInSiblingsCondition new
