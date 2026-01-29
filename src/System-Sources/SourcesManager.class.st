@@ -120,16 +120,6 @@ SourcesManager >> protocolAt: sourcePointer [
 	^ self subclassResponsibility
 ]
 
-{ #category : 'private' }
-SourcesManager >> registerToAnnouncements [
-
-	self class codeChangeAnnouncer weak
-		when: ClassAdded send: #logClassAdded: to: self;
-		when: ClassRemoved send: #logClassRemoved: to: self;
-		when: ClassRenamed send: #logClassRenamed: to: self;
-		when: MethodRemoved send: #logMethodRemoved: to: self
-]
-
 { #category : 'querying' }
 SourcesManager >> reportString [
 
@@ -139,14 +129,11 @@ SourcesManager >> reportString [
 { #category : 'initialization' }
 SourcesManager >> reset [
 
-	
 ]
 
 { #category : 'system startup' }
 SourcesManager >> shutDown [
 	"Hook during image closing."
-
-	self unsubscribeToAnnouncements
 ]
 
 { #category : 'accessing' }
@@ -158,20 +145,12 @@ SourcesManager >> sourceCodeAt: sourcePointer [
 { #category : 'system startup' }
 SourcesManager >> startUp [
 	"Hook during image opening."
-
-	self registerToAnnouncements
 ]
 
 { #category : 'accessing' }
 SourcesManager >> timeStampAt: sourcePointer [
 
 	^ self subclassResponsibility
-]
-
-{ #category : 'private' }
-SourcesManager >> unsubscribeToAnnouncements [
-
-	self class codeChangeAnnouncer unsubscribe: self
 ]
 
 { #category : 'writing' }
