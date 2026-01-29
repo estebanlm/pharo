@@ -19,39 +19,6 @@ NoSourcesManager >> imageMovedWithNewName: newNameWithoutSuffix [
 	
 ]
 
-{ #category : 'testing' }
-NoSourcesManager >> isSourcesPresentInSystem [
-
-	^ false
-]
-
-{ #category : 'event-listening' }
-NoSourcesManager >> logClassAdded: announcement [
-	"Nothing to do here"
-
-]
-
-{ #category : 'event-listening' }
-NoSourcesManager >> logClassRemoved: announcement [
-	"Nothing to do here"
-
-	
-]
-
-{ #category : 'event-listening' }
-NoSourcesManager >> logClassRenamed: announcement [
-	"Nothing to do here"
-
-	
-]
-
-{ #category : 'event-listening' }
-NoSourcesManager >> logMethodRemoved: announcement [
-	"Nothing to do here"
-
-	
-]
-
 { #category : 'accessing' }
 NoSourcesManager >> protocolAt: sourcePointer [
 
@@ -76,11 +43,30 @@ NoSourcesManager >> timeStampAt: sourcePointer [
 	^ ''
 ]
 
+{ #category : 'logging' }
+NoSourcesManager >> writeClassCreation: aClass [
+
+]
+
+{ #category : 'logging' }
+NoSourcesManager >> writeClassRemoved: aClass [
+
+]
+
+{ #category : 'logging' }
+NoSourcesManager >> writeClassRenamed: aClass oldName: aString [
+
+]
+
 { #category : 'writing' }
 NoSourcesManager >> writeComment: aString stamp: aStamp of: aClass [
-	"We do nothing in this one"
 
 	
+]
+
+{ #category : 'logging' }
+NoSourcesManager >> writeMethodRemoved: aMethod from: aBehavior [
+
 ]
 
 { #category : 'writing' }

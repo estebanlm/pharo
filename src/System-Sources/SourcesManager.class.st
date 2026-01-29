@@ -84,36 +84,6 @@ SourcesManager >> imageMovedWithNewName: newNameWithoutSuffix [
 	self subclassResponsibility
 ]
 
-{ #category : 'testing' }
-SourcesManager >> isSourcesPresentInSystem [
-
-	^ self subclassResponsibility
-]
-
-{ #category : 'event-listening' }
-SourcesManager >> logClassAdded: announcement [
-
-	self subclassResponsibility
-]
-
-{ #category : 'event-listening' }
-SourcesManager >> logClassRemoved: announcement [
-
-	self subclassResponsibility
-]
-
-{ #category : 'event-listening' }
-SourcesManager >> logClassRenamed: announcement [
-
-	self subclassResponsibility
-]
-
-{ #category : 'event-listening' }
-SourcesManager >> logMethodRemoved: announcement [
-
-	self subclassResponsibility
-]
-
 { #category : 'accessing' }
 SourcesManager >> protocolAt: sourcePointer [
 
@@ -153,8 +123,32 @@ SourcesManager >> timeStampAt: sourcePointer [
 	^ self subclassResponsibility
 ]
 
+{ #category : 'logging' }
+SourcesManager >> writeClassCreation: aClass [
+
+	self subclassResponsibility
+]
+
+{ #category : 'logging' }
+SourcesManager >> writeClassRemoved: aClass [
+
+	self subclassResponsibility
+]
+
+{ #category : 'logging' }
+SourcesManager >> writeClassRenamed: aClass oldName: aString [
+
+	self subclassResponsibility
+]
+
 { #category : 'writing' }
 SourcesManager >> writeComment: aString stamp: aStamp of: aClass [
+
+	self subclassResponsibility
+]
+
+{ #category : 'logging' }
+SourcesManager >> writeMethodRemoved: aMethod from: aBehavior [
 
 	self subclassResponsibility
 ]

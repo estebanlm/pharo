@@ -821,7 +821,7 @@ Class >> removeFromSystem: logged [
 	self deprecatedAliases do: [ :alias | self environment at: alias ifPresent: [ :class | class = self ifTrue: [ self environment removeKey: alias ] ] ].
 	self obsolete.
 	logged ifTrue: [ 
-		FilesSourcesManager default writeClassRemoved: self.
+		SourcesManager current writeClassRemoved: self.
 		self codeChangeAnnouncer  announce: (ClassRemoved class: self) ]
 ]
 
