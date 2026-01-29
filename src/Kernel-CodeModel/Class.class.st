@@ -820,7 +820,9 @@ Class >> removeFromSystem: logged [
 	We deal also with a special case that is the case a class of the same name than the alias is installed in the image after the alias. In that case we do not remove it. It's the reason we check if the global of the alias is the same as self."
 	self deprecatedAliases do: [ :alias | self environment at: alias ifPresent: [ :class | class = self ifTrue: [ self environment removeKey: alias ] ] ].
 	self obsolete.
-	logged ifTrue: [ self codeChangeAnnouncer  announce: (ClassRemoved class: self) ]
+	logged ifTrue: [ 
+		SourceFileArray default writeClassRemoved: self.
+		self codeChangeAnnouncer  announce: (ClassRemoved class: self) ]
 ]
 
 { #category : 'initialization' }

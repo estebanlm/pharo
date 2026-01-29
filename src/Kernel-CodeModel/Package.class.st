@@ -488,7 +488,8 @@ Package >> moveClass: aClass toTag: aTag [
 
 	"If the tag is undefined, this means we are adding the class. Else we are updating the package or tag."
 	oldTag isUndefined
-		ifTrue: [ self codeChangeAnnouncer  announce: (ClassAdded class: aClass) ]
+		ifTrue: [ SourceFileArray default writeClassCreation: aClass.
+				self codeChangeAnnouncer  announce: (ClassAdded class: aClass) ]
 		ifFalse: [ self codeChangeAnnouncer  announce: (ClassRepackaged classRepackaged: aClass oldTag: oldTag newTag: newTag) ]
 ]
 
