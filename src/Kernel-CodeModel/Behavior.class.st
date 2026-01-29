@@ -646,7 +646,9 @@ Behavior >> compile: sourceCode classified: protocol withStamp: changeStamp noti
 		            source: sourceCode;
 		            requestor: requestor;
 		            failBlock: (requestor ifNotNil: [ [ ^ nil ] ]); "no failblock if no requestor"
-						permitUndeclared: requestor isNil; "compatibility: permit undeclared if no requestor"
+						"compatibility: permit undeclared if no requestor"
+						permitUndeclared: requestor isNil;
+						permitFaulty: requestor isNil;
 						protocol: protocol;
 		            changeStamp: changeStamp;
 		            logged: logSource.
