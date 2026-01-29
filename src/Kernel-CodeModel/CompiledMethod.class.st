@@ -884,7 +884,7 @@ CompiledMethod >> sourceCodeOrNil [
 { #category : 'source code management' }
 CompiledMethod >> sourcePointer [
 	"Answer the integer which can be used to find the source file and position for this method.
-	The actual interpretation of this number is up to the SourceFileArray default instance."
+	The actual interpretation of this number is up to the FilesSourcesManager default instance."
 	| trailerBytes trailerSize start |
 	trailerSize := self class trailerSize.
 	trailerBytes := ByteArray new: trailerSize.

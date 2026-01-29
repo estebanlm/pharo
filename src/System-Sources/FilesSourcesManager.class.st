@@ -509,8 +509,7 @@ FilesSourcesManager >> startUp [
 
 	self
 		ensureSourceFilesCreated;
-		ensureOpen;
-		registerToAnnouncements
+		ensureOpen
 ]
 
 { #category : 'public - string reading' }

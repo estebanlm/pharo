@@ -430,8 +430,8 @@ SystemEnvironment >> renameClass: aClass from: oldName [
 	oldref key: aClass name.
 	self add: oldref. "Old association preserves old refs"
 	self flushClassNameCache.
-	SourceFileArray default writeClassRenamed: aClass oldName: oldName.
-	self announce: (ClassRenamed class: aClass oldName: oldName newName: aClass name)
+	FilesSourcesManager default writeClassRenamed: aClass oldName: oldName.
+	self class codeChangeAnnouncer announce: (ClassRenamed class: aClass oldName: oldName newName: aClass name)
 ]
 
 { #category : 'renaming' }
