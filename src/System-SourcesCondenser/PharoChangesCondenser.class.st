@@ -98,7 +98,7 @@ PharoChangesCondenser >> installNewChangesFile [
 	self backupOldChanges.
 	self originalFile ensureDelete.
 	newChangesFile moveTo: self originalFile.
-	FilesSourcesManager reset
+	FilesSourcesManager default reset
 ]
 
 { #category : 'helper' }

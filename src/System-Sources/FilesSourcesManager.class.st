@@ -52,25 +52,16 @@ FilesSourcesManager class >> initialize [
 	self deprecatedAliases: #(SourceFileArray)
 ]
 
-{ #category : 'initialization' }
-FilesSourcesManager class >> reset [
-
-	<script>
-	self default
-		closeSourceFiles;
-		openSourceFiles
-]
-
 { #category : 'system startup' }
 FilesSourcesManager class >> shutDown: isImageClosing [
 
-	isImageClosing ifTrue: [ self default closeSourceFiles ]
+	isImageClosing ifTrue: [ self default shutDown ]
 ]
 
 { #category : 'system startup' }
 FilesSourcesManager class >> startUp: resuming [
 
-	resuming ifTrue: [ self default openSourceFiles ]
+	resuming ifTrue: [ self default startUp ]
 ]
 
 { #category : 'accessing' }
@@ -119,15 +110,6 @@ FilesSourcesManager >> commentTimeStampAt: sourcePointer [
 ]
 
 { #category : 'private' }
-FilesSourcesManager >> copyChangesTo: newNameWithoutSuffix [
-
-	self isChangesFileInUse ifTrue: [
-			self
-				closeSourceFiles;
-				saveChangesInFileNamed: (self fullNameForChangesNamed: newNameWithoutSuffix) ]
-]
-
-{ #category : 'private' }
 FilesSourcesManager >> createReadOnlyFiles [
 	| readOnly |
 	readOnly := {
@@ -158,6 +140,18 @@ FilesSourcesManager >> emptyReadStreamsQueue [
 	oldQueue := readOnlyQueue.
 	readOnlyQueue := SharedQueue new.
 	oldQueue flushAllSuchThat: [ :each | self closeFileArray: each. true]
+]
+
+{ #category : 'public - file system operations' }
+FilesSourcesManager >> ensureFlushing [
+	"Ensure that the changes file has been fully written to disk by closing and re-opening it. This makes the system more robust in the face of a power failure or hard-reboot."
+
+	| changesFile |
+	changesFile := self changesFileStream ifNil: [ ^ self ].
+	changesFile isReadOnly ifFalse: [ changesFile flush ].
+	changesFile close.
+	changesFile tryOpen.
+	changesFile setToEnd
 ]
 
 { #category : 'public - file system operations' }
@@ -201,12 +195,6 @@ FilesSourcesManager >> fileAt: index ifAbsent: aBlock [
 	^ files at: index ifAbsent: aBlock
 ]
 
-{ #category : 'private' }
-FilesSourcesManager >> fileForChangesNamed: aString [
-
-	^ (Smalltalk imageDirectory resolve: aString) , 'changes'
-]
-
 { #category : 'private - sourcepointer conversion' }
 FilesSourcesManager >> fileIndexFromSourcePointer: anInteger [
 	"Return the index of the source file which contains the source chunk addressed by anInteger"
@@ -240,27 +228,24 @@ FilesSourcesManager >> flushChangesFile [
 	self changesFileStream ifNotNil: [:stream | stream flush]
 ]
 
-{ #category : 'public - file system operations' }
-FilesSourcesManager >> forceChangesToDisk [
-	"Ensure that the changes file has been fully written to disk by closing and re-opening it. This makes the system more robust in the face of a power failure or hard-reboot."
-
-	| changesFile |
-	changesFile := self changesFileStream ifNil: [ ^ self ].
-	changesFile isReadOnly ifFalse: [ changesFile flush ].
-	changesFile close.
-	changesFile tryOpen.
-	changesFile setToEnd
-]
-
 { #category : 'private' }
 FilesSourcesManager >> fullNameForChangesNamed: aString [
 
-	^ (self fileForChangesNamed: aString) fullName
+	^ ((Smalltalk imageDirectory resolve: aString) , 'changes') fullName
 ]
 
 { #category : 'public - string reading' }
 FilesSourcesManager >> getPreambleFrom: aSourceFileStream at: position [
 	^ aSourceFileStream getPreambleAt: position
+]
+
+{ #category : 'private' }
+FilesSourcesManager >> imageMovedWithNewName: newNameWithoutSuffix [
+
+	self isChangesFileInUse ifTrue: [
+			self
+				closeSourceFiles;
+				saveChangesInFileNamed: (self fullNameForChangesNamed: newNameWithoutSuffix) ]
 ]
 
 { #category : 'initialization' }
@@ -305,6 +290,12 @@ FilesSourcesManager >> logClassAdded: announcement [
 ]
 
 { #category : 'event-listening' }
+FilesSourcesManager >> logClassRemoved: announcement [
+
+	self logChange: 'Smalltalk globals removeClassNamed: #' , announcement classRemoved name
+]
+
+{ #category : 'event-listening' }
 FilesSourcesManager >> logClassRenamed: announcement [
 
 	self logChange: '(Smalltalk globals at: #' , announcement oldName , ') rename: #' , announcement newName
@@ -316,27 +307,12 @@ FilesSourcesManager >> logMethodRemoved: announcement [
 	self logChange: announcement methodClass name , ' removeSelector: #' , announcement selector
 ]
 
-{ #category : 'event-listening' }
-FilesSourcesManager >> logRemovedClassAnnouncement: announcement [
-
-	self logChange: 'Smalltalk globals removeClassNamed: #' , announcement classRemoved name
-]
-
 { #category : 'public - string writing' }
 FilesSourcesManager >> newWriter [
 
 	^ SourceFileWriter new
 		  sourceFile: self;
 		  yourself
-]
-
-{ #category : 'public - file system operations' }
-FilesSourcesManager >> openSourceFiles [
-
-	self
-		ensureSourceFilesCreated;
-		ensureOpen;
-		registerToAnnouncements
 ]
 
 { #category : 'public - string reading' }
@@ -463,7 +439,7 @@ FilesSourcesManager >> registerToAnnouncements [
 
 	self class codeChangeAnnouncer weak
 		when: ClassAdded send: #logClassAdded: to: self;
-		when: ClassRemoved send: #logRemovedClassAnnouncement: to: self;
+		when: ClassRemoved send: #logClassRemoved: to: self;
 		when: ClassRenamed send: #logClassRenamed: to: self;
 		when: MethodRemoved send: #logMethodRemoved: to: self
 ]
@@ -477,6 +453,14 @@ FilesSourcesManager >> reportString [
 				aStream nextPutAll: each printString; cr ] ] ]
 ]
 
+{ #category : 'initialization' }
+FilesSourcesManager >> reset [
+
+	self
+		shutDown;
+		startUp
+]
+
 { #category : 'private' }
 FilesSourcesManager >> saveChangesInFileNamed: aString [
 
@@ -487,6 +471,12 @@ FilesSourcesManager >> saveChangesInFileNamed: aString [
 	FileLocator changes absolutePath = changesFile absolutePath ifFalse: [
 			changesFile deleteIfAbsent: [ ].
 			FileLocator changes copyTo: changesFile ]
+]
+
+{ #category : 'system startup' }
+FilesSourcesManager >> shutDown [
+
+	self closeSourceFiles
 ]
 
 { #category : 'public - string reading' }
@@ -543,6 +533,15 @@ FilesSourcesManager >> sourcesFileStream [
 FilesSourcesManager >> sourcesFileStream: aStream [
 
 	^ files at: 1 put: aStream
+]
+
+{ #category : 'system startup' }
+FilesSourcesManager >> startUp [
+
+	self
+		ensureSourceFilesCreated;
+		ensureOpen;
+		registerToAnnouncements
 ]
 
 { #category : 'public - string reading' }

@@ -338,12 +338,6 @@ TaAbstractComposition >> isNotEmpty [
 	^ self isEmpty not
 ]
 
-{ #category : 'operations' }
-TaAbstractComposition >> isSourcesPresentInSystem [
-
-	^ self class environment at: #FilesSourcesManager ifPresent: [ :class | class default isNotNil ] ifAbsent: [ false ]
-]
-
 { #category : 'testing' }
 TaAbstractComposition >> isTraitAlias [
 	^ false
@@ -395,13 +389,9 @@ TaAbstractComposition >> reverseAlias: aSelector [
 
 { #category : 'compiling' }
 TaAbstractComposition >> saveSourceCode: sourceCode ofMethod: newMethod [
-	"I have to check because during bootstrap there is no SouceFiles"
 
-	(sourceCode isNotNil and: [ self isSourcesPresentInSystem ])
-		ifFalse: [ ^ self ].
+	sourceCode ifNil: [ ^ self ].
 
-	"Preamble was 'Trait method'.
-	But that looks like it breaks everything!"
 	newMethod
 		putSource: sourceCode
 		withFooter: ''
