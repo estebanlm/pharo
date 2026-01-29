@@ -211,7 +211,6 @@ StClassAndMethodsSelectionPresenter >> initializePresenters [
 	methodsNotebookPresenter update.
 	self
 		acceptLabel: 'Create';
-		"validateAnswer: [ self validateInputsAndFeedback ];"
 		initializeFocus
 ]
 
