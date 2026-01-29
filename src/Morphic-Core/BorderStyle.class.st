@@ -169,7 +169,7 @@ BorderStyle >> printOn: aStream [
 	self storeOn: aStream
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 BorderStyle >> releaseCachedState [
 	"Release any associated cached state"
 ]

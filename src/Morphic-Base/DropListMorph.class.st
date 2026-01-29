@@ -604,7 +604,7 @@ DropListMorph >> on: anObject list: getListSel selected: getSelectionSel changeS
 		updateContents
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 DropListMorph >> outOfWorld: aWorld [
 	"Get rid of the list if visible."
 

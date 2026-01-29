@@ -87,19 +87,19 @@ OCIRBuilder >> addJumpBackTarget: label to: sequence [
 		addLast: sequence
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 OCIRBuilder >> addLiteral: aLiteral [
 	"Add this literal at the end of the literal array if there is space left"
 	aLiteral ifNil: [ ^ self ].
 	ir addAdditionalLiteral: aLiteral
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 OCIRBuilder >> addPragma: aPragma [
 	^ir addPragma: aPragma
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 OCIRBuilder >> addTemp: tempKey [
 
 	| tempMap |
@@ -112,12 +112,12 @@ OCIRBuilder >> addTemp: tempKey [
 	self cacheIndex: tempKey
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 OCIRBuilder >> addTemps: newKeys [
 	newKeys do: [ :key | self addTemp: key ]
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 OCIRBuilder >> additionalLiterals:  literals [
 	"Add this literal at the end of the literal array if there is space left"
 	ir addAdditionalLiterals: literals
@@ -134,7 +134,7 @@ OCIRBuilder >> blockReturnTop [
 	self popScope
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 OCIRBuilder >> cacheIndex: tempKey [
 	"if we have the ast, we can store the temp offset"
 	self sourceNode ifNotNil: [ :sourceNode |
@@ -149,12 +149,12 @@ OCIRBuilder >> compilationContext [
 	^ir compilationContext
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 OCIRBuilder >> compilationContext: aCompilationContext [
 	ir compilationContext: aCompilationContext
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 OCIRBuilder >> createTempVectorNamed: name withVars: anArray [
 
 	self addTemp: name.
@@ -272,7 +272,7 @@ OCIRBuilder >> mapToNode: object [
 	sourceMapNodes addLast: (object propertyAt: #originalNode ifAbsent: [ object ])
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 OCIRBuilder >> numArgs: anInteger [
 	ir numArgs: anInteger.
 	ir sourceNode: self sourceNode
