@@ -9,14 +9,14 @@ The use of bit 25 of the source pointer for file references permits backward com
 
 "
 Class {
-	#name : 'SourceFileArrayTest',
+	#name : 'FilesSourcesManagerTest',
 	#superclass : 'TestCase',
 	#category : 'System-Sources-Tests',
 	#package : 'System-Sources-Tests'
 }
 
 { #category : 'tests' }
-SourceFileArrayTest >> ensureChangesFileOpenedInProcess [
+FilesSourcesManagerTest >> ensureChangesFileOpenedInProcess [
 	"Ensure the changes file is open"
 
 	| sourcePointer fileIndex filePosition string |
@@ -34,7 +34,7 @@ SourceFileArrayTest >> ensureChangesFileOpenedInProcess [
 ]
 
 { #category : 'tests' }
-SourceFileArrayTest >> testAddressRange [
+FilesSourcesManagerTest >> testAddressRange [
 	"Test source pointer to file position address translation across a wide address range"
 
 	| sf i p a |
@@ -47,13 +47,13 @@ SourceFileArrayTest >> testAddressRange [
 ]
 
 { #category : 'tests' }
-SourceFileArrayTest >> testChangesFileStream [
+FilesSourcesManagerTest >> testChangesFileStream [
 
 	self assert: FilesSourcesManager default changesFileStream isNotNil
 ]
 
 { #category : 'tests' }
-SourceFileArrayTest >> testFileIndexFromSourcePointer [
+FilesSourcesManagerTest >> testFileIndexFromSourcePointer [
 
 	| sf |
 	sf := FilesSourcesManager new.
@@ -64,7 +64,7 @@ SourceFileArrayTest >> testFileIndexFromSourcePointer [
 ]
 
 { #category : 'tests' }
-SourceFileArrayTest >> testFilePositionFromSourcePointer [
+FilesSourcesManagerTest >> testFilePositionFromSourcePointer [
 	"Test derivation of file position for sources or changes file from source pointers"
 	
 	| sf |
@@ -79,7 +79,7 @@ SourceFileArrayTest >> testFilePositionFromSourcePointer [
 ]
 
 { #category : 'tests' }
-SourceFileArrayTest >> testForkedRead [
+FilesSourcesManagerTest >> testForkedRead [
 
 	| originalString remoteString readSemaphore readString testSemaphore position |
 	originalString := '"test"'.
@@ -117,7 +117,7 @@ SourceFileArrayTest >> testForkedRead [
 ]
 
 { #category : 'tests' }
-SourceFileArrayTest >> testForkedWrite [
+FilesSourcesManagerTest >> testForkedWrite [
 
 	| originalString remoteString readSemaphore readString testSemaphore position |
 	originalString := '"test"'.
@@ -156,7 +156,7 @@ SourceFileArrayTest >> testForkedWrite [
 ]
 
 { #category : 'tests' }
-SourceFileArrayTest >> testParseStampWithConflict [
+FilesSourcesManagerTest >> testParseStampWithConflict [
 
 	| sourceFiles timestamp preamble |
 	sourceFiles := FilesSourcesManager new.
@@ -170,7 +170,7 @@ SourceFileArrayTest >> testParseStampWithConflict [
 ]
 
 { #category : 'tests' }
-SourceFileArrayTest >> testParseStampWithNoStamp [
+FilesSourcesManagerTest >> testParseStampWithNoStamp [
 
 	| sourceFiles timestamp preamble |
 	sourceFiles := FilesSourcesManager new.
@@ -184,7 +184,7 @@ SourceFileArrayTest >> testParseStampWithNoStamp [
 ]
 
 { #category : 'tests' }
-SourceFileArrayTest >> testParseStampWithoutConflict [
+FilesSourcesManagerTest >> testParseStampWithoutConflict [
 
 	| sourceFiles timestamp preamble |
 	sourceFiles := FilesSourcesManager new.
@@ -198,7 +198,7 @@ SourceFileArrayTest >> testParseStampWithoutConflict [
 ]
 
 { #category : 'tests' }
-SourceFileArrayTest >> testProtocol [
+FilesSourcesManagerTest >> testProtocol [
 	"Test that we can access protocol correctly"
 
 	| okCm notOkCm |
@@ -211,7 +211,7 @@ SourceFileArrayTest >> testProtocol [
 ]
 
 { #category : 'tests' }
-SourceFileArrayTest >> testSourcePointerFromFileIndexAndPosition [
+FilesSourcesManagerTest >> testSourcePointerFromFileIndexAndPosition [
 
 	| sf |
 	sf := FilesSourcesManager new.
@@ -228,13 +228,13 @@ SourceFileArrayTest >> testSourcePointerFromFileIndexAndPosition [
 ]
 
 { #category : 'tests' }
-SourceFileArrayTest >> testSourcesFileStream [
+FilesSourcesManagerTest >> testSourcesFileStream [
 
 	self assert: FilesSourcesManager default sourcesFileStream isNotNil
 ]
 
 { #category : 'tests' }
-SourceFileArrayTest >> testWriteSourceWritesInGivenSourceFileArray [
+FilesSourcesManagerTest >> testWriteSourceWritesInGivenSourceFileArray [
 
 	| fs array |
 	fs := FileSystem memory.
@@ -259,7 +259,7 @@ some source!
 ]
 
 { #category : 'tests' }
-SourceFileArrayTest >> testWriteSourceWritesInGivenSourceFileArrayWithFlushDefering [
+FilesSourcesManagerTest >> testWriteSourceWritesInGivenSourceFileArrayWithFlushDefering [
 
 	| fs array |
 	fs := FileSystem memory.
@@ -284,7 +284,7 @@ some source!
 ]
 
 { #category : 'tests' }
-SourceFileArrayTest >> testWriteToBufferedStream [
+FilesSourcesManagerTest >> testWriteToBufferedStream [
 
 	| fs array |
 	fs := FileSystem memory.
@@ -310,7 +310,7 @@ some source!
 ]
 
 { #category : 'tests' }
-SourceFileArrayTest >> testWriteToChangesFileInGivenSourceFileArray [
+FilesSourcesManagerTest >> testWriteToChangesFileInGivenSourceFileArray [
 
 	| fs array |
 	fs := FileSystem memory.
