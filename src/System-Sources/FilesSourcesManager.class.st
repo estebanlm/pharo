@@ -94,8 +94,7 @@ FilesSourcesManager >> closeSourceFiles [
 	oldFiles := files.
 	files := Array new: 2.
 	self closeFileArray: oldFiles.
-	self emptyReadStreamsQueue.
-	self unsubscribeToAnnouncements
+	self emptyReadStreamsQueue
 ]
 
 { #category : 'private' }
@@ -119,7 +118,7 @@ FilesSourcesManager >> createReadOnlyFiles [
 	^readOnly
 ]
 
-{ #category : 'public - string writing' }
+{ #category : 'logging' }
 FilesSourcesManager >> deferFlushDuring: aBlock [
 
 	"defer flushing the filestream until a block has been executed"
@@ -264,55 +263,36 @@ FilesSourcesManager >> isChangesFileInUse [
 ]
 
 { #category : 'public - file system operations' }
-FilesSourcesManager >> logChange: aStringOrText [
+FilesSourcesManager >> logChange: aString [
 	"Write the argument, aString, onto the changes file."
 
-	| aString |
-	aString := aStringOrText asString.
-	(aString findFirst: [ :char | char isSeparator not ]) = 0 ifTrue: [ ^ self ]. "null doits confuse replay"
 	self
 		writeChangesDuring: [ :changesFile |
-			| position |
-			position := changesFile position.
-			changesFile
+				| position |
+				position := changesFile position.
+				changesFile
 					cr;
 					cr.
-			(ChunkWriteStream on: changesFile) nextPut: aString.
-			position ]
+				(ChunkWriteStream on: changesFile) nextPut: aString.
+				position ]
 		onSuccess: [ :sourcePointer | "Ignore" ]
 		onFail: [ "Ignore" ]
 ]
 
-{ #category : 'event-listening' }
-FilesSourcesManager >> logClassAdded: announcement [
-
-	self newWriter writeClassDefinition: announcement classAdded definitionString
-]
-
-{ #category : 'event-listening' }
-FilesSourcesManager >> logClassRemoved: announcement [
-
-	self logChange: 'Smalltalk globals removeClassNamed: #' , announcement classRemoved name
-]
-
-{ #category : 'event-listening' }
-FilesSourcesManager >> logClassRenamed: announcement [
-
-	self logChange: '(Smalltalk globals at: #' , announcement oldName , ') rename: #' , announcement newName
-]
-
-{ #category : 'event-listening' }
-FilesSourcesManager >> logMethodRemoved: announcement [
-
-	self logChange: announcement methodClass name , ' removeSelector: #' , announcement selector
-]
-
-{ #category : 'public - string writing' }
+{ #category : 'private' }
 FilesSourcesManager >> newWriter [
 
 	^ SourceFileWriter new
 		  sourceFile: self;
 		  yourself
+]
+
+{ #category : 'public - file system operations' }
+FilesSourcesManager >> openSourceFiles [
+
+	self
+		ensureSourceFilesCreated;
+		ensureOpen
 ]
 
 { #category : 'public - string reading' }
@@ -433,17 +413,6 @@ FilesSourcesManager >> readStreamAtFileIndex: index atPosition: position ifPrese
 
     ^ result
 ]
-
-{ #category : 'private' }
-FilesSourcesManager >> registerToAnnouncements [
-
-	self class codeChangeAnnouncer weak
-		when: ClassAdded send: #logClassAdded: to: self;
-		when: ClassRemoved send: #logClassRemoved: to: self;
-		when: ClassRenamed send: #logClassRenamed: to: self;
-		when: MethodRemoved send: #logMethodRemoved: to: self
-]
-
 { #category : 'printing' }
 FilesSourcesManager >> reportString [
 
@@ -540,8 +509,7 @@ FilesSourcesManager >> startUp [
 
 	self
 		ensureSourceFilesCreated;
-		ensureOpen;
-		registerToAnnouncements
+		ensureOpen
 ]
 
 { #category : 'public - string reading' }
@@ -595,12 +563,6 @@ FilesSourcesManager >> timeStampFromPreamble: preamble for: sourceDataPointers [
 ]
 
 { #category : 'private' }
-FilesSourcesManager >> unsubscribeToAnnouncements [
-
-	self class codeChangeAnnouncer unsubscribe: self
-]
-
-{ #category : 'private' }
 FilesSourcesManager >> writeChangesDuring: aBlock onSuccess: successBlock onFail: failBlock [
 
 	| file |
@@ -614,7 +576,25 @@ FilesSourcesManager >> writeChangesDuring: aBlock onSuccess: successBlock onFail
 	self flushChangesFile
 ]
 
-{ #category : 'public - string writing' }
+{ #category : 'logging' }
+FilesSourcesManager >> writeClassCreation: aClass [
+
+	self newWriter writeClassDefinition: aClass definitionString
+]
+
+{ #category : 'logging' }
+FilesSourcesManager >> writeClassRemoved: aClass [
+
+	self logChange: 'Smalltalk globals removeClassNamed: #' , aClass name
+]
+
+{ #category : 'logging' }
+FilesSourcesManager >> writeClassRenamed: aClass oldName: aString [
+
+	self logChange: '(Smalltalk globals at: #' , aString , ') rename: #' , aClass name
+]
+
+{ #category : 'logging' }
 FilesSourcesManager >> writeComment: aString stamp: aStamp of: aClass [
 
 	self newWriter
@@ -624,7 +604,13 @@ FilesSourcesManager >> writeComment: aString stamp: aStamp of: aClass [
 		writeComment: aString ofClass: aClass
 ]
 
-{ #category : 'public - string writing' }
+{ #category : 'logging' }
+FilesSourcesManager >> writeMethodRemoved: aMethod from: aBehavior [
+
+	self logChange: aBehavior name , ' removeSelector: #' , aMethod selector
+]
+
+{ #category : 'logging' }
 FilesSourcesManager >> writeSource: source of: aMethod withFooter: footer protocol: protocol timestamp: aTimestamp priorSourcePointer: priorSourcePointer [
 
 	self newWriter

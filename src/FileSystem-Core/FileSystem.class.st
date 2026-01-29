@@ -27,7 +27,7 @@ Class {
 
 { #category : 'class initialization' }
 FileSystem class >> initialize [
-	"The initialization is done here because the startup of SourceFileArray needs to use the File system to work."
+	"The initialization is done here because the startup of files sources manager needs to use the File system to work."
 
 	PharoFilesOpener sourceFileVersionString: ('Pharo{1}.{2}-{3}bit-{4}' format: {
 				 SystemVersion current major asString.
