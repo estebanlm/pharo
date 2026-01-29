@@ -215,7 +215,7 @@ MCMethodDefinition >> isOverrideMethod [
 { #category : 'installing' }
 MCMethodDefinition >> loadWithLoader: aLoader [
 
-	| method actualClass |
+	| compiler ast method actualClass |
 	actualClass := self actualClassIn: aLoader targetEnvironment.
 	actualClass ifNil: [ Error signal: 'Class not found: ' , className printString ].
 
