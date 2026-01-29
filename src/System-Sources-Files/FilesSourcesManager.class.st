@@ -11,7 +11,11 @@ The use of bit 25 of the source pointer for file references permits backward com
 "
 Class {
 	#name : 'FilesSourcesManager',
+<<<<<<<< HEAD:src/System-Sources-Files/FilesSourcesManager.class.st
 	#superclass : 'SourcesManager',
+========
+	#superclass : 'Object',
+>>>>>>>> Pharo14:src/System-Sources/FilesSourcesManager.class.st
 	#instVars : [
 		'files',
 		'readOnlyQueue',
@@ -23,15 +27,48 @@ Class {
 	#tag : 'Sources'
 }
 
+<<<<<<<< HEAD:src/System-Sources-Files/FilesSourcesManager.class.st
+========
+{ #category : 'accessing' }
+FilesSourcesManager class >> default [
+
+	^ Default
+]
+
+{ #category : 'accessing' }
+FilesSourcesManager class >> default: anInstance [
+
+	Default := anInstance
+]
+
+>>>>>>>> Pharo14:src/System-Sources/FilesSourcesManager.class.st
 { #category : 'class initialization' }
 FilesSourcesManager class >> initialize [
 
 	self beCurrent.
 	
 	"This next line is to add a deprecated global variable. The deprecation happened in Pharo 14 development. We can remove it completly in the future."
+<<<<<<<< HEAD:src/System-Sources-Files/FilesSourcesManager.class.st
 	self class environment at: #SourceFiles put: SourcesManager current.
 	(self class environment bindingOf: #SourceFiles) isDeprecated: true.
 	self deprecatedAliases: #(SourceFileArray)
+========
+	self class environment at: #SourceFiles put: self default.
+	(self class environment bindingOf: #SourceFiles) isDeprecated: true.
+	self deprecatedAliases: #(SourceFileArray)
+]
+
+{ #category : 'system startup' }
+FilesSourcesManager class >> shutDown: isImageClosing [
+
+	isImageClosing ifTrue: [ self default shutDown ]
+]
+
+{ #category : 'system startup' }
+FilesSourcesManager class >> startUp: resuming [
+
+	resuming ifTrue: [ self default startUp ]
+>>>>>>>> Pharo14:src/System-Sources/FilesSourcesManager.class.st
 ]
 
 { #category : 'accessing' }
@@ -410,6 +447,19 @@ FilesSourcesManager >> readStreamAtFileIndex: index atPosition: position ifPrese
     ^ result
 ]
 
+<<<<<<<< HEAD:src/System-Sources-Files/FilesSourcesManager.class.st
+========
+{ #category : 'private' }
+FilesSourcesManager >> registerToAnnouncements [
+
+	self class codeChangeAnnouncer weak
+		when: ClassAdded send: #logClassAdded: to: self;
+		when: ClassRemoved send: #logClassRemoved: to: self;
+		when: ClassRenamed send: #logClassRenamed: to: self;
+		when: MethodRemoved send: #logMethodRemoved: to: self
+]
+
+>>>>>>>> Pharo14:src/System-Sources/FilesSourcesManager.class.st
 { #category : 'printing' }
 FilesSourcesManager >> reportString [
 
@@ -442,7 +492,10 @@ FilesSourcesManager >> saveChangesInFileNamed: aString [
 { #category : 'system startup' }
 FilesSourcesManager >> shutDown [
 
+<<<<<<<< HEAD:src/System-Sources-Files/FilesSourcesManager.class.st
 	super shutDown.
+========
+>>>>>>>> Pharo14:src/System-Sources/FilesSourcesManager.class.st
 	self closeSourceFiles
 ]
 
@@ -507,8 +560,13 @@ FilesSourcesManager >> startUp [
 
 	self
 		ensureSourceFilesCreated;
+<<<<<<<< HEAD:src/System-Sources-Files/FilesSourcesManager.class.st
 		ensureOpen.
 	super startUp
+========
+		ensureOpen;
+		registerToAnnouncements
+>>>>>>>> Pharo14:src/System-Sources/FilesSourcesManager.class.st
 ]
 
 { #category : 'public - string reading' }
@@ -562,6 +620,15 @@ FilesSourcesManager >> timeStampFromPreamble: preamble for: sourceDataPointers [
 ]
 
 { #category : 'private' }
+<<<<<<<< HEAD:src/System-Sources-Files/FilesSourcesManager.class.st
+========
+FilesSourcesManager >> unsubscribeToAnnouncements [
+
+	self class codeChangeAnnouncer unsubscribe: self
+]
+
+{ #category : 'private' }
+>>>>>>>> Pharo14:src/System-Sources/FilesSourcesManager.class.st
 FilesSourcesManager >> writeChangesDuring: aBlock onSuccess: successBlock onFail: failBlock [
 
 	| file |

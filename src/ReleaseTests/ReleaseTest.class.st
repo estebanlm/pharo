@@ -34,7 +34,7 @@ ReleaseTest >> allowedObsoletes [
 	 system incorrectly."
 	| allowed |
 			
-	allowed := Smalltalk os environment 
+	allowed := OSEnvironment current
 		at: 'PHARO_CI_ALLOWED_OBSOLETES'
 		ifAbsent: [ nil ].
 	allowed ifNil: [ ^ #() ].

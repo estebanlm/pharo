@@ -41,7 +41,7 @@ VirtualMachine >> allocationsBetweenGC: anInteger [
 { #category : 'accessing' }
 VirtualMachine >> architectureName [
 
-	^ Smalltalk vm getSystemAttribute: 1003
+	^ self getSystemAttribute: 1003
 ]
 
 { #category : 'parameters' }
@@ -572,7 +572,7 @@ VirtualMachine >> oldSpaceEnd [
 { #category : 'accessing' }
 VirtualMachine >> operatingSystemName [
 
-	^ Smalltalk vm getSystemAttribute: 1001
+	^ self getSystemAttribute: 1001
 ]
 
 { #category : 'accessing' }

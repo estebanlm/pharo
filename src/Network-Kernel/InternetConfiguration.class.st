@@ -314,7 +314,7 @@ InternetConfiguration class >> setHttpProxy [
 
 { #category : 'system startup' }
 InternetConfiguration class >> shutDown [
-	Smalltalk os isMacOS
+	OSPlatform current isMacOS
 		ifTrue: [ NetworkSystemSettings useHTTPProxy: false ]
 ]
 

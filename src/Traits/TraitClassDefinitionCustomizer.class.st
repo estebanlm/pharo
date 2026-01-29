@@ -48,14 +48,14 @@ TraitClassDefinitionCustomizer class >> fluidMetaclassDefinitionFor: forClass on
 				crtab;
 				nextPutAll: 'traits: {';
 				nextPutAll: forClass traitCompositionString;
-				nextPutAll: '};'.
+				nextPutAll: '}'.
 			forClass slots ifNotEmpty: [ stream nextPutAll: ';' ] ]
 ]
 
 { #category : 'class initialization' }
 TraitClassDefinitionCustomizer class >> initialize [
 
-	ClassDefinitionPrinter customizers add: self
+	ClassDefinitionPrinter addCustomizer: self
 ]
 
 { #category : 'internal' }
