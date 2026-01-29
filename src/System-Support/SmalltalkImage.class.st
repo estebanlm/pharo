@@ -226,7 +226,7 @@ SmalltalkImage >> backupTo: newNameWithoutSuffix [
 		true  when continuing in the new session
 		false for the current session"
 
-	SourceFileArray default copyChangesTo: newNameWithoutSuffix.
+	FilesSourcesManager default imageMovedWithNewName: newNameWithoutSuffix.
 
 	^ self backupImageInFileNamed: (self fullNameForImageNamed: newNameWithoutSuffix)
 ]
@@ -257,7 +257,7 @@ SmalltalkImage >> changeImagePathTo: aString [
 
 	self imagePath: aString.
 	LastImagePath := self imagePath.
-	SourceFileArray reset
+	FilesSourcesManager default reset
 ]
 
 { #category : 'class and trait names' }
@@ -1220,7 +1220,7 @@ SmalltalkImage >> saveAs: newNameWithoutSuffix [
 		false for the current session "
 
 	newNameWithoutSuffix ifNil: [ ^ self ].
-	SourceFileArray default copyChangesTo: newNameWithoutSuffix.
+	FilesSourcesManager default imageMovedWithNewName: newNameWithoutSuffix.
 
 	^ self saveImageInFileNamed: (self fullNameForImageNamed: newNameWithoutSuffix)
 ]

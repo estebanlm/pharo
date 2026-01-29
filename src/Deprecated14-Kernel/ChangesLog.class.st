@@ -14,7 +14,7 @@ Class {
 { #category : 'accessing' }
 ChangesLog class >> default [
 
-	^ SourceFileArray default
+	^ FilesSourcesManager default
 ]
 
 { #category : 'testing' }
