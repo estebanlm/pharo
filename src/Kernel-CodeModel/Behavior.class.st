@@ -1399,13 +1399,15 @@ Behavior >> isWords [
 Behavior >> localMethods [
 	"returns the methods of classes excluding the ones of the traits that the class uses"
 
-	^ self methods
+	^ self localSelectors collect: [ :e | self >> e ]
 ]
 
 { #category : 'accessing - method dictionary' }
 Behavior >> localSelectors [
 	<reflection: 'Class structural inspection - Selectors and methods inspection'>
-	^ self methodDict keys
+	^ self methodDict keys select: [ :s | 
+		(s isKindOf: ScopedSelector) not
+			or: [ s owner == self package ] ]
 ]
 
 { #category : 'accessing - method dictionary' }
