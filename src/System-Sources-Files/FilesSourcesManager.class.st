@@ -442,6 +442,7 @@ FilesSourcesManager >> saveChangesInFileNamed: aString [
 { #category : 'system startup' }
 FilesSourcesManager >> shutDown [
 
+	super shutDown.
 	self closeSourceFiles
 ]
 
