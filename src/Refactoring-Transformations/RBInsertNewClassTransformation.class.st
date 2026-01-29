@@ -120,25 +120,6 @@ RBInsertNewClassTransformation >> privateTransform [
 		reparentClasses: (subclasses collect: [ :subclass | self model classObjectFor: subclass ]) to: (self model classNamed: className asSymbol)
 ]
 
-{ #category : 'storing' }
-RBInsertNewClassTransformation >> storeOn: aStream [
-
-	aStream nextPutAll: '(('.
-	self class storeOn: aStream.
-	aStream
-		nextPutAll: ' className: #';
-		nextPutAll: className;
-		nextPutAll: ') superclass: '.
-	superclass storeOn: aStream.
-	aStream nextPutAll: '; subclasses: '.
-	subclasses asArray storeOn: aStream.
-	aStream nextPutAll: '; packageName: '.
-	packageName storeOn: aStream.
-	aStream nextPutAll: '; tagName: '.
-	tagName storeOn: aStream.
-	aStream nextPut: $)
-]
-
 { #category : 'api' }
 RBInsertNewClassTransformation >> subclasses: aCollection [
 

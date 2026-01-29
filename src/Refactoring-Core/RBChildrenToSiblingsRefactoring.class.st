@@ -250,20 +250,6 @@ RBChildrenToSiblingsRefactoring >> shouldPushUp: aSelector from: aClass [
 		anySatisfy: [ :each | (each directlyDefinesMethod: aSelector) not ]
 ]
 
-{ #category : 'storing' }
-RBChildrenToSiblingsRefactoring >> storeOn: aStream [
-	aStream nextPut: $(.
-	self class storeOn: aStream.
-	aStream
-		nextPutAll: ' name: #';
-		nextPutAll: className;
-		nextPutAll: ' class: '.
-	parent storeOn: aStream.
-	aStream nextPutAll: ' subclasses: '.
-	subclasses asArray storeOn: aStream.
-	aStream nextPut: $)
-]
-
 { #category : 'private - methods' }
 RBChildrenToSiblingsRefactoring >> subclassResponsibilityFor: aSelector in: aClass [
 	| methodNode position source |

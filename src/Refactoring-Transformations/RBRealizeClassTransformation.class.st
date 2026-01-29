@@ -36,15 +36,6 @@ RBRealizeClassTransformation >> privateTransform [
 	self transform: self theClass classSide
 ]
 
-{ #category : 'storing' }
-RBRealizeClassTransformation >> storeOn: aStream [
-	aStream nextPut: $(.
-	self class storeOn: aStream.
-	aStream nextPutAll: ' className: '.
-	className storeOn: aStream.
-	aStream nextPut: $)
-]
-
 { #category : 'accessing' }
 RBRealizeClassTransformation >> theClass [
 	^ (self model classObjectFor: className) instanceSide

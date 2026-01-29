@@ -62,13 +62,3 @@ RBDeprecateClassTransformation >> privateTransform [
 			 in: (className , ' class') asSymbol
 			 withProtocol: #deprecation)
 ]
-
-{ #category : 'storing' }
-RBDeprecateClassTransformation >> storeOn: aStream [
-
-	aStream nextPut: $(.
-	self class storeOn: aStream.
-	aStream nextPutAll: ' className: '.
-	className storeOn: aStream.
-	aStream nextPut: $)
-]

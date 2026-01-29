@@ -199,21 +199,6 @@ RBMoveTemporaryVariableDefinitionTransformation >> definingMethodAST [
 	^ self definingClass parseTreeForSelector: selector asSymbol
 ]
 
-{ #category : 'storing' }
-RBMoveTemporaryVariableDefinitionTransformation >> storeOn: aStream [
-
-	aStream nextPut: $(.
-	self class storeOn: aStream.
-	aStream
-		nextPutAll: ' variable: ''';
-		nextPutAll: variableName;
-		nextPutAll: ''' inMethod: ''';
-		nextPutAll: selector;
-		nextPutAll: ''' inClass: '.
-	class storeOn: aStream.
-	aStream nextPut: $)
-]
-
 { #category : 'api' }
 RBMoveTemporaryVariableDefinitionTransformation >> variable: aVariableName inMethod: aSelector inClass: aClass [
 

@@ -169,18 +169,3 @@ RBTemporaryToInstanceVariableTransformation >> removeTemporaryOfMethod: aSelecto
 	(matcher := self parseTreeRewriterClass removeTemporaryNamed: temporaryVariableName) executeTree: parseTree.
 	aMethod compileTree: matcher tree
 ]
-
-{ #category : 'storing' }
-RBTemporaryToInstanceVariableTransformation >> storeOn: aStream [
-	aStream nextPut: $(.
-	self class storeOn: aStream.
-	aStream nextPutAll: ' class: '.
-	class storeOn: aStream.
-	aStream
-		nextPutAll: ' selector: #';
-		nextPutAll: selector;
-		nextPutAll: ' variable: ''';
-		nextPutAll: temporaryVariableName;
-		nextPut: $'.
-	aStream nextPut: $)
-]
