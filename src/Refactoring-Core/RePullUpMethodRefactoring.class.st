@@ -73,44 +73,6 @@ RePullUpMethodRefactoring >> breakingChangePreconditions [
 		  self preconditionNoOverrides }
 ]
 
-{ #category : 'private' }
-RePullUpMethodRefactoring >> copyDownMethod: aSelector [
-
-	| oldProtocol oldSource superclassDefiner subclasses refactoring |
-	superclassDefiner := targetSuperclass whichClassIncludesSelector: aSelector.
-	superclassDefiner ifNil: [ ^ self ].
-	oldSource := superclassDefiner sourceCodeFor: aSelector.
-	oldSource ifNil: [ self refactoringError: ('Source code for <1s> superclass method not available' expandMacrosWith: aSelector) ].
-	oldProtocol := superclassDefiner protocolsFor: aSelector.
-
-	subclasses := targetSuperclass subclasses reject: [ :each | each directlyDefinesMethod: aSelector ].
-
-	subclasses ifEmpty: [ ^ self ].
-
-	(superclassDefiner parseTreeForSelector: aSelector) superMessages
-		detect: [ :each | superclassDefiner directlyDefinesMethod: each ]
-		ifFound: [
-				self refactoringError:
-					('Cannot pull up <1s> since we must copy down the superclass method in <2p><n>to the other subclasses, and the superclass method sends a super message which is overriden.'
-						 expandMacrosWith: aSelector
-						 with: superclassDefiner) ].
-	self refactoringWarning: 'Do you want to copy down the superclass method to the classes that don''t define ' , aSelector , '?'.
-
-	refactoring := RBExpandReferencedPoolsRefactoring
-		               model: self model
-		               forMethod: (superclassDefiner parseTreeForSelector: aSelector)
-		               fromClass: superclassDefiner
-		               toClasses: subclasses.
-	self generateChangesFor: refactoring.
-	subclasses do: [ :each |
-		self generateChangesFor: (RBAddMethodTransformation sourceCode: oldSource in: each withProtocol: oldProtocol) ]
-]
-
-{ #category : 'transforming' }
-RePullUpMethodRefactoring >> copyDownMethods [
-	selectors do: [:each | self copyDownMethod: each]
-]
-
 { #category : 'preconditions' }
 RePullUpMethodRefactoring >> preconditionNoOverrides [
 
