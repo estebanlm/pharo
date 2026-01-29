@@ -103,7 +103,7 @@ SycRefactoringPreviewPresenter >> changes: aCollection [
 { #category : 'utilities' }
 SycRefactoringPreviewPresenter >> changesFrom: aCompositeChange forEnvironment: anEnvironment [
 
-	^ (aCompositeChange whatToDisplayIn: self) select: [ :change |
+	^ (aCompositeChange changesToDisplayIn: self) select: [ :change |
 		  anEnvironment includesClass: change changeClass ]
 ]
 

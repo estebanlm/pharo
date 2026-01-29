@@ -118,35 +118,26 @@ StRequestClassPresenter >> updateTagSelection: item [
 { #category : 'private' }
 StRequestClassPresenter >> validateAnswer [
 
-	validateBlock ifNotNil: [
-		^ validateBlock
-			value: textInput text
-			value: packagePresenter selectedItem
-			value: tagPresenter selectedItem ].
+	| isValid |
+	isValid := self validateInputs.
+	isValid ifFalse: [ self inform: 'Name can''t be empty or contain spaces' ].
+	^ isValid
+]
+
+{ #category : 'private' }
+StRequestClassPresenter >> validateInputs [
+	| packageName tag clasName |
+	packageName := packagePresenter selectedItem.
+	tag := tagPresenter selectedItem.
+	clasName := textInput text.
+		
+	(packageName isNil or: [ packageName isEmpty ])
+		ifTrue: [ ^ false ].
+	(tag isNil or: [ tag isEmpty ])
+		ifTrue: [ ^ false ].
+	(clasName isNil or: [ clasName isNotEmpty and: [ (clasName includesSubstring: ' ') ]])
+		ifTrue: [ ^ false ].
 	^ true
-]
-
-{ #category : 'private' }
-StRequestClassPresenter >> validateAnswerBlock [
-
-	^ [ :newClassName :packageName :tagName |
-		  | isValid |
-		  isValid := (self validateClassNameBlock value: newClassName) and: [
-			             (self validatePackageNameBlock value: packageName) and: [ self validatePackageNameBlock value: tagName ] ].
-		  isValid ifFalse: [ self inform: 'Name can''t be empty or contain spaces' ].
-		  isValid ]
-]
-
-{ #category : 'private' }
-StRequestClassPresenter >> validateClassNameBlock [
-
-	^ [ :txt | txt isNotNil and: [ txt isNotEmpty and: [ (txt includesSubstring: ' ') not ] ] ]
-]
-
-{ #category : 'private' }
-StRequestClassPresenter >> validatePackageNameBlock [
-
-	^ [ :txt | txt isNotNil and: [ txt isNotEmpty ] ]
 ]
 
 { #category : 'accessing' }
