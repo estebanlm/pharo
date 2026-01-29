@@ -3665,7 +3665,7 @@ Morph >> intersects: aRectangle [
 	^self fullBoundsInWorld intersects: aRectangle
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 Morph >> intoWorld: aWorld [
 	"The receiver has just appeared in a new world. Note:
 		* aWorld can be nil (due to optimizations in other places)
@@ -4719,7 +4719,7 @@ Morph >> otherProperties [
 	^ extension ifNotNil: [extension otherProperties]
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 Morph >> outOfWorld: aWorld [
 	"The receiver has just appeared in a new world. Notes:
 		* aWorld can be nil (due to optimizations in other places)

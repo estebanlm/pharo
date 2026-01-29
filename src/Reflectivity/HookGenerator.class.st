@@ -48,7 +48,7 @@ HookGenerator >> encloseInBlock: nodeOrCollection [
 	^ OCBlockNode body: nodeOrCollection asSequenceNode
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 HookGenerator >> entity: anEntity node: aNode links: aCollection [
 	plugins := Dictionary new.
 	node := aNode.

@@ -204,7 +204,7 @@ KeyboardEvent >> scanCode [
 	^scanCode
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 KeyboardEvent >> scanCode: anInt [
 	scanCode := anInt
 ]

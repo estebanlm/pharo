@@ -226,7 +226,7 @@ ExternalBrowser >> refreshClasses: pack [
 		ifNotNil: [ classes items: (self classesOfPackage: pack) asOrderedCollection].
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 ExternalBrowser >> refreshProtocols: selection [
 
 	self protocols resetListSelection.
