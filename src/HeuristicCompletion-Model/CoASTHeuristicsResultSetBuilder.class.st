@@ -299,7 +299,7 @@ CoASTHeuristicsResultSetBuilder >> visitValueNode: aNode [
 			aMessageNode := OCMessageNode new.
 			aNode replaceWith: aMessageNode.
 			aMessageNode receiver: aNode.
-			aMessageNode selector: #''.
+			aMessageNode selector: (OCSelectorNode value: #'').
 			^ self
 				  configureFetcherForNode: aMessageNode
 				  usingHeuristicAvoidingRepetitions: self messagesHeuristic ] ].

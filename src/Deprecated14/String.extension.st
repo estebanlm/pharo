@@ -1,6 +1,12 @@
 Extension { #name : 'String' }
 
 { #category : '*Deprecated14' }
+String >> asUrl [
+	self deprecated: 'Use asZnUrl instead' transformWith: '`@rcv asUrl' -> '`@rcv asZnUrl'.
+	^ self asZnUrl
+]
+
+{ #category : '*Deprecated14' }
 String >> isValidSelector [
 	"check I could be a valid selector (name of method).
 	 For checking if there is symbol like me used as a selector, see #isSelectorSymbol on Symbol"

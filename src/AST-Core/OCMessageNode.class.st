@@ -325,7 +325,7 @@ OCMessageNode >> removeNode: aNode [
 OCMessageNode >> renameSelector: newSelector andArguments: varNodeCollection [
 	self
 		arguments: varNodeCollection;
-		selector: newSelector
+		selector: (OCSelectorNode value: newSelector)
 ]
 
 { #category : 'private - replacing' }
@@ -418,11 +418,9 @@ OCMessageNode >> selector [
 ]
 
 { #category : 'accessing' }
-OCMessageNode >> selector: aSelector [
+OCMessageNode >> selector: aSelectorNode [
 	keywordsPositions := nil.
-	selector := aSelector isString
-		ifTrue: [ OCSelectorNode value: aSelector ]
-		ifFalse: [ aSelector ].
+	selector := aSelectorNode.
 	selector parent: self
 ]
 

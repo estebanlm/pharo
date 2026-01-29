@@ -297,7 +297,7 @@ DigitalSignatureAlgorithm >> initRandomNonInteractively [
  	self initRandomFromString:
  		Time millisecondClockValue printString,
  		Date today printString,
- 		Smalltalk os platformName printString
+ 		OSPlatform current platformName printString
 ]
 
 { #category : 'large integer arithmetic' }

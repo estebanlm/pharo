@@ -82,12 +82,3 @@ use or other dealings in this Font Software without prior written authorization 
 the Gnome Foundation or Bitstream Inc., respectively.
 For further information, contact: fonts at gnome dot org.'
 ]
-
-{ #category : '*System-Version' }
-SmalltalkImage >> version [
-	"Answer the version of this release."
-
-	^ SystemVersion current
-		  ifNil: [ 'No version set yet' ]
-		  ifNotNil: [ :version | version version ]
-]

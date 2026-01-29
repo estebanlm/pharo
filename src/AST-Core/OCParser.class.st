@@ -309,7 +309,7 @@ OCParser >> parseBinaryMessage [
 OCParser >> parseBinaryMessageWith: aNode [
 	| binaryNode |
 	binaryNode := self selectorNodeClass
-		value: currentToken value
+		value: currentToken value asSymbol
 		keywordPositions: { currentToken start }.
 	self step.
 	^self messageNodeClass
@@ -573,7 +573,7 @@ OCParser >> parseKeywordMessageWith: node [
 			self step.
 			args add: self parseBinaryMessage.
 			isKeyword := true].
-	selector := self selectorNodeClass value: selector.
+	selector := self selectorNodeClass value: selector asSymbol.
 	selector keywordPositions: keywordsStartPositions.
 	^isKeyword
 		ifTrue:
@@ -1143,14 +1143,15 @@ OCParser >> parseUnaryMessage [
 
 { #category : 'private - parsing' }
 OCParser >> parseUnaryMessageWith: aNode [
+
 	| selector |
-	selector := self selectorNodeClass value: currentToken value keywordPositions: {currentToken start}.
+	selector := self selectorNodeClass value: currentToken value asSymbol keywordPositions: { currentToken start }.
 	self step.
-	^self messageNodeClass
-		receiver: aNode
-		selector:  selector
-		keywordsPositions: selector keywordPositions
-		arguments: #()
+	^ self messageNodeClass
+		  receiver: aNode
+		  selector: selector
+		  keywordsPositions: selector keywordPositions
+		  arguments: #(  )
 ]
 
 { #category : 'private - parsing' }

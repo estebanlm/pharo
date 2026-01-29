@@ -11,5 +11,5 @@ Class {
 
 { #category : 'current' }
 MacStore class >> isActiveClass [
-	^ Smalltalk os isMacOS
+	^ OSPlatform current isMacOS
 ]
