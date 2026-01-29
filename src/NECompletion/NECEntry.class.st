@@ -57,7 +57,7 @@ NECEntry >> activateOn: aCompletionContext [
 	NECUsageTracker incrementUsageFor: self contents.
 	
 	"By default insert the contents of the entry instead of the token in the text editor"
-	entryContents := self contents asSymbol separateKeywords.
+	entryContents := self contents asString asSymbol separateKeywords.
 	entryContents := (self class spaceAfterCompletion
 				ifTrue: [ entryContents , ' ' ]
 				ifFalse: [ entryContents ]).

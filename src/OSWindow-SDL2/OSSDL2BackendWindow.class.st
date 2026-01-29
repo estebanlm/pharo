@@ -303,7 +303,7 @@ OSSDL2BackendWindow >> fetchDPI [
 	are completely wrong and we are getting scale factors that are very large
 	even in non-retina display. This workaround does not affect the support for
 	retina display because that is handled by fetching the size of the drawing surface."
-	Smalltalk os isMacOSX ifTrue: [
+	OSPlatform current isMacOSX ifTrue: [
 		diagonalDPI := verticalDPI := horizontalDPI := self screenScaleFactorBaseDPI.
 		screenScaleFactor := 1.0.
 		^ false

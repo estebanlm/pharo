@@ -9,7 +9,7 @@ Class {
 { #category : 'tests' }
 OSPlatformTest >> testAPI [
 	"A test to make sure the full API will work"
-	Smalltalk os
+	OSPlatform current
 		isMacOS;
 		isMacOSX;
 		isWin32;

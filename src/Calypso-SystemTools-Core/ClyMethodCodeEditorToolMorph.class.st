@@ -130,7 +130,7 @@ ClyMethodCodeEditorToolMorph >> createTextContext [
 ClyMethodCodeEditorToolMorph >> decorateContainerTab [
 	| title |
 	super decorateContainerTab.
-	title := editingMethod selector.
+	title := editingMethod selector asString.
 
 	editingMethod origin isClassSide ifTrue: [
 		title := title asText allBold ].

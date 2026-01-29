@@ -51,7 +51,7 @@ ThemeIcons class >> availablePacks [
 
 { #category : 'accessing' }
 ThemeIcons class >> baseUrl [
-	^ 'https://github.com/pharo-project/pharo-icon-packs/archive' asUrl
+	^ 'https://github.com/pharo-project/pharo-icon-packs/archive' asZnUrl
 ]
 
 { #category : 'instance creation' }
@@ -380,5 +380,5 @@ ThemeIcons >> url [
 
 { #category : 'accessing' }
 ThemeIcons >> url: aStringOrUrl [
-	url := aStringOrUrl ifNotNil: [ aStringOrUrl asUrl ]
+	url := aStringOrUrl ifNotNil: [ aStringOrUrl asZnUrl ]
 ]

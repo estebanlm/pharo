@@ -19,11 +19,11 @@ Context >> errorReportOn: stream [
 	stream cr.
 	stream
 		nextPutAll: 'VM: ';
-		nextPutAll: Smalltalk os name;
+		nextPutAll: OSPlatform current name;
 		nextPutAll: ' - ';
-		nextPutAll: Smalltalk os subtype;
+		nextPutAll: OSPlatform current subtype;
 		nextPutAll: ' - ';
-		nextPutAll: Smalltalk os version;
+		nextPutAll: OSPlatform current version;
 		nextPutAll: ' - ';
 		nextPutAll: Smalltalk vm version;
 		cr.
