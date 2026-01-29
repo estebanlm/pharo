@@ -129,7 +129,7 @@ UserInputEvent >> handler: anObject [
 { #category : 'modifier state' }
 UserInputEvent >> metaKeyPressed [
 
-	^ Smalltalk platform isMacOS
+	^ OSPlatform current isMacOS
 		  ifTrue: [ self commandKeyPressed ]
 		  ifFalse: [ self controlKeyPressed ]
 ]
