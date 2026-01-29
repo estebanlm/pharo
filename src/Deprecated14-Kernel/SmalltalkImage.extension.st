@@ -9,6 +9,12 @@ SmalltalkImage >> changesFile [
 ]
 
 { #category : '*Deprecated14-Kernel' }
+SmalltalkImage >> getSystemAttribute: aNumber [
+	self deprecated: 'Use Smalltalk vm getSystemAttribute: instead'.
+	^ self vm getSystemAttribute: aNumber
+]
+
+{ #category : '*Deprecated14-Kernel' }
 SmalltalkImage >> isHeadless [
 
 	self deprecated: 'This method will always answer true now. It should either be replaced by a usage of #isInteractive or be removed'.

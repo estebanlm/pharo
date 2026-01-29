@@ -82,7 +82,7 @@ HDTestReport >> calculateNodeName [
 		ifTrue: [ '32' ]
 		ifFalse: [ '64' ].
 
-	name := Smalltalk os family , bitString , '.'.
+	name := OSPlatform current family , bitString , '.'.
 
 	"The Stage name has kernel in the name when running the tests in the small image.
 	We need to keep record of that"

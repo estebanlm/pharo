@@ -195,11 +195,11 @@ BaselineOfIDE >> loadIceberg [
 		load.
 	(self classNamed: #Iceberg) enableMetacelloIntegration: true.
 
-	Smalltalk os environment at: #GITHUB_TOKEN ifPresent: [ :token |
+	OSEnvironment current at: #GITHUB_TOKEN ifPresent: [ :token |
 		| credentials |
 		credentials := (self classNamed: #IceTokenCredentials) new
 			               username:
-				               (Smalltalk os environment
+				               (OSEnvironment current
 					                at: #GITHUB_USER
 					                ifAbsent: [ self error: 'Github token was found but not the github user associated to this token.' ]);
 			               token: token;

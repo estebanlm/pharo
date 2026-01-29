@@ -159,7 +159,7 @@ RBMoveMethodRefactoring >> compileDelegatorMethod [
 	| statementNode delegatorNode tree |
 	delegatorNode := OCMessageNode
 		                 receiver: (OCVariableNode named: variable)
-		                 selector: parseTree selector
+		                 selector: (OCSelectorNode value: parseTree selector)
 		                 keywordsPositions: parseTree keywordsPositions
 		                 arguments: (parseTree argumentNames collect: [ :each |
 				                  each = selfVariableName

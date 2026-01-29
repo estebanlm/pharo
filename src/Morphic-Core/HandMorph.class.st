@@ -657,7 +657,7 @@ HandMorph >> mapSymbolToKeyValue: keyValue [
 		KeyboardKey tab -> 9.
 		KeyboardKey backspace -> 8.
 		} asDictionary
-		at: (Smalltalk os keyForValue: keyValue)
+		at: (OSPlatform current keyForValue: keyValue)
 		ifAbsent: [ 0 ]
 ]
 
