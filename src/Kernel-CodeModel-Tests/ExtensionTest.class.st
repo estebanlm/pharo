@@ -12,8 +12,9 @@ Class {
 		'pointClass',
 		'extensionOnPoint'
 	],
-	#category : 'Kernel-CodeModel-Tests',
-	#package : 'Kernel-CodeModel-Tests'
+	#category : 'Kernel-CodeModel-Tests-Extensions',
+	#package : 'Kernel-CodeModel-Tests',
+	#tag : 'Extensions'
 }
 
 { #category : 'running' }
