@@ -9,22 +9,22 @@ The use of bit 25 of the source pointer for file references permits backward com
 
 "
 Class {
-	#name : 'SourceFileArrayTest',
+	#name : 'FilesSourcesManagerTest',
 	#superclass : 'TestCase',
 	#category : 'System-Sources-Tests',
 	#package : 'System-Sources-Tests'
 }
 
 { #category : 'tests' }
-SourceFileArrayTest >> ensureChangesFileOpenedInProcess [
+FilesSourcesManagerTest >> ensureChangesFileOpenedInProcess [
 	"Ensure the changes file is open"
 
 	| sourcePointer fileIndex filePosition string |
 	sourcePointer :=  thisContext method sourcePointer.
-	fileIndex := SourceFileArray default fileIndexFromSourcePointer: sourcePointer.
-	filePosition := SourceFileArray default filePositionFromSourcePointer: sourcePointer.
+	fileIndex := FilesSourcesManager default fileIndexFromSourcePointer: sourcePointer.
+	filePosition := FilesSourcesManager default filePositionFromSourcePointer: sourcePointer.
 	
-	string := SourceFileArray default
+	string := FilesSourcesManager default
 		readStreamAtFileIndex: fileIndex
 		atPosition: filePosition
 		ifPresent: [ :readStream | (ChunkReadStream on: readStream) next ]
@@ -34,11 +34,11 @@ SourceFileArrayTest >> ensureChangesFileOpenedInProcess [
 ]
 
 { #category : 'tests' }
-SourceFileArrayTest >> testAddressRange [
+FilesSourcesManagerTest >> testAddressRange [
 	"Test source pointer to file position address translation across a wide address range"
 
 	| sf i p a |
-	sf := SourceFileArray new.
+	sf := FilesSourcesManager new.
 	16r1000000 to: 16r10000000 by: 4093 do: [ :e |
 		i := sf fileIndexFromSourcePointer: e.
 		p := sf filePositionFromSourcePointer: e.
@@ -47,16 +47,16 @@ SourceFileArrayTest >> testAddressRange [
 ]
 
 { #category : 'tests' }
-SourceFileArrayTest >> testChangesFileStream [
+FilesSourcesManagerTest >> testChangesFileStream [
 
-	self assert: SourceFileArray default changesFileStream isNotNil
+	self assert: FilesSourcesManager default changesFileStream isNotNil
 ]
 
 { #category : 'tests' }
-SourceFileArrayTest >> testFileIndexFromSourcePointer [
+FilesSourcesManagerTest >> testFileIndexFromSourcePointer [
 
 	| sf |
-	sf := SourceFileArray new.
+	sf := FilesSourcesManager new.
 	"sources file mapping"
 	self assert: 1 equals: (sf fileIndexFromSourcePointer: 16r1000000).
 	"changes file mapping"
@@ -64,11 +64,11 @@ SourceFileArrayTest >> testFileIndexFromSourcePointer [
 ]
 
 { #category : 'tests' }
-SourceFileArrayTest >> testFilePositionFromSourcePointer [
+FilesSourcesManagerTest >> testFilePositionFromSourcePointer [
 	"Test derivation of file position for sources or changes file from source pointers"
 	
 	| sf |
-	sf := SourceFileArray new.
+	sf := FilesSourcesManager new.
 	"sources file"
 	self assert: 0 equals: (sf filePositionFromSourcePointer: 0).
 	self assert: 16r80000 equals: (sf filePositionFromSourcePointer: 16r100000).
@@ -79,7 +79,7 @@ SourceFileArrayTest >> testFilePositionFromSourcePointer [
 ]
 
 { #category : 'tests' }
-SourceFileArrayTest >> testForkedRead [
+FilesSourcesManagerTest >> testForkedRead [
 
 	| originalString remoteString readSemaphore readString testSemaphore position |
 	originalString := '"test"'.
@@ -94,7 +94,7 @@ SourceFileArrayTest >> testForkedRead [
 		readSemaphore wait.
 
 		"Read the string that was written in other process."
-		readString := SourceFileArray default
+		readString := FilesSourcesManager default
 			readStreamAtFileIndex: 2 "changes"
 			atPosition: position
 			ifPresent: [ :readStream | (ChunkReadStream on: readStream) next ]
@@ -103,7 +103,7 @@ SourceFileArrayTest >> testForkedRead [
 		] fork.
 
 	"Write the string, that will be read in other process."
-	SourceFileArray default writeChangesDuring: [ :theFile |
+	FilesSourcesManager default writeChangesDuring: [ :theFile |
 		theFile cr.
 		position := theFile position.
 		(ChunkWriteStream on: theFile) nextPut: originalString.
@@ -117,7 +117,7 @@ SourceFileArrayTest >> testForkedRead [
 ]
 
 { #category : 'tests' }
-SourceFileArrayTest >> testForkedWrite [
+FilesSourcesManagerTest >> testForkedWrite [
 
 	| originalString remoteString readSemaphore readString testSemaphore position |
 	originalString := '"test"'.
@@ -132,7 +132,7 @@ SourceFileArrayTest >> testForkedWrite [
 		readSemaphore wait.
 
 		"Write the string, that will be read in other process."
-		SourceFileArray default writeChangesDuring: [ :theFile |
+		FilesSourcesManager default writeChangesDuring: [ :theFile |
 			theFile cr.
 			position := theFile position.
 			(ChunkWriteStream on: theFile) nextPut: originalString.
@@ -146,7 +146,7 @@ SourceFileArrayTest >> testForkedWrite [
 	testSemaphore wait.
 
 	"Read the string that was written in other process."
-	readString := SourceFileArray default
+	readString := FilesSourcesManager default
 		readStreamAtFileIndex: 2 "changes"
 		atPosition: position
 		ifPresent: [ :readStream | (ChunkReadStream on: readStream) next ]
@@ -156,10 +156,10 @@ SourceFileArrayTest >> testForkedWrite [
 ]
 
 { #category : 'tests' }
-SourceFileArrayTest >> testParseStampWithConflict [
+FilesSourcesManagerTest >> testParseStampWithConflict [
 
 	| sourceFiles timestamp preamble |
-	sourceFiles := SourceFileArray new.
+	sourceFiles := FilesSourcesManager new.
 
 	preamble := 'SourceFileArray methodsFor: ''public - stamp: reading'' stamp: ''1/14/2025 10:16'' prior: 62647896'.
 	timestamp := sourceFiles
@@ -170,10 +170,10 @@ SourceFileArrayTest >> testParseStampWithConflict [
 ]
 
 { #category : 'tests' }
-SourceFileArrayTest >> testParseStampWithNoStamp [
+FilesSourcesManagerTest >> testParseStampWithNoStamp [
 
 	| sourceFiles timestamp preamble |
-	sourceFiles := SourceFileArray new.
+	sourceFiles := FilesSourcesManager new.
 
 	preamble := 'AeBenchBlurConvexPolygonRunner methodsFor: ''running'''.
 	timestamp := sourceFiles
@@ -184,10 +184,10 @@ SourceFileArrayTest >> testParseStampWithNoStamp [
 ]
 
 { #category : 'tests' }
-SourceFileArrayTest >> testParseStampWithoutConflict [
+FilesSourcesManagerTest >> testParseStampWithoutConflict [
 
 	| sourceFiles timestamp preamble |
-	sourceFiles := SourceFileArray new.
+	sourceFiles := FilesSourcesManager new.
 
 	preamble := 'SourceFileArray methodsFor: ''public - string reading'' stamp: ''1/14/2025 10:16'' prior: 62647896'.
 	timestamp := sourceFiles
@@ -198,23 +198,23 @@ SourceFileArrayTest >> testParseStampWithoutConflict [
 ]
 
 { #category : 'tests' }
-SourceFileArrayTest >> testProtocol [
+FilesSourcesManagerTest >> testProtocol [
 	"Test that we can access protocol correctly"
 
 	| okCm notOkCm |
 	okCm := Point >> #dotProduct:.
-	self assert: ((SourceFileArray default sourcedDataAt: okCm sourcePointer) beginsWith: 'Point methodsFor: ''point functions''').
-	self assert: (SourceFileArray default protocolAt: okCm sourcePointer) equals: 'point functions'.
+	self assert: ((FilesSourcesManager default sourcedDataAt: okCm sourcePointer) beginsWith: 'Point methodsFor: ''point functions''').
+	self assert: (FilesSourcesManager default protocolAt: okCm sourcePointer) equals: 'point functions'.
 
 	notOkCm := Behavior >> #superclass.
-	self assert: (SourceFileArray default protocolAt: notOkCm sourcePointer) equals: 'accessing - class hierarchy'
+	self assert: (FilesSourcesManager default protocolAt: notOkCm sourcePointer) equals: 'accessing - class hierarchy'
 ]
 
 { #category : 'tests' }
-SourceFileArrayTest >> testSourcePointerFromFileIndexAndPosition [
+FilesSourcesManagerTest >> testSourcePointerFromFileIndexAndPosition [
 
 	| sf |
-	sf := SourceFileArray new.
+	sf := FilesSourcesManager new.
 	self should: [ sf sourcePointerFromFileIndex: 0 andPosition: 0 ] raise: Error.
 	self assert: (sf sourcePointerFromFileIndex: 1 andPosition: 0) equals: 0.
 	self assert: (sf sourcePointerFromFileIndex: 2 andPosition: 0) equals: 1.
@@ -228,17 +228,17 @@ SourceFileArrayTest >> testSourcePointerFromFileIndexAndPosition [
 ]
 
 { #category : 'tests' }
-SourceFileArrayTest >> testSourcesFileStream [
+FilesSourcesManagerTest >> testSourcesFileStream [
 
-	self assert: SourceFileArray default sourcesFileStream isNotNil
+	self assert: FilesSourcesManager default sourcesFileStream isNotNil
 ]
 
 { #category : 'tests' }
-SourceFileArrayTest >> testWriteSourceWritesInGivenSourceFileArray [
+FilesSourcesManagerTest >> testWriteSourceWritesInGivenSourceFileArray [
 
 	| fs array |
 	fs := FileSystem memory.
-	array := SourceFileArray new.
+	array := FilesSourcesManager new.
 	array changesFileStream: (SourceFile createFileNamed: fs root / 'changes.chunk' version: ChunkFileFormatParserV200) tryOpen.
 	array sourcesFileStream: (SourceFile createFileNamed: fs root / 'sources.chunk' version: ChunkFileFormatParserV200) tryOpen.
 
@@ -259,11 +259,11 @@ some source!
 ]
 
 { #category : 'tests' }
-SourceFileArrayTest >> testWriteSourceWritesInGivenSourceFileArrayWithFlushDefering [
+FilesSourcesManagerTest >> testWriteSourceWritesInGivenSourceFileArrayWithFlushDefering [
 
 	| fs array |
 	fs := FileSystem memory.
-	array := SourceFileArray new.
+	array := FilesSourcesManager new.
 	array
 		changesFileStream: (SourceFile createFileNamed: fs root / 'changes.chunk' version: ChunkFileFormatParserV200) tryOpen;
 		sourcesFileStream: (SourceFile createFileNamed: fs root / 'sources.chunk' version: ChunkFileFormatParserV200) tryOpen;
@@ -284,11 +284,11 @@ some source!
 ]
 
 { #category : 'tests' }
-SourceFileArrayTest >> testWriteToBufferedStream [
+FilesSourcesManagerTest >> testWriteToBufferedStream [
 
 	| fs array |
 	fs := FileSystem memory.
-	array := SourceFileArray new.
+	array := FilesSourcesManager new.
 	
 	array changesFileStream: (SourceFile createFileNamed: fs root / 'changes.chunk' version: ChunkFileFormatParserV200) tryOpen.
 	array sourcesFileStream: (SourceFile createFileNamed: fs root / 'sources.chunk' version: ChunkFileFormatParserV200) tryOpen.
@@ -310,11 +310,11 @@ some source!
 ]
 
 { #category : 'tests' }
-SourceFileArrayTest >> testWriteToChangesFileInGivenSourceFileArray [
+FilesSourcesManagerTest >> testWriteToChangesFileInGivenSourceFileArray [
 
 	| fs array |
 	fs := FileSystem memory.
-	array := SourceFileArray new.
+	array := FilesSourcesManager new.
 	array changesFileStream: (SourceFile createFileNamed: fs root / 'changes.chunk' version: ChunkFileFormatParserV200) tryOpen.
 	array sourcesFileStream: (SourceFile createFileNamed: fs root / 'sources.chunk' version: ChunkFileFormatParserV200) tryOpen.
 	array writeChangesDuring: [ :changesFile | | position |

@@ -7,7 +7,7 @@ SmalltalkImage >> changesFile [
 	self deprecated: 'Ask for the FileLocator instead of Smalltalk' transformWith: '`@rcv changesFile' -> 'FileLocator changes`'.
 	^ FileLocator changes
 ]
-	
+
 { #category : '*Deprecated14-Kernel' }
 SmalltalkImage >> getSystemAttribute: aNumber [
 	self deprecated: 'Use Smalltalk vm getSystemAttribute: instead'.

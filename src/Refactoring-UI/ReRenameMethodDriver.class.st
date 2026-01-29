@@ -180,7 +180,7 @@ ReRenameMethodDriver >> requestNewMessage [
 	and in this case we may have different parameters. "										
 	parameters := originalMessage selector implementors 
 							ifNotEmpty: [:m | m first  argumentNames ]
-							ifEmpty: [ refactoring buildParamtersForSelector: originalMessage selector ].										
+							ifEmpty: [ refactoring buildParametersForSelector: originalMessage selector ].										
 											
 	methodName := RBMethodName
 		              selector: originalMessage selector
