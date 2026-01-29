@@ -72,11 +72,14 @@ RBRemoveAllSendersRefactoring >> privateTransform [
 
 { #category : 'removing' }
 RBRemoveAllSendersRefactoring >> removeMethod: aMethod of: node [
-	self generateChangesFor: (RBRemoveSenderRefactoring
+	| ref |
+	ref := (RBRemoveSenderRefactoring
 		model: self model
 		remove: node sourceInterval
 		inMethod: aMethod selector
-		forClass: aMethod methodClass)
+		forClass: aMethod methodClass).
+	ref classOfTheMethodToInline: aMethod methodClass.	
+	self generateChangesFor: ref.
 ]
 
 { #category : 'transforming' }

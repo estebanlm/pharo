@@ -141,11 +141,3 @@ ReChange >> textToDisplay [
 
 	^ self name
 ]
-
-{ #category : 'printing' }
-ReChange >> whatToDisplayIn: aChangeBrowser [
-	"We will deprecate this method in the future. For now fixing all the 
-	local senders."
-	
-	^ self changesToDisplayIn: aChangeBrowser 
-]
