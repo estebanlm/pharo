@@ -7,8 +7,9 @@ Class {
 }
 
 { #category : 'running' }
-RBRemoveSenderMethodParametrizedTest >> setUp [ 
+RBRemoveSenderMethodParametrizedTest >> setUp [
 
+	super setUp.
 	rbClass := RBRemoveSenderRefactoring.
 	constructor := #remove:inMethod:forClass:.
 	index := 1
