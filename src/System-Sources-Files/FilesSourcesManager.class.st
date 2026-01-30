@@ -280,7 +280,9 @@ FilesSourcesManager >> logChange: aString [
 				changesFile
 					cr;
 					cr.
-				(ChunkWriteStream on: changesFile) nextPut: aString.
+				(ChunkWriteStream on: changesFile)
+					flushChanges: flushChanges;
+					nextPut: aString.
 				position ]
 		onSuccess: [ :sourcePointer | "Ignore" ]
 		onFail: [ "Ignore" ]
