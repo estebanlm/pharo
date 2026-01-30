@@ -112,18 +112,3 @@ RBAddMessageSendTransformation >> privateTransform [
 		ifNotNil: [ previousNode parent addNode: messageNode after: previousNode ].
 	class compileTree: methodTree
 ]
-
-{ #category : 'storing' }
-RBAddMessageSendTransformation >> storeOn: aStream [
-
-	aStream nextPut: $(.
-	self class storeOn: aStream.
-	aStream
-		nextPutAll: ' messageSend: ''';
-		nextPutAll: message;
-		nextPutAll: ''' inMethod: ''';
-		nextPutAll: selector;
-		nextPutAll: ''' inClass: '.
-	class storeOn: aStream.
-	aStream nextPut: $)
-]

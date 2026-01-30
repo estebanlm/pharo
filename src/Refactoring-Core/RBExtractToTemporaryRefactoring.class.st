@@ -157,22 +157,6 @@ RBExtractToTemporaryRefactoring >> selectedSource [
 	^ source copyFrom: sourceInterval first to: sourceInterval last
 ]
 
-{ #category : 'storing' }
-RBExtractToTemporaryRefactoring >> storeOn: aStream [
-	aStream nextPut: $(.
-	self class storeOn: aStream.
-	aStream nextPutAll: ' extract: '.
-	sourceInterval storeOn: aStream.
-	aStream
-		nextPutAll: ' to: ''';
-		nextPutAll: newVariableName;
-		nextPutAll: ''' from: #';
-		nextPutAll: selector;
-		nextPutAll: ' in: '.
-	class storeOn: aStream.
-	aStream nextPut: $)
-]
-
 { #category : 'initialization' }
 RBExtractToTemporaryRefactoring >> variableName: aString [
 

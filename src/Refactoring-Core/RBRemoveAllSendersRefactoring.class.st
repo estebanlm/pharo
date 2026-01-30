@@ -114,12 +114,3 @@ RBRemoveAllSendersRefactoring >> selfSendIn: aTree [
 	searcher executeTree: aTree initialAnswer: {}.
 	^ nodes
 ]
-
-{ #category : 'storing' }
-RBRemoveAllSendersRefactoring >> storeOn: aStream [
-	aStream nextPut: $(.
-	self class storeOn: aStream.
-	aStream nextPutAll: ' removeSendersOf: '.
-	aStream nextPutAll: selector.
-	aStream nextPut: $)
-]

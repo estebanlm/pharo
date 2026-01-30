@@ -112,23 +112,6 @@ RBAddAssignmentTransformation >> privateTransform [
 	class compileTree: methodTree
 ]
 
-{ #category : 'storing' }
-RBAddAssignmentTransformation >> storeOn: aStream [
-
-	aStream nextPut: $(.
-	self class storeOn: aStream.
-	aStream
-		nextPutAll: ' variable: ''';
-		nextPutAll: variableName;
-		nextPutAll: ' value: ''';
-		nextPutAll: value;
-		nextPutAll: ' inMethod: ''';
-		nextPutAll: selector;
-		nextPutAll: ''' inClass: ''';
-		nextPutAll: className.
-	aStream nextPut: $)
-]
-
 { #category : 'api' }
 RBAddAssignmentTransformation >> variable: aVariableName value: anExpression inMethod: aSelector inClass: aClassName [
 

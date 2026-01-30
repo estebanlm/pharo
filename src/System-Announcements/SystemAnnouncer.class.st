@@ -69,12 +69,6 @@ SystemAnnouncer >> classModificationAppliedTo: aClassOrTrait [
 ]
 
 { #category : 'triggering' }
-SystemAnnouncer >> classRenamed: aClass from: oldClassName to: newClassName [
-
-	self announce: (ClassRenamed class: aClass oldName: oldClassName newName: newClassName)
-]
-
-{ #category : 'triggering' }
 SystemAnnouncer >> evaluated: textOrStream [
 	^ self evaluated: textOrStream context: nil
 ]
@@ -89,7 +83,7 @@ SystemAnnouncer >> evaluated: expression context: aContext [
 { #category : 'triggering' }
 SystemAnnouncer >> methodRemoved: aMethod origin: aBehavior [
 	"A method with the given selector was removed from the class."
-
+	FilesSourcesManager default writeMethodRemoved: aMethod from: aBehavior.
 	self announce: (MethodRemoved methodRemoved: aMethod origin: aBehavior)
 ]
 

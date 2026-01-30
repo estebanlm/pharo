@@ -171,26 +171,6 @@ RBAddParameterRefactoring >> senders [
 	^ senders
 ]
 
-{ #category : 'storing' }
-RBAddParameterRefactoring >> storeOn: aStream [
-	aStream nextPut: $(.
-	aStream nextPutAll: self class name.
-	aStream
-		nextPutAll: ' addParameterToMethod: #';
-		nextPutAll: oldSelector;
-		nextPutAll: ' in: '.
-	aStream nextPutAll: class name.
-	aStream
-		nextPutAll: ' newSelector: #';
-		nextPutAll: newSelector;
-		nextPutAll: ' permutation: ';
-		nextPutAll: permutation asString;
-		nextPutAll: ' newArgs: '''.
-	newArgs storeOn: aStream.
-	aStream
-		nextPutAll: ''')'
-]
-
 { #category : 'preconditions' }
 RBAddParameterRefactoring >> verifyInitializationExpressionOf: initializer [
 	| tree |

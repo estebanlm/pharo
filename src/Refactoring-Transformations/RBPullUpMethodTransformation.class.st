@@ -261,17 +261,3 @@ RBPullUpMethodTransformation >> removePulledUpMethods [
 			selector: symbol
 			from: class ]
 ]
-
-{ #category : 'storing' }
-RBPullUpMethodTransformation >> storeOn: aStream [
-	aStream nextPut: $(.
-	self class storeOn: aStream.
-	aStream
-		nextPutAll: ' pullUp: ';
-		nextPutAll: selectors asString;
-		nextPutAll: ' from: ';
-		nextPutAll: class name;
-		nextPutAll: ' to: ';
-		nextPutAll: targetSuperclass name.
-	aStream nextPut: $)
-]

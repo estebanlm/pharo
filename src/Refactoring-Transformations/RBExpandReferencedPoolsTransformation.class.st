@@ -92,22 +92,6 @@ RBExpandReferencedPoolsTransformation >> privateTransform [
 	self movePoolVariables
 ]
 
-{ #category : 'storing' }
-RBExpandReferencedPoolsTransformation >> storeOn: aStream [
-
-	aStream nextPut: $(.
-	self class storeOn: aStream.
-	aStream
-		nextPutAll: ' forMethod: '''.
-	parseTree storeOn: aStream.
-	aStream
-		nextPutAll: ''' fromClass: ''';
-		nextPutAll: fromClass name;
-		nextPutAll: ''' toClasses: '.
-	toClasses storeOn: aStream.
-	aStream nextPut: $)
-]
-
 { #category : 'testing' }
 RBExpandReferencedPoolsTransformation >> whichPoolDefines: varName [
 	| currentClass |

@@ -209,17 +209,6 @@ RBRemoveMethodRefactoring >> sendersOf: aSelector [
 	^ self model allReferencesTo: aSelector
 ]
 
-{ #category : 'storing' }
-RBRemoveMethodRefactoring >> storeOn: aStream [
-	aStream nextPut: $(.
-	self class storeOn: aStream.
-	aStream nextPutAll: ' removeMethods: '.
-	selector storeOn: aStream.
-	aStream nextPutAll: ' from: '.
-	class storeOn: aStream.
-	aStream nextPut: $)
-]
-
 { #category : 'preconditions' }
 RBRemoveMethodRefactoring >> superclassEquivalentlyDefines: aSelector [
 

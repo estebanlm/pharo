@@ -115,23 +115,6 @@ RBAddTemporaryVariableTransformation >> skippingPreconditions [
 			  , ' already defines a temporary variable named ' , variableName
 ]
 
-{ #category : 'storing' }
-RBAddTemporaryVariableTransformation >> storeOn: aStream [
-
-	aStream nextPut: $(.
-	self class storeOn: aStream.
-	aStream
-		nextPutAll: ' variable: ''';
-		nextPutAll: variableName;
-		nextPutAll: ''' inInterval: ''';
-		nextPutAll: interval;
-		nextPutAll: ''' inMethod: ''';
-		nextPutAll: selector;
-		nextPutAll: ''' inClass: '.
-	class storeOn: aStream.
-	aStream nextPut: $)
-]
-
 { #category : 'api' }
 RBAddTemporaryVariableTransformation >> variable: aVariableName inInterval: anInterval inMethod: aSelector inClass: aClass [
 

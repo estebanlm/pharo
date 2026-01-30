@@ -148,13 +148,3 @@ RBRemoveClassesTransformation >> reparentSubclasses [
 			cls := self model classNamed: each.
 			self model reparentClasses: cls subclasses copy to: cls superclass ]
 ]
-
-{ #category : 'storing' }
-RBRemoveClassesTransformation >> storeOn: aStream [
-
-	aStream nextPut: $(.
-	self class storeOn: aStream.
-	aStream nextPutAll: ' classNames: '.
-	classNames asArray storeOn: aStream.
-	aStream nextPut: $)
-]

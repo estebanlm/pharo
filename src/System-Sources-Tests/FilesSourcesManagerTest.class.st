@@ -161,7 +161,7 @@ FilesSourcesManagerTest >> testParseStampWithConflict [
 	| sourceFiles timestamp preamble |
 	sourceFiles := FilesSourcesManager new.
 
-	preamble := 'SourceFileArray methodsFor: ''public - stamp: reading'' stamp: ''1/14/2025 10:16'' prior: 62647896'.
+	preamble := 'FilesSourcesManager methodsFor: ''public - stamp: reading'' stamp: ''1/14/2025 10:16'' prior: 62647896'.
 	timestamp := sourceFiles
 		             timeStampFromPreamble: preamble
 		             for: sourceFiles sourceDataPointers.
@@ -189,7 +189,7 @@ FilesSourcesManagerTest >> testParseStampWithoutConflict [
 	| sourceFiles timestamp preamble |
 	sourceFiles := FilesSourcesManager new.
 
-	preamble := 'SourceFileArray methodsFor: ''public - string reading'' stamp: ''1/14/2025 10:16'' prior: 62647896'.
+	preamble := 'FilesSourcesManager methodsFor: ''public - string reading'' stamp: ''1/14/2025 10:16'' prior: 62647896'.
 	timestamp := sourceFiles
 		             timeStampFromPreamble: preamble
 		             for: sourceFiles sourceDataPointers.

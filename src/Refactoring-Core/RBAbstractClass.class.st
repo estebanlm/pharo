@@ -740,11 +740,6 @@ RBAbstractClass >> sourceCodeFor: aSelector [
 	^ (class methodFor: aSelector) source
 ]
 
-{ #category : 'storing' }
-RBAbstractClass >> storeOn: aStream [
-	aStream nextPutAll: self name
-]
-
 { #category : 'testing' }
 RBAbstractClass >> subclassRedefines: aSelector [
 	"Return true, if one of your subclasses redefines the method with name, aMethod"

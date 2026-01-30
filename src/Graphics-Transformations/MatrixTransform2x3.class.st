@@ -346,7 +346,7 @@ MatrixTransform2x3 >> setAngle: angle [
 	self a22: c
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 MatrixTransform2x3 >> setIdentiy [
 	"Initialize the receiver to the identity transformation (e.g., not affecting points)"
 	self

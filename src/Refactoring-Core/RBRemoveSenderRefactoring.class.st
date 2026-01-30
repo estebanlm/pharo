@@ -121,17 +121,3 @@ RBRemoveSenderRefactoring >> remove: anInterval inMethod: aSelector forClass: aC
 	class := self classObjectFor: aClass.
 	sourceInterval := anInterval
 ]
-
-{ #category : 'storing' }
-RBRemoveSenderRefactoring >> storeOn: aStream [
-	aStream nextPut: $(.
-	self class storeOn: aStream.
-	aStream nextPutAll: ' remove: '.
-	sourceInterval storeOn: aStream.
-	aStream
-		nextPutAll: ' inMethod: #';
-		nextPutAll: sourceSelector;
-		nextPutAll: ' forClass: '.
-	class storeOn: aStream.
-	aStream nextPut: $)
-]
