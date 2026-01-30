@@ -21,6 +21,7 @@ ClapMetacello class >> commandSpecification [
 		addPositional: #repository description: 'URL of the repository to load code from';
 		addPositional: #project description: 'Name of the project to load (i.e. the name coming after BaselineOf)';
 		addFlagWithPositional: #groups description: 'Names of groups to load, comma-separated';
+		addFlag: #strict description: 'Perform a strict loading -- Avoid undeclared variables and syntax errors. Default: false, for compatibility';
 		addFlag: #signalErrorOnWarning description: 'Signal an error if a warning is raised during metacello load';
 		yourself.
 		
@@ -45,6 +46,7 @@ ClapMetacello >> execute [
 	metacello := Metacello new
 		             baseline: self projectName;
 		             repository: self repositoryUrl;
+		             beStrict: self strict;
 		             silently;
 		             yourself.
 	self shouldSignalErrorOnWarning ifTrue: [ metacello onWarning: [ :e | Error signal: e messageText in: e signalerContext ] ].
@@ -86,4 +88,9 @@ ClapMetacello >> repositoryUrl [
 { #category : 'accessing' }
 ClapMetacello >> shouldSignalErrorOnWarning [
 	^ self hasFlag: #signalErrorOnWarning
+]
+
+{ #category : 'accessing' }
+ClapMetacello >> strict [
+	^ self hasFlag: #strict
 ]
