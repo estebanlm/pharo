@@ -35,8 +35,9 @@ SourcesManager class >> current: anObject [
 
 { #category : 'class initialization' }
 SourcesManager class >> initialize [
+	"Ensure we have a sources manager but do not force it"
 
-	NoSourcesManager beCurrent
+	self current ifNil: [ NoSourcesManager beCurrent ]
 ]
 
 { #category : 'testing' }
