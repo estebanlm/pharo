@@ -83,7 +83,7 @@ SystemAnnouncer >> evaluated: expression context: aContext [
 { #category : 'triggering' }
 SystemAnnouncer >> methodRemoved: aMethod origin: aBehavior [
 	"A method with the given selector was removed from the class."
-	FilesSourcesManager default writeMethodRemoved: aMethod from: aBehavior.
+	SourcesManager current writeMethodRemoved: aMethod from: aBehavior.
 	self announce: (MethodRemoved methodRemoved: aMethod origin: aBehavior)
 ]
 

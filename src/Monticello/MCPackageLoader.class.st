@@ -77,7 +77,7 @@ MCPackageLoader >> analyze [
 { #category : 'private' }
 MCPackageLoader >> basicLoad [
 
-	FilesSourcesManager default deferFlushDuring: [ self basicLoadDefinitions ]
+	SourcesManager current deferFlushDuring: [ self basicLoadDefinitions ]
 ]
 
 { #category : 'private' }

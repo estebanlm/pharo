@@ -226,7 +226,7 @@ SmalltalkImage >> backupTo: newNameWithoutSuffix [
 		true  when continuing in the new session
 		false for the current session"
 
-	FilesSourcesManager default imageMovedWithNewName: newNameWithoutSuffix.
+	SourcesManager current imageMovedWithNewName: newNameWithoutSuffix.
 
 	^ self backupImageInFileNamed: (self fullNameForImageNamed: newNameWithoutSuffix)
 ]
@@ -252,12 +252,12 @@ SmalltalkImage >> bytesLeft: aBool [
 	^self primBytesLeft
 ]
 
-{ #category : 'image, changes name' }
+{ #category : 'image' }
 SmalltalkImage >> changeImagePathTo: aString [
 
 	self imagePath: aString.
 	LastImagePath := self imagePath.
-	FilesSourcesManager default reset
+	SourcesManager current reset
 ]
 
 { #category : 'class and trait names' }
@@ -519,7 +519,7 @@ SmalltalkImage >> extractParameters [
 	^dict
 ]
 
-{ #category : 'image, changes name' }
+{ #category : 'image' }
 SmalltalkImage >> fileForImageNamed: aString [
 
 	^(self imageDirectory resolve: aString), self imageSuffix
@@ -590,7 +590,7 @@ SmalltalkImage >> flushClassNameCache [
 	globals flushClassNameCache
 ]
 
-{ #category : 'image, changes name' }
+{ #category : 'image' }
 SmalltalkImage >> fullNameForImageNamed: aString [
 
 	^(self fileForImageNamed: aString) fullName
@@ -655,7 +655,7 @@ SmalltalkImage >> image [
 	^self
 ]
 
-{ #category : 'image, changes name' }
+{ #category : 'image' }
 SmalltalkImage >> imageDirectory [
 	"Answer the directory containing the current image."
 
@@ -676,7 +676,7 @@ SmalltalkImage >> imageFormatVersion [
 	^''
 ]
 
-{ #category : 'image, changes name' }
+{ #category : 'image' }
 SmalltalkImage >> imagePath [
 	"Answer the full path name for the current image."
 
@@ -685,14 +685,14 @@ SmalltalkImage >> imagePath [
 	^ self primImagePath asByteArray utf8Decoded
 ]
 
-{ #category : 'image, changes name' }
+{ #category : 'image' }
 SmalltalkImage >> imagePath: newPath [
 	"Set the the full path name for the current image.  All further snapshots will use this."
 
 	self primImagePath: newPath utf8Encoded asString
 ]
 
-{ #category : 'image, changes name' }
+{ #category : 'image' }
 SmalltalkImage >> imageSuffix [
 	^ 'image'
 ]
@@ -1220,7 +1220,7 @@ SmalltalkImage >> saveAs: newNameWithoutSuffix [
 		false for the current session "
 
 	newNameWithoutSuffix ifNil: [ ^ self ].
-	FilesSourcesManager default imageMovedWithNewName: newNameWithoutSuffix.
+	SourcesManager current imageMovedWithNewName: newNameWithoutSuffix.
 
 	^ self saveImageInFileNamed: (self fullNameForImageNamed: newNameWithoutSuffix)
 ]
@@ -1258,7 +1258,7 @@ SmalltalkImage >> saveSession [
 	^ self snapshot: true andQuit: false
 ]
 
-{ #category : 'image, changes name' }
+{ #category : 'image' }
 SmalltalkImage >> shortImageName [
 	"Answer the current image name but only that name and not the full path as with imageName."
 	"SmalltalkImage current shortImageName"
@@ -1391,12 +1391,12 @@ SmalltalkImage >> vm [
 	^ vm ifNil: [vm := VirtualMachine new]
 ]
 
-{ #category : 'image, changes name' }
+{ #category : 'image' }
 SmalltalkImage >> vmBinary [
 	^ self vm binary
 ]
 
-{ #category : 'image, changes name' }
+{ #category : 'image' }
 SmalltalkImage >> vmDirectory [
 	^ self vm directory
 ]
