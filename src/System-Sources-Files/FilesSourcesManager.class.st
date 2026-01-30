@@ -23,18 +23,6 @@ Class {
 	#tag : 'Sources'
 }
 
-{ #category : 'accessing' }
-FilesSourcesManager class >> default [
-
-	^ Default
-]
-
-{ #category : 'accessing' }
-FilesSourcesManager class >> default: anInstance [
-
-	Default := anInstance
-]
-
 { #category : 'class initialization' }
 FilesSourcesManager class >> initialize [
 
