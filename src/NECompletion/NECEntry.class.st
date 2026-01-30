@@ -10,7 +10,8 @@ Class {
 		'contents',
 		'node',
 		'description',
-		'fetcher'
+		'fetcher',
+		'displayedContents'
 	],
 	#classVars : [
 		'OriginDisplayed',
@@ -57,7 +58,7 @@ NECEntry >> activateOn: aCompletionContext [
 	NECUsageTracker incrementUsageFor: self contents.
 	
 	"By default insert the contents of the entry instead of the token in the text editor"
-	entryContents := self contents asString asSymbol separateKeywords.
+	entryContents := self contents asSymbol separateKeywords.
 	entryContents := (self class spaceAfterCompletion
 				ifTrue: [ entryContents , ' ' ]
 				ifFalse: [ entryContents ]).
@@ -81,6 +82,11 @@ NECEntry >> contents [
 ]
 
 { #category : 'accessing' }
+NECEntry >> contents: aString [
+	contents := aString
+]
+
+{ #category : 'accessing' }
 NECEntry >> contents: aString node: aNode [
 
 	contents := aString.
@@ -89,13 +95,28 @@ NECEntry >> contents: aString node: aNode [
 
 { #category : 'detail information' }
 NECEntry >> createDescription [
-	self subclassResponsibility
+	
+	^ NECEntryDescription label: self contents
 ]
 
 { #category : 'operations' }
 NECEntry >> description [
 
 	^ description ifNil: [ description := self createDescription ]
+]
+
+{ #category : 'accessing' }
+NECEntry >> displayedContents [
+	"displayedContents offers the possibility to display a different information in the menu than the one returned when the user select an entry. By default displayContents is delegating to contents."
+
+	^ displayedContents ifNil: [ self contents ]
+]
+
+{ #category : 'accessing' }
+NECEntry >> displayedContents: aString [ 
+	"displayedContents offers the possibility to display a different information in the menu than the one returned when the user select an entry. By default displayContents is delegating to contents."
+
+	displayedContents := aString
 ]
 
 { #category : 'accessing' }

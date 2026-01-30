@@ -13,7 +13,6 @@ Class {
 
 { #category : 'enumerating' }
 CoGlobalSelectorFetcher >> entriesDo: aBlock [
-	
 	"We try two approaches
 	
 	- the first one is to see if we can take advantage that we are in the beginning of a keyword message.
@@ -27,27 +26,24 @@ CoGlobalSelectorFetcher >> entriesDo: aBlock [
 	- the last one is to look globally in the method implementors and try to match. 		
 	"
 	
-	astNode ifNotNil: [ :node | node parent ifNotNil: [ :parent | "Try first to continue the parent keyword message"
-		(parent isMessage and: [ parent isKeyword ]) ifTrue: [
-			self systemNavigation
-				allSelectorsStartingWith: parent selector , filter completionString
-				do: [ :e |
-					aBlock value: ((NECSelectorEntry
-							contents: (e 
-								copyFrom: parent selector size + 1 
-								to: e size)
-							node: astNode) 
-							fetcher: self; 
-							selector: e)
-							 ] ] ] ].
-
-	"Otherwise, just go wide"
-	self systemNavigation
-		allSelectorsStartingWith: filter completionString
-		do: [ :e |
-		aBlock value: ((NECSelectorEntry contents: e node: astNode)
-								fetcher: self; yourself)
-				
-		
-		 ]
+	astNode ifNotNil: [ :node |
+			node parent ifNotNil: [ :parent | "Try first to continue the parent keyword message"
+					(parent isMessage and: [ parent isKeyword ]) ifTrue: [
+						
+							self systemNavigation 
+								allSelectorsStartingWith: parent selector , filter completionString 
+								do: [ :e |
+									aBlock value: (NECSelectorEntry new
+											  displayedContents:
+												  '(' , (e copyFrom: 1 to: parent selector size) , ')' , 
+													(e copyFrom: parent selector size + 1 to: e size); 
+												contents: (e copyFrom: parent selector size + 1 to: e size);
+											  	node: astNode; 
+											 fetcher: self;
+											 selector: e) ] ] ] ]. "Otherwise, just go wide"
+							
+	self systemNavigation allSelectorsStartingWith: filter completionString do: [ :e |
+			aBlock value: ((NECSelectorEntry contents: e node: astNode)
+					 fetcher: self;
+					 yourself) ]
 ]
