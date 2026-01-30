@@ -221,7 +221,15 @@ PharoChangesCondenser >> temporaryFile [
 ]
 
 { #category : 'accessing' }
-PharoChangesCondenser >> timestampFor: aMethod [
+PharoChangesCondenser >> timestampForClass: aClass [
+	"It takes a lot of time to access the timestamp of all methods in the sources file, so by default we do not save a new timestamp because the Pharo Boostrap happens in a few minutes, there is no need to save at the second."
+
+	self class conserveTimestamp ifFalse: [ ^ self condensationStamp ].
+	^ aClass commentStamp
+]
+
+{ #category : 'accessing' }
+PharoChangesCondenser >> timestampForMethod: aMethod [
 	"It takes a lot of time to access the timestamp of all methods in the sources file, so by default we do not save a new timestamp because the Pharo Boostrap happens in a few minutes, there is no need to save at the second."
 
 	self class conserveTimestamp ifFalse: [ ^ self condensationStamp ].
@@ -240,7 +248,7 @@ PharoChangesCondenser >> writeClassComment: aClass [
 			strm
 				nextPutAll: aClass name;
 				nextPutAll: ' commentStamp: '.
-			stamp := aClass commentStamp ifNil: [ '<historical>' ].
+			stamp := (self timestampForClass: aClass).
 			stamp storeOn: strm ].
 
 	self writeRemoteString: aClass comment for: aClass
@@ -255,7 +263,7 @@ PharoChangesCondenser >> writeMethodSource: aMethod [
 				nextPutAll: ' methodsFor: ';
 				store: aMethod protocolName asString;
 				nextPutAll: ' stamp: ';
-				store: (self timestampFor: aMethod) ].
+				store: (self timestampForMethod: aMethod) ].
 
 	self writeRemoteString: aMethod sourceCode for: aMethod.
 
