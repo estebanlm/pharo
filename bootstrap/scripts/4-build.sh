@@ -168,6 +168,10 @@ ${VM} "${METACELLO_IMAGE_NAME}.image" metacello install --save --signalErrorOnWa
 ${VM} "${METACELLO_IMAGE_NAME}.image" "${IMAGE_FLAGS}" eval --save "MetacelloProjectRegistry resetRegistry"
 zip "${METACELLO_IMAGE_NAME}.zip" ${METACELLO_IMAGE_NAME}.*
 
+#We alias metacello without version number to make it easier to write the test scripts
+cp "${METACELLO_IMAGE_NAME}.image" "metacello.image"
+zip "metacello.zip" metacello.image
+
 echo $(date -u) "[Pharo] Reloading rest of packages"
 ${VM} "${METACELLO_IMAGE_NAME}.image" save "${PHARO_IMAGE_NAME}"
 
