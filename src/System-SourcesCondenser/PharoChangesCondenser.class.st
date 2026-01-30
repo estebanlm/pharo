@@ -9,7 +9,11 @@ Class {
 		'stream',
 		'job',
 		'remoteStringMap',
-		'sourceStreams'
+		'sourceStreams',
+		'condensationStamp'
+	],
+	#classVars : [
+		'ConserveTimestamps'
 	],
 	#category : 'System-SourcesCondenser',
 	#package : 'System-SourcesCondenser'
@@ -19,6 +23,19 @@ Class {
 PharoChangesCondenser class >> condense [
 	^ self new
 		condense
+]
+
+{ #category : 'accessing' }
+PharoChangesCondenser class >> conserveTimestamp [
+	"It takes a lot of time to access the timestamp of all methods in the sources file, so by default we do not save a new timestamp because the Pharo Boostrap happens in a few minutes, there is no need to save at the second."
+
+	^ ConserveTimestamps ifNil: [ ConserveTimestamps := false ]
+]
+
+{ #category : 'accessing' }
+PharoChangesCondenser class >> conserveTimestamp: aBoolean [
+
+	ConserveTimestamps := aBoolean
 ]
 
 { #category : 'private - 3 installing' }
@@ -38,6 +55,13 @@ PharoChangesCondenser >> basicCondense [
 		condenseClassesAndTraits;
 		swapSourcePointers.
 	stream flush
+]
+
+{ #category : 'accessing' }
+PharoChangesCondenser >> condensationStamp [
+	"Used if we do not conserve the timestamp of the methods in the system"
+
+	^ condensationStamp ifNil: [ condensationStamp := DateAndTime now printString ]
 ]
 
 { #category : 'public' }
@@ -196,6 +220,14 @@ PharoChangesCondenser >> temporaryFile [
 	^ (FileLocator changes , 'new') nextVersion
 ]
 
+{ #category : 'accessing' }
+PharoChangesCondenser >> timestampFor: aMethod [
+	"It takes a lot of time to access the timestamp of all methods in the sources file, so by default we do not save a new timestamp because the Pharo Boostrap happens in a few minutes, there is no need to save at the second."
+
+	self class conserveTimestamp ifFalse: [ ^ self condensationStamp ].
+	^ aMethod timeStamp
+]
+
 { #category : 'private - 1 writing' }
 PharoChangesCondenser >> writeClassComment: aClass [
 
@@ -218,18 +250,18 @@ PharoChangesCondenser >> writeClassComment: aClass [
 PharoChangesCondenser >> writeMethodSource: aMethod [
 
 	self nextCommentChunkDo: [ :strm |
-		strm
-			nextPutAll: aMethod methodClass name;
-			nextPutAll: ' methodsFor: ';
-			store: aMethod protocolName asString;
-			nextPutAll: ' stamp: ';
-			store: aMethod timeStamp ].
+			strm
+				nextPutAll: aMethod methodClass name;
+				nextPutAll: ' methodsFor: ';
+				store: aMethod protocolName asString;
+				nextPutAll: ' stamp: ';
+				store: (self timestampFor: aMethod) ].
 
-	self
-		writeRemoteString: aMethod sourceCode
-		for: aMethod.
+	self writeRemoteString: aMethod sourceCode for: aMethod.
 
-	stream nextPutAll: ' !'; cr
+	stream
+		nextPutAll: ' !';
+		cr
 ]
 
 { #category : 'private - 1 writing' }
