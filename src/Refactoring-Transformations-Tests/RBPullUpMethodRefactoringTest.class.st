@@ -6,6 +6,25 @@ Class {
 	#tag : 'Test'
 }
 
+{ #category : 'running' }
+RBPullUpMethodRefactoringTest >> setUp [
+
+	super setUp.
+	self addClassHierarchy
+]
+
+{ #category : 'tests' }
+RBPullUpMethodRefactoringTest >> testPullUpMethod [
+
+	| refactoring class |
+	class := model classNamed: #Foo1.
+	(model classNamed: #Foo1) compile: 'someMethod | temp | temp := 7. ^temp' classified: #( #accessing ).
+	refactoring := RePullUpMethodRefactoring model: model pullUp: { #someMethod } from: class.
+	self assert: (class directlyDefinesMethod: #someMethod).
+	self proceedThroughWarning: [ self executeRefactoring: refactoring ].
+	self deny: (class directlyDefinesMethod: #someMethod)
+]
+
 { #category : 'failure tests' }
 RBPullUpMethodRefactoringTest >> testWarnDoesntPullUpReferencesInstVar [
 
