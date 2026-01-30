@@ -83,7 +83,8 @@ Class {
 	#superclass : 'TestAsserter',
 	#instVars : [
 		'testSelector',
-		'expectedFails'
+		'expectedFails',
+		'temporaryDirectory'
 	],
 	#classVars : [
 		'DefaultTimeLimit',
@@ -915,6 +916,15 @@ TestCase >> skipOnPharoCITestingEnvironment [
 { #category : 'running' }
 TestCase >> tearDown [
 	"Hooks that subclasses may override to clean the fixture of test."
+	
+	temporaryDirectory ifNotNil: [ temporaryDirectory ensureDeleteAll ]
+]
+
+{ #category : 'accessing' }
+TestCase >> temporaryDirectory [
+
+	^ temporaryDirectory 
+		ifNil: [ temporaryDirectory := (FileLocator temp / 'pharo-tests-' , UUID new asString) asFileReference ensureCreateDirectory ]
 ]
 
 { #category : 'accessing' }
