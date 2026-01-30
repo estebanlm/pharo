@@ -8,9 +8,17 @@ symbols
 Class {
 	#name : 'ChunkReadStream',
 	#superclass : 'DecoratorStream',
-	#category : 'System-Sources-Files',
-	#package : 'System-Sources-Files'
+	#category : 'CodeImport',
+	#package : 'CodeImport'
 }
+
+{ #category : 'testing' }
+ChunkReadStream >> isNextChunkMetaData [
+	| isMetaData |
+	isMetaData := decoratedStream peek = $!.
+	isMetaData ifTrue: [ decoratedStream next ].
+	^ isMetaData
+]
 
 { #category : 'decorated' }
 ChunkReadStream >> next [
