@@ -130,10 +130,9 @@ MetacelloProjectRegistry >> projects [
 MetacelloProjectRegistry >> registerProjectRegistration: aMetacelloProjectRegistration [
 	"unconditionally register <newRegistration> ... use with care"
 
-	self
-		registrationNamed: aMetacelloProjectRegistration className
-		ifPresent: [ :existing | MetacelloNotification signal: 'REGISTRATION OF INCOMPATABLE PROJECTS: ' , existing printString , ' REPLACED BY ' , aMetacelloProjectRegistration printString ]
-		ifAbsent: [ self registrations add: aMetacelloProjectRegistration ]
+	self registrationNamed: aMetacelloProjectRegistration className ifPresent: [ :existing | self registrations remove: existing ] ifAbsent: [ "Nothing to do" ].
+
+	self registrations add: aMetacelloProjectRegistration
 ]
 
 { #category : 'registration' }
