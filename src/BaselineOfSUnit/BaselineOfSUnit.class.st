@@ -27,19 +27,14 @@ BaselineOfSUnit class >> corePackageNames [
 BaselineOfSUnit >> baseline: spec [
 	<baseline>
 	spec for: #common
-		do: [ 
-			spec baseline: 'Traits' with: [
-				spec loads: 'core'. 
-				spec repository: (self packageRepositoryURLForSpec: spec) ].
-			
+		do: [ 			
 			spec baseline: 'Debugging' with: [ 
 				spec loads: 'Core' from: (self packageRepositoryURLForSpec: spec) ].
-
 
 			"Package definitions"							
 			spec
 				package: 'SUnit-Core';
-				package: 'SUnit-Core-Traits' with: [ spec requires: 'Traits' ];
+				package: 'SUnit-Core-Traits';
 				package: 'SUnit-Tests';
 				package: 'SUnit-Visitor' with: [ spec requires: #('SUnit-Core') ];
 				package: 'SUnit-Visitor-Tests' with: [ spec requires: #('SUnit-Visitor') ];
