@@ -55,7 +55,6 @@ BaselineOfKernel >> baseline: spec [
 				package: 'System-SessionManager';
 				package: 'ClassDefinitionPrinters';
 				package: 'CodeExport';
-				package: 'System-Sources';
 				package: 'System-Support';
 				package: 'Zinc-Character-Encoding-Core';
 				
@@ -94,7 +93,7 @@ BaselineOfKernel >> baseline: spec [
 				with: { 'FFI-Kernel'. 'Announcements-Core'. 'Collections-Abstract'. 'Collections-DoubleLinkedList'. 'Collections-Native'. 'Collections-Sequenceable'.
 					'Collections-Streams'. 'Collections-Strings'. 'Collections-Support'. 'Collections-Unordered'. 'Collections-Weak'. 'Files'. 'Hermes'. 'Kernel'. 'Kernel-CodeModel'.
 					'Kernel-BytecodeEncoders'. 'Transcript-NonInteractive'. 'PharoBootstrap-Initialization'. 'Shift-ClassBuilder'. 'System-Announcements'.
-					'System-CommandLineHandler'. 'System-Finalization'. 'System-Platforms'. 'System-SessionManager'. 'ClassDefinitionPrinters'. 'CodeExport'. 'System-Sources'.
+					'System-CommandLineHandler'. 'System-Finalization'. 'System-Platforms'. 'System-SessionManager'. 'ClassDefinitionPrinters'. 'CodeExport'.
 					'System-Support'. 'Zinc-Character-Encoding-Core' };
 				group: 'AdditionalPackages'
 				with: { 'Clap-Core'. 'Clap-Commands-Pharo'. 'Hermes-Extensions'. 'NumberParser'. 'ReflectionMirrors-Primitives'. 'System-Time'. 'Math-Operations-Extensions'.

@@ -4,8 +4,8 @@ Class {
 	#classVars : [
 		'Current'
 	],
-	#category : 'System-Sources-Sources',
-	#package : 'System-Sources',
+	#category : 'Kernel-Sources',
+	#package : 'Kernel',
 	#tag : 'Sources'
 }
 

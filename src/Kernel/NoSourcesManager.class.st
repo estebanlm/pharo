@@ -1,8 +1,8 @@
 Class {
 	#name : 'NoSourcesManager',
 	#superclass : 'SourcesManager',
-	#category : 'System-Sources-Sources',
-	#package : 'System-Sources',
+	#category : 'Kernel-Sources',
+	#package : 'Kernel',
 	#tag : 'Sources'
 }
 

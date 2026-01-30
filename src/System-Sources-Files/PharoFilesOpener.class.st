@@ -8,9 +8,8 @@ Class {
 		'Default',
 		'SourceFileVersionString'
 	],
-	#category : 'System-Sources-Utilities',
-	#package : 'System-Sources',
-	#tag : 'Utilities'
+	#category : 'System-Sources-Files',
+	#package : 'System-Sources-Files'
 }
 
 { #category : 'singleton' }

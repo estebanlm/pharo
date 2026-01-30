@@ -8,9 +8,8 @@ symbols
 Class {
 	#name : 'ChunkReadStream',
 	#superclass : 'DecoratorStream',
-	#category : 'System-Sources-Streams',
-	#package : 'System-Sources',
-	#tag : 'Streams'
+	#category : 'System-Sources-Files',
+	#package : 'System-Sources-Files'
 }
 
 { #category : 'decorated' }

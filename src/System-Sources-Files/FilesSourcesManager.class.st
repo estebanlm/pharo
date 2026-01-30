@@ -413,6 +413,7 @@ FilesSourcesManager >> readStreamAtFileIndex: index atPosition: position ifPrese
 
     ^ result
 ]
+
 { #category : 'printing' }
 FilesSourcesManager >> reportString [
 
