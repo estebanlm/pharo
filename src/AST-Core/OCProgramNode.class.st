@@ -120,17 +120,16 @@ OCProgramNode >> allArgumentVariables [
 
 { #category : 'iterating' }
 OCProgramNode >> allChildren [
-	| children |
-	children := OrderedCollection new.
-	self nodesDo: [ :each | children addLast: each ].
-	^ children
+	" Alias for withAllChildren. Includes self and comments"
+	
+	^ self withAllChildren 
 ]
 
 { #category : 'accessing' }
 OCProgramNode >> allComments [
 	"Answer a collection of objects representing the comments in the method. Return an empty collection if the method's source code does not contain a comment."
 
-	^ self allChildren flatCollect: [:el| el comments]
+	^ self withAllChildren flatCollect: [:el| el comments]
 ]
 
 { #category : 'accessing' }
@@ -205,7 +204,7 @@ OCProgramNode >> allTemporaryVariables [
 OCProgramNode >> allVariables [
 	"Return all the variables in subnodes"
 
-	^ self allChildren select: [ :each | each isVariable ]
+	^ self withAllChildren select: [ :each | each isVariable ]
 ]
 
 { #category : 'replacing' }
@@ -264,7 +263,7 @@ OCProgramNode >> asSequenceNode [
 
 { #category : 'querying' }
 OCProgramNode >> assignmentNodes [
-	^self allChildren select: [:each | each isAssignment]
+	^self withAllChildren select: [:each | each isAssignment]
 ]
 
 { #category : 'testing' }
@@ -332,7 +331,7 @@ OCProgramNode >> bestNodeForPosition: aPosition [
 
 { #category : 'querying' }
 OCProgramNode >> blockNodes [
-	^self allChildren select: [:each | each isBlock]
+	^self withAllChildren select: [:each | each isBlock]
 ]
 
 { #category : 'accessing' }
@@ -1237,7 +1236,7 @@ OCProgramNode >> selfMessages [
 
 { #category : 'accessing' }
 OCProgramNode >> sendNodes [
-	^self allChildren select: [:each | each isMessage]
+	^self withAllChildren select: [:each | each isMessage]
 ]
 
 { #category : 'accessing' }
@@ -1374,14 +1373,14 @@ OCProgramNode >> treePathUpTo: aParent [
 
 { #category : 'querying' }
 OCProgramNode >> variableDefinitionNodes [
-	^ self allChildren select: [ :each |
+	^ self withAllChildren select: [ :each |
 		  each isVariable and: [ each isDefinition ] ]
 ]
 
 { #category : 'querying' }
 OCProgramNode >> variableNodes [
 
-	^ self allChildren select: [ :each |
+	^ self withAllChildren select: [ :each |
 		  each isVariable and: [ each isDefinition not ] ]
 ]
 

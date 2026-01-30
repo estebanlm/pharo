@@ -568,7 +568,7 @@ OCASTTranslator >> visitAnnotationMarkNode: aAnnotationValueNode [
 OCASTTranslator >> visitArrayNode: anArrayNode [
 
 	| elementNodes stackLimit |
-	stackLimit := CompiledCode LargeFrame min: self compilationContext encoderClass arraySizeLimitForPushArrayInstruction.
+	stackLimit := CompiledCode fullFrameSize min: self compilationContext encoderClass arraySizeLimitForPushArrayInstruction.
 	methodBuilder stackSize + anArrayNode statements size > stackLimit ifTrue: [ ^ self visitLargeArrayNode: anArrayNode ].
 
 	elementNodes := anArrayNode children.

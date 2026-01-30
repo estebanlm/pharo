@@ -23,7 +23,8 @@ Class {
 		'notInstVarRefs',
 		'notSharedVarRefs',
 		'notSupersendsReceived',
-		'notSupersendsSent'
+		'notSupersendsSent',
+		'notSuperclassDefiner'
 	],
 	#category : 'Refactoring-UI-Drivers',
 	#package : 'Refactoring-UI',
@@ -59,17 +60,16 @@ RePullUpMethodDriver >> breakingChoices [
 
 	| choices |
 	choices := OrderedCollection new.
-	notSharedVarRefs isFalse ifTrue: [
-		choices add: (RePushUpSharedVariableChoice new driver: self) ].
-	notInstVarRefs isFalse ifTrue: [
-		choices add: (RePushUpInstanceVariableChoice new driver: self) ].
+	notSharedVarRefs isFalse ifTrue: [ choices add: (RePushUpSharedVariableChoice new driver: self) ].
+	notInstVarRefs isFalse ifTrue: [ choices add: (RePushUpInstanceVariableChoice new driver: self) ].
 	choices add: (RePullUpMethodTransformationChoice new driver: self).
-	notOverrides isFalse ifTrue: [ 
-		choices add: (ReBrowseMethodOverridesChoice new 
-			driver: self;
-			description: 'Browse overriden method(s)')  ].
-	
-	^ choices 
+	notOverrides isFalse ifTrue: [
+			choices add: (ReBrowseMethodOverridesChoice new
+					 driver: self;
+					 description: 'Browse overriden method(s)') ].
+	notSuperclassDefiner isFalse ifTrue: [ choices add: (ReCopyDownSuperclassMethodChoice new driver: self) ].
+
+	^ choices
 ]
 
 { #category : 'actions' }
@@ -111,6 +111,42 @@ RePullUpMethodDriver >> configureAndRunRefactoring [
 
 	self setBreakingChangesPreconditions.
 	refactoring failedBreakingChangePreconditions ifEmpty: [ self applyChanges ] ifNotEmpty: [ self handleBreakingChanges ]
+]
+
+{ #category : 'copying' }
+RePullUpMethodDriver >> copyDownMethods [
+
+	| superclassDefiner subclasses oldSource oldProtocol refactoring2 |
+	refactoring selectors do: [ :aSelector |
+			notSuperclassDefiner violators do: [ :violator |
+					violator second = aSelector ifFalse: [ ^ self ].
+					superclassDefiner := violator first.
+
+					subclasses := refactoring targetSuperclass subclasses reject: [ :each | each directlyDefinesMethod: aSelector ].
+
+					subclasses ifEmpty: [ ^ self ].
+
+					oldSource := superclassDefiner sourceCodeFor: aSelector.
+					oldProtocol := superclassDefiner protocolsFor: aSelector.
+					(superclassDefiner parseTreeForSelector: aSelector) superMessages
+						detect: [ :each | superclassDefiner directlyDefinesMethod: each ]
+						ifFound: [
+								refactoring refactoringError:
+									('Cannot pull up <1s> since we must copy down the superclass method in <2p><n>to the other subclasses, and the superclass method sends a super message which is overriden.'
+										 expandMacrosWith: aSelector
+										 with: superclassDefiner) ].
+
+					refactoring2 := RBExpandReferencedPoolsRefactoring
+						                model: refactoring model
+						                forMethod: (superclassDefiner parseTreeForSelector: aSelector)
+						                fromClass: superclassDefiner
+						                toClasses: subclasses.
+
+					refactoring generateChangesFor: refactoring2.
+
+					subclasses do: [ :each |
+						refactoring generateChangesFor: (RBAddMethodTransformation sourceCode: oldSource in: each withProtocol: oldProtocol) ] ] ].
+	self pullUpMethods
 ]
 
 { #category : 'execution' }
@@ -238,5 +274,5 @@ RePullUpMethodDriver >> setBreakingChangesPreconditions [
 	notSharedVarRefs := refactoring preconditionNoReferencesToSharedVars.
 	notSupersendsSent := refactoring preconditionNoSupersendsSent.
 	notSupersendsReceived := refactoring preconditionNoSupersendsReceived.
-	
+	notSuperclassDefiner := refactoring preconditionNoSuperclassDefiner
 ]
