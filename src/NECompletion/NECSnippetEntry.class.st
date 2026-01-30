@@ -26,7 +26,7 @@ NECSnippetEntry >> rawLabel [
 	^ 'snippet'
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'private' }
 NECSnippetEntry >> shortString: aString [ 
 	
 	shortString := aString
