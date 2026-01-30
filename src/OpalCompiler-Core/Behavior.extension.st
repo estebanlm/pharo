@@ -99,3 +99,12 @@ Behavior >> recompile: selector from: oldClass [
 		self compile: selector from: oldClass 
 	]
 ]
+
+{ #category : '*OpalCompiler-Core' }
+Behavior >> recompileAllFrom: oldClass [
+	"Compile silently all the methods in the receiver's method dictionary.
+	This validates sourceCode and variable references and forces
+	all methods to use the current bytecode set"
+
+	self codeChangeAnnouncer suspendAllWhile: [ self compileAllFrom: oldClass ]
+]
