@@ -117,23 +117,6 @@ RBRemoveAssignmentTransformation >> privateTransform [
 	class compileTree: methodTree
 ]
 
-{ #category : 'storing' }
-RBRemoveAssignmentTransformation >> storeOn: aStream [
-
-	aStream nextPut: $(.
-	self class storeOn: aStream.
-	aStream
-		nextPutAll: ' variable: ''';
-		nextPutAll: variableName;
-		nextPutAll: ' value: ''';
-		nextPutAll: value;
-		nextPutAll: ' inMethod: ''';
-		nextPutAll: selector;
-		nextPutAll: ''' inClass: ''';
-		nextPutAll: className.
-	aStream nextPut: $)
-]
-
 { #category : 'api' }
 RBRemoveAssignmentTransformation >> variable: aVariableName value: anExpression inMethod: aSelector inClass: aClassName [
 

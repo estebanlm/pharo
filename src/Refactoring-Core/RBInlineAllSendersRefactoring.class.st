@@ -169,15 +169,3 @@ RBInlineAllSendersRefactoring >> sendersOf: aSelector in: aClass [
 	selector := aSelector.
 	numberReplaced := numberNotReplaced := 0
 ]
-
-{ #category : 'storing' }
-RBInlineAllSendersRefactoring >> storeOn: aStream [
-	aStream nextPut: $(.
-	self class storeOn: aStream.
-	aStream
-		nextPutAll: ' sendersOf: #';
-		nextPutAll: selector;
-		nextPutAll: ' in: '.
-	class storeOn: aStream.
-	aStream nextPut: $)
-]

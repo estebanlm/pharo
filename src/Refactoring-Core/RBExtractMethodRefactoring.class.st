@@ -201,7 +201,8 @@ RBExtractMethodRefactoring >> createModifiedParseTreeForSequenceSelection [
 			ifTrue: [ | name |
 					name := stmts last variable name.
 					(self shouldExtractAssignmentTo: name)
-						ifFalse: [ newCode := '<1s> := <2s>' expandMacrosWith: name with: newCode.
+						ifFalse: [ 
+							newCode := '<1s> := <2s>' expandMacrosWith: name with: newCode.
 							stmts at: stmts size put: stmts last value ] ] ].
 	modifiedParseTree := self parseTreeRewriterClass
 		replaceStatements: subtree formattedCode
@@ -503,23 +504,16 @@ RBExtractMethodRefactoring >> selectorsToSearch [
 	^ class allSelectors
 ]
 
+{ #category : 'preparation' }
+RBExtractMethodRefactoring >> shouldExtractAssignmentTo: aVariableName [ 
+	"the default in Pharo for several years has been true"
+	
+	^ true
+]
+
 { #category : 'transforming' }
 RBExtractMethodRefactoring >> startLimit: aNumber [
 	^ aNumber
-]
-
-{ #category : 'storing' }
-RBExtractMethodRefactoring >> storeOn: aStream [
-	aStream nextPut: $(.
-	self class storeOn: aStream.
-	aStream nextPutAll: ' extract: '.
-	extractionInterval storeOn: aStream.
-	aStream
-		nextPutAll: ' from: #';
-		nextPutAll: selector;
-		nextPutAll: ' in: '.
-	class storeOn: aStream.
-	aStream nextPut: $)
 ]
 
 { #category : 'accessing' }

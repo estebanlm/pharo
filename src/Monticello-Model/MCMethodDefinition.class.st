@@ -338,7 +338,7 @@ MCMethodDefinition >> summary [
 MCMethodDefinition >> timeStamp [
 	"My computation is lazy because it takes time to compute and is not always necessary."
 
-	^ timeStamp ifNil: [ sourcePointer ifNotNil: [ :pointer | timeStamp := SourceFileArray default timeStampAt: pointer ] ]
+	^ timeStamp ifNil: [ sourcePointer ifNotNil: [ :pointer | timeStamp := FilesSourcesManager default timeStampAt: pointer ] ]
 ]
 
 { #category : 'serializing' }

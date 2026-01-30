@@ -72,7 +72,7 @@ QSystemTally >> bumpBy: count [
 	tally := tally + count
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 QSystemTally >> class: aClass method: aCompiledMethod [
 	class := aClass.
 	method := aCompiledMethod.
@@ -197,7 +197,7 @@ QSystemTally >> originMethod [
 		  ifFalse: [ methodOrBlock ]
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 QSystemTally >> primitives: anInteger [
 	"Make the receiver be a node of unassigned primitives"
 	tally := anInteger.

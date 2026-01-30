@@ -155,7 +155,7 @@ RBInlineMethodRefactoring >> checkSuperMessages [
 
 { #category : 'accessing' }
 RBInlineMethodRefactoring >> classOfTheMethodToInline [
-
+	
 	^ classOfTheMethodToInline
 		  ifNil: [
 			  classOfTheMethodToInline := (sourceMessage receiver name
@@ -330,6 +330,7 @@ RBInlineMethodRefactoring >> normalizeReturns [
 { #category : 'initialization' }
 RBInlineMethodRefactoring >> parseInlineMethod [
 
+
 	self classOfTheMethodToInline
 		ifNil: [ self
 				refactoringError:
@@ -503,20 +504,6 @@ RBInlineMethodRefactoring >> sourceIntervalForMessageSend: messageSendSource [
 { #category : 'accessing' }
 RBInlineMethodRefactoring >> sourceSelector [
 	^ sourceSelector
-]
-
-{ #category : 'storing' }
-RBInlineMethodRefactoring >> storeOn: aStream [
-	aStream nextPut: $(.
-	self class storeOn: aStream.
-	aStream nextPutAll: ' inline: '.
-	sourceInterval storeOn: aStream.
-	aStream
-		nextPutAll: ' inMethod: #';
-		nextPutAll: sourceSelector;
-		nextPutAll: ' forClass: '.
-	class storeOn: aStream.
-	aStream nextPut: $)
 ]
 
 { #category : 'canonization' }

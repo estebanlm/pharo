@@ -145,17 +145,3 @@ RBMoveMethodToClassSideTransformation >> removeMethod: aSelector from: aRBClass 
 		selector: aSelector
 		from: aRBClass )
 ]
-
-{ #category : 'storing' }
-RBMoveMethodToClassSideTransformation >> storeOn: aStream [
-	aStream nextPut: $(.
-	self class storeOn: aStream.
-	aStream
-		nextPutAll: ' method: '.
-	method storeOn: aStream.
-	aStream
-		nextPutAll: ' class: ';
-		nextPutAll: class name.
-	aStream
-		nextPutAll: ')'
-]

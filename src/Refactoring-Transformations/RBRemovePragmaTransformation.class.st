@@ -107,18 +107,3 @@ RBRemovePragmaTransformation >> privateTransform [
 	nodesToRemove do: [ :node | node parent removePragma: node ].
 	self definingClass compileTree: methodTree
 ]
-
-{ #category : 'storing' }
-RBRemovePragmaTransformation >> storeOn: aStream [
-
-	aStream nextPut: $(.
-	self class storeOn: aStream.
-	aStream
-		nextPutAll: ' pragma: ''';
-		nextPutAll: pragma;
-		nextPutAll: ''' inMethod: ''';
-		nextPutAll: selector;
-		nextPutAll: ''' inClass: '.
-	class storeOn: aStream.
-	aStream nextPut: $)
-]

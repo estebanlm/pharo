@@ -1,32 +1,33 @@
 Class {
-	#name : 'RBFindAndReplaceSetUpParametrizedTest',
+	#name : 'RBFindAndReplaceSetUpTest',
 	#superclass : 'RBAbstractRefactoringTest',
 	#category : 'Refactoring-Transformations-Tests-SingleParametrized',
 	#package : 'Refactoring-Transformations-Tests',
 	#tag : 'SingleParametrized'
 }
 
-{ #category : 'building suites' }
-RBFindAndReplaceSetUpParametrizedTest class >> testParameters [
-	^ ParametrizedTestMatrix new
-		addCase: { #rbClass -> RBFindAndReplaceSetUpTransformation };
-		yourself
-]
-
 { #category : 'accessing' }
-RBFindAndReplaceSetUpParametrizedTest >> constructor [
+RBFindAndReplaceSetUpTest >> constructor [
 	^ #of:inWholeHierarchy:
 ]
 
-{ #category : 'tests' }
-RBFindAndReplaceSetUpParametrizedTest >> testClassDoesNotDefineSetUpMethod [
-	| refactoring |
-	refactoring := self createRefactoringWithArguments: { RBTestAsDataForExtractSetupTransformationTest . true }.
-	self shouldFail: refactoring
+{ #category : 'running' }
+RBFindAndReplaceSetUpTest >> setUp [ 
+
+	super setUp.
+	rbClass := RBFindAndReplaceSetUpTransformation
 ]
 
 { #category : 'tests' }
-RBFindAndReplaceSetUpParametrizedTest >> testReplaceSetUp [
+RBFindAndReplaceSetUpTest >> testClassDoesNotDefineSetUpMethod [
+	| refactoring |
+	refactoring := self createRefactoringWithArguments: { RBTestAsDataForExtractSetupTransformationTest . true }.
+	self shouldFail: refactoring
+
+]
+
+{ #category : 'tests' }
+RBFindAndReplaceSetUpTest >> testReplaceSetUp [
 	| class refactoring |
 	refactoring := self createRefactoringWithArguments: { RBTestAsDataForExtractSetupTransformationTest . true }.
 	class := refactoring model classNamed: #RBTestAsDataForExtractSetupTransformationTest.

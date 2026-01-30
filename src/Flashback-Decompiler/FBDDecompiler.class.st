@@ -51,13 +51,13 @@ FBDDecompiler >> blockReturnTop [
 	self doPop
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 FBDDecompiler >> canDecompile: aCompiledMethod [
 	"Answers false if aCompiledMethod can't be decompiled due to framework specific constraints."
 	^ (self isPrimitiveNativeCall: aCompiledMethod) not
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 FBDDecompiler >> createNArgs: numArgs [
 
 	| argName |
@@ -70,7 +70,7 @@ FBDDecompiler >> createNArgs: numArgs [
 			builder codeArgument: argName ]
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 FBDDecompiler >> createNTemps: numTemps [
 	^ (1 to: numTemps) collect: [ :i | self newTemp ]
 ]
@@ -206,7 +206,7 @@ FBDDecompiler >> doPop [
 	currentSequence addNode: simulatedStack removeLast
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 FBDDecompiler >> errorCodeNameFor: cm [
 	"Assumes the method holds a primitive with error code"
 	| primitivePragma selectorParts |
@@ -273,7 +273,7 @@ FBDDecompiler >> incrTempCount [
 	tempCount := tempCount + 1
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 FBDDecompiler >> initializeForMethod: aCompiledMethod [
 	method := aCompiledMethod.
 	loopsArray := FBDLoopScanner scan: method.
@@ -282,7 +282,7 @@ FBDDecompiler >> initializeForMethod: aCompiledMethod [
 	jumpSize := 0
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 FBDDecompiler >> initializeStack [
 	argCount := 0.
 	tempCount := 0.
@@ -292,7 +292,7 @@ FBDDecompiler >> initializeStack [
 		numTemps: method numTemps - method numArgs
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 FBDDecompiler >> initializeStackNumArgs: numArgs copied: copiedVars numTemps: numTemps [
 	| args temps |
 	simulatedStack := OrderedCollection new.
@@ -354,7 +354,7 @@ FBDDecompiler >> interpretSeq: seq baseStackSize: stackSize distance: distance [
 		ifTrue: [ false ]
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 FBDDecompiler >> isPrimitiveNativeCall: aCompiledMethod [
 	aCompiledMethod isPrimitive
 		ifFalse: [ ^ false ].
@@ -470,7 +470,7 @@ FBDDecompiler >> popIntoTemporaryVariable: offset [
 				addLast: (builder codeAssignment: simulatedStack removeLast to: (simulatedStack at: offset + 1)). self doPop ]
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 FBDDecompiler >> pragmasForMethod: aCompiledMethod [
 	^ aCompiledMethod pragmas collect: [ :each |
 		OCPragmaNode
@@ -564,7 +564,7 @@ FBDDecompiler >> pushTemporaryVariable: offset [
 	simulatedStack addLast: (simulatedStack at: offset + 1)
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 FBDDecompiler >> quickMethod [
 	instructionStream method isReturnSelf
 		ifTrue: [ ^ self methodReturnReceiver ].

@@ -99,7 +99,7 @@ RGCommentDefinition >> contentAtPointer [
 	"A RGCommentDefinition may be created to point the sourceFile in which case it retrieves the class comment"
 
 	^ self sourcePointer
-		  ifNotNil: [ SourceFileArray default sourceCodeAt: self sourcePointer ]
+		  ifNotNil: [ FilesSourcesManager default sourceCodeAt: self sourcePointer ]
 		  ifNil: [ '' ]
 ]
 
@@ -271,7 +271,7 @@ RGCommentDefinition >> stampAtPointer [
 
 	^ self sourcePointer
 		  ifNotNil: [
-			  SourceFileArray default
+			  FilesSourcesManager default
 				  timeStampAt: self sourcePointer
 				  for: self commentDataPointers ]
 		  ifNil: [ nil ]
