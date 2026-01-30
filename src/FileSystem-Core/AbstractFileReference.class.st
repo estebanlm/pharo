@@ -42,17 +42,10 @@ AbstractFileReference >> accessTime [
 ]
 
 { #category : 'enumerating' }
-AbstractFileReference >> allChildren [
-	"Return all the files and folders recursively nested in the receiver"
-
-	^ CollectVisitor breadthFirst: self resolve collect: [:entry | entry reference]
-]
-
-{ #category : 'enumerating' }
 AbstractFileReference >> allChildrenMatching: aPattern [
     "Return all the files and folders recursively nested in the receiver and matching the pattern, aPattern"
 
-    ^ self allChildren select: [ :each |  aPattern match: each basename ]
+    ^ self withAllChildren select: [ :each |  aPattern match: each basename ]
 ]
 
 { #category : 'enumerating' }
@@ -862,6 +855,13 @@ AbstractFileReference >> uri [
 	"Convert my path into a file:// type url. For odd characters use %20 notation."
 
 	^ self asZnUrl
+]
+
+{ #category : 'enumerating' }
+AbstractFileReference >> withAllChildren [
+	"Return all the files and folders recursively nested in the receiver"
+
+	^ CollectVisitor breadthFirst: self resolve collect: [:entry | entry reference]
 ]
 
 { #category : 'navigating' }

@@ -33,7 +33,7 @@ FileReferenceTest >> testAllChildren [
 	filesystem createDirectory: '/alpha/beta/delta'.
 	filesystem createDirectory: '/alpha/gamma'.
 	ref := filesystem / 'alpha'.
-	children := ref allChildren.
+	children := ref withAllChildren.
 	"all children returns the nodes: '/alpha', '/alpha/beta',  '/alpha/beta/delta', and '/alpha/gamma'."
 	self assert: children size equals: 4.
 	children

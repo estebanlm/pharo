@@ -90,13 +90,13 @@ FileManipulationTest >> testDirectoryMoveTo [
 	self createFilesIn: firstFolder from: #( src f11 f12 #( d11 f21 f22 #( d21 f31 f32 ) #( d22 f33 f34 ) ) ).
 
 	src := firstFolder / 'src'.
-	count := src allChildren size.
+	count := src withAllChildren size.
 	dest := secondFolder / 'dest'.
 	dest ensureCreateDirectory.
 	f33 := dest / 'src/d11/d22/f33'.
 	src copy moveTo: dest.
 	self deny: src exists.
-	self assert: (dest / 'src') allChildren size equals: count.
+	self assert: (dest / 'src') withAllChildren size equals: count.
 	self assert: f33 exists.
 	self assert: f33 contents equals: 'f33'
 ]
@@ -109,12 +109,12 @@ FileManipulationTest >> testDirectoryMoveToRename [
 	self createFilesIn: firstFolder from: #( src f11 f12 #( d11 f21 f22 #( d21 f31 f32 ) #( d22 f33 f34 ) ) ).
 
 	src := firstFolder / 'src'.
-	count := src allChildren size.
+	count := src withAllChildren size.
 	dest := (secondFolder / 'dest') ensureCreateDirectory / 'renamed'.
 	f33 := dest / 'd11/d22/f33'.
 	src copy moveTo: dest.
 	self deny: src exists.
-	self assert: dest allChildren size equals: count.
+	self assert: dest withAllChildren size equals: count.
 	self assert: f33 exists.
 	self assert: f33 contents equals: 'f33'
 ]

@@ -29,11 +29,6 @@ SettingNode >> <= other [
 	^ self asString <= other asString
 ]
 
-{ #category : 'accessing' }
-SettingNode >> allChildren [
-	^ self model childrenOf: self
-]
-
 { #category : 'menu' }
 SettingNode >> browseDeclaration [
 	"open a browser on the method which defines myself"
@@ -45,7 +40,7 @@ SettingNode >> browseDeclaration [
 SettingNode >> checkForUnknownTarget [
 	self parentNode ifNotNil: [:p | item target ifNil: [item target: p item target].
 		item targetSelector ifNil: [item targetSelector: p item targetSelector]].
-	self allChildren do: [:c | c checkForUnknownTarget]
+	self withAllChildren do: [:c | c checkForUnknownTarget]
 ]
 
 { #category : 'accessing' }
@@ -53,7 +48,7 @@ SettingNode >> contents [
 	^ (self settingDeclaration hasValue and: [ self settingValue = false ])
 		ifTrue: [ OrderedCollection new ]
 		ifFalse: [ contents
-				ifNil: [ contents := self allChildren.
+				ifNil: [ contents := self withAllChildren.
 					self settingDeclaration ordering ifTrue: [ contents := contents asArray sort: self model sortBlock ].
 					contents := self model retainedNodesFromList: contents asOrderedCollection ] ]
 ]
@@ -305,4 +300,9 @@ SettingNode >> updateAccordingTo: aFilter [
 		ifFalse: [
 			self contents do: [ :n | n updateAccordingTo: aFilter].
 			self contents removeAllSuchThat: [ :n | (aFilter keepSettingTreeNode: n) not  and: [n isEmpty]]]
+]
+
+{ #category : 'accessing' }
+SettingNode >> withAllChildren [
+	^ self model childrenOf: self
 ]
