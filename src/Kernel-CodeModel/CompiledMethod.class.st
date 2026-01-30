@@ -21,20 +21,6 @@ CompiledMethod class >> abstractMarker [
 	^ #subclassResponsibility
 ]
 
-{ #category : 'class initialization' }
-CompiledMethod class >> checkBytecodeSetConflictsInMethodsWith: aBlock [
-
-	self allSubInstances
-		detect: aBlock
-		ifFound: [ Warning signal: 'There are existing CompiledMethods with a different encoderClass.' ]
-]
-
-{ #category : 'class initialization' }
-CompiledMethod class >> checkIsValidBytecodeEncoder: aBytecodeEncoderSubclass [
-	(aBytecodeEncoderSubclass inheritsFrom: BytecodeEncoder) ifFalse:
-		[self error: 'A bytecode set encoder is expected to be a subclass of BytecodeEncoder']
-]
-
 { #category : 'constants' }
 CompiledMethod class >> conflictMarker [
 	^ #traitConflict
@@ -48,49 +34,6 @@ CompiledMethod class >> disabledMarker [
 { #category : 'constants' }
 CompiledMethod class >> explicitRequirementMarker [
 	^ #explicitRequirement
-]
-
-{ #category : 'class initialization' }
-CompiledMethod class >> fullFrameSize [  "CompiledMethod fullFrameSize"
-	^ LargeFrame
-]
-
-{ #category : 'instance creation' }
-CompiledMethod class >> headerFlagForEncoder: anEncoderClass [
-	anEncoderClass == PrimaryBytecodeSetEncoderClass ifTrue: [ ^ 0 ].
-	anEncoderClass == SecondaryBytecodeSetEncoderClass ifTrue: [ ^ SmallInteger minVal ].
-	self error: 'The encoder is not one of the two installed bytecode sets'
-]
-
-{ #category : 'class initialization' }
-CompiledMethod class >> initialize [    "CompiledMethod initialize"
-	"Initialize class variables specifying the size of the temporary frame
-	needed to run instances of me."
-
-	SmallFrame := 16.	"Context range for temps+stack"
-	LargeFrame := 56.
-	PrimaryBytecodeSetEncoderClass := nil. "Old encoder was removed"
-	SecondaryBytecodeSetEncoderClass := EncoderForSistaV1
-]
-
-{ #category : 'class initialization' }
-CompiledMethod class >> installPrimaryBytecodeSet: aBytecodeEncoderSubclass [
-	PrimaryBytecodeSetEncoderClass == aBytecodeEncoderSubclass ifTrue:
-		[ ^self ].
-	self checkIsValidBytecodeEncoder: aBytecodeEncoderSubclass.
-	self checkBytecodeSetConflictsInMethodsWith: [:m|
-		m usesPrimaryBytecodeSet and: [m encoderClass ~~ aBytecodeEncoderSubclass]].
-	PrimaryBytecodeSetEncoderClass := aBytecodeEncoderSubclass
-]
-
-{ #category : 'class initialization' }
-CompiledMethod class >> installSecondaryBytecodeSet: aBytecodeEncoderSubclass [
-	PrimaryBytecodeSetEncoderClass == aBytecodeEncoderSubclass ifTrue:
-		[ ^ self ].
-	self checkIsValidBytecodeEncoder: aBytecodeEncoderSubclass.
-	self checkBytecodeSetConflictsInMethodsWith: [ :m |
-		m usesSecondaryBytecodeSet and: [ m encoderClass ~~ aBytecodeEncoderSubclass ] ].
-	SecondaryBytecodeSetEncoderClass := aBytecodeEncoderSubclass
 ]
 
 { #category : 'accessing - class hierarchy' }
@@ -115,12 +58,6 @@ CompiledMethod class >> resetPragmaCache [
 
 	"Useful in bootstrap process"
 	self allInstancesDo: [ :method | method cachePragmas ]
-]
-
-{ #category : 'class initialization' }
-CompiledMethod class >> smallFrameSize [
-
-	^ SmallFrame
 ]
 
 { #category : 'constants' }
