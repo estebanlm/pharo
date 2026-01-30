@@ -11,43 +11,25 @@ The use of bit 25 of the source pointer for file references permits backward com
 "
 Class {
 	#name : 'FilesSourcesManager',
-	#superclass : 'Object',
+	#superclass : 'SourcesManager',
 	#instVars : [
 		'files',
 		'readOnlyQueue',
 		'flushChanges',
 		'exporterClass'
 	],
-	#classVars : [
-		'Default'
-	],
-	#category : 'System-Sources-Sources',
-	#package : 'System-Sources',
+	#category : 'System-Sources-Files-Sources',
+	#package : 'System-Sources-Files',
 	#tag : 'Sources'
 }
-
-{ #category : 'accessing' }
-FilesSourcesManager class >> default [
-
-	^ Default
-]
-
-{ #category : 'accessing' }
-FilesSourcesManager class >> default: anInstance [
-
-	Default := anInstance
-]
 
 { #category : 'class initialization' }
 FilesSourcesManager class >> initialize [
 
-	"Guard since initializing twice would create bugs."
-	self default ifNotNil: [ ^ self ].
-	
-	self default: self new.
+	self beCurrent.
 	
 	"This next line is to add a deprecated global variable. The deprecation happened in Pharo 14 development. We can remove it completly in the future."
-	self class environment at: #SourceFiles put: self default.
+	self class environment at: #SourceFiles put: SourcesManager current.
 	(self class environment bindingOf: #SourceFiles) isDeprecated: true.
 	self deprecatedAliases: #(SourceFileArray)
 ]
@@ -262,6 +244,12 @@ FilesSourcesManager >> isChangesFileInUse [
 	^ self changesFileStream isNotNil or: [ self changesFileStream closed not ]
 ]
 
+{ #category : 'testing' }
+FilesSourcesManager >> isSourcesPresentInSystem [
+
+	^ true
+]
+
 { #category : 'public - file system operations' }
 FilesSourcesManager >> logChange: aString [
 	"Write the argument, aString, onto the changes file."
@@ -413,6 +401,7 @@ FilesSourcesManager >> readStreamAtFileIndex: index atPosition: position ifPrese
 
     ^ result
 ]
+
 { #category : 'printing' }
 FilesSourcesManager >> reportString [
 
@@ -445,6 +434,7 @@ FilesSourcesManager >> saveChangesInFileNamed: aString [
 { #category : 'system startup' }
 FilesSourcesManager >> shutDown [
 
+	super shutDown.
 	self closeSourceFiles
 ]
 

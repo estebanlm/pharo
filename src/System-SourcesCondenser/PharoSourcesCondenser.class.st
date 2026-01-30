@@ -60,7 +60,7 @@ PharoSourcesCondenser >> newSourceNamed: aString [
 	
 	originalSourcesFile copyTo: newSourcesFile.
 	"Use the new sources file"
-	FilesSourcesManager default reset
+	SourcesManager current reset
 ]
 
 { #category : 'accessing' }

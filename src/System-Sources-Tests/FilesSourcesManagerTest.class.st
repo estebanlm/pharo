@@ -20,17 +20,25 @@ FilesSourcesManagerTest >> ensureChangesFileOpenedInProcess [
 	"Ensure the changes file is open"
 
 	| sourcePointer fileIndex filePosition string |
-	sourcePointer :=  thisContext method sourcePointer.
-	fileIndex := FilesSourcesManager default fileIndexFromSourcePointer: sourcePointer.
-	filePosition := FilesSourcesManager default filePositionFromSourcePointer: sourcePointer.
-	
-	string := FilesSourcesManager default
-		readStreamAtFileIndex: fileIndex
-		atPosition: filePosition
-		ifPresent: [ :readStream | (ChunkReadStream on: readStream) next ]
-		ifAbsent: [ nil ].
+	sourcePointer := thisContext method sourcePointer.
+	fileIndex := self globalFilesManager fileIndexFromSourcePointer: sourcePointer.
+	filePosition := self globalFilesManager filePositionFromSourcePointer: sourcePointer.
 
-	self deny: string isNil.
+	string := self globalFilesManager
+		          readStreamAtFileIndex: fileIndex
+		          atPosition: filePosition
+		          ifPresent: [ :readStream | (ChunkReadStream on: readStream) next ]
+		          ifAbsent: [ nil ].
+
+	self deny: string isNil
+]
+
+{ #category : 'helpers' }
+FilesSourcesManagerTest >> globalFilesManager [
+	"This is bad. Tests should not use a global instance"
+
+	SourcesManager current class = FilesSourcesManager ifFalse: [ self error: 'This test can only pass if the sources manager is the FilesSourcesManager.' ].
+	^ SourcesManager current
 ]
 
 { #category : 'tests' }
@@ -49,7 +57,7 @@ FilesSourcesManagerTest >> testAddressRange [
 { #category : 'tests' }
 FilesSourcesManagerTest >> testChangesFileStream [
 
-	self assert: FilesSourcesManager default changesFileStream isNotNil
+	self assert: self globalFilesManager changesFileStream isNotNil
 ]
 
 { #category : 'tests' }
@@ -94,7 +102,7 @@ FilesSourcesManagerTest >> testForkedRead [
 		readSemaphore wait.
 
 		"Read the string that was written in other process."
-		readString := FilesSourcesManager default
+		readString := self globalFilesManager
 			readStreamAtFileIndex: 2 "changes"
 			atPosition: position
 			ifPresent: [ :readStream | (ChunkReadStream on: readStream) next ]
@@ -103,7 +111,7 @@ FilesSourcesManagerTest >> testForkedRead [
 		] fork.
 
 	"Write the string, that will be read in other process."
-	FilesSourcesManager default writeChangesDuring: [ :theFile |
+	self globalFilesManager writeChangesDuring: [ :theFile |
 		theFile cr.
 		position := theFile position.
 		(ChunkWriteStream on: theFile) nextPut: originalString.
@@ -132,7 +140,7 @@ FilesSourcesManagerTest >> testForkedWrite [
 		readSemaphore wait.
 
 		"Write the string, that will be read in other process."
-		FilesSourcesManager default writeChangesDuring: [ :theFile |
+		self globalFilesManager writeChangesDuring: [ :theFile |
 			theFile cr.
 			position := theFile position.
 			(ChunkWriteStream on: theFile) nextPut: originalString.
@@ -146,7 +154,7 @@ FilesSourcesManagerTest >> testForkedWrite [
 	testSemaphore wait.
 
 	"Read the string that was written in other process."
-	readString := FilesSourcesManager default
+	readString := self globalFilesManager
 		readStreamAtFileIndex: 2 "changes"
 		atPosition: position
 		ifPresent: [ :readStream | (ChunkReadStream on: readStream) next ]
@@ -203,11 +211,11 @@ FilesSourcesManagerTest >> testProtocol [
 
 	| okCm notOkCm |
 	okCm := Point >> #dotProduct:.
-	self assert: ((FilesSourcesManager default sourcedDataAt: okCm sourcePointer) beginsWith: 'Point methodsFor: ''point functions''').
-	self assert: (FilesSourcesManager default protocolAt: okCm sourcePointer) equals: 'point functions'.
+	self assert: ((self globalFilesManager sourcedDataAt: okCm sourcePointer) beginsWith: 'Point methodsFor: ''point functions''').
+	self assert: (self globalFilesManager protocolAt: okCm sourcePointer) equals: 'point functions'.
 
 	notOkCm := Behavior >> #superclass.
-	self assert: (FilesSourcesManager default protocolAt: notOkCm sourcePointer) equals: 'accessing - class hierarchy'
+	self assert: (self globalFilesManager protocolAt: notOkCm sourcePointer) equals: 'accessing - class hierarchy'
 ]
 
 { #category : 'tests' }
@@ -230,7 +238,7 @@ FilesSourcesManagerTest >> testSourcePointerFromFileIndexAndPosition [
 { #category : 'tests' }
 FilesSourcesManagerTest >> testSourcesFileStream [
 
-	self assert: FilesSourcesManager default sourcesFileStream isNotNil
+	self assert: self globalFilesManager sourcesFileStream isNotNil
 ]
 
 { #category : 'tests' }

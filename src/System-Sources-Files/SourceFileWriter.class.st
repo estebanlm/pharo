@@ -9,9 +9,8 @@ Class {
 		'successBlock',
 		'failBlock'
 	],
-	#category : 'System-Sources-Sources',
-	#package : 'System-Sources',
-	#tag : 'Sources'
+	#category : 'System-Sources-Files',
+	#package : 'System-Sources-Files'
 }
 
 { #category : 'accessing' }

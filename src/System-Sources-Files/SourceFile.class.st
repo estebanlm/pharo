@@ -7,9 +7,8 @@ Class {
 		'formatVersionClass',
 		'fileName'
 	],
-	#category : 'System-Sources-Sources',
-	#package : 'System-Sources',
-	#tag : 'Sources'
+	#category : 'System-Sources-Files',
+	#package : 'System-Sources-Files'
 }
 
 { #category : 'instance creation' }

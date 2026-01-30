@@ -269,7 +269,7 @@ OpalCompilerTest >> testSavedProtocolInChangesFileIsRight [
 		          protocol: (Protocol named: 'hitching');
 		          install.
 
-	self assert: (FilesSourcesManager default protocolAt: method sourcePointer) equals: 'hitching'.
+	self assert: (SourcesManager current protocolAt: method sourcePointer) equals: 'hitching'.
 	"Cleanup"
 	method removeFromSystem.
 	self deny: (MockForCompilation includesSelector: #foo)
