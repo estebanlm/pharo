@@ -214,7 +214,7 @@ OCProgramNodeTest >> testAllParents [
 	| me parentsOf7 |
 	[ :a | a + 7 ].
 	me := self class >> #testAllParents.
-	parentsOf7 := (me ast allChildren select: [ :n |
+	parentsOf7 := (me ast withAllChildren select: [ :n |
 		               n isLiteralNode and: [ n value = 7 ] ]) first
 		              allParents.
 	self assert: parentsOf7 last selector equals: #+.
@@ -1320,7 +1320,7 @@ OCProgramNodeTest >> testWithAllParents [
 	| me parentsOf7 |
 	[ :a | a + 7 ].
 	me := self class >> #testAllParents.
-	parentsOf7 := (me ast allChildren select: [ :n |
+	parentsOf7 := (me ast withAllChildren select: [ :n |
 		               n isLiteralNode and: [ n value = 7 ] ]) first
 		              withAllParents.
 	self assert: parentsOf7 last value equals: 7.
