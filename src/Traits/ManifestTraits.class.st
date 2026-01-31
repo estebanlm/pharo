@@ -8,10 +8,3 @@ Class {
 	#package : 'Traits',
 	#tag : 'Manifest'
 }
-
-{ #category : 'meta-data - dependency analyser' }
-ManifestTraits class >> manuallyResolvedDependencies [
-
-	<ignoreForCoverage>
-	^ #(#'System-Sources')
-]

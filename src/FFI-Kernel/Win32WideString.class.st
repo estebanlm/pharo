@@ -12,9 +12,8 @@ The rationale is that the kernel should not be tied to UFFI (which depends on th
 Class {
 	#name : 'Win32WideString',
 	#superclass : 'ExternalObject',
-	#category : 'System-Platforms-Windows',
-	#package : 'System-Platforms',
-	#tag : 'Windows'
+	#category : 'FFI-Kernel',
+	#package : 'FFI-Kernel'
 }
 
 { #category : 'instance creation' }

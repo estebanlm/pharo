@@ -150,11 +150,6 @@ PharoBootstrapInitialization class >> initializeCommandLineHandlerAndErrorHandli
 	(Smalltalk class classVariableNamed: 'LastImagePath') value: Smalltalk imagePath. "set the default value"
 	SourcesManager initialize.
 
-	'InitializingFFI' traceCr.
-	"FFI"
-	ExternalObject initialize.
-	ExternalType initialize.
-
 	'Initializing Session Manager' traceCr.
 	SessionManager initialize.
 	SessionManager initializeKernelRegistrations.

@@ -23,6 +23,7 @@ BaselineOfFileSystem >> baseline: spec [
 	<baseline>
 	spec for: #common do: [
 			spec
+				package: 'FFI-Kernel';
 				package: 'FileSystem-Path';
 				package: 'FileSystem-Core';
 				package: 'FileSystem-Disk';
@@ -33,6 +34,6 @@ BaselineOfFileSystem >> baseline: spec [
 				package: 'FileSystem-Tests-Attributes'.
 
 			spec
-				group: 'Core' with: { 'FileSystem-Path'. 'FileSystem-Core'. 'FileSystem-Disk'. 'System-Sources-Files'};
+				group: 'Core' with: {'FFI-Kernel'. 'FileSystem-Path'. 'FileSystem-Core'. 'FileSystem-Disk'. 'System-Sources-Files'};
 				group: 'Tests' with: { 'FileSystem-Core-Tests'. 'FileSystem-Disk-Tests'. 'FileSystem-Tests-Attributes' } ]
 ]
