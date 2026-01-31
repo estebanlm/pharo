@@ -1,3 +1,12 @@
+"
+I am a null source code manager. I will not register anything and will not retrieve anything. 
+
+You can use me to deploy a Pharo application without shipping a .changes and .sources file as long as the application does not access source code. In order to do that you can execute:
+
+```st
+	NoSourcesManager beCurrent
+```
+"
 Class {
 	#name : 'NoSourcesManager',
 	#superclass : 'SourcesManager',
