@@ -160,7 +160,7 @@ zip "${MC_BOOTSTRAP_IMAGE_NAME}.zip" ${MC_BOOTSTRAP_IMAGE_NAME}.*
 echo "[Metacello] Bootstrapping Metacello"
 ${VM} "${MC_BOOTSTRAP_IMAGE_NAME}.image" save ${METACELLO_IMAGE_NAME}
 echo "Loading packages: $(cat hermesMetacelloPackages.txt)"
-${VM} "${METACELLO_IMAGE_NAME}.image" loadHermes $(cat hermesMetacelloPackages.txt) --save --no-fail-on-undeclared
+${VM} "${METACELLO_IMAGE_NAME}.image" loadHermes $(cat hermesMetacelloPackages.txt) --save
 ${VM} "${METACELLO_IMAGE_NAME}.image" st ${BOOTSTRAP_REPOSITORY}/bootstrap/scripts/4-build-scripts/03-bootstrapMonticello.st --save --quit
 git clone https://github.com/pharo-vcs/tonel.git -b "Pharo${PHARO_MAJOR}" "${BOOTSTRAP_CACHE}/tonel"
 ${VM} "${METACELLO_IMAGE_NAME}.image" metacello install --save --signalErrorOnWarning "filetree://${BOOTSTRAP_CACHE}/tonel" Tonel --groups core
