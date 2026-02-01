@@ -1,6 +1,6 @@
 Extension { #name : 'String' }
 
-{ #category : '*System-Platforms-Windows' }
+{ #category : '*FFI-Kernel' }
 String >> asWin32WideString [
 
 	^ Win32WideString fromString: self
