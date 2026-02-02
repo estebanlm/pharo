@@ -259,12 +259,12 @@ ReInteractionDriver >> model: aRBBrowserEnvironment [
 
 { #category : 'execution' }
 ReInteractionDriver >> openPreviewWithChanges: changes [
-
 	| presenter |
+	
 	presenter := (self previewPresenterClass newApplication: self application)
-		             changesFrom: changes scopes: scopes;
-		             refactoring: self refactoring;
-		             yourself.
+		changesFrom: changes scopes: scopes;
+		refactoring: self refactoring;
+		yourself.
 
 	self class shouldPreviewChanges
 		ifTrue: [ presenter openModal ]

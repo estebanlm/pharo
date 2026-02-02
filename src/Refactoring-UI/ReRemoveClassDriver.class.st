@@ -66,12 +66,13 @@ ReRemoveClassDriver >> changes [
 ReRemoveClassDriver >> defaultSelectDialog [
 
 	^ super defaultSelectDialog
-		  extent: 400 @ 1200;
-		  title: 'There are potential breaking changes!';
-		  message: self labelBasedOnBreakingChanges;
-		  items: self breakingChoices;
-		  display: [ :each | each description ];
-		  displayIcon: [ :each | self iconNamed: each systemIconName ]; yourself
+		extent: 400 @ 1200;
+		title: 'There are potential breaking changes!';
+		message: self labelBasedOnBreakingChanges;
+		items: self breakingChoices;
+		display: [ :each | each description ];
+		displayIcon: [ :each | self iconNamed: each systemIconName ]; 
+		yourself
 ]
 
 { #category : 'configuration' }
