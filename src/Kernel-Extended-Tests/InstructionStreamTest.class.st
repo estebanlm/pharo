@@ -104,7 +104,7 @@ InstructionStreamTest >> testNextPcAnswerNextBytecodePcInCaseOfExtension [
 	                >> #newMethodWithALotOfLiteralsToTestExtensions.
 
 	startingPc := methodToTest ast firstPcForNode:
-		              (methodToTest ast allChildren select: [ :e |
+		              (methodToTest ast withAllChildren select: [ :e |
 			               e isMessage ]) anyOne.
 	stream := InstructionStream new method: methodToTest pc: startingPc.
 

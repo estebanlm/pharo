@@ -107,7 +107,7 @@ RBExtractToTemporaryRefactoring >> insertTemporary [
 	(node isNotNil and: [ node isValue ]) ifFalse: [
 		self refactoringError: 'Cannot assign to non-value nodes' ].
 	scope := node methodOrBlockNode.
-	nodeReferences := scope allChildren select: [ :each | each = node ].
+	nodeReferences := scope withAllChildren select: [ :each | each = node ].
 	"Insert the assignment before the first occurrence to be replaced,
 	but in the same scope as the selected expression,
 	even if that first occurrence is in a nested block."

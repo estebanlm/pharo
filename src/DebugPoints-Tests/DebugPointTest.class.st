@@ -741,7 +741,7 @@ DebugPointTest >> testRemoveAfterClassRemoved [
 	| testClassNodes |
 	self compileTestClass.
 	self compileTestClass2.
-	testClassNodes := (testSubclass >> #accessingV4) ast allChildren.
+	testClassNodes := (testSubclass >> #accessingV4) ast withAllChildren.
 
 	dp := DebugPointManager
 		      installNew: BreakDebugPoint
@@ -763,7 +763,7 @@ DebugPointTest >> testRemoveAfterSuperclassRemoved [
 	| testClassNodes |
 	self compileTestClass.
 	self compileTestClass2.
-	testClassNodes := (testSubclass >> #accessingV4) ast allChildren.
+	testClassNodes := (testSubclass >> #accessingV4) ast withAllChildren.
 
 	dp := DebugPointManager
 		      installNew: BreakDebugPoint
@@ -941,7 +941,7 @@ DebugPointTest >> testUpdateNodesForVariableDebugPointAfterRecompilingMethod [
 
 	| ast |
 	"We get the variable node one which the variable breakpoint will be installed"
-	ast := (DummyTestClass >> #id) ast allChildren last.
+	ast := (DummyTestClass >> #id) ast withAllChildren last.
 
 	"Removing a variable breakpoint should not uninstall the breakpoint"
 	dp := DebugPointManager
@@ -969,8 +969,8 @@ DebugPointTest >> testVariableDebugPointNoRemoveAfterSubclassRemoved [
 	<ignoreNotImplementedSelectors: #(accessingId)>
 	self compileTestClass.
 	self compileTestClass2.
-	testClassNode := (testClass >> #accessingId) ast allChildren detect:[:n| n isVariable].
-	testSubclassNode := (testSubclass >> #accessingId) ast allChildren detect:[:n| n isVariable].
+	testClassNode := (testClass >> #accessingId) ast withAllChildren detect:[:n| n isVariable].
+	testSubclassNode := (testSubclass >> #accessingId) ast withAllChildren detect:[:n| n isVariable].
 
 	dp := DebugPointManager
 		      installNew: BreakDebugPoint

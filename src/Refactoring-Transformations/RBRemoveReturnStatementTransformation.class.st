@@ -88,7 +88,7 @@ RBRemoveReturnStatementTransformation >> privateTransform [
 	| methodTree nodesToRemove |
 	methodTree := self definingMethod.
 
-	nodesToRemove := ( methodTree allChildren removeDuplicates
+	nodesToRemove := ( methodTree withAllChildren removeDuplicates
 		select: #isReturn )
 		select: [ :node | node sourceCode = returnValue ].
 

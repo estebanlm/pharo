@@ -101,7 +101,7 @@ RBRemovePragmaTransformation >> privateTransform [
 	| methodTree pragmaNode nodesToRemove |
 	methodTree := self definingMethod.
 	pragmaNode := self parserClass parsePragma: pragma.
-	nodesToRemove := (methodTree allChildren removeDuplicates
+	nodesToRemove := (methodTree withAllChildren removeDuplicates
 		select: #isPragma)
 		select: [ :node | node selector = pragmaNode selector ].
 	nodesToRemove do: [ :node | node parent removePragma: node ].
