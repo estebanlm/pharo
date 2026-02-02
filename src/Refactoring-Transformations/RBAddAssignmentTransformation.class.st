@@ -66,7 +66,7 @@ RBAddAssignmentTransformation >> applicabilityPreconditions [
 			   ('Method named <1s> does not exist' expandMacrosWith: selector)).
 		  (RBCondition
 			   withBlock: [
-				   (self definingMethod withAllChildren
+				   (self definingMethod allChildren
 					    select: [ :each | each isVariable ]
 					    thenCollect: [ :each | each name ]) anySatisfy: [ :e |
 					   e asString = variableName ] ]
@@ -103,7 +103,7 @@ RBAddAssignmentTransformation >> privateTransform [
 		value: (self parserClass parseExpression: value).
 
 	"check whether there are some dependencies in the expression"
-	assignments := (methodTree withAllChildren select: #isAssignment)
+	assignments := (methodTree allChildren select: #isAssignment)
 		select: [ :each | each variable name asString = variableName ].
 	previousNode := assignments detectMax: #stop.
 	previousNode

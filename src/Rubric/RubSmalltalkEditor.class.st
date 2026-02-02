@@ -180,7 +180,7 @@ RubSmalltalkEditor >> bestNodeInString: source at: selectionInterval editingMode
 				ifNone: [ ^aBlock value ]].
 
 		node isFaulty ifTrue: [
-			node withAllChildren size = 1 ifTrue: [
+			node allChildren size = 1 ifTrue: [
 				(aRubEdittingMode parseExpression: (node value padLeftTo: source size))
 					ifNil: [ ^node ]
 					ifNotNil: [ :newNode |

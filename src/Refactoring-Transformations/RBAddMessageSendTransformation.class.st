@@ -104,7 +104,7 @@ RBAddMessageSendTransformation >> privateTransform [
 
 	"if the message requires variables, look for the right variables in this context"
 	variables := messageNode allVariables.
-	assignments := (methodTree withAllChildren select: #isAssignment)
+	assignments := (methodTree allChildren select: #isAssignment)
 		select: [ :each | variables includes: each variable ].
 	previousNode := assignments detectMax: #stop.
 	previousNode

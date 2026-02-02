@@ -108,7 +108,7 @@ OCMessageNode >> isInlineToDo [
 	block isBlock ifFalse: [^ false].
 	block arguments size = 1 ifFalse: [^ false].
 	self arguments first isVariable ifTrue: [
-		(block withAllChildren anySatisfy: [:child |
+		(block allChildren anySatisfy: [:child |
 			child isAssignment and: [
 				child variable = self arguments first ]]) ifTrue: [ ^false ].
 	].

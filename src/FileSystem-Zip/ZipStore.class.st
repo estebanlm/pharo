@@ -24,7 +24,7 @@ ZipStore >> close [
 	| archive fs stream |
 	archive := ZipArchive new.
 	fs := FileSystem store: self.
-	fs root withAllChildren do:
+	fs root allChildren do:
 		[ :each |
 		each isFile ifTrue:
 			[ each readStreamDo:

@@ -848,7 +848,7 @@ SettingBrowser >> viewedLabelOfSetting: aSettingDeclaration [
 	node := self settingNodeOfDeclaration: aSettingDeclaration.
 	^ node
 		ifNil: [aSettingDeclaration label]
-		ifNotNil: [(node withAllChildren notEmpty and: [aSettingDeclaration hasValue])
+		ifNotNil: [(node allChildren notEmpty and: [aSettingDeclaration hasValue])
 				ifTrue: [aSettingDeclaration label, '...']
 				ifFalse: [aSettingDeclaration label]]
 ]

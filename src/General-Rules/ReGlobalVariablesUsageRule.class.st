@@ -45,7 +45,7 @@ ReGlobalVariablesUsageRule class >> ruleName [
 
 { #category : 'running' }
 ReGlobalVariablesUsageRule >> check: aMethod forCritiquesDo: aCriticBlock [
-	aMethod ast withAllChildren
+	aMethod ast allChildren
 		select: [ :node |
 				node isGlobalVariable and: [
 					node variable isGlobalClassNameBinding not and: [

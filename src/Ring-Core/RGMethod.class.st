@@ -514,7 +514,7 @@ RGMethod >> pvtUntagFrom: aSymbol [
 { #category : 'scanning' }
 RGMethod >> readsRef: literalAssociation [
 	"Answer whether the receiver loads the argument."
-	^ self ast withAllChildren anySatisfy: [:each |
+	^ self ast allChildren anySatisfy: [:each |
 		each isVariable and: [ each name = literalAssociation key ]]
 
 	"self ast nodesDo: [ :node |

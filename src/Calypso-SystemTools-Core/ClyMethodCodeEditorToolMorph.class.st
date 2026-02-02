@@ -186,7 +186,7 @@ ClyMethodCodeEditorToolMorph >> findAnySelectorInSourceCode: selectors [
 	foundNode := ast sendNodes
 		detect: [:each | selectors includes: (foundSelector := each selector) ]
 		ifNone: [
-			ast withAllChildren
+			ast allChildren
 				detect: [:each | each isLiteralNode and: [ selectors includes: each value ]]
 				ifFound: [:literal | ^ literal sourceInterval ].
 			^0 to: -1].
