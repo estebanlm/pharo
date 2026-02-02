@@ -55,6 +55,13 @@ ReIsValidInstanceVariableName >> classSide: aBoolean [
 	classSide := aBoolean
 ]
 
+{ #category : 'initialization' }
+ReIsValidInstanceVariableName >> initialize [
+
+	super initialize.
+	classSide := false
+]
+
 { #category : 'accessing' }
 ReIsValidInstanceVariableName >> violationMessageOn: aStream [
 
