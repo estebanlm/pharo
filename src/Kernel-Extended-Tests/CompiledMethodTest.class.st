@@ -914,11 +914,11 @@ CompiledMethodTest >> testUndeclaredReparationWithSharedWasCrashingOnOldVM1001 [
 { #category : 'tests - testing' }
 CompiledMethodTest >> testUsesUndeclareds [
 	| method |
-	method := self class compiler compile: 'x ^x'.
+	method := self someClass compiler compile: 'x ^x'.
 	self deny: method usesUndeclareds.
-	method := self class compiler permitFaulty: true; compile: 'z ^z'.
+	method := self someClass compiler permitFaulty: true; compile: 'z ^z'.
 	self assert: method usesUndeclareds.
-	method := self class compiler permitFaulty: true; compile: 'msg self in: [ :anObject | var1 := 1 ]'.
+	method := self someClass compiler permitFaulty: true; compile: 'msg self in: [ :anObject | var1 := 1 ]'.
 	self assert: method usesUndeclareds
 ]
 
@@ -991,12 +991,12 @@ CompiledMethodTest >> testWritesUndeclared [
 	| method |
 	
 	"x is an ivar"
-	method := self class compiler compile: 'x ^ x := 0'.
+	method := self someClass compiler compile: 'x ^ x := 0'.
 	self deny: method usesUndeclareds.
 	self assert: (self executeMethod: method) equals: 0.
 
 	"undeclaredxyz is not declared"
-	method := self class compiler permitFaulty: true; compile: 'z ^ undeclaredxyz := 1'.
+	method := self someClass compiler permitFaulty: true; compile: 'z ^ undeclaredxyz := 1'.
 	self assert: method usesUndeclareds.
 	self should: [ self executeMethod: method ] raise: UndeclaredVariableWrite.
 	self
@@ -1007,7 +1007,7 @@ CompiledMethodTest >> testWritesUndeclared [
 		equals: 1.
 
 	"check same behavior in blocks"
-	method := self class compiler permitFaulty: true; compile: 'msg ^ self in: [ :anObject | undeclaredxyz := 2 ]'.
+	method := self someClass compiler permitFaulty: true; compile: 'msg ^ self in: [ :anObject | undeclaredxyz := 2 ]'.
 	self assert: method usesUndeclareds.
 	self should: [ self executeMethod: method ] raise: UndeclaredVariableWrite.
 	self
