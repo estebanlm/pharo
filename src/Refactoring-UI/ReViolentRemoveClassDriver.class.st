@@ -63,7 +63,8 @@ ReViolentRemoveClassDriver >> defaultSelectDialog [
 		  message: self labelBasedOnBreakingChanges;
 		  items: self breakingChoices;
 		  display: [ :each | each description ];
-		  displayIcon: [ :each | self iconNamed: each systemIconName ]; yourself
+		  displayIcon: [ :each | self iconNamed: each systemIconName ]; 
+yourself
 ]
 
 { #category : 'configuration' }

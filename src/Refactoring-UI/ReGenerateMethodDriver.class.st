@@ -58,9 +58,9 @@ ReGenerateMethodDriver >> refactoringClass [
 
 { #category : 'execution' }
 ReGenerateMethodDriver >> runRefactoring [
-
 	| dialog selection |
-	"I do not use defaultSelectDialog because it is used mainly for choices selection 
+	
+"I do not use defaultSelectDialog because it is used mainly for choices selection 
 	when breaking changes. Here this is for doing something else. "
 
 	dialog := SpSelectMultipleDialog newApplication: self application.
@@ -77,6 +77,7 @@ ReGenerateMethodDriver >> runRefactoring [
 	selectedVariables := selection.
 	self configureRefactoring.
 	self applyChanges.
+	
 	^ true
 ]
 
