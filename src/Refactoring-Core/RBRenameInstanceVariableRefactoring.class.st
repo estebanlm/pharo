@@ -73,11 +73,10 @@ RBRenameInstanceVariableRefactoring >> addNewAccessors [
 RBRenameInstanceVariableRefactoring >> applicabilityPreconditions [
 
 	^ {
-		  (ReIsValidInstanceVariableName name: newName).
+		  self preconditionisValidInstanceVariableName.
 		  self preconditionDirectlyDefinesVariable.
 		  (ReIsVariableNotDefinedInHierarchy name: newName class: class).
-		  (ReNameIsGlobalCondition new model: self model className: newName)
-			  not }
+		  (ReNameIsGlobalCondition new model: self model className: newName) not }
 ]
 
 { #category : 'refactoring' }
