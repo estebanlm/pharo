@@ -141,6 +141,12 @@ EpMonitor class >> shutDown: isImageQuitting [
 				self current sessionStore flush. ]
 ]
 
+{ #category : 'system startup' }
+EpMonitor class >> startUp: isImageLaunching [
+
+	(isImageLaunching and: [ self hasCurrent ]) ifTrue: [ self current imageRestarted ]
+]
+
 { #category : 'private' }
 EpMonitor >> addEvent: anEvent [
 
@@ -360,6 +366,13 @@ EpMonitor >> enabled: aBoolean [
 	aBoolean
 		ifTrue: [ self enable ]
 		ifFalse: [ self disable ]
+]
+
+{ #category : 'private' }
+EpMonitor >> imageRestarted [
+	"When the image restart we tell the store to check if it needs to be reseted."
+
+	self log store imageRestarted
 ]
 
 { #category : 'initialization' }

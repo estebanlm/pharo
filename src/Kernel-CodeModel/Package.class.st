@@ -603,8 +603,9 @@ Package >> removeEmptyTags [
 Package >> removeFromSystem [
 	"Copy to not remove collection over which we are iterating."
 
-	self tags copy do: [ :tag | tag removeFromSystem ].
-	self extensionMethods do: [ :method | method removeFromSystem ].
+	SourcesManager current deferFlushDuring: [
+			self tags copy do: [ :tag | tag removeFromSystem ].
+			self extensionMethods do: [ :method | method removeFromSystem ] ].
 
 	self organizer unregisterPackage: self
 ]

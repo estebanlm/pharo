@@ -153,8 +153,6 @@ SessionManager class >> initializeKernelRegistrations [
 		registerSystemClassNamed: #Delay atPriority: 20;
 		registerSystemClassNamed: #ProcessorScheduler atPriority: 30;
 		registerSystemClassNamed: #OSPlatform atPriority: 50;
-		registerSystemClassNamed: #ExternalObject atPriority: 60;
-		registerSystemClassNamed: #FFIBackend atPriority: 60;
 		registerSystemClassNamed: #File atPriority: 90;
 		registerSystemClassNamed: #SmalltalkImage atPriority: 90;
 		registerSystemClassNamed: #SourcesManager; 

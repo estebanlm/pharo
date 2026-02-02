@@ -235,6 +235,8 @@ ShiftClassBuilder >> createClass [
 	
 	"Since Traits might add some methods in #classCreated:, we need to copy the protocols before we add them."
 	self oldClass ifNotNil: [
+		"Initialize the method dictionary at the right size to avoid growing it later."
+		newClass methodDict: (MethodDictionary new: oldClass methodDict size). 
 		self copyProtocols.
 		self newClass commentSourcePointer: self oldClass commentSourcePointer ].
 

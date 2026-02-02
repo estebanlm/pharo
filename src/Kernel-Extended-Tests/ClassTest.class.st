@@ -240,8 +240,9 @@ ClassTest >> testCommentSourcePointer [
 
 { #category : 'tests - accessing - comments' }
 ClassTest >> testCommentStamp [
-	self assert: Object commentStamp equals: ''.
-	self assert: Object class commentStamp equals: ''.
+
+	self denyEmpty: Object commentStamp.
+	self denyEmpty: Object class commentStamp
 ]
 
 { #category : 'tests' }

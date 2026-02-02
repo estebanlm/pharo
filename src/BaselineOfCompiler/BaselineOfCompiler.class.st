@@ -27,6 +27,7 @@ BaselineOfCompiler >> baseline: spec [
 				package: 'Collections-Arithmetic';
 				package: 'Collections-Atomic';
 				package: 'Collections-Stack';
+				package: 'ClassDefinitionPrinters';
 				package: 'CodeExport';
 				package: 'CodeImport';
 				package: 'CodeImport-Commands';
@@ -47,7 +48,7 @@ BaselineOfCompiler >> baseline: spec [
 			spec
 				group: 'Core'
 				with:
-					{ 'AST-Core'. 'Collections-Arithmetic'. 'Collections-Atomic'. 'Collections-Stack'. 'CodeExport'. 'CodeImport'. 'CodeImport-Commands'. 'DebugInfo'.
+					{ 'AST-Core'. 'Collections-Arithmetic'. 'Collections-Atomic'. 'Collections-Stack'. 'ClassDefinitionPrinters'. 'CodeExport'. 'CodeImport'. 'CodeImport-Commands'. 'DebugInfo'.
 					'OpalCompiler-Core'. 'ParseTreeRewriter'. 'Deprecation' };
 				group: 'Tests'
 				with:

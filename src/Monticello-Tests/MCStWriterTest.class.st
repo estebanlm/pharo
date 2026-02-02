@@ -45,21 +45,23 @@ MCStWriterTest >> assertMethodChunkIsWellFormed: chunk [
 
 { #category : 'data' }
 MCStWriterTest >> expectedClassDefinitionA [
- ^ '
+
+	^ '
 MCMock subclass: #MCMockClassA
 	instanceVariableNames: ''ivar''
 	classVariableNames: ''CVar InitializationOrder''
 	poolDictionaries: ''''
 	category: ''MonticelloMocks''!
 
-!MCMockClassA commentStamp: '''' prior: 0!
+!MCMockClassA commentStamp: ''' , MCMockClassA commentStamp , ''' prior: 0!
 This is a mock class. The Monticello tests manipulated it to simulate a developer modifying code in the image.!
 '
 ]
 
 { #category : 'data' }
 MCStWriterTest >> expectedClassDefinitionB [
- ^ '
+
+	^ '
 MCMock subclass: #MCMockClassB
 	instanceVariableNames: ''ivarb''
 	classVariableNames: ''CVar''
@@ -69,7 +71,7 @@ MCMock subclass: #MCMockClassB
 MCMockClassB class
 	instanceVariableNames: ''ciVar''!
 
-!MCMockClassB commentStamp: '''' prior: 0!
+!MCMockClassB commentStamp: ''' , MCMockClassB commentStamp , ''' prior: 0!
 This comment has a bang!! Bang!! Bang!!!
 '
 ]
