@@ -1,53 +1,54 @@
 "
-This is a variation on StandardSourceFileArray that provides a larger maximum changes file size.
+I am a sources manager saving and retrieving code in a .sources and a .changes file. 
 
-The available address space for source pointers in a traditional CompiledMethod is 16r1000000 through 16r4FFFFFF. StandardSourceFileArray maps positions in the sources file to address range 16r1000000 through 16r1FFFFFF and 16r3000000 through 16r3FFFFFF, and positions in the changes file to address range 16r2000000 through 16r2FFFFFF and 16r4000000 through 16r4FFFFFF. This permits a maximum file size of 16r2000000 (32MB) for both the sources file and the changes file.
+.sources file contains the code of Pharo while the .changes file contains the code compiled in the Pharo environment.
+
+## Storing informations
+
+For each entities complied we will save a preambul with metadatas such as the methods protocol and the source code.
+The entities will store a source pointer that is used to know if the source code is stored in the .sources or .changes and the position of the source code beginning.
+Since we access the source code more than the metadata it is more effective.
+The format of the exporter is Chunk format (See the package Code-Export)
+
+## Source pointers
+
+I maps positions in the sources file to address range 16r1000000 through 16r1FFFFFF and 16r3000000 through 16r3FFFFFF, and positions in the changes file to address range 16r2000000 through 16r2FFFFFF and 16r4000000 through 16r4FFFFFF. This permits a maximum file size of 16r2000000 (32MB) for both the sources file and the changes file.
 
 This implementation extends the source pointer address space using bit 25 of the source pointer to identify the external sources and changes files, with the remaining high order bits treated as address extension. This limits the number of external file references to two (the traditional sources and changes files). If additional external file references are needed in the future, some higher order bits in the source pointer address space should be allocated for that purpose.
 
 The use of bit 25 of the source pointer for file references permits backward compatibility with StandardSourceFileArray, with essentially unlimited address space expansion for the sources and changes files.
 
+## Implementation details
 
+In order to avoid concurency problems I use a queue to manage the accesses. 
+
+I can have multiple modes:
+- Read/Write
+- Read only 
+- No source at all
+
+This will depend on the state of the sources and changes stream state. If they are nil, we consider there is no source. If they are read only, we are in read only. Else we are in read/write.
 "
 Class {
 	#name : 'FilesSourcesManager',
-	#superclass : 'Object',
+	#superclass : 'SourcesManager',
 	#instVars : [
 		'files',
 		'readOnlyQueue',
 		'flushChanges',
 		'exporterClass'
 	],
-	#classVars : [
-		'Default'
-	],
-	#category : 'System-Sources-Sources',
-	#package : 'System-Sources',
-	#tag : 'Sources'
+	#category : 'System-Sources-Files',
+	#package : 'System-Sources-Files'
 }
-
-{ #category : 'accessing' }
-FilesSourcesManager class >> default [
-
-	^ Default
-]
-
-{ #category : 'accessing' }
-FilesSourcesManager class >> default: anInstance [
-
-	Default := anInstance
-]
 
 { #category : 'class initialization' }
 FilesSourcesManager class >> initialize [
 
-	"Guard since initializing twice would create bugs."
-	self default ifNotNil: [ ^ self ].
-	
-	self default: self new.
+	self beCurrent.
 	
 	"This next line is to add a deprecated global variable. The deprecation happened in Pharo 14 development. We can remove it completly in the future."
-	self class environment at: #SourceFiles put: self default.
+	self class environment at: #SourceFiles put: SourcesManager current.
 	(self class environment bindingOf: #SourceFiles) isDeprecated: true.
 	self deprecatedAliases: #(SourceFileArray)
 ]
@@ -262,6 +263,12 @@ FilesSourcesManager >> isChangesFileInUse [
 	^ self changesFileStream isNotNil or: [ self changesFileStream closed not ]
 ]
 
+{ #category : 'testing' }
+FilesSourcesManager >> isSourcesPresentInSystem [
+
+	^ true
+]
+
 { #category : 'public - file system operations' }
 FilesSourcesManager >> logChange: aString [
 	"Write the argument, aString, onto the changes file."
@@ -273,7 +280,9 @@ FilesSourcesManager >> logChange: aString [
 				changesFile
 					cr;
 					cr.
-				(ChunkWriteStream on: changesFile) nextPut: aString.
+				(ChunkWriteStream on: changesFile)
+					flushChanges: flushChanges;
+					nextPut: aString.
 				position ]
 		onSuccess: [ :sourcePointer | "Ignore" ]
 		onFail: [ "Ignore" ]
@@ -413,6 +422,7 @@ FilesSourcesManager >> readStreamAtFileIndex: index atPosition: position ifPrese
 
     ^ result
 ]
+
 { #category : 'printing' }
 FilesSourcesManager >> reportString [
 
@@ -445,6 +455,7 @@ FilesSourcesManager >> saveChangesInFileNamed: aString [
 { #category : 'system startup' }
 FilesSourcesManager >> shutDown [
 
+	super shutDown.
 	self closeSourceFiles
 ]
 

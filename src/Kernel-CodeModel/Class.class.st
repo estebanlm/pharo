@@ -375,7 +375,7 @@ Class >> comment [
 
 	^ self commentSourcePointer
 		  ifNil: [ '' ]
-		  ifNotNil: [ :ptr | FilesSourcesManager default sourceCodeAt: ptr ]
+		  ifNotNil: [ :ptr | SourcesManager current sourceCodeAt: ptr ]
 ]
 
 { #category : 'accessing - comment' }
@@ -394,7 +394,7 @@ Class >> comment: aString stamp: aStamp [
 
 	aString string = oldComment string ifTrue: [ ^ self ].
 
-	FilesSourcesManager default writeComment: aString stamp: aStamp  of: self.
+	SourcesManager current writeComment: aString stamp: aStamp  of: self.
 
 	self codeChangeAnnouncer
 		class: self
@@ -419,7 +419,7 @@ Class >> commentStamp [
 
 	^ self commentSourcePointer
 		  ifNil: [ '' ]
-		  ifNotNil: [:sourcePointer | FilesSourcesManager default commentTimeStampAt: sourcePointer ]
+		  ifNotNil: [ :sourcePointer | SourcesManager current commentTimeStampAt: sourcePointer ]
 ]
 
 { #category : 'accessing - comment' }
@@ -821,7 +821,7 @@ Class >> removeFromSystem: logged [
 	self deprecatedAliases do: [ :alias | self environment at: alias ifPresent: [ :class | class = self ifTrue: [ self environment removeKey: alias ] ] ].
 	self obsolete.
 	logged ifTrue: [ 
-		FilesSourcesManager default writeClassRemoved: self.
+		SourcesManager current writeClassRemoved: self.
 		self codeChangeAnnouncer  announce: (ClassRemoved class: self) ]
 ]
 

@@ -9,7 +9,11 @@ Class {
 		'stream',
 		'job',
 		'remoteStringMap',
-		'sourceStreams'
+		'sourceStreams',
+		'condensationStamp'
+	],
+	#classVars : [
+		'ConserveTimestamps'
 	],
 	#category : 'System-SourcesCondenser',
 	#package : 'System-SourcesCondenser'
@@ -19,6 +23,19 @@ Class {
 PharoChangesCondenser class >> condense [
 	^ self new
 		condense
+]
+
+{ #category : 'accessing' }
+PharoChangesCondenser class >> conserveTimestamp [
+	"It takes a lot of time to access the timestamp of all methods in the sources file, so by default we do not save a new timestamp because the Pharo Boostrap happens in a few minutes, there is no need to save at the second."
+
+	^ ConserveTimestamps ifNil: [ ConserveTimestamps := false ]
+]
+
+{ #category : 'accessing' }
+PharoChangesCondenser class >> conserveTimestamp: aBoolean [
+
+	ConserveTimestamps := aBoolean
 ]
 
 { #category : 'private - 3 installing' }
@@ -40,16 +57,24 @@ PharoChangesCondenser >> basicCondense [
 	stream flush
 ]
 
+{ #category : 'accessing' }
+PharoChangesCondenser >> condensationStamp [
+	"Used if we do not conserve the timestamp of the methods in the system"
+
+	^ condensationStamp ifNil: [ condensationStamp := DateAndTime now printString ]
+]
+
 { #category : 'public' }
 PharoChangesCondenser >> condense [
+
+	SourcesManager current class = FilesSourcesManager ifFalse: [ self error: 'The condenser can work only in the current source manager is the files manager.' ].
 	job := [
-		newChangesFile writeStreamDo: [ :aStream |
-			  stream := aStream.
-			  self basicCondense ].
-  		self
-        installNewChangesFile;
-  		  reset
-    ] asJob.
+		       newChangesFile writeStreamDo: [ :aStream |
+				       stream := aStream.
+				       self basicCondense ].
+		       self
+			       installNewChangesFile;
+			       reset ] asJob.
 
 	job
 		title: 'Condensing Changes';
@@ -94,11 +119,11 @@ PharoChangesCondenser >> initialize [
 { #category : 'private - 3 installing' }
 PharoChangesCondenser >> installNewChangesFile [
 
-	FilesSourcesManager default changesFileStream close.
+	SourcesManager current changesFileStream close.
 	self backupOldChanges.
 	self originalFile ensureDelete.
 	newChangesFile moveTo: self originalFile.
-	FilesSourcesManager default reset
+	SourcesManager current reset
 ]
 
 { #category : 'helper' }
@@ -134,20 +159,19 @@ PharoChangesCondenser >> reset [
 PharoChangesCondenser >> shouldCondenseMethod: aMethod [
 	"Only write methods with changes in the current file (not .sources)"
 
-	^ (FilesSourcesManager default fileIndexFromSourcePointer: aMethod sourcePointer) == 2
+	^ (SourcesManager current fileIndexFromSourcePointer: aMethod sourcePointer) == 2
 ]
 
 { #category : 'private - 1 writing' }
 PharoChangesCondenser >> shouldWriteClassComment: commentRemoteString [
 
-	^ commentRemoteString notNil
-		and: [ (FilesSourcesManager default fileIndexFromSourcePointer: commentRemoteString) ~= 1 ]
+	^ commentRemoteString isNotNil and: [ (SourcesManager current fileIndexFromSourcePointer: commentRemoteString) ~= 1 ]
 ]
 
 { #category : 'private - 2 swapping' }
 PharoChangesCondenser >> sourcePointerFor: remoteString [
 
-	^ FilesSourcesManager default sourcePointerFromFileIndex: remoteString first andPosition: remoteString second
+	^ SourcesManager current sourcePointerFromFileIndex: remoteString first andPosition: remoteString second
 ]
 
 { #category : 'private - 2 swapping' }
@@ -196,6 +220,22 @@ PharoChangesCondenser >> temporaryFile [
 	^ (FileLocator changes , 'new') nextVersion
 ]
 
+{ #category : 'accessing' }
+PharoChangesCondenser >> timestampForClass: aClass [
+	"It takes a lot of time to access the timestamp of all methods in the sources file, so by default we do not save a new timestamp because the Pharo Boostrap happens in a few minutes, there is no need to save at the second."
+
+	self class conserveTimestamp ifFalse: [ ^ self condensationStamp ].
+	^ aClass commentStamp
+]
+
+{ #category : 'accessing' }
+PharoChangesCondenser >> timestampForMethod: aMethod [
+	"It takes a lot of time to access the timestamp of all methods in the sources file, so by default we do not save a new timestamp because the Pharo Boostrap happens in a few minutes, there is no need to save at the second."
+
+	self class conserveTimestamp ifFalse: [ ^ self condensationStamp ].
+	^ aMethod timeStamp
+]
+
 { #category : 'private - 1 writing' }
 PharoChangesCondenser >> writeClassComment: aClass [
 
@@ -208,7 +248,7 @@ PharoChangesCondenser >> writeClassComment: aClass [
 			strm
 				nextPutAll: aClass name;
 				nextPutAll: ' commentStamp: '.
-			stamp := aClass commentStamp ifNil: [ '<historical>' ].
+			stamp := (self timestampForClass: aClass).
 			stamp storeOn: strm ].
 
 	self writeRemoteString: aClass comment for: aClass
@@ -218,18 +258,18 @@ PharoChangesCondenser >> writeClassComment: aClass [
 PharoChangesCondenser >> writeMethodSource: aMethod [
 
 	self nextCommentChunkDo: [ :strm |
-		strm
-			nextPutAll: aMethod methodClass name;
-			nextPutAll: ' methodsFor: ';
-			store: aMethod protocolName asString;
-			nextPutAll: ' stamp: ';
-			store: aMethod timeStamp ].
+			strm
+				nextPutAll: aMethod methodClass name;
+				nextPutAll: ' methodsFor: ';
+				store: aMethod protocolName asString;
+				nextPutAll: ' stamp: ';
+				store: (self timestampForMethod: aMethod) ].
 
-	self
-		writeRemoteString: aMethod sourceCode
-		for: aMethod.
+	self writeRemoteString: aMethod sourceCode for: aMethod.
 
-	stream nextPutAll: ' !'; cr
+	stream
+		nextPutAll: ' !';
+		cr
 ]
 
 { #category : 'private - 1 writing' }

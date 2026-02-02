@@ -150,7 +150,7 @@ CodeImporter >> file: aFileStream [
 { #category : 'evaluating' }
 CodeImporter >> flushChangesFile [
 
-	logSource ifTrue: [ FilesSourcesManager default ensureFlushing ]
+	logSource ifTrue: [ SourcesManager current ensureFlushing ]
 ]
 
 { #category : 'initialization' }

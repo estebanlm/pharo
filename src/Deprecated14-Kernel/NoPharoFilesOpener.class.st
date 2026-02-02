@@ -16,14 +16,21 @@ To get back to the normal situation, execute
 Class {
 	#name : 'NoPharoFilesOpener',
 	#superclass : 'PharoFilesOpener',
-	#category : 'System-Sources-Utilities',
-	#package : 'System-Sources',
-	#tag : 'Utilities'
+	#category : 'Deprecated14-Kernel',
+	#package : 'Deprecated14-Kernel'
 }
 
 { #category : 'singleton' }
 NoPharoFilesOpener class >> install [
-	Default := self new
+
+	NoSourcesManager beCurrent
+]
+
+{ #category : 'testing' }
+NoPharoFilesOpener class >> isDeprecated [
+	"Use `NoSourcesManager beCurrent instead."
+
+	^ true
 ]
 
 { #category : 'public' }
