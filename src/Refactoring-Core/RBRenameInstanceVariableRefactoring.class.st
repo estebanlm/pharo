@@ -115,6 +115,14 @@ RBRenameInstanceVariableRefactoring >> preconditionDirectlyDefinesVariable [
 			   instanceVariables: { variableName }
 ]
 
+{ #category : 'preconditions' }
+RBRenameInstanceVariableRefactoring >> preconditionisValidInstanceVariableName [
+
+	| classSide |
+	classSide := class isMeta.
+	^ ReIsValidInstanceVariableName name: newName classSide: classSide
+]
+
 { #category : 'transforming' }
 RBRenameInstanceVariableRefactoring >> privateTransform [
 	renameAccessors ifTrue: [

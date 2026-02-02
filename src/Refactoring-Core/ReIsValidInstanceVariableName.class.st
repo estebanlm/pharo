@@ -12,6 +12,14 @@ Class {
 	#tag : 'Conditions'
 }
 
+{ #category : 'utilities' }
+ReIsValidInstanceVariableName class >> name: aString classSide: aBoolean [
+
+	^ self new
+		  name: aString;
+		  classSide: aBoolean
+]
+
 { #category : 'checking' }
 ReIsValidInstanceVariableName >> check [
 
