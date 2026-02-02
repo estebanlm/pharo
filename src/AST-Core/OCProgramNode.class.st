@@ -120,9 +120,10 @@ OCProgramNode >> allArgumentVariables [
 
 { #category : 'iterating' }
 OCProgramNode >> allChildren [
-	" Alias for withAllChildren. Includes self and comments"
 	
-	^ self withAllChildren 
+	^ OrderedCollection streamContents: [ :stream | 
+		self childrenAndComments do: [ :child | 
+			child nodesDo: [ stream nextPut: child ] ] ]
 ]
 
 { #category : 'accessing' }
