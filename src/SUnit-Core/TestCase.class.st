@@ -723,6 +723,13 @@ TestCase >> failureLog [
 	^ self class failureLog
 ]
 
+{ #category : 'initialization' }
+TestCase >> initialize [ 
+
+	<ignoreUnusedVariables: #( #temporaryDirectory )>
+	super initialize
+]
+
 { #category : 'private' }
 TestCase >> instanceVariablesToKeep [
 	^ #('testSelector')

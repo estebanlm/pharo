@@ -65,6 +65,13 @@ SomeClassForCompiledMethodTests >> deprecatedMethod4 [
 						-> '`@receiver deprecatedMethod4'
 ]
 
+{ #category : 'initialization' }
+SomeClassForCompiledMethodTests >> initialize [ 
+
+	<ignoreUnusedVariables: #( #x #y #class )>
+	super initialize
+]
+
 { #category : 'examples - linesofcode' }
 SomeClassForCompiledMethodTests >> locComplex [
 

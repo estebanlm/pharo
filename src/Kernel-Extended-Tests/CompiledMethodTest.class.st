@@ -8,8 +8,6 @@ Class {
 	#name : 'CompiledMethodTest',
 	#superclass : 'ClassTestCase',
 	#instVars : [
-		'x',
-		'y',
 		'class',
 		'someClass'
 	],
