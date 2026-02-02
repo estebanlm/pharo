@@ -149,16 +149,21 @@ PBAbstractImageBuilder >> bindingOf: aName [
 
 { #category : 'running' }
 PBAbstractImageBuilder >> bootstrap [
+	"During the bootstrap we disable the assertions for speed."
 
-	self
-		initializeBootstrapEnvironment;
-		createVMStubs;
-		flushNewSpace;
-		createInitialObjects;
-		createClasses;
-		installMethods;
-		installExtensionMethods;
-		initializeImage
+	| oldCode |
+	oldCode := (Object >> #assert:) sourceCode.
+	Object compile: 'assert: arg "Do nothing during the bootstrap"'.
+	[
+		self
+			initializeBootstrapEnvironment;
+			createVMStubs;
+			flushNewSpace;
+			createInitialObjects;
+			createClasses;
+			installMethods;
+			installExtensionMethods;
+			initializeImage ] ensure: [ Object compile: oldCode ]
 ]
 
 { #category : 'accessing' }

@@ -8,6 +8,9 @@ symbols
 Class {
 	#name : 'ChunkWriteStream',
 	#superclass : 'DecoratorStream',
+	#instVars : [
+		'flushChanges'
+	],
 	#category : 'CodeExport',
 	#package : 'CodeExport'
 }
@@ -15,7 +18,7 @@ Class {
 { #category : 'writing' }
 ChunkWriteStream >> afterNexPut [
 
-	decoratedStream flush
+	flushChanges ifTrue: [ decoratedStream flush ]
 ]
 
 { #category : 'writing' }
@@ -65,6 +68,19 @@ ChunkWriteStream >> duplicateTerminatorMarkOn: aString [
 	newStringStream nextPut: self terminatorMark. "one extra"
 
 	^ newStringStream contents
+]
+
+{ #category : 'accessing' }
+ChunkWriteStream >> flushChanges: aBoolean [
+
+	flushChanges := aBoolean
+]
+
+{ #category : 'initialization' }
+ChunkWriteStream >> initialize [
+
+	super initialize.
+	flushChanges := true
 ]
 
 { #category : 'accessing' }

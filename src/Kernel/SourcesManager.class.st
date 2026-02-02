@@ -1,3 +1,15 @@
+"
+I am an abstract class to manage sources in Pharo.
+
+I define the API a sources manager should have and hold the current sources manager.
+
+I can have different subclasses with different ways to store the source code:
+- A null sources manager
+- A sources manager saving the code in files
+- A source manager saving the code in a database...
+
+For more detail, check my subclasses
+"
 Class {
 	#name : 'SourcesManager',
 	#superclass : 'Object',
@@ -35,8 +47,9 @@ SourcesManager class >> current: anObject [
 
 { #category : 'class initialization' }
 SourcesManager class >> initialize [
+	"Ensure we have a sources manager but do not force it"
 
-	NoSourcesManager beCurrent
+	self current ifNil: [ NoSourcesManager beCurrent ]
 ]
 
 { #category : 'testing' }
