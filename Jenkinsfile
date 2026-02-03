@@ -163,39 +163,30 @@ def bootstrapImage(architectures){
             shell "BUILD_NUMBER=${BUILD_NUMBER} BOOTSTRAP_ARCH=${architecture} bash ./bootstrap/scripts/3-prepare.sh"
           }
 
-	      stage("Tests-ISO-SUnit") {
-	        timeout(35) {
-	          dir(env.STAGE_NAME) {
-	            try {
-	                def PHARO_MAJOR = shellOutput('git describe --tags --first-parent | cut -d\'-\' -f 1 | cut -c 2- | cut -d\'.\' -f 1-1')
-	                def PHARO_MINOR = shellOutput('git describe --tags --first-parent | cut -d\'-\' -f 1 | cut -c 2- | cut -d\'.\' -f 2-2')
-	                def PHARO_SHORT = PHARO_MAJOR + PHARO_MINOR
-	                def logMessage = shellOutput('git log -1 --format="%B"')
-	                unstash "bootstrap64"
-	                unzip "build/bootstrap-cache/metacello.zip"
-	                shell "bash -c './bootstrap/scripts/getPharoVM.sh ${PHARO_SHORT}'"
-	                shell "bash -c './pharo metacello.image metacello install --save --strict --signalErrorOnWarning \"filetree://src\" SUnit --groups Core,Tests'"
-	                shell "bash -c './pharo metacello.image test --junit-xml-output --stage-name ${env.STAGE_NAME} \'SUnit.*\''"
-	              junit allowEmptyResults: true, testResults: "${env.STAGE_NAME}*.xml"
-	            } finally {
-	              if(fileExists('PharoDebug.log')){
-	                shell "mv PharoDebug.log PharoDebug-bootstrap.log"
-	                archiveArtifacts allowEmptyArchive: true, artifacts: "PharoDebug-bootstrap.log", fingerprint: true
-	              }
-	              if(fileExists('crash.dmp')){
-	                shell "mv crash.dmp crash-bootstrap.dmp"
-	                archiveArtifacts allowEmptyArchive: true, artifacts: "crash-bootstrap.dmp", fingerprint: true
-	              }
-	              archiveArtifacts artifacts: 'build/bootstrap-cache/*.zip,build/bootstrap-cache/*.sources', fingerprint: true
-	              cleanWs()
-	            }
-	          }
-	        }
-	      }
+          stage ("Metacello-${architecture}") {
+            shell "BUILD_NUMBER=${BUILD_NUMBER} BOOTSTRAP_ARCH=${architecture} bash ./bootstrap/scripts/4-installMetacello.sh"
+            stash includes: "build/bootstrap-cache/*.zip,build/bootstrap-cache/*.sources,bootstrap/scripts/**,tests/**", name: "bootstrap${architecture}"
+          }
 
+          stage("Tests-ISO-SUnit") {
+              timeout(35) {
+                  dir(env.STAGE_NAME) {
+                      def PHARO_MAJOR = shellOutput('git describe --tags --first-parent | cut -d\'-\' -f 1 | cut -c 2- | cut -d\'.\' -f 1-1')
+                      def PHARO_MINOR = shellOutput('git describe --tags --first-parent | cut -d\'-\' -f 1 | cut -c 2- | cut -d\'.\' -f 2-2')
+                      def PHARO_SHORT = PHARO_MAJOR + PHARO_MINOR
+                      def logMessage = shellOutput('git log -1 --format="%B"')
+                      unstash "bootstrap64"
+                      unzip "build/bootstrap-cache/metacello.zip"
+                      shell "bash -c './bootstrap/scripts/getPharoVM.sh ${PHARO_SHORT}'"
+                      shell "bash -c './pharo metacello.image metacello install --save --strict --signalErrorOnWarning \"filetree://../src\" SUnit --groups Core,Tests'"
+                      shell "bash -c './pharo metacello.image test --junit-xml-output --stage-name ${env.STAGE_NAME} \'SUnit.*\''"
+                      junit allowEmptyResults: true, testResults: "${env.STAGE_NAME}*.xml"
+                  }
+              }
+          }
 
           stage ("Full Image-${architecture}") {
-            shell "BUILD_NUMBER=${BUILD_NUMBER} BOOTSTRAP_ARCH=${architecture} bash ./bootstrap/scripts/4-build.sh"
+            shell "BUILD_NUMBER=${BUILD_NUMBER} BOOTSTRAP_ARCH=${architecture} bash ./bootstrap/scripts/5-installIDE.sh"
             stash includes: "build/bootstrap-cache/*.zip,build/bootstrap-cache/*.sources,bootstrap/scripts/**,tests/**", name: "bootstrap${architecture}"
           }
 

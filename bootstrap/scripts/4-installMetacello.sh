@@ -19,7 +19,7 @@ function show_help {
   echo
   "Pharo Build Script
   ==================
-  This script assumes the existence of a new uninitialized image. Then it proceeds to its initialization and \"growing\".
+  This script assumes the existence of a new uninitialized image. Then it proceeds to its initialization and loading metacello on its.
   * Step 1:
     - Initialize the image
     - output: core.image
@@ -32,9 +32,6 @@ function show_help {
   * Step 4:
     - Load Metacello
     - output: metacello.image and changes file
-  * Step 5:
-    - Load the rest of the image using BaselineOfIDE
-    - output: Pharo.image and changes file
 
   Script arguments
   ================
@@ -104,7 +101,6 @@ COMPILER_IMAGE_NAME=${PHARO_NAME_PREFIX}-compiler-${SUFFIX}
 TRAITS_IMAGE_NAME=${PHARO_NAME_PREFIX}-traits-${SUFFIX}
 MC_BOOTSTRAP_IMAGE_NAME=${PHARO_NAME_PREFIX}-monticello_bootstrap-${SUFFIX}
 METACELLO_IMAGE_NAME=${PHARO_NAME_PREFIX}-metacello-${SUFFIX}
-PHARO_IMAGE_NAME=${PHARO_NAME_PREFIX}-${SUFFIX}
 
 #Get inside the bootstrap-cache folder. Pharo interprets relatives as relatives to the image and not the 'working directory'
 cd "${BOOTSTRAP_CACHE}"
@@ -171,41 +167,3 @@ zip "${METACELLO_IMAGE_NAME}.zip" ${METACELLO_IMAGE_NAME}.*
 #We alias metacello without version number to make it easier to write the test scripts
 cp "${METACELLO_IMAGE_NAME}.image" "metacello.image"
 zip "metacello.zip" metacello.image
-
-echo $(date -u) "[Pharo] Reloading rest of packages"
-${VM} "${METACELLO_IMAGE_NAME}.image" save "${PHARO_IMAGE_NAME}"
-
-#Terrible HACK!!!! 
-#I am increasing the size of the eden space.
-#This allows to load the big baselines.
-#However, this is only needed because the VM has a bug when extending the space itself. It is corrupting the objects, this produces random crashes
-${VM} "${PHARO_IMAGE_NAME}.image" eval --save "Smalltalk vm parameterAt: 45 put: (Smalltalk vm parameterAt: 44) * 4"
-
-env 2>&1 > env.log
-
-${VM} "${PHARO_IMAGE_NAME}.image" eval --save "MCCacheRepository uniqueInstance disable"
-#First we load the remote repositories capabilities of Monticello to be able to load the Pharo baseline with external remote dependencies
-${VM} "${PHARO_IMAGE_NAME}.image" metacello install --save --signalErrorOnWarning "tonel://${BOOTSTRAP_REPOSITORY}/src" Monticello --groups RemoteRepositories
-${VM} "${PHARO_IMAGE_NAME}.image" metacello install --save --signalErrorOnWarning "tonel://${BOOTSTRAP_REPOSITORY}/src" Pharo
-
-#Storing the image version into the image header
-${VM} "${PHARO_IMAGE_NAME}.image" "${IMAGE_FLAGS}" eval --save "Smalltalk vm saveImageVersionInImageHeader"
-
-#Extending the default number of stack pages.
-#The VM is divorcing all frames to free a stackPage if there is not a free one.
-#We can check the statistics of number of pages free using the "Smalltalk vm parameterAt: 61"
-${VM} "${PHARO_IMAGE_NAME}.image" "${IMAGE_FLAGS}" eval --save "Smalltalk vm parameterAt: 43 put: 32"
-
-${VM} "${PHARO_IMAGE_NAME}.image" "${IMAGE_FLAGS}" eval --save "MCCacheRepository uniqueInstance enable. FFIMethodRegistry resetAll. PharoSourcesCondenser condenseNewSources. Smalltalk garbageCollect"
-${VM} "${PHARO_IMAGE_NAME}.image" "${IMAGE_FLAGS}" clean --release
-${VM} "${PHARO_IMAGE_NAME}.image" "${IMAGE_FLAGS}" eval --save "SystemBuildInfo current initializeForRelease"
-
-${VM} "${PHARO_IMAGE_NAME}.image" "${IMAGE_FLAGS}" save "Pharo"
-echo "${PHARO_SHORT_VERSION}" > pharo.version
-
-# clean bak sources files
-rm -f *.bak
-
-PHARO_SOURCES_PREFIX=$(echo "${PHARO_NAME_PREFIX}" | cut -d'-' -f 1 | cut -d'.' -f 1-2)
-zip "${PHARO_IMAGE_NAME}.zip" ${PHARO_IMAGE_NAME}.* ${PHARO_SOURCES_PREFIX}*.sources pharo.version
-
