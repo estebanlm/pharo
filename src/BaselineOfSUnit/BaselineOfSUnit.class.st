@@ -37,25 +37,32 @@ BaselineOfSUnit >> baseline: spec [
 			spec
 				package: 'SUnit-Core';
 				package: 'SUnit-Core-Traits';
-				package: 'SUnit-Tests';
 				package: 'SUnit-Visitor' with: [ spec requires: #('SUnit-Core') ];
-				package: 'SUnit-Visitor-Tests' with: [ spec requires: #('SUnit-Visitor') ];
 				package: 'SUnit-MockObjects' with: [ spec requires: #('SUnit-Core') ];
+				package: 'SUnit-Basic-CLI' with: [ spec requires: #('SUnit-Core' 'DebuggingUtils') ];
+
+				package: 'SUnit-Tests' with: [ spec requires: #('SUnit-Core') ];
+				package: 'SUnit-Visitor-Tests' with: [ spec requires: #('SUnit-Visitor') ];
 				package: 'SUnit-MockObjects-Tests' with: [ spec requires: #('SUnit-MockObjects') ];
-				package: 'SUnit-UI' with: [ spec requires: #('Coverage' 'SUnit-Basic-CLI') ];
+
+				"Coverage. Depend on Reflectivity?"
 				package: 'Coverage';
 				package: 'Coverage-Tests' with: [ spec requires: #('Coverage') ];				
-				package: 'SUnit-Basic-CLI' with: [ spec requires: #('SUnit-Core' 'DebuggingUtils') ];
+
+				package: 'SUnit-UI' with: [ spec requires: #('Coverage' 'SUnit-Basic-CLI') ];
 				package: 'SUnit-UI-Tests' with: [ spec requires: #('SUnit-UI') ].
+
 
 			"Custom groups"				
 			spec
 				group: 'Core' with: #('SUnit-Core' 'SUnit-Core-Traits' 'SUnit-Visitor' 'SUnit-MockObjects' 'SUnit-Basic-CLI');
-				group: 'UI' with: #('SUnit-UI' 'Coverage');
-				group: 'Tests' with: #('SUnit-Tests' 'SUnit-Visitor-Tests' 'SUnit-MockObjects-Tests' 'Coverage-Tests' 'SUnit-UI-Tests').
+				group: 'Tests' with: #('SUnit-Tests' 'SUnit-Visitor-Tests' 'SUnit-MockObjects-Tests');
+
+				group: 'UI' with: #('SUnit-UI');
+				group: 'UITests' with: #('SUnit-UI-Tests').
 
 			"Virtual groups"	
 			spec
-				group: 'all' with: #('Core' 'UI' 'Tests');
+				group: 'all' with: #('Core' 'UI' 'Tests' 'UITests');
 				group: 'default' with: #('Core') ]
 ]
