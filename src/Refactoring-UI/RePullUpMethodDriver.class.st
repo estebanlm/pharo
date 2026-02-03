@@ -223,7 +223,7 @@ RePullUpMethodDriver >> pullUpReferencedInstVars [
 
 	notInstVarRefs referencedInstanceVariables do: [ :instVar | "We add the pushUpVariable refactoring to the refactoring previous transformations." "should we not call privateTransform instead of generateChanges"
 		refactoring pullUpVariable: instVar ].
-	self openPreviewWithChanges: refactoring changes
+	self pullUpMethods
 ]
 
 { #category : 'actions' }
