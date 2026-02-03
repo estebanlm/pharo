@@ -28,8 +28,10 @@ BaselineOfSUnit >> baseline: spec [
 	<baseline>
 	spec for: #common
 		do: [ 			
-			spec baseline: 'Debugging' with: [ 
-				spec loads: 'Core' from: (self packageRepositoryURLForSpec: spec) ].
+			spec baseline: 'DebuggingUtils' with: [ 
+				spec
+					className: 'BaselineOfDebugging';
+					loads: 'Utils' from: (self packageRepositoryURLForSpec: spec) ].
 
 			"Package definitions"							
 			spec
@@ -43,7 +45,7 @@ BaselineOfSUnit >> baseline: spec [
 				package: 'SUnit-UI' with: [ spec requires: #('Coverage' 'SUnit-Basic-CLI') ];
 				package: 'Coverage';
 				package: 'Coverage-Tests' with: [ spec requires: #('Coverage') ];				
-				package: 'SUnit-Basic-CLI' with: [ spec requires: #('SUnit-Core' 'Debugging') ];
+				package: 'SUnit-Basic-CLI' with: [ spec requires: #('SUnit-Core' 'DebuggingUtils') ];
 				package: 'SUnit-UI-Tests' with: [ spec requires: #('SUnit-UI') ].
 
 			"Custom groups"				
