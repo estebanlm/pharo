@@ -122,8 +122,14 @@ OCProgramNode >> allArgumentVariables [
 OCProgramNode >> allChildren [
 	
 	^ OrderedCollection streamContents: [ :stream | 
-		self childrenAndComments do: [ :child | 
-			child nodesDo: [ stream nextPut: child ] ] ]
+		self allChildrenDo: [ :childNode | 
+			stream nextPut: childNode ] ]
+]
+
+{ #category : 'iterating' }
+OCProgramNode >> allChildrenDo: aBlock [
+	
+	^ self childrenDo: [ :child | child withAllChildrenDo: aBlock ]
 ]
 
 { #category : 'accessing' }
@@ -396,6 +402,15 @@ OCProgramNode >> childrenAndComments [
 	result ifEmpty: [ ^ self comments ].
 	self comments ifEmpty: [ ^ result ].
 	^ result , self comments
+]
+
+{ #category : 'iterating' }
+OCProgramNode >> childrenDo: aBlock [
+
+	"Evaluate aBlock with each of the receiver's nodes as the argument"
+	"Includes comments"
+	
+	^ self childrenAndComments do: aBlock 
 ]
 
 { #category : 'replacing' }
@@ -1427,10 +1442,16 @@ OCProgramNode >> whichUpNodeDefines: aName [
 
 { #category : 'iterating' }
 OCProgramNode >> withAllChildren [
-	| children |
-	children := OrderedCollection new.
-	self nodesDo: [ :each | children addLast: each ].
-	^ children
+	
+	^ OrderedCollection streamContents: [ :stream | 
+		self withAllChildrenDo: [ :child | stream nextPut: child ] ]
+]
+
+{ #category : 'iterating' }
+OCProgramNode >> withAllChildrenDo: aBlock [
+
+	aBlock value: self.
+	^ self allChildrenDo: aBlock 
 ]
 
 { #category : 'accessing' }
