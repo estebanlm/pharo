@@ -184,16 +184,19 @@ RePushDownMethodDriver >> runRefactoring [
 
 { #category : 'execution' }
 RePushDownMethodDriver >> selectMethods [
-
 	| dialog |
-	dialog := self methodsSelectionPresenterClass 
-		          title: 'There are potential breaking changes!'
-		          label: 'Push down methods from ' , class name
-		          withItems:
-			          (class methods sort: [ :a :b | a asString < b asString ])
-				          asOrderedCollection
-		          selecting: methods asOrderedCollection.
-	dialog cancelled ifTrue: [ ^ nil ].
+	
+	dialog := (self methodsSelectionPresenterClass newApplication: self application)
+		title: 'There are potential breaking changes!'
+		label: 'Push down methods from ' , class name
+		withItems:
+			(class methods sort: [ :a :b | a asString < b asString ])
+			  asOrderedCollection
+		selecting: methods asOrderedCollection;
+		openDialog.
+	
+	dialog isOk ifFalse: [ ^ nil ].
+	
 	^ dialog selectedItems
 ]
 
