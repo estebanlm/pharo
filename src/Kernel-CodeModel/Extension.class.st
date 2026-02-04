@@ -108,9 +108,13 @@ Extension >> internScopedSelector: aSymbol [
 { #category : 'initialization' }
 Extension >> removeSelector: aSelector [
 
+	| extensionMethod |
 	super removeSelector: aSelector.
-	extendedClass removeSelector: aSelector.
-	aSelector removeAliases.
+	
+	extensionMethod := extendedClass >> aSelector.
+
+	"Now we remove the method entirely from the class, even its aliases from other packages"
+	extendedClass methodDict keysAndValuesRemove: [ :k :v | v == extensionMethod ].
 ]
 
 { #category : 'initialization' }

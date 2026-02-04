@@ -170,16 +170,102 @@ ExtensionHotUpdateTest >> test03RemoveExtension01ShouldRemoveExtensionMethod [
 ]
 
 { #category : 'tests' }
-ExtensionHotUpdateTest >> test03RemoveExtension02ShouldRemoveAliasesInSubclasses [
+ExtensionHotUpdateTest >> test03RemoveExtension02ShouldRemoveAliasesToExtensionInTheExtendedClass [
 
-	| scopedSelector |
-	"We extend Object, which will define an aliased method in a subclass"
-	pointClass compile: 'extension ^ 42'.
-	scopedSelector := extensionOnObject compile: 'extension ^ 11'.
+	| extensionScopedSelector receiver userScopedSelector |
+	"We extend Object"
+	extensionScopedSelector := extensionOnObject compile: 'extension ^ 11'.
+	
+	"We import and use the extension, which will generate an alias"
+	userPackage importExtension: extensionOnObject.
+	userClass compile: 'userMethod: anObject ^ anObject extension'.
+	userScopedSelector := userPackage lookupSelector: #extension.
+	
+	"Send the message to create the alias"
+	userClass new userMethod: objectClass new.
 	
 	"Now we remove the extension"
-	extensionOnObject removeSelector: scopedSelector.
+	extensionOnObject removeSelector: extensionScopedSelector.
 	
-	"Check that the alias is not installed. We do not send the message because that would install the alias again"
-	self deny: (pointClass methodDict includesKey: scopedSelector)
+	"So the message is not understood anymore"
+	receiver := objectClass new.
+	
+	"Not from the package itself"
+	self
+		should: [ receiver perform: extensionScopedSelector ]
+		raise: MessageNotUnderstood
+		withExceptionDo: [ :dnu |
+			self assert: dnu receiver equals: receiver.
+			self assert: dnu message selector equals: extensionScopedSelector ].
+	
+	"Nor from the user alias"
+	self
+		should: [ receiver perform: userScopedSelector ]
+		raise: MessageNotUnderstood
+		withExceptionDo: [ :dnu |
+			self assert: dnu receiver equals: receiver.
+			self assert: dnu message selector equals: userScopedSelector ]
+]
+
+{ #category : 'tests' }
+ExtensionHotUpdateTest >> test03RemoveExtension03ShouldNotRemoveUnrelatedAliases [
+
+	| extensionScopedSelector receiver userScopedSelector definerPackage2 extensionOnObject2 userPackage2 extensionScopedSelector2 userScopedSelector2 |
+	"Complex setup.
+	We have two packages defining extensions (def1, def2).
+	Two users (user1, user2).
+	Each user uses only one extension, and thus has an alias to it.
+	
+	We remove one of the extensions: def1.
+	This should not impact def2.
+	"
+
+	"First package already exists.
+	Add extension method, import, send to alias"
+	extensionOnObject compile: 'extension ^ 25'.
+	userPackage importExtension: extensionOnObject.
+	extensionScopedSelector := definerPackage lookupSelector: #extension.
+	userScopedSelector := userPackage lookupSelector: #extension.
+	objectClass new perform: userScopedSelector.
+
+	"Second package.
+	Create package and extension"
+	definerPackage2 := Package named: 'Definer2'.
+	extensionOnObject2 := (Extension << #ExtensionOfObject2
+		extendedClass: objectClass;
+		installingEnvironment: environment;
+		package: definerPackage2) install.
+	
+	"Add extension method, import, send to alias"
+	extensionOnObject2 compile: 'extension ^ 17'.
+	userPackage2 := Package named: 'User2'.
+	userPackage2 importExtension: extensionOnObject2.
+	extensionScopedSelector2 := definerPackage2 lookupSelector: #extension.
+	userScopedSelector2 := userPackage2 lookupSelector: #extension.
+	objectClass new perform: userScopedSelector2.
+	
+	"Now we remove the extension from the definer package 1"
+	extensionOnObject removeSelector: extensionScopedSelector.
+	
+	receiver := objectClass new.
+	
+	"So the message from definer package 1 is not understood anymore"
+	self
+		should: [ receiver perform: extensionScopedSelector ]
+		raise: MessageNotUnderstood
+		withExceptionDo: [ :dnu |
+			self assert: dnu receiver equals: receiver.
+			self assert: dnu message selector equals: extensionScopedSelector ].
+	
+	"Nor from the user 1 alias"
+	self
+		should: [ receiver perform: userScopedSelector ]
+		raise: MessageNotUnderstood
+		withExceptionDo: [ :dnu |
+			self assert: dnu receiver equals: receiver.
+			self assert: dnu message selector equals: userScopedSelector ].
+		
+	"But it should still understand the messages from the definer package 2 and its user"
+	self assert: (receiver perform: extensionScopedSelector2) equals: 17.
+	self assert: (receiver perform: userScopedSelector2) equals: 17.
 ]

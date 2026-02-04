@@ -506,11 +506,7 @@ Package >> lookupSelector: aSymbol [
 { #category : 'lookup' }
 Package >> lookupSelector: aSymbol ifPresent: presentBlock [
 
-	^ presentBlock value: (self scopedSelectors at: aSymbol asSymbol ifAbsent: [
-		self importedExtensions do: [ :ext | 
-			ext package lookupSelector: aSymbol ifPresent: [ :found |
-				^ presentBlock value: found ] ].
-			aSymbol ])
+	^ presentBlock value: (self scopedSelectors at: aSymbol asSymbol ifAbsent: [ aSymbol ])
 ]
 
 { #category : 'accessing' }
