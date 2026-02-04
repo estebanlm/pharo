@@ -36,7 +36,7 @@ TEST_VM_VERSION=`echo ${TEST_NAME_PREFIX} | cut -d'.' -f 1 | cut -d'-' -f 1 | cu
 
 TEST_VM_KIND="vm"
 
-${BOOTSTRAP_REPOSITORY:-.}/bootstrap/scripts/getPharoVM.sh ${TEST_VM_VERSION} ${TEST_VM_KIND} ${ARCH}
+${BOOTSTRAP_REPOSITORY:-.}/bootstrap/scripts/getPharoVM.sh ${TEST_VM_VERSION}
 
 IMAGE_ARCHIVE=$(find ${CACHE} -name ${TEST_NAME_PREFIX}-${ARCH}bit-*.zip)
 unzip $IMAGE_ARCHIVE
