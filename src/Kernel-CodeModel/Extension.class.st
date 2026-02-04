@@ -66,6 +66,7 @@ Extension >> compile: sourceCode classified: protocol withStamp: changeStamp not
 	scopedSelector addExtendedBehavior: self extendedClass.
 	self extendedClass methodDict at: scopedSelector put: methodCopyInExtendedClass.
 	
+	scopedSelector bindAliasesInSubclassesOf: self extendedClass.
 
 	recompileDependencies ifTrue: [
 			self package methods do: [ :m |
@@ -102,6 +103,14 @@ Extension >> extendedClass: anObject [
 Extension >> internScopedSelector: aSymbol [
 
 	^ self package internScopedSelector: aSymbol
+]
+
+{ #category : 'initialization' }
+Extension >> removeSelector: aSelector [
+
+	super removeSelector: aSelector.
+	extendedClass removeSelector: aSelector.
+	aSelector removeAliases.
 ]
 
 { #category : 'initialization' }

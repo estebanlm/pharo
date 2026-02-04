@@ -504,6 +504,12 @@ Symbol >> isOrientedFill [
 ]
 
 { #category : 'testing' }
+Symbol >> isScopedSelector [
+
+	^ false
+]
+
+{ #category : 'testing' }
 Symbol >> isSymbol [
 	^ true
 ]

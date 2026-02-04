@@ -1,0 +1,185 @@
+Class {
+	#name : 'ExtensionHotUpdateTest',
+	#superclass : 'TestCase',
+	#instVars : [
+		'environment',
+		'definerPackage',
+		'userPackage',
+		'objectClass',
+		'pointClass',
+		'extensionOnPoint',
+		'extensionOnObject',
+		'userClass',
+		'coloredPointClass',
+		'extensionOnColoredPoint',
+		'stringClass',
+		'nicerStringClass'
+	],
+	#category : 'Kernel-CodeModel-Tests-Extensions',
+	#package : 'Kernel-CodeModel-Tests',
+	#tag : 'Extensions'
+}
+
+{ #category : 'running' }
+ExtensionHotUpdateTest >> setUp [
+
+	| extendedPackage |
+	super setUp.
+	
+	environment := SystemEnvironment new.
+	extendedPackage := Package named: 'Extended'.
+	definerPackage := Package named: 'Definer'.
+	userPackage := Package named: 'User'.
+
+	objectClass := (Object << #MyObject
+		installingEnvironment: environment;
+		package: userPackage) install.
+	
+	pointClass := (Object << #MyPoint
+		superclass: objectClass;
+		installingEnvironment: environment;
+		package: userPackage) install.
+
+	coloredPointClass := (Object << #MyColoredPoint
+		superclass: pointClass;
+		installingEnvironment: environment;
+		package: userPackage) install.
+	
+	"String will have no extensions. It's here just for polymorphism.
+	It will thus contain aliases only"
+	stringClass := (Object << #MyString
+		superclass: objectClass;
+		installingEnvironment: environment;
+		package: userPackage) install.
+	
+	nicerStringClass := (Object << #MyNicerString
+		superclass: stringClass;
+		installingEnvironment: environment;
+		package: userPackage) install.
+
+	userClass := (Object << #MyUserClass
+		superclass: objectClass;
+		installingEnvironment: environment;
+		package: userPackage) install.
+	
+	extensionOnObject := (Extension << #ExtensionOfObject
+		extendedClass: objectClass;
+		installingEnvironment: environment;
+		package: definerPackage) install.
+
+	extensionOnPoint := (Extension << #ExtensionOfPoint
+		extendedClass: pointClass;
+		installingEnvironment: environment;
+		package: definerPackage) install.
+
+	extensionOnColoredPoint := (Extension << #ExtensionOfColoredPoint
+		extendedClass: coloredPointClass;
+		installingEnvironment: environment;
+		package: definerPackage) install.
+]
+
+{ #category : 'tests' }
+ExtensionHotUpdateTest >> test01CompileNewExtensionMethod01InstallsExtensionInExtendedClass [
+
+	| scopedSelector |
+	scopedSelector := extensionOnObject compile: 'extension ^ 42'.
+	
+	self assert: (objectClass new perform: scopedSelector) equals: 42
+]
+
+{ #category : 'tests' }
+ExtensionHotUpdateTest >> test01CompileNewExtensionMethod02InstallsAliasInSubclasses [
+
+	"Point defines a normal method"
+	| scopedSelector |
+	pointClass compile: 'extension ^ 17'.
+	
+	"We extend the superclass with the same selector"
+	scopedSelector := extensionOnObject compile: 'extension ^ 42'.
+	
+	
+	self assert: (pointClass new perform: scopedSelector) equals: 17
+]
+
+{ #category : 'tests' }
+ExtensionHotUpdateTest >> test01CompileNewExtensionMethod03InstallsAliasInSubclassesButStopsAtFrontier [
+
+	| scopedSelector |
+	
+	"Point defines a normal method that should be aliased"
+	pointClass compile: 'extension ^ 17'.
+	extensionOnColoredPoint compile: 'extension ^ 73'.
+	
+	"We extend the superclass with the same selector"
+	scopedSelector := extensionOnObject compile: 'extension ^ 42'.
+	
+	self assert: (pointClass new perform: scopedSelector) equals: 17.
+	self assert: (coloredPointClass new perform: scopedSelector) equals: 73.
+]
+
+{ #category : 'tests' }
+ExtensionHotUpdateTest >> test02OverrideAliasWithNormalMethod01ShouldAliasNewMethod [
+
+	| scopedSelector |
+	"We extend Point"
+	scopedSelector := extensionOnPoint compile: 'extension ^ 11'.
+	"String defines a normal method with the same selector name, global"
+	stringClass compile: 'extension ^ 42'.
+	
+	"We send a message to a string to alias the method"
+	self assert: (stringClass new perform: scopedSelector) equals: 42.
+	
+	"Now we override #extension in MyNicerString and that should automatically alias it!"
+	nicerStringClass compile: 'extension ^ 73'.
+	
+	self assert: (nicerStringClass new perform: scopedSelector) equals: 73
+]
+
+{ #category : 'tests' }
+ExtensionHotUpdateTest >> test02OverrideExtensionWithNormalMethod01ShouldAliasNewMethod [
+
+	| scopedSelector |
+	"We extend Object"
+	scopedSelector := extensionOnObject compile: 'extension ^ 11'.
+	
+	"Now we override the extension.
+	This should alias the one in the superclass: the scoped selector should see this method"
+	pointClass compile: 'extension ^ 42'.
+	
+	self assert: (pointClass new perform: scopedSelector) equals: 42
+]
+
+{ #category : 'tests' }
+ExtensionHotUpdateTest >> test03RemoveExtension01ShouldRemoveExtensionMethod [
+
+	| scopedSelector receiver |
+	"We extend Object"
+	scopedSelector := extensionOnObject compile: 'extension ^ 11'.
+	
+	"Now we remove the extension"
+	extensionOnObject removeSelector: scopedSelector.
+	
+	"So the message is not understood anymore"
+	receiver := objectClass new.
+	self
+		should: [ receiver perform: scopedSelector ]
+		raise: MessageNotUnderstood
+		withExceptionDo: [ :dnu |
+			self assert: dnu receiver equals: receiver.
+			self assert: dnu message selector equals: scopedSelector ]
+]
+
+{ #category : 'tests' }
+ExtensionHotUpdateTest >> test03RemoveExtension02ShouldRemoveAliasesInSubclasses [
+
+	| scopedSelector |
+	"We extend Object, which will define an aliased method in a subclass"
+	pointClass compile: 'extension ^ 42'.
+	scopedSelector := extensionOnObject compile: 'extension ^ 11'.
+	
+	"Now we remove the extension"
+	extensionOnObject removeSelector: scopedSelector.
+	
+	"Check that the alias is not installed. We do not send the message because that would install the alias again"
+	self deny: (pointClass methodDict includesKey: scopedSelector)
+]

@@ -4,18 +4,32 @@ Class {
 	#instVars : [
 		'symbol',
 		'owner',
-		'extendedBehaviors'
+		'extendedBehaviors',
+		'aliasedClasses'
 	],
 	#category : 'Kernel-CodeModel-Packages',
 	#package : 'Kernel-CodeModel',
 	#tag : 'Packages'
 }
 
+{ #category : 'installing' }
+ScopedSelector >> addAliasedBehavior: aClass [
+
+	aliasedClasses ifNil: [ aliasedClasses := Set new ].
+	aliasedClasses add: aClass
+]
+
 { #category : 'accessing' }
 ScopedSelector >> addExtendedBehavior: aBehavior [
 
 	extendedBehaviors ifNil: [ extendedBehaviors := Set new ].
 	extendedBehaviors	add: aBehavior
+]
+
+{ #category : 'accessing' }
+ScopedSelector >> aliasedBehaviors [
+
+	^ aliasedClasses ifNil: [ #(  ) ] ifNotNil: [ aliasedClasses ]
 ]
 
 { #category : 'converting' }
@@ -48,7 +62,6 @@ ScopedSelector >> bindAliasIn: aClass [
 	| allVisibleExtensions theExtension theExtensionSelector theExtensionMethod allVisibleExtensionsForThisClass |
 	allVisibleExtensions := (owner definedClasses select: [ :e | e isKindOf: Extension ]) , owner importedExtensions.
 	allVisibleExtensionsForThisClass := allVisibleExtensions select: [ :e | e extendedClass == aClass ].
-	
 	allVisibleExtensionsForThisClass ifEmpty: [ 
 		| theAliasedMethod |
 		"No extensions for this class.
@@ -57,7 +70,7 @@ ScopedSelector >> bindAliasIn: aClass [
 			ifFalse: [ ^ self ].
 
 		theAliasedMethod := aClass methodDict at: self symbol.		
-		self addExtendedBehavior: aClass.
+		self addAliasedBehavior: aClass.
 		aClass methodDict at: self put: theAliasedMethod.
 		^ self ].
 	
@@ -72,16 +85,28 @@ ScopedSelector >> bindAliasIn: aClass [
 	theExtension := allVisibleExtensionsForThisClass anyOne.
 	
 	theExtensionSelector := theExtension package lookupSelector: self symbol.
-	theExtensionMethod := theExtension extendedClass methodDict at: theExtensionSelector.
+	theExtensionMethod := theExtension extendedClass methodDict
+		at: theExtensionSelector
+		ifAbsent: [ | theAliasedMethod |
+			"This selector is not extended for this class
+			Check if there is a local global method, and alias it if possible"
+			(aClass methodDict includesKey: self symbol)
+				ifFalse: [ ^ self ].
+
+			theAliasedMethod := aClass methodDict at: self symbol.		
+			self addAliasedBehavior: aClass.
+			aClass methodDict at: self put: theAliasedMethod.
+			^ self
+		].
 	
-	self addExtendedBehavior: theExtension extendedClass.
+	self addAliasedBehavior: theExtension extendedClass.
 	theExtension extendedClass methodDict at: self put: theExtensionMethod
 ]
 
 { #category : 'accessing' }
 ScopedSelector >> bindAliasesInSubclassesOf: aClass [
 
-	aClass withAllSubclassesDo: [ :classToBind | self bindAliasIn: classToBind ]
+	aClass allSubclassesDo: [ :classToBind | self bindAliasIn: classToBind ]
 ]
 
 { #category : 'as yet unclassified' }
@@ -120,6 +145,9 @@ ScopedSelector >> handleDoesNotUnderstand: aMessage to: aReceiver [
 	
 	aliasOwner := aliasPair first.
 	aliasMethod := aliasPair second.
+	
+	"We alias the class itself and its hierarchy"
+	self bindAliasIn: aliasOwner.
 	self bindAliasesInSubclassesOf: aliasOwner.
 	
 	^ aMessage sentTo: aReceiver
@@ -168,10 +196,12 @@ ScopedSelector >> lookupAliasedMethodOnReceiverClass: aClass lookupClass: lookup
 	[ theLookupClass notNil ] whileTrue: [
 			| allVisibleExtensionsForThisClass |
 			allVisibleExtensionsForThisClass := allVisibleExtensions select: [ :e | e extendedClass == theLookupClass ].
-			allVisibleExtensionsForThisClass ifNotEmpty: [ :es |
+			allVisibleExtensionsForThisClass ifNotEmpty: [ :es | | foundScopedMethod |
+				foundScopedMethod := es anyOne extendedClass lookupSelector: (es anyOne package lookupSelector: self symbol).
+				foundScopedMethod ifNotNil: [
 				^ {
 					  es anyOne extendedClass.
-					  (es anyOne extendedClass lookupSelector: (es anyOne package lookupSelector: self symbol)) } ].
+					  foundScopedMethod } ]].
 
 			theLookupClass := theLookupClass superclass ].
 		
@@ -211,6 +241,14 @@ ScopedSelector >> printOn: aStream [
 		nextPutAll: ' - ';
 		print: owner name;
 		nextPutAll: ')'
+]
+
+{ #category : 'installing' }
+ScopedSelector >> removeAliases [
+
+	aliasedClasses ifNil: [ ^ self ].
+	aliasedClasses do: [ :e | e removeSelector: self ].
+	aliasedClasses := nil
 ]
 
 { #category : 'accessing' }

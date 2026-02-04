@@ -639,7 +639,7 @@ Behavior >> compile: sourceCode classified: protocol withStamp: changeStamp noti
 { #category : 'compiling' }
 Behavior >> compile: sourceCode classified: protocol withStamp: changeStamp notifying: requestor logSource: logSource recompileDependencies: recompileDependencies [
 	"Return the selector of the compiled method"
-	| method compiler ast |
+	| method compiler ast aliasingSelectors |
 
 	sourceCode ifEmpty: [ Error signal: 'The source code should not be empty' ].
 	compiler := self compiler
@@ -659,6 +659,16 @@ Behavior >> compile: sourceCode classified: protocol withStamp: changeStamp noti
 		send selector: (OCSelectorNode value: (self package lookupSelector: send selector)) ].
 
 	method := compiler install.
+	
+	"We are compiling a normal method.
+	We need to alias it locally if superclasses are extended/aliased.
+	If a subclass has a method with the same selector, this should have been aliased before"
+	aliasingSelectors := (self allSuperclasses flatCollect: [ :aSuperclass |
+		aSuperclass methodDict keys select: [ :selector |
+			selector isScopedSelector and: [ selector asSymbol = method selector ] ]]) asSet.
+	aliasingSelectors do: [ :k | self methodDict at: k put: method ].
+	
+	
 	^ method selector
 ]
 

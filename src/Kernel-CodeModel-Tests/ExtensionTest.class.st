@@ -390,9 +390,9 @@ ExtensionTest >> test16ExtensionDoesNotTrackAliasedClassBeforeSend [
 ]
 
 { #category : 'tests - runtime' }
-ExtensionTest >> test17ExtensionDefinesAliasAfterSend [
+ExtensionTest >> test17ExtensionSelectorDoesNotDefineAlias [
 
-	| userInstance scopedSelector asStringOriginalDefiner |
+	| userInstance definerScopedSelector |
 	objectClass compile: 'asString ^ ''this is not an extension'''.
 	extensionOnPoint compile: 'asString ^ ''youpiii'''.
 	userClass compile: 'scopedUser: anObject
@@ -404,10 +404,11 @@ ExtensionTest >> test17ExtensionDefinesAliasAfterSend [
 	"This sends a scoped message to a non extended class.
 	The lookup will find the global selector and alias it to the scoped one."
 	self assert: (userInstance scopedUser: objectClass new) equals: 'this is not an extension'.
-	
-	scopedSelector := userPackage lookupSelector: #asString.
-	asStringOriginalDefiner := (objectClass lookupSelector: #asString) methodClass.
-	self assert: (scopedSelector extendedBehaviors includes: asStringOriginalDefiner)
+
+	definerScopedSelector := definerPackage lookupSelector: #asString.
+
+	self assert: definerScopedSelector extendedBehaviors asArray equals: { pointClass }.
+	self assert: definerScopedSelector aliasedBehaviors isEmpty
 ]
 
 { #category : 'tests - runtime' }
@@ -425,9 +426,9 @@ ExtensionTest >> test18CleanExtendedBehaviorsCleansExtensionMethods [
 ]
 
 { #category : 'tests - runtime' }
-ExtensionTest >> test18ExtensionTracksAliasedClassAfterSend [
+ExtensionTest >> test18ScopedSelectorTracksAliasedClassAfterSend [
 
-	| userInstance scopedSelector originalAsStringDefiner |
+	| userInstance userScopedSelector |
 	objectClass compile: 'asString ^ ''this is not an extension'''.
 	extensionOnPoint compile: 'asString ^ ''youpiii'''.
 	userClass compile: 'scopedUser: anObject
@@ -436,11 +437,16 @@ ExtensionTest >> test18ExtensionTracksAliasedClassAfterSend [
 	userPackage importExtension: extensionOnPoint.
 	userInstance := userClass new.
 
+	"This sends a scoped message to a non extended class.
+	The lookup will find the global selector and alias it to the scoped one."
 	self assert: (userInstance scopedUser: objectClass new) equals: 'this is not an extension'.
 	
-	scopedSelector := userPackage lookupSelector: #asString.
-	originalAsStringDefiner := (objectClass lookupSelector: #asString) methodClass.
-	self assert: (scopedSelector extendedBehaviors includes: originalAsStringDefiner)
+	userScopedSelector := userPackage lookupSelector: #asString.
+
+	self assert: userScopedSelector extendedBehaviors isEmpty.
+	self assertCollection: userScopedSelector aliasedBehaviors asArray hasSameElements: {
+			objectClass.
+			pointClass }.
 ]
 
 { #category : 'tests - runtime' }
