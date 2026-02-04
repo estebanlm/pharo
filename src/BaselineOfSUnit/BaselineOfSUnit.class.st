@@ -50,7 +50,7 @@ BaselineOfSUnit >> baseline: spec [
 				package: 'Coverage-Tests' with: [ spec requires: #('Coverage') ];				
 
 				package: 'SUnit-UI' with: [ spec requires: #('Coverage' 'SUnit-Basic-CLI') ];
-				package: 'SUnit-UI-Tests' with: [ spec requires: #('SUnit-UI') ].
+				package: 'SUnit-UI-Tests' with: [ spec requires: #('SUnit-UI' 'Coverage-Tests') ].
 
 
 			"Custom groups"				
