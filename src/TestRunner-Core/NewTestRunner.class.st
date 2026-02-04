@@ -146,12 +146,6 @@ NewTestRunner >> addToSuite: aTestSuite [
 ]
 
 { #category : 'private' }
-NewTestRunner >> classForExecutionMode [
-
-	^ AbstractExecutionMode
-]
-
-{ #category : 'private' }
 NewTestRunner >> classForSuitePreparator [
 
 	^ AbstractSuitePreparator
@@ -196,6 +190,12 @@ NewTestRunner >> executionMode: anExecutionMode [
 	executionMode := anExecutionMode
 ]
 
+{ #category : 'private' }
+NewTestRunner >> executionModeClass [
+
+	^ ExecutionMode
+]
+
 { #category : 'accessing' }
 NewTestRunner >> failureCount [
 	"returns the number of testcase which failed du to assertion error during the execution"
@@ -215,9 +215,10 @@ NewTestRunner >> hasTestsToRun [
 NewTestRunner >> initialize [
 
 	super initialize.
-	self doNotAccumulateResult.
-	self suitePreparator: self classForSuitePreparator anySuitePreparatorClass.
-	self executionMode: self classForExecutionMode runExecutionModeClass
+	self 
+		doNotAccumulateResult;
+		suitePreparator: self classForSuitePreparator anySuitePreparatorClass;
+		executionMode: self executionModeClass executionMode
 ]
 
 { #category : 'accessing' }
@@ -445,13 +446,13 @@ NewTestRunner >> suitePreparator: aSuitePreparator [
 { #category : 'API' }
 NewTestRunner >> switchToDebugMode [
 
-	self executionMode: self classForExecutionMode debugExecutionModeClass
+	self executionMode: self executionModeClass debugMode
 ]
 
 { #category : 'API' }
 NewTestRunner >> switchToRunMode [
 
-	self executionMode: self classForExecutionMode runExecutionModeClass
+	self executionMode: self executionModeClass executionMode
 ]
 
 { #category : 'processing' }
