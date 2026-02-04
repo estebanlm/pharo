@@ -25,6 +25,14 @@ MethodMapExamples >> exampleAccessOuterFromCleanBlock [
 ]
 
 { #category : 'examples' }
+MethodMapExamples >> exampleAccessOuterFromFullBlock [
+	<compilerOptions: #(- optionCleanBlockClosure)>
+	| b |
+	b := 1.
+	^[ thisContext tempNamed: 'b' ] value
+]
+
+{ #category : 'examples' }
 MethodMapExamples >> exampleConstantBlock [
 	
 	^ [ nil ]
