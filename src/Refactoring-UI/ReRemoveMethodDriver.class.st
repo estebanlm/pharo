@@ -60,11 +60,12 @@ ReRemoveMethodDriver >> changes [
 ReRemoveMethodDriver >> defaultSelectDialog [
 
 	^ super defaultSelectDialog
-		  title: 'There are ' , haveNoSenders violators size asString , ' methods calling method(s) you want to delete';
-		  message: 'Select a strategy';
-		  items: self breakingChoices;
-		  display: [ :each | each description ];
-		  displayIcon: [ :each | self iconNamed: each systemIconName ]; yourself
+		title: 'There are ' , haveNoSenders violators size asString , ' methods calling method(s) you want to delete';
+		message: 'Select a strategy';
+		items: self breakingChoices;
+		display: [ :each | each description ];
+		displayIcon: [ :each | self iconNamed: each systemIconName ]; 
+		yourself
 ]
 
 { #category : 'configuration' }

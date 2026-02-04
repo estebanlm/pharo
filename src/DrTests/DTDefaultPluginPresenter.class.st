@@ -304,7 +304,8 @@ DTDefaultPluginPresenter >> resultsList [
 { #category : 'api' }
 DTDefaultPluginPresenter >> selectAllInPackageList [
 
-	packagesList selectAll
+	packagesList selectAll.
+
 ]
 
 { #category : 'api' }
@@ -433,17 +434,13 @@ DTDefaultPluginPresenter >> whenItemsSelectionChanged: itemsSelected [
 { #category : 'private' }
 DTDefaultPluginPresenter >> whenPackagesSelectionChanged: packagesSelected [
 
-	| allClasses |
-	allClasses := packagesSelected flatCollect: [ :package | package classes ].
+	| testClasses |
+	testClasses := plugin itemsToBeAnalysedFor: packagesSelected.
 	itemsList
-		roots: (((plugin itemsToBeAnalysedFor: packagesSelected) reject: [ :aClass | allClasses includes: aClass superclass ]) sorted:
-					 #name ascending);
-		children: [ :aClass | aClass subclasses & allClasses sorted: #name ascending ];
+		roots: ((testClasses reject: [ :aClass | testClasses includes: aClass superclass ]) sorted: #name ascending);
+		children: [ :aClass | aClass subclasses & testClasses sorted: #name ascending ];
 		expandAll.
 	itemsList roots: itemsList items.
 	itemsList selectAll.
-	self updatePackagesListLabel.
-
-
-
+	self updatePackagesListLabel
 ]
