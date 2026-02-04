@@ -180,7 +180,7 @@ def bootstrapImage(architectures){
                       shell "bash -c './bootstrap/scripts/getPharoVM.sh ${PHARO_SHORT}'"
                       shell "bash -c './pharo metacello.image metacello install --save --strict --signalErrorOnWarning \"filetree://../src\" SUnit --groups Core,Tests'"
                       shell "bash -c './pharo metacello.image test --junit-xml-output --stage-name ${env.STAGE_NAME}  \'SUnit-Tests\'  \'SUnit-Visitor-Tests\'  \'SUnit-MockObjects-Tests\''"
-                      junit allowEmptyResults: true, testResults: "${env.STAGE_NAME}*.xml"
+                      junit allowEmptyResults: false, testResults: "${env.STAGE_NAME}*.xml"
                   }
               }
           }
