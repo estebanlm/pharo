@@ -83,12 +83,12 @@ ReRenameMethodDriver >> configureMessage [
 ReRenameMethodDriver >> defaultSelectDialog [
 
 	^ super defaultSelectDialog
-		  title: 'There are potential breaking changes!';
-		  message: 'Watchout potential override detected!';
-		  items: self breakingChoices;
-		  display: [ :each | each description ];
-		  displayIcon: [ :each | self iconNamed: each systemIconName ];
-		  yourself
+		title: 'There are potential breaking changes!';
+		message: 'Watchout potential override detected!';
+		items: self breakingChoices;
+		display: [ :each | each description ];
+		displayIcon: [ :each | self iconNamed: each systemIconName ];
+		yourself
 ]
 
 { #category : 'initialization' }
@@ -180,7 +180,7 @@ ReRenameMethodDriver >> requestNewMessage [
 	and in this case we may have different parameters. "										
 	parameters := originalMessage selector implementors 
 							ifNotEmpty: [:m | m first  argumentNames ]
-							ifEmpty: [ refactoring buildParamtersForSelector: originalMessage selector ].										
+							ifEmpty: [ refactoring buildParametersForSelector: originalMessage selector ].										
 											
 	methodName := RBMethodName
 		              selector: originalMessage selector

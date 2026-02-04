@@ -7,7 +7,7 @@ Class {
 	#superclass : 'PackageManifest',
 	#category : 'Deprecated13-Kernel-Manifest',
 	#package : 'Deprecated13-Kernel',
-	#tag: 'Manifest'
+	#tag : 'Manifest'
 }
 
 { #category : 'testing' }

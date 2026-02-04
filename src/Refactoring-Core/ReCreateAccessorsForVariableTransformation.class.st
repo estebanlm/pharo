@@ -278,19 +278,6 @@ ReCreateAccessorsForVariableTransformation >> setterMethodName [
 	^ setterMethodName
 ]
 
-{ #category : 'storing' }
-ReCreateAccessorsForVariableTransformation >> storeOn: aStream [
-	aStream nextPut: $(.
-	self class storeOn: aStream.
-	aStream nextPutAll: ' variable: '.
-	variableName storeOn: aStream.
-	aStream nextPutAll: ' class: '.
-	class storeOn: aStream.
-	aStream nextPutAll: ' classVariable: '.
-	classVariable storeOn: aStream.
-	aStream nextPut: $)
-]
-
 { #category : 'testing' }
 ReCreateAccessorsForVariableTransformation >> usesAssignmentOf: aString in: aClass classVariable: isClassVar [
 	"Returns whether the variable aString is used in a assignement sequence e.g., x := y := 2 in the class and its subclasses."

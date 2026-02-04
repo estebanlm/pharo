@@ -161,15 +161,6 @@ RBAbstractRefactoringTest >> setupMethodNameFor: aRefactoring toReturn: aSelecto
 ]
 
 { #category : 'set up' }
-RBAbstractRefactoringTest >> setupSelfArgumentNameFor: aRefactoring toReturn: aString [
-
-	| options |
-	options := aRefactoring options copy.
-	options at: #selfArgumentName put: [:ref | aString].
-	aRefactoring options: options
-]
-
-{ #category : 'set up' }
 RBAbstractRefactoringTest >> setupVariableToMoveToFor: aRefactoring toReturn: aString [
 
 	| options |

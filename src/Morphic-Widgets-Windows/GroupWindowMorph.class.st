@@ -73,7 +73,7 @@ GroupWindowMorph >> closeTopWindow [
 			
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 GroupWindowMorph >> defaultColor [
 	^ self theme windowColor lighter
 ]
@@ -261,7 +261,7 @@ GroupWindowMorph >> wantsDroppedMorph: aMorph event: evt [
   ^aMorph isSystemWindow
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 GroupWindowMorph >> wantsKeyboardFocus [
 
 	^ false

@@ -87,11 +87,12 @@ ReExtractMethodDriver >> configureMessage [
 ReExtractMethodDriver >> defaultSelectDialog [
 
 	^ super defaultSelectDialog
-		  title: 'There are potential breaking changes!';
-		  label: self labelBasedOnBreakingChanges;
-		  items: self breakingChoices;
-		  display: [ :each | each description ];
-		  displayIcon: [ :each | self iconNamed: each systemIconName ]
+		title: 'There are potential breaking changes!';
+		label: self labelBasedOnBreakingChanges;
+		items: self breakingChoices;
+		display: [ :each | each description ];
+		displayIcon: [ :each | self iconNamed: each systemIconName ];
+		yourself
 ]
 
 { #category : 'instance creation' }
@@ -130,7 +131,7 @@ ReExtractMethodDriver >> labelBasedOnBreakingChanges [
 { #category : 'accessing' }
 ReExtractMethodDriver >> methodNameEditorPresenterClass [
 
-	^ methodNameEditorPresenterClass ifNil: [ methodNameEditorPresenterClass := StMethodNameEditorPresenter]
+	^ methodNameEditorPresenterClass ifNil: [ methodNameEditorPresenterClass := StMethodNameEditorPresenter ]
 ]
 
 { #category : 'accessing' }
@@ -145,16 +146,17 @@ ReExtractMethodDriver >> requestDialogWith: methodName [
 	and thus side-step methodNameEditorPresenter"
 
 	^ requestDialog ifNil: [
-		  requestDialog := (self methodNameEditorPresenterClass
-			                   openOn: methodName
-			                   withInvalidArgs: (RBCondition
-					                    invalidArgumentNamesForSelector:
-					                    sourceMethod selector
-					                    in: model)
-			                   canRenameArgs: self canRenameArgs
-			                   canRemoveArgs: self canRemoveArgs
-			                   canAddArgs: self canAddArgs
-			                   canEditName: self canEditName) presenter ]
+		requestDialog := ((self methodNameEditorPresenterClass newApplication: self application model: methodName)
+				invalidArgNames: (RBCondition
+						invalidArgumentNamesForSelector:
+						sourceMethod selector
+						in: model);
+				canRenameArgs: self canRenameArgs;
+				canRemoveArgs: self canRemoveArgs;
+				canAddArgs: self canAddArgs; 
+				canEditName: self canEditName; 
+				openModal)
+			presenter ]
 ]
 
 { #category : 'interaction' }

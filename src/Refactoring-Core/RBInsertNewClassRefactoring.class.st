@@ -112,25 +112,6 @@ RBInsertNewClassRefactoring >> privateTransform [
 		reparentClasses: subclasses to: (self model classNamed: className)
 ]
 
-{ #category : 'storing' }
-RBInsertNewClassRefactoring >> storeOn: aStream [
-
-	aStream nextPutAll: '(('.
-	self class storeOn: aStream.
-	aStream
-		nextPutAll: ' className: #';
-		nextPutAll: className;
-		nextPutAll: ') superclass: '.
-	superclass storeOn: aStream.
-	aStream nextPutAll: '; subclasses: '.
-	subclasses asArray storeOn: aStream.
-	aStream nextPutAll: '; packageName: '.
-	packageName storeOn: aStream.
-	aStream nextPutAll: '; tagName: '.
-	tagName storeOn: aStream.
-	aStream nextPut: $)
-]
-
 { #category : 'accessing' }
 RBInsertNewClassRefactoring >> subclasses: aCollection [
 	"Set class objects for a list of class names"

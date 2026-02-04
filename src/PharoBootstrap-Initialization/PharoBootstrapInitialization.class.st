@@ -147,13 +147,7 @@ PharoBootstrapInitialization class >> initializeCommandLineHandlerAndErrorHandli
 	PackageConflictError initialize.
 
 	'Initializing sources' traceCr.
-	(Smalltalk class classVariableNamed: 'LastImagePath') value: Smalltalk imagePath. "set the default value"
-	SourceFileArray initialize.
-
-	'InitializingFFI' traceCr.
-	"FFI"
-	ExternalObject initialize.
-	ExternalType initialize.
+	SourcesManager initialize.
 
 	'Initializing Session Manager' traceCr.
 	SessionManager initialize.
@@ -164,6 +158,8 @@ PharoBootstrapInitialization class >> initializeCommandLineHandlerAndErrorHandli
 	"Initialize basic command line behaviour"
 	NonInteractiveTranscript initialize.
 	PerformMessageCommandLineHandler registerAsCommandLinehandler.
+	
+	self undeclaredRegistry ifNotEmpty: [ self error: 'There should be no undeclared after loading the BaselineOfKernel. List of undeclared: ', self undeclaredRegistry keys printString ].
 
 	Smalltalk snapshot: true andQuit: true.
 	Processor terminateActive

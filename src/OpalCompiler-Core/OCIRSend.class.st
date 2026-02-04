@@ -21,7 +21,7 @@ OCIRSend >> accept: aVisitor [
 { #category : 'stack' }
 OCIRSend >> deltaStack [
 
-	^ (selector occurrencesOf: $:) negated
+	^ selector numArgs negated
 ]
 
 { #category : 'testing' }

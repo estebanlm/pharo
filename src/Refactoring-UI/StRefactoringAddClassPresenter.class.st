@@ -31,20 +31,22 @@ StRefactoringAddClassPresenter >> commentPresenterText [
 StRefactoringAddClassPresenter >> defaultLayout [
 
 	^ SpGridLayout new
-		  add: 'New class name' atPoint: 1 @ 1;
-		  add: textInput atPoint: 2 @ 1 span: 2 @ 1;
-		  add: 'Package' atPoint: 1 @ 2;
-		  add: packagePresenter atPoint: 2 @ 2 span: 2 @ 1;
-		  add: 'Tag' atPoint: 1 @ 3;
-		  add: tagPresenter atPoint: 2 @ 3 span: 2 @ 1;
-		  add: 'Comment' atPoint: 1 @ 4;
-		  add: (SpBoxLayout newTopToBottom
-				   add: useTemplateCheckPresenter expand: false;
-				   add: commentPresenter withConstraints: [ :c | c height: 500 ];
-				   yourself)
-		  atPoint: 2 @ 4 span: 2 @ 1;
-		  beColumnNotHomogeneous;
-		  yourself
+		beColumnNotHomogeneous;
+		beRowNotHomogeneous;
+		column: 2 expand: true;
+		add: 'New class name' atPoint: 1 @ 1;
+		add: textInput atPoint: 2 @ 1;
+		add: 'Package' atPoint: 1 @ 2;
+		add: packagePresenter atPoint: 2 @ 2;
+		add: 'Tag' atPoint: 1 @ 3;
+		add: tagPresenter atPoint: 2 @ 3;
+		add: 'Comment' atPoint: 1 @ 4;
+		add: (SpBoxLayout newTopToBottom
+		  		add: useTemplateCheckPresenter expand: false;
+				add: commentPresenter;
+				yourself)
+			atPoint: 2 @ 4;
+		yourself
 ]
 
 { #category : 'initialization' }
@@ -62,17 +64,18 @@ StRefactoringAddClassPresenter >> initializeClassNamePresenter [
 StRefactoringAddClassPresenter >> initializeCommentPresenter [
 
 	useTemplateCheckPresenter := self newCheckBox
-		                             state: false;
-		                             help: 'When checked, the comment will be prefilled with a generic class comment';
-		                             label: 'Use comment template';
-		                             whenActivatedDo: [ commentPresenter text: driver superclass classCommentBlank ];
-		                             whenDeactivatedDo: [ commentPresenter text: String empty ];
-		                             yourself.
+		state: false;
+		help: 'When checked, the comment will be prefilled with a generic class comment';
+		label: 'Use comment template';
+		whenActivatedDo: [ commentPresenter text: driver superclass classCommentBlank ];
+		whenDeactivatedDo: [ commentPresenter text: String empty ];
+		yourself.
 	commentPresenter := self newText
-		                    beWrapWord;
-		                    placeholder: 'A comment for your new class';
-		                    whenTextChangedDo: [ :text | driver comment: commentPresenter text trimBoth ];
-		                    yourself
+		addStyle: 'lines8';
+		beWrapWord;
+		placeholder: 'A comment for your new class';
+		whenTextChangedDo: [ :text | driver comment: commentPresenter text trimBoth ];
+		yourself
 ]
 
 { #category : 'initialization' }
@@ -93,7 +96,6 @@ StRefactoringAddClassPresenter >> initializePresenters [
 
 	self
 		acceptLabel: 'Create';
-		validateAnswer: self validateAnswerBlock;
 		initializeFocus
 ]
 

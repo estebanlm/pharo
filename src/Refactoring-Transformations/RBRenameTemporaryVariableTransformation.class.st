@@ -112,21 +112,3 @@ RBRenameTemporaryVariableTransformation >> privateTransform [
 		executeTree: definingNode.
 	class compileTree: parseTree
 ]
-
-{ #category : 'storing' }
-RBRenameTemporaryVariableTransformation >> storeOn: aStream [
-
-	aStream nextPut: $(.
-	self class storeOn: aStream.
-	aStream
-		nextPutAll: ' renameTemporary: ';
-		nextPutAll: variableName;
-		nextPutAll: ' to: ''';
-		nextPutAll: newVariableName;
-		nextPutAll: ''' in: '.
-	class storeOn: aStream.
-	aStream
-		nextPutAll: ' selector: #';
-		nextPutAll: selector.
-	aStream nextPut: $)
-]

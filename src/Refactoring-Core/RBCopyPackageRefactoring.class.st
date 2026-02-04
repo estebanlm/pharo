@@ -166,15 +166,3 @@ RBCopyPackageRefactoring >> reparent: classes with: copyClasses [
 								 << cls printString ]).
 				jobIndex := jobIndex + 1 ] ] asJob run
 ]
-
-{ #category : 'storing' }
-RBCopyPackageRefactoring >> storeOn: aStream [
-	aStream nextPut: $(.
-	self class storeOn: aStream.
-	aStream nextPutAll: ' copyPackage: '.
-	aStream nextPutAll: package name.
-	aStream
-		nextPutAll: ' in: #';
-		nextPutAll: newName;
-		nextPut: $)
-]

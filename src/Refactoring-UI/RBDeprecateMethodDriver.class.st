@@ -78,14 +78,12 @@ RBDeprecateMethodDriver >> runRefactoring [
 { #category : 'ui - requests' }
 RBDeprecateMethodDriver >> selectorToReplaceDeprecatedSelector [
 
-	useInsteadSelector := SpRequestDialog new
-		                      title:
-			                      'Selector to replace ' , selectorToDeprecate;
-		                      label:
-			                      'The new selector should not be empty or same as the deprecated one.';
-		                      text: selectorToDeprecate;
-		                      acceptLabel: 'Accept';
-		                      cancelLabel: 'Cancel';
-		                      openModal.
+	useInsteadSelector := self defaultRequestDialog
+		title: 'Selector to replace ' , selectorToDeprecate;
+		message: 'The new selector should not be empty or same as the deprecated one.';
+		text: selectorToDeprecate;
+		acceptLabel: 'Accept';
+		cancelLabel: 'Cancel';
+		openModal.
 	"we should check that the selector is valid here!!!"
 ]

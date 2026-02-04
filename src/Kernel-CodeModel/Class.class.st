@@ -375,7 +375,7 @@ Class >> comment [
 
 	^ self commentSourcePointer
 		  ifNil: [ '' ]
-		  ifNotNil: [ :ptr | SourceFileArray default sourceCodeAt: ptr ]
+		  ifNotNil: [ :ptr | SourcesManager current sourceCodeAt: ptr ]
 ]
 
 { #category : 'accessing - comment' }
@@ -394,7 +394,7 @@ Class >> comment: aString stamp: aStamp [
 
 	aString string = oldComment string ifTrue: [ ^ self ].
 
-	SourceFileArray default writeComment: aString stamp: aStamp  of: self.
+	SourcesManager current writeComment: aString stamp: aStamp  of: self.
 
 	self codeChangeAnnouncer
 		class: self
@@ -419,7 +419,7 @@ Class >> commentStamp [
 
 	^ self commentSourcePointer
 		  ifNil: [ '' ]
-		  ifNotNil: [:sourcePointer | SourceFileArray default commentTimeStampAt: sourcePointer ]
+		  ifNotNil: [ :sourcePointer | SourcesManager current commentTimeStampAt: sourcePointer ]
 ]
 
 { #category : 'accessing - comment' }
@@ -820,7 +820,9 @@ Class >> removeFromSystem: logged [
 	We deal also with a special case that is the case a class of the same name than the alias is installed in the image after the alias. In that case we do not remove it. It's the reason we check if the global of the alias is the same as self."
 	self deprecatedAliases do: [ :alias | self environment at: alias ifPresent: [ :class | class = self ifTrue: [ self environment removeKey: alias ] ] ].
 	self obsolete.
-	logged ifTrue: [ self codeChangeAnnouncer  announce: (ClassRemoved class: self) ]
+	logged ifTrue: [ 
+		SourcesManager current writeClassRemoved: self.
+		self codeChangeAnnouncer  announce: (ClassRemoved class: self) ]
 ]
 
 { #category : 'initialization' }

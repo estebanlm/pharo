@@ -75,14 +75,15 @@ RePushDownMethodInSomeClassesDriver >> runRefactoring [
 
 { #category : 'execution' }
 RePushDownMethodInSomeClassesDriver >> selectClasses [
-
 	| dialog |
-	dialog := StVariablesSelectionPresenter
-		          label: 'Push down in classes: '
-		          withItems:
-			          (class subclasses sort: [ :a :b | a name < b name ])
-				          asOrderedCollection
-		          selecting: class subclasses.
-	dialog cancelled ifTrue: [ ^ nil ].
+	
+	dialog := (StVariablesSelectionPresenter newApplication: self application)
+		label: 'Push down in classes: '
+			withItems:(class subclasses sort: #name ascending) asOrderedCollection
+			selecting: class subclasses;
+		openDialog.
+	
+	dialog isOk ifFalse: [ ^ nil ].
+	
 	^ dialog selectedItems collect: [ :each | each name ]
 ]

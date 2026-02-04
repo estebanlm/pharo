@@ -117,19 +117,6 @@ RBRenameAndDeprecateClassTransformation >> newClassName: aNewClassName [
 	newClassName := aNewClassName asSymbol 
 ]
 
-{ #category : 'storing' }
-RBRenameAndDeprecateClassTransformation >> storeOn: aStream [
-
-	aStream nextPut: $(.
-	self class storeOn: aStream.
-	aStream
-		nextPutAll: ' className ''';
-		nextPutAll: className;
-		nextPutAll: ''' newClassName: ''';
-		nextPutAll: newClassName.
-	aStream nextPut: $)
-]
-
 { #category : 'private' }
 RBRenameAndDeprecateClassTransformation >> tmpName [
 	"return the hidden name of the subclass"

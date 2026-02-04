@@ -25,13 +25,6 @@ Class {
 	#tag : 'Browsers'
 }
 
-{ #category : 'examples' }
-ExternalChangesBrowser class >> browseRecentLog [
-	<example>
-
-	^ self openOnStream: SourceFileArray default changesFileStream
-]
-
 { #category : 'layout' }
 ExternalChangesBrowser class >> defaultLayout [
 	<spec: #default>

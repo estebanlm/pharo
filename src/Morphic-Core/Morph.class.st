@@ -183,6 +183,13 @@ Morph class >> shortcutsHandler: anObject [
 	ShortcutsHandler := anObject
 ]
 
+{ #category : 'accessing' }
+Morph class >> theme [
+	"Answer the ui theme that provides controls."
+
+	^ Smalltalk ui theme
+]
+
 { #category : 'dropping/grabbing' }
 Morph >> aboutToBeGrabbedBy: aHand [
 	"The receiver is being grabbed by a hand.
@@ -3658,7 +3665,7 @@ Morph >> intersects: aRectangle [
 	^self fullBoundsInWorld intersects: aRectangle
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 Morph >> intoWorld: aWorld [
 	"The receiver has just appeared in a new world. Note:
 		* aWorld can be nil (due to optimizations in other places)
@@ -4712,7 +4719,7 @@ Morph >> otherProperties [
 	^ extension ifNotNil: [extension otherProperties]
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 Morph >> outOfWorld: aWorld [
 	"The receiver has just appeared in a new world. Notes:
 		* aWorld can be nil (due to optimizations in other places)

@@ -21,20 +21,6 @@ CompiledMethod class >> abstractMarker [
 	^ #subclassResponsibility
 ]
 
-{ #category : 'class initialization' }
-CompiledMethod class >> checkBytecodeSetConflictsInMethodsWith: aBlock [
-
-	self allSubInstances
-		detect: aBlock
-		ifFound: [ Warning signal: 'There are existing CompiledMethods with a different encoderClass.' ]
-]
-
-{ #category : 'class initialization' }
-CompiledMethod class >> checkIsValidBytecodeEncoder: aBytecodeEncoderSubclass [
-	(aBytecodeEncoderSubclass inheritsFrom: BytecodeEncoder) ifFalse:
-		[self error: 'A bytecode set encoder is expected to be a subclass of BytecodeEncoder']
-]
-
 { #category : 'constants' }
 CompiledMethod class >> conflictMarker [
 	^ #traitConflict
@@ -48,49 +34,6 @@ CompiledMethod class >> disabledMarker [
 { #category : 'constants' }
 CompiledMethod class >> explicitRequirementMarker [
 	^ #explicitRequirement
-]
-
-{ #category : 'class initialization' }
-CompiledMethod class >> fullFrameSize [  "CompiledMethod fullFrameSize"
-	^ LargeFrame
-]
-
-{ #category : 'instance creation' }
-CompiledMethod class >> headerFlagForEncoder: anEncoderClass [
-	anEncoderClass == PrimaryBytecodeSetEncoderClass ifTrue: [ ^ 0 ].
-	anEncoderClass == SecondaryBytecodeSetEncoderClass ifTrue: [ ^ SmallInteger minVal ].
-	self error: 'The encoder is not one of the two installed bytecode sets'
-]
-
-{ #category : 'class initialization' }
-CompiledMethod class >> initialize [    "CompiledMethod initialize"
-	"Initialize class variables specifying the size of the temporary frame
-	needed to run instances of me."
-
-	SmallFrame := 16.	"Context range for temps+stack"
-	LargeFrame := 56.
-	PrimaryBytecodeSetEncoderClass := nil. "Old encoder was removed"
-	SecondaryBytecodeSetEncoderClass := EncoderForSistaV1
-]
-
-{ #category : 'class initialization' }
-CompiledMethod class >> installPrimaryBytecodeSet: aBytecodeEncoderSubclass [
-	PrimaryBytecodeSetEncoderClass == aBytecodeEncoderSubclass ifTrue:
-		[ ^self ].
-	self checkIsValidBytecodeEncoder: aBytecodeEncoderSubclass.
-	self checkBytecodeSetConflictsInMethodsWith: [:m|
-		m usesPrimaryBytecodeSet and: [m encoderClass ~~ aBytecodeEncoderSubclass]].
-	PrimaryBytecodeSetEncoderClass := aBytecodeEncoderSubclass
-]
-
-{ #category : 'class initialization' }
-CompiledMethod class >> installSecondaryBytecodeSet: aBytecodeEncoderSubclass [
-	PrimaryBytecodeSetEncoderClass == aBytecodeEncoderSubclass ifTrue:
-		[ ^ self ].
-	self checkIsValidBytecodeEncoder: aBytecodeEncoderSubclass.
-	self checkBytecodeSetConflictsInMethodsWith: [ :m |
-		m usesSecondaryBytecodeSet and: [ m encoderClass ~~ aBytecodeEncoderSubclass ] ].
-	SecondaryBytecodeSetEncoderClass := aBytecodeEncoderSubclass
 ]
 
 { #category : 'accessing - class hierarchy' }
@@ -115,12 +58,6 @@ CompiledMethod class >> resetPragmaCache [
 
 	"Useful in bootstrap process"
 	self allInstancesDo: [ :method | method cachePragmas ]
-]
-
-{ #category : 'class initialization' }
-CompiledMethod class >> smallFrameSize [
-
-	^ SmallFrame
 ]
 
 { #category : 'constants' }
@@ -209,17 +146,15 @@ CompiledMethod >> flushCache [
 ]
 
 { #category : 'source code management' }
-CompiledMethod >> getPreambleFrom: aFileStream at: position [
-	^ SourceFileArray default getPreambleFrom: aFileStream at: position
-]
-
-{ #category : 'source code management' }
 CompiledMethod >> getSourceFromFile [
 	"PLEASE Note: clients should always call #sourceCode"
+
 	"Read the source code from file, determining source file index and
 	file position from the last bytes of this method (size defined in #trailerSize)."
 
-	^ [ SourceFileArray default sourceCodeAt: self sourcePointer ] on: Error do: [ nil ]
+	^ [ SourcesManager current sourceCodeAt: self sourcePointer ]
+		  on: Error
+		  do: [ nil ]
 ]
 
 { #category : 'source code management' }
@@ -884,7 +819,7 @@ CompiledMethod >> sourceCodeOrNil [
 { #category : 'source code management' }
 CompiledMethod >> sourcePointer [
 	"Answer the integer which can be used to find the source file and position for this method.
-	The actual interpretation of this number is up to the SourceFileArray default instance."
+	The actual interpretation of this number is up to the FilesSourcesManager default instance."
 	| trailerBytes trailerSize start |
 	trailerSize := self class trailerSize.
 	trailerBytes := ByteArray new: trailerSize.

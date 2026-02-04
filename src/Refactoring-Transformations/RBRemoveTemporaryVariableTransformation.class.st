@@ -98,21 +98,6 @@ RBRemoveTemporaryVariableTransformation >> privateTransform [
 	class compileTree: methodTree
 ]
 
-{ #category : 'storing' }
-RBRemoveTemporaryVariableTransformation >> storeOn: aStream [
-
-	aStream nextPut: $(.
-	self class storeOn: aStream.
-	aStream
-		nextPutAll: ' variable: ''';
-		nextPutAll: variableName;
-		nextPutAll: ''' inMethod: ''';
-		nextPutAll: selector;
-		nextPutAll: ''' inClass: '.
-	class storeOn: aStream.
-	aStream nextPut: $)
-]
-
 { #category : 'api' }
 RBRemoveTemporaryVariableTransformation >> variable: aVariableName inMethod: aSelector inClass: aClass [
 

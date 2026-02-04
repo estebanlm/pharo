@@ -39,12 +39,6 @@ Class {
 	#tag : 'Methods'
 }
 
-{ #category : 'class initialization' }
-CompiledCode class >> LargeFrame [
-
-	^ LargeFrame
-]
-
 { #category : 'instance creation' }
 CompiledCode class >> basicNew [
 
@@ -71,6 +65,27 @@ CompiledCode class >> basicNew: numberOfBytes header: headerWord [
 	ec == #'insufficient object memory' ifTrue:
 		[^self handleFailingNew: numberOfBytes header: headerWord].
 	^self primitiveFailed
+]
+
+{ #category : 'class initialization' }
+CompiledCode class >> checkBytecodeSetConflictsInMethodsWith: aBlock [
+
+	self allSubInstances
+		detect: aBlock
+		ifFound: [ Warning signal: 'There are existing CompiledMethods with a different encoderClass.' ]
+]
+
+{ #category : 'class initialization' }
+CompiledCode class >> checkIsValidBytecodeEncoder: aBytecodeEncoderSubclass [
+
+	(aBytecodeEncoderSubclass inheritsFrom: BytecodeEncoder) ifFalse:
+		[self error: 'A bytecode set encoder is expected to be a subclass of BytecodeEncoder']
+]
+
+{ #category : 'accessing' }
+CompiledCode class >> fullFrameSize [
+
+	^ LargeFrame
 ]
 
 { #category : 'private' }
@@ -117,6 +132,46 @@ CompiledCode class >> handleFailingNew: numberOfBytes header: headerWord [
 ]
 
 { #category : 'instance creation' }
+CompiledCode class >> headerFlagForEncoder: anEncoderClass [
+	anEncoderClass == PrimaryBytecodeSetEncoderClass ifTrue: [ ^ 0 ].
+	anEncoderClass == SecondaryBytecodeSetEncoderClass ifTrue: [ ^ SmallInteger minVal ].
+	self error: 'The encoder is not one of the two installed bytecode sets'
+]
+
+{ #category : 'class initialization' }
+CompiledCode class >> initialize [
+	"Initialize class variables specifying the size of the temporary frame
+	needed to run instances of me."
+
+	SmallFrame := 16.	"Context range for temps+stack"
+	LargeFrame := 56.
+	PrimaryBytecodeSetEncoderClass := nil. "Old encoder was removed"
+	SecondaryBytecodeSetEncoderClass := EncoderForSistaV1
+]
+
+{ #category : 'class initialization' }
+CompiledCode class >> installPrimaryBytecodeSet: aBytecodeEncoderSubclass [
+
+	PrimaryBytecodeSetEncoderClass == aBytecodeEncoderSubclass ifTrue:
+		[ ^self ].
+	self checkIsValidBytecodeEncoder: aBytecodeEncoderSubclass.
+	self checkBytecodeSetConflictsInMethodsWith: [:m|
+		m usesPrimaryBytecodeSet and: [m encoderClass ~~ aBytecodeEncoderSubclass]].
+	PrimaryBytecodeSetEncoderClass := aBytecodeEncoderSubclass
+]
+
+{ #category : 'class initialization' }
+CompiledCode class >> installSecondaryBytecodeSet: aBytecodeEncoderSubclass [
+
+	PrimaryBytecodeSetEncoderClass == aBytecodeEncoderSubclass ifTrue:
+		[ ^ self ].
+	self checkIsValidBytecodeEncoder: aBytecodeEncoderSubclass.
+	self checkBytecodeSetConflictsInMethodsWith: [ :m |
+		m usesSecondaryBytecodeSet and: [ m encoderClass ~~ aBytecodeEncoderSubclass ] ].
+	SecondaryBytecodeSetEncoderClass := aBytecodeEncoderSubclass
+]
+
+{ #category : 'instance creation' }
 CompiledCode class >> newFrom: aCompiledMethod [
 	"Create a method with the same bytecode and literals, but do not copy the source pointer, for a complete copy, use #clone"
 	| inst |
@@ -130,6 +185,12 @@ CompiledCode class >> newFrom: aCompiledMethod [
 	1 to: aCompiledMethod numLiterals do: [ :i | 
 		inst literalAt: i put: (aCompiledMethod literalAt: i)].
 	^ inst
+]
+
+{ #category : 'accessing' }
+CompiledCode class >> smallFrameSize [
+
+	^ SmallFrame
 ]
 
 { #category : 'constants' }
@@ -999,7 +1060,7 @@ CompiledCode >> timeStamp [
 	"Answer the authoring time-stamp for the given method, retrieved from the sources or changes file. Answer the empty string if no time stamp is available."
 	"(CompiledMethod compiledMethodAt: #timeStamp) timeStamp"
 
-	^ SourceFileArray default timeStampAt: self sourcePointer
+	^ SourcesManager current timeStampAt: self sourcePointer
 ]
 
 { #category : 'testing' }

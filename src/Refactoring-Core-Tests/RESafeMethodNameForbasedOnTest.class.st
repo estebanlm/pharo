@@ -53,7 +53,7 @@ ReSafeMethodNameForbasedOnTest >> testBinaryMessages [
 ReSafeMethodNameForbasedOnTest >> testBuildParametersForSelectorForBinary [
 
 	| parameters |
-	parameters := ReAbstractTransformation new buildParamtersForSelector: #+.
+	parameters := ReAbstractTransformation new buildParametersForSelector: #+.
 	self assert: parameters asArray equals: #('param1').
 	
 	
@@ -63,7 +63,7 @@ ReSafeMethodNameForbasedOnTest >> testBuildParametersForSelectorForBinary [
 ReSafeMethodNameForbasedOnTest >> testBuildParametersForSelectorForKeywords [
 
 	| parameters |
-	parameters := ReAbstractTransformation new buildParamtersForSelector: #foo:bar:.
+	parameters := ReAbstractTransformation new buildParametersForSelector: #foo:bar:.
 	self assert: parameters asArray equals: #('param1' 'param2').
 	
 	
@@ -73,7 +73,7 @@ ReSafeMethodNameForbasedOnTest >> testBuildParametersForSelectorForKeywords [
 ReSafeMethodNameForbasedOnTest >> testBuildParametersForSelectorForUnary [
 
 	| parameters |
-	parameters := ReAbstractTransformation new buildParamtersForSelector: #class.
+	parameters := ReAbstractTransformation new buildParametersForSelector: #class.
 	self assert: parameters asArray equals: #().
 	
 	

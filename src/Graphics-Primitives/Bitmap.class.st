@@ -393,7 +393,7 @@ Bitmap >> encodeInt: anInt in: ba at: i [
 	^ self encodeBytesOf: anInt in: ba at: i + 1
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 Bitmap >> fromByteStream: aStream [
 	"Initialize the array of bits by reading integers from the argument,
 	aStream."

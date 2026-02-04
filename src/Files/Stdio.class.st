@@ -70,7 +70,7 @@ Stdio class >> standardIOStreamNamed: moniker forWrite: forWrite [
 	handle := File stdioHandles at: streamIndex.
 	(handle isNil or: [ (File fileDescriptorIsAvailable: streamIndex-1) not ]) ifTrue: [
 		"On windows, create a file for stdio, error on other platforms"
-		^ Smalltalk os createStdioFileFor: moniker ].
+		^ OSPlatform current createStdioFileFor: moniker ].
 	^ StdioStream handle: handle file: (File named: moniker) forWrite: forWrite
 ]
 

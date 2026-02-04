@@ -264,11 +264,6 @@ ExceptionTest >> testHandlingWithSeveralExclusionsAndExceptionSetsHandling [
 ]
 
 { #category : 'tests - exceptiontester' }
-ExceptionTest >> testNoTimeout [
-	self assertSuccess: (ExceptionTester new runTest: #simpleNoTimeoutTest )
-]
-
-{ #category : 'tests - exceptiontester' }
 ExceptionTest >> testNonResumableFallOffTheEndHandler [
 	self assertSuccess: (ExceptionTester new runTest: #nonResumableFallOffTheEndHandler )
 ]
@@ -449,11 +444,6 @@ ExceptionTest >> testSimpleResume [
 { #category : 'tests - exceptiontester' }
 ExceptionTest >> testSimpleReturn [
 	self assertSuccess: (ExceptionTester new runTest: #simpleReturnTest )
-]
-
-{ #category : 'tests - exceptiontester' }
-ExceptionTest >> testTimeoutWithZeroDuration [
-	self assertSuccess: (ExceptionTester new runTest: #simpleTimeoutWithZeroDurationTest )
 ]
 
 { #category : 'tests - handling' }

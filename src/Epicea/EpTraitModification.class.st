@@ -56,7 +56,7 @@ EpTraitModification >> hasChanges [
 		oldTrait classSide definitionSource ~= newTrait classSide definitionSource ]
 ]
 
-{ #category : 'initialize' }
+{ #category : 'initialization' }
 EpTraitModification >> initializeOldTrait: anOldTrait newTrait: aNewTrait [
 
 	self initialize.

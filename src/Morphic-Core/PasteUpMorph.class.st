@@ -37,7 +37,7 @@ PasteUpMorph class >> isMenuOpenByLeftClick [
 	1	 	1 		1
 "
 
-	^ self shouldSwapMenuOpenerButtons ==> [ Smalltalk os isMacOS ]
+	^ self shouldSwapMenuOpenerButtons ==> [ OSPlatform current isMacOS ]
 ]
 
 { #category : 'accessing' }

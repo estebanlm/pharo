@@ -10,7 +10,7 @@ Class {
 ManifestOpalCompilerCore class >> manuallyResolvedDependencies [
 
 	<ignoreForCoverage>
-	^ #(#'System-Announcements' #'System-Sources' #'Collections-Abstract')
+	^ #(#'System-Announcements' #'Collections-Abstract')
 ]
 
 { #category : 'code-critics' }

@@ -598,6 +598,12 @@ DebugSession >> stepToFirstInterestingBytecodeInContext: aContext [
 	^ aContext
 ]
 
+{ #category : 'accessing' }
+DebugSession >> suspendedContext: aContext [ 
+	
+	interruptedContext := aContext
+]
+
 { #category : 'debugging actions' }
 DebugSession >> terminate [
 	"Action that needs to be executed after the window containing this debug session is closed,
@@ -607,6 +613,10 @@ DebugSession >> terminate [
 	
 	"Assume the user closed the debugger. 
 	Simply kill the interrupted process."
+	
+	(exception isKindOf: MessageNotUnderstood)
+		ifTrue: [ exception stopResendingMessage ].
+	
 	self interruptedProcess terminate.
 	self clear.
 	Smalltalk installLowSpaceWatcher "restart low space handler"

@@ -40,18 +40,12 @@ ReAbstractTransformation class >> initializeRefactoringOptions [
 
 		at: #methodName
 		put: [ :methodName :ref | self error: #methodName ];
-
-		at: #selfArgumentName
-		put: [ :ref | self error: #selfArgumentName ];
-
+		
 		at: #selectVariableToMoveTo
 		put: [ :ref :class :selector | self error: #selectVariableToMoveTo ];
 
 		at: #variableTypes
 		put: [ :ref :types :selected | self error: #variableTypes ];
-
-		at: #extractAssignment
-		put: [ :ref :varName | self error: #extractAssignment ];
 
 		at: #shouldNotCreateExtraBindings
 		put: [ :ref :string | self error: #shouldNotCreateExtraBindings ];
@@ -102,19 +96,10 @@ ReAbstractTransformation >> buildParametersForSelector: aSelector [
 ]
 
 { #category : 'private' }
-ReAbstractTransformation >> buildParamtersForSelector: aSelector [
-	| params |
-	params := OrderedCollection new. 
-	1 
-		to: aSelector numArgs 
-		do: [ :i | params add: 'param', i asString ].
-	^ params 
-]
-
-{ #category : 'private' }
 ReAbstractTransformation >> buildSelectorString: aSelector [
+
 	aSelector numArgs = 0 ifTrue: [^aSelector].
-	^self buildSelectorString: aSelector
+	^ self buildSelectorString: aSelector
 		withPermuteMap: (1 to: aSelector numArgs)
 ]
 
@@ -190,7 +175,7 @@ ReAbstractTransformation >> checkPreconditions [
 	self checkApplicabilityPreconditions
 ]
 
-{ #category : 'preconditions' }
+{ #category : 'condition definitions' }
 ReAbstractTransformation >> classExist [
 
 	| className |
@@ -226,7 +211,7 @@ ReAbstractTransformation >> copyOptionsFrom: aDictionary [
 	self options: dict
 ]
 
-{ #category : 'initialize' }
+{ #category : 'utilities' }
 ReAbstractTransformation >> defaultEnvironment [
 
 	^ RBBrowserEnvironment new
@@ -278,19 +263,11 @@ ReAbstractTransformation >> generateChangesFor: aRefactoring [
 ]
 
 { #category : 'testing' }
-ReAbstractTransformation >> isValidSelector [
-	"Check I could be a valid selector (name of method).
-	 For checking if there is symbol like me used as a selector, see Symbol>>#isSelectorSymbol"
-
-	^ OCScanner isSelector: self
-]
-
-{ #category : 'testing' }
 ReAbstractTransformation >> isValidSelector: aString [
 	"Returns the boolean true if aString is a valid selector (name of method).
 	 For checking if there is symbol like me used as a selector, see Symbol>>#isSelectorSymbol"
 
-	"Pay attention RBCondition >> #isValidSelector is returning an Condition object."
+	"Pay attention RBCondition >> #isValidSelector is returning a Condition object."
 	^ OCScanner isSelector: aString
 ]
 
@@ -369,21 +346,23 @@ ReAbstractTransformation >> performChanges: aCompositeChange [
 		performCompositeChange: aCompositeChange
 ]
 
-{ #category : 'accessing' }
+{ #category : 'utilities' }
 ReAbstractTransformation >> poolVariableNamesFor: aClass [
+
 	| pools |
 	pools := Set new.
 	aClass withAllSuperclasses do:
-			[:each |
+			[ :each |
 			each allPoolDictionaryNames do:
-					[:pool |
+					[ :pool |
 					pools addAll: (self poolVariableNamesIn: pool asSymbol) ] ].
 	^pools
 ]
 
-{ #category : 'accessing' }
+{ #category : 'utilities' }
 ReAbstractTransformation >> poolVariableNamesIn: poolName [
-	^(self model classNamed: poolName) classPool keys
+
+	^ (self model classNamed: poolName) classPool keys
 ]
 
 { #category : 'preconditions' }
@@ -428,19 +407,8 @@ ReAbstractTransformation >> refactoringWarning: aString with: aBlock [
 ]
 
 { #category : 'requests' }
-ReAbstractTransformation >> requestImplementorToInline: implementorsCollection [
-	^(self options at: #implementorToInline) value: self
-		value: implementorsCollection
-]
-
-{ #category : 'requests' }
 ReAbstractTransformation >> requestMethodNameFor: aMethodName [
 	^(self options at: #methodName) cull: aMethodName cull: self
-]
-
-{ #category : 'requests' }
-ReAbstractTransformation >> requestSelfArgumentName [
-	^(self options at: #selfArgumentName) value: self
 ]
 
 { #category : 'utilities' }
@@ -493,11 +461,6 @@ ReAbstractTransformation >> setOption: aSymbol toUse: aBlock [
 ]
 
 { #category : 'requests' }
-ReAbstractTransformation >> shouldExtractAssignmentTo: aString [
-	^(self options at: #extractAssignment) value: self value: aString
-]
-
-{ #category : 'requests' }
 ReAbstractTransformation >> shouldNotCreateExtraBindings: aString [
 	^(self options at: #shouldNotCreateExtraBindings) value: self value: aString
 ]
@@ -528,10 +491,4 @@ ReAbstractTransformation >> uniqueMethodNameFor: anInteger [
 	(Symbol findInterned: name) isNotNil]
 			whileTrue: [index := index + 1].
 	^name asSymbol
-]
-
-{ #category : 'printing' }
-ReAbstractTransformation >> whatToDisplayIn: aBrowser [
-
-	^ self changesToDisplayIn: aBrowser
 ]

@@ -255,9 +255,17 @@ Number >> ceiling [
 
 { #category : 'calculating' }
 Number >> clampBetween: min and: max [
+	"Return the receiver if between min and max, else the min or max closest to the receiver."
 
-	 (self between: min and: max ) ifTrue: [ ^ self  ]
-	ifFalse: [( self < min )  ifTrue: [ ^ min]].
+	"(1 clampBetween: 10 and: 20) >>> 10"
+
+	"(15 clampBetween: 10 and: 20) >>> 15"
+
+	"(25 clampBetween: 10 and: 20) >>> 20"
+	
+	(self between: min and: max)
+		ifTrue: [ ^ self ]
+		ifFalse: [ self < min ifTrue: [ ^ min ] ].
 	^ max
 ]
 

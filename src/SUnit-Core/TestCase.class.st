@@ -762,7 +762,7 @@ TestCase >> nameForReport [
 { #category : 'CI support' }
 TestCase >> onPharoCITestingEnvironment [
 
-	^ Smalltalk os environment at: 'PHARO_CI_TESTING_ENVIRONMENT' ifPresent: [ true ] ifAbsent: [ false ]
+	^ OSEnvironment current at: 'PHARO_CI_TESTING_ENVIRONMENT' ifPresent: [ true ] ifAbsent: [ false ]
 ]
 
 { #category : 'running' }
