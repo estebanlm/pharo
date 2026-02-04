@@ -687,14 +687,17 @@ CompiledCode >> literalsToSkip [
 { #category : 'scanning' }
 CompiledCode >> localMessages [
 	"Answer a Set of all the message selectors sent by this method."
+
 	<reflection: 'Structural queries on methods - Method element references'>
 	| scanner aSet |
 	aSet := IdentitySet new.
 	scanner := InstructionStream on: self.
-	scanner scanFor: [:x | 
-			scanner addSelectorTo: aSet.
-			false	"keep scanning"].
-	^aSet
+	scanner scanFor: [ :x |
+		| selectorOrSelf |
+		(selectorOrSelf := scanner selectorToSendOrSelf) isSymbol
+			ifTrue: [ aSet add: selectorOrSelf ].
+		false "keep scanning" ].
+	^ aSet
 ]
 
 { #category : 'scanning' }

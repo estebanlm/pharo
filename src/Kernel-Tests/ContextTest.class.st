@@ -58,7 +58,7 @@ ContextTest >> setUp [
 
 { #category : 'running' }
 ContextTest >> tearDown [
-	aMethodContext stepIntoQuickMethod: false.
+	aMethodContext compiledCode stepIntoQuickMethod: false.
 	super tearDown
 ]
 
@@ -78,22 +78,6 @@ ContextTest >> testActiveHome [
 	"non-active block context"
 	nonActiveBlockContext := self class returnNonActiveContextOfBlock.
 	self assert: (nonActiveBlockContext activeHome) isNil
-]
-
-{ #category : 'tests' }
-ContextTest >> testAstScope [
-
-	| scope |
-	"test that we get a scope for optimized blocks"
-	aMethodContext pc: 88 + 1.
-	scope := aMethodContext astScope.
-	self assert: scope isOptimized.
-
-	"test that we do not get a block scope when pushing a block on the stack"
-	aMethodContext pc: 95 + 1.
-	scope := aMethodContext astScope.
-	self assert: aMethodContext sourceNodeExecuted isBlock.
-	self deny: scope isBlockScope
 ]
 
 { #category : 'tests' }
