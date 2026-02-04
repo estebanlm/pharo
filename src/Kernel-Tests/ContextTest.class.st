@@ -58,7 +58,8 @@ ContextTest >> setUp [
 
 { #category : 'running' }
 ContextTest >> tearDown [
-	aMethodContext compiledCode stepIntoQuickMethod: false.
+
+	aMethodContext compiledCode stepIntoQuickMethods: false.
 	super tearDown
 ]
 
@@ -168,7 +169,7 @@ ContextTest >> testMethodContextPrintDetails [
 		equals: 'Rectangle>>areasOutside:
 	Receiver: (100@100) corner: (200@200)
 	Arguments and temporary variables: 
-		aRectangle: 	(200@200) corner: (420@420)
+		temp1: 	(200@200) corner: (420@420)
 	Receiver''s instance variables: 
 		origin: 	(100@100)
 		corner: 	(200@200)
@@ -242,7 +243,7 @@ ContextTest >> testStepIntoQuickMethod [
 	aMethodContext step.
 
 	"Now we step into #topLeft which is a quick method"
-	aMethodContext stepIntoQuickMethod: true.
+	aMethodContext compiledCode stepIntoQuickMethods: true.
 	newContext := aMethodContext step.
 	quickMethod := (Rectangle >> #topLeft).
 	self assert: newContext sender identicalTo: aMethodContext.
@@ -263,7 +264,7 @@ ContextTest >> testStepIntoQuickMethod [
 { #category : 'tests' }
 ContextTest >> testStepIntoQuickMethodBoolean [
 
-	self deny: aMethodContext stepIntoQuickMethod
+	self deny: aMethodContext compiledCode stepIntoQuickMethods
 ]
 
 { #category : 'tests' }
@@ -271,9 +272,9 @@ ContextTest >> testStepIntoQuickMethodInCompiledBlock [
 
 	|newContext|
 	newContext := [ ] asContext.
-	newContext stepIntoQuickMethod: false.
+	newContext compiledCode stepIntoQuickMethods: false.
 	self deny: newContext method stepIntoQuickMethods.
-	newContext stepIntoQuickMethod: true.
+	newContext compiledCode stepIntoQuickMethods: true.
 	self assert: newContext method stepIntoQuickMethods
 ]
 
@@ -294,7 +295,7 @@ ContextTest >> testStepIntoReturnSelfMethod [
 	aMethodContext step.
 
 	"Now we step into #yourself which is a quick method just returning self"
-	aMethodContext stepIntoQuickMethod: true.
+	aMethodContext compiledCode stepIntoQuickMethods: true.
 	newContext := aMethodContext step.
 	quickMethod := (Object >> #yourself).
 	self assert: newContext sender identicalTo: aMethodContext.

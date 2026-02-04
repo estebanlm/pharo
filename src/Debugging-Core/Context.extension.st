@@ -1,17 +1,6 @@
 Extension { #name : 'Context' }
 
 { #category : '*Debugging-Core' }
-Context >> callPrimitive: primNumber [
-	| res |
-	res := receiver tryPrimitive: primNumber withArgs: self arguments.
-	primNumber >= (1 << 15) ifTrue: [ "inlined primitive, cannot fail" ^ self push: res ].  
-	"regular primitive. Always at the beginning of methods."
-	(self isFailToken: res) ifTrue: [ "keeps interpreting the method" ^ self ].
-	self push: res.
-	self methodReturnTop
-]
-
-{ #category : '*Debugging-Core' }
 Context >> findSecondToOldestSimilarSender [
 	"Search the stack for the second-to-oldest occurance of self's method.  Very useful for an infinite recursion.  Gets back to the second call so you can see one complete recursion cycle, and how it was called at the beginning."
 
@@ -316,27 +305,6 @@ Context >> temporaryVariableNames [
 	| suspendedPC |
 	suspendedPC := self executedPC max: self method initialPC.
 	^ self method debugInfo variableNamesAt: suspendedPC
-]
-
-{ #category : '*Debugging-Core' }
-Context >> tempsAndValuesLimitedTo: sizeLimit indent: indent [
-	"Return a string of the temporary variabls and their current values"
-
-	^ String streamContents: [ :aStream |
-			  | variableNames |
-			  variableNames := self temporaryVariableNames.
-			  variableNames
-				  do: [ :name |
-						  indent timesRepeat: [ aStream tab ].
-						  aStream
-							  nextPutAll: name;
-							  nextPut: $:;
-							  space;
-							  tab.
-						  aStream nextPutAll:
-							  ((self tempNamed: name) printStringLimitedTo:
-								   (sizeLimit - 3 - name size max: 1)) ]
-				  separatedBy: [ aStream cr ] ]
 ]
 
 { #category : '*Debugging-Core' }

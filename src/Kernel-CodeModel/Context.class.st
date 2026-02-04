@@ -354,6 +354,17 @@ Context >> bottomContext [
 	^ self findContextSuchThat: [ :context | context sender isNil]
 ]
 
+{ #category : 'instruction decoding' }
+Context >> callPrimitive: primNumber [
+	| res |
+	res := receiver tryPrimitive: primNumber withArgs: self arguments.
+	primNumber >= (1 << 15) ifTrue: [ "inlined primitive, cannot fail" ^ self push: res ].  
+	"regular primitive. Always at the beginning of methods."
+	(self isFailToken: res) ifTrue: [ "keeps interpreting the method" ^ self ].
+	self push: res.
+	self methodReturnTop
+]
+
 { #category : 'private - exceptions' }
 Context >> canHandleSignal: exception [
 	"Sent to handler (on:do:) contexts only.  If my exception class (first arg) handles exception then return true, otherwise forward this message to the next handler context.  If none left, return false (see nil>>canHandleSignal:)"
@@ -1313,7 +1324,7 @@ Context >> printDetails: stream [
 		cr.
 	string := [ (self tempsAndValuesLimitedTo: 80 indent: 2) padRightTo: 1 with: $x ]
 		          on: Exception
-		          do: [ errorMessage ].
+		          do: [ :ex | '<<error during printing: ' , ex messageText asString , '>>' ].
 	stream nextPutAll: string.
 
 	stream
@@ -1323,13 +1334,13 @@ Context >> printDetails: stream [
 		cr.
 	receiver class allInstVarNames
 		ifEmpty: [
-			stream nextPutAll: ([ receiver printStringLimitedTo: 90 ]
-					 on: Exception
-					 do: [ errorMessage ]) ]
+				stream nextPutAll: ([ receiver printStringLimitedTo: 90 ]
+						 on: Exception
+						 do: [ errorMessage ]) ]
 		ifNotEmpty: [
-			[ receiver longPrintOn: stream limitedTo: 80 indent: 2 ]
-				on: Exception
-				do: [ stream nextPutAll: errorMessage ] ].
+				[ receiver longPrintOn: stream limitedTo: 80 indent: 2 ]
+					on: Exception
+					do: [ stream nextPutAll: errorMessage ] ].
 	stream cr
 ]
 
@@ -1851,7 +1862,7 @@ Context >> send: selector to: aReceiver with: arguments super: superFlag [
 			  with: (Array with: selector with: arguments with: aReceiver)
 			  super: superFlag ].
 
-	(aMethod isRealPrimitive or:[self stepIntoQuickMethod not]) ifTrue: [
+	(aMethod isRealPrimitive or:[ self compiledCode stepIntoQuickMethods not ]) ifTrue: [
 		value := self
 			         tryPrimitiveFor: aMethod
 			         receiver: aReceiver
@@ -1889,7 +1900,7 @@ Context >> send: selector to: aReceiver with: arguments super: superFlag [
 	When activating the quick method, we arrive on the PC corresponding to the primitive which is not suposed to be stepped.
 	We have to fix the PC so that the next executed bytecode is the push.
 	We do that by setting the PC to aMethod initialPC + 3 (the number of bytes of the primitive)."
-	(aMethod isQuick and:[self stepIntoQuickMethod]) ifTrue: [ context pc: aMethod initialPC + self quickMethodPrimitiveBytecodeSize].
+	(aMethod isQuick and:[ self compiledCode stepIntoQuickMethods ]) ifTrue: [ context pc: aMethod initialPC + self quickMethodPrimitiveBytecodeSize].
 
 	"check if activated method handles the error code (a first bytecode will be store into temp)"
 	"long store temp"
@@ -2168,6 +2179,28 @@ Context >> tempAt: index put: value [
 	<reflection: 'Stack Manipulation - Context'>
 	<primitive: 211>
 	^self at: index put: value
+]
+
+{ #category : 'printing' }
+Context >> tempsAndValuesLimitedTo: sizeLimit indent: indent [
+	"Return a string of the temporary variabls and their current values"
+
+	"Compute a line limit to not go over @sizeLimit per line"
+	| lineLimit |
+	lineLimit := sizeLimit - 'temp0: ' size - indent.
+	^ String streamContents: [ :aStream |
+			  (1 to: self numTemps)
+				  do: [ :index |
+						  indent timesRepeat: [ aStream tab ].
+						  aStream
+							  nextPutAll: 'temp';
+							  print: index;
+							  nextPut: $:;
+							  space;
+							  tab.
+						  aStream nextPutAll: ((self tempAt: index) printStringLimitedTo: 
+						lineLimit) ]
+				  separatedBy: [ aStream cr ] ]
 ]
 
 { #category : 'controlling' }
