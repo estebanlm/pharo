@@ -98,8 +98,11 @@ StMethodNameEditorPresenter class >> openOn: aMethod withInvalidArgs: aSet canRe
 { #category : 'specs' }
 StMethodNameEditorPresenter class >> openOn: aMethod withInvalidArgs: aSet canRenameArgs: aBoolean1 canRemoveArgs: aBoolean2 canAddArgs: aBoolean3 canEditName: aBoolean4 [
 	"I take a RBMethodName as parameter and open the refactoring UI in a modal to rename it."
-
 	| temp |
+	
+	self flag: #REMOVE. "This methis does not has to exist, please de no use it
+	Yes. my eyes are still hurting"
+	
 	temp := self on: aMethod.
 	temp invalidArgNames: aSet.
 	temp canRenameArgs: aBoolean1.

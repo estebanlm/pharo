@@ -53,11 +53,11 @@ ReRemoveSharedVariablesDriver >> configureRefactoring [
 ReRemoveSharedVariablesDriver >> defaultSelectDialog [
 
 	^ super defaultSelectDialog
-		  title: 'There are references to variables!';
-		  items: self breakingChoices;
-		  display: [ :each | each description ];
-		  displayIcon: [ :each | self iconNamed: each systemIconName ];
-			yourself
+		title: 'There are references to variables!';
+		items: self breakingChoices;
+		display: [ :each | each description ];
+		displayIcon: [ :each | self iconNamed: each systemIconName ];
+		yourself
 ]
 
 { #category : 'configuration' }

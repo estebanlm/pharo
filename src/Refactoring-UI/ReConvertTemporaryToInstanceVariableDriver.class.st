@@ -76,7 +76,7 @@ ReConvertTemporaryToInstanceVariableDriver >> defaultSelectDialog [
 		  items: self breakingChoices;
 		  display: [ :each | each description ];
 		  displayIcon: [ :each | self iconNamed: each systemIconName ];
-		  openModal
+		  yourself
 ]
 
 { #category : 'execution' }

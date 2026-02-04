@@ -102,7 +102,7 @@ ReInsertSubclassDriver >> packageName [
 { #category : 'initialization' }
 ReInsertSubclassDriver >> requestClass [
 
-	(StRefactoringAddClassPresenter on: self)
+	(StRefactoringAddClassPresenter newApplication: self application model: self)
 		onCancel: [ : dialog | dialog close ];
 		onAccept: [ :dialog |
 			self

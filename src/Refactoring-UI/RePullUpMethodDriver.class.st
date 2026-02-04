@@ -48,7 +48,8 @@ RePullUpMethodDriver class >> model: model scopes: refactoringScopes pullUpMetho
 
 { #category : 'ui - dialogs' }
 RePullUpMethodDriver >> alertFailedPreconditions [
-	SpAlertDialog new
+
+	self application newAlert
 		title: 'Pull Up method failed: Required preconditions were not met';
 		label:  self failedPreconditionsErrorString;
 		acceptLabel: 'Accept';
@@ -107,7 +108,8 @@ RePullUpMethodDriver >> configureAndRunRefactoring [
 	method with the same name because during an interaction we when to let the user the possibility to 
 	do actions to handle this specific case. This is why similarly method in direct superclass is checked 
 	but in the breaking change precondtions."
-	refactoring failedApplicabilityPreconditions ifNotEmpty: [ ^ self alertFailedPreconditions ].
+	refactoring failedApplicabilityPreconditions 
+		ifNotEmpty: [ ^ self alertFailedPreconditions ].
 
 	self setBreakingChangesPreconditions.
 	refactoring failedBreakingChangePreconditions ifEmpty: [ self applyChanges ] ifNotEmpty: [ self handleBreakingChanges ]
@@ -157,7 +159,8 @@ RePullUpMethodDriver >> defaultSelectDialog [
 		  message: self labelBasedOnBreakingChanges;
 		  items: self breakingChoices;
 		  display: [ :each | each description ];
-		  displayIcon: [ :each | self iconNamed: each systemIconName ]
+		  displayIcon: [ :each | self iconNamed: each systemIconName ];
+		  yourself
 		  
 ]
 
@@ -244,24 +247,25 @@ RePullUpMethodDriver >> runRefactoring [
 
 { #category : 'execution' }
 RePullUpMethodDriver >> selectMethodsAndClass [
-
 	| dialog classes |
-	classes := class allSuperclasses removeAllSuchThat: [ :each |
-		           each == Object or: [ each == ProtoObject ] ].
-	dialog := self methodsAndSuperclassSelectionPresenterClass
-		          title: 'There are potential breaking changes!'
-		          label: 'Methods to be pulled up'
-		          dropLabel: 'Pull up methods from ' , class name , ' to:'
-		          withItems:
-			          (class methods sort: [ :a :b | a asString < b asString ])
-				          asOrderedCollection
-		          selecting: methods asOrderedCollection
-		          dropItems: classes
-		          acceptBlock: [ :selectedClass :selectedMethods |
-				          superclass := selectedClass.
-				          methods := selectedMethods ].
+	
+	classes := class allSuperclasses 
+		removeAllSuchThat: [ :each | each == Object or: [ each == ProtoObject ] ].
+	
+	dialog := (self methodsAndSuperclassSelectionPresenterClass newApplication: self application)
+		title: 'There are potential breaking changes!'
+			label: 'Methods to be pulled up'
+			dropLabel: 'Pull up methods from ' , class name , ' to:'
+			withItems: (class methods sort: #asString ascending) asOrderedCollection
+			selecting: methods asOrderedCollection
+			dropItems: classes
+			acceptBlock: [ :selectedClass :selectedMethods |
+				superclass := selectedClass.
+				methods := selectedMethods ];
+		openModal.			
 
-	dialog cancelled ifFalse: [ ^ self ].
+	dialog isOk ifTrue: [ ^ self ].
+	
 	superclass := nil.
 	methods := nil
 ]

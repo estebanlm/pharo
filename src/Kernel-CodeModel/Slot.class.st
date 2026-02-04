@@ -198,10 +198,13 @@ Slot >> isReadIn: aCompiledCode [
 
 { #category : 'testing' }
 Slot >> isReferenced [
+
 	^ self owningClass
-		ifNil: [ false ]
-		ifNotNil: [ :class |
-		  class withAllSubclasses anySatisfy: [ :subclass | subclass hasMethodAccessingVariable: self ] ]
+		  ifNil: [ false ]
+		  ifNotNil: [ :class |
+		"We do not use #withAllSubclasses because it often put the owning class last and most of the time variables are referenced by the owning class and not the subclasses. And it is really costly to check the references since it builds the AST of each methods.
+		You can check the speed of NoUnusedVariablesLeftTest>>#testNoUnusedInstanceVariablesLeft to see the difference."
+		  (class hasMethodAccessingVariable: self) or: [ class allSubclasses anySatisfy: [ :subclass | subclass hasMethodAccessingVariable: self ] ] ]
 ]
 
 { #category : 'testing' }
