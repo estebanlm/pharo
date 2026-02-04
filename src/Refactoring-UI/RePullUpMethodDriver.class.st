@@ -221,11 +221,9 @@ RePullUpMethodDriver >> pullUpMethods [
 { #category : 'actions' }
 RePullUpMethodDriver >> pullUpReferencedInstVars [
 
-	( notInstVarRefs referencedInstanceVariables do: [ :instVar | 
-		"We add the pushUpVariable refactoring to the refactoring previous transformations."
-		"should we not call privateTransform instead of generateChanges"
-		(refactoring pullUpVariable: instVar) ]).
-	
+	notInstVarRefs referencedInstanceVariables do: [ :instVar | "We add the pushUpVariable refactoring to the refactoring previous transformations." "should we not call privateTransform instead of generateChanges"
+		refactoring pullUpVariable: instVar ].
+	self pullUpMethods
 ]
 
 { #category : 'actions' }
