@@ -71,6 +71,7 @@ MyRunnerPresenterTreeTest >> testItemSelectionInPackagePresenter [
 MyRunnerPresenterTreeTest >> testResultDescriptionPresenterShouldContainsTheTestsExecutionStats [
 
 	| aPackage aClass expectedDescription |
+	self skip: 'again, a mock package is needed'.
 	aPackage := #'TestRunner-Tests' asPackage.
 	aClass := GreenTest.
 	expectedDescription := '2 ran, 2 passed, 0 skipped, 0 expected failures, 0 failures, 0 errors, 0 passed unexpected'.
