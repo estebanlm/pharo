@@ -166,9 +166,8 @@ PBBootstrap >> createImage [
 PBBootstrap >> ensureBaselineOfPharoBootstrap [
 
 	"Update metacello, then install the baselines"
-	[
+	'Metacello-Core' asPackage removeFromSystem.
 	(self originRepository versionWithInfo: (self originRepository versionInfoFromVersionNamed: 'Metacello-Core')) load.
-	] on: MCMergeOrLoadWarning do: [ :w | w resume: true ].
 
 	#( BaselineOfKernel BaselineOfCompiler BaselineOfTraits BaselineOfFileSystem BaselineOfMonticello BaselineOfPharoBootstrap BaselineOfMetacello ) do: [
 		:baselineName | (self originRepository versionWithInfo: (self originRepository versionInfoFromVersionNamed: baselineName)) load ]
