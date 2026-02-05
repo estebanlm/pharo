@@ -4,9 +4,8 @@ Class {
 	#classInstVars : [
 		'data'
 	],
-	#category : 'TestRunner-Tests-Utilities-Test',
-	#package : 'TestRunner-Tests',
-	#tag : 'Utilities-Test'
+	#category : 'TestRunner-FakeTests',
+	#package : 'TestRunner-FakeTests'
 }
 
 { #category : 'initialization' }
@@ -23,14 +22,29 @@ DependencyTest class >> data: anInteger [
 
 { #category : 'initialization' }
 DependencyTest class >> incrementData [
-	data := data + 1
+	data add: 1
 ]
 
-{ #category : 'initialization' }
+{ #category : 'class initialization' }
 DependencyTest class >> reset [
 
 	<script>
-	data := 10
+	data := OrderedCollection new
+]
+
+{ #category : 'initialization' }
+DependencyTest >> assertCountThenIncrement: anObject [
+
+	self skipOnPharoCITestingEnvironment.
+	self ignore.
+	self assert: self count equals: anObject .
+	self class incrementData
+]
+
+{ #category : 'accessing' }
+DependencyTest >> count [
+
+	^ self class data size
 ]
 
 { #category : 'script' }
@@ -42,47 +56,37 @@ DependencyTest >> resetData [
 { #category : 'initialization' }
 DependencyTest >> testDataIs10ThenIncrement [
 
-	self skipOnPharoCITestingEnvironment.
-	self resetData.
-	self assert: self class data equals: 10.
-	self class incrementData
+	self 
+		resetData;
+		assertCountThenIncrement: 0
 ]
 
 { #category : 'initialization' }
 DependencyTest >> testDataIs11ThenIncrement [
 
-	self skipOnPharoCITestingEnvironment.
-	self assert: self class data equals: 11.
-	self class incrementData
+	self assertCountThenIncrement: 1
 ]
 
 { #category : 'initialization' }
 DependencyTest >> testDataIs12ThenIncrement [
 
-	self skipOnPharoCITestingEnvironment.
-	self assert: self class data equals: 12.
-	self class incrementData
+	self assertCountThenIncrement: 2
 ]
 
 { #category : 'initialization' }
 DependencyTest >> testDataIs13ThenIncrement [
 
-	self skipOnPharoCITestingEnvironment.
-	self assert: self class data equals: 13.
-	self class incrementData
+	self assertCountThenIncrement: 3
 ]
 
 { #category : 'initialization' }
 DependencyTest >> testDataIs14ThenIncrement [
 
-	self skipOnPharoCITestingEnvironment.
-	self assert: self class data equals: 14.
-	self class incrementData
+	self assertCountThenIncrement: 4
 ]
 
 { #category : 'initialization' }
 DependencyTest >> testDataIs15ThenIncrement [
 
-	self skipOnPharoCITestingEnvironment.
-	self assert: self class data equals: 15
+	self assertCountThenIncrement: 5
 ]

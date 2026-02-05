@@ -9,38 +9,33 @@ Class {
 	#tag : 'Core'
 }
 
+{ #category : 'as yet unclassified' }
+RunnerLongDurationTest >> longTestClass [
+
+	^ LongTest
+]
+
 { #category : 'running' }
 RunnerLongDurationTest >> setUp [
 
 	super setUp.
+	self longTestClass doNotIgnoreTest .
 	runner := NewTestRunner new suitePreparator:
-		          SuitePreparator shuffleSuitePreparatorClass 
+		          SuitePreparator withShuffling 
 ]
 
 { #category : 'tests' }
-RunnerLongDurationTest >> testRunningFromACollectionOfPackages [
+RunnerLongDurationTest >> testRunningFromAClass [
 
-	"first execution"
-
-	| packages |
-	self skip: 'these tests depend on the duration of other tests, it would be better to create a mock test package'.
-	packages := OrderedCollection
-		            with: #'Zodiac-Tests' asPackage
-		            with: #'Zodiac-Tests' asPackage.
-	runner runPackages: packages.
-	self assert: runner runCount equals: 79 * 2.
-	self assert: runner passedCount equals: 79 * 2
+	runner runClass: self longTestClass.
+	self assert: runner runCount equals: 1.
+	self assert: runner passedCount equals: 1
 ]
 
 { #category : 'tests' }
-RunnerLongDurationTest >> testRunningFromAPackage [
+RunnerLongDurationTest >> testRunningFromACollectionOfClasses [
 
-	"first execution"
-
-	| aPackage |
-	self skip: 'these tests depend on the duration of other tests, it would be better to create a mock test package'.
-	aPackage := #'Zodiac-Tests' asPackage.
-	runner runPackage: aPackage.
-	self assert: runner runCount equals: 79.
-	self assert: runner passedCount equals: 79
+	runner runClasses: { LongTest . LongTest . LongTest }.
+	self assert: runner runCount equals: 3.
+	self assert: runner passedCount equals: 3
 ]

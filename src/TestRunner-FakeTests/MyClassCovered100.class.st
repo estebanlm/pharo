@@ -4,9 +4,8 @@ I am a simple class with 100% code coverage
 Class {
 	#name : 'MyClassCovered100',
 	#superclass : 'Object',
-	#category : 'TestRunner-Tests-Utilities-Class',
-	#package : 'TestRunner-Tests',
-	#tag : 'Utilities-Class'
+	#category : 'TestRunner-FakeTests',
+	#package : 'TestRunner-FakeTests'
 }
 
 { #category : 'as yet unclassified' }
