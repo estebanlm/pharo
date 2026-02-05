@@ -19,7 +19,7 @@ ShuffleSuitePreparatorTest >> testSuitePreparator [
 		assert: initialSuiteCopy tests
 		equals: initialSuite tests.
 	
-	ShuffleSuitePreparator applyOn: initialSuite.
+	SuitePreparator shuffleSuitePreparatorClass applyOn: initialSuite.
 	
 	self
 		assert: initialSuite tests size

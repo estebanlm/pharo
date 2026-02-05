@@ -14,7 +14,7 @@ RunnerLongDurationTest >> setUp [
 
 	super setUp.
 	runner := NewTestRunner new suitePreparator:
-		          ShuffleSuitePreparator
+		          SuitePreparator shuffleSuitePreparatorClass 
 ]
 
 { #category : 'tests' }
@@ -23,6 +23,7 @@ RunnerLongDurationTest >> testRunningFromACollectionOfPackages [
 	"first execution"
 
 	| packages |
+	self skip: 'these tests depend on the duration of other tests, it would be better to create a mock test package'.
 	packages := OrderedCollection
 		            with: #'Zodiac-Tests' asPackage
 		            with: #'Zodiac-Tests' asPackage.
@@ -37,6 +38,7 @@ RunnerLongDurationTest >> testRunningFromAPackage [
 	"first execution"
 
 	| aPackage |
+	self skip: 'these tests depend on the duration of other tests, it would be better to create a mock test package'.
 	aPackage := #'Zodiac-Tests' asPackage.
 	runner runPackage: aPackage.
 	self assert: runner runCount equals: 79.

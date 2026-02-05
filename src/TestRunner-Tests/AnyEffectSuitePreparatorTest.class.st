@@ -19,7 +19,7 @@ AnyEffectSuitePreparatorTest >> testSuitePreparator [
 		assert: initialSuiteCopy tests
 		equals: initialSuite tests.
 	
-	AnyEffectSuitePreparator applyOn: initialSuite.
+	SuitePreparator anySuitePreparatorClass applyOn: initialSuite.
 	
 	self 
 		assert: initialSuiteCopy tests

@@ -148,7 +148,7 @@ NewTestRunner >> addToSuite: aTestSuite [
 { #category : 'private' }
 NewTestRunner >> classForSuitePreparator [
 
-	^ AbstractSuitePreparator
+	^ SuitePreparator 
 ]
 
 { #category : 'private' }
