@@ -762,7 +762,7 @@ TestCase >> nameForReport [
 { #category : 'CI support' }
 TestCase >> onPharoCITestingEnvironment [
 
-	^ OSEnvironment current at: 'PHARO_CI_TESTING_ENVIRONMENT' ifPresent: [ true ] ifAbsent: [ false ]
+	^ (VirtualMachine new readEnvironmentVariable: 'PHARO_CI_TESTING_ENVIRONMENT') notNil
 ]
 
 { #category : 'running' }
