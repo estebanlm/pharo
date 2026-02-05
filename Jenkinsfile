@@ -161,71 +161,58 @@ def defineIsoTestStage(stageName, projectName, testGroup, testPackages){
     }
 }
 
-def bootstrapImage(architectures){
-  cleanWs()
-  def builders = [:]
-    
-  for (arch in architectures) {
-      // Need to bind the label variable before the closure - can't do 'for (label in labels)'
-      def architecture = arch
-
-      builders[architecture] = {
-        dir(architecture) {
-
-        try {
-          stage ("Fetch Requirements-${architecture}") {  
+def bootstrapImage(){
+    cleanWs()
+    try {
+        stage ("Fetch Requirements") {  
             checkout scm
             // Stage 1 is to remove any artefacts, not required for Jenkins
-            shell "BUILD_NUMBER=${BUILD_NUMBER} BOOTSTRAP_ARCH=${architecture} bash ./bootstrap/scripts/2-download.sh"
-          }
+            shell "BUILD_NUMBER=${BUILD_NUMBER} BOOTSTRAP_ARCH=64 bash ./bootstrap/scripts/2-download.sh"
+        }
 
-          stage ("Bootstrap-${architecture}") {
-            shell "BUILD_NUMBER=${BUILD_NUMBER} BOOTSTRAP_ARCH=${architecture} bash ./bootstrap/scripts/3-prepare.sh"
-          }
+        stage ("Bootstrap") {
+            shell "BUILD_NUMBER=${BUILD_NUMBER} BOOTSTRAP_ARCH=64 bash ./bootstrap/scripts/3-prepare.sh"
+        }
 
-          stage ("Metacello-${architecture}") {
-            shell "BUILD_NUMBER=${BUILD_NUMBER} BOOTSTRAP_ARCH=${architecture} bash ./bootstrap/scripts/4-installMetacello.sh"
-            stash includes: "build/bootstrap-cache/*.zip,build/bootstrap-cache/*.sources,bootstrap/scripts/**,tests/**", name: "bootstrap${architecture}"
-          }
-          
-          def isoTesters = [:]
-          isoTesters['SUnit'] = { defineIsoTestStage("SUnit", "SUnit", "Tests", "\'SUnit-Tests\'  \'SUnit-Visitor-Tests\'  \'SUnit-MockObjects-Tests\'") }
-          isoTesters['Kernel'] = { defineIsoTestStage("Kernel", "Kernel", "Tests", "\'Kernel-Tests\'  \'Kernel-CodeModel-Tests\'") }
-          parallel isoTesters
+        stage ("Metacello") {
+            shell "BUILD_NUMBER=${BUILD_NUMBER} BOOTSTRAP_ARCH=64 bash ./bootstrap/scripts/4-installMetacello.sh"
+            stash includes: "build/bootstrap-cache/*.zip,build/bootstrap-cache/*.sources,bootstrap/scripts/**,tests/**", name: "bootstrap64"
+        }
+        
+        def isoTesters = [:]
+        isoTesters['SUnit'] = { defineIsoTestStage("SUnit", "SUnit", "Tests", "\'SUnit-Tests\'  \'SUnit-Visitor-Tests\'  \'SUnit-MockObjects-Tests\'") }
+        isoTesters['Kernel'] = { defineIsoTestStage("Kernel", "Kernel", "Tests", "\'Kernel-Tests\'  \'Kernel-CodeModel-Tests\'") }
+        parallel isoTesters
 
-          stage ("Full Image-${architecture}") {
-            shell "BUILD_NUMBER=${BUILD_NUMBER} BOOTSTRAP_ARCH=${architecture} bash ./bootstrap/scripts/5-installIDE.sh"
-            stash includes: "build/bootstrap-cache/*.zip,build/bootstrap-cache/*.sources,bootstrap/scripts/**,tests/**", name: "bootstrap${architecture}"
-          }
+        stage ("Full Image") {
+            shell "BUILD_NUMBER=${BUILD_NUMBER} BOOTSTRAP_ARCH=64 bash ./bootstrap/scripts/5-installIDE.sh"
+            stash includes: "build/bootstrap-cache/*.zip,build/bootstrap-cache/*.sources,bootstrap/scripts/**,tests/**", name: "bootstrap64"
+        }
 
-          if( isDevelopmentBranch() ) {
-            stage("Upload to files.pharo.org-${architecture}") {
-              dir("build/bootstrap-cache") {
-                  shell "BUILD_NUMBER=${env.BUILD_ID} bash ../../bootstrap/scripts/prepare_for_upload.sh ${architecture}"
-                sshagent (credentials: ['files-pharo-org-inria']) {
-                  shell "bash ../../bootstrap/scripts/upload_to_files.pharo.org.sh"
+        if( isDevelopmentBranch() ) {
+            stage("Upload to files.pharo.org") {
+                dir("build/bootstrap-cache") {
+                    shell "BUILD_NUMBER=${env.BUILD_ID} bash ../../bootstrap/scripts/prepare_for_upload.sh 64"
+                    sshagent (credentials: ['files-pharo-org-inria']) {
+                        shell "bash ../../bootstrap/scripts/upload_to_files.pharo.org.sh"
+                    }
                 }
-              }
             }
-          }
-      } finally {
-          shell "ls -la"
-          if(fileExists('PharoDebug.log')){
-              shell "mv PharoDebug.log PharoDebug-bootstrap.log"
-              archiveArtifacts allowEmptyArchive: true, artifacts: "PharoDebug-bootstrap.log", fingerprint: true
-          }
-          if(fileExists('crash.dmp')){
-              shell "mv crash.dmp crash-bootstrap.dmp"
-              archiveArtifacts allowEmptyArchive: true, artifacts: "crash-bootstrap.dmp", fingerprint: true
-          }
+        }
+    } finally {
+        shell "ls -la"
+        if(fileExists('PharoDebug.log')){
+            shell "mv PharoDebug.log PharoDebug-bootstrap.log"
+            archiveArtifacts allowEmptyArchive: true, artifacts: "PharoDebug-bootstrap.log", fingerprint: true
+        }
+        if(fileExists('crash.dmp')){
+            shell "mv crash.dmp crash-bootstrap.dmp"
+            archiveArtifacts allowEmptyArchive: true, artifacts: "crash-bootstrap.dmp", fingerprint: true
+        }
 
         archiveArtifacts artifacts: 'build/bootstrap-cache/*.zip,build/bootstrap-cache/*.sources', fingerprint: true
         cleanWs()
-      }
-      }
     }
-  }
-  parallel builders
 }
 
 def launchBenchmark(){
@@ -261,7 +248,7 @@ try{
 
   node('unix') {
     timeout(60) {
-      bootstrapImage(architectures)
+      bootstrapImage()
     }
   }
 
