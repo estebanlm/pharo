@@ -141,8 +141,28 @@ Build Url: ${env.BUILD_URL}
   }}}
 }
 
+def defineIsoTestStage(stageName, projectName, testGroup, testPackages){
+    stage("Tests-ISO-" + stageName) {
+        timeout(2) {
+            dir(env.STAGE_NAME) {
+                def PHARO_MAJOR = shellOutput('git describe --tags --first-parent | cut -d\'-\' -f 1 | cut -c 2- | cut -d\'.\' -f 1-1')
+                def PHARO_MINOR = shellOutput('git describe --tags --first-parent | cut -d\'-\' -f 1 | cut -c 2- | cut -d\'.\' -f 2-2')
+                def PHARO_SHORT = PHARO_MAJOR + PHARO_MINOR
+
+                unstash "bootstrap64"
+                unzip "build/bootstrap-cache/metacello.zip"
+                shell "bash -c './bootstrap/scripts/getPharoVM.sh ${PHARO_SHORT}'"
+                shell "bash -c './pharo metacello.image metacello install --save --strict --signalErrorOnWarning \"filetree://../src\" SUnit --groups Core'"
+                shell "bash -c './pharo metacello.image metacello install --save --strict --signalErrorOnWarning \"filetree://../src\" " + projectName + " --groups " + testGroup + "'"
+                shell "bash -c './pharo metacello.image test --junit-xml-output --stage-name ${env.STAGE_NAME}  " + testPackages + " '"
+                junit allowEmptyResults: false, testResults: "${env.STAGE_NAME}*.xml"
+            }
+        }
+    }
+}
+
 def bootstrapImage(architectures){
-   cleanWs()
+  cleanWs()
   def builders = [:]
     
   for (arch in architectures) {
@@ -167,42 +187,11 @@ def bootstrapImage(architectures){
             shell "BUILD_NUMBER=${BUILD_NUMBER} BOOTSTRAP_ARCH=${architecture} bash ./bootstrap/scripts/4-installMetacello.sh"
             stash includes: "build/bootstrap-cache/*.zip,build/bootstrap-cache/*.sources,bootstrap/scripts/**,tests/**", name: "bootstrap${architecture}"
           }
-
-          stage("Tests-ISO-SUnit") {
-              timeout(35) {
-                  dir(env.STAGE_NAME) {
-                      def PHARO_MAJOR = shellOutput('git describe --tags --first-parent | cut -d\'-\' -f 1 | cut -c 2- | cut -d\'.\' -f 1-1')
-                      def PHARO_MINOR = shellOutput('git describe --tags --first-parent | cut -d\'-\' -f 1 | cut -c 2- | cut -d\'.\' -f 2-2')
-                      def PHARO_SHORT = PHARO_MAJOR + PHARO_MINOR
-                      def logMessage = shellOutput('git log -1 --format="%B"')
-                      unstash "bootstrap64"
-                      unzip "build/bootstrap-cache/metacello.zip"
-                      shell "bash -c './bootstrap/scripts/getPharoVM.sh ${PHARO_SHORT}'"
-                      shell "bash -c './pharo metacello.image metacello install --save --strict --signalErrorOnWarning \"filetree://../src\" SUnit --groups Core'"
-                      shell "bash -c './pharo metacello.image metacello install --save --strict --signalErrorOnWarning \"filetree://../src\" SUnit --groups Tests'"
-                      shell "bash -c './pharo metacello.image test --junit-xml-output --stage-name ${env.STAGE_NAME}  \'SUnit-Tests\'  \'SUnit-Visitor-Tests\'  \'SUnit-MockObjects-Tests\''"
-                      junit allowEmptyResults: false, testResults: "${env.STAGE_NAME}*.xml"
-                  }
-              }
-          }
           
-          stage("Tests-ISO-Kernel") {
-              timeout(35) {
-                  dir(env.STAGE_NAME) {
-                      def PHARO_MAJOR = shellOutput('git describe --tags --first-parent | cut -d\'-\' -f 1 | cut -c 2- | cut -d\'.\' -f 1-1')
-                      def PHARO_MINOR = shellOutput('git describe --tags --first-parent | cut -d\'-\' -f 1 | cut -c 2- | cut -d\'.\' -f 2-2')
-                      def PHARO_SHORT = PHARO_MAJOR + PHARO_MINOR
-                      def logMessage = shellOutput('git log -1 --format="%B"')
-                      unstash "bootstrap64"
-                      unzip "build/bootstrap-cache/metacello.zip"
-                      shell "bash -c './bootstrap/scripts/getPharoVM.sh ${PHARO_SHORT}'"
-                      shell "bash -c './pharo metacello.image metacello install --save --strict --signalErrorOnWarning \"filetree://../src\" SUnit --groups Core'"
-                      shell "bash -c './pharo metacello.image metacello install --save --strict --signalErrorOnWarning \"filetree://../src\" Kernel --groups Tests'"
-                      shell "bash -c './pharo metacello.image test --junit-xml-output --stage-name ${env.STAGE_NAME}  \'Kernel-Tests\'  \'Kernel-CodeModel-Tests\' '"
-                      junit allowEmptyResults: false, testResults: "${env.STAGE_NAME}*.xml"
-                  }
-              }
-          }
+          def isoTesters = [:]
+          isoTesters['SUnit'] = { defineIsoTestStage("SUnit", "SUnit", "Tests", "\'SUnit-Tests\'  \'SUnit-Visitor-Tests\'  \'SUnit-MockObjects-Tests\'") }
+          isoTesters['Kernel'] = { defineIsoTestStage("Kernel", "Kernel", "Tests", "\'Kernel-Tests\'  \'Kernel-CodeModel-Tests\'") }
+          parallel isoTesters
 
           stage ("Full Image-${architecture}") {
             shell "BUILD_NUMBER=${BUILD_NUMBER} BOOTSTRAP_ARCH=${architecture} bash ./bootstrap/scripts/5-installIDE.sh"
@@ -236,7 +225,7 @@ def bootstrapImage(architectures){
       }
     }
   }
-  parallel builders 
+  parallel builders
 }
 
 def launchBenchmark(){
