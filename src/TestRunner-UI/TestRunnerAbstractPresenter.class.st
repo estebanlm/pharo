@@ -371,15 +371,15 @@ TestRunnerAbstractPresenter >> suitePreparationModesPresenter [
 	^ SpDropListPresenter new
 		  help: 'Suite preparation mode';
 		  items: { SuitePreparator new . SuitePreparator withShuffling };
-		  whenSelectedItemChangedDo: [ :aSuitePreparatorClass | 
-			  self updateTestRunnerSuiePreparatorWith: aSuitePreparatorClass.
+		  whenSelectedItemChangedDo: [ :aSuitePreparator | 
+			  self updateTestRunnerSuiePreparatorWith: aSuitePreparator.
 			  self inform: self runner suitePreparator name ]
 ]
 
 { #category : 'accessing' }
 TestRunnerAbstractPresenter >> suitePreparator [
 
-	^ suitePreparationMode ifNil: [ AnyEffectSuitePreparator ]
+	^ suitePreparationMode ifNil: [ SuitePreparator new ]
 ]
 
 { #category : 'buttons-presenters-initialization' }

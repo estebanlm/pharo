@@ -1,13 +1,32 @@
 Class {
 	#name : 'SuitePreparatorTest',
-	#superclass : 'TestCase',
+	#superclass : 'ParametrizedTestCase',
 	#instVars : [
-		'runner'
+		'suitePreparator'
 	],
 	#category : 'TestRunner-Tests-Preparators',
 	#package : 'TestRunner-Tests',
 	#tag : 'Preparators'
 }
+
+{ #category : 'building suites' }
+SuitePreparatorTest class >> testParameters [
+
+	^ ParametrizedTestMatrix new
+		forSelector: #suitePreparator addOptions: { SuitePreparator new . SuitePreparator withShuffling }
+]
+
+{ #category : 'accessing' }
+SuitePreparatorTest >> suitePreparator [
+
+	^ suitePreparator
+]
+
+{ #category : 'accessing' }
+SuitePreparatorTest >> suitePreparator: anObject [
+
+	suitePreparator := anObject
+]
 
 { #category : 'tests' }
 SuitePreparatorTest >> testSuitePreparator [
@@ -19,9 +38,9 @@ SuitePreparatorTest >> testSuitePreparator [
 		assert: initialSuiteCopy tests
 		equals: initialSuite tests.
 	
-	SuitePreparator new applyOn: initialSuite.
+	self suitePreparator applyOn: initialSuite.
 	
 	self 
-		assert: initialSuiteCopy tests
-		equals: initialSuite tests.
+		assertCollection: initialSuiteCopy tests
+		hasSameElements: initialSuite tests.
 ]
