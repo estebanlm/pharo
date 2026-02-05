@@ -1,5 +1,5 @@
 Class {
-	#name : 'ShuffleSuitePreparatorTest',
+	#name : 'SuitePreparatorTest',
 	#superclass : 'TestCase',
 	#instVars : [
 		'runner'
@@ -10,7 +10,7 @@ Class {
 }
 
 { #category : 'tests' }
-ShuffleSuitePreparatorTest >> testSuitePreparator [
+SuitePreparatorTest >> testSuitePreparator [
 	
 	|initialSuite initialSuiteCopy|
 	initialSuite := GreenTest suite.
@@ -19,11 +19,9 @@ ShuffleSuitePreparatorTest >> testSuitePreparator [
 		assert: initialSuiteCopy tests
 		equals: initialSuite tests.
 	
-	SuitePreparator withShuffling applyOn: initialSuite.
+	SuitePreparator new applyOn: initialSuite.
 	
-	self
-		assert: initialSuite tests size
-		equals: initialSuiteCopy tests size.
-	
-	self assert: (initialSuiteCopy tests includesAll: initialSuite tests)
+	self 
+		assert: initialSuiteCopy tests
+		equals: initialSuite tests.
 ]

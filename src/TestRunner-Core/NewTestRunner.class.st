@@ -43,7 +43,7 @@ Class {
 NewTestRunner class >> example [
 	<script>
 	self new 
-	suitePreparator: ShuffleSuitePreparator;
+	suitePreparator: SuitePreparator withShuffling ;
 	run: DependencyTest;
 	inspect
 ]
@@ -146,12 +146,6 @@ NewTestRunner >> addToSuite: aTestSuite [
 ]
 
 { #category : 'private' }
-NewTestRunner >> classForSuitePreparator [
-
-	^ SuitePreparator 
-]
-
-{ #category : 'private' }
 NewTestRunner >> classForTestResult [
 
 	^ TestResult
@@ -217,7 +211,7 @@ NewTestRunner >> initialize [
 	super initialize.
 	self 
 		doNotAccumulateResult;
-		suitePreparator: self classForSuitePreparator anySuitePreparatorClass;
+		suitePreparator: self suitePreparatorClass new;
 		executionMode: self executionModeClass executionMode
 ]
 
@@ -226,6 +220,14 @@ NewTestRunner >> passedCount [
 	"return the number of passed testcase"
 
 	^ self result passedCount
+]
+
+{ #category : 'processing' }
+NewTestRunner >> prepareSuite [
+	"we would like to process suites before execution (e.g shufling the tests for exemple).
+	see SuitePreparator"
+
+	self suitePreparator applyOn: self suite
 ]
 
 { #category : 'private' }
@@ -266,7 +268,7 @@ NewTestRunner >> runAll [
 	"run the current collected suite"
 
 	[ 
-	self setUp.
+	self prepareSuite.
 	self runSuite ] ensure: [ self tearDown ]
 ]
 
@@ -386,14 +388,6 @@ NewTestRunner >> runSuite: aTestSuite [
 	self runAll
 ]
 
-{ #category : 'processing' }
-NewTestRunner >> setUp [
-	"we would like to process suites before execution (e.g shufling the tests for exemple).
-	see AbstractSuitePreparator"
-
-	self suitePreparator applyOn: self suite
-]
-
 { #category : 'testing' }
 NewTestRunner >> shouldAccumulate [
 
@@ -441,6 +435,12 @@ NewTestRunner >> suitePreparator [
 NewTestRunner >> suitePreparator: aSuitePreparator [
 
 	suitePreparator := aSuitePreparator
+]
+
+{ #category : 'private' }
+NewTestRunner >> suitePreparatorClass [
+
+	^ SuitePreparator 
 ]
 
 { #category : 'API' }

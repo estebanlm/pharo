@@ -13,12 +13,6 @@ Class {
 }
 
 { #category : 'factory' }
-SuitePreparator class >> anySuitePreparatorClass [
-
-	^ self new
-]
-
-{ #category : 'factory' }
 SuitePreparator class >> applyBlock: aBlock [
 
 	^ self new
@@ -27,7 +21,7 @@ SuitePreparator class >> applyBlock: aBlock [
 ]
 
 { #category : 'factory' }
-SuitePreparator class >> shuffleSuitePreparatorClass [
+SuitePreparator class >> withShuffling [
 
 	^ self applyBlock: [ :testSuite | testSuite tests shuffle ]
 ]
@@ -56,4 +50,11 @@ SuitePreparator >> applyOnSuites: aCollection [
 	"apply to every testSuite the specified process (see self applyOn:)"
 
 	aCollection do: [ :suite | self applyOn: suite ]
+]
+
+{ #category : 'printing' }
+SuitePreparator >> printOn: aStream [
+
+	super printOn: aStream.
+	aStream print: applyBlock
 ]
