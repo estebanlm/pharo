@@ -4,6 +4,9 @@ I evaluate code passed via standard input or as arguments from the command line.
 Class {
 	#name : 'ClapCodeEvaluator',
 	#superclass : 'ClapPharoApplication',
+	#instVars : [
+		'expression'
+	],
 	#category : 'CodeImport-Commands',
 	#package : 'CodeImport-Commands'
 }
@@ -118,6 +121,18 @@ ClapCodeEvaluator >> execute [
 		ifTrue: [ self outputStreamDo: [ :out | out print: result; lf ] ]
 ]
 
+{ #category : 'accessing' }
+ClapCodeEvaluator >> expression [
+
+	^ expression ifNil: [ expression := self positional: #EXPR ]
+]
+
+{ #category : 'private - accessing' }
+ClapCodeEvaluator >> file [
+
+	^ self expression first asFileReference
+]
+
 { #category : 'error handling' }
 ClapCodeEvaluator >> handleError: error [
 	"for syntax errors we print more detailed error informations"
@@ -143,6 +158,12 @@ ClapCodeEvaluator >> handleError: error reference: aReference [
 	error pass
 ]
 
+{ #category : 'testing' }
+ClapCodeEvaluator >> isEvaluatingFile [
+
+	^ self expression size = 1 and: [ self file extension = 'st' ]
+]
+
 { #category : 'asserting' }
 ClapCodeEvaluator >> shouldLogEvaluationResult [
 
@@ -152,7 +173,9 @@ ClapCodeEvaluator >> shouldLogEvaluationResult [
 
 { #category : 'accessing' }
 ClapCodeEvaluator >> source [
-	^ String space join: (self positional: #EXPR)
+	^ self isEvaluatingFile 
+		ifTrue: [ self file contents ]
+		ifFalse: [ String space join: self expression ] 
 ]
 
 { #category : 'validating' }
