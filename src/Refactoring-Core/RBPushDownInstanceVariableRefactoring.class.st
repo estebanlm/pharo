@@ -20,12 +20,13 @@ RBPushDownInstanceVariableRefactoring >> applicabilityPreconditions [
 { #category : 'preconditions' }
 RBPushDownInstanceVariableRefactoring >> breakingChangePreconditions [
 
-	| references |
-	references := RBCondition referencesInstanceVariable: variableName in: class.
-	class realClass
-		ifNil: [ references errorMacro: ('<1s> is referenced.' expandMacrosWith: variableName) ]
-		ifNotNil: [ references errorMacro: ('<1s> is referenced.<n>Browse references?' expandMacrosWith: variableName) ].
-	^ { references not }
+	^ { self preconditionReferencesInstanceVariable }
+]
+
+{ #category : 'preconditions' }
+RBPushDownInstanceVariableRefactoring >> preconditionReferencesInstanceVariable [
+
+	^ ReReferencesInstanceVariableCondition class: class inModel: self model instanceVariables: { variableName }
 ]
 
 { #category : 'preconditions' }
