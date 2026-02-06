@@ -2758,20 +2758,6 @@ OCCodeSnippet class >> badVariableAndScopes [
 	^ list
 ]
 
-{ #category : 'script' }
-OCCodeSnippet class >> styleAll [
-	"Display all snippets in a big styled text.
-	Each snipped is styled independently."
-
-	<script>
-	| bigtext |
-	bigtext := Text new.
-	self allSnippets do: [ :each |
-		bigtext ifNotEmpty: [ bigtext append: String cr ].
-		bigtext append: each styledText ].
-	bigtext inspect
-]
-
 { #category : 'updating' }
 OCCodeSnippet class >> updateSnippets: snippets [
 	"This script will update all definitions of all snippets.
