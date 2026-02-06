@@ -1040,6 +1040,14 @@ Context >> methodNode [
 ]
 
 { #category : 'instruction decoding' }
+Context >> methodReturnConstant: value [
+	"Simulate the action of a 'return constant' bytecode whose value is the
+	 argument, value. This corresponds to a source expression like '^0'."
+
+	^self return: value from: self home
+]
+
+{ #category : 'instruction decoding' }
 Context >> methodReturnReceiver [
 	"Simulate the action of a 'return receiver' bytecode. This corresponds to
 	 the source expression '^self'."
