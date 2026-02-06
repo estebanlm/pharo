@@ -281,6 +281,13 @@ InstructionStream >> interpretSistaV1ExtendedPush: extB for: client [
 	self error: 'undefined extended push'
 ]
 
+{ #category : 'interpreting' }
+InstructionStream >> interpretWithClient: aClient [
+	| endPC |
+	endPC := self method endPC.
+	[pc > endPC] whileFalse: [self interpretNextInstructionFor: aClient]
+]
+
 { #category : 'scanning' }
 InstructionStream >> method [
 	"Answer the compiled method that supplies the receiver's bytecodes."

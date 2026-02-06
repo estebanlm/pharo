@@ -53,13 +53,6 @@ InstructionStream >> interpret [
 ]
 
 { #category : '*Debugging-Core' }
-InstructionStream >> interpretWithClient: aClient [
-	| endPC |
-	endPC := self method endPC.
-	[pc > endPC] whileFalse: [self interpretNextInstructionFor: aClient]
-]
-
-{ #category : '*Debugging-Core' }
 InstructionStream >> peekByte [
 	"Answer the first byte of the current bytecode."
 
