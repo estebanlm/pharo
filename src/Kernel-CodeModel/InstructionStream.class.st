@@ -343,3 +343,25 @@ InstructionStream >> scanFor: scanBlock [
 		 pc := pc + (encoderClass bytecodeSize: byte)].
 	^false
 ]
+
+{ #category : 'interpreting' }
+InstructionStream >> willCreateBlock [
+	"next bytecode is a block creation"
+
+	^ (self method encoderClass isCreateBlockAt: pc in: self method) or: 
+		[ self method encoderClass isCreateFullBlockAt: pc in: self method]
+]
+
+{ #category : 'interpreting' }
+InstructionStream >> willSend [
+	"Answer whether the next bytecode is a message-send."
+
+	^ self method encoderClass isSendAt: pc in: self method
+]
+
+{ #category : 'interpreting' }
+InstructionStream >> willStore [
+	"Answer whether the next bytecode is a store or store-pop"
+
+	^ self method encoderClass isStoreAt: pc in: self method
+]
