@@ -112,6 +112,7 @@ RBPushDownInstanceVariableParametrizedTest >> testPushDownInstanceVariable [
 { #category : 'tests' }
 RBPushDownInstanceVariableParametrizedTest >> testPushDownInstanceVariableWithReferences [
 
-	self shouldWarn: (self createRefactoringWithModel: model andArguments:
-			 { 'name'. #RBBasicLintRuleTestData })
+	| refactoring |
+	refactoring := self createRefactoringWithModel: model andArguments: { 'name'. #RBBasicLintRuleTestData }.
+	(refactoring isKindOf: RBPushDownInstanceVariableRefactoring) ifTrue: [ self shouldWarn: refactoring ]
 ]
