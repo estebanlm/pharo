@@ -2758,22 +2758,6 @@ OCCodeSnippet class >> badVariableAndScopes [
 	^ list
 ]
 
-{ #category : 'updating' }
-OCCodeSnippet class >> updateSnippets: snippets [
-	"This script will update all definitions of all snippets.
-	Beware of code loss and double check the generated definitions."
-
-	"I did not manage to update all in a single transformation (with a preview!)
-	So do them one by one with a progress bar :("
-
-	<script: 'self updateSnippets: self allSnippets'>
-	snippets
-		do: [ :snippet |
-			snippet definitionRefactoring ifNotNil: [ :refactoring |
-				refactoring execute ] ]
-		displayingProgress: 'Updating snippets...'
-]
-
 { #category : 'accessing' }
 OCCodeSnippet >> applyDefaultTo: aCollection [
 
@@ -3211,14 +3195,6 @@ OCCodeSnippet >> textWithNode: aNode message: aString at: aPosition [
 		with: (aString asText addAttribute:
 				 (TextBackgroundColor color: Color lightBlue)).
 	^ text
-]
-
-{ #category : 'updating' }
-OCCodeSnippet >> updateDefinition [
-	"Do the update of the definition of self in the method (class-side) that defines it"
-
-	self definitionRefactoring ifNotNil: [ :transformation |
-		transformation execute ]
 ]
 
 { #category : 'updating' }
