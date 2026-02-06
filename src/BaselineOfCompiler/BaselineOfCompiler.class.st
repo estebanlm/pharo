@@ -26,7 +26,7 @@ BaselineOfCompiler >> baseline: spec [
 					spec
 						repository: (self packageRepositoryURLForSpec: spec);
 						className: 'BaselineOfKernel';
-						loads: #( 'Collections-Abstract-Tests' ) ].
+						loads: #( 'Collections-Abstract-Tests' 'Kernel-Tests' 'Collections-Unordered-Tests' 'Collections-Support-Tests' 'System-Time-Tests') ].
 
 			spec
 
@@ -50,8 +50,8 @@ BaselineOfCompiler >> baseline: spec [
 				package: 'OpalCompiler-Core';
 				package: 'DebugInfo';
 
-				package: 'Kernel-Extended-Tests';
-				package: 'Kernel-Tests-WithCompiler';
+				package: 'Kernel-Extended-Tests' with: [ spec requires: #( 'KernelTests' ) ];
+				package: 'Kernel-Tests-WithCompiler' with: [ spec requires: #( 'KernelTests' ) ];
 
 				package: 'AST-Core-Tests';
 
