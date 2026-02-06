@@ -2780,29 +2780,6 @@ OCCodeSnippet >> default: aRBCodeSnippet [
 ]
 
 { #category : 'updating' }
-OCCodeSnippet >> definitionRefactoring [
-	"A transformation to update the definition of self in the correct class side method"
-
-	| node old new newast |
-	node := self searchDefinition.
-	node ifNil: [ ^ nil ].
-	self updateExpectations.
-
-	"Check if the new code is different from the old one"
-	old := node sourceCode.
-	new := self dumpDefinition.
-	newast := OCParser parseFaultyExpression: new.
-	newast parent: node parent. "Force same context, so formattedCode is reliable"
-	node formattedCode = newast formattedCode ifTrue: [ ^ nil ].
-
-	^ RBReplaceSubtreeTransformation
-		  replace: old
-		  to: new
-		  inMethod: node methodNode selector
-		  inClass: node methodNode methodClass
-]
-
-{ #category : 'updating' }
 OCCodeSnippet >> dumpDefinition [
 	"The definition of the snippet (according to the current values)
 	as it should appears in the class side methods."
@@ -3177,24 +3154,6 @@ OCCodeSnippet >> styledPattern [
 OCCodeSnippet >> styledPattern: anObject [
 
 	styledPattern := anObject
-]
-
-{ #category : 'inspecting' }
-OCCodeSnippet >> textWithNode: aNode message: aString at: aPosition [
-
-	| text |
-	text := self styledText.
-	"Highlight the error node background"
-	text
-		addAttribute: (TextBackgroundColor color: Color cyan)
-		from: aNode start
-		to: aNode stop.
-	text
-		replaceFrom: aPosition
-		to: aPosition - 1
-		with: (aString asText addAttribute:
-				 (TextBackgroundColor color: Color lightBlue)).
-	^ text
 ]
 
 { #category : 'updating' }
