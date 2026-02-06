@@ -254,6 +254,20 @@ ZnCharacterEncoderTest >> testNullEncoder [
 ]
 
 { #category : 'testing' }
+ZnCharacterEncoderTest >> testNumberOfCharactersFrom [
+
+	| bytes |
+	bytes := 'Düsseldorf Königsallee' utf8Encoded.
+	self assert: (#utf8 asZnCharacterEncoder numberOfCharactersFrom: bytes) equals: 22.
+	bytes := 'Düsseldorf Königsallee' encodeWith: #utf16.
+	self assert: (#utf16 asZnCharacterEncoder numberOfCharactersFrom: bytes) equals: 22.
+	bytes := 'Test' encodeWith: #ascii.
+	self assert: (#ascii asZnCharacterEncoder numberOfCharactersFrom: bytes) equals: 4.
+	bytes := 'Test' encodeWith: #latin1.
+	self assert: (#latin1 asZnCharacterEncoder numberOfCharactersFrom: bytes) equals: 4
+]
+
+{ #category : 'testing' }
 ZnCharacterEncoderTest >> testReadIntoStartingAtCountFromStream [
 	| encoder |
 	encoder := ZnUTF8Encoder new.
