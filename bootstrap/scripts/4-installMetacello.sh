@@ -166,4 +166,5 @@ zip "${METACELLO_IMAGE_NAME}.zip" ${METACELLO_IMAGE_NAME}.*
 
 #We alias metacello without version number to make it easier to write the test scripts
 cp "${METACELLO_IMAGE_NAME}.image" "metacello.image"
-zip "metacello.zip" metacello.image
+cp "${METACELLO_IMAGE_NAME}.changes" "metacello.changes"
+zip "metacello.zip" metacello.image metacello.changes
