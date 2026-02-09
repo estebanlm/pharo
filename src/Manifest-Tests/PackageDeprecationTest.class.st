@@ -13,7 +13,7 @@ PackageDeprecationTest >> packageNameForTests [
 	^ #'Generated-Compiled-Method-Test-Package'
 ]
 
-{ #category : 'tests' }
+{ #category : 'running' }
 PackageDeprecationTest >> tearDown [
 
 	self packageOrganizer removePackage: self packageNameForTests.
