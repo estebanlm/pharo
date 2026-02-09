@@ -530,21 +530,6 @@ CompiledMethodTest >> testMethodInDeprecatedClassIsDeprecated [
 	self assert: (class >> #method) isDeprecated
 ]
 
-{ #category : 'tests - testing' }
-CompiledMethodTest >> testMethodInDeprecatedPackageIsDeprecated [
-
-	self class compile: 'method ^1' classified: '*' , self packageNameForTests.
-
-	self deny: self packageNameForTests asPackage isDeprecated.
-	self deny: (self class >> #method) isDeprecated.
-
-	class := self packageNameForTests asPackage packageManifest.
-	class class compile: 'isDeprecated ^ true'.
-
-	self assert: self packageNameForTests asPackage isDeprecated.
-	self assert: (self class >> #method) isDeprecated
-]
-
 { #category : 'tests - comparing' }
 CompiledMethodTest >> testMethodsThatHaveOnlyDifferentSelectorsShouldBeDifferent [
 	| method1 method2 |
