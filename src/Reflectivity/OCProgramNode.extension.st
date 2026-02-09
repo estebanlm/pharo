@@ -157,7 +157,7 @@ OCProgramNode >> links [
 
 { #category : '*Reflectivity' }
 OCProgramNode >> nodesWithLinks [
-	^ self allChildren select: [ :e | e links isNotEmpty ]
+	^ self withAllChildren select: [ :e | e links isNotEmpty ]
 ]
 
 { #category : '*Reflectivity' }

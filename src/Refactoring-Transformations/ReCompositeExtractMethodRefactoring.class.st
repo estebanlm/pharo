@@ -200,13 +200,13 @@ ReCompositeExtractMethodRefactoring >> calculateAssignments [
 	
 	^ assignments ifNil: [
 		| sequenceNode whoDefinesTemp |
-		sequenceNode := (self sourceMethodTree allChildren select: [ :each | each isSequence ]) last.
+		sequenceNode := (self sourceMethodTree withAllChildren select: [ :each | each isSequence ]) last.
 
 		assignments := temporaries select: [ :temp |
 			whoDefinesTemp := (sequenceNode whichUpNodeDefines: temp).
 			whoDefinesTemp statements anySatisfy: [ :statement |
 				(statement references: temp)
-				and: [ (subtree allChildren includes: statement) not ] ] ] ]
+				and: [ (subtree withAllChildren includes: statement) not ] ] ] ]
 ]
 
 { #category : 'querying' }

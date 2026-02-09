@@ -115,7 +115,7 @@ DTCoveragePluginPresenter >> defineColorMessageNode: aMessageNode [
 DTCoveragePluginPresenter >> hasSequenceNodeInside: aSequenceNode [
 
 	^ aSequenceNode statements anySatisfy: [ :statement |
-		  statement allChildren anySatisfy: [ :node | node isSequence ] ]
+		  statement withAllChildren anySatisfy: [ :node | node isSequence ] ]
 ]
 
 { #category : 'initialization' }
