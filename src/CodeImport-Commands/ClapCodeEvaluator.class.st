@@ -158,10 +158,17 @@ ClapCodeEvaluator >> handleError: error reference: aReference [
 	error pass
 ]
 
+{ #category : 'private - testing' }
+ClapCodeEvaluator >> hasOneArgument [
+
+	^ self expression size = 1
+]
+
 { #category : 'testing' }
 ClapCodeEvaluator >> isEvaluatingFile [
 
-	^ self expression size = 1 and: [ self file extension = 'st' ]
+	"Do not use FileReference here since eval is used in Pharo boostrap and when FileSystem package not yet loaded"
+	^ self expression size = 1 and: [ self expression first endsWith: '.st' ]
 ]
 
 { #category : 'asserting' }
