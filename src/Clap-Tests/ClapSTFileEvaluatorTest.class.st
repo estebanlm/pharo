@@ -44,13 +44,10 @@ ClapSTFileEvaluatorTest >> testCanGetStFile [
 { #category : 'tests' }
 ClapSTFileEvaluatorTest >> testCanRunStFile [
 	| file |
-	file := FileLocator temp / 'pharo-tests-' , UUID new asString / 'dummy.st'.
-	
-	[ file parent ensureCreateDirectory.
+	file := self temporaryDirectory / 'dummy.st'.
 	file writeStreamDo: [ :stream | stream nextPutAll: 'ClapSTFileEvaluatorTest testValue: 3' ].
 	
-	context := ClapSTFileEvaluator commandSpecification activateWith: {'st' . file fullName} ]
-		ensure: [ file parent deleteAll ].
+	context := ClapSTFileEvaluator commandSpecification activateWith: {'st' . file fullName}.
 	
 	self
 		assert: self class testValue
@@ -60,14 +57,12 @@ ClapSTFileEvaluatorTest >> testCanRunStFile [
 { #category : 'tests' }
 ClapSTFileEvaluatorTest >> testCanSkipShebang [
 	| file |
-	file := FileLocator temp / 'pharo-tests-' , UUID new asString / 'dummy.st'.
+	file := self temporaryDirectory / 'dummy.st'.
 	
-	[ file parent ensureCreateDirectory.
 	file writeStreamDo: [ :stream | stream nextPutAll: '#!/usr/bin/env pharo
 		ClapSTFileEvaluatorTest testValue: 4' ].
 	
-	context := ClapSTFileEvaluator commandSpecification activateWith: {'st' . file fullName} ]
-		ensure: [ file parent deleteAll ].
+	context := ClapSTFileEvaluator commandSpecification activateWith: {'st' . file fullName}.
 	
 	self
 		assert: self class testValue
@@ -90,8 +85,7 @@ ClapSTFileEvaluatorTest >> testGetManyFilesToProcessWheManyFuelFilesGivenInArgum
 ClapSTFileEvaluatorTest >> testGetOneFileToProcessWheOneStFileGivenInArguments [
 
 	| command |
-	context := ClapSTFileEvaluator commandSpecification activationWith:
-		           #( 'st' 'foo.st' ).
+	context := ClapSTFileEvaluator commandSpecification activationWith: #( 'st' 'foo.st' ).
 	command := context command.
 
 	self

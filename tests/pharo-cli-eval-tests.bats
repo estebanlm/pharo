@@ -31,6 +31,13 @@ teardown() {
   assert_output "8"
 }
 
+@test "eval can evaluate a valid Smalltalk expression from a file and quit" {
+  echo "Transcript show: 'Hello World!'; cr" > "$WORKDIR/test-code.st"
+  run_pharo eval "$WORKDIR/test-code.st"
+  assert_success
+  assert_line "Hello World!"
+}
+
 @test "eval outputs error if any when evaluating a valid Smalltalk expression with runtime error" {
   run_pharo eval 1 / 0
   assert_failure
