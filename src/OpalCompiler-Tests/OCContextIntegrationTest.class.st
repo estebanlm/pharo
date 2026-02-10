@@ -44,6 +44,8 @@ OCContextIntegrationTest >> setUp [
 OCContextIntegrationTest >> testAstScope [
 
 	| scope |
+	self assert: aMethodContext compiledCode hasSourceCode.
+	
 	"test that we get a scope for optimized blocks"
 	aMethodContext pc: 88 + 1.
 	scope := aMethodContext astScope.

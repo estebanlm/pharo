@@ -4,9 +4,9 @@ SUnit tests for code simulation
 Class {
 	#name : 'CodeSimulationTest',
 	#superclass : 'TestCase',
-	#category : 'Kernel-Extended-Tests-Methods',
-	#package : 'Kernel-Extended-Tests',
-	#tag : 'Methods'
+	#category : 'Debugger-Model-Tests-Core',
+	#package : 'Debugger-Model-Tests',
+	#tag : 'Core'
 }
 
 { #category : 'private' }

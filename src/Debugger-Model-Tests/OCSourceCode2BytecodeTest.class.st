@@ -10,9 +10,9 @@ Class {
 	#classVars : [
 		'ClassVar'
 	],
-	#category : 'OpalCompiler-Tests-Source',
-	#package : 'OpalCompiler-Tests',
-	#tag : 'Source'
+	#category : 'Debugger-Model-Tests-Core',
+	#package : 'Debugger-Model-Tests',
+	#tag : 'Core'
 }
 
 { #category : 'accessing' }

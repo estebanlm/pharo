@@ -37,7 +37,7 @@ BaselineOfTraits >> baseline: spec [
 	spec for: #common do: [
 			spec
 				package: 'Traits';
-				package: 'Kernel-Traits' with: [ spec requires: #( 'Traits' ) ];
+				package: 'Kernel-Traits';
 				package: 'Traits-Tests' with: [ spec requires: #( 'Traits' ) ].
 
 			spec group: 'core' with: #( 'Traits' ).

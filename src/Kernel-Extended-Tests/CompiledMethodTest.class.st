@@ -151,8 +151,9 @@ CompiledMethodTest >> testComments [
 	self
 		assert: (CompiledMethodTest >> #testComments) comments second
 		equals: 'And I am the second comment to be found in this test'.
-	"Next test assumes #compiledMethod has no comment..."
-	self assert: (CompiledMethod >> #compiledMethod) comments isEmpty
+
+	"Next test assumes #testComparison, in this same class has no comment..."
+	self assert: (CompiledMethodTest >> #testComparison) comments isEmpty
 ]
 
 { #category : 'tests - accessing' }
@@ -233,7 +234,8 @@ CompiledMethodTest >> testEqualityInstanceSideMethod [
 
 { #category : 'tests - testing' }
 CompiledMethodTest >> testHasComment [
-	self assert: (CompiledMethod>>#hasComment) hasComment
+
+	self assert: (CompiledMethodTest >> #testComments) hasComment
 ]
 
 { #category : 'tests - literals' }
@@ -526,21 +528,6 @@ CompiledMethodTest >> testMethodInDeprecatedClassIsDeprecated [
 	class class compile: 'isDeprecated ^ true'.
 	self assert: class isDeprecated.
 	self assert: (class >> #method) isDeprecated
-]
-
-{ #category : 'tests - testing' }
-CompiledMethodTest >> testMethodInDeprecatedPackageIsDeprecated [
-
-	self class compile: 'method ^1' classified: '*' , self packageNameForTests.
-
-	self deny: self packageNameForTests asPackage isDeprecated.
-	self deny: (self class >> #method) isDeprecated.
-
-	class := self packageNameForTests asPackage packageManifest.
-	class class compile: 'isDeprecated ^ true'.
-
-	self assert: self packageNameForTests asPackage isDeprecated.
-	self assert: (self class >> #method) isDeprecated
 ]
 
 { #category : 'tests - comparing' }
