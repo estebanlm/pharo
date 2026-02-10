@@ -5,12 +5,23 @@ Class {
 		'title',
 		'label',
 		'items',
-		'selecting'
+		'selecting',
+		'acceptBlock'
 	],
 	#category : 'Refactoring-UI-Tests-Mocks',
 	#package : 'Refactoring-UI-Tests',
 	#tag : 'Mocks'
 }
+
+{ #category : 'reflective operations' }
+StMethodsSelectionPresenterMock class >> doesNotUnderstand: aMessage [
+]
+
+{ #category : 'testing' }
+StMethodsSelectionPresenterMock class >> isOk [
+
+	^ true
+]
 
 { #category : 'initialization' }
 StMethodsSelectionPresenterMock class >> label: aString withItems: aCollection selecting: aCollection3 [
@@ -29,6 +40,17 @@ StMethodsSelectionPresenterMock class >> title: aTitle label: aString withItems:
 		  label: aString
 		  withItems: aCollection
 		  selecting: aCollection3
+]
+
+{ #category : 'initialization' }
+StMethodsSelectionPresenterMock class >> title: aTitle label: aString withItems: aCollection selecting: aCollection3 acceptBlock: aFullBlockClosure [
+
+	^ self new
+		  title: aTitle
+		  label: aString
+		  withItems: aCollection
+		  selecting: aCollection3
+		  acceptBlock: aFullBlockClosure
 ]
 
 { #category : 'testing' }
@@ -58,4 +80,14 @@ StMethodsSelectionPresenterMock >> title: aTitle label: aString withItems: aOrde
 	label := 'Push down methods from a class'.
 	items := aOrderedCollection.
 	selecting := aOrderedCollectionToo
+]
+
+{ #category : 'initialization' }
+StMethodsSelectionPresenterMock >> title: aTitle label: aString withItems: aOrderedCollection selecting: aOrderedCollectionToo acceptBlock: aFullBlockClosure [
+
+	title := aTitle.
+	label := 'Push down methods from a class'.
+	items := aOrderedCollection.
+	selecting := aOrderedCollectionToo.
+	acceptBlock:= aFullBlockClosure 
 ]
