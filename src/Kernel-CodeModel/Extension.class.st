@@ -42,11 +42,10 @@ Extension >> compile: sourceCode classified: protocol withStamp: changeStamp not
 	compiler := self compiler
 		            source: sourceCode;
 		            requestor: requestor;
-		            failBlock: (requestor ifNotNil: [ [ ^ nil ] ]); "no failblock if no requestor"
-						"compatibility: permit undeclared if no requestor"
-						permitFaulty: requestor isNil;
-						permitUndeclared: requestor isNil;
-						protocol: protocol;
+		            failBlock: (requestor ifNotNil: [ [ ^ nil ] ]);
+		            "no failblock if no requestor""compatibility: permit undeclared if no requestor"permitFaulty: requestor isNil;
+		            permitUndeclared: requestor isNil;
+		            protocol: protocol;
 		            changeStamp: changeStamp;
 		            logged: logSource.
 
@@ -62,17 +61,18 @@ Extension >> compile: sourceCode classified: protocol withStamp: changeStamp not
 	methodCopyInExtendedClass := method copy.
 	methodCopyInExtendedClass methodClass: self extendedClass.
 	self extendedClass classify: scopedSelector under: protocol.
-	
+
 	scopedSelector addExtendedBehavior: self extendedClass.
 	self extendedClass methodDict at: scopedSelector put: methodCopyInExtendedClass.
-	
-	scopedSelector bindAliasesInSubclassesOf: self extendedClass.
 
-	"Update user packages so they define a locally scoped selector with the same name"	
-	userPackages do: [ :e | e internScopedSelector: selectorSymbol ].
+	scopedSelector bindAliasesInSubclassesOf: self extendedClass. "Update user packages so they define a locally scoped selector with the same name"
+	userPackages ifNotNil: [ userPackages do: [ :e | e internScopedSelector: selectorSymbol ] ].
 
 	recompileDependencies ifTrue: [
-			({ self package } , userPackages asArray flatCollect: [ :p | p methods ]) do: [ :m |
+			| packagesToRecompile |
+			packagesToRecompile := { self package }.
+			userPackages ifNotNil: [ packagesToRecompile := packagesToRecompile , userPackages asArray ].
+			(packagesToRecompile flatCollect: [ :p | p methods ]) do: [ :m |
 					m methodClass
 						compile: m sourceCode
 						classified: m protocol

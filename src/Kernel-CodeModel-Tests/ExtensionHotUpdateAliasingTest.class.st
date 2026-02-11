@@ -150,6 +150,22 @@ ExtensionHotUpdateAliasingTest >> test02OverrideExtensionWithNormalMethod01Shoul
 ]
 
 { #category : 'tests' }
+ExtensionHotUpdateAliasingTest >> test03OnDemandAlias01ShouldAliasSubclasses [
+
+	| scopedSelector |
+	"We extend Point"
+	scopedSelector := extensionOnPoint compile: 'extension ^ 11'.
+	"We define two methods in the hierarchy"
+	stringClass compile: 'extension ^ 42'.	
+	nicerStringClass compile: 'extension ^ 73'.
+	
+	"We send a message to a string to alias the method."
+	"In addition, it should automatically alias the subclass!"
+	self assert: (stringClass new perform: scopedSelector) equals: 42.	
+	self assert: (nicerStringClass new perform: scopedSelector) equals: 73
+]
+
+{ #category : 'tests' }
 ExtensionHotUpdateAliasingTest >> test03RemoveExtension01ShouldRemoveExtensionMethod [
 
 	| scopedSelector receiver |
@@ -285,4 +301,30 @@ ExtensionHotUpdateAliasingTest >> test03RemoveExtension04ShouldRemoveAliasesToEx
 		withExceptionDo: [ :dnu |
 			self assert: dnu receiver equals: receiver.
 			self assert: dnu message selector equals: userScopedSelector ]
+]
+
+{ #category : 'tests' }
+ExtensionHotUpdateAliasingTest >> test04ImportExtensionMethod01InstallsExtensionInExtendedClass [
+
+	| userScopedSelector |
+	extensionOnObject compile: 'extension ^ 42'.
+	userPackage importExtension: extensionOnObject.
+	
+	userScopedSelector := userPackage lookupSelector: #extension.
+	self assert: userScopedSelector owner == userPackage.
+	
+	self assert: (objectClass new perform: userScopedSelector) equals: 42
+]
+
+{ #category : 'tests' }
+ExtensionHotUpdateAliasingTest >> test05CompileNewExtensionMethodAfterImport01InstallsExtensionInExtendedClass [
+
+	| userScopedSelector |
+	userPackage importExtension: extensionOnObject.
+	extensionOnObject compile: 'extension ^ 42'.
+	
+	userScopedSelector := userPackage lookupSelector: #extension.
+	self assert: userScopedSelector owner == userPackage.
+	
+	self assert: (objectClass new perform: userScopedSelector) equals: 42
 ]
