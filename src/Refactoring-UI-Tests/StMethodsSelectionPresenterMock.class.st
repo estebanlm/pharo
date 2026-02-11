@@ -61,6 +61,10 @@ StMethodsSelectionPresenterMock >> label: aString withItems: aOrderedCollection 
 StMethodsSelectionPresenterMock >> openDialog [
 ]
 
+{ #category : 'instance creation' }
+StMethodsSelectionPresenterMock >> openModal [
+]
+
 { #category : 'accessing' }
 StMethodsSelectionPresenterMock >> selectedItems [
 
