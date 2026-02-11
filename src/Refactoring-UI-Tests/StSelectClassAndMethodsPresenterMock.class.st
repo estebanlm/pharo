@@ -43,6 +43,12 @@ StSelectClassAndMethodsPresenterMock class >> label: aString dropLabel: aString2
 		acceptBlock: aFullBlockClosure
 ]
 
+{ #category : 'as yet unclassified' }
+StSelectClassAndMethodsPresenterMock class >> newApplication: anApplication [
+
+	^ self new
+]
+
 { #category : 'accessing' }
 StSelectClassAndMethodsPresenterMock class >> selectedClass [
 	^ nil
@@ -66,6 +72,12 @@ StSelectClassAndMethodsPresenterMock >> cancelled [
 	^ false
 ]
 
+{ #category : 'as yet unclassified' }
+StSelectClassAndMethodsPresenterMock >> isOk [
+
+	^ true
+]
+
 { #category : 'initialization' }
 StSelectClassAndMethodsPresenterMock >> label: aString dropLabel: aString2 withItems: aCollection selecting: aCollection4 dropItems: aCollection5 acceptBlock: aFullBlockClosure [ 
 	label := aString.
@@ -75,6 +87,14 @@ StSelectClassAndMethodsPresenterMock >> label: aString dropLabel: aString2 withI
 	dropItems := aCollection4.
 	acceptBlock := aFullBlockClosure.
 	acceptBlock value: self selectedClass value: self selectedMethods
+]
+
+{ #category : 'as yet unclassified' }
+StSelectClassAndMethodsPresenterMock >> openDialog [
+]
+
+{ #category : 'as yet unclassified' }
+StSelectClassAndMethodsPresenterMock >> openModal [
 ]
 
 { #category : 'initialization' }

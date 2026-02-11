@@ -32,6 +32,12 @@ StMethodsSelectionPresenterMock class >> label: aString withItems: aCollection s
 		selecting: aCollection3
 ]
 
+{ #category : 'instance creation' }
+StMethodsSelectionPresenterMock class >> newApplication: anApplication [
+
+	^ self new
+]
+
 { #category : 'initialization' }
 StMethodsSelectionPresenterMock class >> title: aTitle label: aString withItems: aCollection selecting: aCollection3 [
 
@@ -59,12 +65,26 @@ StMethodsSelectionPresenterMock >> cancelled [
 	^ false
 ]
 
+{ #category : 'testing' }
+StMethodsSelectionPresenterMock >> isOk [
+
+	^ true
+]
+
 { #category : 'initialization' }
 StMethodsSelectionPresenterMock >> label: aString withItems: aOrderedCollection selecting: aOrderedCollectionToo [
 		
 	label := 'Push down methods from a class'.
 	items := aOrderedCollection .
 	selecting := aOrderedCollectionToo .
+]
+
+{ #category : 'instance creation' }
+StMethodsSelectionPresenterMock >> openDialog [
+]
+
+{ #category : 'instance creation' }
+StMethodsSelectionPresenterMock >> openModal [
 ]
 
 { #category : 'accessing' }
