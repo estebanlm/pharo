@@ -68,8 +68,11 @@ Extension >> compile: sourceCode classified: protocol withStamp: changeStamp not
 	
 	scopedSelector bindAliasesInSubclassesOf: self extendedClass.
 
+	"Update user packages so they define a locally scoped selector with the same name"	
+	userPackages do: [ :e | e internScopedSelector: selectorSymbol ].
+
 	recompileDependencies ifTrue: [
-			self package methods do: [ :m |
+			({ self package } , userPackages asArray flatCollect: [ :p | p methods ]) do: [ :m |
 					m methodClass
 						compile: m sourceCode
 						classified: m protocol

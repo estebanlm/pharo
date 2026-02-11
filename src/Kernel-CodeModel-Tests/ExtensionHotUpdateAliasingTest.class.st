@@ -1,5 +1,5 @@
 Class {
-	#name : 'ExtensionHotUpdateTest',
+	#name : 'ExtensionHotUpdateAliasingTest',
 	#superclass : 'TestCase',
 	#instVars : [
 		'environment',
@@ -21,7 +21,7 @@ Class {
 }
 
 { #category : 'running' }
-ExtensionHotUpdateTest >> setUp [
+ExtensionHotUpdateAliasingTest >> setUp [
 
 	| extendedPackage |
 	super setUp.
@@ -79,7 +79,7 @@ ExtensionHotUpdateTest >> setUp [
 ]
 
 { #category : 'tests' }
-ExtensionHotUpdateTest >> test01CompileNewExtensionMethod01InstallsExtensionInExtendedClass [
+ExtensionHotUpdateAliasingTest >> test01CompileNewExtensionMethod01InstallsExtensionInExtendedClass [
 
 	| scopedSelector |
 	scopedSelector := extensionOnObject compile: 'extension ^ 42'.
@@ -88,7 +88,7 @@ ExtensionHotUpdateTest >> test01CompileNewExtensionMethod01InstallsExtensionInEx
 ]
 
 { #category : 'tests' }
-ExtensionHotUpdateTest >> test01CompileNewExtensionMethod02InstallsAliasInSubclasses [
+ExtensionHotUpdateAliasingTest >> test01CompileNewExtensionMethod02InstallsAliasInSubclasses [
 
 	"Point defines a normal method"
 	| scopedSelector |
@@ -102,7 +102,7 @@ ExtensionHotUpdateTest >> test01CompileNewExtensionMethod02InstallsAliasInSubcla
 ]
 
 { #category : 'tests' }
-ExtensionHotUpdateTest >> test01CompileNewExtensionMethod03InstallsAliasInSubclassesButStopsAtFrontier [
+ExtensionHotUpdateAliasingTest >> test01CompileNewExtensionMethod03InstallsAliasInSubclassesButStopsAtFrontier [
 
 	| scopedSelector |
 	
@@ -118,7 +118,7 @@ ExtensionHotUpdateTest >> test01CompileNewExtensionMethod03InstallsAliasInSubcla
 ]
 
 { #category : 'tests' }
-ExtensionHotUpdateTest >> test02OverrideAliasWithNormalMethod01ShouldAliasNewMethod [
+ExtensionHotUpdateAliasingTest >> test02OverrideAliasWithNormalMethod01ShouldAliasNewMethod [
 
 	| scopedSelector |
 	"We extend Point"
@@ -136,7 +136,7 @@ ExtensionHotUpdateTest >> test02OverrideAliasWithNormalMethod01ShouldAliasNewMet
 ]
 
 { #category : 'tests' }
-ExtensionHotUpdateTest >> test02OverrideExtensionWithNormalMethod01ShouldAliasNewMethod [
+ExtensionHotUpdateAliasingTest >> test02OverrideExtensionWithNormalMethod01ShouldAliasNewMethod [
 
 	| scopedSelector |
 	"We extend Object"
@@ -150,7 +150,7 @@ ExtensionHotUpdateTest >> test02OverrideExtensionWithNormalMethod01ShouldAliasNe
 ]
 
 { #category : 'tests' }
-ExtensionHotUpdateTest >> test03RemoveExtension01ShouldRemoveExtensionMethod [
+ExtensionHotUpdateAliasingTest >> test03RemoveExtension01ShouldRemoveExtensionMethod [
 
 	| scopedSelector receiver |
 	"We extend Object"
@@ -170,45 +170,24 @@ ExtensionHotUpdateTest >> test03RemoveExtension01ShouldRemoveExtensionMethod [
 ]
 
 { #category : 'tests' }
-ExtensionHotUpdateTest >> test03RemoveExtension02ShouldRemoveAliasesToExtensionInTheExtendedClass [
+ExtensionHotUpdateAliasingTest >> test03RemoveExtension02ShouldKeepAliasInSubclass [
 
-	| extensionScopedSelector receiver userScopedSelector |
+	| scopedSelector |
 	"We extend Object"
-	extensionScopedSelector := extensionOnObject compile: 'extension ^ 11'.
+	scopedSelector := extensionOnObject internScopedSelector: #extension.
+	extensionOnObject compile: 'extension ^ 11'.
 	
-	"We import and use the extension, which will generate an alias"
-	userPackage importExtension: extensionOnObject.
-	userClass compile: 'userMethod: anObject ^ anObject extension'.
-	userScopedSelector := userPackage lookupSelector: #extension.
+	"Now we override the extension.
+	This should alias the one in the superclass: the scoped selector should see this method"
+	pointClass compile: 'extension ^ 42'.
 	
-	"Send the message to create the alias"
-	userClass new userMethod: objectClass new.
+	extensionOnObject removeSelector: scopedSelector.
 	
-	"Now we remove the extension"
-	extensionOnObject removeSelector: extensionScopedSelector.
-	
-	"So the message is not understood anymore"
-	receiver := objectClass new.
-	
-	"Not from the package itself"
-	self
-		should: [ receiver perform: extensionScopedSelector ]
-		raise: MessageNotUnderstood
-		withExceptionDo: [ :dnu |
-			self assert: dnu receiver equals: receiver.
-			self assert: dnu message selector equals: extensionScopedSelector ].
-	
-	"Nor from the user alias"
-	self
-		should: [ receiver perform: userScopedSelector ]
-		raise: MessageNotUnderstood
-		withExceptionDo: [ :dnu |
-			self assert: dnu receiver equals: receiver.
-			self assert: dnu message selector equals: userScopedSelector ]
+	self assert: (pointClass new perform: scopedSelector) equals: 42
 ]
 
 { #category : 'tests' }
-ExtensionHotUpdateTest >> test03RemoveExtension03ShouldNotRemoveUnrelatedAliases [
+ExtensionHotUpdateAliasingTest >> test03RemoveExtension03ShouldNotRemoveUnrelatedAliases [
 
 	| extensionScopedSelector receiver userScopedSelector definerPackage2 extensionOnObject2 userPackage2 extensionScopedSelector2 userScopedSelector2 |
 	"Complex setup.
@@ -268,4 +247,42 @@ ExtensionHotUpdateTest >> test03RemoveExtension03ShouldNotRemoveUnrelatedAliases
 	"But it should still understand the messages from the definer package 2 and its user"
 	self assert: (receiver perform: extensionScopedSelector2) equals: 17.
 	self assert: (receiver perform: userScopedSelector2) equals: 17.
+]
+
+{ #category : 'tests' }
+ExtensionHotUpdateAliasingTest >> test03RemoveExtension04ShouldRemoveAliasesToExtensionInTheExtendedClass [
+
+	| extensionScopedSelector receiver userScopedSelector |
+	"We extend Object"
+	extensionScopedSelector := extensionOnObject compile: 'extension ^ 11'.
+	
+	"We import and use the extension, which will generate an alias"
+	userPackage importExtension: extensionOnObject.
+	userClass compile: 'userMethod: anObject ^ anObject extension'.
+	userScopedSelector := userPackage lookupSelector: #extension.
+	
+	"Send the message to create the alias"
+	userClass new userMethod: objectClass new.
+	
+	"Now we remove the extension"
+	extensionOnObject removeSelector: extensionScopedSelector.
+	
+	"So the message is not understood anymore"
+	receiver := objectClass new.
+	
+	"Not from the package itself"
+	self
+		should: [ receiver perform: extensionScopedSelector ]
+		raise: MessageNotUnderstood
+		withExceptionDo: [ :dnu |
+			self assert: dnu receiver equals: receiver.
+			self assert: dnu message selector equals: extensionScopedSelector ].
+	
+	"Nor from the user alias"
+	self
+		should: [ receiver perform: userScopedSelector ]
+		raise: MessageNotUnderstood
+		withExceptionDo: [ :dnu |
+			self assert: dnu receiver equals: receiver.
+			self assert: dnu message selector equals: userScopedSelector ]
 ]
