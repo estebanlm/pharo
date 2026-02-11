@@ -66,7 +66,6 @@ RBAddTemporaryVariableTransformation class >> variable: aString inMethod: aSelec
 RBAddTemporaryVariableTransformation >> applicabilityPreconditions [
 
 	^ {
-		  self preconditionMethodAlreadyDefines.
 		  (RBCondition withBlock: [ self definingClass isNotNil ] errorString: 'No such class or trait named ' , className).
 		  (RBCondition definesSelector: selector in: self definingClass).
 		  (RBCondition
@@ -107,6 +106,12 @@ RBAddTemporaryVariableTransformation >> privateTransform [
 	
 	parseTree addTemporaryNamed: variableName.
 	class compileTree: methodTree
+]
+
+{ #category : 'preconditions' }
+RBAddTemporaryVariableTransformation >> skippingPreconditions [
+
+	self preconditionMethodAlreadyDefines
 ]
 
 { #category : 'api' }
