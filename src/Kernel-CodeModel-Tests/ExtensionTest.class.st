@@ -242,7 +242,7 @@ ExtensionTest >> test13ConflictingExtensionsThrowError [
 	userPackage importExtension: anotherExtensionOnObject.
 	userInstance := userClass new.
 
-	self should: [(userInstance scopedUser: objectClass new)] raise: ExtensionConflict with: [ :ex | self assert: ex messageText equals: 'Conflict extending #foo in MyObject' ].
+	self should: [(userInstance scopedUser: objectClass new)] raise: ExtensionConflict with: [ :ex | self assert: ex messageText equals: 'Conflict: extension overwrites method #foo in MyObject' ].
 	
 ]
 

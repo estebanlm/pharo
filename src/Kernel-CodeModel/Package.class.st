@@ -356,14 +356,20 @@ Package >> hierarchyRoots [
 
 { #category : 'as yet unclassified' }
 Package >> importExtension: anExtension [
-	
+
 	self importedExtensions add: anExtension.
 	anExtension addUserPackage: self.
-	
-	self importSelectors: anExtension methodDictionary keys.
-	
-	"Recompile dependencies, so they can see the extension"
-	self definedClasses do: [ :c | c compileAll ]
+
+	self importSelectors: anExtension methodDictionary keys. "Recompile dependencies, so they can see the extension"
+	self definedClasses do: [ :c |
+			c definedMethods do: [ :m |
+					m methodClass
+						compile: m sourceCode
+						classified: m protocol
+						withStamp: m timeStamp
+						notifying: nil
+						logSource: true
+						recompileDependencies: false ] ]
 ]
 
 { #category : 'private' }

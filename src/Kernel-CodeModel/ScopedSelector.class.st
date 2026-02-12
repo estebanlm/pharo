@@ -76,11 +76,16 @@ ScopedSelector >> bindAliasIn: aClass [
 	
 	"Prevent conflicts!"
 	allVisibleExtensionsForThisClass size <= 1
-		ifFalse: [ 
-			ExtensionConflict new
-				selector: self;
+		ifFalse: [ | conflictMethod | 
+			conflictMethod := ConflictMethod new
+				overwrittenSelector: self symbol;
 				conflictingClass: aClass;
-				signal ].
+				conflictingExtensions: allVisibleExtensionsForThisClass;
+				yourself.
+		self addAliasedBehavior: aClass.
+		aClass methodDict at: self put: conflictMethod.
+		^ self
+	].
 	
 	theExtension := allVisibleExtensionsForThisClass anyOne.
 	
@@ -109,7 +114,7 @@ ScopedSelector >> bindAliasesInSubclassesOf: aClass [
 	aClass allSubclassesDo: [ :classToBind | self bindAliasIn: classToBind ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'installing' }
 ScopedSelector >> cleanupExtendedBehaviors [
 
 	extendedBehaviors ifNil: [ ^ self ].
@@ -121,6 +126,14 @@ ScopedSelector >> cleanupExtendedBehaviors [
 ScopedSelector >> extendedBehaviors [
 	
 	^ extendedBehaviors ifNil: [#()]
+]
+
+{ #category : 'accessing' }
+ScopedSelector >> extensionsOn: aBehavior [
+
+	| allVisibleExtensions |
+	allVisibleExtensions := (owner definedClasses select: [ :e | e isKindOf: Extension ]) , owner importedExtensions.
+	^ allVisibleExtensions select: [ :e | e extendedClass == aBehavior ]
 ]
 
 { #category : 'private' }

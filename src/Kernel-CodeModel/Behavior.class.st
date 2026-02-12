@@ -660,6 +660,19 @@ Behavior >> compile: sourceCode classified: protocol withStamp: changeStamp noti
 
 	method := compiler install.
 	
+	"Wait! There was maybe an extension with the same name here!
+	If that's the case, we need to mark the extension as a conflict."
+	self selectors
+		detect: [ :e | e isScopedSelector and: [ e symbol = method selector ] ]
+		ifFound: [ :found | | conflictMethod |
+			conflictMethod := ConflictMethod new
+				overwrittenSelector: method selector;
+				conflictingClass: self;
+				conflictingExtensions: (found extensionsOn: self);
+				yourself.
+		self methodDict at: found put: conflictMethod.
+	].
+	
 	"We are compiling a normal method.
 	We need to alias it locally if superclasses are extended/aliased.
 	If a subclass has a method with the same selector, this should have been aliased before"

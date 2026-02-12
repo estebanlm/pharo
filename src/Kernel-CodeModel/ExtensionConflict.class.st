@@ -3,28 +3,52 @@ Class {
 	#superclass : 'Error',
 	#instVars : [
 		'selector',
-		'conflictingClass'
+		'conflictingClass',
+		'conflictingExtensions'
 	],
 	#category : 'Kernel-CodeModel',
 	#package : 'Kernel-CodeModel'
 }
 
-{ #category : 'as yet unclassified' }
-ExtensionConflict >> conflictingClass: aClass [ 
+{ #category : 'accessing' }
+ExtensionConflict >> conflictingClass [
 
-	conflictingClass := aClass 
+	^ conflictingClass
 ]
 
 { #category : 'accessing' }
-ExtensionConflict >> messageText [
+ExtensionConflict >> conflictingClass: aConflictingClass [
 
-	^ 'Conflict extending #{1} in {2}' format: {
-			  selector asString.
-			  conflictingClass name }
+	conflictingClass := aConflictingClass
 ]
 
 { #category : 'accessing' }
-ExtensionConflict >> selector: aScopedSelector [ 
-	
-	selector := aScopedSelector
+ExtensionConflict >> conflictingExtensions [
+
+	^ conflictingExtensions
+]
+
+{ #category : 'accessing' }
+ExtensionConflict >> conflictingExtensions: anObject [
+
+	conflictingExtensions := anObject
+]
+
+{ #category : 'initialization' }
+ExtensionConflict >> initialize [
+
+	super initialize.
+	conflictingExtensions := #()
+]
+
+{ #category : 'accessing' }
+ExtensionConflict >> selector [
+
+	^ selector
+]
+
+{ #category : 'accessing' }
+ExtensionConflict >> selector: aSelector [
+
+	selector := aSelector
 ]

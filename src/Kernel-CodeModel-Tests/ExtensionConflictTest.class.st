@@ -1,0 +1,580 @@
+Class {
+	#name : 'ExtensionConflictTest',
+	#superclass : 'TestCase',
+	#instVars : [
+		'pointClass',
+		'extensionOnPoint',
+		'environment',
+		'definerPackage',
+		'userPackage',
+		'objectClass',
+		'coloredPointClass',
+		'stringClass',
+		'nicerStringClass',
+		'userClass',
+		'extensionOnObject',
+		'extensionOnColoredPoint'
+	],
+	#category : 'Kernel-CodeModel-Tests-Extensions',
+	#package : 'Kernel-CodeModel-Tests',
+	#tag : 'Extensions'
+}
+
+{ #category : 'tests' }
+ExtensionConflictTest >> setUp [
+
+	| extendedPackage |
+	super setUp.
+	
+	environment := SystemEnvironment new.
+	extendedPackage := Package named: 'Extended'.
+	definerPackage := Package named: 'Definer'.
+	userPackage := Package named: 'User'.
+
+	objectClass := (Object << #MyObject
+		installingEnvironment: environment;
+		package: userPackage) install.
+	
+	pointClass := (Object << #MyPoint
+		superclass: objectClass;
+		installingEnvironment: environment;
+		package: userPackage) install.
+
+	coloredPointClass := (Object << #MyColoredPoint
+		superclass: pointClass;
+		installingEnvironment: environment;
+		package: userPackage) install.
+	
+	"String will have no extensions. It's here just for polymorphism.
+	It will thus contain aliases only"
+	stringClass := (Object << #MyString
+		superclass: objectClass;
+		installingEnvironment: environment;
+		package: userPackage) install.
+	
+	nicerStringClass := (Object << #MyNicerString
+		superclass: stringClass;
+		installingEnvironment: environment;
+		package: userPackage) install.
+
+	userClass := (Object << #MyUserClass
+		superclass: objectClass;
+		installingEnvironment: environment;
+		package: userPackage) install.
+	
+	extensionOnObject := (Extension << #ExtensionOfObject
+		extendedClass: objectClass;
+		installingEnvironment: environment;
+		package: definerPackage) install.
+
+	extensionOnPoint := (Extension << #ExtensionOfPoint
+		extendedClass: pointClass;
+		installingEnvironment: environment;
+		package: definerPackage) install.
+
+	extensionOnColoredPoint := (Extension << #ExtensionOfColoredPoint
+		extendedClass: coloredPointClass;
+		installingEnvironment: environment;
+		package: definerPackage) install.
+]
+
+{ #category : 'tests' }
+ExtensionConflictTest >> test01ExtensionConflictsWithPreExistingNormalMethod01NormalMethodWorksAsExpected [
+
+	pointClass compile: 'extension ^ 17'.
+	extensionOnPoint compile: 'extension ^ 73'.
+
+	self assert: pointClass new extension equals: 17
+]
+
+{ #category : 'tests' }
+ExtensionConflictTest >> test01ExtensionConflictsWithPreExistingNormalMethod02ExtensionThrowsException [
+
+	| scopedSelector |
+	pointClass compile: 'extension ^ 17'.
+	scopedSelector := extensionOnPoint compile: 'extension ^ 73'.
+
+	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflict with: [ :conflict |
+			self assert: conflict messageText equals: 'Conflict: extension overwrites method #extension in MyPoint'.
+			self assertCollection: conflict conflictingExtensions hasSameElements: { extensionOnPoint } ]
+]
+
+{ #category : 'tests' }
+ExtensionConflictTest >> test01ExtensionConflictsWithPreExistingNormalMethod03SubclassesAreStillAliased [
+
+	| scopedSelector |
+	pointClass compile: 'extension ^ 17'.
+	coloredPointClass compile: 'extension ^ 42'.
+	scopedSelector := extensionOnPoint compile: 'extension ^ 73'.
+
+	self assert: (coloredPointClass new perform: scopedSelector) equals: 42
+]
+
+{ #category : 'tests' }
+ExtensionConflictTest >> test02NormalMethodConflictsWithPreExistingExtension01NormalMethodWorksAsExpected [
+
+	extensionOnPoint compile: 'extension ^ 73'.
+	pointClass compile: 'extension ^ 17'.
+
+	self assert: pointClass new extension equals: 17
+]
+
+{ #category : 'tests' }
+ExtensionConflictTest >> test02NormalMethodConflictsWithPreExistingExtension02ExtensionThrowsException [
+
+	| scopedSelector |
+	scopedSelector := extensionOnPoint compile: 'extension ^ 73'.
+	pointClass compile: 'extension ^ 17'.
+
+	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflict with: [ :conflict |
+			self assert: conflict messageText equals: 'Conflict: extension overwrites method #extension in MyPoint'.
+			self assertCollection: conflict conflictingExtensions hasSameElements: { extensionOnPoint } ]
+]
+
+{ #category : 'tests' }
+ExtensionConflictTest >> test02NormalMethodConflictsWithPreExistingExtension03SubclassesAreStillAliased [
+	
+	| scopedSelector |
+	scopedSelector := extensionOnPoint compile: 'extension ^ 73'.
+	pointClass compile: 'extension ^ 17'.
+	coloredPointClass compile: 'extension ^ 42'.
+
+	self assert: (coloredPointClass new perform: scopedSelector) equals: 42
+]
+
+{ #category : 'tests' }
+ExtensionConflictTest >> test03ImportExtensionMethodConflictsWithPreExistingImportedExtension01ExtensionThrowsException [
+
+	"We have a first extension"
+	| definerPackage2 anotherExtensionOnPoint scopedSelector |
+	extensionOnPoint compile: 'extension ^ 73'.
+	
+	"We have a second extension"
+	definerPackage2 := Package named: 'Definer2'.
+	anotherExtensionOnPoint := (Extension << #ExtensionOfPoint2
+		extendedClass: pointClass;
+		installingEnvironment: environment;
+		package: definerPackage2) install.
+	anotherExtensionOnPoint compile: 'extension ^ 17'.
+	
+	"We import both extensions"
+	userPackage importExtension: extensionOnPoint.
+	userPackage importExtension: anotherExtensionOnPoint.
+
+	scopedSelector := userPackage lookupSelector: #extension.
+
+	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflict with: [ :conflict |
+			self assert: conflict messageText equals: 'Conflict: extension overwrites method #extension in MyPoint'.
+			self assertCollection: conflict conflictingExtensions hasSameElements: { extensionOnPoint. anotherExtensionOnPoint } ]
+]
+
+{ #category : 'tests' }
+ExtensionConflictTest >> test03ImportExtensionMethodConflictsWithPreExistingImportedExtension02KeepFirstImportWorkingOnIsolation [
+
+	"We have a first extension"
+	| definerPackage2 anotherExtensionOnPoint scopedSelector |
+	extensionOnPoint compile: 'extension ^ 73'.
+	
+	"We have a second extension"
+	definerPackage2 := Package named: 'Definer2'.
+	anotherExtensionOnPoint := (Extension << #ExtensionOfPoint2
+		extendedClass: pointClass;
+		installingEnvironment: environment;
+		package: definerPackage2) install.
+	anotherExtensionOnPoint compile: 'extension ^ 17'.
+	
+	"We import both extensions"
+	userPackage importExtension: extensionOnPoint.
+	userPackage importExtension: anotherExtensionOnPoint.
+
+	scopedSelector := extensionOnPoint package lookupSelector: #extension.
+	self assert: (pointClass new perform: scopedSelector) equals: 73
+]
+
+{ #category : 'tests' }
+ExtensionConflictTest >> test03ImportExtensionMethodConflictsWithPreExistingImportedExtension03KeepSecondImportWorkingOnIsolation [
+
+	"We have a first extension"
+	| definerPackage2 anotherExtensionOnPoint scopedSelector |
+	extensionOnPoint compile: 'extension ^ 73'.
+	
+	"We have a second extension"
+	definerPackage2 := Package named: 'Definer2'.
+	anotherExtensionOnPoint := (Extension << #ExtensionOfPoint2
+		extendedClass: pointClass;
+		installingEnvironment: environment;
+		package: definerPackage2) install.
+	anotherExtensionOnPoint compile: 'extension ^ 17'.
+	
+	"We import both extensions"
+	userPackage importExtension: extensionOnPoint.
+	userPackage importExtension: anotherExtensionOnPoint.
+
+	scopedSelector := anotherExtensionOnPoint package lookupSelector: #extension.
+	self assert: (pointClass new perform: scopedSelector) equals: 17
+]
+
+{ #category : 'tests' }
+ExtensionConflictTest >> test03ImportExtensionMethodConflictsWithPreExistingImportedExtension04SubclassesAreStillAliased [
+
+	"We have a first extension"
+	| definerPackage2 anotherExtensionOnPoint scopedSelector |
+	extensionOnPoint compile: 'extension ^ 73'.
+	coloredPointClass compile: 'extension ^ 42'.
+
+	"We have a second extension"
+	definerPackage2 := Package named: 'Definer2'.
+	anotherExtensionOnPoint := (Extension << #ExtensionOfPoint2
+		extendedClass: pointClass;
+		installingEnvironment: environment;
+		package: definerPackage2) install.
+	anotherExtensionOnPoint compile: 'extension ^ 17'.
+	
+	"We import both extensions"
+	userPackage importExtension: extensionOnPoint.
+	userPackage importExtension: anotherExtensionOnPoint.
+
+	scopedSelector := userPackage lookupSelector: #extension.
+	self assert: (coloredPointClass new perform: scopedSelector) equals: 42
+	
+]
+
+{ #category : 'tests' }
+ExtensionConflictTest >> test04NewExtensionOnImportExtensionMethodConflictsWithPreExistingImportedExtension01ExtensionThrowsException [
+
+	| definerPackage2 anotherExtensionOnPoint scopedSelector |
+	"We have a second extension"
+	definerPackage2 := Package named: 'Definer2'.
+	anotherExtensionOnPoint := (Extension << #ExtensionOfPoint2
+		extendedClass: pointClass;
+		installingEnvironment: environment;
+		package: definerPackage2) install.
+	
+	"We import both extensions"
+	userPackage importExtension: extensionOnPoint.
+	userPackage importExtension: anotherExtensionOnPoint.
+
+	"We define the methods on the extensions after import"
+	extensionOnPoint compile: 'extension ^ 73'.
+	anotherExtensionOnPoint compile: 'extension ^ 17'.
+
+	scopedSelector := userPackage lookupSelector: #extension.
+
+	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflict with: [ :conflict |
+			self assert: conflict messageText equals: 'Conflict: extension overwrites method #extension in MyPoint'.
+			self assertCollection: conflict conflictingExtensions hasSameElements: { extensionOnPoint. anotherExtensionOnPoint } ]
+]
+
+{ #category : 'tests' }
+ExtensionConflictTest >> test04NewExtensionOnImportExtensionMethodConflictsWithPreExistingImportedExtension02KeepFirstImportWorkingOnIsolation [
+
+	| definerPackage2 anotherExtensionOnPoint scopedSelector |
+	"We have a second extension"
+	definerPackage2 := Package named: 'Definer2'.
+	anotherExtensionOnPoint := (Extension << #ExtensionOfPoint2
+		extendedClass: pointClass;
+		installingEnvironment: environment;
+		package: definerPackage2) install.
+	
+	"We import both extensions"
+	userPackage importExtension: extensionOnPoint.
+	userPackage importExtension: anotherExtensionOnPoint.
+
+	"We define the methods on the extensions after import"
+	extensionOnPoint compile: 'extension ^ 73'.
+	anotherExtensionOnPoint compile: 'extension ^ 17'.
+
+	scopedSelector := extensionOnPoint package lookupSelector: #extension.
+	self assert: (pointClass new perform: scopedSelector) equals: 73
+]
+
+{ #category : 'tests' }
+ExtensionConflictTest >> test04NewExtensionOnImportExtensionMethodConflictsWithPreExistingImportedExtension03KeepSecondImportWorkingOnIsolation [
+
+	| definerPackage2 anotherExtensionOnPoint scopedSelector |	
+	"We have a second extension"
+	definerPackage2 := Package named: 'Definer2'.
+	anotherExtensionOnPoint := (Extension << #ExtensionOfPoint2
+		extendedClass: pointClass;
+		installingEnvironment: environment;
+		package: definerPackage2) install.
+	
+	"We import both extensions"
+	userPackage importExtension: extensionOnPoint.
+	userPackage importExtension: anotherExtensionOnPoint.
+
+	"We define the methods on the extensions after import"
+	extensionOnPoint compile: 'extension ^ 73'.
+	anotherExtensionOnPoint compile: 'extension ^ 17'.
+
+	scopedSelector := anotherExtensionOnPoint package lookupSelector: #extension.
+	self assert: (pointClass new perform: scopedSelector) equals: 17
+]
+
+{ #category : 'tests' }
+ExtensionConflictTest >> test04NewExtensionOnImportExtensionMethodConflictsWithPreExistingImportedExtension04SubclassesAreStillAliased [
+
+	| definerPackage2 anotherExtensionOnPoint scopedSelector |
+	coloredPointClass compile: 'extension ^ 42'.
+
+	"We have a second extension"
+	definerPackage2 := Package named: 'Definer2'.
+	anotherExtensionOnPoint := (Extension << #ExtensionOfPoint2
+		extendedClass: pointClass;
+		installingEnvironment: environment;
+		package: definerPackage2) install.
+	
+	"We import both extensions"
+	userPackage importExtension: extensionOnPoint.
+	userPackage importExtension: anotherExtensionOnPoint.
+	
+	"We define the methods on the extensions after import"
+	extensionOnPoint compile: 'extension ^ 73'.
+	anotherExtensionOnPoint compile: 'extension ^ 17'.
+
+	scopedSelector := userPackage lookupSelector: #extension.
+	self assert: (coloredPointClass new perform: scopedSelector) equals: 42
+	
+]
+
+{ #category : 'tests' }
+ExtensionConflictTest >> test05LocalExtensionMethodConflictsWithPreExistingImportedExtension01ExtensionThrowsException [
+
+	"We have a first extension"
+	| anotherExtensionOnPoint scopedSelector |
+	extensionOnPoint compile: 'extension ^ 73'.
+	userPackage importExtension: extensionOnPoint.
+
+	"We have a second extension"
+	anotherExtensionOnPoint := (Extension << #ExtensionOfPoint2
+		extendedClass: pointClass;
+		installingEnvironment: environment;
+		package: userPackage) install.
+	anotherExtensionOnPoint compile: 'extension ^ 17'.
+	
+	scopedSelector := userPackage lookupSelector: #extension.
+
+	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflict with: [ :conflict |
+			self assert: conflict messageText equals: 'Conflict: extension overwrites method #extension in MyPoint'.
+			self assertCollection: conflict conflictingExtensions hasSameElements: { extensionOnPoint. anotherExtensionOnPoint } ]
+]
+
+{ #category : 'tests' }
+ExtensionConflictTest >> test05LocalExtensionMethodConflictsWithPreExistingImportedExtension02KeepImportWorkingOnIsolation [
+
+	"We have a first extension"
+	| anotherExtensionOnPoint scopedSelector |
+	extensionOnPoint compile: 'extension ^ 73'.
+	userPackage importExtension: extensionOnPoint.
+
+	"We have a second extension"
+	anotherExtensionOnPoint := (Extension << #ExtensionOfPoint2
+		extendedClass: pointClass;
+		installingEnvironment: environment;
+		package: userPackage) install.
+	anotherExtensionOnPoint compile: 'extension ^ 17'.
+	
+	scopedSelector := extensionOnPoint package lookupSelector: #extension.
+
+	self assert: (pointClass new perform: scopedSelector) equals: 73
+]
+
+{ #category : 'tests' }
+ExtensionConflictTest >> test05LocalExtensionMethodConflictsWithPreExistingImportedExtension03SubclassesAreStillAliased [
+
+	| anotherExtensionOnPoint scopedSelector |
+	coloredPointClass compile: 'extension ^ 42'.
+
+	"We have a first extension"
+	extensionOnPoint compile: 'extension ^ 73'.
+	userPackage importExtension: extensionOnPoint.
+
+	"We have a second extension"
+	anotherExtensionOnPoint := (Extension << #ExtensionOfPoint2
+		extendedClass: pointClass;
+		installingEnvironment: environment;
+		package: userPackage) install.
+	anotherExtensionOnPoint compile: 'extension ^ 17'.
+	
+	scopedSelector := extensionOnPoint package lookupSelector: #extension.
+
+	scopedSelector := userPackage lookupSelector: #extension.
+	self assert: (coloredPointClass new perform: scopedSelector) equals: 42
+	
+]
+
+{ #category : 'tests' }
+ExtensionConflictTest >> test06ImportedExtensionConflictsWithPreExistingLocalExtensionMethod01ExtensionThrowsException [
+
+	| anotherExtensionOnPoint scopedSelector |
+	"We have a local extension"
+	anotherExtensionOnPoint := (Extension << #ExtensionOfPoint2
+		extendedClass: pointClass;
+		installingEnvironment: environment;
+		package: userPackage) install.
+	anotherExtensionOnPoint compile: 'extension ^ 17'.
+	
+	"And we import a conflict"
+	extensionOnPoint compile: 'extension ^ 73'.
+	userPackage importExtension: extensionOnPoint.
+	
+	scopedSelector := userPackage lookupSelector: #extension.
+
+	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflict with: [ :conflict |
+			self assert: conflict messageText equals: 'Conflict: extension overwrites method #extension in MyPoint'.
+			self assertCollection: conflict conflictingExtensions hasSameElements: { extensionOnPoint. anotherExtensionOnPoint } ]
+]
+
+{ #category : 'tests' }
+ExtensionConflictTest >> test06ImportedExtensionConflictsWithPreExistingLocalExtensionMethod02KeepImportWorkingOnIsolation [
+
+	| anotherExtensionOnPoint scopedSelector |
+	"We have a local extension"
+	anotherExtensionOnPoint := (Extension << #ExtensionOfPoint2
+		extendedClass: pointClass;
+		installingEnvironment: environment;
+		package: userPackage) install.
+	anotherExtensionOnPoint compile: 'extension ^ 17'.
+
+	"And we import a conflict"
+	extensionOnPoint compile: 'extension ^ 73'.
+	userPackage importExtension: extensionOnPoint.
+	
+	scopedSelector := extensionOnPoint package lookupSelector: #extension.
+
+	self assert: (pointClass new perform: scopedSelector) equals: 73
+]
+
+{ #category : 'tests' }
+ExtensionConflictTest >> test06ImportedExtensionConflictsWithPreExistingLocalExtensionMethod03SubclassesAreStillAliased [
+
+	| anotherExtensionOnPoint scopedSelector |
+	coloredPointClass compile: 'extension ^ 42'.
+
+	"We have a local extension"
+	anotherExtensionOnPoint := (Extension << #ExtensionOfPoint2
+		extendedClass: pointClass;
+		installingEnvironment: environment;
+		package: userPackage) install.
+	anotherExtensionOnPoint compile: 'extension ^ 17'.
+	
+	"And we import a conflict"
+	extensionOnPoint compile: 'extension ^ 73'.
+	userPackage importExtension: extensionOnPoint.
+	
+	scopedSelector := extensionOnPoint package lookupSelector: #extension.
+
+	scopedSelector := userPackage lookupSelector: #extension.
+	self assert: (coloredPointClass new perform: scopedSelector) equals: 42
+	
+]
+
+{ #category : 'tests' }
+ExtensionConflictTest >> test07NewExtensionOnImportExtensionMethodConflictsWithPreExistingLocalExtensionMethod01ExtensionThrowsException [
+
+	| anotherExtensionOnPoint scopedSelector |
+	"We have a local extension"
+	anotherExtensionOnPoint := (Extension << #ExtensionOfPoint2
+		extendedClass: pointClass;
+		installingEnvironment: environment;
+		package: userPackage) install.
+	anotherExtensionOnPoint compile: 'extension ^ 17'.
+	
+	"We import first, then define a conflict"
+	userPackage importExtension: extensionOnPoint.
+	extensionOnPoint compile: 'extension ^ 73'.
+	
+	scopedSelector := userPackage lookupSelector: #extension.
+
+	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflict with: [ :conflict |
+			self assert: conflict messageText equals: 'Conflict: extension overwrites method #extension in MyPoint'.
+			self assertCollection: conflict conflictingExtensions hasSameElements: { extensionOnPoint. anotherExtensionOnPoint } ]
+]
+
+{ #category : 'tests' }
+ExtensionConflictTest >> test07NewExtensionOnImportExtensionMethodConflictsWithPreExistingLocalExtensionMethod02KeepImportWorkingOnIsolation [
+
+	| anotherExtensionOnPoint scopedSelector |
+	"We have a local extension"
+	anotherExtensionOnPoint := (Extension << #ExtensionOfPoint2
+		extendedClass: pointClass;
+		installingEnvironment: environment;
+		package: userPackage) install.
+	anotherExtensionOnPoint compile: 'extension ^ 17'.
+	
+	"We import first, then define a conflict"
+	userPackage importExtension: extensionOnPoint.
+	extensionOnPoint compile: 'extension ^ 73'.
+	
+	scopedSelector := extensionOnPoint package lookupSelector: #extension.
+
+	self assert: (pointClass new perform: scopedSelector) equals: 73
+]
+
+{ #category : 'tests' }
+ExtensionConflictTest >> test07NewExtensionOnImportExtensionMethodConflictsWithPreExistingLocalExtensionMethod03SubclassesAreStillAliased [
+
+	| anotherExtensionOnPoint scopedSelector |
+	coloredPointClass compile: 'extension ^ 42'.
+
+	"We have a local extension"
+	anotherExtensionOnPoint := (Extension << #ExtensionOfPoint2
+		extendedClass: pointClass;
+		installingEnvironment: environment;
+		package: userPackage) install.
+	anotherExtensionOnPoint compile: 'extension ^ 17'.
+	
+	"We import first, then define a conflict"
+	userPackage importExtension: extensionOnPoint.
+	extensionOnPoint compile: 'extension ^ 73'.
+	
+	scopedSelector := extensionOnPoint package lookupSelector: #extension.
+
+	scopedSelector := userPackage lookupSelector: #extension.
+	self assert: (coloredPointClass new perform: scopedSelector) equals: 42
+	
+]
+
+{ #category : 'tests' }
+ExtensionConflictTest >> test08LocalExtensionMethodConflictsWithPreExistingLocalExtension01ExtensionThrowsException [
+
+	"We have a first extension"
+	| anotherExtensionOnPoint scopedSelector |
+	extensionOnPoint compile: 'extension ^ 73'.
+
+	"We have a second extension"
+	anotherExtensionOnPoint := (Extension << #ExtensionOfPoint2
+		extendedClass: pointClass;
+		installingEnvironment: environment;
+		package: definerPackage) install.
+	anotherExtensionOnPoint compile: 'extension ^ 17'.
+	
+	scopedSelector := definerPackage lookupSelector: #extension.
+
+	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflict with: [ :conflict |
+			self assert: conflict messageText equals: 'Conflict: extension overwrites method #extension in MyPoint'.
+			self assertCollection: conflict conflictingExtensions hasSameElements: { extensionOnPoint. anotherExtensionOnPoint } ]
+]
+
+{ #category : 'tests' }
+ExtensionConflictTest >> test08LocalExtensionMethodConflictsWithPreExistingLocalExtension02SubclassesAreStillAliased [
+
+	| anotherExtensionOnPoint scopedSelector |
+	coloredPointClass compile: 'extension ^ 42'.
+
+	"We have a first extension"
+	extensionOnPoint compile: 'extension ^ 73'.
+
+	"We have a second extension"
+	anotherExtensionOnPoint := (Extension << #ExtensionOfPoint2
+		extendedClass: pointClass;
+		installingEnvironment: environment;
+		package: definerPackage) install.
+	anotherExtensionOnPoint compile: 'extension ^ 17'.
+	
+	scopedSelector := definerPackage lookupSelector: #extension.
+
+	scopedSelector := userPackage lookupSelector: #extension.
+	self assert: (coloredPointClass new perform: scopedSelector) equals: 42
+	
+]

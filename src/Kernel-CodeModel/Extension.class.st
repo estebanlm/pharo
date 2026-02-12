@@ -13,10 +13,17 @@ Class {
 { #category : 'accessing' }
 Extension >> addUserPackage: aPackage [
 
-	(self userPackages includes: aPackage) ifTrue: [ self error: 'Package already extended: ', aPackage name ].
-	
+	(self userPackages includes: aPackage) ifTrue: [ self error: 'Package already extended: ' , aPackage name ].
+
 	self userPackages add: aPackage.
-	aPackage methods do: [:m | m recompile ].
+	aPackage methods do: [ :m |
+			m methodClass
+				compile: m sourceCode
+				classified: m protocol
+				withStamp: m timeStamp
+				notifying: nil
+				logSource: true
+				recompileDependencies: false ]
 ]
 
 { #category : 'converting' }
@@ -38,7 +45,7 @@ Extension >> asClassDefinition [
 Extension >> compile: sourceCode classified: protocol withStamp: changeStamp notifying: requestor logSource: logSource recompileDependencies: recompileDependencies [
 	"Return the selector of the compiled method"
 
-	| method compiler ast scopedSelector selectorSymbol methodCopyInExtendedClass |
+	| method compiler ast scopedSelector selectorSymbol methodCopyInExtendedClass visibleExtensions |
 	compiler := self compiler
 		            source: sourceCode;
 		            requestor: requestor;
@@ -56,14 +63,34 @@ Extension >> compile: sourceCode classified: protocol withStamp: changeStamp not
 	ast selector: scopedSelector.
 	ast sendNodes do: [ :send | send selector: (OCSelectorNode value: (self package lookupSelector: send selector)) ].
 
-	method := compiler install.
+	method := compiler install. "If the extension overwrites a normal method, then install a conflict method"
 
-	methodCopyInExtendedClass := method copy.
-	methodCopyInExtendedClass methodClass: self extendedClass.
+	visibleExtensions := scopedSelector extensionsOn: self extendedClass.
+	methodCopyInExtendedClass := (self extendedClass methodDictionary includesKey: selectorSymbol)
+		                             ifTrue: [
+				                             ConflictMethod new
+					                             overwrittenSelector: selectorSymbol;
+					                             conflictingClass: self extendedClass;
+					                             conflictingExtensions: visibleExtensions;
+					                             yourself ]
+		                             ifFalse: [
+				                             visibleExtensions size > 1
+					                             ifTrue: [
+							                             ConflictMethod new
+								                             overwrittenSelector: selectorSymbol;
+								                             conflictingClass: self extendedClass;
+								                             conflictingExtensions: visibleExtensions;
+								                             yourself ]
+					                             ifFalse: [
+							                             method copy
+								                             methodClass: self extendedClass;
+								                             yourself ] ].
+
+	methodCopyInExtendedClass propertyAt: #extensionPackage put: self package.
 	self extendedClass classify: scopedSelector under: protocol.
+	self extendedClass methodDict at: scopedSelector put: methodCopyInExtendedClass.
 
 	scopedSelector addExtendedBehavior: self extendedClass.
-	self extendedClass methodDict at: scopedSelector put: methodCopyInExtendedClass.
 
 	scopedSelector bindAliasesInSubclassesOf: self extendedClass. "Update user packages so they define a locally scoped selector with the same name"
 	userPackages ifNotNil: [ userPackages do: [ :e | e internScopedSelector: selectorSymbol ] ].
@@ -88,6 +115,13 @@ Extension >> compile: sourceCode classified: protocol withStamp: changeStamp not
 Extension >> defineScopedSelector: aSymbol [
 
 	^ self package defineScopedSelector: aSymbol
+]
+
+{ #category : 'converting' }
+Extension >> definedMethods [
+	"Returns the methods of classes excluding the ones of the traits or extensions"
+
+	^ self localMethods
 ]
 
 { #category : 'accessing' }
