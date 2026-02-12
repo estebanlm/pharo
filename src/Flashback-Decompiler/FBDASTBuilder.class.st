@@ -172,6 +172,11 @@ FBDASTBuilder >> codeThisContext [
 ]
 
 { #category : 'building' }
+FBDASTBuilder >> codeThisProcess [
+	^ OCVariableNode thisProcessNode 
+]
+
+{ #category : 'building' }
 FBDASTBuilder >> codeVariable: variable [
 	^ OCVariableNode named: variable
 ]
