@@ -1037,16 +1037,12 @@ FBDDecompilerTest >> testWhileTrue2 [
 
 { #category : 'tests' }
 FBDDecompilerTest >> testWhileTrue3 [
-	<expectedFailure>
-	"See https://github.com/pharo-project/pharo/issues/13196"
 
 	self checkCorrectDecompilation: #exampleWhileTrue3
 ]
 
 { #category : 'tests' }
 FBDDecompilerTest >> testWhileTrue4 [
-	<expectedFailure>
-	"See https://github.com/pharo-project/pharo/issues/13196"
 
 	self checkCorrectDecompilation: #exampleWhileTrue4
 ]
