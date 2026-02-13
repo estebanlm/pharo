@@ -135,6 +135,14 @@ Extension >> internScopedSelector: aSymbol [
 ]
 
 { #category : 'initialization' }
+Extension >> removeFromSystem: logged [.
+
+	self selectors do: [ :e |
+		self removeSelector: e ].
+	super removeFromSystem: logged
+]
+
+{ #category : 'initialization' }
 Extension >> removeSelector: aSelector [
 
 	| extensionMethod |
