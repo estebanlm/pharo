@@ -1711,7 +1711,17 @@ Behavior >> removeSelector: aSelector [
 	"Assuming that the argument, selector (a Symbol), is a message selector in my method dictionary, remove it and its method."
 	<reflection: 'Class structural modification - Selector/Method modification'>
 
-	self methodDict removeKey: aSelector ifAbsent: []
+	| methodToRemove aliasKeys |
+	methodToRemove := self methodDict at: aSelector.
+	
+	"Obtain all keys that alias to the same method"
+	aliasKeys := self methodDict keys select: [ :e |
+			e isScopedSelector
+				and: [ e symbol == aSelector
+					and: [ (self methodDict at: e) == methodToRemove ] ] ].
+			
+	self methodDict removeKey: aSelector ifAbsent: [].
+	aliasKeys do: [ :k | self methodDict removeKey: k ]	
 ]
 
 { #category : 'adding-removing methods' }

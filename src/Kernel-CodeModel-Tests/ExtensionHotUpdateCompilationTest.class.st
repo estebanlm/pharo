@@ -191,3 +191,167 @@ ExtensionHotUpdateCompilationTest >> test03CompileNewExtensionMethodAfterImport0
 	scopedSelector := extensionOnObject compile: 'extension ^ 11'.
 	self assert: userClass new foo equals: 11
 ]
+
+{ #category : 'tests' }
+ExtensionHotUpdateCompilationTest >> test04ReCompileNewExtensionMethod01IsVisibleForNewMethods [
+
+	"A normal method sends the (non scoped) extension message"
+	| classInDefinerPackage |
+	classInDefinerPackage := (Object << #ClassInDefinerPackage
+		superclass: objectClass;
+		installingEnvironment: environment;
+		package: definerPackage) install.
+
+	"Now we define an extension in the scope.
+	=> the method above (foo) should see the extension!"
+	extensionOnObject compile: 'extension ^ 11'.
+	
+	"Recompilation should not change anything"
+	extensionOnObject compile: 'extension ^ 11'.
+
+	classInDefinerPackage compile: 'foo ^ self extension'.	
+	self assert: classInDefinerPackage new foo equals: 11
+]
+
+{ #category : 'tests' }
+ExtensionHotUpdateCompilationTest >> test04ReCompileNewExtensionMethod02RecompilesSendersInScope [
+
+	"A normal method sends the (non scoped) extension message"
+	| classInDefinerPackage |
+	classInDefinerPackage := (Object << #ClassInDefinerPackage
+		superclass: objectClass;
+		installingEnvironment: environment;
+		package: definerPackage) install.
+	classInDefinerPackage compile: 'foo ^ self extension'.
+
+	"Before compiling the extension, we do not see a scoped selector. We DNU on the global selector"
+	self assertDNU: #extension on: #foo to: classInDefinerPackage new.
+
+	"Now we define an extension in the scope.
+	=> the method above (foo) should see the extension!"
+	extensionOnObject compile: 'extension ^ 11'.
+	
+	"Recompilation should not change anything"
+	extensionOnObject compile: 'extension ^ 11'.
+	
+	self assert: classInDefinerPackage new foo equals: 11
+]
+
+{ #category : 'tests' }
+ExtensionHotUpdateCompilationTest >> test05ReCompileNewExtensionMethodAfterImport01IsVisibleForNewMethods [
+
+	"A normal method sends the (non scoped) extension message"
+	| scopedSelector |	
+	
+	"We import an extension in the scope. The extension is empty"
+	userClass package importExtension: extensionOnObject.
+
+	"=> the method above (foo) should see the extension!"
+	scopedSelector := extensionOnObject compile: 'extension ^ 11'.
+
+	userClass compile: 'foo ^ self extension'.
+	
+	"Recompilation should not change anything"
+	scopedSelector := extensionOnObject compile: 'extension ^ 11'.
+	self assert: userClass new foo equals: 11
+]
+
+{ #category : 'tests' }
+ExtensionHotUpdateCompilationTest >> test05ReCompileNewExtensionMethodAfterImport02RecompilesSendersInScope [
+
+	"A normal method sends the (non scoped) extension message"
+	| scopedSelector |	
+	
+	"We import an extension in the scope. The extension is empty"
+	userClass package importExtension: extensionOnObject.
+
+	userClass compile: 'foo ^ self extension'.
+
+	"=> the method above (foo) should see the extension!"
+	scopedSelector := extensionOnObject compile: 'extension ^ 11'.
+	
+	"Recompilation should not change anything"
+	scopedSelector := extensionOnObject compile: 'extension ^ 11'.
+	self assert: userClass new foo equals: 11
+]
+
+{ #category : 'tests' }
+ExtensionHotUpdateCompilationTest >> test06RedefineExtensionMethod01IsVisibleForNewMethods [
+
+	"A normal method sends the (non scoped) extension message"
+	| classInDefinerPackage |
+	classInDefinerPackage := (Object << #ClassInDefinerPackage
+		superclass: objectClass;
+		installingEnvironment: environment;
+		package: definerPackage) install.
+
+	"Now we define an extension in the scope.
+	=> the method above (foo) should see the extension!"
+	extensionOnObject compile: 'extension ^ 11'.
+	
+	"We redefine it, and this new version should be taken into account"
+	extensionOnObject compile: 'extension ^ 12'.
+
+	classInDefinerPackage compile: 'foo ^ self extension'.	
+	self assert: classInDefinerPackage new foo equals: 12
+]
+
+{ #category : 'tests' }
+ExtensionHotUpdateCompilationTest >> test06RedefineExtensionMethod02RecompilesSendersInScope [
+
+	"A normal method sends the (non scoped) extension message"
+	| classInDefinerPackage |
+	classInDefinerPackage := (Object << #ClassInDefinerPackage
+		superclass: objectClass;
+		installingEnvironment: environment;
+		package: definerPackage) install.
+	classInDefinerPackage compile: 'foo ^ self extension'.
+
+	"Before compiling the extension, we do not see a scoped selector. We DNU on the global selector"
+	self assertDNU: #extension on: #foo to: classInDefinerPackage new.
+
+	"Now we define an extension in the scope.
+	=> the method above (foo) should see the extension!"
+	extensionOnObject compile: 'extension ^ 11'.
+	
+	"We redefine it, and this new version should be taken into account"
+	extensionOnObject compile: 'extension ^ 12'.
+	
+	self assert: classInDefinerPackage new foo equals: 12
+]
+
+{ #category : 'tests' }
+ExtensionHotUpdateCompilationTest >> test07RedefineExtensionMethodAfterImport01IsVisibleForNewMethods [
+
+	"A normal method sends the (non scoped) extension message"
+	| scopedSelector |	
+
+	scopedSelector := extensionOnObject compile: 'extension ^ 11'.
+	
+	"We import an extension in the scope. The extension is empty"
+	userClass package importExtension: extensionOnObject.
+
+	"We redefine it, and this new version should be taken into account"
+	extensionOnObject compile: 'extension ^ 12'.
+
+	userClass compile: 'foo ^ self extension'.
+	self assert: userClass new foo equals: 12
+]
+
+{ #category : 'tests' }
+ExtensionHotUpdateCompilationTest >> test07RedefineExtensionMethodAfterImport02RecompilesSendersInScope [
+
+	"A normal method sends the (non scoped) extension message"
+	| scopedSelector |	
+	"=> the method above (foo) should see the extension!"
+	scopedSelector := extensionOnObject compile: 'extension ^ 11'.
+	
+	"We import an extension in the scope. The extension is empty"
+	userClass package importExtension: extensionOnObject.
+
+	userClass compile: 'foo ^ self extension'.
+	
+	extensionOnObject compile: 'extension ^ 12'.
+
+	self assert: userClass new foo equals: 12
+]
