@@ -82,7 +82,7 @@ Behavior >> outerScope [
 
 { #category : '*OpalCompiler-Core' }
 Behavior >> recompile [
-	self compileAll
+	 ^ self recompileAllFrom: self
 ]
 
 { #category : '*OpalCompiler-Core' }
