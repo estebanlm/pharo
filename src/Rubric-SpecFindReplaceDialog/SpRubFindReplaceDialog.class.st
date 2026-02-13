@@ -238,12 +238,8 @@ SpRubFindReplaceDialog >> replacingText: aText [
 
 { #category : 'morphic dependencies' }
 SpRubFindReplaceDialog >> selectAllOnFocusIn: aPresenter [
-	"Morphic dependent!"
 
-	aPresenter whenBuiltDo: [ :built |
-			| w |
-			w := built widget.
-			w announcer when: MorphGotFocus do: [ :ann | w selectAll ] for: self ]
+	aPresenter eventHandler whenFocusReceivedDo: [ :anEvent | replaceTextInput selectAll ]
 ]
 
 { #category : 'accessing' }
