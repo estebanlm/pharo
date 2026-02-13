@@ -682,6 +682,20 @@ Package >> removeEmptyTags [
 	(self tags select: [ :tag | tag isEmpty ]) do: [ :emptyTag | self removeTag: emptyTag ]
 ]
 
+{ #category : 'as yet unclassified' }
+Package >> removeExtensionImport: anExtension [
+
+	self importedExtensions remove: anExtension.
+	anExtension removeUserPackage: self.
+
+	"Now we remove the local aliases to that extension"
+	anExtension selectors do: [ :e | | localScopedSelector |
+		localScopedSelector := self lookupSelector: e symbol.
+		self assert: (anExtension extendedClass >> localScopedSelector) == (anExtension extendedClass >> e).
+		anExtension removeSelector: localScopedSelector.
+	]
+]
+
 { #category : 'removing' }
 Package >> removeFromSystem [
 	"Copy to not remove collection over which we are iterating."

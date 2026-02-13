@@ -440,7 +440,7 @@ ExtensionHotUpdateAliasingTest >> test09RemoveImport01ShouldRemoveExtensionMetho
 	self assert: (objectClass new perform: scopedSelector) equals: 11.
 	
 	"We remove the extension. Now the object should not understand the message anymore"
-	userPackage removeExtension: extensionOnObject.
+	userPackage removeExtensionImport: extensionOnObject.
 		
 	"So the message is not understood anymore"
 	receiver := objectClass new.
@@ -464,7 +464,7 @@ ExtensionHotUpdateAliasingTest >> test09RemoveImport02ShouldNotRemoveOriginalExt
 	self assert: (objectClass new perform: scopedSelector) equals: 11.
 	
 	"We remove the extension. Now the object should not understand the message anymore"
-	userPackage removeExtension: extensionOnObject.
+	userPackage removeExtensionImport: extensionOnObject.
 		
 	"So message from the extension package should still work"
 	self assert: (objectClass new perform: scopedSelector) equals: 11.

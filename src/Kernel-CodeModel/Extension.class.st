@@ -15,15 +15,7 @@ Extension >> addUserPackage: aPackage [
 
 	(self userPackages includes: aPackage) ifTrue: [ self error: 'Package already extended: ' , aPackage name ].
 
-	self userPackages add: aPackage.
-	aPackage methods do: [ :m |
-			m methodClass
-				compile: m sourceCode
-				classified: m protocol
-				withStamp: m timeStamp
-				notifying: nil
-				logSource: true
-				recompileDependencies: false ]
+	self userPackages add: aPackage
 ]
 
 { #category : 'converting' }
@@ -152,6 +144,12 @@ Extension >> removeSelector: aSelector [
 
 	"Now we remove the method entirely from the class, even its aliases from other packages"
 	extendedClass methodDict keysAndValuesRemove: [ :k :v | v == extensionMethod ].
+]
+
+{ #category : 'accessing' }
+Extension >> removeUserPackage: aPackage [
+
+	self userPackages remove: aPackage
 ]
 
 { #category : 'initialization' }
