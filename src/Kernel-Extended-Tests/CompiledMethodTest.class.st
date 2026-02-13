@@ -52,6 +52,8 @@ CompiledMethodTest >> tearDown [
 
 	self packageOrganizer removePackage: self packageNameForTests.
 	class ifNotNil: [ class removeFromSystem ].
+	
+	(self someClass >> #returnTrue) recompile.
 	super tearDown
 ]
 
@@ -724,6 +726,44 @@ CompiledMethodTest >> testRecompilingDoesNotRemoveExtensions [
 	self assert: method isExtension ] ensure: [
 		self packageOrganizer removePackage: 'GeneratedPackageForTest'.
 		self class compiledMethodAt: #isExtensionTestMethod ifPresent: [ :method | method removeFromSystem ] ]
+]
+
+{ #category : 'tests - accessing - pragmas & properties' }
+CompiledMethodTest >> testRemovePropertyIfAbsentRemovesAdditionalMethodStateIfEmpty [
+
+	| method |
+	
+	method := self someClass >> #returnTrue.
+	method propertyAt: #aTestProperty put: 42.
+	
+	self assert: (method hasProperty: #aTestProperty).
+	self assert: method penultimateLiteral isMethodProperties.
+	self assert: method penultimateLiteral size equals: 1.
+	
+	method removeProperty: #aTestProperty ifAbsent: [ self fail ].
+	
+	self deny: (method hasProperty: #aTestProperty).
+	self deny: method penultimateLiteral isMethodProperties.
+
+]
+
+{ #category : 'tests - accessing - pragmas & properties' }
+CompiledMethodTest >> testRemovePropertyRemovesAdditionalMethodStateIfEmpty [
+
+	| method |
+	
+	method := self someClass >> #returnTrue.
+	method propertyAt: #aTestProperty put: 42.
+	
+	self assert: (method hasProperty: #aTestProperty).
+	self assert: method penultimateLiteral isMethodProperties.
+	self assert: method penultimateLiteral size equals: 1.
+	
+	method removeProperty: #aTestProperty.
+	
+	self deny: (method hasProperty: #aTestProperty).
+	self deny: method penultimateLiteral isMethodProperties.
+
 ]
 
 { #category : 'tests - accessing' }
