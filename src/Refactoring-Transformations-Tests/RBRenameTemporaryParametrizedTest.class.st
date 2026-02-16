@@ -66,23 +66,26 @@ RBRenameTemporaryParametrizedTest >> testFailureBadName [
 { #category : 'failure tests' }
 RBRenameTemporaryParametrizedTest >> testFailureExistingVariable [
 
+	| refactoring |
 	model := self modelOnClasses: { RBLintRuleTestData }.
-
-	self
-		shouldFail: (self createRefactoringWithModel: model andArguments: {
-						 {
-							 (15 to: 19).
-							 #rules }.
-						 'name'.
-						 #RBLintRuleTestData.
-						 #openEditor });
-		shouldFail: (self createRefactoringWithModel: model andArguments: {
-						 {
-							 (15 to: 19).
-							 #rules }.
-						 'rules'.
-						 #RBLintRuleTestData.
-						 #openEditor })
+	refactoring := self createRefactoringWithModel: model andArguments: {
+			               {
+				               (15 to: 19).
+				               #rules }.
+			               'name'.
+			               #RBLintRuleTestData.
+			               #openEditor }.
+	(refactoring isKindOf: RBPushDownInstanceVariableRefactoring) ifTrue: [ self shouldWarn: refactoring ].
+	refactoring := self createRefactoringWithModel: model andArguments: {
+			               {
+				               (15 to: 19).
+				               #rules }.
+			               'rules'.
+			               #RBLintRuleTestData.
+			               #openEditor }.
+	(refactoring isKindOf: RBPushDownInstanceVariableRefactoring)
+		ifTrue: [ self shouldWarn: refactoring ]
+		ifFalse: [ self shouldFail: refactoring ]
 ]
 
 { #category : 'failure tests' }

@@ -60,13 +60,10 @@ RBExtractToTemporaryRefactoring class >> model: aRBSmalltalk extract: anInterval
 RBExtractToTemporaryRefactoring >> applicabilityPreconditions [
 
 	^ {
-			(ReDefinesSelectorsCondition new definesSelectors: (Array with: selector) in: class).
-		  	(ReIsValidInstanceVariableName new name: newVariableName).
-			(ReCheckVariableNameCondition
-				class: class
-				variableName: newVariableName 
-				parseTree: parseTree ).
-		}
+		  (ReDefinesSelectorsCondition new definesSelectors: (Array with: selector) in: class).
+		  (ReIsValidInstanceVariableName new name: newVariableName).
+		  (ReCheckVariableNameShadowingCondition class: class variableName: newVariableName parseTree: parseTree).
+		  (ReLocalNameConflictCondition class: class variableName: newVariableName parseTree: parseTree) }
 ]
 
 { #category : 'transforming' }

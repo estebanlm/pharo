@@ -67,8 +67,13 @@ RBRenameArgumentOrTemporaryRefactoring >> applicabilityPreconditionsOfTheNewName
 
 	^ {
 		  (RBCondition isValidInstanceVariableName: newName for: class).
+		  (ReLocalNameConflictCondition class: class variableName: newName parseTree: parseTree) }
+]
 
-		  (ReCheckVariableNameCondition class: class variableName: newName parseTree: parseTree) }
+{ #category : 'preconditions' }
+RBRenameArgumentOrTemporaryRefactoring >> breakingChangePreconditions [
+
+	^ { self preconditionCheckVariableName }
 ]
 
 { #category : 'initialization' }
@@ -102,6 +107,12 @@ RBRenameArgumentOrTemporaryRefactoring >> getExistingNameFromInterval [
 RBRenameArgumentOrTemporaryRefactoring >> newName: aString [
 
 	newName := aString
+]
+
+{ #category : 'preconditions' }
+RBRenameArgumentOrTemporaryRefactoring >> preconditionCheckVariableName [
+
+	^ ReCheckVariableNameShadowingCondition class: class variableName: newName parseTree: parseTree
 ]
 
 { #category : 'transforming' }
