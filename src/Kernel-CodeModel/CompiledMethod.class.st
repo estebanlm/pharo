@@ -724,10 +724,18 @@ CompiledMethod >> removeFromSystem [
 
 { #category : 'accessing - pragmas & properties' }
 CompiledMethod >> removeProperty: propName [
+
+	^ self removeProperty: propName ifAbsent: [ nil ]
+]
+
+{ #category : 'accessing - pragmas & properties' }
+CompiledMethod >> removeProperty: propName ifAbsent: aBlock [
 	"Remove the property propName if it exists.
-	 Do _not_ raise an error if the property is missing."
+	 Answer the evaluation of aBlock if the property is missing."
+
 	| value |
-	value := self propertyAt: propName ifAbsent: [^nil].
+
+	value := self propertyAt: propName ifAbsent: [^aBlock value].
 	self penultimateLiteral: (self penultimateLiteral copyWithout:
 									(Association
 										key: propName
@@ -735,19 +743,6 @@ CompiledMethod >> removeProperty: propName [
 
 	"Remove unneded AdditionalMethodState"
 	self penultimateLiteral size = 0 ifTrue: [ self penultimateLiteral: self selector ].
-	^value
-]
-
-{ #category : 'accessing - pragmas & properties' }
-CompiledMethod >> removeProperty: propName ifAbsent: aBlock [
-	"Remove the property propName if it exists.
-	 Answer the evaluation of aBlock if the property is missing."
-	| value |
-	value := self propertyAt: propName ifAbsent: [^aBlock value].
-	self penultimateLiteral: (self penultimateLiteral copyWithout:
-									(Association
-										key: propName
-										value: value)).
 	^value
 ]
 

@@ -1,8 +1,9 @@
 Class {
 	#name : 'CodeSimulationWithHaltTest',
 	#superclass : 'CodeSimulationTest',
-	#category : 'Debugging-Utils-Tests',
-	#package : 'Debugging-Utils-Tests'
+	#category : 'Debugger-Model-Tests-Core',
+	#package : 'Debugger-Model-Tests',
+	#tag : 'Core'
 }
 
 { #category : 'tests' }

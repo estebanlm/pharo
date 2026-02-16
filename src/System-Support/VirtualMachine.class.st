@@ -783,6 +783,18 @@ VirtualMachine >> processPreemptionYields: aBoolean [
 	self parameterAt: 48 put: ((self parameterAt: 48) bitClear: 4) + (aBoolean ifTrue: [0] ifFalse: [2r100])
 ]
 
+{ #category : 'primitives' }
+VirtualMachine >> readEnvironmentVariable: encodedVariableName [
+
+	"PRIVATE: This primitive call works on Strings, while the correct way to manage encodings is with raw data.
+	Use me through #rawAt: to correctly marshall data."
+
+	"Gets the value of an environment variable called `anEncodedVariableName` already encoded but in ByteString form."
+
+	<primitive: 'primitiveGetenv' module: '' error: ec>
+	self primitiveFail
+]
+
 { #category : 'gc' }
 VirtualMachine >> setGCBiasToGrowGCLimit: aNumber [
 	"Primitive. Indicate that the bias to grow logic should do a GC after aNumber Bytes"

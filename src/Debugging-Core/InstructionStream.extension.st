@@ -53,13 +53,6 @@ InstructionStream >> interpret [
 ]
 
 { #category : '*Debugging-Core' }
-InstructionStream >> interpretWithClient: aClient [
-	| endPC |
-	endPC := self method endPC.
-	[pc > endPC] whileFalse: [self interpretNextInstructionFor: aClient]
-]
-
-{ #category : '*Debugging-Core' }
 InstructionStream >> peekByte [
 	"Answer the first byte of the current bytecode."
 
@@ -74,32 +67,10 @@ InstructionStream >> previousPc [
 ]
 
 { #category : '*Debugging-Core' }
-InstructionStream >> secondByte [
-	"Answer the second byte of the current bytecode."
-
-	^self method at: pc + 1
-]
-
-{ #category : '*Debugging-Core' }
-InstructionStream >> selectorToSendOrSelf [
-	"If this instruction is a send, answer the selector, otherwise answer self."
- 
-	^ self method encoderClass selectorToSendOrItselfFor: self in: self method at: pc
-]
-
-{ #category : '*Debugging-Core' }
 InstructionStream >> thirdByte [
 	"Answer the third byte of the current bytecode."
 
 	^self method at: pc + 2
-]
-
-{ #category : '*Debugging-Core' }
-InstructionStream >> willCreateBlock [
-	"next bytecode is a block creation"
-
-	^ (self method encoderClass isCreateBlockAt: pc in: self method) or: 
-		[ self method encoderClass isCreateFullBlockAt: pc in: self method]
 ]
 
 { #category : '*Debugging-Core' }
@@ -120,18 +91,4 @@ InstructionStream >> willReturn [
 	"Answer whether the next bytecode is a return."
 
 	^ self method encoderClass isReturnAt: pc in: self method
-]
-
-{ #category : '*Debugging-Core' }
-InstructionStream >> willSend [
-	"Answer whether the next bytecode is a message-send."
-
-	^ self method encoderClass isSendAt: pc in: self method
-]
-
-{ #category : '*Debugging-Core' }
-InstructionStream >> willStore [
-	"Answer whether the next bytecode is a store or store-pop"
-
-	^ self method encoderClass isStoreAt: pc in: self method
 ]

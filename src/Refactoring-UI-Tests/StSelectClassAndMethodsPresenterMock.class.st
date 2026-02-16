@@ -21,6 +21,16 @@ StSelectClassAndMethodsPresenterMock class >> cancelled [
 	^ false
 ]
 
+{ #category : 'reflective operations' }
+StSelectClassAndMethodsPresenterMock class >> doesNotUnderstand: aMessage [
+]
+
+{ #category : 'testing' }
+StSelectClassAndMethodsPresenterMock class >> isOk [
+
+	^ true
+]
+
 { #category : 'initialization' }
 StSelectClassAndMethodsPresenterMock class >> label: aString dropLabel: aString2 withItems: aCollection selecting: aCollection4 dropItems: aCollection5 acceptBlock: aFullBlockClosure [
 
@@ -31,6 +41,12 @@ StSelectClassAndMethodsPresenterMock class >> label: aString dropLabel: aString2
 		selecting: aCollection4
 		dropItems: aCollection
 		acceptBlock: aFullBlockClosure
+]
+
+{ #category : 'as yet unclassified' }
+StSelectClassAndMethodsPresenterMock class >> newApplication: anApplication [
+
+	^ self new
 ]
 
 { #category : 'accessing' }
@@ -56,6 +72,12 @@ StSelectClassAndMethodsPresenterMock >> cancelled [
 	^ false
 ]
 
+{ #category : 'as yet unclassified' }
+StSelectClassAndMethodsPresenterMock >> isOk [
+
+	^ true
+]
+
 { #category : 'initialization' }
 StSelectClassAndMethodsPresenterMock >> label: aString dropLabel: aString2 withItems: aCollection selecting: aCollection4 dropItems: aCollection5 acceptBlock: aFullBlockClosure [ 
 	label := aString.
@@ -65,6 +87,14 @@ StSelectClassAndMethodsPresenterMock >> label: aString dropLabel: aString2 withI
 	dropItems := aCollection4.
 	acceptBlock := aFullBlockClosure.
 	acceptBlock value: self selectedClass value: self selectedMethods
+]
+
+{ #category : 'as yet unclassified' }
+StSelectClassAndMethodsPresenterMock >> openDialog [
+]
+
+{ #category : 'as yet unclassified' }
+StSelectClassAndMethodsPresenterMock >> openModal [
 ]
 
 { #category : 'initialization' }

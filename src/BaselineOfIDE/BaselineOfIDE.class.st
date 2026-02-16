@@ -56,8 +56,14 @@ BaselineOfIDE >> baseline: spec [
 			load: 'Shift' group: 'shift-tests' spec: spec;
 			load: 'Traits' group: 'traits-tests' spec: spec;
 			load: 'Slot' group: 'slot-tests' spec: spec;
-			load: 'Clap' group: 'development' spec: spec;
-			load: 'SUnit' group: 'Tests' spec: spec;
+			load: 'Clap' group: 'development' spec: spec.
+
+		spec
+			baseline: 'SUnit' with: [
+				spec
+					loads: #( 'Tests' 'UITests' );
+					repository: repository ].
+		self
 			load: 'EnlumineurFormatter' group: 'Tests' spec: spec;
 			load: 'Reflectivity' group: 'tests' spec: spec;
 			load: 'DebugPoints' group: 'Tests' spec: spec;

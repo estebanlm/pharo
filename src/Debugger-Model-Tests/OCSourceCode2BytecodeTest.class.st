@@ -10,9 +10,9 @@ Class {
 	#classVars : [
 		'ClassVar'
 	],
-	#category : 'OpalCompiler-Tests-Source',
-	#package : 'OpalCompiler-Tests',
-	#tag : 'Source'
+	#category : 'Debugger-Model-Tests-Core',
+	#package : 'Debugger-Model-Tests',
+	#tag : 'Core'
 }
 
 { #category : 'accessing' }
@@ -34,6 +34,12 @@ OCSourceCode2BytecodeTest >> compile2method: sourceStream [
 OCSourceCode2BytecodeTest >> instVar [
 
 	^ instVar
+]
+
+{ #category : 'accessing' }
+OCSourceCode2BytecodeTest >> instVarIndex [
+
+	^ 3
 ]
 
 { #category : 'tests' }
@@ -568,7 +574,7 @@ OCSourceCode2BytecodeTest >> testPushReceiverVariableBytecode [
 	scanner := InstructionStream on: method.
 	self
 		assert: ((did := scanner peekInstruction) selector == #pushReceiverVariable:
-				and: [did arguments first == 2])
+				and: [did arguments first == self instVarIndex ])
 		description: 'Failed ' , selector
 ]
 
@@ -661,7 +667,7 @@ OCSourceCode2BytecodeTest >> testStoreAndPopReceiverVariableBytecode [
 	scanner := InstructionStream on: method.
 	self
 		assert: ((did := scanner decodeNextInstruction; peekInstruction) selector == #popIntoReceiverVariable:
-				and: [did arguments first == 2])
+				and: [did arguments first == self instVarIndex ])
 		description: 'Failed ' , selector
 ]
 
@@ -693,7 +699,7 @@ OCSourceCode2BytecodeTest >> testStoreIntoReceiverVariableBytecode [
 	scanner := InstructionStream on: method.
 	self
 		assert: ((did := scanner decodeNextInstruction; peekInstruction) selector == #storeIntoReceiverVariable:
-				and: [did arguments first == 2])
+				and: [did arguments first == self instVarIndex ])
 		description: 'Failed ' , selector
 ]
 
