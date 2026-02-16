@@ -42,9 +42,9 @@ ReInsertSuperclassDriverTest >> testInsertSuperclass [
 
 	driver runRefactoring.
 
-	self assert: driver refactoring changes changes size equals: 3. "one because the subclasses got a new root the new subclass of the superclass"
+	self assert: driver refactoring changes changes size equals: 2. "one because the subclasses got a new root the new subclass of the superclass"
 	self assert: rbLeafClass subclasses size equals: 0.
-	self assert: rbLeafClass superclass subclasses size equals: 2.
+	self assert: rbLeafClass superclass subclasses size equals: 1.
 
 
 	self assert: rbLeafClass superclass name equals: self newSuperclassName

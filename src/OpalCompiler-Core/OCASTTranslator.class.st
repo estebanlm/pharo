@@ -486,7 +486,7 @@ OCASTTranslator >> replaceVariablesInBlock: anOptimizedBlockNode using: replacem
 	copiedBody := anOptimizedBlockNode body copy.
 	
 	replacements keysAndValuesDo: [ :k :v |
-			(copiedBody allChildren copyWithout: copiedBody) do: [ :node |
+			(copiedBody withAllChildren copyWithout: copiedBody) do: [ :node |
 					| originalNode |
 					
 					node isCommentNode ifFalse: [

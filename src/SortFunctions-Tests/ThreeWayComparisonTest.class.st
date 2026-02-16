@@ -17,6 +17,14 @@ ThreeWayComparisonTest >> testBooleans [
 ]
 
 { #category : 'tests' }
+ThreeWayComparisonTest >> testCharacters [
+
+	self assert: ($b threeWayCompareTo: $a) equals: 1.
+	self assert: ($a threeWayCompareTo: $b) equals: -1.
+	self assert: ($b threeWayCompareTo: $b ) equals: 0
+]
+
+{ #category : 'tests' }
 ThreeWayComparisonTest >> testFloats [
 
 	| a b c d |

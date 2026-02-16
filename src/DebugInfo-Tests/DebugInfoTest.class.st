@@ -39,8 +39,10 @@ DebugInfoTest >> methodWithArgumentCapturingContext: anArgument [
 { #category : 'helpers' }
 DebugInfoTest >> methodWithArgumentCapturingFullBlockContext: anArgument [
 
+	<compilerOptions: #(- optionCleanBlockClosure)>
+
 	"anArgument is unused, but the context should capture it"
-	^ [  thisContext copy ] value
+	^ [ self. thisContext copy ] value
 ]
 
 { #category : 'helpers' }
@@ -706,6 +708,7 @@ DebugInfoTest >> testRangeForSendInInlinedBlock [
 { #category : 'tests - read variables' }
 DebugInfoTest >> testReadLocalBlockArgumentVariable [
 
+	<compilerOptions: #(- optionCleanBlockClosure)>
 	| debugInfo context |
 	context := [ :blockArgument | thisContext copy ] value: 7.
 
@@ -783,6 +786,7 @@ DebugInfoTest >> testReadLocalBlockTempVectorTemporaryVariableFromMethod [
 { #category : 'tests - read variables' }
 DebugInfoTest >> testReadLocalBlockTemporaryVariable [
 
+	<compilerOptions: #(- optionCleanBlockClosure)>
 	| debugInfo context |
 	context := [ :blockArgument |
 		           | tempInBlock |
@@ -901,6 +905,7 @@ DebugInfoTest >> testReadNonExistingVariableRaisesError [
 { #category : 'tests - read variables' }
 DebugInfoTest >> testReadOuterBlockArgumentVariableFromClosure [
 
+	<compilerOptions: #(- optionCleanBlockClosure)>
 	| debugInfo context |
 	context := [ :blockArgument | [ thisContext copy ] value ] value: 7.
 
@@ -915,6 +920,7 @@ DebugInfoTest >> testReadOuterBlockArgumentVariableFromClosure [
 { #category : 'tests - read variables' }
 DebugInfoTest >> testReadOuterBlockArgumentVariableFromOptimizedBlock [
 
+	<compilerOptions: #(- optionCleanBlockClosure)>
 	| debugInfo context |
 	context := [ :blockArgument | true ifTrue: [ thisContext copy ] ]
 		           value: 7.
@@ -1125,6 +1131,8 @@ DebugInfoTest >> testReadOuterMethodArgumentVariableFromOptimizedBlock [
 { #category : 'tests - read variables' }
 DebugInfoTest >> testReadOuterMethodTemporaryVariableFromClosure [
 
+	<compilerOptions: #(- optionCleanBlockClosure)>
+	
 	| debugInfo contextWithArguments |
 	contextWithArguments := [ thisContext copy ] value.
 	debugInfo := self newDebugInfoFor: contextWithArguments method.

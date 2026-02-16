@@ -226,23 +226,61 @@ ClassTest >> testClassVariableEntanglement [
 
 { #category : 'tests - accessing - comments' }
 ClassTest >> testComment [
-	self assert: Object comment isNotNil.
-	self assert: Object class comment equals: Object comment
+
+	| oldComment oldStamp |
+	oldComment := Object comment.
+	oldStamp := Object commentStamp.
+	
+	[ 
+	
+	Object comment: 'toto' stamp: 'something'.
+	
+	self assert: Object comment equals: 'toto'.
+	self assert: Object class comment equals: 'toto'.
+	
+	] ensure: [
+		Object comment: oldComment stamp: oldStamp
+	]
 ]
 
 { #category : 'tests - accessing - comments' }
 ClassTest >> testCommentSourcePointer [
 
+	| oldComment oldStamp |
+	oldComment := Object comment.
+	oldStamp := Object commentStamp.
+	
+	[ 
+	
+	Object comment: 'toto' stamp: 'something'.
+	
+	self assert: Object commentSourcePointer notNil.
 	self
 		assert: Object class commentSourcePointer
-		identicalTo: Object commentSourcePointer
+		equals: Object commentSourcePointer
+	
+	] ensure: [
+		Object comment: oldComment stamp: oldStamp
+	]
 ]
 
 { #category : 'tests - accessing - comments' }
 ClassTest >> testCommentStamp [
 
-	self denyEmpty: Object commentStamp.
-	self denyEmpty: Object class commentStamp
+	| oldComment oldStamp |
+	oldComment := Object comment.
+	oldStamp := Object commentStamp.
+	
+	[ 
+	
+	Object comment: 'toto' stamp: 'something'.
+	
+	self assert: Object commentStamp equals: 'something'.
+	self assert: Object class commentStamp equals: 'something'.
+	
+	] ensure: [
+		Object comment: oldComment stamp: oldStamp
+	]	
 ]
 
 { #category : 'tests' }

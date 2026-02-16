@@ -340,6 +340,12 @@ Exception >> signal: signalerText [
 	^ self signal
 ]
 
+{ #category : 'accessing' }
+Exception >> signalContext [
+
+	^ signalContext
+]
+
 { #category : 'signaling' }
 Exception >> signalIn: context [
 	"Ask ContextHandlers in the sender chain starting at the given context to handle this signal.

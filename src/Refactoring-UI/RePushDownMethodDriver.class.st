@@ -101,7 +101,7 @@ RePushDownMethodDriver >> defaultSelectDialog [
 { #category : 'execution' }
 RePushDownMethodDriver >> gatherUserInput [
 
-	methods := self selectMethods
+	self selectMethods
 ]
 
 { #category : 'configuration' }
@@ -184,20 +184,20 @@ RePushDownMethodDriver >> runRefactoring [
 
 { #category : 'execution' }
 RePushDownMethodDriver >> selectMethods [
+
 	| dialog |
 	
 	dialog := (self methodsSelectionPresenterClass newApplication: self application)
-		title: 'There are potential breaking changes!'
-		label: 'Push down methods from ' , class name
-		withItems:
-			(class methods sort: [ :a :b | a asString < b asString ])
-			  asOrderedCollection
-		selecting: methods asOrderedCollection;
-		openDialog.
-	
-	dialog isOk ifFalse: [ ^ nil ].
-	
-	^ dialog selectedItems
+		          title: 'There are potential breaking changes!'
+		          label: 'Push down methods from ' , class name
+		          withItems: (class methods sort: [ :a :b | a asString < b asString ]) asOrderedCollection
+		          selecting: methods asOrderedCollection
+		          acceptBlock: [ :selectedMethods | methods := selectedMethods ];
+		          openModal.
+
+	dialog isOk ifTrue: [ ^ self ].
+
+	methods:= nil
 ]
 
 { #category : 'initialization' }
