@@ -23,7 +23,8 @@ RTFSelfCallVisitorInterpreter >> analyze [
 
 { #category : 'accessing' }
 RTFSelfCallVisitorInterpreter >> considerClassesThat [
-	^ considerClassesThat
+
+	^ considerClassesThat ifNil: [ considerClassesThat := [ :class | class inheritsFrom: Object ] ]
 ]
 
 { #category : 'accessing' }
@@ -31,22 +32,14 @@ RTFSelfCallVisitorInterpreter >> considerClassesThat: anObject [
 	considerClassesThat := anObject
 ]
 
-{ #category : 'initialization' }
-RTFSelfCallVisitorInterpreter >> initialize [
-
-	super initialize.
-	selfSentMethods := OrderedCollection new.
-	considerClassesThat := [ :class | class inheritsFrom: Object ]
-]
-
 { #category : 'private' }
 RTFSelfCallVisitorInterpreter >> isMethodAnalyzable [
 
-	(considerClassesThat value: selfSentMethod methodClass)
+	(self considerClassesThat value: selfSentMethod methodClass)
 		ifFalse: [ ^ false ].
 	selfSentMethod isPrimitive
 		ifTrue: [ ^ false ].
-	(selfSentMethods includes: selfSentMethod)
+	(self selfSentMethods includes: selfSentMethod)
 		ifTrue: [ ^ false ].
 	^ true
 ]
@@ -68,6 +61,12 @@ RTFSelfCallVisitorInterpreter >> preAnalysisHook: aMessageNode [
 	^ self
 ]
 
+{ #category : 'api' }
+RTFSelfCallVisitorInterpreter >> reset [
+
+	^ selfSentMethods := OrderedCollection new
+]
+
 { #category : 'accessing' }
 RTFSelfCallVisitorInterpreter >> selfClass: aClass [
 
@@ -76,7 +75,8 @@ RTFSelfCallVisitorInterpreter >> selfClass: aClass [
 
 { #category : 'accessing' }
 RTFSelfCallVisitorInterpreter >> selfSentMethods [
-	^ selfSentMethods
+
+	^ selfSentMethods ifNil: [ self reset ]
 ]
 
 { #category : 'visiting' }
