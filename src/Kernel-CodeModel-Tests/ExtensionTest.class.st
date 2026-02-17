@@ -355,19 +355,19 @@ ExtensionTest >> test15ExtensionsWithIsolatedSuperSends [
 ]
 
 { #category : 'tests - runtime' }
-ExtensionTest >> test15LookupAliasedSelectorInUserReturnsExtensionMethod [
+ExtensionTest >> test15LookupAliasedSelectorInUserReturnsExtendedClass [
 
-	| definerScopedSelector userScopedSelector method1 method2 |
+	| definerScopedSelector userScopedSelector extendedClass1 extendedClass2 |
 	extensionOnPoint compile: 'asString ^ ''youpiii'''.
 
 	userPackage addExtensionImport: extensionOnPoint.
 
 	definerScopedSelector := definerPackage visibleSelectorForSymbol: #asString.
 	userScopedSelector := userPackage visibleSelectorForSymbol: #asString.
-	method1 := userScopedSelector lookupAliasedMethodOnReceiverClass: Point.
-	method2 := definerScopedSelector lookupAliasedMethodOnReceiverClass: Point.
+	extendedClass1 := userScopedSelector lookupAliasedMethodOnReceiverClass: Point.
+	extendedClass2 := definerScopedSelector lookupAliasedMethodOnReceiverClass: Point.
 
-	self assert: method1 second == method2 second
+	self assert: extendedClass1 == extendedClass2
 ]
 
 { #category : 'tests - runtime' }

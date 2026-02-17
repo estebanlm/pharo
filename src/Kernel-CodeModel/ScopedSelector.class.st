@@ -7,9 +7,9 @@ Class {
 		'extendedBehaviors',
 		'aliasedBehaviors'
 	],
-	#category : 'Kernel-CodeModel-Packages',
+	#category : 'Kernel-CodeModel-Extensions',
 	#package : 'Kernel-CodeModel',
-	#tag : 'Packages'
+	#tag : 'Extensions'
 }
 
 { #category : 'installing' }
@@ -155,15 +155,13 @@ ScopedSelector >> handleDoesNotUnderstand: aMessage to: aReceiver [
 	"Lookup failed on a scoped send to a non-extended class.
 	We should lookup an aliased method, and activate it."
 	
-	| aliasPair aliasOwner aliasMethod |
-	aliasPair := self lookupAliasedMethodOnReceiverClass: aReceiver class lookupClass: aMessage lookupClass.
+	| aliasOwner |
+	aliasOwner := self lookupAliasedMethodOnReceiverClass: aReceiver class lookupClass: aMessage lookupClass.
 	
 	"This looks like a real DNU"
-	aliasPair ifNil: [
+	aliasOwner ifNil: [
 		^ self symbol handleDoesNotUnderstand: aMessage to: aReceiver ].
 	
-	aliasOwner := aliasPair first.
-	aliasMethod := aliasPair second.
 	
 	"We alias the class itself and its hierarchy"
 	self bindAliasIn: aliasOwner.
@@ -210,25 +208,21 @@ ScopedSelector >> lookupAliasedMethodOnReceiverClass: aClass lookupClass: lookup
 	Let's look up recursively starting at aClass/lookupClass"
 	theLookupClass := lookupClass ifNil: [ aClass ].
 
-
-	allVisibleExtensions := (owner definedClasses select: [ :e | e isKindOf: Extension ]) , owner importedExtensions.
+	allVisibleExtensions := owner visibleExtensions.
 	[ theLookupClass notNil ] whileTrue: [
 			| allVisibleExtensionsForThisClass |
 			allVisibleExtensionsForThisClass := allVisibleExtensions select: [ :e | e extendedClass == theLookupClass ].
 			allVisibleExtensionsForThisClass ifNotEmpty: [ :es |
 					| foundScopedMethod |
 					foundScopedMethod := es anyOne extendedClass lookupSelector: (es anyOne package visibleSelectorForSymbol: self symbol).
-					foundScopedMethod ifNotNil: [
-							^ {
-								  es anyOne extendedClass.
-								  foundScopedMethod } ] ].
+					foundScopedMethod ifNotNil: [ ^ es anyOne extendedClass ] ].
 
-			theLookupClass := theLookupClass superclass ]. "We reached the top of the hierarchy and found no extensions, just look for the symbol"
+			theLookupClass := theLookupClass superclass ].
+	
+	"We reached the top of the hierarchy and found no extensions, just look for the symbol"
 	foundMethod := (lookupClass ifNil: [ aClass ]) lookupSelector: self symbol.
 	foundMethod ifNil: [ ^ nil ].
-	^ {
-		  foundMethod methodClass.
-		  foundMethod }
+	^ foundMethod methodClass
 ]
 
 { #category : 'accessing' }
