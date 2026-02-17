@@ -18,7 +18,7 @@ Class {
 { #category : 'private' }
 RTFSelfCallVisitorInterpreter >> analyze [
 
-	selfSentMethods add: selfSentMethod.
+	self selfSentMethods add: selfSentMethod.
 ]
 
 { #category : 'accessing' }
@@ -49,8 +49,8 @@ RTFSelfCallVisitorInterpreter >> lookupMethodFromNode: aMessageNode [
 
 	| lookupClass |
 	lookupClass := aMessageNode receiver isSuperVariable
-		               ifTrue: [ selfClass superclass ]
-		               ifFalse: [ selfClass ].
+		               ifTrue: [ self selfClass superclass ]
+		               ifFalse: [ self selfClass ].
 
 	selfSentMethod := lookupClass lookupSelector: aMessageNode selector
 ]
@@ -64,7 +64,13 @@ RTFSelfCallVisitorInterpreter >> preAnalysisHook: aMessageNode [
 { #category : 'api' }
 RTFSelfCallVisitorInterpreter >> reset [
 
-	^ selfSentMethods := OrderedCollection new
+	selfSentMethods := nil
+]
+
+{ #category : 'accessing' }
+RTFSelfCallVisitorInterpreter >> selfClass [
+
+	^ selfClass ifNil: [ Error signal: 'self class not assigned' ]
 ]
 
 { #category : 'accessing' }
@@ -76,7 +82,7 @@ RTFSelfCallVisitorInterpreter >> selfClass: aClass [
 { #category : 'accessing' }
 RTFSelfCallVisitorInterpreter >> selfSentMethods [
 
-	^ selfSentMethods ifNil: [ self reset ]
+	^ selfSentMethods ifNil: [ selfSentMethods := OrderedCollection new ]
 ]
 
 { #category : 'visiting' }
