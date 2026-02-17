@@ -218,7 +218,7 @@ ExtensionHotUpdateAliasingTest >> test03RemoveExtension03ShouldNotRemoveUnrelate
 	"First package already exists.
 	Add extension method, import, send to alias"
 	extensionOnObject compile: 'extension ^ 25'.
-	userPackage importExtension: extensionOnObject.
+	userPackage addExtensionImport: extensionOnObject.
 	extensionScopedSelector := definerPackage lookupSelector: #extension.
 	userScopedSelector := userPackage lookupSelector: #extension.
 	objectClass new perform: userScopedSelector.
@@ -234,7 +234,7 @@ ExtensionHotUpdateAliasingTest >> test03RemoveExtension03ShouldNotRemoveUnrelate
 	"Add extension method, import, send to alias"
 	extensionOnObject2 compile: 'extension ^ 17'.
 	userPackage2 := Package named: 'User2'.
-	userPackage2 importExtension: extensionOnObject2.
+	userPackage2 addExtensionImport: extensionOnObject2.
 	extensionScopedSelector2 := definerPackage2 lookupSelector: #extension.
 	userScopedSelector2 := userPackage2 lookupSelector: #extension.
 	objectClass new perform: userScopedSelector2.
@@ -273,7 +273,7 @@ ExtensionHotUpdateAliasingTest >> test03RemoveExtension04ShouldRemoveAliasesToEx
 	extensionScopedSelector := extensionOnObject compile: 'extension ^ 11'.
 	
 	"We import and use the extension, which will generate an alias"
-	userPackage importExtension: extensionOnObject.
+	userPackage addExtensionImport: extensionOnObject.
 	userClass compile: 'userMethod: anObject ^ anObject extension'.
 	userScopedSelector := userPackage lookupSelector: #extension.
 	
@@ -308,7 +308,7 @@ ExtensionHotUpdateAliasingTest >> test04ImportExtensionMethod01InstallsExtension
 
 	| userScopedSelector |
 	extensionOnObject compile: 'extension ^ 42'.
-	userPackage importExtension: extensionOnObject.
+	userPackage addExtensionImport: extensionOnObject.
 	
 	userScopedSelector := userPackage lookupSelector: #extension.
 	self assert: userScopedSelector owner == userPackage.
@@ -320,7 +320,7 @@ ExtensionHotUpdateAliasingTest >> test04ImportExtensionMethod01InstallsExtension
 ExtensionHotUpdateAliasingTest >> test05CompileNewExtensionMethodAfterImport01InstallsExtensionInExtendedClass [
 
 	| userScopedSelector |
-	userPackage importExtension: extensionOnObject.
+	userPackage addExtensionImport: extensionOnObject.
 	extensionOnObject compile: 'extension ^ 42'.
 	
 	userScopedSelector := userPackage lookupSelector: #extension.
@@ -387,7 +387,7 @@ ExtensionHotUpdateAliasingTest >> test08RemoveExtensionMethodFromImport01ShouldR
 	extensionOnObject compile: 'extension ^ 11'.
 	
 	"We import it -> the method should be locally seen using the local scoped selector"
-	userPackage importExtension: extensionOnObject.
+	userPackage addExtensionImport: extensionOnObject.
 	scopedSelector := userPackage lookupSelector: #extension.
 	self assert: (objectClass new perform: scopedSelector) equals: 11.
 	
@@ -411,7 +411,7 @@ ExtensionHotUpdateAliasingTest >> test08RemoveExtensionMethodFromImport02ShouldN
 	"We extend Object"
 	scopedSelector := extensionOnObject compile: 'extension ^ 11'.
 
-	userPackage importExtension: extensionOnObject.
+	userPackage addExtensionImport: extensionOnObject.
 	self assert: (objectClass new perform: scopedSelector) equals: 11.
 	
 	"We remove the extension. Now the object should not understand the message anymore"
@@ -435,7 +435,7 @@ ExtensionHotUpdateAliasingTest >> test09RemoveImport01ShouldRemoveExtensionMetho
 	extensionOnObject compile: 'extension ^ 11'.
 	
 	"We import it -> the method should be locally seen using the local scoped selector"
-	userPackage importExtension: extensionOnObject.
+	userPackage addExtensionImport: extensionOnObject.
 	scopedSelector := userPackage lookupSelector: #extension.
 	self assert: (objectClass new perform: scopedSelector) equals: 11.
 	
@@ -459,7 +459,7 @@ ExtensionHotUpdateAliasingTest >> test09RemoveImport02ShouldNotRemoveOriginalExt
 	"We extend Object"
 	scopedSelector := extensionOnObject compile: 'extension ^ 11'.
 
-	userPackage importExtension: extensionOnObject.
+	userPackage addExtensionImport: extensionOnObject.
 	self assert: (objectClass new perform: scopedSelector) equals: 11.
 	
 	"We remove the extension. Now the object should not understand the message anymore"
@@ -477,7 +477,7 @@ ExtensionHotUpdateAliasingTest >> test10RemoveExtensionFromSystem01ShouldRemoveE
 	extensionOnObject compile: 'extension ^ 11'.
 	
 	"We import it -> the method should be locally seen using the local scoped selector"
-	userPackage importExtension: extensionOnObject.
+	userPackage addExtensionImport: extensionOnObject.
 	scopedSelector := userPackage lookupSelector: #extension.
 	self assert: (objectClass new perform: scopedSelector) equals: 11.
 	
@@ -501,7 +501,7 @@ ExtensionHotUpdateAliasingTest >> test10RemoveExtensionFromSystem02ShouldNotRemo
 	"We extend Object"
 	scopedSelector := extensionOnObject compile: 'extension ^ 11'.
 
-	userPackage importExtension: extensionOnObject.
+	userPackage addExtensionImport: extensionOnObject.
 	self assert: (objectClass new perform: scopedSelector) equals: 11.
 	
 	"We remove the extension. Now the object should not understand the message anymore"

@@ -114,6 +114,24 @@ Package >> addClass: aClass [
 	self moveClass: aClass toTag: self rootTag
 ]
 
+{ #category : 'extensions' }
+Package >> addExtensionImport: anExtension [
+
+	self importedExtensions add: anExtension.
+	anExtension addUserPackage: self.
+
+	self importSelectors: anExtension scopedSelectors. "Recompile dependencies, so they can see the extension"
+	self definedClasses do: [ :c |
+			c definedMethods do: [ :m |
+					m methodClass
+						compile: m sourceCode
+						classified: m protocol
+						withStamp: m timeStamp
+						notifying: nil
+						logSource: true
+						recompileDependencies: false ] ]
+]
+
 { #category : 'add method - compiled method' }
 Package >> addMethod: aCompiledMethod [
 	"Add the method to the receiver as a defined method if the class is  defined in it, else as an extension."
@@ -142,7 +160,7 @@ Package >> classesTaggedWith: aSymbol [
 	^ (self tagNamed: aSymbol ifAbsent: [ ^ #(  ) ]) classes
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'extensions' }
 Package >> cleanupExtendedBehaviors [
 	
 	"This package is about to be removed.
@@ -164,7 +182,7 @@ Package >> codeChangeAnnouncer [
 	^ self environment codeChangeAnnouncer
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'extensions' }
 Package >> defineScopedSelector: aSymbol [
 
 	| scopedSelector |
@@ -354,24 +372,6 @@ Package >> hierarchyRoots [
 		select: [ :each | (each superclass isNil or: [ each superclass package ~~ self ]) and: [ each hasSubclasses ] ]
 ]
 
-{ #category : 'as yet unclassified' }
-Package >> importExtension: anExtension [
-
-	self importedExtensions add: anExtension.
-	anExtension addUserPackage: self.
-
-	self importSelectors: anExtension methodDictionary keys. "Recompile dependencies, so they can see the extension"
-	self definedClasses do: [ :c |
-			c definedMethods do: [ :m |
-					m methodClass
-						compile: m sourceCode
-						classified: m protocol
-						withStamp: m timeStamp
-						notifying: nil
-						logSource: true
-						recompileDependencies: false ] ]
-]
-
 { #category : 'private' }
 Package >> importProtocol: aProtocol forClass: aClass [
 	"import all the local methods of a protocol as defined in the receiver."
@@ -381,13 +381,13 @@ Package >> importProtocol: aProtocol forClass: aClass [
 		thenDo: [ :method | self addMethod: method ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'extensions' }
 Package >> importSelectors: aCollection [ 
 	
 	aCollection do: [ :e | self internScopedSelector: e symbol ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'extensions' }
 Package >> importedExtensions [
 	
 	^ importedExtensions ifNil: [ importedExtensions := Set new ]
@@ -447,7 +447,7 @@ Package >> initialize [
 	tags := Set new
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'extensions' }
 Package >> internScopedSelector: aSymbol [
 
 	| found |
@@ -503,13 +503,13 @@ Package >> linesOfCode [
 	^self methods inject: 0 into: [:sum :each | sum + each linesOfCode]
 ]
 
-{ #category : 'lookup' }
+{ #category : 'extensions' }
 Package >> lookupSelector: aSymbol [
 
 	^ self lookupSelector: aSymbol ifPresent: [ :found | found ]
 ]
 
-{ #category : 'lookup' }
+{ #category : 'extensions' }
 Package >> lookupSelector: aSymbol ifPresent: presentBlock [
 
 	^ presentBlock value: (self scopedSelectors at: aSymbol asSymbol ifAbsent: [ aSymbol ])
@@ -682,7 +682,7 @@ Package >> removeEmptyTags [
 	(self tags select: [ :tag | tag isEmpty ]) do: [ :emptyTag | self removeTag: emptyTag ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'extensions' }
 Package >> removeExtensionImport: anExtension [
 
 	self importedExtensions remove: anExtension.
@@ -827,7 +827,7 @@ Package >> sanitizeName: aName [
 	^ aName trimBoth
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'extensions' }
 Package >> scopedSelectors [
 	
 	^ scopedSelectors ifNil: [ scopedSelectors := IdentityDictionary new ]

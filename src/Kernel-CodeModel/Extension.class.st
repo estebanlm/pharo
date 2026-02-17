@@ -143,6 +143,13 @@ Extension >> removeUserPackage: aPackage [
 	self userPackages remove: aPackage
 ]
 
+{ #category : 'accessing' }
+Extension >> scopedSelectors [
+
+	"Return the scoped selectors defined in this extension"
+	^ self methodDictionary keys
+]
+
 { #category : 'initialization' }
 Extension >> userPackages [
 

@@ -109,7 +109,7 @@ ExtensionTest >> test05LookupExtendedSelectorInUserReturnsScopedSelector [
 	| scopedSelector |	
 	"We define a extension method, which defines a scoped selector in the selector namespace"
 	extensionOnObject compile: 'extensionMethod ^ 42'.
-	userPackage importExtension: extensionOnObject.
+	userPackage addExtensionImport: extensionOnObject.
 	
 	scopedSelector := userPackage lookupSelector: #extensionMethod.
 	self assert: scopedSelector isScopedSelector.
@@ -170,7 +170,7 @@ ExtensionTest >> test10ExtensionIsVisibleIfImported [
 	extensionOnObject compile: 'extensionMethod ^ 42'.
 	userClass compile: 'userMethod ^ self extensionMethod'.
 
-	userPackage importExtension: extensionOnObject.
+	userPackage addExtensionImport: extensionOnObject.
 	
 	receiver := userClass new.
 	self assert: receiver userMethod equals: 42
@@ -185,7 +185,7 @@ ExtensionTest >> test11ExtensionsArePolymorphicWithBaseSelectors [
 	userClass compile: 'scopedUser: anObject
 		^ anObject asString'.
 
-	userPackage importExtension: extensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
 	userInstance := userClass new.
 
 	self assert: (userInstance scopedUser: pointClass new) equals: 'youpiii'.
@@ -215,8 +215,8 @@ ExtensionTest >> test12ExtensionsArePolymorphicBetweenThem [
 	userClass compile: 'scopedUser: anObject
 		^ anObject foo'.
 
-	userPackage importExtension: extensionOnObject.
-	userPackage importExtension: extensionOnPoint.
+	userPackage addExtensionImport: extensionOnObject.
+	userPackage addExtensionImport: extensionOnPoint.
 	userInstance := userClass new.
 
 	self assert: (userInstance scopedUser: pointClass new) equals: 42.
@@ -238,8 +238,8 @@ ExtensionTest >> test13ConflictingExtensionsThrowError [
 	userClass compile: 'scopedUser: anObject
 		^ anObject foo'.
 
-	userPackage importExtension: extensionOnObject.
-	userPackage importExtension: anotherExtensionOnObject.
+	userPackage addExtensionImport: extensionOnObject.
+	userPackage addExtensionImport: anotherExtensionOnObject.
 	userInstance := userClass new.
 
 	self should: [(userInstance scopedUser: objectClass new)] raise: ExtensionConflictError with: [ :ex | self assert: ex messageText equals: 'Conflict: extension overwrites method #foo in MyObject' ].
@@ -254,7 +254,7 @@ ExtensionTest >> test13ExtensionDoesNotDefineAliasBeforeSend [
 	userClass compile: 'scopedUser: anObject
 		^ anObject asString'.
 
-	userPackage importExtension: extensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
 	userInstance := userClass new.
 	
 	scopedSelector := userPackage lookupSelector: #asString.
@@ -268,7 +268,7 @@ ExtensionTest >> test14DefinerAndUserSelectorAreNotTheSame [
 	| definerScopedSelector userScopedSelector |
 	extensionOnPoint compile: 'asString ^ ''youpiii'''.
 
-	userPackage importExtension: extensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
 	
 	definerScopedSelector := definerPackage lookupSelector: #asString.
 	userScopedSelector := userPackage lookupSelector: #asString.
@@ -286,8 +286,8 @@ ExtensionTest >> test14ExtensionSuperSends [
 	userClass compile: 'scopedUser: anObject
 		^ anObject foo'.
 
-	userPackage importExtension: extensionOnObject.
-	userPackage importExtension: extensionOnPoint.
+	userPackage addExtensionImport: extensionOnObject.
+	userPackage addExtensionImport: extensionOnPoint.
 	userInstance := userClass new.
 
 	self assert: (userInstance scopedUser: pointClass new) equals: 11.
@@ -303,8 +303,8 @@ ExtensionTest >> test15ExtensionsInHierarchySubclassBindingFirst [
 	userClass compile: 'scopedUser: anObject
 		^ anObject foo'.
 
-	userPackage importExtension: extensionOnObject.
-	userPackage importExtension: extensionOnPoint.
+	userPackage addExtensionImport: extensionOnObject.
+	userPackage addExtensionImport: extensionOnPoint.
 	userInstance := userClass new.
 
 	self assert: (userInstance scopedUser: pointClass new) equals: 42.
@@ -320,8 +320,8 @@ ExtensionTest >> test15ExtensionsInHierarchySuperclassBindingFirst [
 	userClass compile: 'scopedUser: anObject
 		^ anObject foo'.
 
-	userPackage importExtension: extensionOnObject.
-	userPackage importExtension: extensionOnPoint.
+	userPackage addExtensionImport: extensionOnObject.
+	userPackage addExtensionImport: extensionOnPoint.
 	userInstance := userClass new.
 
 	self assert: (userInstance scopedUser: objectClass new) equals: 10.
@@ -343,8 +343,8 @@ ExtensionTest >> test15ExtensionsWithIsolatedSuperSends [
 	userClass compile: 'scopedUser: anObject
 		^ anObject foo'.
 
-	userPackage importExtension: extensionOnObject.
-	userPackage importExtension: extensionOnPoint2.
+	userPackage addExtensionImport: extensionOnObject.
+	userPackage addExtensionImport: extensionOnPoint2.
 	userInstance := userClass new.
 
 	self assert: (userInstance scopedUser: objectClass new) equals: 10.
@@ -364,7 +364,7 @@ ExtensionTest >> test15LookupAliasedSelectorInUserReturnsExtensionMethod [
 	| definerScopedSelector userScopedSelector method1 method2 |
 	extensionOnPoint compile: 'asString ^ ''youpiii'''.
 
-	userPackage importExtension: extensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
 	
 	definerScopedSelector := definerPackage lookupSelector: #asString.
 	userScopedSelector := userPackage lookupSelector: #asString.
@@ -382,7 +382,7 @@ ExtensionTest >> test16ExtensionDoesNotTrackAliasedClassBeforeSend [
 	userClass compile: 'scopedUser: anObject
 		^ anObject asString'.
 
-	userPackage importExtension: extensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
 	userInstance := userClass new.
 	
 	scopedSelector := userPackage lookupSelector: #asString.
@@ -398,7 +398,7 @@ ExtensionTest >> test17ExtensionSelectorDoesNotDefineAlias [
 	userClass compile: 'scopedUser: anObject
 		^ anObject asString'.
 
-	userPackage importExtension: extensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
 	userInstance := userClass new.
 
 	"This sends a scoped message to a non extended class.
@@ -434,7 +434,7 @@ ExtensionTest >> test18ScopedSelectorTracksAliasedClassAfterSend [
 	userClass compile: 'scopedUser: anObject
 		^ anObject asString'.
 
-	userPackage importExtension: extensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
 	userInstance := userClass new.
 
 	"This sends a scoped message to a non extended class.
@@ -456,7 +456,7 @@ ExtensionTest >> test19CleanExtendedBehaviorsRemovesTrackedBehaviors [
 	extensionOnObject compile: 'extensionMethod ^ 42'.
 	userClass compile: 'userMethod ^ self extensionMethod'.
 
-	userPackage importExtension: extensionOnObject.
+	userPackage addExtensionImport: extensionOnObject.
 
 	receiver := userClass new.
 	receiver userMethod.
@@ -476,7 +476,7 @@ ExtensionTest >> test20CleanExtendedBehaviorsCleansAliases [
 	userClass compile: 'scopedUser: anObject
 		^ anObject asString'.
 
-	userPackage importExtension: extensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
 	userInstance := userClass new.
 
 	self assert: (userInstance scopedUser: objectClass new) equals: 'this is not an extension'.

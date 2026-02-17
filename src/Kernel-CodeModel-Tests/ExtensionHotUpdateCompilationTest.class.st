@@ -135,7 +135,7 @@ ExtensionHotUpdateCompilationTest >> test02ImportNewExtensionMethod01IsVisibleFo
 	=> the method above (foo) should see the extension!"
 	scopedSelector := extensionOnObject compile: 'extension ^ 11'.
 	
-	userClass package importExtension: extensionOnObject.
+	userClass package addExtensionImport: extensionOnObject.
 
 	userClass compile: 'foo ^ self extension'.
 	self assert: userClass new foo equals: 11
@@ -155,7 +155,7 @@ ExtensionHotUpdateCompilationTest >> test02ImportNewExtensionMethod02RecompilesS
 	"Before importing the extension, we do not see a scoped selector. We DNU on the global selector"
 	self assertDNU: #extension on: #foo to: userClass new.
 	
-	userClass package importExtension: extensionOnObject.
+	userClass package addExtensionImport: extensionOnObject.
 
 	self assert: userClass new foo equals: 11
 ]
@@ -167,7 +167,7 @@ ExtensionHotUpdateCompilationTest >> test03CompileNewExtensionMethodAfterImport0
 	| scopedSelector |	
 	
 	"We import an extension in the scope. The extension is empty"
-	userClass package importExtension: extensionOnObject.
+	userClass package addExtensionImport: extensionOnObject.
 
 	"=> the method above (foo) should see the extension!"
 	scopedSelector := extensionOnObject compile: 'extension ^ 11'.
@@ -183,7 +183,7 @@ ExtensionHotUpdateCompilationTest >> test03CompileNewExtensionMethodAfterImport0
 	| scopedSelector |	
 	
 	"We import an extension in the scope. The extension is empty"
-	userClass package importExtension: extensionOnObject.
+	userClass package addExtensionImport: extensionOnObject.
 
 	userClass compile: 'foo ^ self extension'.
 
@@ -244,7 +244,7 @@ ExtensionHotUpdateCompilationTest >> test05ReCompileNewExtensionMethodAfterImpor
 	| scopedSelector |	
 	
 	"We import an extension in the scope. The extension is empty"
-	userClass package importExtension: extensionOnObject.
+	userClass package addExtensionImport: extensionOnObject.
 
 	"=> the method above (foo) should see the extension!"
 	scopedSelector := extensionOnObject compile: 'extension ^ 11'.
@@ -263,7 +263,7 @@ ExtensionHotUpdateCompilationTest >> test05ReCompileNewExtensionMethodAfterImpor
 	| scopedSelector |	
 	
 	"We import an extension in the scope. The extension is empty"
-	userClass package importExtension: extensionOnObject.
+	userClass package addExtensionImport: extensionOnObject.
 
 	userClass compile: 'foo ^ self extension'.
 
@@ -329,7 +329,7 @@ ExtensionHotUpdateCompilationTest >> test07RedefineExtensionMethodAfterImport01I
 	scopedSelector := extensionOnObject compile: 'extension ^ 11'.
 	
 	"We import an extension in the scope. The extension is empty"
-	userClass package importExtension: extensionOnObject.
+	userClass package addExtensionImport: extensionOnObject.
 
 	"We redefine it, and this new version should be taken into account"
 	extensionOnObject compile: 'extension ^ 12'.
@@ -347,7 +347,7 @@ ExtensionHotUpdateCompilationTest >> test07RedefineExtensionMethodAfterImport02R
 	scopedSelector := extensionOnObject compile: 'extension ^ 11'.
 	
 	"We import an extension in the scope. The extension is empty"
-	userClass package importExtension: extensionOnObject.
+	userClass package addExtensionImport: extensionOnObject.
 
 	userClass compile: 'foo ^ self extension'.
 	

@@ -238,8 +238,8 @@ ExtensionConflictTest >> test03ImportExtensionMethodConflictsWithPreExistingImpo
 	anotherExtensionOnPoint compile: 'extension ^ 17'.
 	
 	"We import both extensions"
-	userPackage importExtension: extensionOnPoint.
-	userPackage importExtension: anotherExtensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
+	userPackage addExtensionImport: anotherExtensionOnPoint.
 
 	scopedSelector := userPackage lookupSelector: #extension.
 
@@ -264,8 +264,8 @@ ExtensionConflictTest >> test03ImportExtensionMethodConflictsWithPreExistingImpo
 	anotherExtensionOnPoint compile: 'extension ^ 17'.
 	
 	"We import both extensions"
-	userPackage importExtension: extensionOnPoint.
-	userPackage importExtension: anotherExtensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
+	userPackage addExtensionImport: anotherExtensionOnPoint.
 
 	scopedSelector := extensionOnPoint package lookupSelector: #extension.
 	self assert: (pointClass new perform: scopedSelector) equals: 73
@@ -287,8 +287,8 @@ ExtensionConflictTest >> test03ImportExtensionMethodConflictsWithPreExistingImpo
 	anotherExtensionOnPoint compile: 'extension ^ 17'.
 	
 	"We import both extensions"
-	userPackage importExtension: extensionOnPoint.
-	userPackage importExtension: anotherExtensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
+	userPackage addExtensionImport: anotherExtensionOnPoint.
 
 	scopedSelector := anotherExtensionOnPoint package lookupSelector: #extension.
 	self assert: (pointClass new perform: scopedSelector) equals: 17
@@ -311,8 +311,8 @@ ExtensionConflictTest >> test03ImportExtensionMethodConflictsWithPreExistingImpo
 	anotherExtensionOnPoint compile: 'extension ^ 17'.
 	
 	"We import both extensions"
-	userPackage importExtension: extensionOnPoint.
-	userPackage importExtension: anotherExtensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
+	userPackage addExtensionImport: anotherExtensionOnPoint.
 
 	scopedSelector := userPackage lookupSelector: #extension.
 	self assert: (coloredPointClass new perform: scopedSelector) equals: 42
@@ -335,8 +335,8 @@ ExtensionConflictTest >> test03ImportExtensionMethodConflictsWithPreExistingImpo
 	anotherExtensionOnPoint compile: 'extension ^ 17'.
 	
 	"We import both extensions"
-	userPackage importExtension: extensionOnPoint.
-	userPackage importExtension: anotherExtensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
+	userPackage addExtensionImport: anotherExtensionOnPoint.
 
 	"Recompilation should not change anything"
 	extensionOnPoint compile: 'extension ^ 73'.
@@ -363,8 +363,8 @@ ExtensionConflictTest >> test03ImportExtensionMethodConflictsWithPreExistingImpo
 	anotherExtensionOnPoint compile: 'extension ^ 17'.
 	
 	"We import both extensions"
-	userPackage importExtension: extensionOnPoint.
-	userPackage importExtension: anotherExtensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
+	userPackage addExtensionImport: anotherExtensionOnPoint.
 	
 	"Recompilation should not change anything"
 	extensionOnPoint compile: 'extension ^ 73'.
@@ -389,8 +389,8 @@ ExtensionConflictTest >> test03ImportExtensionMethodConflictsWithPreExistingImpo
 	anotherExtensionOnPoint compile: 'extension ^ 17'.
 	
 	"We import both extensions"
-	userPackage importExtension: extensionOnPoint.
-	userPackage importExtension: anotherExtensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
+	userPackage addExtensionImport: anotherExtensionOnPoint.
 
 	"Recompilation should not change anything"
 	extensionOnPoint compile: 'extension ^ 73'.
@@ -416,8 +416,8 @@ ExtensionConflictTest >> test03ImportExtensionMethodConflictsWithPreExistingImpo
 	anotherExtensionOnPoint compile: 'extension ^ 17'.
 	
 	"We import both extensions"
-	userPackage importExtension: extensionOnPoint.
-	userPackage importExtension: anotherExtensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
+	userPackage addExtensionImport: anotherExtensionOnPoint.
 	
 	"Recompilation should not change anything"
 	extensionOnPoint compile: 'extension ^ 73'.
@@ -439,8 +439,8 @@ ExtensionConflictTest >> test04NewExtensionOnImportExtensionMethodConflictsWithP
 		package: definerPackage2) install.
 	
 	"We import both extensions"
-	userPackage importExtension: extensionOnPoint.
-	userPackage importExtension: anotherExtensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
+	userPackage addExtensionImport: anotherExtensionOnPoint.
 
 	"We define the methods on the extensions after import"
 	extensionOnPoint compile: 'extension ^ 73'.
@@ -465,8 +465,8 @@ ExtensionConflictTest >> test04NewExtensionOnImportExtensionMethodConflictsWithP
 		package: definerPackage2) install.
 	
 	"We import both extensions"
-	userPackage importExtension: extensionOnPoint.
-	userPackage importExtension: anotherExtensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
+	userPackage addExtensionImport: anotherExtensionOnPoint.
 
 	"We define the methods on the extensions after import"
 	extensionOnPoint compile: 'extension ^ 73'.
@@ -488,8 +488,8 @@ ExtensionConflictTest >> test04NewExtensionOnImportExtensionMethodConflictsWithP
 		package: definerPackage2) install.
 	
 	"We import both extensions"
-	userPackage importExtension: extensionOnPoint.
-	userPackage importExtension: anotherExtensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
+	userPackage addExtensionImport: anotherExtensionOnPoint.
 
 	"We define the methods on the extensions after import"
 	extensionOnPoint compile: 'extension ^ 73'.
@@ -513,8 +513,8 @@ ExtensionConflictTest >> test04NewExtensionOnImportExtensionMethodConflictsWithP
 		package: definerPackage2) install.
 	
 	"We import both extensions"
-	userPackage importExtension: extensionOnPoint.
-	userPackage importExtension: anotherExtensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
+	userPackage addExtensionImport: anotherExtensionOnPoint.
 	
 	"We define the methods on the extensions after import"
 	extensionOnPoint compile: 'extension ^ 73'.
@@ -537,8 +537,8 @@ ExtensionConflictTest >> test04NewExtensionOnImportExtensionMethodConflictsWithP
 		package: definerPackage2) install.
 	
 	"We import both extensions"
-	userPackage importExtension: extensionOnPoint.
-	userPackage importExtension: anotherExtensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
+	userPackage addExtensionImport: anotherExtensionOnPoint.
 
 	"We define the methods on the extensions after import"
 	extensionOnPoint compile: 'extension ^ 73'.
@@ -566,8 +566,8 @@ ExtensionConflictTest >> test04NewExtensionOnImportExtensionMethodConflictsWithP
 		package: definerPackage2) install.
 	
 	"We import both extensions"
-	userPackage importExtension: extensionOnPoint.
-	userPackage importExtension: anotherExtensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
+	userPackage addExtensionImport: anotherExtensionOnPoint.
 
 	"We define the methods on the extensions after import"
 	extensionOnPoint compile: 'extension ^ 73'.
@@ -592,8 +592,8 @@ ExtensionConflictTest >> test04NewExtensionOnImportExtensionMethodConflictsWithP
 		package: definerPackage2) install.
 	
 	"We import both extensions"
-	userPackage importExtension: extensionOnPoint.
-	userPackage importExtension: anotherExtensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
+	userPackage addExtensionImport: anotherExtensionOnPoint.
 
 	"We define the methods on the extensions after import"
 	extensionOnPoint compile: 'extension ^ 73'.
@@ -620,8 +620,8 @@ ExtensionConflictTest >> test04NewExtensionOnImportExtensionMethodConflictsWithP
 		package: definerPackage2) install.
 	
 	"We import both extensions"
-	userPackage importExtension: extensionOnPoint.
-	userPackage importExtension: anotherExtensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
+	userPackage addExtensionImport: anotherExtensionOnPoint.
 	
 	"We define the methods on the extensions after import"
 	extensionOnPoint compile: 'extension ^ 73'.
@@ -641,7 +641,7 @@ ExtensionConflictTest >> test05LocalExtensionMethodConflictsWithPreExistingImpor
 	"We have a first extension"
 	| anotherExtensionOnPoint scopedSelector |
 	extensionOnPoint compile: 'extension ^ 73'.
-	userPackage importExtension: extensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
 
 	"We have a second extension"
 	anotherExtensionOnPoint := (Extension << #ExtensionOfPoint2
@@ -663,7 +663,7 @@ ExtensionConflictTest >> test05LocalExtensionMethodConflictsWithPreExistingImpor
 	"We have a first extension"
 	| anotherExtensionOnPoint scopedSelector |
 	extensionOnPoint compile: 'extension ^ 73'.
-	userPackage importExtension: extensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
 
 	"We have a second extension"
 	anotherExtensionOnPoint := (Extension << #ExtensionOfPoint2
@@ -685,7 +685,7 @@ ExtensionConflictTest >> test05LocalExtensionMethodConflictsWithPreExistingImpor
 
 	"We have a first extension"
 	extensionOnPoint compile: 'extension ^ 73'.
-	userPackage importExtension: extensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
 
 	"We have a second extension"
 	anotherExtensionOnPoint := (Extension << #ExtensionOfPoint2
@@ -707,7 +707,7 @@ ExtensionConflictTest >> test05LocalExtensionMethodConflictsWithPreExistingImpor
 	"We have a first extension"
 	| anotherExtensionOnPoint scopedSelector |
 	extensionOnPoint compile: 'extension ^ 73'.
-	userPackage importExtension: extensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
 
 	"We have a second extension"
 	anotherExtensionOnPoint := (Extension << #ExtensionOfPoint2
@@ -732,7 +732,7 @@ ExtensionConflictTest >> test05LocalExtensionMethodConflictsWithPreExistingImpor
 	"We have a first extension"
 	| anotherExtensionOnPoint scopedSelector |
 	extensionOnPoint compile: 'extension ^ 73'.
-	userPackage importExtension: extensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
 
 	"We have a second extension"
 	anotherExtensionOnPoint := (Extension << #ExtensionOfPoint2
@@ -757,7 +757,7 @@ ExtensionConflictTest >> test05LocalExtensionMethodConflictsWithPreExistingImpor
 
 	"We have a first extension"
 	extensionOnPoint compile: 'extension ^ 73'.
-	userPackage importExtension: extensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
 
 	"We have a second extension"
 	anotherExtensionOnPoint := (Extension << #ExtensionOfPoint2
@@ -787,7 +787,7 @@ ExtensionConflictTest >> test06ImportedExtensionConflictsWithPreExistingLocalExt
 	
 	"And we import a conflict"
 	extensionOnPoint compile: 'extension ^ 73'.
-	userPackage importExtension: extensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
 	
 	scopedSelector := userPackage lookupSelector: #extension.
 
@@ -809,7 +809,7 @@ ExtensionConflictTest >> test06ImportedExtensionConflictsWithPreExistingLocalExt
 
 	"And we import a conflict"
 	extensionOnPoint compile: 'extension ^ 73'.
-	userPackage importExtension: extensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
 	
 	scopedSelector := extensionOnPoint package lookupSelector: #extension.
 
@@ -831,7 +831,7 @@ ExtensionConflictTest >> test06ImportedExtensionConflictsWithPreExistingLocalExt
 	
 	"And we import a conflict"
 	extensionOnPoint compile: 'extension ^ 73'.
-	userPackage importExtension: extensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
 	
 	scopedSelector := extensionOnPoint package lookupSelector: #extension.
 
@@ -853,7 +853,7 @@ ExtensionConflictTest >> test06ImportedExtensionConflictsWithPreExistingLocalExt
 	
 	"And we import a conflict"
 	extensionOnPoint compile: 'extension ^ 73'.
-	userPackage importExtension: extensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
 	
 	"Recompilation should not change anything"
 	extensionOnPoint compile: 'extension ^ 73'.
@@ -878,7 +878,7 @@ ExtensionConflictTest >> test06ImportedExtensionConflictsWithPreExistingLocalExt
 
 	"And we import a conflict"
 	extensionOnPoint compile: 'extension ^ 73'.
-	userPackage importExtension: extensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
 	
 	"Recompilation should not change anything"
 	extensionOnPoint compile: 'extension ^ 73'.
@@ -903,7 +903,7 @@ ExtensionConflictTest >> test06ImportedExtensionConflictsWithPreExistingLocalExt
 	
 	"And we import a conflict"
 	extensionOnPoint compile: 'extension ^ 73'.
-	userPackage importExtension: extensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
 	
 	"Recompilation should not change anything"
 	extensionOnPoint compile: 'extension ^ 73'.
@@ -927,7 +927,7 @@ ExtensionConflictTest >> test07NewExtensionOnImportExtensionMethodConflictsWithP
 	anotherExtensionOnPoint compile: 'extension ^ 17'.
 	
 	"We import first, then define a conflict"
-	userPackage importExtension: extensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
 	extensionOnPoint compile: 'extension ^ 73'.
 	
 	scopedSelector := userPackage lookupSelector: #extension.
@@ -949,7 +949,7 @@ ExtensionConflictTest >> test07NewExtensionOnImportExtensionMethodConflictsWithP
 	anotherExtensionOnPoint compile: 'extension ^ 17'.
 	
 	"We import first, then define a conflict"
-	userPackage importExtension: extensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
 	extensionOnPoint compile: 'extension ^ 73'.
 	
 	scopedSelector := extensionOnPoint package lookupSelector: #extension.
@@ -971,7 +971,7 @@ ExtensionConflictTest >> test07NewExtensionOnImportExtensionMethodConflictsWithP
 	anotherExtensionOnPoint compile: 'extension ^ 17'.
 	
 	"We import first, then define a conflict"
-	userPackage importExtension: extensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
 	extensionOnPoint compile: 'extension ^ 73'.
 	
 	scopedSelector := extensionOnPoint package lookupSelector: #extension.
@@ -993,7 +993,7 @@ ExtensionConflictTest >> test07NewExtensionOnImportExtensionMethodConflictsWithP
 	anotherExtensionOnPoint compile: 'extension ^ 17'.
 	
 	"We import first, then define a conflict"
-	userPackage importExtension: extensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
 	extensionOnPoint compile: 'extension ^ 73'.
 	
 	"Recompilation should not change anything"
@@ -1018,7 +1018,7 @@ ExtensionConflictTest >> test07NewExtensionOnImportExtensionMethodConflictsWithP
 	anotherExtensionOnPoint compile: 'extension ^ 17'.
 	
 	"We import first, then define a conflict"
-	userPackage importExtension: extensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
 	extensionOnPoint compile: 'extension ^ 73'.
 	
 	"Recompilation should not change anything"
@@ -1043,7 +1043,7 @@ ExtensionConflictTest >> test07NewExtensionOnImportExtensionMethodConflictsWithP
 	anotherExtensionOnPoint compile: 'extension ^ 17'.
 	
 	"We import first, then define a conflict"
-	userPackage importExtension: extensionOnPoint.
+	userPackage addExtensionImport: extensionOnPoint.
 	extensionOnPoint compile: 'extension ^ 73'.
 	
 	"Recompilation should not change anything"
