@@ -691,8 +691,9 @@ Package >> removeExtensionImport: anExtension [
 	"Now we remove the local aliases to that extension"
 	anExtension selectors do: [ :e | | localScopedSelector |
 		localScopedSelector := self lookupSelector: e symbol.
-		self assert: (anExtension extendedClass >> localScopedSelector) == (anExtension extendedClass >> e).
-		anExtension removeSelector: localScopedSelector.
+		(anExtension extendedClass includesSelector: localScopedSelector) ifTrue: [
+			self assert: anExtension extendedClass >> localScopedSelector == (anExtension extendedClass >> e).
+			anExtension removeSelector: localScopedSelector ]
 	]
 ]
 

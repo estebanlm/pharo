@@ -460,7 +460,6 @@ ExtensionHotUpdateAliasingTest >> test09RemoveImport02ShouldNotRemoveOriginalExt
 	scopedSelector := extensionOnObject compile: 'extension ^ 11'.
 
 	userPackage importExtension: extensionOnObject.
-	userPackage lookupSelector: #extension.
 	self assert: (objectClass new perform: scopedSelector) equals: 11.
 	
 	"We remove the extension. Now the object should not understand the message anymore"
