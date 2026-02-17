@@ -60,11 +60,22 @@ ScopedSelector >> beginsWith: aString [
 { #category : 'accessing' }
 ScopedSelector >> bindAliasIn: aClass [
 
-	| theAliasedMethod allVisibleExtensionsForThisClass |
+	"Bind aliases in aClass using self as selector.
+	
+	Check how many methods to alias are there.
+	If many extensions are available on the same class, with the same name => conflict.
+	If there is an extension"
+
+	| theAliasedMethod allVisibleExtensionsForThisClass locallyDefined methodsInConflict |
 	allVisibleExtensionsForThisClass := self visibleExtensionsOn: aClass.
 
 	"Prevent conflicts!"
-	allVisibleExtensionsForThisClass size > 1
+	locallyDefined := aClass includesSelector: self symbol.
+	methodsInConflict := locallyDefined
+		ifTrue: [ 1 ]
+		ifFalse: [ 0 ].
+	methodsInConflict := methodsInConflict + allVisibleExtensionsForThisClass size.
+	methodsInConflict > 1
 		ifTrue: [ | conflictMethod | 
 			conflictMethod := ConflictMethod new
 				overwrittenSelector: self symbol;

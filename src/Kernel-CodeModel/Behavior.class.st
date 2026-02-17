@@ -657,25 +657,24 @@ Behavior >> compile: sourceCode classified: protocol withStamp: changeStamp noti
 
 	ast sendNodes do: [ :send | send selector: (OCSelectorNode value: (self package visibleSelectorForSymbol: send selector)) ].
 
-	method := compiler install. "Wait! There was maybe an extension with the same name here!
+	method := compiler install.
+	
+	"Wait! There was maybe an extension with the same name here!
 	If that's the case, we need to mark the extension as a conflict."
-	self selectors detect: [ :e | e isScopedSelector and: [ e symbol = method selector ] ] ifFound: [ :found |
-			| conflictMethod |
-			conflictMethod := ConflictMethod new
-				                  overwrittenSelector: method selector;
-				                  conflictingClass: self;
-				                  conflictingExtensions: (found extensionsOn: self);
-				                  yourself.
-			self methodDict at: found put: conflictMethod ]. "We are compiling a normal method.
+	self selectors
+		select: [ :e | e isScopedSelector and: [ e symbol = method selector ] ]
+		thenDo: [ :selector | selector bindAliasIn: self ].
+		
+	"We are compiling a normal method.
 	We need to alias it locally if superclasses are extended/aliased.
 	If a subclass has a method with the same selector, this should have been aliased before"
 	aliasingSelectors := (self allSuperclasses flatCollect: [ :aSuperclass |
 		                      aSuperclass methodDict keys select: [ :selector |
-			                      selector isScopedSelector and: [ selector asSymbol = method selector ] ] ]) asSet.
+			                      selector isScopedSelector and: [ selector asSymbol = ast selector ] ] ]) asSet.
 	aliasingSelectors do: [ :k | self methodDict at: k put: method ].
 
 
-	^ method selector
+	^ ast selector
 ]
 
 { #category : 'compiling' }

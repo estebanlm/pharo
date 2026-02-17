@@ -599,9 +599,13 @@ ExtensionConflictTest >> test05LocalExtensionMethodConflictsWithPreExistingImpor
 ExtensionConflictTest >> test05LocalExtensionMethodConflictsWithPreExistingImportedExtension03SubclassesAreStillAliased [
 
 	| anotherExtensionOnPoint scopedSelector |
-	coloredPointClass compile: 'extension ^ 42'. "We have a first extension"
+	coloredPointClass compile: 'extension ^ 42'.
+	
+	"We have a first extension"
 	extensionOnPoint compile: 'extension ^ 73'.
-	userPackage addExtensionImport: extensionOnPoint. "We have a second extension"
+	userPackage addExtensionImport: extensionOnPoint.
+	
+	"We have a second extension"
 	anotherExtensionOnPoint := ((Extension << #ExtensionOfPoint2)
 		                            extendedClass: pointClass;
 		                            installingEnvironment: environment;

@@ -166,6 +166,31 @@ ExtensionHotUpdateAliasingTest >> test03OnDemandAlias01ShouldAliasSubclasses [
 ]
 
 { #category : 'tests' }
+ExtensionHotUpdateAliasingTest >> test03OnDemandAlias02ShouldAliasConflicts [
+
+	| scopedSelector userScopedSelector |
+	pointClass compile: 'extension ^ 73'.
+	coloredPointClass compile: 'extension ^ 11'.
+	scopedSelector := extensionOnColoredPoint compile: 'extension ^ 42'.
+
+	self assert: pointClass new extension equals: 73.
+	self assert: coloredPointClass new extension equals: 11.
+
+	self assert: (pointClass new perform: scopedSelector) equals: 73.
+	self should: [ coloredPointClass new perform: scopedSelector ] raise: ExtensionConflictError with: [ :conflict |
+			self assert: conflict messageText equals: 'Conflict: extension overwrites method #extension in MyColoredPoint'.
+			self assertCollection: conflict conflictingExtensions hasSameElements: {
+					extensionOnColoredPoint } ].
+
+	userPackage addExtensionImport: extensionOnColoredPoint.
+	userScopedSelector := userPackage visibleSelectorForSymbol: #extension.
+	self should: [ coloredPointClass new perform: userScopedSelector ] raise: ExtensionConflictError with: [ :conflict |
+			self assert: conflict messageText equals: 'Conflict: extension overwrites method #extension in MyColoredPoint'.
+			self assertCollection: conflict conflictingExtensions hasSameElements: {
+					extensionOnColoredPoint } ].
+]
+
+{ #category : 'tests' }
 ExtensionHotUpdateAliasingTest >> test03RemoveExtension01ShouldRemoveExtensionMethod [
 
 	| scopedSelector receiver |
