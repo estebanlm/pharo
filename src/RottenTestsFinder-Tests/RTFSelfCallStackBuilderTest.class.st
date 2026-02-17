@@ -7,8 +7,9 @@ Class {
 	#instVars : [
 		'stackBuilder'
 	],
-	#category : 'RottenTestsFinder-Tests',
-	#package : 'RottenTestsFinder-Tests'
+	#category : 'RottenTestsFinder-Tests-SelfInterpreter',
+	#package : 'RottenTestsFinder-Tests',
+	#tag : 'SelfInterpreter'
 }
 
 { #category : 'accessing' }

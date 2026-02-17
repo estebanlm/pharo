@@ -4,8 +4,9 @@ A RottenTestsFinderTest is a test class for testing the behavior of RottenTestsF
 Class {
 	#name : 'RottenTestsFinderTest',
 	#superclass : 'TestCase',
-	#category : 'RottenTestsFinder-Tests',
-	#package : 'RottenTestsFinder-Tests'
+	#category : 'RottenTestsFinder-Tests-Core',
+	#package : 'RottenTestsFinder-Tests',
+	#tag : 'Core'
 }
 
 { #category : 'running' }
