@@ -917,6 +917,12 @@ Package >> tags [
 ]
 
 { #category : 'extensions' }
+Package >> visibleExtensions [
+
+	^ (self definedClasses select: [ :e | e isKindOf: Extension ]), self importedExtensions
+]
+
+{ #category : 'extensions' }
 Package >> visibleSelectorForSymbol: aSymbol [
 
 	^ self scopedSelectors at: aSymbol asSymbol ifAbsent: [ aSymbol ]

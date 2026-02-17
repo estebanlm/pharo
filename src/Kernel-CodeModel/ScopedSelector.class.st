@@ -53,30 +53,19 @@ ScopedSelector >> asSymbol [
 { #category : 'matching' }
 ScopedSelector >> beginsWith: aString [
 
+	1halt.
 	^ self asString beginsWith: aString
 ]
 
 { #category : 'accessing' }
 ScopedSelector >> bindAliasIn: aClass [
 
-	| allVisibleExtensions theExtension theExtensionSelector theExtensionMethod allVisibleExtensionsForThisClass |
-	allVisibleExtensions := (owner definedClasses select: [ :e | e isKindOf: Extension ]) , owner importedExtensions.
-	allVisibleExtensionsForThisClass := allVisibleExtensions select: [ :e | e extendedClass == aClass ].
-	allVisibleExtensionsForThisClass ifEmpty: [ 
-		| theAliasedMethod |
-		"No extensions for this class.
-		Check if there is a local global method, and alias it if possible"
-		(aClass methodDict includesKey: self symbol)
-			ifFalse: [ ^ self ].
+	| theAliasedMethod allVisibleExtensionsForThisClass |
+	allVisibleExtensionsForThisClass := self visibleExtensionsOn: aClass.
 
-		theAliasedMethod := aClass methodDict at: self symbol.		
-		self addAliasedBehavior: aClass.
-		aClass methodDict at: self put: theAliasedMethod.
-		^ self ].
-	
 	"Prevent conflicts!"
-	allVisibleExtensionsForThisClass size <= 1
-		ifFalse: [ | conflictMethod | 
+	allVisibleExtensionsForThisClass size > 1
+		ifTrue: [ | conflictMethod | 
 			conflictMethod := ConflictMethod new
 				overwrittenSelector: self symbol;
 				conflictingClass: aClass;
@@ -86,30 +75,36 @@ ScopedSelector >> bindAliasIn: aClass [
 		aClass methodDict at: self put: conflictMethod.
 		^ self
 	].
+	"From here we know there are maybe aliases to install but no conflicts."
 	
-	theExtension := allVisibleExtensionsForThisClass anyOne.
+	"If there are no extensions and no local methods, do nothing"
+	(allVisibleExtensionsForThisClass isEmpty and: [ 
+		(aClass includesSelector: self symbol) not])
+			ifTrue: [ ^ self ].
 	
-	theExtensionSelector := theExtension package visibleSelectorForSymbol: self symbol.
-	theExtensionMethod := theExtension extendedClass methodDict
-		at: theExtensionSelector
-		ifAbsent: [ | theAliasedMethod |
-			"This selector is not extended for this class
-			Check if there is a local global method, and alias it if possible"
-			(aClass methodDict includesKey: self symbol)
-				ifFalse: [ ^ self ].
+	"Create an alias in aClass from `self` to the existing method with the same (global) name if any.
+	If no method is there, no alias is created."
+	theAliasedMethod := allVisibleExtensionsForThisClass
+		ifEmpty: [ aClass >> self symbol ]
+		ifNotEmpty: [ | theExtension theExtensionSelector |
+			theExtension := allVisibleExtensionsForThisClass anyOne.
+			theExtensionSelector := theExtension package visibleSelectorForSymbol: self symbol.
+			aClass >> theExtensionSelector ].
 
-			theAliasedMethod := aClass methodDict at: self symbol.		
-			self addAliasedBehavior: aClass.
-			aClass methodDict at: self put: theAliasedMethod.
-			^ self
-		].
-	
-	self addAliasedBehavior: theExtension extendedClass.
-	theExtension extendedClass methodDict at: self put: theExtensionMethod
+	self addAliasedBehavior: aClass.
+	aClass methodDict at: self put: theAliasedMethod
 ]
 
 { #category : 'accessing' }
 ScopedSelector >> bindAliasesInSubclassesOf: aClass [
+
+	"To be called after installing an extension method in aClass.
+	Now all subclasses should be aliased: 
+		that is, 
+			for each subclass
+			all methods with the same selector name as the new extension should include `self` as an alias to the existing method.
+	
+	This guarantees that polymorphism is kept between instances of the hierarchy regardless of the order in which messages are sent"
 
 	aClass allSubclassesDo: [ :classToBind | self bindAliasIn: classToBind ]
 ]
@@ -273,4 +268,16 @@ ScopedSelector >> symbol [
 ScopedSelector >> symbol: anObject [
 
 	symbol := anObject
+]
+
+{ #category : 'accessing' }
+ScopedSelector >> visibleExtensionsOn: aClass [
+
+	"Return all extensions on aClass defining a selector with my same name and visible from my package"
+
+	^ owner visibleExtensions select: [ :e |
+		  e extendedClass == aClass and: [
+				  | selectorInExtensionPackage |
+				  selectorInExtensionPackage := e package visibleSelectorForSymbol: self symbol.
+				  selectorInExtensionPackage isScopedSelector and: [ e includesSelector: selectorInExtensionPackage ] ] ]
 ]
