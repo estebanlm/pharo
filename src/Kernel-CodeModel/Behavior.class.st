@@ -1711,8 +1711,9 @@ Behavior >> removeSelector: aSelector [
 	" Remove a method defined locally.
 	That is, the method should be defined in this class and not be imported from other source (a trait or an extension).
 	
+	Assuming that the argument, selector (a Symbol), is a message selector in my method dictionary, remove it and its method. Fail if it is not the case.
 	
-	Assuming that the argument, selector (a Symbol), is a message selector in my method dictionary, remove it and its method."
+	If a method with this selector has aliases, remove all aliases too."
 	<reflection: 'Class structural modification - Selector/Method modification'>
 
 	| methodToRemove aliasKeys |
@@ -1722,7 +1723,7 @@ Behavior >> removeSelector: aSelector [
 	aliasKeys := self methodDict keys select: [ :e |
 			(self methodDict at: e) == methodToRemove ].
 
-	aliasKeys do: [ :k | self methodDict removeKey: k ]	
+	aliasKeys do: [ :k | self methodDict removeKey: k ]
 ]
 
 { #category : 'adding-removing methods' }
