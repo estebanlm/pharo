@@ -68,10 +68,11 @@ ConflictMethod >> propertyAt: aKey put: aValue [
 { #category : 'evaluation' }
 ConflictMethod >> run: aSelector with: anArray in: aReceiver [
 
-	ExtensionConflict new
+	ExtensionConflictError new
 		messageText: ('Conflict: extension overwrites method #{1} in {2}' format: {
-		overwrittenSelector asString.
-		conflictingClass name asString });
+			overwrittenSelector asString.
+			conflictingClass name asString });
+		conflictingClass: conflictingClass;
 		conflictingExtensions: conflictingExtensions;
 		signal
 ]

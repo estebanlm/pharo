@@ -1,5 +1,5 @@
 Class {
-	#name : 'ExtensionConflict',
+	#name : 'ExtensionConflictError',
 	#superclass : 'Error',
 	#instVars : [
 		'selector',
@@ -11,44 +11,44 @@ Class {
 }
 
 { #category : 'accessing' }
-ExtensionConflict >> conflictingClass [
+ExtensionConflictError >> conflictingClass [
 
 	^ conflictingClass
 ]
 
 { #category : 'accessing' }
-ExtensionConflict >> conflictingClass: aConflictingClass [
+ExtensionConflictError >> conflictingClass: aConflictingClass [
 
 	conflictingClass := aConflictingClass
 ]
 
 { #category : 'accessing' }
-ExtensionConflict >> conflictingExtensions [
+ExtensionConflictError >> conflictingExtensions [
 
 	^ conflictingExtensions
 ]
 
 { #category : 'accessing' }
-ExtensionConflict >> conflictingExtensions: anObject [
+ExtensionConflictError >> conflictingExtensions: anObject [
 
 	conflictingExtensions := anObject
 ]
 
 { #category : 'initialization' }
-ExtensionConflict >> initialize [
+ExtensionConflictError >> initialize [
 
 	super initialize.
 	conflictingExtensions := #()
 ]
 
 { #category : 'accessing' }
-ExtensionConflict >> selector [
+ExtensionConflictError >> selector [
 
 	^ selector
 ]
 
 { #category : 'accessing' }
-ExtensionConflict >> selector: aSelector [
+ExtensionConflictError >> selector: aSelector [
 
 	selector := aSelector
 ]

@@ -94,7 +94,7 @@ ExtensionConflictTest >> test01ExtensionConflictsWithPreExistingNormalMethod02Ex
 	pointClass compile: 'extension ^ 17'.
 	scopedSelector := extensionOnPoint compile: 'extension ^ 73'.
 
-	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflict with: [ :conflict |
+	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflictError with: [ :conflict |
 			self assert: conflict messageText equals: 'Conflict: extension overwrites method #extension in MyPoint'.
 			self assertCollection: conflict conflictingExtensions hasSameElements: { extensionOnPoint } ]
 ]
@@ -132,7 +132,7 @@ ExtensionConflictTest >> test01ExtensionConflictsWithPreExistingNormalMethod05Ex
 	"Recompilation should not change anything"
 	pointClass compile: 'extension ^ 17'.
 
-	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflict with: [ :conflict |
+	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflictError with: [ :conflict |
 			self assert: conflict messageText equals: 'Conflict: extension overwrites method #extension in MyPoint'.
 			self assertCollection: conflict conflictingExtensions hasSameElements: { extensionOnPoint } ]
 ]
@@ -167,7 +167,7 @@ ExtensionConflictTest >> test02NormalMethodConflictsWithPreExistingExtension02Ex
 	scopedSelector := extensionOnPoint compile: 'extension ^ 73'.
 	pointClass compile: 'extension ^ 17'.
 
-	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflict with: [ :conflict |
+	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflictError with: [ :conflict |
 			self assert: conflict messageText equals: 'Conflict: extension overwrites method #extension in MyPoint'.
 			self assertCollection: conflict conflictingExtensions hasSameElements: { extensionOnPoint } ]
 ]
@@ -203,7 +203,7 @@ ExtensionConflictTest >> test02NormalMethodConflictsWithPreExistingExtension05Ex
 	pointClass compile: 'extension ^ 17'.
 	scopedSelector := extensionOnPoint compile: 'extension ^ 73'.
 
-	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflict with: [ :conflict |
+	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflictError with: [ :conflict |
 			self assert: conflict messageText equals: 'Conflict: extension overwrites method #extension in MyPoint'.
 			self assertCollection: conflict conflictingExtensions hasSameElements: { extensionOnPoint } ]
 ]
@@ -243,7 +243,7 @@ ExtensionConflictTest >> test03ImportExtensionMethodConflictsWithPreExistingImpo
 
 	scopedSelector := userPackage lookupSelector: #extension.
 
-	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflict with: [ :conflict |
+	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflictError with: [ :conflict |
 			self assert: conflict messageText equals: 'Conflict: extension overwrites method #extension in MyPoint'.
 			self assertCollection: conflict conflictingExtensions hasSameElements: { extensionOnPoint. anotherExtensionOnPoint } ]
 ]
@@ -342,7 +342,7 @@ ExtensionConflictTest >> test03ImportExtensionMethodConflictsWithPreExistingImpo
 	extensionOnPoint compile: 'extension ^ 73'.
 	scopedSelector := userPackage lookupSelector: #extension.
 
-	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflict with: [ :conflict |
+	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflictError with: [ :conflict |
 			self assert: conflict messageText equals: 'Conflict: extension overwrites method #extension in MyPoint'.
 			self assertCollection: conflict conflictingExtensions hasSameElements: { extensionOnPoint. anotherExtensionOnPoint } ]
 ]
@@ -448,7 +448,7 @@ ExtensionConflictTest >> test04NewExtensionOnImportExtensionMethodConflictsWithP
 
 	scopedSelector := userPackage lookupSelector: #extension.
 
-	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflict with: [ :conflict |
+	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflictError with: [ :conflict |
 			self assert: conflict messageText equals: 'Conflict: extension overwrites method #extension in MyPoint'.
 			self assertCollection: conflict conflictingExtensions hasSameElements: { extensionOnPoint. anotherExtensionOnPoint } ]
 ]
@@ -549,7 +549,7 @@ ExtensionConflictTest >> test04NewExtensionOnImportExtensionMethodConflictsWithP
 
 	scopedSelector := userPackage lookupSelector: #extension.
 
-	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflict with: [ :conflict |
+	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflictError with: [ :conflict |
 			self assert: conflict messageText equals: 'Conflict: extension overwrites method #extension in MyPoint'.
 			self assertCollection: conflict conflictingExtensions hasSameElements: { extensionOnPoint. anotherExtensionOnPoint } ]
 ]
@@ -652,7 +652,7 @@ ExtensionConflictTest >> test05LocalExtensionMethodConflictsWithPreExistingImpor
 	
 	scopedSelector := userPackage lookupSelector: #extension.
 
-	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflict with: [ :conflict |
+	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflictError with: [ :conflict |
 			self assert: conflict messageText equals: 'Conflict: extension overwrites method #extension in MyPoint'.
 			self assertCollection: conflict conflictingExtensions hasSameElements: { extensionOnPoint. anotherExtensionOnPoint } ]
 ]
@@ -721,7 +721,7 @@ ExtensionConflictTest >> test05LocalExtensionMethodConflictsWithPreExistingImpor
 	
 	scopedSelector := userPackage lookupSelector: #extension.
 
-	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflict with: [ :conflict |
+	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflictError with: [ :conflict |
 			self assert: conflict messageText equals: 'Conflict: extension overwrites method #extension in MyPoint'.
 			self assertCollection: conflict conflictingExtensions hasSameElements: { extensionOnPoint. anotherExtensionOnPoint } ]
 ]
@@ -791,7 +791,7 @@ ExtensionConflictTest >> test06ImportedExtensionConflictsWithPreExistingLocalExt
 	
 	scopedSelector := userPackage lookupSelector: #extension.
 
-	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflict with: [ :conflict |
+	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflictError with: [ :conflict |
 			self assert: conflict messageText equals: 'Conflict: extension overwrites method #extension in MyPoint'.
 			self assertCollection: conflict conflictingExtensions hasSameElements: { extensionOnPoint. anotherExtensionOnPoint } ]
 ]
@@ -860,7 +860,7 @@ ExtensionConflictTest >> test06ImportedExtensionConflictsWithPreExistingLocalExt
 	
 	scopedSelector := userPackage lookupSelector: #extension.
 
-	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflict with: [ :conflict |
+	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflictError with: [ :conflict |
 			self assert: conflict messageText equals: 'Conflict: extension overwrites method #extension in MyPoint'.
 			self assertCollection: conflict conflictingExtensions hasSameElements: { extensionOnPoint. anotherExtensionOnPoint } ]
 ]
@@ -932,7 +932,7 @@ ExtensionConflictTest >> test07NewExtensionOnImportExtensionMethodConflictsWithP
 	
 	scopedSelector := userPackage lookupSelector: #extension.
 
-	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflict with: [ :conflict |
+	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflictError with: [ :conflict |
 			self assert: conflict messageText equals: 'Conflict: extension overwrites method #extension in MyPoint'.
 			self assertCollection: conflict conflictingExtensions hasSameElements: { extensionOnPoint. anotherExtensionOnPoint } ]
 ]
@@ -1001,7 +1001,7 @@ ExtensionConflictTest >> test07NewExtensionOnImportExtensionMethodConflictsWithP
 	
 	scopedSelector := userPackage lookupSelector: #extension.
 
-	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflict with: [ :conflict |
+	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflictError with: [ :conflict |
 			self assert: conflict messageText equals: 'Conflict: extension overwrites method #extension in MyPoint'.
 			self assertCollection: conflict conflictingExtensions hasSameElements: { extensionOnPoint. anotherExtensionOnPoint } ]
 ]
@@ -1072,7 +1072,7 @@ ExtensionConflictTest >> test08LocalExtensionMethodConflictsWithPreExistingLocal
 	
 	scopedSelector := definerPackage lookupSelector: #extension.
 
-	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflict with: [ :conflict |
+	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflictError with: [ :conflict |
 			self assert: conflict messageText equals: 'Conflict: extension overwrites method #extension in MyPoint'.
 			self assertCollection: conflict conflictingExtensions hasSameElements: { extensionOnPoint. anotherExtensionOnPoint } ]
 ]
@@ -1119,7 +1119,7 @@ ExtensionConflictTest >> test08LocalExtensionMethodConflictsWithPreExistingLocal
 	
 	scopedSelector := definerPackage lookupSelector: #extension.
 
-	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflict with: [ :conflict |
+	self should: [ pointClass new perform: scopedSelector ] raise: ExtensionConflictError with: [ :conflict |
 			self assert: conflict messageText equals: 'Conflict: extension overwrites method #extension in MyPoint'.
 			self assertCollection: conflict conflictingExtensions hasSameElements: { extensionOnPoint. anotherExtensionOnPoint } ]
 ]
