@@ -384,7 +384,7 @@ Package >> importProtocol: aProtocol forClass: aClass [
 { #category : 'as yet unclassified' }
 Package >> importSelectors: aCollection [ 
 	
-	aCollection do: [ :e | self defineScopedSelector: e symbol ]
+	aCollection do: [ :e | self internScopedSelector: e symbol ]
 ]
 
 { #category : 'as yet unclassified' }
