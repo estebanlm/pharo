@@ -30,18 +30,6 @@ ShiftClassBuilder >> classTraits: aValue [
 ]
 
 { #category : '*Traits' }
-ShiftClassBuilder >> extendedClass [
-
-	^ extensibleProperties at: #extendedClass
-]
-
-{ #category : '*Traits' }
-ShiftClassBuilder >> extendedClass: aClass [
-
-	extensibleProperties at: #extendedClass put: aClass
-]
-
-{ #category : '*Traits' }
 ShiftClassBuilder >> isTrait [
 	^ self metaSuperclass isKindOf: Trait class
 ]

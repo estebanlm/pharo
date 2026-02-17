@@ -313,6 +313,18 @@ ShiftClassBuilder >> environment: anObject [
 	^ self buildEnvironment: anObject
 ]
 
+{ #category : 'accessing' }
+ShiftClassBuilder >> extendedClass [
+
+	^ extensibleProperties at: #extendedClass
+]
+
+{ #category : 'accessing' }
+ShiftClassBuilder >> extendedClass: aClass [
+
+	extensibleProperties at: #extendedClass put: aClass
+]
+
 { #category : 'copying' }
 ShiftClassBuilder >> fillClassSideFromEnvironment: anEnvironment [
 
