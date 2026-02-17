@@ -5,7 +5,7 @@ Class {
 		'symbol',
 		'owner',
 		'extendedBehaviors',
-		'aliasedClasses'
+		'aliasedBehaviors'
 	],
 	#category : 'Kernel-CodeModel-Packages',
 	#package : 'Kernel-CodeModel',
@@ -15,8 +15,8 @@ Class {
 { #category : 'installing' }
 ScopedSelector >> addAliasedBehavior: aClass [
 
-	aliasedClasses ifNil: [ aliasedClasses := Set new ].
-	aliasedClasses add: aClass
+	aliasedBehaviors ifNil: [ aliasedBehaviors := Set new ].
+	aliasedBehaviors add: aClass
 ]
 
 { #category : 'accessing' }
@@ -29,7 +29,7 @@ ScopedSelector >> addExtendedBehavior: aBehavior [
 { #category : 'accessing' }
 ScopedSelector >> aliasedBehaviors [
 
-	^ aliasedClasses ifNil: [ #(  ) ] ifNotNil: [ aliasedClasses ]
+	^ aliasedBehaviors ifNil: [ #(  ) ]
 ]
 
 { #category : 'converting' }
@@ -51,8 +51,8 @@ ScopedSelector >> asSymbol [
 ]
 
 { #category : 'matching' }
-ScopedSelector >> beginsWith: aString [ 
-	
+ScopedSelector >> beginsWith: aString [
+
 	^ self asString beginsWith: aString
 ]
 
@@ -124,7 +124,7 @@ ScopedSelector >> cleanupExtendedBehaviors [
 
 { #category : 'accessing' }
 ScopedSelector >> extendedBehaviors [
-	
+
 	^ extendedBehaviors ifNil: [#()]
 ]
 
@@ -174,7 +174,7 @@ ScopedSelector >> isBinary [
 
 { #category : 'testing' }
 ScopedSelector >> isDoIt [
-	
+
 	^ self symbol isDoIt
 ]
 
@@ -192,7 +192,7 @@ ScopedSelector >> keywords [
 
 { #category : 'accessing' }
 ScopedSelector >> lookupAliasedMethodOnReceiverClass: aClass [
-	
+
 	^ self lookupAliasedMethodOnReceiverClass: aClass lookupClass: nil
 ]
 
@@ -227,7 +227,7 @@ ScopedSelector >> lookupAliasedMethodOnReceiverClass: aClass lookupClass: lookup
 
 { #category : 'accessing' }
 ScopedSelector >> numArgs [
-	
+
 	^ self symbol numArgs
 ]
 
@@ -258,9 +258,9 @@ ScopedSelector >> printOn: aStream [
 { #category : 'installing' }
 ScopedSelector >> removeAliases [
 
-	aliasedClasses ifNil: [ ^ self ].
-	aliasedClasses do: [ :e | e removeSelector: self ].
-	aliasedClasses := nil
+	aliasedBehaviors ifNil: [ ^ self ].
+	aliasedBehaviors do: [ :e | e removeSelector: self ].
+	aliasedBehaviors := nil
 ]
 
 { #category : 'accessing' }
