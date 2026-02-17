@@ -130,16 +130,11 @@ Extension >> removeFromSystem: logged [.
 	super removeFromSystem: logged
 ]
 
-{ #category : 'initialization' }
+{ #category : 'accessing - method dictionary' }
 Extension >> removeSelector: aSelector [
 
-	| extensionMethod |
-	super removeSelector: aSelector.
-	
-	extensionMethod := extendedClass >> aSelector.
-
-	"Now we remove the method entirely from the class, even its aliases from other packages"
-	extendedClass methodDict keysAndValuesRemove: [ :k :v | v == extensionMethod ].
+	super removeSelector: aSelector.	
+	extendedClass removeMethod: (extendedClass >> aSelector)
 ]
 
 { #category : 'accessing' }

@@ -1682,6 +1682,21 @@ Behavior >> removeAllObsoleteSubclasses [
 	self basicObsoleteSubclasses removeKey: self ifAbsent: [  ]
 ]
 
+{ #category : 'accessing - method dictionary' }
+Behavior >> removeMethod: aMethod [
+	" Remove a method from the method dictionary including the original definition (if any) and all its aliases.
+	Low-level: it removes a method regardless of where it comes from or where it was defined"
+
+	<reflection: 'Class structural modification - Selector/Method modification'>
+
+	| aliasKeys |	
+	"Obtain all keys that alias to the same method"
+	aliasKeys := self methodDict keys select: [ :e |
+			(self methodDict at: e) == aMethod ].
+
+	aliasKeys do: [ :k | self methodDict removeKey: k ]
+]
+
 { #category : 'accessing - properties' }
 Behavior >> removePropertiesIfEmpty [
 	^ ClassProperties at: self ifPresent: [ :dict |
@@ -1716,14 +1731,9 @@ Behavior >> removeSelector: aSelector [
 	If a method with this selector has aliases, remove all aliases too."
 	<reflection: 'Class structural modification - Selector/Method modification'>
 
-	| methodToRemove aliasKeys |
+	| methodToRemove |
 	methodToRemove := self methodDict at: aSelector.
-	
-	"Obtain all keys that alias to the same method"
-	aliasKeys := self methodDict keys select: [ :e |
-			(self methodDict at: e) == methodToRemove ].
-
-	aliasKeys do: [ :k | self methodDict removeKey: k ]
+	self removeMethod: methodToRemove
 ]
 
 { #category : 'adding-removing methods' }
