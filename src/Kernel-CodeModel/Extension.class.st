@@ -133,7 +133,7 @@ Extension >> removeFromSystem: logged [.
 { #category : 'accessing - method dictionary' }
 Extension >> removeSelector: aSelector [
 
-	super removeSelector: aSelector.	
+	super removeSelector: aSelector.
 	extendedClass removeMethod: (extendedClass >> aSelector)
 ]
 
@@ -146,8 +146,8 @@ Extension >> removeUserPackage: aPackage [
 { #category : 'accessing' }
 Extension >> scopedSelectors [
 
-	"Return the scoped selectors defined in this extension"
-	^ self methodDictionary keys
+	"An extension only has scoped selectors"
+	^ self selectors
 ]
 
 { #category : 'initialization' }
