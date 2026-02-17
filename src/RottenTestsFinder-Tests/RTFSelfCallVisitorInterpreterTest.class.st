@@ -42,3 +42,10 @@ RTFSelfCallVisitorInterpreterTest >> testReset [
 	
 	
 ]
+
+{ #category : 'tests' }
+RTFSelfCallVisitorInterpreterTest >> testSelfClass [
+
+	self interpreter selfClass: nil.
+	self should: [ self interpreter selfClass] raise: Error
+]
