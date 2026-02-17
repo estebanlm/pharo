@@ -703,7 +703,7 @@ Package >> removeFromSystem [
 
 	SourcesManager current deferFlushDuring: [
 			self tags copy do: [ :tag | tag removeFromSystem ].
-			self extensionMethods do: [ :method | method removeFromSystem ]
+			self extensionMethods do: [ :method | method removeFromSystem ].
 			self cleanupExtendedBehaviors.
 	].
 
