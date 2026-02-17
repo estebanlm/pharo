@@ -1708,7 +1708,11 @@ Behavior >> removeProperty: propName ifAbsent: aBlock [
 
 { #category : 'accessing - method dictionary' }
 Behavior >> removeSelector: aSelector [
-	"Assuming that the argument, selector (a Symbol), is a message selector in my method dictionary, remove it and its method."
+	" Remove a method defined locally.
+	That is, the method should be defined in this class and not be imported from other source (a trait or an extension).
+	
+	
+	Assuming that the argument, selector (a Symbol), is a message selector in my method dictionary, remove it and its method."
 	<reflection: 'Class structural modification - Selector/Method modification'>
 
 	| methodToRemove aliasKeys |
@@ -1716,11 +1720,8 @@ Behavior >> removeSelector: aSelector [
 	
 	"Obtain all keys that alias to the same method"
 	aliasKeys := self methodDict keys select: [ :e |
-			e isScopedSelector
-				and: [ e symbol == aSelector
-					and: [ (self methodDict at: e) == methodToRemove ] ] ].
-			
-	self methodDict removeKey: aSelector ifAbsent: [].
+			(self methodDict at: e) == methodToRemove ].
+
 	aliasKeys do: [ :k | self methodDict removeKey: k ]	
 ]
 
