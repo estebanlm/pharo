@@ -510,12 +510,6 @@ Symbol >> isScopedSelector [
 ]
 
 { #category : 'testing' }
-Symbol >> isSelector [
-
-	^ true
-]
-
-{ #category : 'testing' }
 Symbol >> isSymbol [
 	^ true
 ]
