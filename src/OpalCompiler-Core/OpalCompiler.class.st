@@ -571,6 +571,7 @@ OpalCompiler >> install [
 	
 	This is not the ideal order, because this means that a failure in writing the source code may prevent method installation in the system (and thus preventing further work/updates to code)."
 	class addAndClassifySelector: method selector withMethod: method inProtocol: protocol.
+	method cachePragmas.
 
 	class noteCompilationOf: method.
 

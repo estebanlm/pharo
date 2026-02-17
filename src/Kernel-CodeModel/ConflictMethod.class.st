@@ -11,12 +11,6 @@ Class {
 	#tag : 'Extensions'
 }
 
-{ #category : 'evaluation' }
-ConflictMethod >> cachePragmas [
-
-	"Nothing..."
-]
-
 { #category : 'accessing' }
 ConflictMethod >> conflictingClass [
 
@@ -41,7 +35,7 @@ ConflictMethod >> conflictingExtensions: anObject [
 	conflictingExtensions := anObject
 ]
 
-{ #category : 'evaluation' }
+{ #category : 'compatibility' }
 ConflictMethod >> isExtension [
 
 	^ true
@@ -59,7 +53,7 @@ ConflictMethod >> overwrittenSelector: anObject [
 	overwrittenSelector := anObject
 ]
 
-{ #category : 'evaluation' }
+{ #category : 'compatibility' }
 ConflictMethod >> propertyAt: aKey put: aValue [
 
 	self assert: aKey == #extensionPackage
