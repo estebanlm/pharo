@@ -89,7 +89,7 @@ ScopedSelector >> bindAliasIn: aClass [
 	
 	theExtension := allVisibleExtensionsForThisClass anyOne.
 	
-	theExtensionSelector := theExtension package lookupSelector: self symbol.
+	theExtensionSelector := theExtension package visibleSelectorForSymbol: self symbol.
 	theExtensionMethod := theExtension extendedClass methodDict
 		at: theExtensionSelector
 		ifAbsent: [ | theAliasedMethod |
@@ -209,16 +209,15 @@ ScopedSelector >> lookupAliasedMethodOnReceiverClass: aClass lookupClass: lookup
 	[ theLookupClass notNil ] whileTrue: [
 			| allVisibleExtensionsForThisClass |
 			allVisibleExtensionsForThisClass := allVisibleExtensions select: [ :e | e extendedClass == theLookupClass ].
-			allVisibleExtensionsForThisClass ifNotEmpty: [ :es | | foundScopedMethod |
-				foundScopedMethod := es anyOne extendedClass lookupSelector: (es anyOne package lookupSelector: self symbol).
-				foundScopedMethod ifNotNil: [
-				^ {
-					  es anyOne extendedClass.
-					  foundScopedMethod } ]].
+			allVisibleExtensionsForThisClass ifNotEmpty: [ :es |
+					| foundScopedMethod |
+					foundScopedMethod := es anyOne extendedClass lookupSelector: (es anyOne package visibleSelectorForSymbol: self symbol).
+					foundScopedMethod ifNotNil: [
+							^ {
+								  es anyOne extendedClass.
+								  foundScopedMethod } ] ].
 
-			theLookupClass := theLookupClass superclass ].
-		
-	"We reached the top of the hierarchy and found no extensions, just look for the symbol"
+			theLookupClass := theLookupClass superclass ]. "We reached the top of the hierarchy and found no extensions, just look for the symbol"
 	foundMethod := (lookupClass ifNil: [ aClass ]) lookupSelector: self symbol.
 	foundMethod ifNil: [ ^ nil ].
 	^ {

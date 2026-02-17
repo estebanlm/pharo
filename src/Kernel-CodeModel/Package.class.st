@@ -453,7 +453,7 @@ Package >> initialize [
 Package >> internScopedSelector: aSymbol [
 
 	| found |
-	found := self lookupSelector: aSymbol asSymbol.
+	found := self visibleSelectorForSymbol: aSymbol asSymbol.
 	found == aSymbol ifFalse: [ ^ found ].
 
 	^ self defineScopedSelector: aSymbol
@@ -503,18 +503,6 @@ Package >> linesOfCode [
 	"An approximate measure of lines of code.
 	Includes comments, but excludes blank lines."
 	^self methods inject: 0 into: [:sum :each | sum + each linesOfCode]
-]
-
-{ #category : 'extensions' }
-Package >> lookupSelector: aSymbol [
-
-	^ self lookupSelector: aSymbol ifPresent: [ :found | found ]
-]
-
-{ #category : 'extensions' }
-Package >> lookupSelector: aSymbol ifPresent: presentBlock [
-
-	^ presentBlock value: (self scopedSelectors at: aSymbol asSymbol ifAbsent: [ aSymbol ])
 ]
 
 { #category : 'accessing' }
@@ -692,7 +680,7 @@ Package >> removeExtensionImport: anExtension [
 
 	"Now we remove the local aliases to that extension"
 	anExtension scopedSelectors do: [ :e | | localScopedSelector |
-		localScopedSelector := self lookupSelector: e symbol.
+		localScopedSelector := self visibleSelectorForSymbol: e symbol.
 		(anExtension extendedClass includesSelector: localScopedSelector) ifTrue: [
 			self assert: anExtension extendedClass >> localScopedSelector == (anExtension extendedClass >> e).
 			anExtension extendedClass removeSelector: localScopedSelector ]
@@ -926,4 +914,10 @@ Package >> tags [
 	"Returns the tags of the receiver"
 
 	^ tags
+]
+
+{ #category : 'extensions' }
+Package >> visibleSelectorForSymbol: aSymbol [
+
+	^ self scopedSelectors at: aSymbol asSymbol ifAbsent: [ aSymbol ]
 ]

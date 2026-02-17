@@ -639,49 +639,42 @@ Behavior >> compile: sourceCode classified: protocol withStamp: changeStamp noti
 { #category : 'compiling' }
 Behavior >> compile: sourceCode classified: protocol withStamp: changeStamp notifying: requestor logSource: logSource recompileDependencies: recompileDependencies [
 	"Return the selector of the compiled method"
+
 	| method compiler ast aliasingSelectors |
 
 	sourceCode ifEmpty: [ Error signal: 'The source code should not be empty' ].
 	compiler := self compiler
 		            source: sourceCode;
 		            requestor: requestor;
-		            failBlock: (requestor ifNotNil: [ [ ^ nil ] ]); "no failblock if no requestor"
-						"compatibility: permit undeclared if no requestor"
-						permitUndeclared: requestor isNil;
-						permitFaulty: requestor isNil;
-						protocol: protocol;
+		            failBlock: (requestor ifNotNil: [ [ ^ nil ] ]);
+		            "no failblock if no requestor""compatibility: permit undeclared if no requestor"permitUndeclared: requestor isNil;
+		            permitFaulty: requestor isNil;
+		            protocol: protocol;
 		            changeStamp: changeStamp;
 		            logged: logSource.
 
 	ast := compiler parse.
 
-	ast sendNodes do: [ :send | 
-		send selector: (OCSelectorNode value: (self package lookupSelector: send selector)) ].
+	ast sendNodes do: [ :send | send selector: (OCSelectorNode value: (self package visibleSelectorForSymbol: send selector)) ].
 
-	method := compiler install.
-	
-	"Wait! There was maybe an extension with the same name here!
+	method := compiler install. "Wait! There was maybe an extension with the same name here!
 	If that's the case, we need to mark the extension as a conflict."
-	self selectors
-		detect: [ :e | e isScopedSelector and: [ e symbol = method selector ] ]
-		ifFound: [ :found | | conflictMethod |
+	self selectors detect: [ :e | e isScopedSelector and: [ e symbol = method selector ] ] ifFound: [ :found |
+			| conflictMethod |
 			conflictMethod := ConflictMethod new
-				overwrittenSelector: method selector;
-				conflictingClass: self;
-				conflictingExtensions: (found extensionsOn: self);
-				yourself.
-		self methodDict at: found put: conflictMethod.
-	].
-	
-	"We are compiling a normal method.
+				                  overwrittenSelector: method selector;
+				                  conflictingClass: self;
+				                  conflictingExtensions: (found extensionsOn: self);
+				                  yourself.
+			self methodDict at: found put: conflictMethod ]. "We are compiling a normal method.
 	We need to alias it locally if superclasses are extended/aliased.
 	If a subclass has a method with the same selector, this should have been aliased before"
 	aliasingSelectors := (self allSuperclasses flatCollect: [ :aSuperclass |
-		aSuperclass methodDict keys select: [ :selector |
-			selector isScopedSelector and: [ selector asSymbol = method selector ] ]]) asSet.
+		                      aSuperclass methodDict keys select: [ :selector |
+			                      selector isScopedSelector and: [ selector asSymbol = method selector ] ] ]) asSet.
 	aliasingSelectors do: [ :k | self methodDict at: k put: method ].
-	
-	
+
+
 	^ method selector
 ]
 

@@ -87,34 +87,34 @@ ExtensionTest >> test02ExtensionIsPresentInEnvironment [
 { #category : 'tests - runtime' }
 ExtensionTest >> test03LookupNonExtendedSelectorReturnsGlobalSelector [
 
-	self assert: (userPackage lookupSelector: #maybeExtension) == #maybeExtension
+	self assert: (userPackage visibleSelectorForSymbol: #maybeExtension) == #maybeExtension
 ]
 
 { #category : 'tests - runtime' }
 ExtensionTest >> test04LookupExtendedSelectorInDefinerReturnsScopedSelector [
 
-	| scopedSelector |	
+	| scopedSelector |
 	"We define a extension method, which defines a scoped selector in the selector namespace"
 	extensionOnObject compile: 'extensionMethod ^ 42'.
-	
-	scopedSelector := definerPackage lookupSelector: #extensionMethod.
+
+	scopedSelector := definerPackage visibleSelectorForSymbol: #extensionMethod.
 	self assert: scopedSelector isScopedSelector.
 	self assert: scopedSelector symbol equals: #extensionMethod.
-	self assert: scopedSelector owner equals: definerPackage.
+	self assert: scopedSelector owner equals: definerPackage
 ]
 
 { #category : 'tests - runtime' }
 ExtensionTest >> test05LookupExtendedSelectorInUserReturnsScopedSelector [
 
-	| scopedSelector |	
+	| scopedSelector |
 	"We define a extension method, which defines a scoped selector in the selector namespace"
 	extensionOnObject compile: 'extensionMethod ^ 42'.
 	userPackage addExtensionImport: extensionOnObject.
-	
-	scopedSelector := userPackage lookupSelector: #extensionMethod.
+
+	scopedSelector := userPackage visibleSelectorForSymbol: #extensionMethod.
 	self assert: scopedSelector isScopedSelector.
 	self assert: scopedSelector symbol equals: #extensionMethod.
-	self assert: scopedSelector owner equals: userPackage.
+	self assert: scopedSelector owner equals: userPackage
 ]
 
 { #category : 'tests - semantic' }
@@ -125,7 +125,7 @@ ExtensionTest >> test06ExtensionsInTheSamePackageSeeEachOther [
 	extensionOnObject compile: 'extension1 ^ self extension2'.
 
 	receiver := objectClass new.
-	self assert: (receiver perform: (definerPackage lookupSelector: #extension1)) equals: 42
+	self assert: (receiver perform: (definerPackage visibleSelectorForSymbol: #extension1)) equals: 42
 ]
 
 { #category : 'tests - semantic' }
@@ -136,7 +136,7 @@ ExtensionTest >> test07ExtensionsInTheSamePackageSeeEachOtherIfDefinedBackwards 
 	extensionOnObject compile: 'extension2 ^ 42'.
 
 	receiver := objectClass new.
-	self assert: (receiver perform: (definerPackage lookupSelector: #extension1)) equals: 42
+	self assert: (receiver perform: (definerPackage visibleSelectorForSymbol: #extension1)) equals: 42
 ]
 
 { #category : 'tests - semantic' }
@@ -144,9 +144,9 @@ ExtensionTest >> test08RecursiveExtensionSeesItself [
 
 	| receiver |
 	extensionOnObject compile: 'factorial: n ^ n == 0 ifTrue: [1] ifFalse: [n * (self factorial: n - 1)]'.
-	
+
 	receiver := objectClass new.
-	self assert: (receiver perform: (definerPackage lookupSelector: #factorial:) with: 5) equals: 120
+	self assert: (receiver perform: (definerPackage visibleSelectorForSymbol: #factorial:) with: 5) equals: 120
 ]
 
 { #category : 'tests - semantic' }
@@ -199,10 +199,8 @@ ExtensionTest >> test11ExtensionsArePolymorphicWithBaseSelectors [
 { #category : 'tests - runtime' }
 ExtensionTest >> test12ExtensionDefinesSelectorWithExtendedClass [
 
-	extensionOnObject compile: 'extensionMethod ^ 42'.
-	
-	"Now userMethod has executed, and a scoped selector for #extensionMethod has been installed in Object"
-	self assert: ((definerPackage lookupSelector: #extensionMethod) extendedBehaviors includes: objectClass)
+	extensionOnObject compile: 'extensionMethod ^ 42'. "Now userMethod has executed, and a scoped selector for #extensionMethod has been installed in Object"
+	self assert: ((definerPackage visibleSelectorForSymbol: #extensionMethod) extendedBehaviors includes: objectClass)
 ]
 
 { #category : 'tests - semantic' }
@@ -256,8 +254,8 @@ ExtensionTest >> test13ExtensionDoesNotDefineAliasBeforeSend [
 
 	userPackage addExtensionImport: extensionOnPoint.
 	userInstance := userClass new.
-	
-	scopedSelector := userPackage lookupSelector: #asString.
+
+	scopedSelector := userPackage visibleSelectorForSymbol: #asString.
 	self assert: scopedSelector isScopedSelector.
 	self assert: (objectClass lookupSelector: scopedSelector) isNil
 ]
@@ -269,9 +267,9 @@ ExtensionTest >> test14DefinerAndUserSelectorAreNotTheSame [
 	extensionOnPoint compile: 'asString ^ ''youpiii'''.
 
 	userPackage addExtensionImport: extensionOnPoint.
-	
-	definerScopedSelector := definerPackage lookupSelector: #asString.
-	userScopedSelector := userPackage lookupSelector: #asString.
+
+	definerScopedSelector := definerPackage visibleSelectorForSymbol: #asString.
+	userScopedSelector := userPackage visibleSelectorForSymbol: #asString.
 
 	self deny: definerScopedSelector == userScopedSelector
 ]
@@ -333,11 +331,11 @@ ExtensionTest >> test15ExtensionsWithIsolatedSuperSends [
 
 	| userInstance extensionOnPoint2 superSenderSelector pointObject |
 	definerPackage2 := Package named: 'Definer2'.
-	extensionOnPoint2 := (Extension << #ExtensionOfInteger
-		extendedClass: pointClass;
-		installingEnvironment: environment;
-		package: definerPackage2) install.
-	
+	extensionOnPoint2 := ((Extension << #ExtensionOfInteger)
+		                      extendedClass: pointClass;
+		                      installingEnvironment: environment;
+		                      package: definerPackage2) install.
+
 	extensionOnObject compile: 'foo ^ 10'.
 	superSenderSelector := extensionOnPoint2 compile: 'foo ^ super foo + 1'.
 	userClass compile: 'scopedUser: anObject
@@ -348,14 +346,12 @@ ExtensionTest >> test15ExtensionsWithIsolatedSuperSends [
 	userInstance := userClass new.
 
 	self assert: (userInstance scopedUser: objectClass new) equals: 10.
-	
-	pointObject := pointClass new.
-	self should: [userInstance scopedUser: pointObject] raise: MessageNotUnderstood with: [ :dnu |
-		self assert: dnu receiver equals: pointObject.
-		self assert: dnu message selector equals: (extensionOnPoint2 package lookupSelector: #foo).
-		"I don't like the sender sender sender"
-		self assert: dnu signalerContext sender sender sender method == (pointClass >> superSenderSelector) ]
 
+	pointObject := pointClass new.
+	self should: [ userInstance scopedUser: pointObject ] raise: MessageNotUnderstood with: [ :dnu |
+			self assert: dnu receiver equals: pointObject.
+			self assert: dnu message selector equals: (extensionOnPoint2 package visibleSelectorForSymbol: #foo). "I don't like the sender sender sender"
+			self assert: dnu signalerContext sender sender sender method == (pointClass >> superSenderSelector) ]
 ]
 
 { #category : 'tests - runtime' }
@@ -365,9 +361,9 @@ ExtensionTest >> test15LookupAliasedSelectorInUserReturnsExtensionMethod [
 	extensionOnPoint compile: 'asString ^ ''youpiii'''.
 
 	userPackage addExtensionImport: extensionOnPoint.
-	
-	definerScopedSelector := definerPackage lookupSelector: #asString.
-	userScopedSelector := userPackage lookupSelector: #asString.
+
+	definerScopedSelector := definerPackage visibleSelectorForSymbol: #asString.
+	userScopedSelector := userPackage visibleSelectorForSymbol: #asString.
 	method1 := userScopedSelector lookupAliasedMethodOnReceiverClass: Point.
 	method2 := definerScopedSelector lookupAliasedMethodOnReceiverClass: Point.
 
@@ -384,8 +380,8 @@ ExtensionTest >> test16ExtensionDoesNotTrackAliasedClassBeforeSend [
 
 	userPackage addExtensionImport: extensionOnPoint.
 	userInstance := userClass new.
-	
-	scopedSelector := userPackage lookupSelector: #asString.
+
+	scopedSelector := userPackage visibleSelectorForSymbol: #asString.
 	self deny: (scopedSelector extendedBehaviors includes: pointClass)
 ]
 
@@ -399,13 +395,11 @@ ExtensionTest >> test17ExtensionSelectorDoesNotDefineAlias [
 		^ anObject asString'.
 
 	userPackage addExtensionImport: extensionOnPoint.
-	userInstance := userClass new.
-
-	"This sends a scoped message to a non extended class.
+	userInstance := userClass new. "This sends a scoped message to a non extended class.
 	The lookup will find the global selector and alias it to the scoped one."
 	self assert: (userInstance scopedUser: objectClass new) equals: 'this is not an extension'.
 
-	definerScopedSelector := definerPackage lookupSelector: #asString.
+	definerScopedSelector := definerPackage visibleSelectorForSymbol: #asString.
 
 	self assert: definerScopedSelector extendedBehaviors asArray equals: { pointClass }.
 	self assert: definerScopedSelector aliasedBehaviors isEmpty
@@ -435,18 +429,16 @@ ExtensionTest >> test18ScopedSelectorTracksAliasedClassAfterSend [
 		^ anObject asString'.
 
 	userPackage addExtensionImport: extensionOnPoint.
-	userInstance := userClass new.
-
-	"This sends a scoped message to a non extended class.
+	userInstance := userClass new. "This sends a scoped message to a non extended class.
 	The lookup will find the global selector and alias it to the scoped one."
 	self assert: (userInstance scopedUser: objectClass new) equals: 'this is not an extension'.
-	
-	userScopedSelector := userPackage lookupSelector: #asString.
+
+	userScopedSelector := userPackage visibleSelectorForSymbol: #asString.
 
 	self assert: userScopedSelector extendedBehaviors isEmpty.
 	self assertCollection: userScopedSelector aliasedBehaviors asArray hasSameElements: {
 			objectClass.
-			pointClass }.
+			pointClass }
 ]
 
 { #category : 'tests - runtime' }
@@ -461,7 +453,7 @@ ExtensionTest >> test19CleanExtendedBehaviorsRemovesTrackedBehaviors [
 	receiver := userClass new.
 	receiver userMethod.
 
-	scopedSelector := definerPackage lookupSelector: #extensionMethod.
+	scopedSelector := definerPackage visibleSelectorForSymbol: #extensionMethod.
 	definerPackage cleanupExtendedBehaviors.
 
 	self assert: scopedSelector extendedBehaviors isEmpty
@@ -480,10 +472,10 @@ ExtensionTest >> test20CleanExtendedBehaviorsCleansAliases [
 	userInstance := userClass new.
 
 	self assert: (userInstance scopedUser: objectClass new) equals: 'this is not an extension'.
-	
-	scopedSelector := userPackage lookupSelector: #asString.
+
+	scopedSelector := userPackage visibleSelectorForSymbol: #asString.
 
 	userPackage cleanupExtendedBehaviors.
-	
+
 	self deny: (scopedSelector extendedBehaviors includes: objectClass)
 ]

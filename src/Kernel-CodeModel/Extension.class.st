@@ -38,7 +38,7 @@ Extension >> compile: sourceCode classified: protocol withStamp: changeStamp not
 	selectorSymbol := ast selector.
 	scopedSelector := self internScopedSelector: selectorSymbol.
 	ast selector: scopedSelector.
-	ast sendNodes do: [ :send | send selector: (OCSelectorNode value: (self package lookupSelector: send selector)) ].
+	ast sendNodes do: [ :send | send selector: (OCSelectorNode value: (self package visibleSelectorForSymbol: send selector)) ].
 
 	method := compiler install.
 	
