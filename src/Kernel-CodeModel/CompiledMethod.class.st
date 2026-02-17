@@ -473,19 +473,6 @@ CompiledMethod >> overriddenMethod [
 	^ self methodClass superclass ifNotNil: [ :class | class lookupSelector: self selector ]
 ]
 
-{ #category : 'testing' }
-CompiledMethod >> overridingMethods [
-	| selector overrides |
-	selector := self selector.
-	overrides := Set new.
-	self methodClass allSubclassesDo: [:each |
-		(each includesSelector: selector)
-			ifTrue: [ 
-				overrides add: (each >> selector)
-				 ]].
-	^ overrides
-]
-
 { #category : 'accessing - literals' }
 CompiledMethod >> pathOfLiteralIndexes [
 	
