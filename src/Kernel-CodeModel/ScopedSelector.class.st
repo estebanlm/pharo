@@ -203,14 +203,23 @@ ScopedSelector >> lookupAliasedMethodOnReceiverClass: aClass [
 { #category : 'accessing' }
 ScopedSelector >> lookupAliasedMethodOnReceiverClass: aClass lookupClass: lookupClass [
 
-	| allVisibleExtensions theLookupClass foundMethod |
-	"I'm looking for aliases: methods that we imported or are global.
-	Let's look up recursively starting at aClass/lookupClass"
+	| allVisibleExtensions theLookupClass |
+	"
+	Find the first class in the hierarchy (looking upwards) that defines a method with my name and is visible in my owner's scope.
+	
+	Methods can be locally defined, local extensions, or imported extensions."
 	theLookupClass := lookupClass ifNil: [ aClass ].
 
 	allVisibleExtensions := owner visibleExtensions.
 	[ theLookupClass notNil ] whileTrue: [
 			| allVisibleExtensionsForThisClass |
+			
+			"For each class, look for a normal method or an extension with my same name.
+			If found, we need to alias from this class and its subclasses!"
+			(theLookupClass includesSelector: self symbol) ifTrue: [ ^ theLookupClass ].
+			
+			"As long as there is one extension, it is enough here.
+			The decision of installing an alias or a conflict will be taken later."
 			allVisibleExtensionsForThisClass := allVisibleExtensions select: [ :e | e extendedClass == theLookupClass ].
 			allVisibleExtensionsForThisClass ifNotEmpty: [ :es |
 					| foundScopedMethod |
@@ -219,10 +228,8 @@ ScopedSelector >> lookupAliasedMethodOnReceiverClass: aClass lookupClass: lookup
 
 			theLookupClass := theLookupClass superclass ].
 	
-	"We reached the top of the hierarchy and found no extensions, just look for the symbol"
-	foundMethod := (lookupClass ifNil: [ aClass ]) lookupSelector: self symbol.
-	foundMethod ifNil: [ ^ nil ].
-	^ foundMethod methodClass
+	"We reached the top of the hierarchy and found no extensions"
+	^ nil
 ]
 
 { #category : 'accessing' }
