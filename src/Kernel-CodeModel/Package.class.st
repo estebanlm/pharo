@@ -120,16 +120,18 @@ Package >> addExtensionImport: anExtension [
 	self importedExtensions add: anExtension.
 	anExtension addUserPackage: self.
 
-	self importSelectors: anExtension scopedSelectors. "Recompile dependencies, so they can see the extension"
-	self definedClasses do: [ :c |
-			c definedMethods do: [ :m |
-					m methodClass
-						compile: m sourceCode
-						classified: m protocol
-						withStamp: m timeStamp
-						notifying: nil
-						logSource: true
-						recompileDependencies: false ] ]
+	self importSelectors: anExtension scopedSelectors.
+	
+	"Recompile dependencies, so they can see the extension.
+	For now, we recompile the entire package, since every callsite may now become a scoped callsite"
+	self methods do: [ :m |
+		m methodClass
+			compile: m sourceCode
+			classified: m protocol
+			withStamp: m timeStamp
+			notifying: nil
+			logSource: true
+			recompileDependencies: false ]
 ]
 
 { #category : 'add method - compiled method' }
