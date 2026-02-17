@@ -2010,12 +2010,6 @@ String >> isPatternVariable [
 ]
 
 { #category : 'testing' }
-String >> isSelector [
-
-	^ true
-]
-
-{ #category : 'testing' }
 String >> isString [
 	^ true
 ]
