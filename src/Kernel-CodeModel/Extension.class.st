@@ -18,7 +18,7 @@ Extension >> addUserPackage: aPackage [
 	self userPackages add: aPackage
 ]
 
-{ #category : 'initialization' }
+{ #category : 'compiling' }
 Extension >> compile: sourceCode classified: protocol withStamp: changeStamp notifying: requestor logSource: logSource recompileDependencies: recompileDependencies [
 	"Return the selector of the compiled method"
 
@@ -40,8 +40,9 @@ Extension >> compile: sourceCode classified: protocol withStamp: changeStamp not
 	ast selector: scopedSelector.
 	ast sendNodes do: [ :send | send selector: (OCSelectorNode value: (self package lookupSelector: send selector)) ].
 
-	method := compiler install. "If the extension overwrites a normal method, then install a conflict method"
-
+	method := compiler install.
+	
+	"If the extension overwrites a normal method, then install a conflict method"
 	visibleExtensions := scopedSelector extensionsOn: self extendedClass.
 	methodCopyInExtendedClass := (self extendedClass methodDictionary includesKey: selectorSymbol)
 		                             ifTrue: [
@@ -63,15 +64,17 @@ Extension >> compile: sourceCode classified: protocol withStamp: changeStamp not
 								                             methodClass: self extendedClass;
 								                             yourself ] ].
 
+	"We install the extension in the extended class"
 	methodCopyInExtendedClass propertyAt: #extensionPackage put: self package.
 	self extendedClass classify: scopedSelector under: protocol.
 	self extendedClass methodDict at: scopedSelector put: methodCopyInExtendedClass.
-
 	scopedSelector addExtendedBehavior: self extendedClass.
 
-	scopedSelector bindAliasesInSubclassesOf: self extendedClass. "Update user packages so they define a locally scoped selector with the same name"
+	"Alias subclasses"
+	scopedSelector bindAliasesInSubclassesOf: self extendedClass.
+	
+	"Update user packages so they define a locally scoped selector with the same name"
 	userPackages ifNotNil: [ userPackages do: [ :e | e internScopedSelector: selectorSymbol ] ].
-
 	recompileDependencies ifTrue: [
 			| packagesToRecompile |
 			packagesToRecompile := { self package }.
