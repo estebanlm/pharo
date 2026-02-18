@@ -38,15 +38,15 @@ ShuffleSuitePreparatorTest >> randomGenerator [
 { #category : 'accessing' }
 ShuffleSuitePreparatorTest >> suite [
 
-	^ suite ifNil: [ suite := AllTestFailTest suite ]
+	^ suite ifNil: [ suite := EmptyTest suite ]
 ]
 
 { #category : 'tests' }
 ShuffleSuitePreparatorTest >> testIsSuiteShuffled [
 
-	self assertSuiteSelectorsEquals: { #testFail1 . #testFail2 . #testFail3 . #testFail4 }.
+	self assertSuiteSelectorsEquals: { #test1 . #test2 . #test3 . #test4 }.
 		
 	self preparator applyOn: self suite.
 	
-	self assertSuiteSelectorsEquals: { #testFail3 . #testFail4 . #testFail2 . #testFail1 }.
+	self assertSuiteSelectorsEquals: { #test3 . #test4 . #test2 . #test1 }.
 ]
