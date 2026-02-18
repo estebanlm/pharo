@@ -28,23 +28,16 @@ SuitePreparator class >> withShuffling [
 	^ self applyBlock: [ :testSuite | testSuite tests shuffle ]
 ]
 
-{ #category : 'accessing' }
-SuitePreparator >> applyBlock [
-
-	^ applyBlock ifNil: [ [  ] ]
-]
-
-{ #category : 'accessing' }
-SuitePreparator >> applyBlock: anObject [
-
-	applyBlock := anObject
+{ #category : 'applying' }
+SuitePreparator >> applyOn: testSuite [
+	
+	testSuite tests do: [ :aTestCase | self applyOnCase: aTestCase ]
 ]
 
 { #category : 'applying' }
-SuitePreparator >> applyOn: testSuite [
-	"this method defined the process which will applied in a giving suite."
+SuitePreparator >> applyOnCase: aTestCase [
 
-	self applyBlock cull: testSuite 
+	
 ]
 
 { #category : 'applying' }
@@ -52,11 +45,4 @@ SuitePreparator >> applyOnSuites: aCollection [
 	"apply to every testSuite the specified process (see self applyOn:)"
 
 	aCollection do: [ :suite | self applyOn: suite ]
-]
-
-{ #category : 'printing' }
-SuitePreparator >> printOn: aStream [
-
-	super printOn: aStream.
-	aStream print: applyBlock
 ]
