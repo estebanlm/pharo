@@ -1,3 +1,6 @@
+"
+I define a suite preparator that stores a seed before shuffling tests
+"
 Class {
 	#name : 'ShuffleSuitePreparator',
 	#superclass : 'SuitePreparator',
@@ -12,7 +15,7 @@ Class {
 { #category : 'applying' }
 ShuffleSuitePreparator >> applyOn: aSuite [
 
-	aSuite tests shuffleBy: self randomGenerator copy
+	aSuite tests shuffleBy: self randomGenerator 
 ]
 
 { #category : 'accessing' }
