@@ -1,5 +1,10 @@
 "
-I am an abstract execution mode. I defined the way a testsuite should be executed (running simply all the suite, opening the debuger on the first failure or error...)
+I define a strategy to execute a test case for `NewTestRunner`. 
+For simpler clases, a block can be provided to `ExecutionMode>>#executionBlock:` to run a test case. If you consider it more appropiate, override `ExecutionMode>>#executeCase:`
+
+The following modes are provided through class methods:
+- `ExecutionMode class >> #executionMode` runs a test case.
+- `ExecutionMode class >> #debugMode` debugs a test case. 
 "
 Class {
 	#name : 'ExecutionMode',

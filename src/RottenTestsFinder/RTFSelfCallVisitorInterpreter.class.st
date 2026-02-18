@@ -23,7 +23,6 @@ RTFSelfCallVisitorInterpreter >> analyze [
 
 { #category : 'accessing' }
 RTFSelfCallVisitorInterpreter >> considerClassesThat [
-
 	^ considerClassesThat
 ]
 

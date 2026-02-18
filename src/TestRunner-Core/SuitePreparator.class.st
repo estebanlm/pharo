@@ -1,5 +1,7 @@
 "
-After building a TestSuite and before executing its tests, we would like to apply to it some process like randomisation. I am an abstract representation of any class intented to do such things.
+I define a strategy for `NewTestRunner` to prepare a test suite before execution.
+
+We would like to apply processes like randomisation or proxies to tests and suites, hence `SuitePreparator>>#applyOn:` is sent after building a TestSuite and before executing its tests.
 "
 Class {
 	#name : 'SuitePreparator',
