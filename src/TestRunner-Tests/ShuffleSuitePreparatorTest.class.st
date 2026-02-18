@@ -18,7 +18,7 @@ Class {
 ShuffleSuitePreparatorTest >> assertSuiteSelectorsEquals: aCollection [
 
 	^ self 
-		assertCollection: (self suite tests collect: #selector) 
+		assertCollection: self suiteSelectors 
 		equals: aCollection asOrderedCollection 
 ]
 
@@ -41,6 +41,12 @@ ShuffleSuitePreparatorTest >> suite [
 	^ suite ifNil: [ suite := EmptyTest suite ]
 ]
 
+{ #category : 'as yet unclassified' }
+ShuffleSuitePreparatorTest >> suiteSelectors [
+
+	^ self suite tests collect: #selector
+]
+
 { #category : 'tests' }
 ShuffleSuitePreparatorTest >> testIsSuiteShuffled [
 
@@ -49,4 +55,17 @@ ShuffleSuitePreparatorTest >> testIsSuiteShuffled [
 	self preparator applyOn: self suite.
 	
 	self assertSuiteSelectorsEquals: { #test3 . #test4 . #test2 . #test1 }.
+]
+
+{ #category : 'tests' }
+ShuffleSuitePreparatorTest >> testShuffleTwice [
+
+	self preparator applyOn: self suite.
+
+	self assertSuiteSelectorsEquals: { #test3. #test4. #test2. #test1 }.
+
+	suite := nil.
+	self preparator applyOn: self suite.
+
+	self denyCollection: self suiteSelectors equals: { #test3. #test4. #test2. #test1 } asOrderedCollection
 ]
