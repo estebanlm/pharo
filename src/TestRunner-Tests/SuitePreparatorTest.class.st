@@ -13,7 +13,7 @@ Class {
 SuitePreparatorTest class >> testParameters [
 
 	^ ParametrizedTestMatrix new
-		forSelector: #suitePreparator addOptions: { SuitePreparator new . SuitePreparator withShuffling }
+		forSelector: #suitePreparator addOptions: { SuitePreparator new . ShuffleSuitePreparator new }
 ]
 
 { #category : 'accessing' }

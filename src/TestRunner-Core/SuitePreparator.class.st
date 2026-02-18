@@ -14,20 +14,6 @@ Class {
 	#tag : 'SuitePreparators'
 }
 
-{ #category : 'factory' }
-SuitePreparator class >> applyBlock: aBlock [
-
-	^ self new
-		applyBlock: aBlock;
-		yourself
-]
-
-{ #category : 'factory' }
-SuitePreparator class >> withShuffling [
-
-	^ self applyBlock: [ :testSuite | testSuite tests shuffle ]
-]
-
 { #category : 'applying' }
 SuitePreparator >> applyOn: testSuite [
 	

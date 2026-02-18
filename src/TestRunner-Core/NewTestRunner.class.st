@@ -43,7 +43,7 @@ Class {
 NewTestRunner class >> example [
 	<script>
 	self new 
-	suitePreparator: SuitePreparator withShuffling ;
+	suitePreparator: ShuffleSuitePreparator new ;
 	run: DependencyTest;
 	inspect
 ]

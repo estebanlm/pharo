@@ -370,7 +370,7 @@ TestRunnerAbstractPresenter >> suitePreparationModesPresenter [
 
 	^ SpDropListPresenter new
 		  help: 'Suite preparation mode';
-		  items: { SuitePreparator new . SuitePreparator withShuffling };
+		  items: { SuitePreparator new . ShuffleSuitePreparator new };
 		  whenSelectedItemChangedDo: [ :aSuitePreparator | 
 			  self updateTestRunnerSuiePreparatorWith: aSuitePreparator.
 			  self inform: self runner suitePreparator name ]

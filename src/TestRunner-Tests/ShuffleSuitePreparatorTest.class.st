@@ -41,7 +41,7 @@ ShuffleSuitePreparatorTest >> suite [
 	^ suite ifNil: [ suite := EmptyTest suite ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'enumerating' }
 ShuffleSuitePreparatorTest >> suiteSelectors [
 
 	^ self suite tests collect: #selector

@@ -21,7 +21,7 @@ RunnerLongDurationTest >> setUp [
 	super setUp.
 	self longTestClass doNotIgnoreTest .
 	runner := NewTestRunner new suitePreparator:
-		          SuitePreparator withShuffling 
+		          ShuffleSuitePreparator new 
 ]
 
 { #category : 'tests' }
