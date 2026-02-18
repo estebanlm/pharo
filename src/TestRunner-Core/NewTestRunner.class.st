@@ -173,9 +173,9 @@ NewTestRunner >> errorCount [
 ]
 
 { #category : 'accessing' }
-NewTestRunner >> executionMode [
+NewTestRunner >> executionMode [ 
 
-	^ executionMode
+	^ executionMode 
 ]
 
 { #category : 'setter' }
@@ -212,7 +212,7 @@ NewTestRunner >> initialize [
 	self 
 		doNotAccumulateResult;
 		suitePreparator: self suitePreparatorClass new;
-		executionMode: self executionModeClass executionMode
+		executionMode: self executionModeClass runTestsMode
 ]
 
 { #category : 'accessing' }
@@ -452,7 +452,7 @@ NewTestRunner >> switchToDebugMode [
 { #category : 'API' }
 NewTestRunner >> switchToRunMode [
 
-	self executionMode: self executionModeClass executionMode
+	self executionMode: self executionModeClass runTestsMode
 ]
 
 { #category : 'processing' }
