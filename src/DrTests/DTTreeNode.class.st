@@ -105,7 +105,7 @@ DTTreeNode >> drTestsName [
 		s
 			<< self name;
 			<< ' (';
-			<< (self subResultsAggregator value: self subResults) asString;
+			print: (self subResultsAggregator value: self subResults);
 			<< ')' ]
 ]
 
