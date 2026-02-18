@@ -22,6 +22,12 @@ RTFSelfCallVisitorInterpreter >> analyze [
 ]
 
 { #category : 'accessing' }
+RTFSelfCallVisitorInterpreter >> considerClassesThat [
+
+	^ considerClassesThat
+]
+
+{ #category : 'accessing' }
 RTFSelfCallVisitorInterpreter >> considerClassesThat: anObject [
 	considerClassesThat := anObject
 ]
@@ -30,7 +36,6 @@ RTFSelfCallVisitorInterpreter >> considerClassesThat: anObject [
 RTFSelfCallVisitorInterpreter >> initialize [
 
 	super initialize.
-	considerClassesThat := [ :class | class inheritsFrom: Object ].
 	selfSentMethods := OrderedCollection new.
 ]
 
