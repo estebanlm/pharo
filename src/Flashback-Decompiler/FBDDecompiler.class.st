@@ -483,6 +483,12 @@ FBDDecompiler >> pushActiveContext [
 	simulatedStack addLast: builder codeThisContext
 ]
 
+{ #category : 'instruction decoding' }
+FBDDecompiler >> pushActiveProcess [
+
+	simulatedStack addLast: builder codeThisProcess
+]
+
 { #category : 'closure support' }
 FBDDecompiler >> pushCleanClosure: aCompiledBlock [
 

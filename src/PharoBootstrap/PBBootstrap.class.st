@@ -164,9 +164,23 @@ PBBootstrap >> createImage [
 
 { #category : 'pre-requisites' }
 PBBootstrap >> ensureBaselineOfPharoBootstrap [
+	"Update metacello, then install the baselines"
 
-	#( BaselineOfKernel BaselineOfCompiler BaselineOfTraits BaselineOfFileSystem BaselineOfMonticello BaselineOfPharoBootstrap BaselineOfMetacello ) do: [
-		:baselineName | (self originRepository versionWithInfo: (self originRepository versionInfoFromVersionNamed: baselineName)) load ]
+	| old |
+	old := MCMethodDefinition initializersEnabled.
+
+	[
+		"Disable initializers. We don't care for them in the bootstrap.
+		If they have important side effects for the bootstrap we should refactor that code to remove the side effects"
+		MCMethodDefinition initializersEnabled: false.
+		'Metacello-Core' asPackage removeFromSystem.
+		(self originRepository versionWithInfo: (self originRepository versionInfoFromVersionNamed: 'Metacello-Core')) load.
+
+		#( BaselineOfKernel BaselineOfCompiler BaselineOfTraits BaselineOfFileSystem BaselineOfMonticello BaselineOfPharoBootstrap
+		   BaselineOfMetacello ) do: [ :baselineName |
+			(self originRepository versionWithInfo: (self originRepository versionInfoFromVersionNamed: baselineName)) load ]
+		
+	] ensure: [ MCMethodDefinition initializersEnabled: old ]
 ]
 
 { #category : 'preparation' }

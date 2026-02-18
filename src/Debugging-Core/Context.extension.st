@@ -1,17 +1,6 @@
 Extension { #name : 'Context' }
 
 { #category : '*Debugging-Core' }
-Context >> callPrimitive: primNumber [
-	| res |
-	res := receiver tryPrimitive: primNumber withArgs: self arguments.
-	primNumber >= (1 << 15) ifTrue: [ "inlined primitive, cannot fail" ^ self push: res ].  
-	"regular primitive. Always at the beginning of methods."
-	(self isFailToken: res) ifTrue: [ "keeps interpreting the method" ^ self ].
-	self push: res.
-	self methodReturnTop
-]
-
-{ #category : '*Debugging-Core' }
 Context >> findSecondToOldestSimilarSender [
 	"Search the stack for the second-to-oldest occurance of self's method.  Very useful for an infinite recursion.  Gets back to the second call so you can see one complete recursion cycle, and how it was called at the beginning."
 
@@ -47,14 +36,6 @@ Context >> instructionStream [
 ]
 
 { #category : '*Debugging-Core' }
-Context >> methodReturnConstant: value [
-	"Simulate the action of a 'return constant' bytecode whose value is the
-	 argument, value. This corresponds to a source expression like '^0'."
-
-	^self return: value from: self home
-]
-
-{ #category : '*Debugging-Core' }
 Context >> pcRangeContextIsActive: contextIsActive [
 	"return the debug highlight for aPC"
 
@@ -66,11 +47,6 @@ Context >> pcRangeContextIsActive: contextIsActive [
 		                 ifTrue: [ self currentPC ]
 		                 ifFalse: [ self executedPC ].
 	^ self method debugInfo rangeForPC: pcToHighlight
-]
-
-{ #category : '*Debugging-Core' }
-Context >> readVariableNamed: aName [
-	^ (self lookupVar: aName) readInContext: self
 ]
 
 { #category : '*Debugging-Core' }
@@ -166,30 +142,6 @@ Context >> runSimulated: aBlock contextAtEachStep: block2 [
 	exception class == SimulationExceptionWrapper
 		ifTrue: [ ^ exception exception signal ].
 	^ exception
-]
-
-{ #category : '*Debugging-Core' }
-Context >> send: selector super: superFlag numArgs: numArgs [
-	"Simulate the action of bytecodes that send a message with selector, 
-	selector. The argument, superFlag, tells whether the receiver of the 
-	message was specified with 'super' in the source method. The arguments 
-	of the message are found in the top numArgs locations on the stack and 
-	the receiver just below them."
-
-	| currentReceiver arguments  |
-	arguments := Array new: numArgs.
-	numArgs to: 1 by: -1 do: [ :i | 
-		arguments at: i put: self pop ].
-	currentReceiver := self pop.
-"	selector == #doPrimitive:method:receiver:args:
-		ifTrue: [answer := receiver 
-					doPrimitive: (arguments at: 1)
-					method: (arguments at: 2)
-					receiver: (arguments at: 3)
-					args: (arguments at: 4).
-				self push: answer.
-				^self]. "
-	^ self send: selector to: currentReceiver with: arguments super: superFlag
 ]
 
 { #category : '*Debugging-Core' }
@@ -305,62 +257,10 @@ Context class >> tallyMethods: aBlock [
 ]
 
 { #category : '*Debugging-Core' }
-Context >> tempNamed: aName [
-	"Returns the value of the temporaries, aName"
-
-	| debugInfo |
-	debugInfo := self method debugInfo.
-	^ debugInfo readVariableNamed: aName fromContext: self
-]
-
-{ #category : '*Debugging-Core' }
-Context >> tempNamed: aName put: anObject [
-	"Assign the value of the temp with name in aContext"
-	| var |
-	var := self lookupVar: aName.
-	"To be checked. if we keep the error, we should raise a dedicated exception, 
-	but no client would catch it, so why do we need it at all?"
- 	var isLocalVariable ifFalse: [ ^self error: var name, ' is not a temp but, ', var class name].
-	^var write: anObject inContext: self
-]
-
-{ #category : '*Debugging-Core' }
 Context >> temporaryVariableNamed: aName [
 	(self hasTemporaryVariableNamed: aName)
 		ifFalse: [ ^ nil ].
 	^self lookupVar: aName
-]
-
-{ #category : '*Debugging-Core' }
-Context >> temporaryVariableNames [
-
-	"If the context is suspended on a send, we want to highlight the send.
-	However, the context already executed the send, and the PC advanced to the next instruction.
-	Thus, we want the instruction previously executed!"
-	| suspendedPC |
-	suspendedPC := self executedPC max: self method initialPC.
-	^ self method debugInfo variableNamesAt: suspendedPC
-]
-
-{ #category : '*Debugging-Core' }
-Context >> tempsAndValuesLimitedTo: sizeLimit indent: indent [
-	"Return a string of the temporary variabls and their current values"
-
-	^ String streamContents: [ :aStream |
-			  | variableNames |
-			  variableNames := self temporaryVariableNames.
-			  variableNames
-				  do: [ :name |
-						  indent timesRepeat: [ aStream tab ].
-						  aStream
-							  nextPutAll: name;
-							  nextPut: $:;
-							  space;
-							  tab.
-						  aStream nextPutAll:
-							  ((self tempNamed: name) printStringLimitedTo:
-								   (sizeLimit - 3 - name size max: 1)) ]
-				  separatedBy: [ aStream cr ] ]
 ]
 
 { #category : '*Debugging-Core' }

@@ -108,7 +108,9 @@ HDTestReport >> done [
 { #category : 'private' }
 HDTestReport >> generateTestName: aTestCase [
 
-	^ nodeName , (aTestCase class package name copyReplaceAll: '-' with: '.')
+	| stagePrefix |
+	stagePrefix := stageName ifNotEmpty: [ stageName, '.'  ].
+	^ nodeName, stagePrefix , (aTestCase class package name copyReplaceAll: '-' with: '.')
 ]
 
 { #category : 'testing' }

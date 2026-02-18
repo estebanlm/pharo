@@ -37,6 +37,7 @@ BaselineOfGeneralTests >> baseline: spec [
 			package: 'StartupPreferences-Tests';
 			package: 'STON-Tests';
 			package: 'System-Object Events-Tests';
+			package: 'System-Model-Tests';
 			package: 'System-Caching-Tests';
 			package: 'System-Utilities-Tests';
 			package: 'System-Hashing-Tests';

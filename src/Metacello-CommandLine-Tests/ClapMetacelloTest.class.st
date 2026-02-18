@@ -118,3 +118,13 @@ ClapMetacelloTest >> testRepositoryUrl [
 
 	self assert: command repositoryUrl equals: 'github://myorg/myproject:main/src'
 ]
+
+{ #category : 'tests' }
+ClapMetacelloTest >> testStrict [
+
+	| command |
+	context := ClapMetacello commandSpecification activationWith: #( 'metacello' 'install' '--signalErrorOnWarning' 'github://myorg/myproject:main/src' 'MyProject' '--strict').
+	command := context command.
+
+	self assert: command strict
+]

@@ -75,12 +75,12 @@ ReInsertSuperclassDriver >> dialogTitleForClassSelection [
 
 { #category : 'configuration' }
 ReInsertSuperclassDriver >> instantiateRefactoring [
-
 	"self ensureSuperclassInModel."
+
 	^ (RBInsertNewClassRefactoring className: self subclass asString)
 		  model: model;
 		  superclass: superclassParent;
-		  subclasses: (superclassParent subclasses collect: [ :each | each name ]);
+		  subclasses: { superclass };
 		  packageName: self packageName;
 		  tagName: self tagName;
 		  comment: self comment;

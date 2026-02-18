@@ -8,8 +8,8 @@ Class {
 	#instVars : [
 		'mappedInlinePrimitiveHandlers'
 	],
-	#category : 'Debugging-Core',
-	#package : 'Debugging-Core'
+	#category : 'DebugInfo',
+	#package : 'DebugInfo'
 }
 
 { #category : 'extended instruction decoding' }

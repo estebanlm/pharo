@@ -4,6 +4,9 @@ I evaluate code passed via standard input or as arguments from the command line.
 Class {
 	#name : 'ClapCodeEvaluator',
 	#superclass : 'ClapPharoApplication',
+	#instVars : [
+		'expression'
+	],
 	#category : 'CodeImport-Commands',
 	#package : 'CodeImport-Commands'
 }
@@ -118,6 +121,18 @@ ClapCodeEvaluator >> execute [
 		ifTrue: [ self outputStreamDo: [ :out | out print: result; lf ] ]
 ]
 
+{ #category : 'accessing' }
+ClapCodeEvaluator >> expression [
+
+	^ expression ifNil: [ expression := self positional: #EXPR ]
+]
+
+{ #category : 'private - accessing' }
+ClapCodeEvaluator >> file [
+
+	^ self expression first asFileReference
+]
+
 { #category : 'error handling' }
 ClapCodeEvaluator >> handleError: error [
 	"for syntax errors we print more detailed error informations"
@@ -143,6 +158,19 @@ ClapCodeEvaluator >> handleError: error reference: aReference [
 	error pass
 ]
 
+{ #category : 'private - testing' }
+ClapCodeEvaluator >> hasOneArgument [
+
+	^ self expression size = 1
+]
+
+{ #category : 'testing' }
+ClapCodeEvaluator >> isEvaluatingFile [
+
+	"Do not use FileReference here since eval is used in Pharo boostrap and when FileSystem package not yet loaded"
+	^ self expression size = 1 and: [ self expression first endsWith: '.st' ]
+]
+
 { #category : 'asserting' }
 ClapCodeEvaluator >> shouldLogEvaluationResult [
 
@@ -152,7 +180,9 @@ ClapCodeEvaluator >> shouldLogEvaluationResult [
 
 { #category : 'accessing' }
 ClapCodeEvaluator >> source [
-	^ String space join: (self positional: #EXPR)
+	^ self isEvaluatingFile 
+		ifTrue: [ self file contents ]
+		ifFalse: [ String space join: self expression ] 
 ]
 
 { #category : 'validating' }

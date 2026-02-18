@@ -30,7 +30,8 @@ Class {
 		'compiledMethodClass',
 		'semanticScope',
 		'compiledBlockClass',
-		'semanticAnalysisNeeded'
+		'semanticAnalysisNeeded',
+		'storeSourcesAsProperty'
 	],
 	#classVars : [
 		'DefaultOptions',
@@ -710,4 +711,16 @@ OCCompilationContext >> semanticScope: anObject [
 { #category : 'options' }
 OCCompilationContext >> setOptions: opts [
 	options := opts
+]
+
+{ #category : 'accessing' }
+OCCompilationContext >> storeSourcesAsProperty [
+	
+	^ storeSourcesAsProperty ifNil: [ true ]
+]
+
+{ #category : 'accessing' }
+OCCompilationContext >> storeSourcesAsProperty: aBoolean [ 
+	
+	storeSourcesAsProperty := aBoolean
 ]

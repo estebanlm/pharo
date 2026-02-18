@@ -10,9 +10,9 @@ Class {
 		'isScripting',
 		'text'
 	],
-	#category : 'OpalCompiler-Tests-Misc',
-	#package : 'OpalCompiler-Tests',
-	#tag : 'Misc'
+	#category : 'AST-Core-Tests-Snippets',
+	#package : 'AST-Core-Tests',
+	#tag : 'Snippets'
 }
 
 { #category : 'binding' }

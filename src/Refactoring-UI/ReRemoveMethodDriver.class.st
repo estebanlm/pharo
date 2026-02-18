@@ -83,6 +83,7 @@ ReRemoveMethodDriver >> instantiateRefactoring [
 ReRemoveMethodDriver >> runRefactoring [
 
 	self configureRefactoring.
+
 	refactoring failedApplicabilityPreconditions 
 		ifNotEmpty: [ ^ self inform: 'The method does not exist' ].
 	
