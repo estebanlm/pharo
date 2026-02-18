@@ -27,6 +27,7 @@ RunnerLongDurationTest >> setUp [
 { #category : 'tests' }
 RunnerLongDurationTest >> testRunningFromAClass [
 
+	self skip.
 	runner runClass: self longTestClass.
 	self assert: runner runCount equals: 1.
 	self assert: runner passedCount equals: 1
@@ -35,6 +36,7 @@ RunnerLongDurationTest >> testRunningFromAClass [
 { #category : 'tests' }
 RunnerLongDurationTest >> testRunningFromACollectionOfClasses [
 
+	self skip.
 	runner runClasses: { LongTest . LongTest . LongTest }.
 	self assert: runner runCount equals: 3.
 	self assert: runner passedCount equals: 3

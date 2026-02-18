@@ -23,7 +23,7 @@ XmlReporterTest >> setUp [
 XmlReporterTest >> testBuildingAttributesForFailureTag [
 
 	| aDictionnary aFailure aTestCase |
-	aTestCase := GreenTest suite tests at: 1.
+	aTestCase := GreenTest suite tests first.
 	aFailure := self class exampleOfTestFailureException.
 	aDictionnary := reporter
 		                buildAttributesForFailure: aFailure
