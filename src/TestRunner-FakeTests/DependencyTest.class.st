@@ -32,7 +32,7 @@ DependencyTest class >> reset [
 	data := OrderedCollection new
 ]
 
-{ #category : 'initialization' }
+{ #category : 'asserting' }
 DependencyTest >> assertCountThenIncrement: anObject [
 
 	self skipOnPharoCITestingEnvironment.
@@ -53,7 +53,7 @@ DependencyTest >> resetData [
 	self class reset
 ]
 
-{ #category : 'initialization' }
+{ #category : 'tests' }
 DependencyTest >> testDataIs10ThenIncrement [
 
 	self 
@@ -61,31 +61,31 @@ DependencyTest >> testDataIs10ThenIncrement [
 		assertCountThenIncrement: 0
 ]
 
-{ #category : 'initialization' }
+{ #category : 'tests' }
 DependencyTest >> testDataIs11ThenIncrement [
 
 	self assertCountThenIncrement: 1
 ]
 
-{ #category : 'initialization' }
+{ #category : 'tests' }
 DependencyTest >> testDataIs12ThenIncrement [
 
 	self assertCountThenIncrement: 2
 ]
 
-{ #category : 'initialization' }
+{ #category : 'tests' }
 DependencyTest >> testDataIs13ThenIncrement [
 
 	self assertCountThenIncrement: 3
 ]
 
-{ #category : 'initialization' }
+{ #category : 'tests' }
 DependencyTest >> testDataIs14ThenIncrement [
 
 	self assertCountThenIncrement: 4
 ]
 
-{ #category : 'initialization' }
+{ #category : 'tests' }
 DependencyTest >> testDataIs15ThenIncrement [
 
 	self assertCountThenIncrement: 5

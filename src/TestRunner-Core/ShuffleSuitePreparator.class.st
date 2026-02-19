@@ -1,5 +1,7 @@
 "
-I define a suite preparator that stores a seed before shuffling tests
+I am a suite preparator who shuffles the order of tests in a suite. 
+I store an instance of `Random` that can be injected to control shuffling and seeding.
+My objective is to collaborate on detecting test execution that depend on test case order.
 "
 Class {
 	#name : 'ShuffleSuitePreparator',
@@ -13,9 +15,9 @@ Class {
 }
 
 { #category : 'applying' }
-ShuffleSuitePreparator >> applyOn: aSuite [
+ShuffleSuitePreparator >> applyOn: aTestSuite [
 
-	aSuite tests shuffleBy: self randomGenerator 
+	aTestSuite tests shuffleBy: self randomGenerator 
 ]
 
 { #category : 'accessing' }
