@@ -7,9 +7,8 @@ Class {
 	#classInstVars : [
 		'ignore'
 	],
-	#category : 'TestRunner-Tests-Utilities-Test',
-	#package : 'TestRunner-Tests',
-	#tag : 'Utilities-Test'
+	#category : 'TestRunner-FakeTests',
+	#package : 'TestRunner-FakeTests'
 }
 
 { #category : 'accessing' }
@@ -40,6 +39,12 @@ MockTest class >> shouldBeIgnored [
 MockTest >> doNotIgnoreTest [
 
 	self class doNotIgnoreTest
+]
+
+{ #category : 'asserting' }
+MockTest >> ignore [ 
+
+	self shouldBeIgnored ifTrue: [ ^ self skip ]
 ]
 
 { #category : 'asserting' }

@@ -28,7 +28,7 @@ NewCommandLineRunner class >> with: aReporterClass [
 { #category : 'accessing' }
 NewCommandLineRunner >> classForReporter [
 
-	^ AbstractReporter
+	^ Reporter
 ]
 
 { #category : 'private' }
