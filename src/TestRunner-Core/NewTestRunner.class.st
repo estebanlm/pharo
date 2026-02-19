@@ -43,7 +43,7 @@ Class {
 NewTestRunner class >> example [
 	<script>
 	self new 
-	suitePreparator: ShuffleSuitePreparator;
+	suitePreparator: ShuffleSuitePreparator new ;
 	run: DependencyTest;
 	inspect
 ]
@@ -146,18 +146,6 @@ NewTestRunner >> addToSuite: aTestSuite [
 ]
 
 { #category : 'private' }
-NewTestRunner >> classForExecutionMode [
-
-	^ AbstractExecutionMode
-]
-
-{ #category : 'private' }
-NewTestRunner >> classForSuitePreparator [
-
-	^ AbstractSuitePreparator
-]
-
-{ #category : 'private' }
 NewTestRunner >> classForTestResult [
 
 	^ TestResult
@@ -185,15 +173,21 @@ NewTestRunner >> errorCount [
 ]
 
 { #category : 'accessing' }
-NewTestRunner >> executionMode [
+NewTestRunner >> executionMode [ 
 
-	^ executionMode
+	^ executionMode 
 ]
 
 { #category : 'setter' }
 NewTestRunner >> executionMode: anExecutionMode [
 
 	executionMode := anExecutionMode
+]
+
+{ #category : 'private' }
+NewTestRunner >> executionModeClass [
+
+	^ ExecutionMode
 ]
 
 { #category : 'accessing' }
@@ -215,9 +209,10 @@ NewTestRunner >> hasTestsToRun [
 NewTestRunner >> initialize [
 
 	super initialize.
-	self doNotAccumulateResult.
-	self suitePreparator: self classForSuitePreparator anySuitePreparatorClass.
-	self executionMode: self classForExecutionMode runExecutionModeClass
+	self 
+		doNotAccumulateResult;
+		suitePreparator: self suitePreparatorClass new;
+		executionMode: self executionModeClass runTestsMode
 ]
 
 { #category : 'accessing' }
@@ -225,6 +220,14 @@ NewTestRunner >> passedCount [
 	"return the number of passed testcase"
 
 	^ self result passedCount
+]
+
+{ #category : 'processing' }
+NewTestRunner >> prepareSuite [
+	"we would like to process suites before execution (e.g shufling the tests for exemple).
+	see SuitePreparator"
+
+	self suitePreparator applyOn: self suite
 ]
 
 { #category : 'private' }
@@ -265,7 +268,7 @@ NewTestRunner >> runAll [
 	"run the current collected suite"
 
 	[ 
-	self setUp.
+	self prepareSuite.
 	self runSuite ] ensure: [ self tearDown ]
 ]
 
@@ -385,14 +388,6 @@ NewTestRunner >> runSuite: aTestSuite [
 	self runAll
 ]
 
-{ #category : 'processing' }
-NewTestRunner >> setUp [
-	"we would like to process suites before execution (e.g shufling the tests for exemple).
-	see AbstractSuitePreparator"
-
-	self suitePreparator applyOn: self suite
-]
-
 { #category : 'testing' }
 NewTestRunner >> shouldAccumulate [
 
@@ -442,16 +437,22 @@ NewTestRunner >> suitePreparator: aSuitePreparator [
 	suitePreparator := aSuitePreparator
 ]
 
+{ #category : 'private' }
+NewTestRunner >> suitePreparatorClass [
+
+	^ SuitePreparator 
+]
+
 { #category : 'API' }
 NewTestRunner >> switchToDebugMode [
 
-	self executionMode: self classForExecutionMode debugExecutionModeClass
+	self executionMode: self executionModeClass debugMode
 ]
 
 { #category : 'API' }
 NewTestRunner >> switchToRunMode [
 
-	self executionMode: self classForExecutionMode runExecutionModeClass
+	self executionMode: self executionModeClass runTestsMode
 ]
 
 { #category : 'processing' }

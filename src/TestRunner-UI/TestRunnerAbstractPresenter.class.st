@@ -31,7 +31,7 @@ TestRunnerAbstractPresenter >> allDefinedTestCases: aCollectionOfPackage [
 
 	"return all the defined test cases from the giving pavkage"
 
-	^ aCollectionOfPackage collectAll: [ :package | 
+	^ aCollectionOfPackage collect: [ :package | 
 		  self definedTestCases: package ]
 ]
 
@@ -370,16 +370,16 @@ TestRunnerAbstractPresenter >> suitePreparationModesPresenter [
 
 	^ SpDropListPresenter new
 		  help: 'Suite preparation mode';
-		  items: AbstractSuitePreparator subclasses;
-		  whenSelectedItemChangedDo: [ :aSuitePreparatorClass | 
-			  self updateTestRunnerSuiePreparatorWith: aSuitePreparatorClass.
+		  items: { SuitePreparator new . ShuffleSuitePreparator new };
+		  whenSelectedItemChangedDo: [ :aSuitePreparator | 
+			  self updateTestRunnerSuiePreparatorWith: aSuitePreparator.
 			  self inform: self runner suitePreparator name ]
 ]
 
 { #category : 'accessing' }
 TestRunnerAbstractPresenter >> suitePreparator [
 
-	^ suitePreparationMode ifNil: [ AnyEffectSuitePreparator ]
+	^ suitePreparationMode ifNil: [ SuitePreparator new ]
 ]
 
 { #category : 'buttons-presenters-initialization' }
