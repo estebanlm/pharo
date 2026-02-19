@@ -19,12 +19,12 @@ Reporter class >> isAbstract [
 	^ self = Reporter
 ]
 
-{ #category : 'facotry' }
+{ #category : 'factory' }
 Reporter class >> stdReporter [
 	^ StdReporter new
 ]
 
-{ #category : 'facotry' }
+{ #category : 'factory' }
 Reporter class >> xmlReporter [
 	^ XmlReporter new
 ]

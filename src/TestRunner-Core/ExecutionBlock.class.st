@@ -12,7 +12,7 @@ Class {
 	#tag : 'ExecutionModes'
 }
 
-{ #category : 'private - accessing' }
+{ #category : 'instance creation' }
 ExecutionBlock class >> executionBlock: aBlock [
 
 	^ self new

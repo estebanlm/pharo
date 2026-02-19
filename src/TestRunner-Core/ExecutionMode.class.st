@@ -15,7 +15,7 @@ Class {
 	#tag : 'ExecutionModes'
 }
 
-{ #category : 'testing' }
+{ #category : 'instance creation' }
 ExecutionMode class >> debugMode [
 
 	^ ExecutionBlock executionBlock: [ :aTestCase | aTestCase debug ]
@@ -27,7 +27,7 @@ ExecutionMode class >> isAbstract [
 	^ self == ExecutionMode 
 ]
 
-{ #category : 'testing' }
+{ #category : 'instance creation' }
 ExecutionMode class >> runTestsMode [
 
 	^ ExecutionBlock executionBlock: [ :aTestCase | aTestCase run ]

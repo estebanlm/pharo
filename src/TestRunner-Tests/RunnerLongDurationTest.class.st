@@ -9,7 +9,7 @@ Class {
 	#tag : 'Core'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 RunnerLongDurationTest >> longTestClass [
 
 	^ LongTest
