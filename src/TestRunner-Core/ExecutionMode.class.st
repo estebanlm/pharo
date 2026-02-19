@@ -1,7 +1,7 @@
 "
 I define a strategy interface to execute a test case for `NewTestRunner`. 
-For simpler clases, a block can be provided to `ExecutionBlock>>#executionBlock:`. 
-If you consider it more appropiate, override `ExecutionMode>>#executeCase:`
+For simpler clases, a block can be provided to `ExecutionBlock class>>#executionBlock:`. 
+If you consider it more appropiate, implement your own `ExecutionMode>>#executeCase:`
 
 The following modes are provided through class methods:
 - `ExecutionMode class >> #executionMode` runs a test case.
@@ -19,12 +19,6 @@ Class {
 ExecutionMode class >> debugMode [
 
 	^ ExecutionBlock executionBlock: [ :aTestCase | aTestCase debug ]
-]
-
-{ #category : 'testing' }
-ExecutionMode class >> executionMode [
-
-	^ ExecutionBlock executionBlock: [ :aTestCase | aTestCase run ]
 ]
 
 { #category : 'testing' }
