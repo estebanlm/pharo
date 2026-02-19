@@ -2,7 +2,7 @@
 I am an abstract class which specify the behaviour for reporting the result of tests execution 
 "
 Class {
-	#name : 'AbstractReporter',
+	#name : 'Reporter',
 	#superclass : 'Object',
 	#instVars : [
 		'suiteExecutionDuration',
@@ -14,41 +14,41 @@ Class {
 }
 
 { #category : 'testing' }
-AbstractReporter class >> isAbstract [
+Reporter class >> isAbstract [
 
-	^ self = AbstractReporter
+	^ self = Reporter
 ]
 
 { #category : 'facotry' }
-AbstractReporter class >> stdReporter [
+Reporter class >> stdReporter [
 	^ StdReporter new
 ]
 
 { #category : 'facotry' }
-AbstractReporter class >> xmlReporter [
+Reporter class >> xmlReporter [
 	^ XmlReporter new
 ]
 
 { #category : 'internal' }
-AbstractReporter >> addToSuiteExecutionDuration: aDuration [
+Reporter >> addToSuiteExecutionDuration: aDuration [
 
 	suiteExecutionDuration := self suiteExecutionDuration + aDuration
 ]
 
 { #category : 'reporting' }
-AbstractReporter >> currentCaseDuration: aDuration [
+Reporter >> currentCaseDuration: aDuration [
 
 	currentCaseDuration := aDuration
 ]
 
 { #category : 'reporting' }
-AbstractReporter >> datasAreReseted [
+Reporter >> datasAreReseted [
 
 	^ suiteExecutionDuration isNil and: currentCaseDuration isNil
 ]
 
 { #category : 'reporting' }
-AbstractReporter >> reportCase: aTestCase runBlock: aBlock [
+Reporter >> reportCase: aTestCase runBlock: aBlock [
 
 	"run an report the execution's result of a testCase"
 
@@ -58,19 +58,19 @@ AbstractReporter >> reportCase: aTestCase runBlock: aBlock [
 ]
 
 { #category : 'reporting' }
-AbstractReporter >> reportError: aTestError of: aTestCase [
+Reporter >> reportError: aTestError of: aTestCase [
 
 	self subclassResponsibility
 ]
 
 { #category : 'reporting' }
-AbstractReporter >> reportFailure: aTestFailure of: aTestCase [
+Reporter >> reportFailure: aTestFailure of: aTestCase [
 
 	self subclassResponsibility
 ]
 
 { #category : 'reporting' }
-AbstractReporter >> reportPass: aTestCase [
+Reporter >> reportPass: aTestCase [
 
 	"report the execution's result of a passed test"
 
@@ -78,7 +78,7 @@ AbstractReporter >> reportPass: aTestCase [
 ]
 
 { #category : 'reporting' }
-AbstractReporter >> reportResult: aTestResult [
+Reporter >> reportResult: aTestResult [
 
 	"report the execution's result of a testSuite"
 
@@ -86,14 +86,14 @@ AbstractReporter >> reportResult: aTestResult [
 ]
 
 { #category : 'reporting' }
-AbstractReporter >> reportSkipped: aTestCase [
+Reporter >> reportSkipped: aTestCase [
 	"report the giving testcase"
 	
 	
 ]
 
 { #category : 'reporting' }
-AbstractReporter >> reportSuite: aTestSuite runBlock: aBlock [
+Reporter >> reportSuite: aTestSuite runBlock: aBlock [
 
 	"run an report the execution's result of a testSuite"
 
@@ -101,14 +101,14 @@ AbstractReporter >> reportSuite: aTestSuite runBlock: aBlock [
 ]
 
 { #category : 'accessing' }
-AbstractReporter >> suiteExecutionDuration [
+Reporter >> suiteExecutionDuration [
 
 	^ suiteExecutionDuration ifNil: [ 
 		  suiteExecutionDuration := Duration new ]
 ]
 
 { #category : 'reporting' }
-AbstractReporter >> updateSuiteExecutionDuration [
+Reporter >> updateSuiteExecutionDuration [
 
 	self addToSuiteExecutionDuration: currentCaseDuration
 ]
