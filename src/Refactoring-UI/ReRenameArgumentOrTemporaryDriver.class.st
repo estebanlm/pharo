@@ -9,7 +9,8 @@ Class {
 	#instVars : [
 		'sourceNode',
 		'newName',
-		'method'
+		'method',
+		'notCheckVarName'
 	],
 	#category : 'Refactoring-UI-Drivers',
 	#package : 'Refactoring-UI',
@@ -28,6 +29,46 @@ ReRenameArgumentOrTemporaryDriver class >> shouldPreviewChangesByDefault [
 	^ false
 ]
 
+{ #category : 'execution' }
+ReRenameArgumentOrTemporaryDriver >> breakingChoices [
+
+	| choices |
+
+	choices := OrderedCollection new.
+	notCheckVarName isFalse ifTrue: [
+			choices add: (ReRenameTemporaryVariableChoice new driver: self).
+			choices add: (ReNewVariableNameChoice new driver: self).
+			choices add: (ReConvertTemporaryToExistingVariableChoice new driver: self) ].
+
+ 
+	^ choices
+]
+
+{ #category : 'action' }
+ReRenameArgumentOrTemporaryDriver >> convertTemporaryToExistingVariable [
+
+	| transformation |
+	self applyChanges.
+	transformation := RBRemoveTemporaryVariableTransformation
+		                  variable: notCheckVarName violators first
+		                  inMethod: (method methodClass compiledMethodAt: method selector) selector
+		                  inClass: method methodClass name.
+	transformation privateTransform.
+	self openPreviewWithChanges: transformation changes
+]
+
+{ #category : 'configuration' }
+ReRenameArgumentOrTemporaryDriver >> defaultSelectDialog [
+
+	^ super defaultSelectDialog
+		  title: 'There are potential breaking changes!';
+		  message: self labelBasedOnBreakingChanges;
+		  items: self breakingChoices;
+		  display: [ :each | each description ];
+		  displayIcon: [ :each | self iconNamed: each systemIconName ];
+		  yourself
+]
+
 { #category : 'configuration' }
 ReRenameArgumentOrTemporaryDriver >> instantiateRefactoring [
 
@@ -35,6 +76,17 @@ ReRenameArgumentOrTemporaryDriver >> instantiateRefactoring [
 		  renameTemporaryFrom: sourceNode sourceInterval
 		  in: method origin
 		  selector: method selector
+]
+
+{ #category : 'ui - dialogs' }
+ReRenameArgumentOrTemporaryDriver >> labelBasedOnBreakingChanges [
+
+	^ String streamContents: [ :stream |
+			  refactoring failedBreakingChangePreconditions do: [ :cond |
+					  cond check ifFalse: [
+							  cond violationMessageOn: stream.
+							  stream cr ] ].
+			  stream nextPutAll: 'Select the strategies to apply' ]
 ]
 
 { #category : 'accessing' }
@@ -87,7 +139,15 @@ ReRenameArgumentOrTemporaryDriver >> runRefactoring [
 				detect: [ :condition | condition check ]
 				ifFound: [ :condition | self inform: condition errorString ] ].
 
-	self applyChanges
+	self setBreakingChangesPreconditions.
+
+	refactoring failedBreakingChangePreconditions ifEmpty: [ self applyChanges ] ifNotEmpty: [ self handleBreakingChanges ]
+]
+
+{ #category : 'initialization' }
+ReRenameArgumentOrTemporaryDriver >> setBreakingChangesPreconditions [
+
+	notCheckVarName := refactoring preconditionCheckVariableName
 ]
 
 { #category : 'accessing' }
