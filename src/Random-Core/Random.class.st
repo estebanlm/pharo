@@ -8,7 +8,7 @@ Every integer interval can give a random number:
 SequenceableCollections can give randomly selected elements:
 		'pick one of these letters randomly' atRandom
 SequenceableCollections also respond to shuffled, as in:
-		($A to: $Z) shuffled
+		(\$A to: \$Z) shuffled
 
 The correct way to use class Random is to store one in an instance or class variable:
 		myGenerator := Random new.

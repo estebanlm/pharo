@@ -1,29 +1,71 @@
+"
+A ShuffleSuitePreparatorTest is a test class for testing the behavior of ShuffleSuitePreparator
+"
 Class {
 	#name : 'ShuffleSuitePreparatorTest',
 	#superclass : 'TestCase',
 	#instVars : [
-		'runner'
+		'preparator',
+		'randomGenerator',
+		'suite'
 	],
 	#category : 'TestRunner-Tests-Preparators',
 	#package : 'TestRunner-Tests',
 	#tag : 'Preparators'
 }
 
+{ #category : 'asserting' }
+ShuffleSuitePreparatorTest >> assertSuiteSelectorsEquals: aCollection [
+
+	^ self 
+		assertCollection: self suiteSelectors 
+		equals: aCollection asOrderedCollection 
+]
+
+{ #category : 'accessing' }
+ShuffleSuitePreparatorTest >> preparator [
+
+	^ preparator ifNil: [ preparator := ShuffleSuitePreparator new 
+		randomGenerator: self randomGenerator; yourself. ]
+]
+
+{ #category : 'accessing' }
+ShuffleSuitePreparatorTest >> randomGenerator [ 
+
+	^ randomGenerator ifNil: [ randomGenerator := Random seed: 4 ]
+]
+
+{ #category : 'accessing' }
+ShuffleSuitePreparatorTest >> suite [
+
+	^ suite ifNil: [ suite := EmptyTest suite ]
+]
+
+{ #category : 'enumerating' }
+ShuffleSuitePreparatorTest >> suiteSelectors [
+
+	^ self suite tests collect: #selector
+]
+
 { #category : 'tests' }
-ShuffleSuitePreparatorTest >> testSuitePreparator [
+ShuffleSuitePreparatorTest >> testIsSuiteShuffled [
+
+	self assertSuiteSelectorsEquals: { #test1 . #test2 . #test3 . #test4 }.
+		
+	self preparator applyOn: self suite.
 	
-	|initialSuite initialSuiteCopy|
-	initialSuite := GreenTest suite.
-	initialSuiteCopy := initialSuite copy.
-	self 
-		assert: initialSuiteCopy tests
-		equals: initialSuite tests.
-	
-	ShuffleSuitePreparator applyOn: initialSuite.
-	
-	self
-		assert: initialSuite tests size
-		equals: initialSuiteCopy tests size.
-	
-	self assert: (initialSuiteCopy tests includesAll: initialSuite tests)
+	self assertSuiteSelectorsEquals: { #test3 . #test4 . #test2 . #test1 }.
+]
+
+{ #category : 'tests' }
+ShuffleSuitePreparatorTest >> testShuffleTwice [
+
+	self preparator applyOn: self suite.
+
+	self assertSuiteSelectorsEquals: { #test3. #test4. #test2. #test1 }.
+
+	suite := nil.
+	self preparator applyOn: self suite.
+
+	self denyCollection: self suiteSelectors equals: { #test3. #test4. #test2. #test1 } asOrderedCollection
 ]
