@@ -49,8 +49,7 @@ ReCheckVariableNameShadowingCondition >> variableName: aVariableName parseTree: 
 ReCheckVariableNameShadowingCondition >> violationMessageOn: aStream [
 
 	^ violators do: [ :violator |
-		aStream
-			nextPutAll: ('The variable {1} is invalid in the context of the class {2}'
-         		format: { violator. class name });
-			nextPut: Character cr ].
+			  aStream
+				  nextPutAll: ('The variable {1} is already defined as a class/instance variable in the given context' format: { violator });
+				  nextPut: Character cr ]
 ]

@@ -64,18 +64,9 @@ RBRenameTemporaryParametrizedTest >> testFailureBadName [
 ]
 
 { #category : 'failure tests' }
-RBRenameTemporaryParametrizedTest >> testFailureExistingVariable [
+RBRenameTemporaryParametrizedTest >> testFailureExistingTempVariable [
 
 	| refactoring |
-	model := self modelOnClasses: { RBLintRuleTestData }.
-	refactoring := self createRefactoringWithModel: model andArguments: {
-			               {
-				               (15 to: 19).
-				               #rules }.
-			               'name'.
-			               #RBLintRuleTestData.
-			               #openEditor }.
-	(refactoring isKindOf: RBPushDownInstanceVariableRefactoring) ifTrue: [ self shouldWarn: refactoring ].
 	refactoring := self createRefactoringWithModel: model andArguments: {
 			               {
 				               (15 to: 19).
@@ -83,9 +74,7 @@ RBRenameTemporaryParametrizedTest >> testFailureExistingVariable [
 			               'rules'.
 			               #RBLintRuleTestData.
 			               #openEditor }.
-	(refactoring isKindOf: RBPushDownInstanceVariableRefactoring)
-		ifTrue: [ self shouldWarn: refactoring ]
-		ifFalse: [ self shouldFail: refactoring ]
+	self shouldFail: refactoring
 ]
 
 { #category : 'failure tests' }
@@ -168,4 +157,30 @@ RBRenameTemporaryParametrizedTest >> testRenameTemporary [
 								asdf := self failedRules.
 								asdf isEmpty ifTrue: [^self].
 								asdf size == 1 ifTrue: [^asdf first viewResults]')
+]
+
+{ #category : 'tests' }
+RBRenameTemporaryParametrizedTest >> testWarningExistingInstanceVariable [
+
+	| refactoring |
+	model := self modelOnClasses: { RBLintRuleTestData }.
+
+	refactoring := RBRenameArgumentOrTemporaryRefactoring
+		               model: model
+		               renameTemporaryFrom: (15 to: 19)
+		               to: 'name'
+		               in: #RBLintRuleTestData
+		               selector: #openEditor.
+	self assert: refactoring class equals: RBRenameArgumentOrTemporaryRefactoring.
+
+	self shouldWarn: refactoring.
+
+	refactoring := RBRenameTemporaryVariableTransformation
+		               model: model
+		               rename: 'rules'
+		               to: 'name'
+		               in: #RBLintRuleTestData
+		               selector: #openEditor.
+	self assert: refactoring class equals: RBRenameTemporaryVariableTransformation.
+	self shouldFail: refactoring
 ]
