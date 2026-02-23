@@ -598,6 +598,12 @@ DebugSession >> stepToFirstInterestingBytecodeInContext: aContext [
 	^ aContext
 ]
 
+{ #category : 'accessing' }
+DebugSession >> suspendedContext: aContext [ 
+	
+	interruptedContext := aContext
+]
+
 { #category : 'debugging actions' }
 DebugSession >> terminate [
 	"Action that needs to be executed after the window containing this debug session is closed,
