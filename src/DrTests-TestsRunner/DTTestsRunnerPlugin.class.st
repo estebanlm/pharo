@@ -163,15 +163,3 @@ DTTestsRunnerPlugin >> startButtonHelp [
 DTTestsRunnerPlugin >> startButtonLabel [
 	^ 'Run Tests' translated
 ]
-
-{ #category : 'tests' }
-DTTestsRunnerPlugin >> testSuiteOf: aSetOfTest withName: aString [
-	^ aSetOfTest
-		collect: [ :each |
-			TestSuite new
-				in: [ :suite |
-					suite
-						addTest: each;
-						name: (self label: aString forSuite: suite) ];
-				yourself ]
-]
