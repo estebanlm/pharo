@@ -21,5 +21,6 @@ DTTestsRunnerConfiguration >> asTestSuite [
 	self items reject: #drTestsIsAbstract thenDo: [ :aTestCase | 
 		"drTestsSuite -> This method allows to either add a test case 
 		 instance or a test suite depending on kind of item."
-		suite addTests: aTestCase drTestsSuite tests ]
+		suite addTests: aTestCase drTestsSuite tests ].
+	^ suite
 ]

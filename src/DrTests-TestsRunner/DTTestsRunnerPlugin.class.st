@@ -114,39 +114,9 @@ DTTestsRunnerPlugin >> resultButtonHelp [
 DTTestsRunnerPlugin >> runForConfiguration: aDTpluginConfiguration [
 	| results |
 	results := self pluginResultClass new
-		testResults: (self runTestSuites: { aDTpluginConfiguration asTestSuite });
+		testResults: ( DTTestRunner new runTestSuite: aDTpluginConfiguration asTestSuite );
 		yourself.
 	^ aDTpluginConfiguration handleResults: results for: self
-]
-
-{ #category : 'private' }
-DTTestsRunnerPlugin >> runSuite: aTestSuite withResult: aResult [
-
-	aTestSuite when: TestAnnouncement do: [ :testAnnouncement |
-		self flag: #TODO. "Dirty"
-		testAnnouncement test class = TestSuite ifTrue: [
-			self announceStatusChanged:
-				('Running test {1}.' format: { testAnnouncement test name }) ] ]
-		for: self.
-	[ aResult mergeWith: (aTestSuite run) ] ensure: [
-		aTestSuite unsubscribe: TestAnnouncement ]
-]
-
-{ #category : 'private' }
-DTTestsRunnerPlugin >> runTestSuites: testSuites [
-
-	| result |
-	result := TestAsserter classForTestResult new.
-	CurrentExecutionEnvironment runTestsBy: [
-		testSuites
-			do: [ :testSuite |
-				| specificResult |
-				specificResult := testSuite resultClass new.
-				self runSuite: testSuite withResult: specificResult.
-				result mergeWith: specificResult ]
-			displayingProgress: 'Running Tests' ].
-	result updateResultsInHistory.
-	^ result
 ]
 
 { #category : 'api' }

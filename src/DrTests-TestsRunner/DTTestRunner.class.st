@@ -40,6 +40,20 @@ DTTestRunner >> runSuite: aTestSuite withResult: aResult [
 ]
 
 { #category : 'api' }
+DTTestRunner >> runTestSuite: testSuite [
+
+	| result |
+	result := TestAsserter classForTestResult new.
+	CurrentExecutionEnvironment runTestsBy: [
+				| specificResult |
+				specificResult := testSuite resultClass new.
+				self runSuite: testSuite withResult: specificResult.
+				result mergeWith: specificResult ].
+	result updateResultsInHistory.
+	^ result
+]
+
+{ #category : 'api' }
 DTTestRunner >> runTestSuites: testSuites [
 
 	| result |
