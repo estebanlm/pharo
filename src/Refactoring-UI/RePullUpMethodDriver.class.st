@@ -148,7 +148,9 @@ RePullUpMethodDriver >> copyDownMethods [
 
 					subclasses do: [ :each |
 						refactoring generateChangesFor: (RBAddMethodTransformation sourceCode: oldSource in: each withProtocol: oldProtocol) ] ] ].
-	self pullUpMethods
+	notInstVarRefs check
+		ifFalse: [ self pullUpReferencedInstVars ]
+		ifTrue: [ self pullUpMethods ]
 ]
 
 { #category : 'execution' }
