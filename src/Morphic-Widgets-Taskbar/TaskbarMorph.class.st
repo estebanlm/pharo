@@ -189,7 +189,7 @@ TaskbarMorph >> initializeLayout [
 		layoutInset: 2;
 		cellInset: 2;
 		listDirection: #leftToRight;
-		wrapDirection: #topToBottom;
+		wrapDirection: #none;
 		hResizing: #spaceFill;
 		vResizing: #shrinkWrap;
 		extent: self minimumExtent
@@ -245,6 +245,18 @@ TaskbarMorph >> isTaskbar [
 	"Answer true."
 
 	^true
+]
+
+{ #category : 'private - layout' }
+TaskbarMorph >> layoutButtonsEvenly [
+
+	| per |
+	self submorphs isEmpty ifTrue: [ ^ self ].
+	per := self innerBounds width // self submorphs size.
+
+	self submorphs do: [ :b |
+			b hResizing: #rigid.
+			b width: per ]
 ]
 
 { #category : 'geometry' }
@@ -377,6 +389,7 @@ TaskbarMorph >> updateBounds [
 
 	self
 		width: self owner width;
+		layoutButtonsEvenly;
 		snapToEdgeIfAppropriate
 ]
 
@@ -406,12 +419,14 @@ TaskbarMorph >> updateTaskButtons [
 	| oldButtons size |
 	oldButtons := self submorphs copy.
 	self removeAllMorphs.
-	self defer: [oldButtons do: [:b | b model: nil]]. "release dependency after event handling"
+	self defer: [ oldButtons do: [ :b | b model: nil ] ]. "release dependency after event handling"
 
 	size := self orderedTasks size.
-	(self orderedTasks copyFrom: ( size - self class maximumButtons + 1 max: 1 ) to: size) do: [:t | | button |
-		button := t taskbarButtonFor: self.
-		button ifNotNil: [self addMorphBack: button]]
+	(self orderedTasks copyFrom: (size - self class maximumButtons + 1 max: 1) to: size) do: [ :t |
+			| button |
+			button := t taskbarButtonFor: self.
+			button ifNotNil: [ self addMorphBack: button ] ].
+	self layoutButtonsEvenly
 ]
 
 { #category : 'taskbar' }
