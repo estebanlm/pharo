@@ -292,7 +292,9 @@ ClassTest >> testCommonSuperclassWith [
 	"but the other way this is not true"
 	self assert: (Object commonSuperclassWith: ProtoObject) equals: nil.
 	"as nil is the terminator of the hierarchy, we have to support it"
-	self assert: (nil commonSuperclassWith: ProtoObject) equals: nil
+	self assert: (nil commonSuperclassWith: ProtoObject) equals: nil.
+	"metaclass case"
+   self assert: (Array class commonSuperclassWith: Interval class) equals: SequenceableCollection class.
 ]
 
 { #category : 'tests' }
