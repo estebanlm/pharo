@@ -114,7 +114,7 @@ DTTestsRunnerPlugin >> resultButtonHelp [
 DTTestsRunnerPlugin >> runForConfiguration: aDTpluginConfiguration [
 	| results |
 	results := self pluginResultClass new
-		testResults: ( NewTestRunner runSuite: aDTpluginConfiguration asTestSuite );
+		testResults: ( TestAnnouncerDecorator runSuite: aDTpluginConfiguration asTestSuite );
 		yourself.
 	^ aDTpluginConfiguration handleResults: results for: self
 ]
