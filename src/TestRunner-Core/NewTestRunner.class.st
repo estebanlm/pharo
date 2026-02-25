@@ -137,7 +137,7 @@ NewTestRunner >> addPass: aPassedTest [
 NewTestRunner >> addToSuite: aTestSuite [
 	"add the giving testsuite to the current suite. Notice that only the tests are added"
 
-	suite := self suite , aTestSuite
+	self suite addTests: aTestSuite tests
 ]
 
 { #category : 'private' }
@@ -279,7 +279,7 @@ NewTestRunner >> runClass: aClass [
 
 	self runAll.
 
-	^ result
+	^ self result
 ]
 
 { #category : 'running' }
@@ -287,9 +287,8 @@ NewTestRunner >> runClasses: aCollectionOfTestCases [
 	"run and return the result of the giving collection of classes"
 
 	self accumulateResult.
-	aCollectionOfTestCases do: [ :class | 
-		class isAbstract ifFalse: [ self runClass: class ] ].
-	^ result
+	aCollectionOfTestCases reject: #isAbstract thenDo: [ :class | self runClass: class ]  .
+	^ self result
 ]
 
 { #category : 'accessing' }
@@ -322,7 +321,7 @@ NewTestRunner >> runFailure: aTestCase [
 	"rerun the giving failure then update the result"
 
 	| rerunningResult |
-	rerunningResult := aTestCase run.
+	rerunningResult := self executionMode executeCase: aTestCase .
 
 	rerunningResult hasPassed ifTrue: [ result removeFailure: aTestCase ].
 	self updateResultWith: rerunningResult

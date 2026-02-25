@@ -1,3 +1,6 @@
+"
+I run tests while announcing their execution progress
+"
 Class {
 	#name : 'TestAnnouncerDecorator',
 	#superclass : 'NewTestRunner',
