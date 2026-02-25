@@ -110,12 +110,19 @@ DTTestsRunnerPlugin >> resultButtonHelp [
 	^ 'Browse the test selected in the results list.' translated
 ]
 
+{ #category : 'running' }
+DTTestsRunnerPlugin >> runConfiguration: aDTpluginConfiguration [
+
+	^ TestAnnouncerDecorator runSuite: aDTpluginConfiguration asTestSuite
+]
+
 { #category : 'api' }
 DTTestsRunnerPlugin >> runForConfiguration: aDTpluginConfiguration [
+
 	| results |
 	results := self pluginResultClass new
-		testResults: ( TestAnnouncerDecorator runSuite: aDTpluginConfiguration asTestSuite );
-		yourself.
+		           testResults: (self runConfiguration: aDTpluginConfiguration);
+		           yourself.
 	^ aDTpluginConfiguration handleResults: results for: self
 ]
 
