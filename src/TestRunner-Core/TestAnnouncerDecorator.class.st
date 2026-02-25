@@ -4,9 +4,9 @@ Class {
 	#instVars : [
 		'job'
 	],
-	#category : 'TestRunner-Core-Decorators',
+	#category : 'TestRunner-Core-Core',
 	#package : 'TestRunner-Core',
-	#tag : 'Decorators'
+	#tag : 'Core'
 }
 
 { #category : 'accessing' }

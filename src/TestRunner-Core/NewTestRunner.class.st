@@ -150,6 +150,7 @@ NewTestRunner >> classForTestResult [
 NewTestRunner >> debugFailure: failure [
 	"debug the giving failure"
 
+	self flag: #TODO. "method not defined in execution mode"
 	self executionMode debugFailure: failure
 ]
 
@@ -164,13 +165,13 @@ NewTestRunner >> doNotAccumulateResult [
 NewTestRunner >> errorCount [
 	"returns the number of testcase which failed du to error during the execution"
 
-	^ result errorCount
+	^ self result errorCount
 ]
 
 { #category : 'accessing' }
 NewTestRunner >> executionMode [ 
 
-	^ executionMode 
+	^ executionMode ifNil: [ executionMode := self executionModeClass runTestsMode ]
 ]
 
 { #category : 'setter' }
@@ -198,16 +199,6 @@ NewTestRunner >> hasTestsToRun [
 	If any test has not been collected, there nothing to run"
 
 	^ self suite tests isNotEmpty
-]
-
-{ #category : 'initialization' }
-NewTestRunner >> initialize [
-
-	super initialize.
-	self 
-		doNotAccumulateResult;
-		suitePreparator: self suitePreparatorClass new;
-		executionMode: self executionModeClass runTestsMode
 ]
 
 { #category : 'accessing' }
@@ -387,7 +378,7 @@ NewTestRunner >> runSuite: aTestSuite [
 { #category : 'testing' }
 NewTestRunner >> shouldAccumulate [
 
-	^ shouldAccumulate
+	^ shouldAccumulate ifNil: [ shouldAccumulate := false ]
 ]
 
 { #category : 'setter' }
@@ -424,7 +415,7 @@ NewTestRunner >> suite: aTestSuite [
 { #category : 'private' }
 NewTestRunner >> suitePreparator [
 
-	^ suitePreparator
+	^ suitePreparator ifNil: [ suitePreparator := self suitePreparator new ]
 ]
 
 { #category : 'setter' }
