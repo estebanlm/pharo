@@ -51,12 +51,7 @@ NewTestRunner class >> example [
 { #category : 'tests' }
 NewTestRunner class >> isValidClass: aClass [
 
-	| criterias |
-	criterias := { 
-		             [ :class | class isTestCase ].
-		             [ :class | class isAbstract not ] }.
-
-	^ criterias allSatisfy: [ :criteria | criteria value: aClass ]
+	^ aClass isTestCase and: [ aClass isAbstract not ]
 ]
 
 { #category : 'running' }
