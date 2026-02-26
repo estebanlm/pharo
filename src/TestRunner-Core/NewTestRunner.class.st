@@ -483,6 +483,5 @@ NewTestRunner >> testsCount [
 NewTestRunner >> updateResultWith: testResult [
 	"Merge the current result with the giving one then return it"
 
-	self result + testResult.
-	^ result
+	^ self result mergeWith: testResult; yourself
 ]
