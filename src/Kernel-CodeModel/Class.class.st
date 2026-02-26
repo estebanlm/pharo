@@ -428,13 +428,6 @@ Class >> commentStamp: changeStamp [
 	self comment: self comment stamp: changeStamp
 ]
 
-{ #category : 'accessing - class hierarchy' }
-Class >> commonSuperclassWith: aClass [
-	"return the next common superclass between me and aClass. If I am the superclass of aClass, that is me"
-	<reflection: 'Class structural inspection - Iterating and querying hierarchy'>
-	^ self withAllSuperclasses detect: [ :class | (aClass allSuperclasses includes: class) ] ifNone: nil
-]
-
 { #category : 'copying' }
 Class >> copyForAnnouncement [
 	"Answer a copy of the receiver to be used in the announcement of changes.
