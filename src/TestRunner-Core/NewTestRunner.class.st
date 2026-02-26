@@ -68,8 +68,7 @@ NewTestRunner class >> runCase: aTestCase [
 	"return the result of the execution of the giving testCase"
 
 	^ self new
-		  runCase: aTestCase;
-		  result
+		  runCase: aTestCase
 ]
 
 { #category : 'running' }
@@ -262,10 +261,11 @@ NewTestRunner >> runAll [
 NewTestRunner >> runCase: aTestCase [
 	"run and return the result of the fiving testCase"
 
-	| executionResult |
-	executionResult := self executionMode executeCase: aTestCase.
-	self result mergeWith: executionResult.
-	^ executionResult
+	| testResult |
+	testResult :=  self executionMode executeCase: aTestCase.
+	self shouldAccumulate ifTrue: [ 
+		self result mergeWith: testResult ].
+	^ testResult 
 ]
 
 { #category : 'running' }
@@ -362,7 +362,12 @@ NewTestRunner >> runSequenceableCollection: aCollection [
 NewTestRunner >> runSuite [
 	"run the tests from the current collected suite"
 
-	self suite tests do: [ :aTestCase | self runCase: aTestCase ]
+	| accumulate |
+	accumulate := self shouldAccumulate.
+	self shouldAccumulate: true.
+	self suite tests do: [ :aTestCase | self runCase: aTestCase ].
+	self shouldAccumulate: accumulate.
+	^ self result
 ]
 
 { #category : 'running' }
