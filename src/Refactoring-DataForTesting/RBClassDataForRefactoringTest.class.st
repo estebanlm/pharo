@@ -331,6 +331,12 @@ RBClassDataForRefactoringTest >> inlineTemporary [
 ]
 
 { #category : 'lint' }
+RBClassDataForRefactoringTest >> justExpression [
+
+	^ 2 + 3
+]
+
+{ #category : 'lint' }
 RBClassDataForRefactoringTest >> justSendsSuper [
 	super justSendsSuper
 ]
