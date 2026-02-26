@@ -62,8 +62,13 @@ RBExtractToTemporaryRefactoring >> applicabilityPreconditions [
 	^ {
 		  (ReDefinesSelectorsCondition new definesSelectors: (Array with: selector) in: class).
 		  (ReIsValidInstanceVariableName new name: newVariableName).
-		  (ReCheckVariableNameShadowingCondition class: class variableName: newVariableName parseTree: parseTree).
 		  (ReLocalNameConflictCondition class: class variableName: newVariableName parseTree: parseTree) }
+]
+
+{ #category : 'preconditions' }
+RBExtractToTemporaryRefactoring >> breakingChangePreconditions [
+
+	^ { self preconditionCheckVariableName }
 ]
 
 { #category : 'transforming' }
@@ -114,6 +119,12 @@ RBExtractToTemporaryRefactoring >> insertTemporary [
 		addTemporaryNamed: newVariableName.
 	nodeReferences do: [ :each |
 		each replaceWith: (OCVariableNode named: newVariableName) ]
+]
+
+{ #category : 'preconditions' }
+RBExtractToTemporaryRefactoring >> preconditionCheckVariableName [
+
+	^ ReCheckVariableNameShadowingCondition class: class variableName: newVariableName parseTree: parseTree
 ]
 
 { #category : 'transforming' }
