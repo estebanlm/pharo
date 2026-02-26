@@ -414,7 +414,7 @@ NewTestRunner >> suite: aTestSuite [
 { #category : 'private' }
 NewTestRunner >> suitePreparator [
 
-	^ suitePreparator ifNil: [ suitePreparator := self suitePreparator new ]
+	^ suitePreparator ifNil: [ suitePreparator := self suitePreparatorClass new ]
 ]
 
 { #category : 'setter' }
