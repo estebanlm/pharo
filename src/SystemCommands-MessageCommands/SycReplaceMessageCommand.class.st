@@ -49,6 +49,12 @@ SycReplaceMessageCommand >> defaultMenuItemName [
 	^ self refactoringClass menuItemString
 ]
 
+{ #category : 'testing' }
+SycReplaceMessageCommand >> isComplexRefactoring [
+
+	^ true 
+]
+
 { #category : 'execution' }
 SycReplaceMessageCommand >> prepareFullExecutionInContext: aToolContext [
 
