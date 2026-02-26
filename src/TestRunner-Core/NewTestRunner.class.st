@@ -264,8 +264,7 @@ NewTestRunner >> runCase: aTestCase [
 
 	| executionResult |
 	executionResult := self executionMode executeCase: aTestCase.
-	self result + executionResult.
-	self flag: #TODO. "+ message implies new instance, not aliasing"
+	self result mergeWith: executionResult.
 	^ executionResult
 ]
 
