@@ -26,6 +26,15 @@ DTTreeNode class >> empty [
 		yourself
 ]
 
+{ #category : 'instance creation' }
+DTTreeNode class >> name: aString subResults: aCollection [
+
+	^ self new 
+		name: aString;
+		subResults: aCollection;
+		yourself 
+]
+
 { #category : 'visiting' }
 DTTreeNode >> acceptVisitor: aDTResultsTreeVisitor [
 	^ aDTResultsTreeVisitor visitDTTreeNode: self
