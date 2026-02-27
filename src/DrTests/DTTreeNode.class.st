@@ -157,7 +157,7 @@ DTTreeNode >> startExpanded [
 
 { #category : 'accessing' }
 DTTreeNode >> subResults [
-	^ subResults
+	^ subResults ifNil: [ Error signal: 'Missing subresults' ]
 ]
 
 { #category : 'accessing' }
