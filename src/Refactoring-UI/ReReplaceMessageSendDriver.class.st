@@ -50,12 +50,3 @@ ReReplaceMessageSendDriver >> scopes: refactoringScopes class: aClass selector: 
 	selector := aSelector.
 	oldSelector := aSecondSelector
 ]
-
-{ #category : 'initialization' }
-ReReplaceMessageSendDriver >> scopes: refactoringScopes selector: aSelector oldSelector: aSecondSelector [
-
-	scopes := refactoringScopes.
-	model := self refactoringScopeOn: scopes first.
-	selector := aSelector.
-	oldSelector := aSecondSelector
-]
