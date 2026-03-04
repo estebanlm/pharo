@@ -234,7 +234,7 @@ MCMethodDefinition >> loadWithLoader: aLoader [
 			scopedSelector := actualClass internScopedSelector: selectorSymbol.
 			ast selector: scopedSelector ].
 
-	ast sendNodes do: [ :send | send selector: (OCSelectorNode value: (actualClass package lookupSelector: send selector)) ].
+	ast sendNodes do: [ :send | send selector: (OCSelectorNode value: (actualClass package visibleSelectorForSymbol: send selector)) ].
 
 	method := compiler install.
 
