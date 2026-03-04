@@ -238,16 +238,18 @@ MCMethodDefinition >> loadWithLoader: aLoader [
 
 	method := compiler install.
 
-	actualClass package methods do: [ :m |
-		"Recompile all but this method"
-		m ~= method ifTrue: [
-				m methodClass
-					compile: m sourceCode
-					classified: m protocol
-					withStamp: m timeStamp
-					notifying: nil
-					logSource: false
-					recompileDependencies: false ] ].
+	(actualClass isKindOf: Extension) ifTrue: [
+		actualClass package methods do: [ :m |
+			"Recompile all but this method"
+			m ~= method ifTrue: [
+					m methodClass
+						compile: m sourceCode
+						classified: m protocol
+						withStamp: m timeStamp
+						notifying: nil
+						logSource: false
+						recompileDependencies: false ] ].
+	].
 
 	method selector asSymbol = selector asSymbol ifTrue: [ ^ self ]. "This can happen if we provide a selector that does not match the source code. I (Cyril Ferlicot) personnaly do not like that. I would prefer even that the MCMethodDefinition would not have a selector variable at all. But this is used in some places of the system :("
 	(aLoader isStrict
