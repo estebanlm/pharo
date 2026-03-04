@@ -222,8 +222,8 @@ MCMethodDefinition >> loadWithLoader: aLoader [
 	compiler := actualClass compiler
 		            protocol: category;
 		            changeStamp: timeStamp;
-		            permitFaulty: true;
-		            permitUndeclared: true;
+		            permitFaulty: aLoader isStrict not;
+		            permitUndeclared: aLoader isStrict not;
 		            source: source.
 
 	ast := compiler parse.

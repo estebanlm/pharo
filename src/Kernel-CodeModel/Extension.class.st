@@ -50,7 +50,7 @@ Extension >> internScopedSelector: aSymbol [
 ]
 
 { #category : 'initialization' }
-Extension >> removeFromSystem: logged [.
+Extension >> removeFromSystem: logged [
 
 	self selectors do: [ :e |
 		self removeSelector: e ].

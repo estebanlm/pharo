@@ -22,8 +22,7 @@ Class {
 	#name : 'ShiftClassInstaller',
 	#superclass : 'Object',
 	#instVars : [
-		'builder',
-		'packageOrganizer'
+		'builder'
 	],
 	#category : 'Shift-ClassBuilder-Installer',
 	#package : 'Shift-ClassBuilder',

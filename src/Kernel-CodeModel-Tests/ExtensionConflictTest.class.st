@@ -20,7 +20,7 @@ Class {
 	#tag : 'Extensions'
 }
 
-{ #category : 'tests' }
+{ #category : 'running' }
 ExtensionConflictTest >> setUp [
 
 	| extendedPackage |

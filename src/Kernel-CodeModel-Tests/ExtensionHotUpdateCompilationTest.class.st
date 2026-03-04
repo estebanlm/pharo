@@ -20,7 +20,7 @@ Class {
 	#tag : 'Extensions'
 }
 
-{ #category : 'tests' }
+{ #category : 'asserting' }
 ExtensionHotUpdateCompilationTest >> assertDNU: scopedSelector on: selector to: receiver [
 	
 	
@@ -29,7 +29,7 @@ ExtensionHotUpdateCompilationTest >> assertDNU: scopedSelector on: selector to: 
 		self assert: ex message selector == scopedSelector. ]
 ]
 
-{ #category : 'tests' }
+{ #category : 'running' }
 ExtensionHotUpdateCompilationTest >> setUp [
 
 	| extendedPackage |

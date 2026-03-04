@@ -52,8 +52,7 @@ Class {
 		'organizer',
 		'tags',
 		'importedExtensions',
-		'scopedSelectors',
-		'aliases'
+		'scopedSelectors'
 	],
 	#classVars : [
 		'Properties'
