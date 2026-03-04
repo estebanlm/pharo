@@ -255,7 +255,10 @@ HEInstaller >> rebuildMethod: aMethod into: aClass [
 	aClass
 		addAndClassifySelector: aMethod name
 		withMethod: newMethod
-		inProtocol: aMethod protocol
+		inProtocol: aMethod protocol.
+	
+	"Move later to a common method installer"
+	aMethod cachePragmas.
 ]
 
 { #category : 'reporting undeclared' }
