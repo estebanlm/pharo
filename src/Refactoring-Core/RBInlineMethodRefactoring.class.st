@@ -107,7 +107,8 @@ RBInlineMethodRefactoring >> breakingChangePreconditions [
 				   (statements size > 1 and: [ sourceMessage isEvaluatedFirst not ]) ifTrue: [
 						   self refactoringWarning:
 							   'To inline this method, we need to move some of its statements before the original message send.<n>This could change the order of execution, which can change the behavior.<n>Do you want to proceed?'
-								   expandMacros ] ]).
+								   expandMacros ].
+				   true ]).
 		  (RBCondition withBlock: [
 				   self checkSuperMessages.
 				   true ]) }
