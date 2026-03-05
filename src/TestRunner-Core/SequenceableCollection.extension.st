@@ -9,5 +9,5 @@ SequenceableCollection >> runBy: aTestRunner [
 { #category : '*TestRunner-Core' }
 SequenceableCollection >> suite [ 
 
-	^ TestCase new addTests: self; yourself
+	^ TestSuite new addTests: self; yourself
 ]
