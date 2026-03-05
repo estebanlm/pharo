@@ -176,6 +176,12 @@ NewTestRunnerTest >> testRunCasesDontAccumulatesResults [
 ]
 
 { #category : 'tests' }
+NewTestRunnerTest >> testRunCountOnNew [
+
+	self assert: runner runCount equals: 0
+]
+
+{ #category : 'tests' }
 NewTestRunnerTest >> testRunnerCanAccumulateResult [
 
 	| firstRunningCount secondRunningCount |
