@@ -3282,7 +3282,7 @@ UITheme >> newTaskbarThumbnailIn: aThemedMorph for: aWindow [
 		cellInset: 4 scaledByDisplayScaleFactor;
 		addMorphBack: thumb;
 		addMorphBack: ((self
-			buttonLabelForText: (aWindow labelString truncateWithElipsisTo: 50))
+			buttonLabelForText: (aWindow labelString ))
 				color: Color white).
 	answer
 		extent: answer minExtent;
