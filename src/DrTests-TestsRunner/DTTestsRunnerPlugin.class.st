@@ -113,7 +113,7 @@ DTTestsRunnerPlugin >> resultButtonHelp [
 { #category : 'running' }
 DTTestsRunnerPlugin >> runConfiguration: aDTpluginConfiguration [
 
-	^ TestAnnouncerDecorator runSuite: aDTpluginConfiguration asTestSuite
+	^ AnnouncerTestRunner runSuite: aDTpluginConfiguration asTestSuite
 ]
 
 { #category : 'api' }
