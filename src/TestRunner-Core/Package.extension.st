@@ -11,7 +11,8 @@ Package >> suite [
 
 	| suite |
 	suite := TestSuite new.
-	self definedClasses collect: #suite thenDo: [ :aSuite | suite addTests: aSuite tests ].
+	(self definedClasses select: #isTestCase thenCollect: #suite) do: [ :aSuite | 
+		suite addTests: aSuite tests ].
 	suite name: self name.
 	^ suite
 ]
