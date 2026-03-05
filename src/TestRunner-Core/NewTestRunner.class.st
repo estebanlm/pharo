@@ -362,12 +362,10 @@ NewTestRunner >> runSequenceableCollection: aCollection [
 NewTestRunner >> runSuite [
 	"run the tests from the current collected suite"
 
-	| accumulate |
-	accumulate := self shouldAccumulate.
-	self shouldAccumulate: true.
-	self suite tests do: [ :aTestCase | self runCase: aTestCase ].
-	self shouldAccumulate: accumulate.
-	^ self result
+	self suite tests 
+		collect: [ :aTestCase | self runCase: aTestCase ] 
+		thenDo: [ :aResult | self result mergeWith: aResult ].
+	^ self result 
 ]
 
 { #category : 'running' }
