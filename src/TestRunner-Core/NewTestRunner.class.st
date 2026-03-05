@@ -149,7 +149,7 @@ NewTestRunner >> classForTestResult [
 NewTestRunner >> debugFailure: failure [
 	"debug the giving failure"
 
-	self flag: #TODO. "method not defined in execution mode"
+	self flag: #TODO. "method not defined in execution mode interface"
 	self executionMode debugFailure: failure
 ]
 
@@ -360,7 +360,7 @@ NewTestRunner >> runSequenceableCollection: aCollection [
 
 { #category : 'running' }
 NewTestRunner >> runSuite [
-	"run the tests from the current collected suite"
+	"run the tests from the current suite and collect the results"
 
 	self suite tests 
 		collect: [ :aTestCase | self runCase: aTestCase ] 

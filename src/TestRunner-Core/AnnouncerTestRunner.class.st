@@ -1,5 +1,5 @@
 "
-I run tests while announcing their execution progress
+I run tests while announcing their execution progress. I was meant to be a decorator for `ExecutionMode`.
 "
 Class {
 	#name : 'AnnouncerTestRunner',
@@ -28,10 +28,7 @@ AnnouncerTestRunner >> job: anObject [
 AnnouncerTestRunner >> runCase: aTestCase [
 
 	| currentResult |
-	self job title: (String streamContents: [ :stream | 
-		stream 
-			<< 'Running test: ';
-			print: aTestCase ] ).
+	self job title: 'Running test: ', aTestCase asString.
 	currentResult := super runCase: aTestCase.
 	self job progress: self job progress + (1 / self suite tests size).
 	^ currentResult 
