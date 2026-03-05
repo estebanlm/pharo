@@ -2,30 +2,30 @@
 I run tests while announcing their execution progress
 "
 Class {
-	#name : 'TestAnnouncerDecorator',
+	#name : 'AnnouncerTestRunner',
 	#superclass : 'NewTestRunner',
 	#instVars : [
 		'job'
 	],
-	#category : 'TestRunner-Core-Core',
+	#category : 'TestRunner-Core-Extensions',
 	#package : 'TestRunner-Core',
-	#tag : 'Core'
+	#tag : 'Extensions'
 }
 
 { #category : 'accessing' }
-TestAnnouncerDecorator >> job [
+AnnouncerTestRunner >> job [
 
 	^ job
 ]
 
 { #category : 'accessing' }
-TestAnnouncerDecorator >> job: anObject [
+AnnouncerTestRunner >> job: anObject [
 
 	job := anObject
 ]
 
 { #category : 'running' }
-TestAnnouncerDecorator >> runCase: aTestCase [
+AnnouncerTestRunner >> runCase: aTestCase [
 
 	| currentResult |
 	self job title: (String streamContents: [ :stream | 
@@ -38,7 +38,7 @@ TestAnnouncerDecorator >> runCase: aTestCase [
 ]
 
 { #category : 'running' }
-TestAnnouncerDecorator >> runSuite [
+AnnouncerTestRunner >> runSuite [
 
 	^ [ :newJob | 
 		self job: newJob.
