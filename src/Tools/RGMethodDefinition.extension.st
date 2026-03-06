@@ -1,6 +1,6 @@
 Extension { #name : 'RGMethodDefinition' }
 
-{ #category : '*Tool-Base' }
+{ #category : '*Tools' }
 RGMethodDefinition >> browse [
 
 	^ (self tools toolNamed: #browser)

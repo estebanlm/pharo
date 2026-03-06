@@ -1,6 +1,6 @@
 Extension { #name : 'RGBehaviorDefinition' }
 
-{ #category : '*Tool-Base' }
+{ #category : '*Tools' }
 RGBehaviorDefinition >> browse [
 
 	^ (self tools toolNamed: #browser) openOnClass: self realClass

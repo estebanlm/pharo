@@ -1,6 +1,6 @@
 Extension { #name : 'Trait' }
 
-{ #category : '*Ring-Core-Tests' }
+{ #category : '*Ring-TraitsSupport' }
 Trait >> asRingMinimalDefinitionIn: anRGEnvironment [
 
 	^ anRGEnvironment backend definitionFor: self ifAbsentRegister: [

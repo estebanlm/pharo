@@ -54,11 +54,6 @@ Object >> dependents [
 ]
 
 { #category : '*System-Model' }
-Object >> modelWakeUpIn: aWindow [
-	"A window with me as model is being entered or expanded.  Default response is no-op"
-]
-
-{ #category : '*System-Model' }
 Object >> myDependents [
 	"Private. Answer a list of all the receiver's dependents."
 

@@ -9,9 +9,8 @@ Class {
 		'extent',
 		'offset'
 	],
-	#category : 'Graphics-Canvas-Fills',
-	#package : 'Graphics-Canvas',
-	#tag : 'Fills'
+	#category : 'Athens-Morphic',
+	#package : 'Athens-Morphic'
 }
 
 { #category : 'instance creation' }
@@ -33,6 +32,15 @@ ImageFillStyle >> = anOrientedFillStyle [
 
 	^super = anOrientedFillStyle
 		and: [(self form = anOrientedFillStyle form) and: [ offset = anOrientedFillStyle offset]]
+]
+
+{ #category : 'converting' }
+ImageFillStyle >> asAthensPaintOn: anAthensCanvas [
+
+	^ (anAthensCanvas cacheAt: self ifAbsentPut: [
+		anAthensCanvas surface
+		createFormPaint: self form ])
+		origin: origin
 ]
 
 { #category : 'converting' }

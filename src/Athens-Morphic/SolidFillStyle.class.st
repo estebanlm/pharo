@@ -12,9 +12,8 @@ Class {
 		'color',
 		'pixelValue32'
 	],
-	#category : 'Graphics-Canvas-Fills',
-	#package : 'Graphics-Canvas',
-	#tag : 'Fills'
+	#category : 'Athens-Morphic',
+	#package : 'Athens-Morphic'
 }
 
 { #category : 'instance creation' }
@@ -27,6 +26,12 @@ SolidFillStyle >> = aFillStyle [
 
 	^ aFillStyle species = self species
 		and: [ self asColor = aFillStyle asColor ]
+]
+
+{ #category : 'converting' }
+SolidFillStyle >> asAthensPaintOn: anAthensCanvas [
+
+	^ anAthensCanvas surface createSolidColorPaint: color
 ]
 
 { #category : 'converting' }
