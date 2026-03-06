@@ -88,6 +88,12 @@ ClyRing2Environment >> defaultClassCompiler [
 ]
 
 { #category : 'accessing' }
+ClyRing2Environment >> definedClassesInPackage: aPackage [
+
+	^ aPackage definedClasses
+]
+
+{ #category : 'accessing' }
 ClyRing2Environment >> environment [
 	^ environment
 ]

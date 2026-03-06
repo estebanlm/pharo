@@ -18,15 +18,15 @@ ClyClassTableDecorator class >> decorateTableCell: anItemCellMorph of: aDataSour
 	| labelMorphExtension cmt |
 	labelMorphExtension := anItemCellMorph label assureExtension.
 	cmt := aDataSourceItem actualObject comment.
-	cmt 
-		ifEmpty: [ cmt := ClyUncommentedItemTableDecorator balloonText ]
-		ifNotEmpty: [ | lines |
-				lines := cmt lines. 
-				cmt := lines first: (lines size min: 3).
-				cmt := String cr join: cmt. ].
-	labelMorphExtension balloonText: cmt 
-		
-		
+
+	((cmt isKindOf: RGComment)
+		 ifTrue: [ cmt := cmt content ]
+		 ifFalse: [ cmt ]) ifEmpty: [ cmt := ClyUncommentedItemTableDecorator balloonText ] ifNotEmpty: [
+			| lines |
+			lines := cmt lines.
+			cmt := lines first: (lines size min: 3).
+			cmt := String cr join: cmt ].
+	labelMorphExtension balloonText: cmt
 ]
 
 { #category : 'decoration' }
