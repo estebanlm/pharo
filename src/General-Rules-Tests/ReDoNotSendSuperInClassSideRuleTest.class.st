@@ -2,8 +2,7 @@ Class {
 	#name : 'ReDoNotSendSuperInClassSideRuleTest',
 	#superclass : 'ReAbstractRuleTestCase',
 	#instVars : [
-		'rule',
-		'selector'
+		'rule'
 	],
 	#category : 'General-Rules-Tests-Potential Bugs',
 	#package : 'General-Rules-Tests',
