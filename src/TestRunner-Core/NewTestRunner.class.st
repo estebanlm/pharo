@@ -39,15 +39,6 @@ Class {
 	#tag : 'Core'
 }
 
-{ #category : 'running' }
-NewTestRunner class >> example [
-	<script>
-	self new 
-	suitePreparator: ShuffleSuitePreparator new ;
-	run: DependencyTest;
-	inspect
-]
-
 { #category : 'tests' }
 NewTestRunner class >> isValidClass: aClass [
 
