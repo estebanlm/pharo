@@ -78,6 +78,19 @@ ExtensionConflictTest >> setUp [
 		package: definerPackage) install.
 ]
 
+{ #category : 'running' }
+ExtensionConflictTest >> tearDown [
+	"Make sure we did not pollute the global dictionaries"
+
+	self deny: (Point methodDictionary keys anySatisfy: [ :k | k isKindOf: ScopedSelector ]).
+	self deny: (Object methodDictionary keys anySatisfy: [ :k | k isKindOf: ScopedSelector ]).
+	self deny: (Integer methodDictionary keys anySatisfy: [ :k | k isKindOf: ScopedSelector ]).
+	
+	environment allClassesAndTraits do: [ :e | e removeFromSystem ].
+	
+	super tearDown
+]
+
 { #category : 'tests' }
 ExtensionConflictTest >> test01ExtensionConflictsWithPreExistingNormalMethod01NormalMethodWorksAsExpected [
 

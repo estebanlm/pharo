@@ -35,10 +35,27 @@ ConflictMethod >> conflictingExtensions: anObject [
 	conflictingExtensions := anObject
 ]
 
+{ #category : 'accessing' }
+ConflictMethod >> extensionPackage [
+	self shouldBeImplemented.
+]
+
+{ #category : 'accessing' }
+ConflictMethod >> extensionPackages [
+	
+	^ (conflictingExtensions collect: #package) asSet
+]
+
 { #category : 'compatibility' }
 ConflictMethod >> isExtension [
 
 	^ true
+]
+
+{ #category : 'accessing' }
+ConflictMethod >> methodClass [
+	
+	^conflictingClass
 ]
 
 { #category : 'accessing' }

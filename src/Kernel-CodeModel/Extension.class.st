@@ -61,7 +61,11 @@ Extension >> removeFromSystem: logged [
 Extension >> removeSelector: aSelector [
 
 	super removeSelector: aSelector.
-	extendedClass removeMethod: (extendedClass >> aSelector)
+	
+	"In some tests we removed the extension method by hand, breaking some invariants.
+	We should take a look a that"
+	(extendedClass includesSelector: aSelector)
+		ifTrue: [ extendedClass removeMethod: (extendedClass >> aSelector) ]
 ]
 
 { #category : 'accessing' }

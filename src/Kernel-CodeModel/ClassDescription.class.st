@@ -388,9 +388,9 @@ ClassDescription >> ensureProtocol: aProtocol [
 ClassDescription >> extendingPackages [
 	"the extending packages of a class are the packages that extend it."
 
-	^ (self localMethods , self classSide localMethods
-		   select: [ :each | each isExtension ]
-		   thenCollect: [ :each | each extensionPackage ]) asIdentitySet
+	^ (self localMethods , self classSide localMethods select: [ :each | each isExtension ])
+		  flatCollect: [ :each | each extensionPackages ]
+		  as: IdentitySet
 ]
 
 { #category : 'protocols' }
