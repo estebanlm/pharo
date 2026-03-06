@@ -157,6 +157,8 @@ RBLintRuleTestData >> run [
 
 { #category : 'accessing' }
 RBLintRuleTestData >> runOnEnvironment: anEnvironment [
+
+	<ignoreNotImplementedSelectors: #(printOn:onEnvironment:)>
 	^Object printOn: self onEnvironment: anEnvironment
 ]
 
