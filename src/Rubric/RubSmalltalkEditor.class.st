@@ -180,7 +180,7 @@ RubSmalltalkEditor >> bestNodeInString: source at: selectionInterval editingMode
 				ifNone: [ ^aBlock value ]].
 
 		node isFaulty ifTrue: [
-			node allChildren size = 1 ifTrue: [
+			node withAllChildren size = 1 ifTrue: [
 				(aRubEdittingMode parseExpression: (node value padLeftTo: source size))
 					ifNil: [ ^node ]
 					ifNotNil: [ :newNode |
@@ -555,10 +555,9 @@ RubSmalltalkEditor >> evaluateSelectionAndDo: aBlock [
 	"Treat the current selection as an expression; evaluate it and invoke aBlock with the result.
 	If no selection is present select the current line."
 
-	self expressionSelectAndEmptyCheck: [^ ''].
-	^ self
-		evaluate: self selection
-		andDo: aBlock
+	self selectLine.
+	self selection ifEmpty: [ ^ '' ].
+	^ self evaluate: self selection andDo: aBlock
 ]
 
 { #category : 'do-its' }

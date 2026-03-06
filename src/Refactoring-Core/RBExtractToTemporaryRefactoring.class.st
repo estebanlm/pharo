@@ -60,13 +60,15 @@ RBExtractToTemporaryRefactoring class >> model: aRBSmalltalk extract: anInterval
 RBExtractToTemporaryRefactoring >> applicabilityPreconditions [
 
 	^ {
-			(ReDefinesSelectorsCondition new definesSelectors: (Array with: selector) in: class).
-		  	(ReIsValidInstanceVariableName new name: newVariableName).
-			(ReCheckVariableNameCondition
-				class: class
-				variableName: newVariableName 
-				parseTree: parseTree ).
-		}
+		  (ReDefinesSelectorsCondition new definesSelectors: (Array with: selector) in: class).
+		  (ReIsValidInstanceVariableName new name: newVariableName).
+		  (ReLocalNameConflictCondition class: class variableName: newVariableName parseTree: parseTree) }
+]
+
+{ #category : 'preconditions' }
+RBExtractToTemporaryRefactoring >> breakingChangePreconditions [
+
+	^ { self preconditionCheckVariableName }
 ]
 
 { #category : 'transforming' }
@@ -107,7 +109,7 @@ RBExtractToTemporaryRefactoring >> insertTemporary [
 	(node isNotNil and: [ node isValue ]) ifFalse: [
 		self refactoringError: 'Cannot assign to non-value nodes' ].
 	scope := node methodOrBlockNode.
-	nodeReferences := scope allChildren select: [ :each | each = node ].
+	nodeReferences := scope withAllChildren select: [ :each | each = node ].
 	"Insert the assignment before the first occurrence to be replaced,
 	but in the same scope as the selected expression,
 	even if that first occurrence is in a nested block."
@@ -117,6 +119,12 @@ RBExtractToTemporaryRefactoring >> insertTemporary [
 		addTemporaryNamed: newVariableName.
 	nodeReferences do: [ :each |
 		each replaceWith: (OCVariableNode named: newVariableName) ]
+]
+
+{ #category : 'preconditions' }
+RBExtractToTemporaryRefactoring >> preconditionCheckVariableName [
+
+	^ ReCheckVariableNameShadowingCondition class: class variableName: newVariableName parseTree: parseTree
 ]
 
 { #category : 'transforming' }

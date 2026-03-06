@@ -237,6 +237,12 @@ ColorTest >> testIsContrastCompliantForWCAG2AAA [
 			 (edgeColor adjustBrightness: -0.01))
 ]
 
+{ #category : 'tests' }
+ColorTest >> testIsSelfEvaluating [
+
+	self assert: Color red isSelfEvaluating
+]
+
 { #category : 'tests - multiply' }
 ColorTest >> testMultiplyByArray [
 	| newColor oldColor tolerance |

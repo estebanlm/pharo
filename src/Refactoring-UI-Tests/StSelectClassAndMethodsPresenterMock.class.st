@@ -21,6 +21,16 @@ StSelectClassAndMethodsPresenterMock class >> cancelled [
 	^ false
 ]
 
+{ #category : 'reflective operations' }
+StSelectClassAndMethodsPresenterMock class >> doesNotUnderstand: aMessage [
+]
+
+{ #category : 'testing' }
+StSelectClassAndMethodsPresenterMock class >> isOk [
+
+	^ true
+]
+
 { #category : 'initialization' }
 StSelectClassAndMethodsPresenterMock class >> label: aString dropLabel: aString2 withItems: aCollection selecting: aCollection4 dropItems: aCollection5 acceptBlock: aFullBlockClosure [
 

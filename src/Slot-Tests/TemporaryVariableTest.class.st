@@ -19,7 +19,7 @@ TemporaryVariableTest >> testDefiningNode [
   	 test.
   	 [ testCopied. testTempVector := 1 ].
     ^test'.
-	tempsNodes := ast allChildren select: [ :each | each isTempVariable ].
+	tempsNodes := ast withAllChildren select: [ :each | each isTempVariable ].
 	tempDefintions := tempsNodes select:  [ :each | each isDefinition ].
 	tempUses := tempsNodes reject:  [ :each | each isDefinition ].
 	tempUses do: [ :use | self assert: (tempDefintions includes: use variable definingNode)].

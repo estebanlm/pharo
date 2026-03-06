@@ -526,7 +526,8 @@ OpalCompiler >> generateMethod [
 
 	ast compiledMethod: method.
 	ast propertyAt: #Undeclareds ifPresent: [ :undeclareds | undeclareds do: [ :var | var registerMethod: method ] ].
-	method propertyAt: #source put: source.
+	
+	compilationContext storeSourcesAsProperty ifTrue: [ method propertyAt: #source put: source ].
 	self isScripting ifTrue: [ method propertyAt: #ast put: ast ]. "Keep AST for scripts (for the moment)"
 
 	^ method
@@ -793,4 +794,10 @@ OpalCompiler >> source: aString [
 
 	source := aString contents asString.
 	ast := nil
+]
+
+{ #category : 'accessing' }
+OpalCompiler >> storeSourcesAsProperty: aBoolean [ 
+	
+	compilationContext storeSourcesAsProperty: aBoolean
 ]

@@ -2758,36 +2758,6 @@ OCCodeSnippet class >> badVariableAndScopes [
 	^ list
 ]
 
-{ #category : 'script' }
-OCCodeSnippet class >> styleAll [
-	"Display all snippets in a big styled text.
-	Each snipped is styled independently."
-
-	<script>
-	| bigtext |
-	bigtext := Text new.
-	self allSnippets do: [ :each |
-		bigtext ifNotEmpty: [ bigtext append: String cr ].
-		bigtext append: each styledText ].
-	bigtext inspect
-]
-
-{ #category : 'updating' }
-OCCodeSnippet class >> updateSnippets: snippets [
-	"This script will update all definitions of all snippets.
-	Beware of code loss and double check the generated definitions."
-
-	"I did not manage to update all in a single transformation (with a preview!)
-	So do them one by one with a progress bar :("
-
-	<script: 'self updateSnippets: self allSnippets'>
-	snippets
-		do: [ :snippet |
-			snippet definitionRefactoring ifNotNil: [ :refactoring |
-				refactoring execute ] ]
-		displayingProgress: 'Updating snippets...'
-]
-
 { #category : 'accessing' }
 OCCodeSnippet >> applyDefaultTo: aCollection [
 
@@ -2807,29 +2777,6 @@ OCCodeSnippet >> applyDefaultTo: aCollection [
 OCCodeSnippet >> default: aRBCodeSnippet [
 
 	default := aRBCodeSnippet
-]
-
-{ #category : 'updating' }
-OCCodeSnippet >> definitionRefactoring [
-	"A transformation to update the definition of self in the correct class side method"
-
-	| node old new newast |
-	node := self searchDefinition.
-	node ifNil: [ ^ nil ].
-	self updateExpectations.
-
-	"Check if the new code is different from the old one"
-	old := node sourceCode.
-	new := self dumpDefinition.
-	newast := OCParser parseFaultyExpression: new.
-	newast parent: node parent. "Force same context, so formattedCode is reliable"
-	node formattedCode = newast formattedCode ifTrue: [ ^ nil ].
-
-	^ RBReplaceSubtreeTransformation
-		  replace: old
-		  to: new
-		  inMethod: node methodNode selector
-		  inClass: node methodNode methodClass
 ]
 
 { #category : 'updating' }
@@ -3207,32 +3154,6 @@ OCCodeSnippet >> styledPattern [
 OCCodeSnippet >> styledPattern: anObject [
 
 	styledPattern := anObject
-]
-
-{ #category : 'inspecting' }
-OCCodeSnippet >> textWithNode: aNode message: aString at: aPosition [
-
-	| text |
-	text := self styledText.
-	"Highlight the error node background"
-	text
-		addAttribute: (TextBackgroundColor color: Color cyan)
-		from: aNode start
-		to: aNode stop.
-	text
-		replaceFrom: aPosition
-		to: aPosition - 1
-		with: (aString asText addAttribute:
-				 (TextBackgroundColor color: Color lightBlue)).
-	^ text
-]
-
-{ #category : 'updating' }
-OCCodeSnippet >> updateDefinition [
-	"Do the update of the definition of self in the method (class-side) that defines it"
-
-	self definitionRefactoring ifNotNil: [ :transformation |
-		transformation execute ]
 ]
 
 { #category : 'updating' }
