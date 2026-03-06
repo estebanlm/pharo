@@ -158,7 +158,7 @@ SpRubFindReplaceDialog >> initializeDialogWindow: aDialogWindowPresenter [
 	aDialogWindowPresenter
 		title: self title;
 		initialExtent: 430 @ 220.
-
+	aDialogWindowPresenter whenOpenedDo: [ findInput selectAll ].
 	aDialogWindowPresenter whenClosedDo: [
 			service findText: ''.
 			service discardDialog.
@@ -185,6 +185,8 @@ SpRubFindReplaceDialog >> initializePresenters [
 	entireCheckBox := self newCheckBox label: 'Entire words only'.
 	self updateFromService.
 	replaceTextInput := self newTextInput autoAccept: true.
+	self selectAllOnFocusIn: replaceTextInput.
+
 	self closeWindowOnEscIn: replaceTextInput.
 
 	replaceTextInput text: self replacingText.
@@ -232,6 +234,12 @@ SpRubFindReplaceDialog >> replacingText [
 SpRubFindReplaceDialog >> replacingText: aText [
 
 	^ self class replacingText: aText
+]
+
+{ #category : 'morphic dependencies' }
+SpRubFindReplaceDialog >> selectAllOnFocusIn: aPresenter [
+
+	aPresenter eventHandler whenFocusReceivedDo: [ :anEvent | replaceTextInput selectAll ]
 ]
 
 { #category : 'accessing' }

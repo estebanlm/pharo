@@ -9,9 +9,8 @@ Class {
 	#classInstVars : [
 		'counter'
 	],
-	#category : 'TestRunner-Tests-Utilities-Test',
-	#package : 'TestRunner-Tests',
-	#tag : 'Utilities-Test'
+	#category : 'TestRunner-FakeTests',
+	#package : 'TestRunner-FakeTests'
 }
 
 { #category : 'accessing' }

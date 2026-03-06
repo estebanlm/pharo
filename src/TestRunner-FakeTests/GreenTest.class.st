@@ -1,9 +1,8 @@
 Class {
 	#name : 'GreenTest',
 	#superclass : 'MockTest',
-	#category : 'TestRunner-Tests-Utilities-Test',
-	#package : 'TestRunner-Tests',
-	#tag : 'Utilities-Test'
+	#category : 'TestRunner-FakeTests',
+	#package : 'TestRunner-FakeTests'
 }
 
 { #category : 'tests' }

@@ -304,6 +304,13 @@ ClassDescription >> commentStamp [
 	self subclassResponsibility
 ]
 
+{ #category : 'accessing - class hierarchy' }
+ClassDescription >> commonSuperclassWith: aClass [
+	"return the next common superclass between me and aClass. If I am the superclass of aClass, that is me"
+	<reflection: 'Class structural inspection - Iterating and querying hierarchy'>
+	^ self withAllSuperclasses detect: [ :class | (aClass allSuperclasses includes: class) ] ifNone: nil
+]
+
 { #category : 'slots' }
 ClassDescription >> definesSlot: aSlot [
 	"Return true whether the receiver defines an instance variable named aString"
