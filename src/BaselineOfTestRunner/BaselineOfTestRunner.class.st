@@ -14,14 +14,11 @@ BaselineOfTestRunner >> baseline: spec [
 			spec
 				package: 'TestRunner-Core';
 				package: 'TestRunner-FakeTests';
-				package: 'TestRunner-Tests' with: [ spec requires: #('TestRunner-Core' 'TestRunner-FakeTests') ];
-				package: 'TestRunner-UI' with: [ spec requires: #('TestRunner-Core') ];
-				package: 'TestRunner-UI-Tests' with: [ spec requires: #('TestRunner-UI') ] ].
+				package: 'TestRunner-Tests' with: [ spec requires: #('TestRunner-Core' 'TestRunner-FakeTests') ] ].
 			
 			spec
 				group: 'Core' with: #( 'TestRunner-Core' );
-				group: 'UI' with: #( 'TestRunner-UI' );
-				group: 'Tests' with: #( 'TestRunner-UI-Tests' 'TestRunner-Tests' 'TestRunner-FakeTests' );
-				group: 'default' with: #( 'Core' 'UI' );
-				group: 'All' with: #( 'Core' 'UI' 'Tests' )
+				group: 'Tests' with: #( 'TestRunner-Tests' 'TestRunner-FakeTests' );
+				group: 'default' with: #( 'Core' );
+				group: 'All' with: #( 'Core' 'Tests' )
 ]
