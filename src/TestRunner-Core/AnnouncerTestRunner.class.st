@@ -12,10 +12,20 @@ Class {
 	#tag : 'Extensions'
 }
 
+{ #category : 'building' }
+AnnouncerTestRunner >> buildJob: aJob [
+
+	^ self 
+		job: (aJob title: self suite name;
+			max: self suite tests size;
+			yourself); 
+		job
+]
+
 { #category : 'accessing' }
 AnnouncerTestRunner >> job [
 
-	^ job
+	^ job ifNil: [ self buildJob: Job new ]
 ]
 
 { #category : 'accessing' }
@@ -30,7 +40,7 @@ AnnouncerTestRunner >> runCase: aTestCase [
 	| currentResult |
 	self job title: 'Running test: ', aTestCase asString.
 	currentResult := super runCase: aTestCase.
-	self job progress: self job progress + (1 / self suite tests size).
+	self job currentValue: 1 + self job currentValue.
 	^ currentResult 
 ]
 
@@ -38,6 +48,6 @@ AnnouncerTestRunner >> runCase: aTestCase [
 AnnouncerTestRunner >> runSuite [
 
 	^ [ :newJob | 
-		self job: newJob.
+		self buildJob: newJob.
 		super runSuite ] asJob run
 ]
