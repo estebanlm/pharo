@@ -38,5 +38,6 @@ ReArgumentsAreNotTheSameSizeCondition >> violators [
 	^ violators ifNil: [
 			  violators := OrderedCollection new.
 			  oldSelector numArgs < newSelector numArgs ifTrue: [
-				  oldSelector numArgs + newArgs size = newSelector numArgs ifFalse: [ violators add: oldSelector ] ] ]
+				  oldSelector numArgs + newArgs size = newSelector numArgs ifFalse: [ violators add: oldSelector ] ].
+			  violators ]
 ]
