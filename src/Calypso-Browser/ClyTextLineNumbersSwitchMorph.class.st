@@ -22,7 +22,7 @@ Class {
 
 { #category : 'settings' }
 ClyTextLineNumbersSwitchMorph class >> showLineNumbers [
-	^ showLineNumbers ifNil: [ false ]
+	^ showLineNumbers ifNil: [ true ]
 ]
 
 { #category : 'settings' }
