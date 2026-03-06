@@ -400,7 +400,7 @@ SessionManager >> snapshot: save andQuit: quit [
 	wait wait.
 
 	snapshotOperation hasError 
-		ifTrue: [ snapshotOperation error debug ].
+		ifTrue: [ snapshotOperation error pass ].
 
 	"The execution of the deferred startup actions are executed in the caller thread."
 	self currentSession executeDeferredStartupActions: snapshotOperation isImageStarting.
