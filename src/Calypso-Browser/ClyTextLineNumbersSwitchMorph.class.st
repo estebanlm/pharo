@@ -21,17 +21,6 @@ Class {
 }
 
 { #category : 'settings' }
-ClyTextLineNumbersSwitchMorph class >> settingsOn: aBuilder [
-	<systemsettings>
-	(aBuilder setting: #showLineNumbers)
-		label: 'Show lines numbers for all browsers';
-		parent: #Calypso;
-		default: false;
-		target: self;
-		description: 'If true, line numbers will appear in new system browsers for method editor'
-]
-
-{ #category : 'settings' }
 ClyTextLineNumbersSwitchMorph class >> showLineNumbers [
 	^ showLineNumbers ifNil: [ false ]
 ]
