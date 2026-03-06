@@ -505,6 +505,32 @@ BagTest >> testIncludesElementIsNotThere [
 	self deny: (self empty includes: self elementNotInForOccurrences)
 ]
 
+{ #category : 'tests' }
+BagTest >> testKeysAtValue [
+
+	| bag |
+	bag := Bag new.
+	bag add: 1 withOccurrences: 5.
+	bag add: 2 withOccurrences: 5.
+	bag add: 3 withOccurrences: 10.
+	bag add: 4 withOccurrences: 42.
+
+	self assert: (bag keysAtValue: 5) equals: { 1. 2 }
+]
+
+{ #category : 'tests' }
+BagTest >> testKeysAtValueEmpty [
+
+	| bag |
+	bag := Bag new.
+	bag add: 1 withOccurrences: 5.
+	bag add: 2 withOccurrences: 5.
+	bag add: 3 withOccurrences: 10.
+	bag add: 4 withOccurrences: 42.
+
+	self assert: (bag keysAtValue: 3) equals: {  }
+]
+
 { #category : 'basic tests' }
 BagTest >> testOccurrencesOf [
 

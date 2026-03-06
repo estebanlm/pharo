@@ -194,6 +194,15 @@ Bag >> keysAndValuesDo: aTwoArgBlock [
     contents associationsDo: [:assoc | aTwoArgBlock value: assoc key value: assoc value ]
 ]
 
+{ #category : 'accessing' }
+Bag >> keysAtValue: aValue [
+	"Returns all the keys that have the specified value."
+
+	"(#(111 22 33 111 33 111 111 111 22) asBag keysAtValue: 2) >>>  {22 . 33}"
+
+	^ (contents select: [ :association | association value = aValue ]) keys
+]
+
 { #category : 'testing' }
 Bag >> occurrencesOf: anObject [
 	"Answer how many of the receiver's elements are equal to anObject."
