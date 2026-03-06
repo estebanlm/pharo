@@ -489,7 +489,7 @@ RBClassDataForRefactoringTest >> renameThisMethod: anArg [
 { #category : 'rendering' }
 RBClassDataForRefactoringTest >> renderContentOn: html [
 
-	<ignoreNotImplementedSelectors: #(on:of:)>
+	<ignoreNotImplementedSelectors: #(on:of: contact)>
 	html
 		form: [ html text: 'Name:'.
 			html textInput on: #name of: self contact.
@@ -663,7 +663,7 @@ RBClassDataForRefactoringTest >> testMethod1 [
 { #category : 'rendering' }
 RBClassDataForRefactoringTest >> textInput: html name: aString symbol: aSymbol [
 
-	<ignoreNotImplementedSelectors: #(on:of:)>
+	<ignoreNotImplementedSelectors: #(on:of: contact)>
 	html text: aString.
 	html textInput on: aSymbol of: self contact.
 	html break

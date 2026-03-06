@@ -157,7 +157,7 @@ ExtensionTest >> test09ExtensionIsNotVisibleIfNotImported [
 	userClass compile: 'userMethod ^ self extensionMethod'.
 	
 	receiver := userClass new.
-	[receiver userMethod. self fail]
+	[receiver perform: #userMethod. self fail]
 		on: MessageNotUnderstood do: [ :dnu |
 			self assert: dnu receiver == receiver.
 			self assert: dnu message selector equals: #extensionMethod ]
@@ -173,7 +173,7 @@ ExtensionTest >> test10ExtensionIsVisibleIfImported [
 	userPackage addExtensionImport: extensionOnObject.
 	
 	receiver := userClass new.
-	self assert: receiver userMethod equals: 42
+	self assert: (receiver perform: #userMethod) equals: 42
 ]
 
 { #category : 'tests - semantic' }
@@ -188,8 +188,8 @@ ExtensionTest >> test11ExtensionsArePolymorphicWithBaseSelectors [
 	userPackage addExtensionImport: extensionOnPoint.
 	userInstance := userClass new.
 
-	self assert: (userInstance scopedUser: pointClass new) equals: 'youpiii'.
-	self assert: (userInstance scopedUser: objectClass new) equals: 'This is not an extension'.
+	self assert: (userInstance perform: #scopedUser: with: pointClass new) equals: 'youpiii'.
+	self assert: (userInstance perform: #scopedUser: with: objectClass new) equals: 'This is not an extension'.
 		
 	"Not visible if not imported"
 	self assert: pointClass new asString equals: 'This is not an extension'.
@@ -217,8 +217,8 @@ ExtensionTest >> test12ExtensionsArePolymorphicBetweenThem [
 	userPackage addExtensionImport: extensionOnPoint.
 	userInstance := userClass new.
 
-	self assert: (userInstance scopedUser: pointClass new) equals: 42.
-	self assert: (userInstance scopedUser: objectClass new) equals: 10.
+	self assert: (userInstance perform: #scopedUser: with: pointClass new) equals: 42.
+	self assert: (userInstance perform: #scopedUser: with: objectClass new) equals: 10.
 ]
 
 { #category : 'tests - semantic' }
@@ -240,7 +240,7 @@ ExtensionTest >> test13ConflictingExtensionsThrowError [
 	userPackage addExtensionImport: anotherExtensionOnObject.
 	userInstance := userClass new.
 
-	self should: [(userInstance scopedUser: objectClass new)] raise: ExtensionConflictError with: [ :ex | self assert: ex messageText equals: 'Conflict: extension overwrites method #foo in MyObject' ].
+	self should: [(userInstance perform: #scopedUser: with: objectClass new)] raise: ExtensionConflictError with: [ :ex | self assert: ex messageText equals: 'Conflict: extension overwrites method #foo in MyObject' ].
 	
 ]
 
@@ -288,8 +288,8 @@ ExtensionTest >> test14ExtensionSuperSends [
 	userPackage addExtensionImport: extensionOnPoint.
 	userInstance := userClass new.
 
-	self assert: (userInstance scopedUser: pointClass new) equals: 11.
-	self assert: (userInstance scopedUser: objectClass new) equals: 10.
+	self assert: (userInstance perform: #scopedUser: with: pointClass new) equals: 11.
+	self assert: (userInstance perform: #scopedUser: with: objectClass new) equals: 10.
 ]
 
 { #category : 'tests - semantic' }
@@ -305,8 +305,8 @@ ExtensionTest >> test15ExtensionsInHierarchySubclassBindingFirst [
 	userPackage addExtensionImport: extensionOnPoint.
 	userInstance := userClass new.
 
-	self assert: (userInstance scopedUser: pointClass new) equals: 42.
-	self assert: (userInstance scopedUser: objectClass new) equals: 10.
+	self assert: (userInstance perform: #scopedUser: with: pointClass new) equals: 42.
+	self assert: (userInstance perform: #scopedUser: with: objectClass new) equals: 10.
 ]
 
 { #category : 'tests - semantic' }
@@ -322,8 +322,8 @@ ExtensionTest >> test15ExtensionsInHierarchySuperclassBindingFirst [
 	userPackage addExtensionImport: extensionOnPoint.
 	userInstance := userClass new.
 
-	self assert: (userInstance scopedUser: objectClass new) equals: 10.
-	self assert: (userInstance scopedUser: pointClass new) equals: 42.
+	self assert: (userInstance perform: #scopedUser: with: objectClass new) equals: 10.
+	self assert: (userInstance perform: #scopedUser: with: pointClass new) equals: 42.
 ]
 
 { #category : 'tests - semantic' }
@@ -348,7 +348,7 @@ ExtensionTest >> test15ExtensionsWithIsolatedSuperSends [
 	self assert: (userInstance scopedUser: objectClass new) equals: 10.
 
 	pointObject := pointClass new.
-	self should: [ userInstance scopedUser: pointObject ] raise: MessageNotUnderstood with: [ :dnu |
+	self should: [ userInstance perform: #scopedUser: with: pointObject ] raise: MessageNotUnderstood with: [ :dnu |
 			self assert: dnu receiver equals: pointObject.
 			self assert: dnu message selector equals: (extensionOnPoint2 package visibleSelectorForSymbol: #foo). "I don't like the sender sender sender"
 			self assert: dnu signalerContext sender sender sender method == (pointClass >> superSenderSelector) ]
@@ -397,7 +397,7 @@ ExtensionTest >> test17ExtensionSelectorDoesNotDefineAlias [
 	userPackage addExtensionImport: extensionOnPoint.
 	userInstance := userClass new. "This sends a scoped message to a non extended class.
 	The lookup will find the global selector and alias it to the scoped one."
-	self assert: (userInstance scopedUser: objectClass new) equals: 'this is not an extension'.
+	self assert: (userInstance perform: #scopedUser: with: objectClass new) equals: 'this is not an extension'.
 
 	definerScopedSelector := definerPackage visibleSelectorForSymbol: #asString.
 
@@ -429,9 +429,10 @@ ExtensionTest >> test18ScopedSelectorTracksAliasedClassAfterSend [
 		^ anObject asString'.
 
 	userPackage addExtensionImport: extensionOnPoint.
-	userInstance := userClass new. "This sends a scoped message to a non extended class.
+	userInstance := userClass new.
+	"This sends a scoped message to a non extended class.
 	The lookup will find the global selector and alias it to the scoped one."
-	self assert: (userInstance scopedUser: objectClass new) equals: 'this is not an extension'.
+	self assert: (userInstance perform: #scopedUser: with: objectClass new) equals: 'this is not an extension'.
 
 	userScopedSelector := userPackage visibleSelectorForSymbol: #asString.
 
@@ -451,7 +452,7 @@ ExtensionTest >> test19CleanExtendedBehaviorsRemovesTrackedBehaviors [
 	userPackage addExtensionImport: extensionOnObject.
 
 	receiver := userClass new.
-	receiver userMethod.
+	receiver perform: #userMethod.
 
 	scopedSelector := definerPackage visibleSelectorForSymbol: #extensionMethod.
 	definerPackage cleanupExtendedBehaviors.
@@ -471,7 +472,7 @@ ExtensionTest >> test20CleanExtendedBehaviorsCleansAliases [
 	userPackage addExtensionImport: extensionOnPoint.
 	userInstance := userClass new.
 
-	self assert: (userInstance scopedUser: objectClass new) equals: 'this is not an extension'.
+	self assert: (userInstance perform: #scopedUser: with: objectClass new) equals: 'this is not an extension'.
 
 	scopedSelector := userPackage visibleSelectorForSymbol: #asString.
 
