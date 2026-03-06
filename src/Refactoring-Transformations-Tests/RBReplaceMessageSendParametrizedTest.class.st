@@ -9,7 +9,7 @@ Class {
 { #category : 'tests' }
 RBReplaceMessageSendParametrizedTest class >> testParameters [
 	^ ParametrizedTestMatrix new
-		addCase: { #rbClass -> RBReplaceMessageSendTransformation };
+		addCase: { #rbClass -> ReReplaceMessageSendTransformation };
 		yourself
 ]
 
@@ -17,7 +17,7 @@ RBReplaceMessageSendParametrizedTest class >> testParameters [
 RBReplaceMessageSendParametrizedTest >> setUp [
 	| classEnv |
 	super setUp.
-	classEnv := RBClassEnvironment classes: { RBReplaceMessageSendTransformation . RBClassDataForRefactoringTest . RBBasicLintRuleTestData }.
+	classEnv := RBClassEnvironment classes: { ReReplaceMessageSendTransformation . RBClassDataForRefactoringTest . RBBasicLintRuleTestData }.
 	model := self defaultNamespaceClass onEnvironment: classEnv
 ]
 

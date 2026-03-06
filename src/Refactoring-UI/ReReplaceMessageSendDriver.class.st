@@ -23,7 +23,7 @@ ReReplaceMessageSendDriver class >> driverName [
 { #category : 'configuration' }
 ReReplaceMessageSendDriver >> instantiateRefactoring [
 
-	^ (RBReplaceMessageSendTransformation
+	^ (ReReplaceMessageSendTransformation
 		   model: model 
 		   replaceMethod: oldSelector selector
 		   in: class

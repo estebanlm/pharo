@@ -61,7 +61,7 @@ SycReplaceMessageCommand >> prepareFullExecutionInContext: aToolContext [
 { #category : 'factory method' }
 SycReplaceMessageCommand >> refactoringClass [
 
-	^ RBReplaceMessageSendTransformation
+	^ ReReplaceMessageSendTransformation
 ]
 
 { #category : 'execution' }
