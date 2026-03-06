@@ -19,7 +19,7 @@ ClyClassTableDecorator class >> decorateTableCell: anItemCellMorph of: aDataSour
 	labelMorphExtension := anItemCellMorph label assureExtension.
 	cmt := aDataSourceItem actualObject comment.
 
-	((cmt isKindOf: RGComment)
+	((cmt respondsTo: #content)
 		 ifTrue: [ cmt := cmt content ]
 		 ifFalse: [ cmt ]) ifEmpty: [ cmt := ClyUncommentedItemTableDecorator balloonText ] ifNotEmpty: [
 			| lines |
