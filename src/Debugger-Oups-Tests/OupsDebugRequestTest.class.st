@@ -9,7 +9,7 @@ Class {
 	#tag : 'Tests - infrastructure'
 }
 
-{ #category : 'private' }
+{ #category : 'running' }
 OupsDebugRequestTest >> setUp [
 	"Temporary printing to find more information about https://github.com/pharo-project/pharo/issues/12502"
 

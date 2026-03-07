@@ -6,7 +6,7 @@ Class {
 	#tag : 'Tests - strategies'
 }
 
-{ #category : 'private' }
+{ #category : 'running' }
 OupsDebuggerSelectionStrategyTest >> setUp [
 	
 	super setUp.

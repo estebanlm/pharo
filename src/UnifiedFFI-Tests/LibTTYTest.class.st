@@ -116,12 +116,13 @@ LibTTYTest >> readOutput: fdm [
 					stream nextPut: (buffer byteAt: index) ] ] ] ]
 ]
 
-{ #category : 'private' }
+{ #category : 'running' }
 LibTTYTest >> setUp [
 
+	super setUp.
 	OSPlatform current isWindows 
 		ifTrue: [ self skip ].
-	super setUp.
+	
 ]
 
 { #category : 'tests' }
