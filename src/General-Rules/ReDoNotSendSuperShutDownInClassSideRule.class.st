@@ -14,6 +14,9 @@ ZnServer class>>initialize
 Class {
 	#name : 'ReDoNotSendSuperShutDownInClassSideRule',
 	#superclass : 'ReNodeRewriteRule',
+	#instVars : [
+		'ruleSelectors'
+	],
 	#category : 'General-Rules-Potential Bugs',
 	#package : 'General-Rules',
 	#tag : 'Potential Bugs'
@@ -38,14 +41,18 @@ ReDoNotSendSuperShutDownInClassSideRule class >> uniqueIdentifierName [
 
 { #category : 'initialization' }
 ReDoNotSendSuperShutDownInClassSideRule >> initialize [
-	super initialize.
-	self
-		replace: 'super shutDown: `@arg.'
-		with: ''
+
+    super initialize.
+    self replace: 'super shutDown: `@arg.' with: ''.
+    self replace: 'super shutDown' with: ''.
+    self replace: 'super startUp: `@arg.' with: ''.
+    self replace: 'super startUp' with: ''.
+
+    ruleSelectors := { #shutDown:. #shutDown. #startUp:. #startUp }
 ]
 
 { #category : 'testing' }
 ReDoNotSendSuperShutDownInClassSideRule >> shouldCheckMethod: aMethod [
 
-	^ aMethod selector = #shutDown: and: [ aMethod methodClass isMeta ]
+    ^ (ruleSelectors includes: aMethod selector)and: [ aMethod methodClass isMeta ]
 ]
