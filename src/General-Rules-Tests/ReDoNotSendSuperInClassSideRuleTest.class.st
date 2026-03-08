@@ -12,7 +12,7 @@ Class {
 { #category : 'testing' }
 ReDoNotSendSuperInClassSideRuleTest class >> isAbstract [
 
-    ^ self class == ReDoNotSendSuperInClassSideRuleTest
+    ^ self = ReDoNotSendSuperInClassSideRuleTest
 ]
 
 { #category : 'utilities' }
