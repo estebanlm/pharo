@@ -147,7 +147,7 @@ CmdCommand >> asCommandActivator [
 { #category : 'ui requests' }
 CmdCommand >> confirm: aString [
 
-	^ UIManager default confirm: aString
+	^ self application confirm: aString
 ]
 
 { #category : 'accessing' }
