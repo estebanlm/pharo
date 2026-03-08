@@ -1,15 +1,5 @@
 "
-Don't send super initialize in class side because the class initialize methods of your superclass  may maintain state level shared state and it can be dangerous to automatically reinitialize it. 
-
-For example, 
-
-[[[  
-ZnServer class>>initialize
-	ManagedServers := IdentitySet new.
-	AlwaysRestart := true.
-	Smalltalk addToStartUpList: self.
-	Smalltalk addToShutDownList: self
-]]]
+Do not send super in the class side image start up (and shutdown) methods. This can break the state of the classes 
 "
 Class {
 	#name : 'ReDoNotSendSuperShutDownInClassSideRule',
@@ -54,5 +44,5 @@ ReDoNotSendSuperShutDownInClassSideRule >> initialize [
 { #category : 'testing' }
 ReDoNotSendSuperShutDownInClassSideRule >> shouldCheckMethod: aMethod [
 
-    ^ (ruleSelectors includes: aMethod selector)and: [ aMethod methodClass isMeta ]
+    ^ (ruleSelectors includes: aMethod selector) and: [ aMethod methodClass isMeta ]
 ]

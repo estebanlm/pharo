@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'rule',
 		'fixture',
-		'compiledMethods'
+		'compiledMethod'
 	],
 	#category : 'General-Rules-Tests-Potential Bugs',
 	#package : 'General-Rules-Tests',
@@ -41,10 +41,8 @@ ReDoNotSendStartingUpSuperInClassSideRuleKeyworkSelectorTest >> generateMethod: 
 { #category : 'utilities' }
 ReDoNotSendStartingUpSuperInClassSideRuleKeyworkSelectorTest >> generateMethod: code classified: protocol in: aBehavior [
 
-    | method |
-    method := aBehavior >> (aBehavior compile: code classified: protocol).
-    compiledMethods add: method.
-    ^ method
+    compiledMethod := aBehavior >> (aBehavior compile: code classified: protocol).
+    ^ compiledMethod
 ]
 
 { #category : 'utilities' }
@@ -85,14 +83,13 @@ ReDoNotSendStartingUpSuperInClassSideRuleKeyworkSelectorTest >> myCritiquesOnMet
 ReDoNotSendStartingUpSuperInClassSideRuleKeyworkSelectorTest >> setUp [
 
     super setUp.
-    rule := ReDoNotSendSuperShutDownInClassSideRule new.
-    compiledMethods := OrderedCollection new
+    rule := ReDoNotSendSuperShutDownInClassSideRule new
 ]
 
 { #category : 'running' }
 ReDoNotSendStartingUpSuperInClassSideRuleKeyworkSelectorTest >> tearDown [
 
-    compiledMethods do: [ :method | method removeFromSystem ].
+    compiledMethod removeFromSystem.
     super tearDown
 ]
 
@@ -100,33 +97,33 @@ ReDoNotSendStartingUpSuperInClassSideRuleKeyworkSelectorTest >> tearDown [
 ReDoNotSendStartingUpSuperInClassSideRuleKeyworkSelectorTest >> testDoesNotMatch [
 
     self generateMethod: self methodWithoutSuper.
-    self assert: (self myCritiquesOnMethod: compiledMethods first) size equals: 0
+    self assert: (self myCritiquesOnMethod: compiledMethod) size equals: 0
 ]
 
 { #category : 'tests' }
 ReDoNotSendStartingUpSuperInClassSideRuleKeyworkSelectorTest >> testRuleMatchesOnce [
 
-	self generateMethod: self methodWithSuper.
-	self assert: (self myCritiquesOnMethod: compiledMethods first) size equals: 1
+    self generateMethod: self methodWithSuper.
+    self assert: (self myCritiquesOnMethod: compiledMethod) size equals: 1
 ]
 
 { #category : 'tests' }
 ReDoNotSendStartingUpSuperInClassSideRuleKeyworkSelectorTest >> testShouldCheckMethod [
 
-	self generateMethod: self methodWithSuper.
-	self assert: (rule shouldCheckMethod: compiledMethods first)
+    self generateMethod: self methodWithSuper.
+    self assert: (rule shouldCheckMethod: compiledMethod)
 ]
 
 { #category : 'tests' }
 ReDoNotSendStartingUpSuperInClassSideRuleKeyworkSelectorTest >> testShouldNotCheckMethodInInstanceSide [
 
-	self generateMethod: self methodWithoutSuper in: self class.
-	self deny: (rule shouldCheckMethod: compiledMethods first)
+    self generateMethod: self methodWithoutSuper in: self class.
+    self deny: (rule shouldCheckMethod: compiledMethod)
 ]
 
 { #category : 'tests' }
 ReDoNotSendStartingUpSuperInClassSideRuleKeyworkSelectorTest >> testShouldNotCheckMethodWrongSelector [
 
-	self generateMethod: self methodWithoutSuperWrongSelector.
-	self deny: (rule shouldCheckMethod: compiledMethods first)
+    self generateMethod: self methodWithoutSuperWrongSelector.
+    self deny: (rule shouldCheckMethod: compiledMethod)
 ]
