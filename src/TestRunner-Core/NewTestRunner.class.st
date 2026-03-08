@@ -133,7 +133,7 @@ NewTestRunner >> addToSuite: aTestSuite [
 { #category : 'private' }
 NewTestRunner >> classForTestResult [
 
-	^ TestRunnerResult 
+	^ TestResult 
 ]
 
 { #category : 'running' }
