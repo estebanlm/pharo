@@ -32,6 +32,24 @@ ClyMatchingPackageScope class >> ofAll: basisObjects withName: aName [
 		prefix: aName 
 ]
 
+{ #category : 'comparing' }
+ClyMatchingPackageScope >> = anObject [
+
+	^ super = anObject and: [ prefix = anObject prefix ]
+]
+
+{ #category : 'comparing' }
+ClyMatchingPackageScope >> hash [
+
+	^ super hash bitXor: prefix hash
+]
+
+{ #category : 'accessing' }
+ClyMatchingPackageScope >> prefix [
+
+	^ prefix
+]
+
 { #category : 'accessing' }
 ClyMatchingPackageScope >> prefix: aName [
 
@@ -43,4 +61,21 @@ ClyMatchingPackageScope >> printBasisOn: aStream [
 
 	basisObjects ifEmpty: [ ^ self ].
 	aStream nextPutAll: prefix , '* (...)'
+]
+
+{ #category : 'filtering' }
+ClyMatchingPackageScope >> splitOnMatchingScopes [
+
+	| packages allPrefixes |
+	packages := PackageOrganizer default packages.
+
+	allPrefixes := basisObjects flatCollect: [ :pkg |
+			               | substrings partialName |
+			               substrings := pkg name substrings: '-'.
+			               partialName := ''.
+			               (1 to: substrings size - 1) collect: [ :i |
+					               partialName := partialName , (substrings at: i) , '-'.
+					               partialName ] ].
+	^ allPrefixes asSet collect: [ :pre |
+		  self class ofAll: (packages select: [ :each | each name beginsWith: pre ]) in: environment withName: pre ]
 ]

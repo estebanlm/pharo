@@ -166,23 +166,6 @@ ClyFullBrowserMorph class >> taskbarIconName [
 	^#smallSystemBrowser
 ]
 
-{ #category : 'adding' }
-ClyFullBrowserMorph >> addMatchingScopes [
-
-	| name substrings partialName |
-	name := self packageSelection items first name.
-
-	substrings := name substrings: '-'.
-	partialName := ''.
-
-	^ (1 to: substrings size - 1) collect: [ :i |
-			  partialName := partialName , (substrings at: i) , '-'.
-			  ClyMatchingPackageScope
-				  ofAll: (PackageOrganizer default packages select: [ :each | each name beginsWith: partialName ])
-				  in: self packageSelection rootDataSource queryEnvironment
-				  withName: partialName ]
-]
-
 { #category : 'private' }
 ClyFullBrowserMorph >> adoptForExtendedClass [
 
@@ -215,7 +198,7 @@ ClyFullBrowserMorph >> allNavigationScopes [
 
 	^ (super allNavigationScopes , {
 		   (self packageSelection asItemsScope: ClyPackageScope).
-		   self addMatchingScopes.
+		   (self packageSelection asItemsScope: ClyMatchingPackageScope) splitOnMatchingScopes.
 		   classLocalScope asFullHierarchyScope.
 		   classLocalScope } , ScopesManager availableScopes) flattened
 ]
