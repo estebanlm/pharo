@@ -131,6 +131,12 @@ Number >> floorLog: radix [
 ]
 
 { #category : '*Math-Operations-Extensions' }
+Number >> fractionPart [
+	"Added for ANSI compatibility"
+	^self - self integerPart
+]
+
+{ #category : '*Math-Operations-Extensions' }
 Number >> integerPart [
 	"Added for ANSI compatibility"
 	^self truncated

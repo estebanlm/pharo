@@ -316,12 +316,6 @@ Number >> floor [
 		  ifFalse: [ truncation - 1 ]
 ]
 
-{ #category : 'truncation and round off' }
-Number >> fractionPart [
-	"Added for ANSI compatibility"
-	^self - self integerPart
-]
-
 { #category : 'testing' }
 Number >> isInfinite [
 
