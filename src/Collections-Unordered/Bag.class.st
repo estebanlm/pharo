@@ -198,9 +198,9 @@ Bag >> keysAndValuesDo: aTwoArgBlock [
 Bag >> keysAtValue: aValue [
 	"Returns all the keys that have the specified value."
 
-	"(#(111 22 33 111 33 111 111 111 22) asBag keysAtValue: 2) >>>  {22 . 33}"
+	"(#(111 22 33 111 33 111 111 111 22) asBag keysAtValue: 2) >>>  #(22 33)"
 
-	^ (contents select: [ :association | association value = aValue ]) keys
+	^ contents associations select: [ :association | association value = aValue ] thenCollect: [ :association | association key ]
 ]
 
 { #category : 'testing' }

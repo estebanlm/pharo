@@ -515,7 +515,7 @@ BagTest >> testKeysAtValue [
 	bag add: 3 withOccurrences: 10.
 	bag add: 4 withOccurrences: 42.
 
-	self assert: (bag keysAtValue: 5) equals: { 1. 2 }
+	self assert: (bag keysAtValue: 5) equals: #( 1 2 )
 ]
 
 { #category : 'tests' }
@@ -528,7 +528,7 @@ BagTest >> testKeysAtValueEmpty [
 	bag add: 3 withOccurrences: 10.
 	bag add: 4 withOccurrences: 42.
 
-	self assert: (bag keysAtValue: 3) equals: {  }
+	self assert: (bag keysAtValue: 3) equals: #(  )
 ]
 
 { #category : 'basic tests' }
