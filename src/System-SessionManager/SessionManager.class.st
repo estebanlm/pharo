@@ -401,7 +401,7 @@ SessionManager >> snapshot: save andQuit: quit [
 
 	snapshotOperation hasError ifTrue: [ 
 		"Resignal the exception from its original context (or a copy of it) to have the original stack trace"
-		snapshotOperation error signalIn: snapshotOperation error signalContext ].
+		snapshotOperation error raiseUnhandledError  ].
 
 	"The execution of the deferred startup actions are executed in the caller thread."
 	self currentSession executeDeferredStartupActions: snapshotOperation isImageStarting.
