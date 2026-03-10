@@ -1191,8 +1191,13 @@ Collection >> printNameOn: aStream [
 Collection >> printOn: aStream [
 	"Append a sequence of characters that identify the receiver to aStream."
 
-	self printNameOn: aStream.
-	self printElementsOn: aStream
+	[ self printNameOn: aStream.
+	self printElementsOn: aStream ] 
+		on: Error 
+		do: [ :ex | aStream 
+				nextPutAll: 'aCollection of class ';
+				nextPutAll: self class name ;
+				nextPutAll: 'with a failing printOn: is getting printed.' ]
 ]
 
 { #category : 'enumerating' }

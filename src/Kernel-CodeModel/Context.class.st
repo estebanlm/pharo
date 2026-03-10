@@ -504,8 +504,9 @@ Context >> debugStack: stackSize on: aStream [
 
 { #category : 'printing' }
 Context >> debugStackOn: aStream [
-	"print the top ten contexts on my sender chain."
-	^ self debugStack: 100 on: aStream
+	"print the top hundred contexts on my sender chain."
+	
+	self debugStack: 100 on: aStream
 ]
 
 { #category : 'debugger access' }
@@ -1284,18 +1285,20 @@ Context >> printDebugOn: aStream [
 	"print a condensed for of the stack.
 		For methods simply print Class >> selector
 		For blocks only print the first line"
+		
 	| blockSource blockSourceSize |
 
 	self printOn: aStream.
 	self outerContext ifNil: [ ^ self ].
+	
 	"print the block..."
 	aStream
 		nextPutAll: ' in Block: '.
-
-	blockSource := [closureOrNil printStringLimitedTo: 50] on:Exception do: ['Cannot print the closure'].
+	blockSource := [ closureOrNil printStringLimitedTo: 50 ] 
+		on: Exception do: [ 'Cannot print the closure' ].
 	blockSourceSize := blockSource size.
+	
 	blockSource := blockSource copyUpTo: Character cr.
-
 	aStream nextPutAll: blockSource.
 	blockSource size < blockSourceSize
 		ifTrue: [ aStream nextPutAll: '...' ]
@@ -1303,7 +1306,6 @@ Context >> printDebugOn: aStream [
 
 { #category : 'printing' }
 Context >> printDebugStackOn: aStream [
-
 	"Print the debug stack from the context on my sender chain.
 	To avoid defining an arbitrary amount of elements in the stack, I use the SmallInteger >> maxVal 	constant."
 
@@ -1314,16 +1316,15 @@ Context >> printDebugStackOn: aStream [
 Context >> printDetails: stream [
 	"Put my class>>selector and instance variables and arguments and temporaries on the stream.  Protect against errors during printing."
 
-	| errorMessage string |
+	| string |
 	self printOn: stream.
 	stream cr.
 	stream
 		tab;
 		nextPutAll: 'Receiver: '.
-	errorMessage := '<<error during printing>>'.
 	stream nextPutAll: ([ receiver printStringLimitedTo: 90 ]
 			 on: Exception
-			 do: [ errorMessage ]).
+			 do: [ :error | error messageText asString ]).
 
 	stream
 		cr;
@@ -1340,30 +1341,33 @@ Context >> printDetails: stream [
 		tab;
 		nextPutAll: 'Receiver''s instance variables: ';
 		cr.
-	receiver class allInstVarNames
+	[receiver class allInstVarNames
 		ifEmpty: [
-				stream nextPutAll: ([ receiver printStringLimitedTo: 90 ]
-						 on: Exception
-						 do: [ errorMessage ]) ]
+				stream nextPutAll: (receiver printStringLimitedTo: 90) ]
 		ifNotEmpty: [
-				[ receiver longPrintOn: stream limitedTo: 80 indent: 2 ]
-					on: Exception
-					do: [ stream nextPutAll: errorMessage ] ].
+			stream
+				cr;
+				tab;
+				nextPutAll: 'Receiver''s instance variables: ';
+				cr.
+				receiver longPrintOn: stream limitedTo: 80 indent: 2 ]]
+			on: Exception do: [ :error | stream nextPutAll: '<<Error during printing: ', error messageText asString, '>>' ].
 	stream cr
 ]
 
 { #category : 'printing' }
 Context >> printOn: aStream [
-	(closureOrNil isNotNil and: [closureOrNil isKindOf: CleanBlockClosure]) ifTrue:
-		[ | selector |
+
+	(closureOrNil isNotNil and: [closureOrNil isKindOf: CleanBlockClosure]) 
+		ifTrue: [ | selector |
 			selector := self selector.
 			aStream
-			 print: closureOrNil;
-			 nextPutAll: ' in ';
-			 nextPutAll: self methodClass name;
-			 nextPutAll: '>>';
-			 nextPutAll: selector.
-			 ^self].
+				print: closureOrNil;
+				nextPutAll: ' in ';
+				nextPutAll: self methodClass name;
+				nextPutAll: '>>';
+				nextPutAll: selector.
+			 ^ self ].
 
 	self outerContext
 		ifNil:
@@ -1387,9 +1391,11 @@ Context >> printOn: aStream [
 					(self tempAt: 1) selector printOn: aStream ] ]
 		ifNotNil:
 			[ :outerContext |
-			[closureOrNil printOn: aStream] on:Exception do: [aStream nextPutAll: 'Error printing the compiledBlock'].
-			aStream nextPutAll: ' in '.
-			outerContext printOn: aStream ]
+				[ closureOrNil printOn: aStream] 
+					on:Exception 
+					do: [ aStream nextPutAll: 'Error printing the compiledBlock' ].
+				aStream nextPutAll: ' in '.
+				outerContext printOn: aStream ]
 ]
 
 { #category : 'debugger access' }
@@ -1975,6 +1981,7 @@ Context >> shortDebugStack [
 Context >> shortDebugStackOn: aStream [
 	"print the top 30 contexts on my sender chain."
 	<reflection: 'Stack Manipulation - Context'>
+	
 	^ self debugStack: 30 on: aStream
 ]
 
@@ -2193,21 +2200,21 @@ Context >> tempAt: index put: value [
 Context >> tempsAndValuesLimitedTo: sizeLimit indent: indent [
 	"Return a string of the temporary variabls and their current values"
 
-	"Compute a line limit to not go over @sizeLimit per line"
+	"Compute a line limit to not go over sizeLimit per line"
+	
 	| lineLimit |
 	lineLimit := sizeLimit - 'temp0: ' size - indent.
 	^ String streamContents: [ :aStream |
 			  (1 to: self numTemps)
 				  do: [ :index |
 						  indent timesRepeat: [ aStream tab ].
-						  aStream
-							  nextPutAll: 'temp';
-							  print: index;
-							  nextPut: $:;
-							  space;
-							  tab.
-						  aStream nextPutAll: ((self tempAt: index) printStringLimitedTo: 
-						lineLimit) ]
+							aStream
+								nextPutAll: 'temp';
+								print: index;
+								nextPut: $:;
+								space;
+								tab.
+						  aStream nextPutAll: ((self tempAt: index) printStringLimitedTo: lineLimit) ]
 				  separatedBy: [ aStream cr ] ]
 ]
 
