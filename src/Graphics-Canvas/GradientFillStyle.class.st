@@ -22,8 +22,9 @@ Class {
 	#classVars : [
 		'PixelRampCache'
 	],
-	#category : 'Athens-Morphic',
-	#package : 'Athens-Morphic'
+	#category : 'Graphics-Canvas-Fills',
+	#package : 'Graphics-Canvas',
+	#tag : 'Fills'
 }
 
 { #category : 'cleanup' }
@@ -90,23 +91,6 @@ GradientFillStyle >> = anGradientFillStyle [
 
 	^super = anGradientFillStyle
 		and: [self pixelRamp == anGradientFillStyle pixelRamp] "LRU should make identity equal"
-]
-
-{ #category : 'converting' }
-GradientFillStyle >> asAthensPaintOn: anAthensCanvas [
-
-	^ AthensGradientPaint new gradient: self.
-	"^ radial ifTrue: [
-		anAthensCanvas surface
-			createRadialGradient: colorRamp
-			center:  (anAthensCanvas pathTransform inverseTransform: origin )
-			radius: direction y ]
-	ifFalse: [
-		anAthensCanvas surface
-			createLinearGradient: colorRamp
-			origin: (anAthensCanvas pathTransform inverseTransform: origin)
-			corner: (anAthensCanvas pathTransform inverseTransform: origin + direction ) ]
-"
 ]
 
 { #category : 'converting' }

@@ -9,8 +9,9 @@ Class {
 		'extent',
 		'offset'
 	],
-	#category : 'Athens-Morphic',
-	#package : 'Athens-Morphic'
+	#category : 'Graphics-Canvas-Fills',
+	#package : 'Graphics-Canvas',
+	#tag : 'Fills'
 }
 
 { #category : 'instance creation' }
