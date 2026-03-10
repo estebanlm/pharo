@@ -15,9 +15,8 @@ Class {
 		'strokeTransform',
 		'engine'
 	],
-	#category : 'Athens-Balloon-Surface',
-	#package : 'Athens-Balloon',
-	#tag : 'Surface'
+	#category : 'Athens-Morphic',
+	#package : 'Athens-Morphic'
 }
 
 { #category : 'instance creation' }
@@ -129,6 +128,17 @@ AthensBalloonSurface >> createStrokePaintFor: aPaint [
 AthensBalloonSurface >> disableMask [
 
 	maskEnabled := false
+]
+
+{ #category : 'drawing' }
+AthensBalloonSurface >> displayOnMorphicCanvas: canvas at: aPoint [
+	"Display receiver on morphic canvas"
+
+	canvas
+		image: self asForm
+		at: aPoint
+		sourceRect: (0 @ 0 extent: self asForm extent)
+		rule: 34
 ]
 
 { #category : 'drawing' }

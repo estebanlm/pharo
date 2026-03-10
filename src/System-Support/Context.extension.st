@@ -10,11 +10,11 @@ Context >> errorReportOn: stream [
 	"The packae System-Time is not loaded during the first steps of the bootstrap. Thus we print the date only if we have the necessary classes loaded in the system. Else we at least print the useful info."
 	self class environment at: #Date ifPresent: [ :date |
 			self class environment at: #Time ifPresent: [ :time |
-					stream
+				[ stream
 						print: date today;
 						space;
 						print: time now;
-						cr ] ].
+						cr ] onErrorDo: [ :err | stream nextPutAll: '<< date and time not available >>'; cr ] ] ].
 
 	stream cr.
 	stream

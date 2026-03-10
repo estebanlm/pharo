@@ -8,9 +8,8 @@ Class {
 		'origin',
 		'corner'
 	],
-	#category : 'Athens-Balloon-Paint',
-	#package : 'Athens-Balloon',
-	#tag : 'Paint'
+	#category : 'Athens-Morphic',
+	#package : 'Athens-Morphic'
 }
 
 { #category : 'rendering' }

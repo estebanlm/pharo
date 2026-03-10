@@ -116,22 +116,6 @@ Object >> taskbarIconName [
 ]
 
 { #category : '*Morphic-Base' }
-Object class >> taskbarLabel [
-	"Answer the label string for the receiver in a task bar
-	or nil for the default."
-
-	^nil
-]
-
-{ #category : '*Morphic-Base' }
-Object >> taskbarLabel [
-	"Answer the label string for the receiver in a task bar
-	or nil for the default."
-
-	^self class taskbarLabel
-]
-
-{ #category : '*Morphic-Base' }
 Object >> transferFor: passenger from: aMorph [
 
 	^ TransferMorph withPassenger: passenger from: aMorph
