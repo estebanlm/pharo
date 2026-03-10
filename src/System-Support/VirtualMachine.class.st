@@ -815,7 +815,7 @@ VirtualMachine >> setGCParameters [
 	edenSize := self edenSpaceSize.
 	survivorSize := edenSize / 5.0. "David's paper uses 140Kb eden + 2 x 28kb survivor spaces; Spur uses the same ratios :-)"
 	averageObjectSize := 8 * self wordSize. "a good approximation"
-	numObjects := (proportion * survivorSize / averageObjectSize) rounded.
+	numObjects := (proportion * survivorSize // averageObjectSize).
 	self tenuringThreshold: numObjects  "tenure when more than this many objects survive the GC"
 ]
 

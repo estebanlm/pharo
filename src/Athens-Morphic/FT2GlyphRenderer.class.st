@@ -25,9 +25,8 @@ Class {
 	#pools : [
 		'FT2Constants'
 	],
-	#category : 'Athens-Balloon-Text',
-	#package : 'Athens-Balloon',
-	#tag : 'Text'
+	#category : 'Athens-Morphic',
+	#package : 'Athens-Morphic'
 }
 
 { #category : 'instance creation' }
