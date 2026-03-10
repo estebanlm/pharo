@@ -130,7 +130,7 @@ AthensBalloonSurface >> disableMask [
 	maskEnabled := false
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'drawing' }
 AthensBalloonSurface >> displayOnMorphicCanvas: canvas at: aPoint [
 	"Display receiver on morphic canvas"
 
