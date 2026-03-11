@@ -186,7 +186,10 @@ BlockClosure >> doPrintOn: aStream [
 	| code |
 	"If the compiler is available, we can print the code nicely"
 	code := Smalltalk hasCompiler
-		        ifTrue: [ self sourceNode value sourceCode ]
+		        ifTrue: [ 
+					[ self sourceNode value sourceCode] 
+						on: Error 
+						do: [ :ex | '[]' ] ]
 		        ifFalse: [ '[]' ].
 	aStream nextPutAll: code
 ]
@@ -568,10 +571,13 @@ BlockClosure >> outerContext: ctxt [
 BlockClosure >> printOn: aStream [
 
 	[self doPrintOn: aStream]
-		onErrorDo: [ aStream
+		onErrorDo: [ 
+			
+			self method ifNotNil: [ :mth |
+			aStream
 				nextPutAll: '<Error printing blockClosure in: ';
-				print: self method;
-				nextPutAll: ' >' ]
+				print: mth;
+				nextPutAll: ' >' ] ]
 ]
 
 { #category : 'accessing' }

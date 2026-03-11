@@ -4,9 +4,8 @@ I'm an abstract root class of many balloon-specific paints
 Class {
 	#name : 'AthensBalloonPaint',
 	#superclass : 'AthensPaint',
-	#category : 'Athens-Balloon-Paint',
-	#package : 'Athens-Balloon',
-	#tag : 'Paint'
+	#category : 'Athens-Morphic',
+	#package : 'Athens-Morphic'
 }
 
 { #category : 'testing' }

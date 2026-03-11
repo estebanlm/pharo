@@ -123,11 +123,6 @@ CompiledBlock >> isInstalled [
 	^ self method isInstalled
 ]
 
-{ #category : 'testing' }
-CompiledBlock >> isTestMethod [
-	^ false
-]
-
 { #category : 'comparing' }
 CompiledBlock >> literalEqual: other [
 	"Two compiled blocks should be unified in the literal frame only if they are the same block.

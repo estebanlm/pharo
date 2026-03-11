@@ -41,6 +41,12 @@ ClyGroupWindowMorph >> dragTab: aSystemWindow event: anEvent in: aTabLabel [
 	anEvent hand grabMorph: aSystemWindow
 ]
 
+{ #category : 'window' }
+ClyGroupWindowMorph >> modelWakeUpIn: aSystemWindow [ 
+	
+	"Do nothing"
+]
+
 { #category : 'updating' }
 ClyGroupWindowMorph >> update: aSymbol [
 	"Handle tab changes."
