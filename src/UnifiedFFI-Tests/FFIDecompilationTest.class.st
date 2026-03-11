@@ -36,7 +36,7 @@ FFIDecompilationTest >> setUp [
 { #category : 'tests' }
 FFIDecompilationTest >> testDecompilationOfFFIMethodShouldHaveNamedArgs [
 	| decompiledFFIMethod |
-	decompiledFFIMethod := (FFICompilerPluginTest >> #ffiCopyString:to:) decompile.
+	decompiledFFIMethod := (FFIDecompilationTest >> #ffiCopyString:to:) decompile.
 	self assert: decompiledFFIMethod argumentNames equals: #(#aString #dest)
 ]
 
@@ -57,7 +57,7 @@ FFIDecompilationTest >> testFFIMethodDelegatesWhenLookingForHasSelector [
 	buffer := ByteArray new: 12.
 	self ffiCopyString: 'Hello World!' to: buffer.
 
-	ffiMethod := FFICompilerPluginTest >> #ffiCopyString:to:.
+	ffiMethod := self class >> #ffiCopyString:to:.
 
 	self assert: (ffiMethod hasSelector: #ffiCall: specialSelectorIndex: nil)
 ]

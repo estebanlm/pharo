@@ -139,9 +139,11 @@ MCClassDefinition >> classVarNames: cvarArray [
 
 { #category : 'printing' }
 MCClassDefinition >> classVariables [
-	^ self needsSlotClassDefinition 
- 		ifTrue: [ self sortedVariablesOfType: #isClassVariable ]
- 		ifFalse: [ self classVariablesString asClassVariableCollection ]
+
+	^ self needsSlotClassDefinition
+		  ifTrue: [ self sortedVariablesOfType: #isClassVariable ]
+		  ifFalse: [
+		  (self classVariablesString substrings: Character separators) collect: [ :substring | substring asSymbol asClassVariable ] ]
 ]
 
 { #category : 'printing' }
