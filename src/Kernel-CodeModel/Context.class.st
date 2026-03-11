@@ -492,23 +492,6 @@ Context >> deadContextForClosure: closure [
 		  yourself
 ]
 
-{ #category : 'printing' }
-Context >> debugStack: stackSize on: aStream [
-	"print a condensed version of the stack up to stackSize on aStream"
-
-	(self stackOfSize: stackSize)
-		do: [ :item |
-			item printDebugOn: aStream.
-			aStream cr ]
-]
-
-{ #category : 'printing' }
-Context >> debugStackOn: aStream [
-	"print the top hundred contexts on my sender chain."
-	
-	self debugStack: 100 on: aStream
-]
-
 { #category : 'debugger access' }
 Context >> depthBelow: aContext [
 	"Answer how many calls there are between this and aContext."
@@ -1011,13 +994,6 @@ Context >> jump: distance withInterpreter: anInterpreter [
 	anInterpreter pc: pc
 ]
 
-{ #category : 'debugger access' }
-Context >> longStack [
-	"Answer a String showing the top 100 contexts on my sender chain."
-
-	^ self printStackOfSize: 100
-]
-
 { #category : 'accessing' }
 Context >> method [
 	"self
@@ -1268,146 +1244,55 @@ Context >> popIntoTemporaryVariable: offset [
 	self at: offset + 1 put: self pop
 ]
 
-{ #category : 'debugger access' }
-Context >> print: anObject on: aStream [
-	"Safely print anObject in the face of direct ProtoObject subclasses"
-	| title |
-	(anObject class canUnderstand: #printOn:)
-		ifTrue: [ ^ anObject printOn: aStream ].
-	title := anObject class name.
-	aStream
-		nextPutAll: (title first isVowel ifTrue: ['an '] ifFalse: ['a ']);
-		nextPutAll: title
-]
-
-{ #category : 'printing' }
-Context >> printDebugOn: aStream [
-	"print a condensed for of the stack.
-		For methods simply print Class >> selector
-		For blocks only print the first line"
-		
-	| blockSource blockSourceSize |
-
-	self printOn: aStream.
-	self outerContext ifNil: [ ^ self ].
-	
-	"print the block..."
-	aStream
-		nextPutAll: ' in Block: '.
-	blockSource := [ closureOrNil printStringLimitedTo: 50 ] 
-		on: Exception do: [ 'Cannot print the closure' ].
-	blockSourceSize := blockSource size.
-	
-	blockSource := blockSource copyUpTo: Character cr.
-	aStream nextPutAll: blockSource.
-	blockSource size < blockSourceSize
-		ifTrue: [ aStream nextPutAll: '...' ]
-]
-
-{ #category : 'printing' }
-Context >> printDebugStackOn: aStream [
-	"Print the debug stack from the context on my sender chain.
-	To avoid defining an arbitrary amount of elements in the stack, I use the SmallInteger >> maxVal 	constant."
-
-	^ self debugStack: SmallInteger maxVal on: aStream
-]
-
-{ #category : 'printing' }
-Context >> printDetails: stream [
-	"Put my class>>selector and instance variables and arguments and temporaries on the stream.  Protect against errors during printing."
-
-	| string |
-	self printOn: stream.
-	stream cr.
-	stream
-		tab;
-		nextPutAll: 'Receiver: '.
-	stream nextPutAll: ([ receiver printStringLimitedTo: 90 ]
-			 on: Exception
-			 do: [ :error | error messageText asString ]).
-
-	stream
-		cr;
-		tab;
-		nextPutAll: 'Arguments and temporary variables: ';
-		cr.
-	string := [ (self tempsAndValuesLimitedTo: 80 indent: 2) padRightTo: 1 with: $x ]
-		          on: Exception
-		          do: [ :ex | '<<error during printing: ' , ex messageText asString , '>>' ].
-	stream nextPutAll: string.
-
-	stream
-		cr;
-		tab;
-		nextPutAll: 'Receiver''s instance variables: ';
-		cr.
-	[receiver class allInstVarNames
-		ifEmpty: [
-				stream nextPutAll: (receiver printStringLimitedTo: 90) ]
-		ifNotEmpty: [
-			stream
-				cr;
-				tab;
-				nextPutAll: 'Receiver''s instance variables: ';
-				cr.
-				receiver longPrintOn: stream limitedTo: 80 indent: 2 ]]
-			on: Exception do: [ :error | stream nextPutAll: '<<Error during printing: ', error messageText asString, '>>' ].
-	stream cr
-]
-
 { #category : 'printing' }
 Context >> printOn: aStream [
 
-	(closureOrNil isNotNil and: [closureOrNil isKindOf: CleanBlockClosure]) 
-		ifTrue: [ | selector |
-			selector := self selector.
-			aStream
-				print: closureOrNil;
-				nextPutAll: ' in ';
-				nextPutAll: self methodClass name;
-				nextPutAll: '>>';
-				nextPutAll: selector.
-			 ^ self ].
+	"Print this single context in the form:
+	  ReceiverClass (ClassOwnerOfTheMethod) >> methodSelector
+	
+	special cases:
+		- ClassOwnerOfTheMethod is optional if ClassOwnerOfTheMethod == ReceiverClass
+		- in case of a DNU, we use as methodSelector: #doesNotUnderstand: #selectorNotUnderstood
+		- in case of a block, prefix it with '[ ] in: '
+	"
+	
+	| selector class mclass |
+	
+	closureOrNil ifNotNil: [ aStream nextPutAll: '[ ] in: '	 ].
 
-	self outerContext
-		ifNil:
-			[ | selector class mclass |
-			self compiledCode
-				ifNil: [ ^ super printOn: aStream ].
-			class := self receiver class.
-			mclass := self methodClass.
-			selector := self selector.
-			aStream nextPutAll: class name.
-			mclass == class
-				ifFalse:
-					[ aStream nextPut: $(.
-					aStream nextPutAll: mclass name.
-					aStream nextPut: $) ].
-			aStream nextPutAll: '>>'.
-			aStream nextPutAll: selector.
-			selector = #doesNotUnderstand:
-				ifTrue:
-					[ aStream space.
-					(self tempAt: 1) selector printOn: aStream ] ]
-		ifNotNil:
-			[ :outerContext |
-				[ closureOrNil printOn: aStream] 
-					on:Exception 
-					do: [ aStream nextPutAll: 'Error printing the compiledBlock' ].
-				aStream nextPutAll: ' in '.
-				outerContext printOn: aStream ]
+	"If this is a context without compiled code, it is very potentially broken.
+	Just fall back to a simple print"
+	self compiledCode ifNil: [ ^ super printOn: aStream ].
+
+	"Print the receiver's class"
+	class := self receiver class.
+	aStream nextPutAll: class name.
+	
+	"Now the class where the method is installed, if necessary"
+	mclass := self methodClass.
+	mclass == class ifFalse: [
+			aStream nextPut: $(.
+			aStream nextPutAll: mclass name.
+			aStream nextPut: $) ].
+
+	"And the selector"
+	aStream nextPutAll: '>>'.
+	selector := self selector.
+	aStream nextPutAll: selector.
+
+	"Handle #doesNotUnderstand:"
+	selector = #doesNotUnderstand: ifFalse: [ ^ self ].
+	aStream space.
+	(self tempAt: 1) selector printOn: aStream
 ]
 
-{ #category : 'debugger access' }
-Context >> printStackOfSize: aNumber [
-	"Answer a String showing the top ten contexts on my sender chain."
+{ #category : 'printing' }
+Context >> printStackTraceOn: aStream [
+	"Print the stack trace starting from this context up to the bottom of the stack"
 
-	<reflection: 'Stack Manipulation - Context'>
-	^ String streamContents: [ :stream |
-		  (self stackOfSize: aNumber) do: [ :item |
-			  stream
-				  print: item;
-				  lf ] ]
+	self withSendersDo: [ :context |
+			context printOn: aStream.
+			aStream cr ]
 ]
 
 { #category : 'initialization' }
@@ -1970,28 +1855,6 @@ Context >> setSender: newSender receiver: newReceiver method: newMethod closure:
 	stackp := 0
 ]
 
-{ #category : 'controlling' }
-Context >> shortDebugStack [
-	"Answer a String showing the top ten contexts on my sender chain."
-	<reflection: 'Stack Manipulation - Context'>
-	^ String streamContents: [ :stream | self debugStack: 10 on: stream ]
-]
-
-{ #category : 'printing' }
-Context >> shortDebugStackOn: aStream [
-	"print the top 30 contexts on my sender chain."
-	<reflection: 'Stack Manipulation - Context'>
-	
-	^ self debugStack: 30 on: aStream
-]
-
-{ #category : 'debugger access' }
-Context >> shortStack [
-	"Answer a String showing the top ten contexts on my sender chain."
-
-	^ self printStackOfSize: 10
-]
-
 { #category : 'debugger access' }
 Context >> singleRelease [
 	"Remove information from the receiver in order to break circularities."
@@ -2045,6 +1908,13 @@ Context >> stackOfSize: limit [
 Context >> stackPtr [
 	"For use only by the SystemTracer and the Debugger, Inspectors etc"
 	^ stackp
+]
+
+{ #category : 'printing' }
+Context >> stackTraceString [
+	"Return a string representing the stack trace starting from this context up to the bottom of the stack"
+
+	^ String streamContents: [ :s | self printStackTraceOn: s ]
 ]
 
 { #category : 'private' }
@@ -2194,28 +2064,6 @@ Context >> tempAt: index put: value [
 	<reflection: 'Stack Manipulation - Context'>
 	<primitive: 211>
 	^self at: index put: value
-]
-
-{ #category : 'printing' }
-Context >> tempsAndValuesLimitedTo: sizeLimit indent: indent [
-	"Return a string of the temporary variabls and their current values"
-
-	"Compute a line limit to not go over sizeLimit per line"
-	
-	| lineLimit |
-	lineLimit := sizeLimit - 'temp0: ' size - indent.
-	^ String streamContents: [ :aStream |
-			  (1 to: self numTemps)
-				  do: [ :index |
-						  indent timesRepeat: [ aStream tab ].
-							aStream
-								nextPutAll: 'temp';
-								print: index;
-								nextPut: $:;
-								space;
-								tab.
-						  aStream nextPutAll: ((self tempAt: index) printStringLimitedTo: lineLimit) ]
-				  separatedBy: [ aStream cr ] ]
 ]
 
 { #category : 'controlling' }
@@ -2371,4 +2219,14 @@ Context >> willFailReturn [
 	"Answer whether self step will cause an illegal return."
 
 	^(self method encoderClass isReturnAt: pc in: self method) and: [self sender isNil or: [self sender isDead]]
+]
+
+{ #category : 'enumerating' }
+Context >> withSendersDo: aBlock [
+
+	| current |
+	current := self.
+	[ current notNil ] whileTrue: [
+			aBlock value: current.
+			current := current sender ]
 ]
