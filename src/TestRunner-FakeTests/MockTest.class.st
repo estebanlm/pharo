@@ -4,6 +4,9 @@ Don't edit these classes. They are used else where for tests. Changing anything 
 Class {
 	#name : 'MockTest',
 	#superclass : 'TestCase',
+	#classVars : [
+		'ShouldIgnore'
+	],
 	#classInstVars : [
 		'ignore'
 	],
@@ -11,50 +14,21 @@ Class {
 	#package : 'TestRunner-FakeTests'
 }
 
-{ #category : 'accessing' }
-MockTest class >> doNotIgnoreTest [
+{ #category : 'running' }
+MockTest >> setUp [ 
 
-	ignore := false
+	super setUp.
+	self shouldIgnore ifTrue: [ self skip ]
 ]
 
 { #category : 'accessing' }
-MockTest class >> ignoreTest [
+MockTest >> shouldIgnore [
 
-	ignore := true
-]
-
-{ #category : 'class initialization' }
-MockTest class >> initialize [
-
-	self ignoreTest
+	^ ShouldIgnore ifNil: [ ShouldIgnore := true ]
 ]
 
 { #category : 'accessing' }
-MockTest class >> shouldBeIgnored [
+MockTest >> shouldIgnore: anObject [
 
-	^ ignore ifNil: [ ignore := true ]
-]
-
-{ #category : 'asserting' }
-MockTest >> doNotIgnoreTest [
-
-	self class doNotIgnoreTest
-]
-
-{ #category : 'asserting' }
-MockTest >> ignore [ 
-
-	self shouldBeIgnored ifTrue: [ ^ self skip ]
-]
-
-{ #category : 'asserting' }
-MockTest >> ignoreTest [
-
-	self class ignoreTest
-]
-
-{ #category : 'asserting' }
-MockTest >> shouldBeIgnored [
-
-	^ self class shouldBeIgnored
+	ShouldIgnore := anObject
 ]

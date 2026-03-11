@@ -9,7 +9,5 @@ Class {
 LongTest >> testIsTakingTooLong [
 
 	(Delay forSeconds: 3) wait.
-	self 
-		ignore;
-	 	assert: true
+	 self assert: true
 ]

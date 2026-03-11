@@ -19,9 +19,16 @@ RunnerLongDurationTest >> longTestClass [
 RunnerLongDurationTest >> setUp [
 
 	super setUp.
-	self longTestClass doNotIgnoreTest .
+	self longTestClass new shouldIgnore: false.
 	runner := NewTestRunner new suitePreparator:
 		          ShuffleSuitePreparator new 
+]
+
+{ #category : 'running' }
+RunnerLongDurationTest >> tearDown [
+
+	self longTestClass new shouldIgnore: true.
+	super tearDown 
 ]
 
 { #category : 'tests' }

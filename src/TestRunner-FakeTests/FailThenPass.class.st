@@ -31,13 +31,11 @@ FailThenPass class >> reset [
 { #category : 'tests' }
 FailThenPass >> testFailAtFirstRunning [
 
-	self shouldBeIgnored ifTrue: [ ^ self ].
 	self assert: self class counter equals: 1
 ]
 
 { #category : 'tests' }
 FailThenPass >> testPass [
 
-	self shouldBeIgnored ifTrue: [ ^ self ].
 	self assert: true
 ]

@@ -8,7 +8,6 @@ Class {
 { #category : 'tests' }
 YellowTest >> testFail [
 
-	self shouldBeIgnored ifTrue: [ ^ self ].
 	self assert: false
 ]
 

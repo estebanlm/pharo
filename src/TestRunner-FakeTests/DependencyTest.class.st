@@ -35,8 +35,6 @@ DependencyTest class >> reset [
 { #category : 'asserting' }
 DependencyTest >> assertCountThenIncrement: anObject [
 
-	self skipOnPharoCITestingEnvironment.
-	self ignore.
 	self assert: self count equals: anObject .
 	self class incrementData
 ]
