@@ -7,9 +7,8 @@ Class {
 	#instVars : [
 		'contours'
 	],
-	#category : 'Athens-Balloon-Path',
-	#package : 'Athens-Balloon',
-	#tag : 'Path'
+	#category : 'Athens-Morphic',
+	#package : 'Athens-Morphic'
 }
 
 { #category : 'accessing' }

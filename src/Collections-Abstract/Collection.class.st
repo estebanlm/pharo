@@ -186,14 +186,6 @@ Collection >> adaptToCollection: rcvr andSend: selector [
 ]
 
 { #category : 'adapting' }
-Collection >> adaptToNumber: rcvr andSend: selector [
-	"If I am involved in arithmetic with a scalar, return a Collection of
-	the results of each element combined with the scalar in that expression."
-
-	^ self collect: [:element | rcvr perform: selector with: element]
-]
-
-{ #category : 'adapting' }
 Collection >> adaptToPoint: rcvr andSend: selector [
 	"If I am involved in arithmetic with a scalar, return a Collection of
 	the results of each element combined with the scalar in that expression."
@@ -700,6 +692,20 @@ Collection >> difference: aCollection [
 		removeAllFoundIn: aCollection;
 		yourself.
 	^ self species withAll: set asArray
+]
+
+{ #category : 'printing' }
+Collection >> displayStringOn: stream [
+	self printNameOn: stream.
+	stream
+		space;
+		nextPut: $[;
+		nextPutAll: self size asStringWithCommas;
+		nextPutAll: (' item' asPluralBasedOn: self size);
+		nextPut: $];
+		space.
+	self size <= self collectionSizeThreshold
+		ifTrue: [ self printElementsOn: stream ]
 ]
 
 { #category : 'enumerating' }

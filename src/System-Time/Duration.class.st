@@ -125,9 +125,12 @@ Duration class >> seconds: seconds [
 
 { #category : 'instance creation' }
 Duration class >> seconds: seconds nanoSeconds: nanos [
+
+	| integerPart |
+	integerPart := seconds truncated.
 	^ self basicNew
 		seconds: seconds truncated
-		nanoSeconds: seconds fractionPart * NanosInSecond + nanos
+		nanoSeconds: (seconds - integerPart) * NanosInSecond + nanos
 ]
 
 { #category : 'instance creation simple' }

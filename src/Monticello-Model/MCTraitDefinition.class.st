@@ -22,6 +22,13 @@ MCTraitDefinition >> = aDefinition [
 												  self classInstVarNames = aDefinition classInstVarNames and: [ comment = aDefinition comment ] ] ] ] ] ] ]
 ]
 
+{ #category : 'accessing' }
+MCTraitDefinition >> classDefinitionString [
+	"Answer a string describing the class-side definition."
+
+	^String streamContents: [:stream | self printMetaDefinitionOn: stream]
+]
+
 { #category : 'printing' }
 MCTraitDefinition >> classSlotDefinitionString [
 
@@ -109,6 +116,13 @@ MCTraitDefinition >> printDefinitionOn: stream [
 		 nextPutAll: 'package: ';
 		 store: self category asString
 
+]
+
+{ #category : 'printing' }
+MCTraitDefinition >> printMetaDefinitionOn: stream [
+
+	stream nextPutAll: self className, ' classTrait'.
+	self printDefinitionBodyOn: stream
 ]
 
 { #category : 'comparing' }

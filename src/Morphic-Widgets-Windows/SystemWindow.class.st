@@ -1050,7 +1050,7 @@ SystemWindow >> basicActivate [
 	].
 
 	self isCollapsed ifFalse: [
-		model modelWakeUpIn: self.
+		model ifNotNil:[ model modelWakeUpIn: self ].
 		self positionSubmorphs.
 		labelArea ifNil: [ self adjustBorderUponActivationWhenLabeless ]
 	].

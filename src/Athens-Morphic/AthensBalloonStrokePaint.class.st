@@ -4,9 +4,8 @@ i represent stroke paint for balloon backend
 Class {
 	#name : 'AthensBalloonStrokePaint',
 	#superclass : 'AthensStrokePaint',
-	#category : 'Athens-Balloon-Paint',
-	#package : 'Athens-Balloon',
-	#tag : 'Paint'
+	#category : 'Athens-Morphic',
+	#package : 'Athens-Morphic'
 }
 
 { #category : 'rendering' }

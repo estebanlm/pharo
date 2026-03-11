@@ -14,9 +14,8 @@ Class {
 	#instVars : [
 		'currentFill'
 	],
-	#category : 'Athens-Balloon-Engine',
-	#package : 'Athens-Balloon',
-	#tag : 'Engine'
+	#category : 'Athens-Morphic',
+	#package : 'Athens-Morphic'
 }
 
 { #category : 'copying' }
