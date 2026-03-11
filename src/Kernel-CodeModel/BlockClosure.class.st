@@ -556,7 +556,7 @@ BlockClosure >> outerContext: ctxt [
 { #category : 'printing' }
 BlockClosure >> printOn: aStream [
 
-	aStream nextPutAll: '[ ] in: ' , self homeMethod name asString
+	aStream nextPutAll: '[ ] in ' , self homeMethod name asString
 ]
 
 { #category : 'accessing' }

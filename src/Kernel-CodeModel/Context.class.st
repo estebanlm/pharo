@@ -1258,7 +1258,7 @@ Context >> printOn: aStream [
 	
 	| selector class mclass |
 	
-	closureOrNil ifNotNil: [ aStream nextPutAll: '[ ] in: '	 ].
+	closureOrNil ifNotNil: [ aStream nextPutAll: '[ ] in '	 ].
 
 	"If this is a context without compiled code, it is very potentially broken.
 	Just fall back to a simple print"
