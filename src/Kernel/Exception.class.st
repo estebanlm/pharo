@@ -375,6 +375,15 @@ Exception >> signalerContext [
 		or: [ context receiver == self class ]) not ]
 ]
 
+{ #category : 'printing' }
+Exception >> stackTraceString [
+
+	^ String streamContents: [ :s |
+			  self printOn: s.
+			  s cr.
+			  self signalerContext printStackTraceOn: s ]
+]
+
 { #category : 'accessing' }
 Exception >> tag [
 	"Return an exception's tag value."
