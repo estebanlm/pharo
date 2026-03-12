@@ -3,7 +3,7 @@ A RTFSelfCallInterpreterTest is a test class for testing the behavior of RTFSelf
 "
 Class {
 	#name : 'RTFSelfCallStackBuilderTest',
-	#superclass : 'TestCase',
+	#superclass : 'RTFMetaTest',
 	#instVars : [
 		'stackBuilder'
 	],
@@ -22,20 +22,14 @@ RTFSelfCallStackBuilderTest >> fixtureClass [
 RTFSelfCallStackBuilderTest >> setUp [
 	"See RTFFakeTestSuperClass comment for more information."
 	super setUp.
-	RTFFakeTestSuperClass superclass: TestCase
+	stackBuilder := RTFSelfCallStackBuilder new 
+		considerClassesThat: [ :class | class inheritsFrom: TestAsserter ]; yourself
 ]
 
 { #category : 'accessing' }
 RTFSelfCallStackBuilderTest >> stackBuilder [
 
-	^ stackBuilder ifNil: [ stackBuilder := RTFSelfCallStackBuilder new 
-		considerClassesThat: [ :class | class inheritsFrom: TestAsserter ]; yourself ]
-]
-
-{ #category : 'running' }
-RTFSelfCallStackBuilderTest >> tearDown [
-	RTFFakeTestSuperClass superclass: Object.
-	super tearDown
+	^ stackBuilder
 ]
 
 { #category : 'tests' }
