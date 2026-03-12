@@ -20,13 +20,13 @@ NewTestRunnerTest >> setUp [
 
 	super setUp.
 	runner := self classForRunner new.
-	MockTest new shouldIgnore: false
+	MockTest doNotIgnore
 ]
 
 { #category : 'running' }
 NewTestRunnerTest >> tearDown [
 
-	MockTest new shouldIgnore: true.
+	MockTest ignore.
 	super tearDown 
 ]
 

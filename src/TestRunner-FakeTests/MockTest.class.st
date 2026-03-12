@@ -14,6 +14,24 @@ Class {
 	#package : 'TestRunner-FakeTests'
 }
 
+{ #category : 'accessing' }
+MockTest class >> doNotIgnore [ 
+
+	ShouldIgnore := false
+]
+
+{ #category : 'accessing' }
+MockTest class >> ignore [ 
+
+	ShouldIgnore := true
+]
+
+{ #category : 'class initialization' }
+MockTest class >> initialize [ 
+		
+	self ignore
+]
+
 { #category : 'running' }
 MockTest >> setUp [ 
 
@@ -24,7 +42,7 @@ MockTest >> setUp [
 { #category : 'accessing' }
 MockTest >> shouldIgnore [
 
-	^ ShouldIgnore ifNil: [ ShouldIgnore := true ]
+	^ ShouldIgnore 
 ]
 
 { #category : 'accessing' }
