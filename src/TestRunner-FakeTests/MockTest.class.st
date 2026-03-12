@@ -7,11 +7,9 @@ Class {
 	#classVars : [
 		'ShouldIgnore'
 	],
-	#classInstVars : [
-		'ignore'
-	],
-	#category : 'TestRunner-FakeTests',
-	#package : 'TestRunner-FakeTests'
+	#category : 'TestRunner-FakeTests-Mock Tests',
+	#package : 'TestRunner-FakeTests',
+	#tag : 'Mock Tests'
 }
 
 { #category : 'accessing' }
