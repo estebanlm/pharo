@@ -1,7 +1,7 @@
 Class {
 	#name : 'Win32EnvironmentTest',
 	#superclass : 'TestCase',
-	#category : 'System-OSEnvironments-Tests-Windows',
+	#category : 'System-Platforms-Tests-Windows',
 	#package : 'System-OSEnvironments-Tests',
 	#tag : 'Windows'
 }
