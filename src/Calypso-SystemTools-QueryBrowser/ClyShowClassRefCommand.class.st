@@ -94,7 +94,7 @@ ClyShowClassRefCommand >> defaultMenuItemName [
 { #category : 'execution' }
 ClyShowClassRefCommand >> execute [
 
-	browser spawnQueryBrowserOn: (ClyClassReferencesQuery toAny: classes) 
+	StMethodBrowser browseReferencesToClass: classes first
 ]
 
 { #category : 'execution' }

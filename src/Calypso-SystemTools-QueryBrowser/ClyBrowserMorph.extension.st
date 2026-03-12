@@ -49,7 +49,7 @@ ClyBrowserMorph >> browseReferencesTo: aSymbol inNameResolver: anEnvironment [
 { #category : '*Calypso-SystemTools-QueryBrowser' }
 ClyBrowserMorph >> browseSendersOf: aSymbol [
 
-	self spawnQueryBrowserOn: (ClyMessageSendersQuery of: aSymbol)
+	StMethodBrowser browseSendersOf: aSymbol "self spawnQueryBrowserOn: (ClyMessageSendersQuery of: aSymbol)"
 ]
 
 { #category : '*Calypso-SystemTools-QueryBrowser' }
