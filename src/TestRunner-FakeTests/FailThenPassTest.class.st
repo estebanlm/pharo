@@ -4,7 +4,7 @@ I am a Test who faild at the first execution.
 I will be use to tests some rerunFailed Tests features.
 "
 Class {
-	#name : 'FailThenPass',
+	#name : 'FailThenPassTest',
 	#superclass : 'MockTest',
 	#classInstVars : [
 		'counter'
@@ -15,28 +15,29 @@ Class {
 }
 
 { #category : 'accessing' }
-FailThenPass class >> counter [
+FailThenPassTest class >> counter [
 
-	counter
-		ifNil: [ counter := 0 ]
-		ifNotNil: [ counter = 1 ifTrue: [ counter := 0 ] ifFalse: [ counter := 1 ]].
+	counter ifNil: [ counter := 0 ] ifNotNil: [
+			counter := counter = 1
+				           ifTrue: [ 0 ]
+				           ifFalse: [ 1 ] ].
 	^ counter
 ]
 
-{ #category : 'accessing' }
-FailThenPass class >> reset [
+{ #category : 'class initialization' }
+FailThenPassTest class >> reset [
 	<script>
 	counter := nil.
 ]
 
 { #category : 'tests' }
-FailThenPass >> testFailAtFirstRunning [
+FailThenPassTest >> testFailAtFirstRunning [
 
 	self assert: self class counter equals: 1
 ]
 
 { #category : 'tests' }
-FailThenPass >> testPass [
+FailThenPassTest >> testPass [
 
 	self assert: true
 ]

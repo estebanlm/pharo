@@ -112,7 +112,7 @@ NewTestRunnerTest >> testRerunningFailedTest [
 	"we will run a test who fail only during the first execution"
 
 	"first execution"
-	runner runClass: FailThenPass.
+	runner runClass: FailThenPassTest.
 	self assert: runner runCount equals: 2.
 	self assert: runner failureCount equals: 1.
 
@@ -319,7 +319,7 @@ NewTestRunnerTest >> testTryingToRunFailuresAfterRunningMultipleTestCaseClass [
 	runner
 		accumulateResult;
 		runClasses: { 
-				FailThenPass.
+				FailThenPassTest.
 				YellowTest }.
 
 	self assert: runner runCount equals: 4.
