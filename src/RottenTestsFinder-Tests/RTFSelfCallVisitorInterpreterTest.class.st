@@ -21,8 +21,15 @@ RTFSelfCallVisitorInterpreterTest >> fixtureClass [
 { #category : 'accessing' }
 RTFSelfCallVisitorInterpreterTest >> interpreter [ 
 
-	^ interpreter ifNil: [ interpreter := RTFSelfCallVisitorInterpreter new 
-			selfClass: self fixtureClass; yourself ]
+	^ interpreter
+]
+
+{ #category : 'running' }
+RTFSelfCallVisitorInterpreterTest >> setUp [
+	super setUp.
+
+	interpreter := RTFSelfCallVisitorInterpreter new 
+			selfClass: self fixtureClass; yourself
 ]
 
 { #category : 'tests' }
