@@ -33,13 +33,6 @@ Class {
 	#package : 'Calypso-SystemTools-OldToolCompatibillity'
 }
 
-{ #category : 'tools registration' }
-ClyOldMessageBrowserAdapter class >> beDefaultBrowser [
-	<script>
-	
-	self registerToolsOn: Smalltalk tools
-]
-
 { #category : 'opening' }
 ClyOldMessageBrowserAdapter class >> browse: methods [
 
