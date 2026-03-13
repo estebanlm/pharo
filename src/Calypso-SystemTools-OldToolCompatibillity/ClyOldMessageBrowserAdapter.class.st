@@ -91,12 +91,6 @@ ClyOldMessageBrowserAdapter class >> on: aNavigationEnvironment systemScope: aSy
 		systemScope: aSystemEnvironmentScope
 ]
 
-{ #category : 'tools registration' }
-ClyOldMessageBrowserAdapter class >> registerToolsOn: registry [
-	
-	registry register: self as: #messageList
-]
-
 { #category : 'accessing' }
 ClyOldMessageBrowserAdapter >> autoSelect [
 	^ autoSelect

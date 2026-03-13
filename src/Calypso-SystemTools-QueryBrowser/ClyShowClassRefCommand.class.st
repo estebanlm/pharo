@@ -94,7 +94,7 @@ ClyShowClassRefCommand >> defaultMenuItemName [
 { #category : 'execution' }
 ClyShowClassRefCommand >> execute [
 
-	StMethodBrowser browseReferencesToClass: classes first
+	(Smalltalk tools toolNamed: #messageList) browseReferencesToClass: classes first
 ]
 
 { #category : 'execution' }

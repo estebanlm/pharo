@@ -77,7 +77,7 @@ ClyShowMessageImplementorCommand >> execute [
 
 	| selectors |
 	selectors := messages collect: [ :each | each selector ].
-	StMethodBrowser browseImplementorsOfAll: selectors
+	(Smalltalk tools toolNamed: #messageList) browseImplementorsOfAll: selectors
 ]
 
 { #category : 'execution' }
