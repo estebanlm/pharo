@@ -173,14 +173,6 @@ RBRenameArgumentOrTemporaryRefactoring >> prepareForExecution [
  definingNode ifNil: [
      self refactoringError:
          oldName asString , ' isn''t defined by the method' ].
-
- interval ifNil: [
-    (class realClass instVarNames includes: newName asSymbol) ifTrue: [
-        self refactoringError:
-            ('Temporary variable named {1} is already defined.'
-                format: { newName asString })
-    ]
- ].
 ]
 
 { #category : 'transforming' }
