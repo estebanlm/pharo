@@ -16,3 +16,16 @@ StRefactoringAddClassPresenterTest >> newPresenter [
 			   superclass: Object;
 			   yourself)
 ]
+
+{ #category : 'tests' }
+StRefactoringAddClassPresenterTest >> testCommentTemplateActivationFillsComment [
+
+	| checkbox comment |
+	checkbox := presenter instVarNamed: 'useTemplateCheckPresenter'.
+	comment := presenter instVarNamed: 'commentPresenter'.
+	self assert: comment text isEmpty.
+	checkbox state: true.
+
+	self deny: comment text isEmpty.
+	self assert: comment text equals: Object classCommentBlank
+]
