@@ -150,11 +150,11 @@ SmallDictionary >> associationAt: key ifAbsent: aBlock [
 	isn't implemented with associations like Dictionary."
 
 	| index value |
-	index := keys indexOf: key.
-	index = 0 ifTrue: [ ^ aBlock value].
+	index := self findIndexForKey: key.
+	index = 0 ifTrue: [ ^ aBlock value ].
 
 	value := values at: index.
-	^ key->value
+	^ key -> value
 ]
 
 { #category : 'accessing' }
@@ -167,7 +167,7 @@ SmallDictionary >> associationAt: key ifPresent: aBlock [
 	isn't implemented with associations like Dictionary."
 
 	| index |
-	(index := keys indexOf: key) = 0
+	(index := self findIndexForKey: key) = 0
 		ifTrue: [ ^ nil ].
 	^ aBlock cull: key -> (values at: index)
 ]

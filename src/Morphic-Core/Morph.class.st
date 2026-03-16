@@ -2331,7 +2331,7 @@ Morph >> drawErrorOn: aCanvas [
 	aCanvas line: bounds topRight to: bounds bottomLeft width: 1 color: Color yellow.
 
 	self valueOfProperty: #drawError ifPresentDo: [ :error| | trace stringBounds |
-		trace := String streamContents: [ :s| error signalerContext shortDebugStackOn: s].
+		trace := error stackTraceString.
 		stringBounds := bounds insetBy: 5.
 		trace linesDo: [ :aString|
 			aCanvas drawString: aString in: stringBounds.

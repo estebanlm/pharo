@@ -10,11 +10,11 @@ Context >> errorReportOn: stream [
 	"The packae System-Time is not loaded during the first steps of the bootstrap. Thus we print the date only if we have the necessary classes loaded in the system. Else we at least print the useful info."
 	self class environment at: #Date ifPresent: [ :date |
 			self class environment at: #Time ifPresent: [ :time |
-					stream
+				[ stream
 						print: date today;
 						space;
 						print: time now;
-						cr ] ].
+						cr ] onErrorDo: [ :err | stream nextPutAll: '<< date and time not available >>'; cr ] ] ].
 
 	stream cr.
 	stream
@@ -62,4 +62,68 @@ Context >> errorReportOn: stream [
 					stream nextPutAll: '-- and more not shown --'.
 					^ self ].
 			aContext := aContext sender ]
+]
+
+{ #category : '*System-Support' }
+Context >> printDetails: stream [
+	"Put my class>>selector and instance variables and arguments and temporaries on the stream.  Protect against errors during printing."
+
+	| errorMessage string |
+	self printOn: stream.
+	stream cr.
+	stream
+		tab;
+		nextPutAll: 'Receiver: '.
+	errorMessage := '<<error during printing>>'.
+	stream nextPutAll: ([ receiver printStringLimitedTo: 90 ]
+			 on: Exception
+			 do: [ errorMessage ]).
+
+	stream
+		cr;
+		tab;
+		nextPutAll: 'Arguments and temporary variables: ';
+		cr.
+	string := [ (self tempsAndValuesLimitedTo: 80 indent: 2) padRightTo: 1 with: $x ]
+		          on: Exception
+		          do: [ :ex | '<<error during printing: ' , ex messageText asString , '>>' ].
+	stream nextPutAll: string.
+
+	stream
+		cr;
+		tab;
+		nextPutAll: 'Receiver''s instance variables: ';
+		cr.
+	receiver class allInstVarNames
+		ifEmpty: [
+				stream nextPutAll: ([ receiver printStringLimitedTo: 90 ]
+						 on: Exception
+						 do: [ errorMessage ]) ]
+		ifNotEmpty: [
+				[ receiver longPrintOn: stream limitedTo: 80 indent: 2 ]
+					on: Exception
+					do: [ stream nextPutAll: errorMessage ] ].
+	stream cr
+]
+
+{ #category : '*System-Support' }
+Context >> tempsAndValuesLimitedTo: sizeLimit indent: indent [
+	"Return a string of the temporary variabls and their current values"
+
+	"Compute a line limit to not go over @sizeLimit per line"
+	| lineLimit |
+	lineLimit := sizeLimit - 'temp0: ' size - indent.
+	^ String streamContents: [ :aStream |
+			  (1 to: self numTemps)
+				  do: [ :index |
+						  indent timesRepeat: [ aStream tab ].
+						  aStream
+							  nextPutAll: 'temp';
+							  print: index;
+							  nextPut: $:;
+							  space;
+							  tab.
+						  aStream nextPutAll: ((self tempAt: index) printStringLimitedTo: 
+						lineLimit) ]
+				  separatedBy: [ aStream cr ] ]
 ]

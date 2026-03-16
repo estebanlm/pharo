@@ -619,11 +619,6 @@ CompiledCode >> isReturnSpecial [
 	^ self primitive between: 256 and: 263
 ]
 
-{ #category : 'testing' }
-CompiledCode >> isTestMethod [
-	^ self subclassResponsibility
-]
-
 { #category : 'accessing - literals' }
 CompiledCode >> literalAt: index [
 	"Returns the nth element in the literal frame, without considering the method header"
@@ -764,11 +759,6 @@ CompiledCode >> method [
 { #category : 'accessing' }
 CompiledCode >> methodClass [
 	self subclassResponsibility
-]
-
-{ #category : 'accessing' }
-CompiledCode >> methodNode [
-	^ self subclassResponsibility
 ]
 
 { #category : 'accessing' }
