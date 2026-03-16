@@ -150,7 +150,7 @@ ReCompositeExtractMethodRefactoring >> buildTransformationFor: newMethodName [
 		  add: (ReRemoveUnusedTemporaryVariableRefactoring
 				   model: self model
 				   inMethod: selector
-				   inClass: class name);
+				   inClass: (class realClass ifNil: [ class name ] ifNotNil: [ :rc | rc name ]));
 		  yourself
 ]
 
