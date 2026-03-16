@@ -170,7 +170,6 @@ RBRenameTemporaryRefactoringTest >> testWarningExistingInstanceVariable [
 		               to: 'name'
 		               in: #RBLintRuleTestData
 		               selector: #openEditor.
-	self assert: refactoring class equals: RBRenameArgumentOrTemporaryRefactoring.
 	self shouldWarn: refactoring.
 
 	refactoring := RBRenameArgumentOrTemporaryRefactoring
@@ -179,6 +178,5 @@ RBRenameTemporaryRefactoringTest >> testWarningExistingInstanceVariable [
 		               to: 'name'
 		               in: #RBLintRuleTestData
 		               selector: #openEditor.
-	self assert: refactoring class equals: RBRenameArgumentOrTemporaryRefactoring.
 	self shouldWarn: refactoring
 ]
