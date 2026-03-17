@@ -67,7 +67,7 @@ StRefactoringAddClassPresenter >> initializeCommentPresenter [
 		state: false;
 		help: 'When checked, the comment will be prefilled with a generic class comment';
 		label: 'Use comment template';
-		whenActivatedDo: [ commentPresenter text: driver superclass classCommentBlank ];
+		whenActivatedDo: [ commentPresenter text: driver superclass realClass  classCommentBlank ];
 		whenDeactivatedDo: [ commentPresenter text: String empty ];
 		yourself.
 	commentPresenter := self newText

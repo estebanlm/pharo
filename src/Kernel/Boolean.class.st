@@ -82,11 +82,6 @@ Boolean >> asBit [
 	self subclassResponsibility
 ]
 
-{ #category : 'converting' }
-Boolean >> asInteger [
-	^ self subclassResponsibility
-]
-
 { #category : 'copying' }
 Boolean >> deepCopy [
 	"Receiver has two concrete subclasses, True and False.

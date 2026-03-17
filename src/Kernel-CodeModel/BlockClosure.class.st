@@ -180,17 +180,6 @@ BlockClosure >> cull: firstArg cull: secondArg cull: thirdArg cull: fourthArg [
 		ifFalse: [self value: firstArg value: secondArg value: thirdArg value: fourthArg]
 ]
 
-{ #category : 'printing' }
-BlockClosure >> doPrintOn: aStream [
-
-	| code |
-	"If the compiler is available, we can print the code nicely"
-	code := Smalltalk hasCompiler
-		        ifTrue: [ self sourceNode value sourceCode ]
-		        ifFalse: [ '[]' ].
-	aStream nextPutAll: code
-]
-
 { #category : 'controlling' }
 BlockClosure >> doWhileFalse: conditionBlock [
 	"Evaluate the receiver once, then again as long the value of conditionBlock is false."
@@ -567,11 +556,7 @@ BlockClosure >> outerContext: ctxt [
 { #category : 'printing' }
 BlockClosure >> printOn: aStream [
 
-	[self doPrintOn: aStream]
-		onErrorDo: [ aStream
-				nextPutAll: '<Error printing blockClosure in: ';
-				print: self method;
-				nextPutAll: ' >' ]
+	aStream nextPutAll: '[ ] in ' , self homeMethod name asString
 ]
 
 { #category : 'accessing' }

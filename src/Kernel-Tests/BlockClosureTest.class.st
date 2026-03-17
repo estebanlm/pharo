@@ -420,7 +420,8 @@ BlockClosureTest >> testOneArgument [
 
 { #category : 'tests - printing' }
 BlockClosureTest >> testPrintOn [
-	self assert: (OCParser parseExpression: [ 1 + 2 ] printString) equals: (OCParser parseExpression: '[ 1 + 2 ]')
+
+	self assert: [ 1 + 2 ] printString equals: '[ ] in BlockClosureTest>>#testPrintOn'
 ]
 
 { #category : 'tests' }

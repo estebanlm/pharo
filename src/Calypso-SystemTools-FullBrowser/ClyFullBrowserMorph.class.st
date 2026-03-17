@@ -196,10 +196,11 @@ ClyFullBrowserMorph >> allNavigationScopes [
 	| classLocalScope |
 	classLocalScope := self classSelection asItemsScope: ClyBothMetaLevelClassScope.
 
-	^super allNavigationScopes, {
-		self packageSelection asItemsScope: ClyPackageScope.
-		classLocalScope asFullHierarchyScope.
-		classLocalScope }, ScopesManager availableScopes
+	^ (super allNavigationScopes , {
+		   (self packageSelection asItemsScope: ClyPackageScope).
+		   (self packageSelection asItemsScope: ClyMatchingPackageScope) splitOnMatchingScopes.
+		   classLocalScope asFullHierarchyScope.
+		   classLocalScope } , ScopesManager availableScopes) flattened
 ]
 
 { #category : 'updating' }

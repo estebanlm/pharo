@@ -18,6 +18,11 @@ CompiledCode >> compilerClass [
 ]
 
 { #category : '*OpalCompiler-Core' }
+CompiledCode >> methodNode [
+	^ self subclassResponsibility
+]
+
+{ #category : '*OpalCompiler-Core' }
 CompiledCode >> sourceNode [
 	^ self subclassResponsibility
 ]

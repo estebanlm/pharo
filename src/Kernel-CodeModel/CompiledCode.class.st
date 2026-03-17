@@ -259,7 +259,11 @@ CompiledCode >> allLiterals [
 
 { #category : 'source code management' }
 CompiledCode >> argumentNames [
-	^ self propertyAt: #argumentNames ifAbsent: [ self ast argumentNames ]
+	
+	"If the property is not there, this is a method with no arguments"
+	^ self propertyAt: #argumentNames ifAbsent: [ 
+		self numArgs > 0 ifTrue: [ self error: 'Missing argument names for: ', self printString ].
+		#() ]
 ]
 
 { #category : 'compatibility' }
@@ -619,11 +623,6 @@ CompiledCode >> isReturnSpecial [
 	^ self primitive between: 256 and: 263
 ]
 
-{ #category : 'testing' }
-CompiledCode >> isTestMethod [
-	^ self subclassResponsibility
-]
-
 { #category : 'accessing - literals' }
 CompiledCode >> literalAt: index [
 	"Returns the nth element in the literal frame, without considering the method header"
@@ -764,11 +763,6 @@ CompiledCode >> method [
 { #category : 'accessing' }
 CompiledCode >> methodClass [
 	self subclassResponsibility
-]
-
-{ #category : 'accessing' }
-CompiledCode >> methodNode [
-	^ self subclassResponsibility
 ]
 
 { #category : 'accessing' }

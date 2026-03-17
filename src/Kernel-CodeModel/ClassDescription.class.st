@@ -99,13 +99,6 @@ ClassDescription >> addSelectorSilently: selector withMethod: compiledMethod [
 	self instanceSide noteAddedSelector: selector meta: self isMeta
 ]
 
-{ #category : 'instance variables' }
-ClassDescription >> addSlot: aSlot [
-
-	<reflection: 'Class structural modification - Slot modification'>
-	^self subclassResponsibility
-]
-
 { #category : 'accessing - instances and variables' }
 ClassDescription >> allInstVarNames [
 	"Answer an Array of the receiver's instance variable names."
@@ -922,12 +915,6 @@ ClassDescription >> removeSelector: selector [
 	super removeSelector: selector.
 
 	self codeChangeAnnouncer methodRemoved: method origin: origin
-]
-
-{ #category : 'instance variables' }
-ClassDescription >> removeSlot: aSlot [
-	<reflection: 'Class structural modification - Slot modification'>
-	^self subclassResponsibility
 ]
 
 { #category : 'protocols' }

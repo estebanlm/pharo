@@ -12,31 +12,6 @@ Class {
 	#package : 'SystemCommands-MessageCommands'
 }
 
-{ #category : 'execution' }
-SycReplaceMessageCommand >> createRefactoring [
-
-	self flag: 'TODO'. "Improve preview to add args when change the sender with empty args"
-	self flag: 'scope'. "Should introduce scope instead of passing a boolean".
-	
-	^ newSelector newArgs
-		  ifNotEmpty: [
-			  (self refactoringClass
-				   model: model
-				   replaceMethod: originalMessage selector
-				   in: selectedClass
-				   to: newSelector selector
-				   permutation: newSelector permutation
-				   inAllClasses: true) newArgs: newSelector newArgs ]
-		  ifEmpty: [
-			  (self refactoringClass
-				   model: model
-				   replaceMethod: originalMessage selector
-				   in: selectedClass
-				   to: newSelector selector
-				   permutation: newSelector permutation
-				   inAllClasses: true) newArgs:  newSelector newArgs ]
-]
-
 { #category : 'accessing' }
 SycReplaceMessageCommand >> defaultMenuIconName [
 	^#edit
@@ -49,10 +24,14 @@ SycReplaceMessageCommand >> defaultMenuItemName [
 	^ self refactoringClass menuItemString
 ]
 
-{ #category : 'testing' }
-SycReplaceMessageCommand >> isComplexRefactoring [
+{ #category : 'execution' }
+SycReplaceMessageCommand >> execute [
 
-	^ true 
+	^ ((ReReplaceMessageSendDriver newApplication: self application)
+		   scopes: refactoringScopes
+		   class: selectedClass
+		   selector: newSelector
+		   oldSelector: originalMessage) runRefactoring 
 ]
 
 { #category : 'execution' }
@@ -82,7 +61,7 @@ SycReplaceMessageCommand >> prepareFullExecutionInContext: aToolContext [
 { #category : 'factory method' }
 SycReplaceMessageCommand >> refactoringClass [
 
-	^ RBReplaceMessageSendTransformation
+	^ ReReplaceMessageSendTransformation
 ]
 
 { #category : 'execution' }

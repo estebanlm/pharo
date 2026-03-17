@@ -36,6 +36,15 @@ ImageFillStyle >> = anOrientedFillStyle [
 ]
 
 { #category : 'converting' }
+ImageFillStyle >> asAthensPaintOn: anAthensCanvas [
+
+	^ (anAthensCanvas cacheAt: self ifAbsentPut: [
+		anAthensCanvas surface
+		createFormPaint: self form ])
+		origin: origin
+]
+
+{ #category : 'converting' }
 ImageFillStyle >> asColor [
 	"Answer transparent, no other reasonable interpretation."
 
