@@ -772,7 +772,7 @@ SmalltalkImage >> logError: errMsg inContext: aContext [
 			nextPutAll: errMsg; cr;
 			"reset the color"
 			nextPut: Character escape; nextPutAll: '[0m'.
-		aContext shortDebugStackOn: stderr.].
+		aContext printStackTraceOn: stderr.].
 
 	self logDuring: [:logger |
 		logger

@@ -39,15 +39,8 @@ ReRemoveMethodDriver >> breakingChoices [
 { #category : 'execution' }
 ReRemoveMethodDriver >> browseSenders [
 
-	((Smalltalk tools toolNamed: #messageList) class =  ClyOldMessageBrowserAdapter)
-		ifFalse: [ (Smalltalk tools toolNamed: #messageList)
-		browseSendersOf: refactoring allSelectors ]
-	"this does not work for multiple selectors remove."
-		ifTrue: [ (Smalltalk tools toolNamed: #messageList)
-		browse: (haveNoSenders violators collect: [ :each | each value methodClass realClass >> each value selector ]) 
-		asSendersOf: refactoring allSelectors ]
-	
-	
+	(Smalltalk tools toolNamed: #messageList) browseImplementorsOfAll:
+		(haveNoSenders violators collect: [ :each | each value selector ])
 ]
 
 { #category : 'execution' }
