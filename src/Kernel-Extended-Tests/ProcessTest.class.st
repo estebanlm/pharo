@@ -13,6 +13,7 @@ Class {
 ProcessTest >> recursive [
 
 	"To test stack overflow"
+	self recursive
 ]
 
 { #category : 'running' }
