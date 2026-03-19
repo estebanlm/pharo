@@ -758,6 +758,13 @@ VirtualMachine >> primVmPath [
 	^ ''
 ]
 
+{ #category : 'primitives' }
+VirtualMachine >> primVmVersion [
+
+	<primitive: 'primitiveVMVersion'>
+	^ nil
+]
+
 { #category : 'attributes' }
 VirtualMachine >> processHasThreadIdInstVar: aBoolean [
 	"The threaded VM needs to know if the 4th inst var of Process
@@ -987,6 +994,15 @@ VirtualMachine >> versionLabel [
 { #category : 'accessing' }
 VirtualMachine >> vmFileName [
 	^ self fileName
+]
+
+{ #category : 'accessing' }
+VirtualMachine >> vmVersion [
+
+	^ self primVmVersion ifNil: [
+			  | string |
+			  string := self interpreterSourceVersion allButFirst.
+			  ((string splitOn: $+) first splitOn: $.) collect: [ :e | e asInteger ] as: Array ]
 ]
 
 { #category : 'gc' }
