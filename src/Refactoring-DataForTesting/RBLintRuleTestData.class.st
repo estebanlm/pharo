@@ -53,6 +53,12 @@ RBLintRuleTestData class >> someOtherFooMethod [
 	^ 'does nothing here even better:)'
 ]
 
+{ #category : 'as yet unclassified' }
+RBLintRuleTestData >> accessor [
+
+	^ nil
+]
+
 { #category : 'accessing' }
 RBLintRuleTestData >> checkClass: aSmalllintContext [
 ]

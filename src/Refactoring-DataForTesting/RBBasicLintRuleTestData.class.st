@@ -5,7 +5,8 @@ Class {
 		'methodBlock',
 		'result',
 		'classBlock',
-		'anInstVar'
+		'anInstVar',
+		'accessor'
 	],
 	#category : 'Refactoring-DataForTesting-LittleHierarchy',
 	#package : 'Refactoring-DataForTesting',
