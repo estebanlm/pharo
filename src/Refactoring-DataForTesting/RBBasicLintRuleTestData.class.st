@@ -326,6 +326,12 @@ RBBasicLintRuleTestData >> newResultClass: aClass [
 	result := aClass new
 ]
 
+{ #category : 'initialization' }
+RBBasicLintRuleTestData >> noUnused [
+
+	accessor := 'toto'
+]
+
 { #category : 'accessing' }
 RBBasicLintRuleTestData >> onlyReferenceToSomeDemoMethod [
 
