@@ -53,7 +53,7 @@ RBLintRuleTestData class >> someOtherFooMethod [
 	^ 'does nothing here even better:)'
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 RBLintRuleTestData >> accessor [
 
 	^ nil
