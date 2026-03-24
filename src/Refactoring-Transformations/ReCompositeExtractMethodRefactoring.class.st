@@ -213,11 +213,12 @@ ReCompositeExtractMethodRefactoring >> calculateAssignments [
 ReCompositeExtractMethodRefactoring >> calculateIfReturnIsNeededInCaller [
 
 	| searcher |
+	subtree isBlock ifTrue: [ ^ false ].
 	searcher := self parseTreeSearcher.
 	searcher
-		matches: '^self' do: [:aNode :answer | answer];
-		matches: '^`@anything' do: [:aNode :answer | true].
-	^ (searcher executeTree: subtree initialAnswer: false)
+		matches: '^self' do: [ :aNode :answer | answer ];
+		matches: '^`@anything' do: [ :aNode :answer | true ].
+	^ searcher executeTree: subtree initialAnswer: false
 ]
 
 { #category : 'querying' }

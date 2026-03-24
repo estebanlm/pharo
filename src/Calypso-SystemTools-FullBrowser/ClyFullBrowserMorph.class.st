@@ -457,12 +457,6 @@ ClyFullBrowserMorph >> methodView [
 	^ methodView
 ]
 
-{ #category : 'window' }
-ClyFullBrowserMorph >> modelWakeUpIn: aSystemWindow [ 
-	
-	"Do nothing"
-]
-
 { #category : 'navigation' }
 ClyFullBrowserMorph >> navigateSpawnedFullBrowser: aFullBrowser [
 	self isScopedModeEnabled ifTrue: [
