@@ -38,9 +38,16 @@ ReLocalNameConflictCondition class >> classNamed: aString inModel: aRBNamespace 
 { #category : 'checking' }
 ReLocalNameConflictCondition >> check [
 
-	(definingNode exactNodeDefines: variableName) ifTrue: [ violators addIfNotPresent: variableName ].
-	(parseTree whichUpNodeDefines: variableName) ifNotNil: [ violators addIfNotPresent: variableName ].
-	^ violators isEmpty
+    (definingNode exactNodeDefines: variableName) ifTrue: [
+        violators addIfNotPresent: variableName ].
+
+    (parseTree withAllChildren anySatisfy: [ :node |
+        (node exactNodeDefines: variableName) and: [
+            (node withAllChildren includes: definingNode) 
+            or: [ definingNode withAllChildren includes: node ] ] ]) 
+        ifTrue: [ violators addIfNotPresent: variableName ].
+
+    ^ violators isEmpty
 ]
 
 { #category : 'instance creation' }
