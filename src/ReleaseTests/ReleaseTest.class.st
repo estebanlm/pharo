@@ -565,16 +565,13 @@ ReleaseTest >> testThatThereAreNoSelectorsRemainingThatAreSentButNotImplemented 
 	"There is a long term cleanup to fix 'selectors send but not implemented'.
 	 This test makes sure that we do not introduce new cases until we are down to one"
 
-	| violations wantedAndValidViolations |
+	| violations |
 
 	violations := (SystemNavigation default allSentButNotImplementedSelectors collect: [ :method | method printString ]) asOrderedCollection.
+
 	"This next line is to ignore this for SmalltalkCI and not make external Pharo projects fail :("
 	violations removeAllSuchThat: [ :violation | violation beginsWithAnyOf: #( SCI SmalltalkCI ) ].
 
-	"There is a violation that we explicitly want for rule tesing"
-	wantedAndValidViolations := #( 'ReSentButNotUnderstoodBySuperRuleTest>>#sampleMethod' ).
-
-	violations removeAll: wantedAndValidViolations.
 	self assertEmpty: violations
 ]
 
