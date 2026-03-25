@@ -34,7 +34,7 @@ ClassDescription >> addAndClassifySelector: selector withMethod: compiledMethod 
 			priorMethod := method.
 			priorOrigin := method origin ].
 
-	super addSelectorSilently: selector withMethod: compiledMethod.
+	self addSelectorSilently: selector withMethod: compiledMethod.
 
 	"Protocols are set even for anonymous classes"
 	oldProtocol := self protocolOfSelector: selector.
@@ -89,14 +89,6 @@ ClassDescription >> addProtocol: aProtocol [
 ClassDescription >> addSelector: selector withMethod: compiledMethod [
 	<reflection: 'Class structural modification - Selector/Method modification'>
 	self addAndClassifySelector: selector withMethod: compiledMethod inProtocol: nil
-]
-
-{ #category : 'accessing - method dictionary' }
-ClassDescription >> addSelectorSilently: selector withMethod: compiledMethod [
-
-	<reflection: 'Class structural modification - Selector/Method modification'>
-	super addSelectorSilently: selector withMethod: compiledMethod.
-	self instanceSide noteAddedSelector: selector meta: self isMeta
 ]
 
 { #category : 'accessing - instances and variables' }
@@ -672,18 +664,6 @@ ClassDescription >> newInstanceFrom: oldInstance variable: variable size: instSi
 { #category : 'accessing - method dictionary' }
 ClassDescription >> noteAddedSelector: aSelector meta: isMeta [
 	"A hook allowing some classes to react to adding of certain selectors"
-]
-
-{ #category : 'compiling' }
-ClassDescription >> noteCompilationOf: aSelector [
-	"A hook allowing some classes to react to recompilation of certain selectors"
-	
-	^ self instanceSide noteCompilationOf: aSelector meta: self isMeta
-]
-
-{ #category : 'compiling' }
-ClassDescription >> noteCompilationOf: aSelector meta: isMeta [
-	"A hook allowing some classes to react to recompilation of certain selectors"
 ]
 
 { #category : 'organization updating' }
