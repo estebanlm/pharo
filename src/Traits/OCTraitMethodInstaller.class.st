@@ -1,23 +1,20 @@
 Class {
 	#name : 'OCTraitMethodInstaller',
 	#superclass : 'OCAnnouncingMethodInstaller',
-	#category : 'OpalCompiler-Core-FrontEnd',
-	#package : 'OpalCompiler-Core',
-	#tag : 'FrontEnd'
+	#category : 'Traits',
+	#package : 'Traits'
 }
 
 { #category : 'installing' }
-OCTraitMethodInstaller >> addAndClassifySelector: selector withMethod: compiledMethod into: behavior inProtocol: aProtocol [
+OCTraitMethodInstaller >> addAndClassifyMethod: compiledMethod into: behavior [
 	"When a new methods is added, I add it to the localMethodDict and also propagate the changes to my users"
 
 	<reflection: 'Class structural modification - Selector/Method modification'>
+	| selector |
+	selector := compiledMethod selector.
 	behavior localMethodDict at: selector put: compiledMethod.
 
-	super
-		addAndClassifySelector: selector
-		withMethod: compiledMethod
-		into: behavior
-		inProtocol: aProtocol.
+	super addAndClassifyMethod: compiledMethod into: behavior.
 
 	TraitChange addSelector: selector on: behavior
 ]

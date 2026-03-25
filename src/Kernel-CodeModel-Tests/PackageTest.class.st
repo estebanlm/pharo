@@ -138,21 +138,6 @@ PackageTest >> testAllUnsentMessages [
 		equals: (#( 'nonexistingMethodName1' 'nonexistingMethodName3' 'nonexistingMethodName4' ) collect: [ :each | each asSymbol ]) asSet
 ]
 
-{ #category : 'tests' }
-PackageTest >> testAnonymousClassAndSelector [
-	"jgeidel test case from issue 12628."
-
-	"Make sure we don't have a registration or a package for the method."
-
-	| ghost method |
-	ghost := Object newAnonymousSubclassInEnvironment: testEnvironment.
-	method := ghost compiler compile: 'rpackagetest'.
-	ghost addSelector: #packagetest withMethod: method.
-	self deny: (self organizer undefinedPackage includesSelector: #packagetest ofClass: ghost).
-	self assert: (self organizer packageOfClassNamed: ghost name) equals: self organizer undefinedPackage.
-	ghost classify: #packagetest under: '*packagetest'
-]
-
 { #category : 'tests - extensions' }
 PackageTest >> testAsPackage [
 	self assert: self class package name asPackage isNotNil

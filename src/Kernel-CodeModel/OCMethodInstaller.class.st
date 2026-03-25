@@ -8,15 +8,15 @@ Class {
 		'protocol',
 		'sourceManager'
 	],
-	#category : 'OpalCompiler-Core-FrontEnd',
-	#package : 'OpalCompiler-Core',
-	#tag : 'FrontEnd'
+	#category : 'Kernel-CodeModel-Methods',
+	#package : 'Kernel-CodeModel',
+	#tag : 'Methods'
 }
 
 { #category : 'installing' }
-OCMethodInstaller >> addAndClassifySelector: selector withMethod: compiledMethod into: behavior inProtocol: aProtocol [
+OCMethodInstaller >> addAndClassifyMethod: compiledMethod into: behavior [
 
-	behavior addSelectorSilently: selector withMethod: compiledMethod
+	behavior addSelectorSilently: compiledMethod selector withMethod: compiledMethod
 ]
 
 { #category : 'accessing' }
@@ -58,18 +58,17 @@ OCMethodInstaller >> install: method into: behavior compiler: compiler [
 				writeSource: compiler source
 				of: method
 				withFooter: ''
-				protocol: (protocol isString
-						 ifTrue: [ protocol ]
-						 ifFalse: [ protocol name ]) asString
+				protocol: self protocolName
 				timestamp: self changeStamp asString
-				priorSourcePointer: (self priorMethod ifNil: [ 0 ] ifNotNil: [ self priorMethod sourcePointer ]) ].
-
+				priorSourcePointer: self priorSourcePointer ].
+			
 	"Install the method and classify AFTER setting the source pointer.
 	If the method is a trait method, trait installation is hooked down here.
 	And it depends on having set the source pointer before.
 	
 	This is not the ideal order, because this means that a failure in writing the source code may prevent method installation in the system (and thus preventing further work/updates to code)."
-	self addAndClassifySelector: method selector withMethod: method into: behavior inProtocol: protocol.
+	self addAndClassifyMethod: method into: behavior.
+	method cachePragmas.
 
 	^ method
 ]
@@ -98,6 +97,12 @@ OCMethodInstaller >> priorMethod: anObject [
 	priorMethod := anObject
 ]
 
+{ #category : 'installing' }
+OCMethodInstaller >> priorSourcePointer [
+
+	^ self priorMethod ifNil: [ 0 ] ifNotNil: [ self priorMethod sourcePointer ]
+]
+
 { #category : 'accessing' }
 OCMethodInstaller >> protocol [
 
@@ -108,4 +113,13 @@ OCMethodInstaller >> protocol [
 OCMethodInstaller >> protocol: anObject [
 
 	protocol := anObject
+]
+
+{ #category : 'installing' }
+OCMethodInstaller >> protocolName [
+	"Return a string representation of the protocol, to store it in source files"
+
+	^ (protocol isString
+		   ifTrue: [ protocol ]
+		   ifFalse: [ protocol name ]) asString
 ]

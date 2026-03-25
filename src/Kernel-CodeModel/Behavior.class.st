@@ -55,14 +55,6 @@ Behavior >> >> selector [
 	^self compiledMethodAt: selector
 ]
 
-{ #category : 'adding-removing methods' }
-Behavior >> addAndClassifySelector: selector withMethod: compiledMethod inProtocol: protocol [
-
-	<reflection: 'Class structural modification - Selector/Method modification'>
-
-	self addSelectorSilently: selector withMethod: compiledMethod.
-]
-
 { #category : 'obsolete subclasses' }
 Behavior >> addObsoleteSubclass: aClass [
 	"Weakly remember that aClass was a subclass of the receiver and is now obsolete"
@@ -77,8 +69,14 @@ Behavior >> addObsoleteSubclass: aClass [
 
 { #category : 'adding-removing methods' }
 Behavior >> addSelector: selector withMethod: compiledMethod [
+
 	<reflection: 'Class structural modification - Selector/Method modification'>
-	^ self addSelectorSilently: selector withMethod: compiledMethod
+	self deprecated: 'Use #methodInstaller instead'.
+
+	"This method installer does not announce"
+	self methodInstaller
+		logged: false;
+		install: compiledMethod into: self compiler: nil
 ]
 
 { #category : 'adding-removing methods' }
@@ -1364,6 +1362,12 @@ Behavior >> methodDictionary [
 { #category : 'accessing - method dictionary' }
 Behavior >> methodDictionary: aDictionary [
 	self methodDict: aDictionary
+]
+
+{ #category : 'organization' }
+Behavior >> methodInstaller [
+
+	^ OCMethodInstaller new
 ]
 
 { #category : 'accessing' }

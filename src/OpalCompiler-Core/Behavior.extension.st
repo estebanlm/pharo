@@ -72,8 +72,10 @@ Behavior >> compile: sourceCode classified: protocol withStamp: changeStamp noti
 		            source: sourceCode;
 		            requestor: requestor;
 		            failBlock: (requestor ifNotNil: [ [ ^ nil ] ]);
-		            "no failblock if no requestor""compatibility: permit undeclared if no requestor"permitUndeclared: requestor isNil;
-		            permitFaulty: requestor isNil;
+		            "no failblock if no requestor"
+						"compatibility: permit undeclared if no requestor"
+						permitUndeclared: false;
+		            permitFaulty: false;
 		            protocol: protocol;
 		            changeStamp: changeStamp;
 		            logged: logSource.
