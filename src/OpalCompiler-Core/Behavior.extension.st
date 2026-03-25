@@ -65,7 +65,7 @@ Behavior >> compile: sourceCode classified: protocol withStamp: changeStamp noti
 Behavior >> compile: sourceCode classified: protocol withStamp: changeStamp notifying: requestor logSource: logSource recompileDependencies: recompileDependencies [
 	"Return the selector of the compiled method"
 
-	| method compiler ast aliasingSelectors 
+	| method compiler ast aliasingSelectors |
 	
 	sourceCode ifEmpty: [ Error signal: 'The source code should not be empty' ].
 	compiler := self compiler
