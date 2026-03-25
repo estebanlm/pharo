@@ -9,21 +9,6 @@ Class {
 	#tag : 'Bugs'
 }
 
-{ #category : 'tests' }
-ReSelfSentNotImplementedRuleTest >> myCritiquesOnMethod: method ast: ast [
-	"The global Release tests identify sampleMethod as a violation.
-	Thus, we mark it as ignoreNotImplementedSelectors:.
-	However, we locally remove the pragma to be able to test that the checker does actually check"
-
-	"TODO: Shouldn't we test that the pragma is well taken into account too?"
-
-	| methodAST |
-	methodAST := ast copy.
-	methodAST removePragmaNamed: #ignoreNotImplementedSelectors:.
-
-	^ super myCritiquesOnMethod: method ast: methodAST
-]
-
 { #category : 'sample' }
 ReSelfSentNotImplementedRuleTest >> sampleMethod [
 	"Do not highlight this bar. I am a method used in testCheckForCritiques"

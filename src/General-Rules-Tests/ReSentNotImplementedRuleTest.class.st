@@ -9,6 +9,17 @@ Class {
 	#tag : 'Bugs'
 }
 
+{ #category : 'utilities' }
+ReSentNotImplementedRuleTest >> myCritiquesOnMethod: method [
+
+	| methodCopy newProperties |
+	methodCopy := method copy.
+	newProperties := methodCopy properties copyWithout: methodCopy pragmas first.
+	methodCopy properties: newProperties.
+
+	^ super myCritiquesOnMethod: methodCopy
+]
+
 { #category : 'sample' }
 ReSentNotImplementedRuleTest >> sampleMethod [
 
