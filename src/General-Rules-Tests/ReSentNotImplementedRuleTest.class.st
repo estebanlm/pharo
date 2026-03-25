@@ -12,6 +12,7 @@ Class {
 { #category : 'sample' }
 ReSentNotImplementedRuleTest >> sampleMethod [
 
+	<ignoreNotImplementedSelectors: #( whatShallIDoNow andThisIsBogusToo )>
 	"this is a comment, so whatShallIDoNow should not highlight"
 	99 whatShallIDoNow.
 	77 andThisIsBogusToo.

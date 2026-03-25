@@ -348,7 +348,7 @@ ExtensionTest >> test15ExtensionsWithIsolatedSuperSends [
 	userPackage addExtensionImport: extensionOnPoint2.
 	userInstance := userClass new.
 
-	self assert: (userInstance scopedUser: objectClass new) equals: 10.
+	self assert: (userInstance perform: #scopedUser: with: objectClass new) equals: 10.
 
 	pointObject := pointClass new.
 	self should: [ userInstance perform: #scopedUser: with: pointObject ] raise: MessageNotUnderstood with: [ :dnu |

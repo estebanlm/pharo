@@ -57,13 +57,18 @@ ReAbstractRuleTestCase >> myCritiquesOnClass: aClass [
 { #category : 'utilities' }
 ReAbstractRuleTestCase >> myCritiquesOnMethod: method [
 
+	^ self myCritiquesOnMethod: method ast: method ast
+]
+
+{ #category : 'utilities' }
+ReAbstractRuleTestCase >> myCritiquesOnMethod: method ast: methodAST [
+
 	| critiques rule |
 	critiques := OrderedCollection new.
 	rule := self subjectUnderTest new.
 	self subjectUnderTest checksNode
-		ifTrue: [
-			| ast |
-			ast := method ast.
+		ifTrue: [ | ast |
+			ast := methodAST.
 			"for rewrite rules, we run every rule on a copy of the ast"
 			rule isRewriteRule ifTrue: [ ast := ast copy ].
 			ast nodesDo: [ :node |
