@@ -5,7 +5,8 @@ Class {
 		'methodBlock',
 		'result',
 		'classBlock',
-		'anInstVar'
+		'anInstVar',
+		'accessor'
 	],
 	#category : 'Refactoring-DataForTesting-LittleHierarchy',
 	#package : 'Refactoring-DataForTesting',
@@ -331,6 +332,12 @@ RBBasicLintRuleTestData >> methodBlock: aBlock [
 RBBasicLintRuleTestData >> newResultClass: aClass [
 "New one:)"
 	result := aClass new
+]
+
+{ #category : 'initialization' }
+RBBasicLintRuleTestData >> noUnused [
+
+	accessor := 'toto'
 ]
 
 { #category : 'accessing' }

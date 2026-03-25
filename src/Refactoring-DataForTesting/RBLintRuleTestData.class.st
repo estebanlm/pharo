@@ -54,6 +54,12 @@ RBLintRuleTestData class >> someOtherFooMethod [
 ]
 
 { #category : 'accessing' }
+RBLintRuleTestData >> accessor [
+
+	^ nil
+]
+
+{ #category : 'accessing' }
 RBLintRuleTestData >> checkClass: aSmalllintContext [
 ]
 
