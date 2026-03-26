@@ -11,7 +11,7 @@ Class {
 		'noOverridden',
 		'notExecutionOrder',
 		'noSuperMessage',
-		'noSelfSendMessage'
+		'methodSelectionPresenterClass'
 	],
 	#category : 'Refactoring-UI-Drivers',
 	#package : 'Refactoring-UI',
@@ -29,10 +29,6 @@ ReInlineMethodDriver >> breakingChoices [
 
 	| items |
 	items := OrderedCollection new.
-
-	noSelfSendMessage check ifFalse: [
-			items add: (ReProvideMethodToInlineChoice new driver: self).
-			^ items ].
 
 	(noOverridden check and: [ notExecutionOrder check and: [ noSuperMessage check ] ]) ifFalse: [
 		items add: (ReInlineMethodChoice new driver: self) ].
@@ -86,7 +82,7 @@ ReInlineMethodDriver >> runRefactoring [
 			^ false ].
 	self setBreakingChangesPreconditions.
 
-	noOverridden check & notExecutionOrder check & noSuperMessage check & noSelfSendMessage
+	noOverridden check & notExecutionOrder check & noSuperMessage check
 		ifTrue: [ self applyChanges ]
 		ifFalse: [ self handleBreakingChanges ]
 ]
@@ -101,17 +97,11 @@ ReInlineMethodDriver >> scopes: aScope interval: anInterval selector: aSelector 
 	class := aClass
 ]
 
-{ #category : 'action' }
-ReInlineMethodDriver >> selectMethodToInline [
-
-
-]
-
 { #category : 'initialization' }
 ReInlineMethodDriver >> setBreakingChangesPreconditions [
 
 	noOverridden := refactoring preconditionIsMethodOverridden.
 	notExecutionOrder := refactoring preconditionExecutionOrder.
 	noSuperMessage := refactoring  preconditionSuperMessages.
-	noSelfSendMessage := refactoring preconditionNonSelfSendMessages 
+
 ]

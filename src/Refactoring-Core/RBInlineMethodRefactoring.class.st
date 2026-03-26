@@ -141,17 +141,12 @@ RBInlineMethodRefactoring >> checkSelectedMessage [
 { #category : 'accessing' }
 RBInlineMethodRefactoring >> classOfTheMethodToInline [
 
-	methodToInline ifNotNil: [
-        ^ methodToInline methodClass
-    ].
+	methodToInline ifNotNil: [ ^ methodToInline methodClass ].
 	^ classOfTheMethodToInline
 		  ifNil: [
-			  classOfTheMethodToInline := (sourceMessage receiver name
-			                               = 'super'
-				                               ifTrue: [ class superclass ]
-				                               ifFalse: [ class ])
-				                              whichClassIncludesSelector:
-				                              self inlineSelector ]
+				  classOfTheMethodToInline := (sourceMessage receiver isSuperVariable
+					                               ifTrue: [ class superclass ]
+					                               ifFalse: [ class ]) whichClassIncludesSelector: self inlineSelector ]
 		  ifNotNil: [ classOfTheMethodToInline ]
 ]
 
@@ -252,12 +247,6 @@ RBInlineMethodRefactoring >> insertInlinedMethod [
 ]
 
 { #category : 'accessing' }
-RBInlineMethodRefactoring >> isOverridden [
-
-	^ class subclassRedefines: self inlineSelector
-]
-
-{ #category : 'accessing' }
 RBInlineMethodRefactoring >> methodToInline: aCompiledMethod [
 
 	methodToInline := aCompiledMethod
@@ -349,15 +338,6 @@ RBInlineMethodRefactoring >> preconditionIsMethodOverridden [
 
 	self checkOverridden ifFalse: [ ^ RBCondition true ].
 	^ ReSubclassesDirectlyDefinesCondition new class: class selectors: { self inlineSelector }
-]
-
-{ #category : 'preconditions' }
-RBInlineMethodRefactoring >> preconditionNonSelfSendMessages [
-
-
-^ ReNoSelfSendMessagesCondition new sourceMessage: sourceMessage .
-
-  
 ]
 
 { #category : 'preconditions' }
