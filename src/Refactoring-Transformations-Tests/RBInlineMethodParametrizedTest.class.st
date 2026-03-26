@@ -452,6 +452,25 @@ RBInlineMethodParametrizedTest >> testInlineMethodForSuperSend [
 ]
 
 { #category : 'tests' }
+RBInlineMethodParametrizedTest >> testInlineMethodProvidingMethodToInline [
+
+	| refactoring methodName |
+	methodName := #provideInlineMethod.
+	refactoring := RBInlineMethodRefactoring
+		               inline: (25 to: 62)
+		               inMethod: methodName
+		               forClass: RBClassDataForRefactoringTest
+		               usingMethod: RBBasicLintRuleTestData >> #classBlock.
+
+	self executeRefactoring: refactoring.
+
+	self
+		assert: ((refactoring model classNamed: #RBClassDataForRefactoringTest) parseTreeForSelector: methodName)
+		equals: (self parseMethod: 'provideInlineMethod
+	^ self anInstVar + 5 + 3')
+]
+
+{ #category : 'tests' }
 RBInlineMethodParametrizedTest >> testInlineRecursiveCascadedMethod [
 	| refactoring |
 	refactoring := self createRefactoringWithArguments:
