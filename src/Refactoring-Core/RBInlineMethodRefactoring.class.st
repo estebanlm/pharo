@@ -18,7 +18,8 @@ Class {
 		'sourceSelector',
 		'sourceMessage',
 		'checkOverridden',
-		'classOfTheMethodToInline'
+		'classOfTheMethodToInline',
+		'methodToInline'
 	],
 	#category : 'Refactoring-Core-Refactorings',
 	#package : 'Refactoring-Core',
@@ -33,6 +34,15 @@ RBInlineMethodRefactoring class >> inline: anInterval inMethod: aSelector forCla
 		inline: anInterval
 		inMethod: aSelector
 		forClass: aClass
+]
+
+{ #category : 'instance creation' }
+RBInlineMethodRefactoring class >> inline: anInterval inMethod: aSelector forClass: aClass usingMethod: aCompiledMethod [
+ "Use this API to inline a non-self send by providing the method to inline explicitly."
+	^ self new
+		  inline: anInterval inMethod: aSelector forClass: aClass;
+		  methodToInline: aCompiledMethod;
+		  yourself
 ]
 
 { #category : 'instance creation' }
@@ -131,8 +141,10 @@ RBInlineMethodRefactoring >> checkSelectedMessage [
 	sourceParseTree := class parseTreeForSelector: sourceSelector.
 	sourceParseTree ifNil: [
 		self refactoringError: 'Could not parse sources' ].
+
 	sourceMessage := sourceParseTree whichNodeIsContainedBy:
 		                 sourceInterval.
+
 	sourceMessage ifNil: [
 		self refactoringError:
 			'The selection doesn''t appear to be a message send' ].
@@ -142,8 +154,10 @@ RBInlineMethodRefactoring >> checkSelectedMessage [
 		self refactoringError:
 			'The selection doesn''t appear to be a message send' ].
 	(sourceMessage receiver isSelfVariable or: [
-		 sourceMessage receiver isSuperVariable ]) ifFalse: [
-		self refactoringError: 'Cannot inline non-self messages' ]
+		 sourceMessage receiver isSuperVariable ]) ifFalse: [ 
+		methodToInline ifNil:[
+			self refactoringError: 'Cannot inline non-self messages' 
+			]]
 ]
 
 { #category : 'preconditions' }
@@ -162,7 +176,10 @@ RBInlineMethodRefactoring >> checkSuperMessages [
 
 { #category : 'accessing' }
 RBInlineMethodRefactoring >> classOfTheMethodToInline [
-	
+
+	methodToInline ifNotNil: [
+        ^ methodToInline methodClass
+    ].
 	^ classOfTheMethodToInline
 		  ifNil: [
 			  classOfTheMethodToInline := (sourceMessage receiver name
@@ -274,6 +291,12 @@ RBInlineMethodRefactoring >> insertInlinedMethod [
 RBInlineMethodRefactoring >> isOverridden [
 
 	^ class subclassRedefines: self inlineSelector
+]
+
+{ #category : 'accessing' }
+RBInlineMethodRefactoring >> methodToInline: aCompiledMethod [
+
+	methodToInline := aCompiledMethod
 ]
 
 { #category : 'transforming' }
