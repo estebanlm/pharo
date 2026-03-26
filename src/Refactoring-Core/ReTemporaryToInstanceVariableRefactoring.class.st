@@ -101,7 +101,7 @@ ReTemporaryToInstanceVariableRefactoring >> applicabilityPreconditions [
 	^ {
 		  (RBCondition withBlock: [ parseTree isNotNil ]).
 		  (ReDefinesSelectorsCondition new definesSelectors: (Array with: selector) in: class).
-		  (ReIsVariableNotDefinedInHierarchy name: temporaryVariableName class: class).
+		  (RBCondition definesInstanceVariable: temporaryVariableName asString in: class) not.
 		  (RBCondition withBlock: [
 				   parseTree ifNotNil: [ self isTemporaryVariableNameValid ].
 				   true ]) }
