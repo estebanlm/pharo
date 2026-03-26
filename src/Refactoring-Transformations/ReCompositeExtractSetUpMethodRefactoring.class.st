@@ -40,7 +40,7 @@ ReCompositeExtractSetUpMethodRefactoring >> buildTransformationFor: newMethodNam
 					model: self model
 					methodTree: newMethod
 					inClass: class);
-		  addAll: (assignments collect: [ :var | RBTemporaryToInstanceVariableRefactoring
+		  addAll: (assignments collect: [ :var | ReTemporaryToInstanceVariableRefactoring
 					model: self model
 					class: class
 					selector: selector

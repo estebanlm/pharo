@@ -65,7 +65,7 @@ MyClassA subclass: #MyClassB
 ```
 "
 Class {
-	#name : 'RBTemporaryToInstanceVariableRefactoring',
+	#name : 'ReTemporaryToInstanceVariableRefactoring',
 	#superclass : 'RBMethodRefactoring',
 	#instVars : [
 		'selector',
@@ -78,7 +78,7 @@ Class {
 }
 
 { #category : 'instance creation' }
-RBTemporaryToInstanceVariableRefactoring class >> class: aClass selector: aSelector variable: aVariableName [
+ReTemporaryToInstanceVariableRefactoring class >> class: aClass selector: aSelector variable: aVariableName [
 	^ self new
 		class: aClass
 		selector: aSelector
@@ -86,7 +86,7 @@ RBTemporaryToInstanceVariableRefactoring class >> class: aClass selector: aSelec
 ]
 
 { #category : 'instance creation' }
-RBTemporaryToInstanceVariableRefactoring class >> model: aRBSmalltalk class: aClass selector: aSelector variable: aVariableName [
+ReTemporaryToInstanceVariableRefactoring class >> model: aRBSmalltalk class: aClass selector: aSelector variable: aVariableName [
 	^ self new
 		model: aRBSmalltalk;
 		class: aClass
@@ -96,22 +96,19 @@ RBTemporaryToInstanceVariableRefactoring class >> model: aRBSmalltalk class: aCl
 ]
 
 { #category : 'preconditions' }
-RBTemporaryToInstanceVariableRefactoring >> applicabilityPreconditions [
+ReTemporaryToInstanceVariableRefactoring >> applicabilityPreconditions [
 
 	^ {
-		  (RBCondition withBlock: [parseTree isNotNil]).
-		  (RBCondition definesSelector: selector in: class).
-		  (RBCondition
-			   definesInstanceVariable: temporaryVariableName asString
-			   in: class) not.
+		  (RBCondition withBlock: [ parseTree isNotNil ]).
+		  (ReDefinesSelectorsCondition new definesSelectors: (Array with: selector) in: class).
+		  (ReIsVariableNotDefinedInHierarchy name: temporaryVariableName class: class).
 		  (RBCondition withBlock: [
-				parseTree ifNotNil: [ .
-				   self isTemporaryVariableNameValid ].
-			   true ]) }
+				   parseTree ifNotNil: [ self isTemporaryVariableNameValid ].
+				   true ]) }
 ]
 
 { #category : 'preconditions' }
-RBTemporaryToInstanceVariableRefactoring >> breakingChangePreconditions [
+ReTemporaryToInstanceVariableRefactoring >> breakingChangePreconditions [
 
 	^ {
 		  self preconditionNoMultipleTempOccurences.
@@ -119,14 +116,14 @@ RBTemporaryToInstanceVariableRefactoring >> breakingChangePreconditions [
 ]
 
 { #category : 'initialization' }
-RBTemporaryToInstanceVariableRefactoring >> class: aClass selector: aSelector variable: aVariableName [
+ReTemporaryToInstanceVariableRefactoring >> class: aClass selector: aSelector variable: aVariableName [
 	class := self classObjectFor: aClass.
 	selector := aSelector.
 	temporaryVariableName := aVariableName
 ]
 
 { #category : 'preconditions' }
-RBTemporaryToInstanceVariableRefactoring >> isTemporaryVariableNameValid [
+ReTemporaryToInstanceVariableRefactoring >> isTemporaryVariableNameValid [
 
 	(parseTree allTemporaryVariables includes: temporaryVariableName) ifFalse: [
 		self refactoringError: temporaryVariableName , ' isn''t a valid temporary variable name' ].
@@ -135,13 +132,13 @@ RBTemporaryToInstanceVariableRefactoring >> isTemporaryVariableNameValid [
 ]
 
 { #category : 'preconditions' }
-RBTemporaryToInstanceVariableRefactoring >> preconditionNoMultipleTempOccurences [
+ReTemporaryToInstanceVariableRefactoring >> preconditionNoMultipleTempOccurences [
 
 	^ ReMultipleMethodsDontReferToTempVarCondition name: temporaryVariableName class: class selector: selector 
 ]
 
 { #category : 'preconditions' }
-RBTemporaryToInstanceVariableRefactoring >> preconditionNoReadBeforeWritten [
+ReTemporaryToInstanceVariableRefactoring >> preconditionNoReadBeforeWritten [
 
 	^ ReVariablesNotReadBeforeWrittenCondition new
 		  subtree: parseTree;
@@ -150,19 +147,19 @@ RBTemporaryToInstanceVariableRefactoring >> preconditionNoReadBeforeWritten [
 ]
 
 { #category : 'preconditions' }
-RBTemporaryToInstanceVariableRefactoring >> preconditions [
+ReTemporaryToInstanceVariableRefactoring >> preconditions [
 
 	^ self applicabilityPreconditions & self breakingChangePreconditions
 ]
 
 { #category : 'transforming' }
-RBTemporaryToInstanceVariableRefactoring >> prepareForExecution [ 
+ReTemporaryToInstanceVariableRefactoring >> prepareForExecution [ 
 
 	parseTree := class parseTreeForSelector: selector.
 ]
 
 { #category : 'transforming' }
-RBTemporaryToInstanceVariableRefactoring >> privateTransform [
+ReTemporaryToInstanceVariableRefactoring >> privateTransform [
 
 	self removeTemporaryOfClass: class.
 	class allSubclasses do: [ :cls |
@@ -173,12 +170,12 @@ RBTemporaryToInstanceVariableRefactoring >> privateTransform [
 ]
 
 { #category : 'removing' }
-RBTemporaryToInstanceVariableRefactoring >> removeTemporaryOfClass: aClass [
+ReTemporaryToInstanceVariableRefactoring >> removeTemporaryOfClass: aClass [
 	aClass selectors do: [ :aSymbol | self removeTemporaryOfMethod: aSymbol in: aClass ]
 ]
 
 { #category : 'removing' }
-RBTemporaryToInstanceVariableRefactoring >> removeTemporaryOfMethod: aSelector in: aClass [
+ReTemporaryToInstanceVariableRefactoring >> removeTemporaryOfMethod: aSelector in: aClass [
 
 	| methodParseTree matcher method |
 	method := aClass methodFor: aSelector.

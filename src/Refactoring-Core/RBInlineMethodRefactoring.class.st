@@ -90,38 +90,20 @@ RBInlineMethodRefactoring >> applicabilityPreconditions [
 	"Even though it looks complex it only does preconditions and set up. `transform` does actual refactoring"
 
 	^ {
-		  (RBCondition definesSelector: sourceSelector in: class).
+		  (ReDefinesSelectorsCondition new definesSelectors: (Array with: sourceSelector) in: class).
 		  (RBCondition withBlock: [
-			   (sourceMessage parent isReturn or: [
-				    self hasMultipleReturns not ]) ifFalse: [
-				   self refactoringError:
-					   'Cannot inline method since it contains multiple returns that cannot be rewritten' ].
-			   true ]) }
+				   (sourceMessage parent isReturn or: [ self hasMultipleReturns not ]) ifFalse: [
+					   self refactoringError: 'Cannot inline method since it contains multiple returns that cannot be rewritten' ].
+				   true ]) }
 ]
 
 { #category : 'preconditions' }
 RBInlineMethodRefactoring >> breakingChangePreconditions [
 
 	^ {
-		  (RBCondition withBlock: [
-				   self checkOverridden ifTrue: [
-						   self isOverridden ifTrue: [
-								   self refactoringWarning:
-									   ('<1p>>><2s> is overriden. Do you want to inline it anyway?' , String cr , 'You can break you hooks with this inline.'
-										    expandMacrosWith: self classOfTheMethodToInline
-										    with: self inlineSelector) ] ].
-				   true ]).
-		  (RBCondition withBlock: [
-				   | statements |
-				   statements := inlineParseTree body statements.
-				   (statements size > 1 and: [ sourceMessage isEvaluatedFirst not ]) ifTrue: [
-						   self refactoringWarning:
-							   'To inline this method, we need to move some of its statements before the original message send.<n>This could change the order of execution, which can change the behavior.<n>Do you want to proceed?'
-								   expandMacros ].
-				   true ]).
-		  (RBCondition withBlock: [
-				   self checkSuperMessages.
-				   true ]) }
+		  self preconditionIsMethodOverridden.
+		  self preconditionExecutionOrder.
+		  self preconditionSuperMessages }
 ]
 
 { #category : 'accessing' }
@@ -153,25 +135,7 @@ RBInlineMethodRefactoring >> checkSelectedMessage [
 	sourceMessage isMessage ifFalse: [
 		self refactoringError:
 			'The selection doesn''t appear to be a message send' ].
-	(sourceMessage receiver isSelfVariable or: [
-		 sourceMessage receiver isSuperVariable ]) ifFalse: [ 
-		methodToInline ifNil:[
-			self refactoringError: 'Cannot inline non-self messages' 
-			]]
-]
 
-{ #category : 'preconditions' }
-RBInlineMethodRefactoring >> checkSuperMessages [
-
-	self classOfTheMethodToInline = class ifTrue: [ ^ self ].
-	self classOfTheMethodToInline superclass ifNil: [ ^ self ].
-	inlineParseTree superMessages do: [ :each |
-		(self classOfTheMethodToInline superclass
-			 whichClassIncludesSelector: each)
-		= (class superclass whichClassIncludesSelector: each) ifFalse: [
-			self refactoringWarning:
-				('Cannot inline method since it sends a super message <1s> that is overriden'
-					 expandMacrosWith: each) ] ]
 ]
 
 { #category : 'accessing' }
@@ -370,6 +334,39 @@ RBInlineMethodRefactoring >> parseInlineMethod [
 		ifFalse: [ inlineParseTree addSelfReturn ].
    inlineParseTree isPrimitive ifTrue: [
 	   self refactoringError: 'Cannot inline primitives' ].
+]
+
+{ #category : 'preconditions' }
+RBInlineMethodRefactoring >> preconditionExecutionOrder [
+
+    ^ ReInlineMethodExecutionOrderCondition new
+        sourceMessage: sourceMessage
+        inlineParseTree: inlineParseTree
+]
+
+{ #category : 'preconditions' }
+RBInlineMethodRefactoring >> preconditionIsMethodOverridden [
+
+	self checkOverridden ifFalse: [ ^ RBCondition true ].
+	^ ReSubclassesDirectlyDefinesCondition new class: class selectors: { self inlineSelector }
+]
+
+{ #category : 'preconditions' }
+RBInlineMethodRefactoring >> preconditionNonSelfSendMessages [
+
+
+^ ReNoSelfSendMessagesCondition new sourceMessage: sourceMessage .
+
+  
+]
+
+{ #category : 'preconditions' }
+RBInlineMethodRefactoring >> preconditionSuperMessages [
+
+    ^ ReInlineMethodSuperMessagesCondition new
+        class: self classOfTheMethodToInline
+        callerClass: class
+        inlineParseTree: inlineParseTree
 ]
 
 { #category : 'preconditions' }
