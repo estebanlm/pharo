@@ -23,3 +23,25 @@ OCScopeTest >> ivarForTesting [
 
 	^ ivarForTesting
 ]
+
+{ #category : 'tests - scope from contexts' }
+OCScopeTest >> testASTContextFromACleanBlockShouldNotExposeOuterVariables [
+
+	| myVariable ctx |
+	myVariable := 27.
+	
+	ctx := [ Object new ] asContext.
+	
+	self assert: (ctx astScope lookupVar: 'myVariable') isNil.
+]
+
+{ #category : 'tests - scope from contexts' }
+OCScopeTest >> testASTContextFromANonCleanBlockShouldExposeOuterVariables [
+
+	| myVariable ctx |
+	myVariable := 27.
+	
+	ctx := [ Object new. self ] asContext.
+	
+	self assert: (ctx astScope lookupVar: 'myVariable') isNotNil.
+]
