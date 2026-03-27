@@ -10,8 +10,7 @@ Class {
 		'interval',
 		'noOverridden',
 		'notExecutionOrder',
-		'noSuperMessage',
-		'methodSelectionPresenterClass'
+		'noSuperMessage'
 	],
 	#category : 'Refactoring-UI-Drivers',
 	#package : 'Refactoring-UI',
