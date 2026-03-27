@@ -7,14 +7,12 @@ Class {
 }
 
 { #category : 'tests' }
-ReSharedVariableHasReferencesInDefiningClassTest >> testClassHasNoReferences [
+ReSharedVariableHasReferencesInDefiningClassTest >> testDefinedSharedVariableHasNoReferences [
 
     | condition |
-
     condition := ReSharedVariableHasReferencesInDefiningClass new
-        class: (self model classNamed: #MyClassB)
+        class: (self model classNamed: #MyClassAlpha)
         referencesToSharedVariable: #SharedVarA.
-
     self deny: condition check.
-    self assert: condition violators isEmpty.
+    self assert: condition violators isEmpty
 ]

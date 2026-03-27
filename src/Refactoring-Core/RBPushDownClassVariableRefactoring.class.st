@@ -18,7 +18,7 @@ RBPushDownClassVariableRefactoring >> applicabilityPreconditions [
     	(ReDirectlyDefinesSharedVariableCondition 
         	class: class 
         	sharedVariables: { variableName }).
-		self preconditionHasAnySubclass
+		self preconditionHasSubclass
 	 }
 ]
 
@@ -39,19 +39,19 @@ RBPushDownClassVariableRefactoring >> findDestinationClasses [
 ]
 
 { #category : 'preconditions' }
-RBPushDownClassVariableRefactoring >> preconditionHasAnySubclass [
-
-    ^ (ReClassesHaveNoSubclassesCondition new
-            classes: { class }) not
-]
-
-{ #category : 'preconditions' }
 RBPushDownClassVariableRefactoring >> preconditionHasNoReferences [
 
     ^ (ReSharedVariableHasReferencesInDefiningClass
             new
             class: class
             referencesToSharedVariable: variableName) not
+]
+
+{ #category : 'preconditions' }
+RBPushDownClassVariableRefactoring >> preconditionHasSubclass [
+
+    ^ (ReClassesHaveNoSubclassesCondition new
+            classes: { class }) not
 ]
 
 { #category : 'transforming' }
