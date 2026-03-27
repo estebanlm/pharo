@@ -14,19 +14,18 @@ Class {
 { #category : 'preconditions' }
 RBPushDownClassVariableRefactoring >> applicabilityPreconditions [
 
-	^ { (RBCondition definesClassVariable: variableName in: class) }
+	^ {
+    	(ReDirectlyDefinesSharedVariableCondition 
+        	class: class 
+        	sharedVariables: { variableName }).
+		self preconditionHasAnySubclass
+	 }
 ]
 
 { #category : 'preconditions' }
 RBPushDownClassVariableRefactoring >> breakingChangePreconditions [
 
-	| references |
-
-	references := RBCondition referencesClassVariable: variableName in: class.
-	class realClass
-		ifNil: [ references errorMacro: ('<1s> is referenced.' expandMacrosWith: variableName) ]
-		ifNotNil: [ references errorMacro: ('<1s> is referenced.<n>Browse references?' expandMacrosWith: variableName) ].
-	^ { references not }
+    ^ { self preconditionHasNoReferences }
 ]
 
 { #category : 'preconditions' }
@@ -40,9 +39,19 @@ RBPushDownClassVariableRefactoring >> findDestinationClasses [
 ]
 
 { #category : 'preconditions' }
-RBPushDownClassVariableRefactoring >> preconditions [
+RBPushDownClassVariableRefactoring >> preconditionHasAnySubclass [
 
-	^ self applicabilityPreconditions & self breakingChangePreconditions
+    ^ (ReClassesHaveNoSubclassesCondition new
+            classes: { class }) not
+]
+
+{ #category : 'preconditions' }
+RBPushDownClassVariableRefactoring >> preconditionHasNoReferences [
+
+    ^ (ReSharedVariableHasReferencesInDefiningClass
+            new
+            class: class
+            referencesToSharedVariable: variableName) not
 ]
 
 { #category : 'transforming' }

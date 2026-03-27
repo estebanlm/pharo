@@ -1,0 +1,20 @@
+Class {
+	#name : 'ReSharedVariableHasReferencesInDefiningClassTest',
+	#superclass : 'ReClassesConditionTest',
+	#category : 'Refactoring-Core-Tests-Conditions',
+	#package : 'Refactoring-Core-Tests',
+	#tag : 'Conditions'
+}
+
+{ #category : 'tests' }
+ReSharedVariableHasReferencesInDefiningClassTest >> testClassHasNoReferences [
+
+    | condition |
+
+    condition := ReSharedVariableHasReferencesInDefiningClass new
+        class: (self model classNamed: #MyClassB)
+        referencesToSharedVariable: #SharedVarA.
+
+    self deny: condition check.
+    self assert: condition violators isEmpty.
+]
