@@ -16,3 +16,14 @@ ReSharedVariableHasReferencesInDefiningClassTest >> testDefinedSharedVariableHas
     self deny: condition check.
     self assert: condition violators isEmpty
 ]
+
+{ #category : 'tests' }
+ReSharedVariableHasReferencesInDefiningClassTest >> testDefinedSharedVariableHasReferences [
+
+    | condition |
+    condition := ReSharedVariableHasReferencesInDefiningClass new
+        class: (self model classNamed: #MyClassBeta)
+        referencesToSharedVariable: #SharedVarB.
+    self assert: condition check.
+    self assert: condition violators isNotEmpty
+]
