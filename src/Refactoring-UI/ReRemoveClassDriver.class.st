@@ -74,6 +74,21 @@ ReRemoveClassDriver >> defaultSelectDialog [
 		yourself
 ]
 
+{ #category : 'execution' }
+ReRemoveClassDriver >> handleApplicabilityPreconditions [ 
+
+	refactoring failedApplicabilityPreconditions 
+		ifNotEmpty: [ ^ self inform: refactoring failedApplicabilityErrorMessage ]
+
+]
+
+{ #category : 'private ex' }
+ReRemoveClassDriver >> hasFailedBehaviorPreservingPreconditions [
+
+	^ haveNoReferences check | emptyClasses check | noSubclasses check
+
+]
+
 { #category : 'configuration' }
 ReRemoveClassDriver >> instantiateRefactoring [
 
@@ -104,19 +119,6 @@ ReRemoveClassDriver >> removeClassAndPushStateToSubclasses [
 	self openPreviewWithChanges: refactoring removeClassesChanges
 ]
 
-{ #category : 'execution' }
-ReRemoveClassDriver >> runRefactoring [
-	
-	self configureRefactoring.
-	refactoring failedApplicabilityPreconditions 
-		ifNotEmpty: [ ^ self inform: refactoring failedApplicabilityErrorMessage ].
-	self setBreakingChangesPreconditions.
-	haveNoReferences check & emptyClasses check & noSubclasses check
-			ifTrue: [ self applyChanges ]
-			ifFalse: [ self handleBreakingChanges ]
-
-]
-
 { #category : 'initialization' }
 ReRemoveClassDriver >> scopes: refactoringScopes classes: aColclasses [
 
@@ -126,7 +128,7 @@ ReRemoveClassDriver >> scopes: refactoringScopes classes: aColclasses [
 ]
 
 { #category : 'private execution' }
-ReRemoveClassDriver >> setBreakingChangesPreconditions [
+ReRemoveClassDriver >> setBehaviorPreservingPreconditions [
 	
 	haveNoReferences := refactoring preconditionHaveNoReferences.
 	emptyClasses := refactoring preconditionEmptyClasses.
