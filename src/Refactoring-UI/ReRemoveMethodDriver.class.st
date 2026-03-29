@@ -72,7 +72,8 @@ ReRemoveMethodDriver >> hasFailedApplicabilityPreconditions [
 { #category : 'execution' }
 ReRemoveMethodDriver >> hasFailedBehaviorPreservingPreconditions [
 
-	 ^ haveNoSenders check not
+	haveNoSenders := refactoring preconditionHaveNoSenders.
+	^ refactoring failedBreakingChangePreconditions isNotEmpty 
 ]
 
 { #category : 'configuration' }
@@ -100,10 +101,4 @@ ReRemoveMethodDriver >> scopes: refactoringScopes methods: aMethods [
 	scopes := refactoringScopes.
 	model := self refactoringScopeOn: scopes first.
 	methods := aMethods
-]
-
-{ #category : 'execution' }
-ReRemoveMethodDriver >> setBehaviorPreservingPreconditions [ 
-	
-	haveNoSenders := refactoring preconditionHaveNoSenders
 ]

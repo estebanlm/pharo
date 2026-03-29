@@ -82,7 +82,7 @@ RePushDownMethodDriver >> changes [
 RePushDownMethodDriver >> configureAndRunRefactoring [
 
 	self configureRefactoring.
-	self setBehaviorPreservingPreconditions.
+	self hasFailedBehaviorPreservingPreconditions.
 	refactoring failedBreakingChangePreconditions ifEmpty: [ self applyChanges ] ifNotEmpty: [ self handleBreakingChanges ]
 ]
 
@@ -102,6 +102,18 @@ RePushDownMethodDriver >> defaultSelectDialog [
 RePushDownMethodDriver >> gatherUserInput [
 
 	self selectMethods
+]
+
+{ #category : 'private exe' }
+RePushDownMethodDriver >> hasFailedBehaviorPreservingPreconditions [
+
+	isAbstract := refactoring preconditionIsAbstract.
+	subclassesSendSuper := refactoring preconditionSubclassesDontSendSuper.
+	subclassDirectlyDefines := refactoring preconditionSubclassesDirectlyDefines.
+	refersToSelector := refactoring preconditionMethodsReferToSelector.
+	allSubclassesDirectlyDefines := refactoring preconditionAllSubclassesDirectlyDefines.
+	
+	^ isAbstract | subclassesSendSuper | subclassDirectlyDefines | refersToSelector | allSubclassesDirectlyDefines 
 ]
 
 { #category : 'configuration' }
@@ -198,14 +210,4 @@ RePushDownMethodDriver >> selectMethods [
 	dialog isOk ifTrue: [ ^ self ].
 
 	methods:= nil
-]
-
-{ #category : 'initialization' }
-RePushDownMethodDriver >> setBehaviorPreservingPreconditions [
-
-	isAbstract := refactoring preconditionIsAbstract.
-	subclassesSendSuper := refactoring preconditionSubclassesDontSendSuper.
-	subclassDirectlyDefines := refactoring preconditionSubclassesDirectlyDefines.
-	refersToSelector := refactoring preconditionMethodsReferToSelector.
-	allSubclassesDirectlyDefines := refactoring preconditionAllSubclassesDirectlyDefines 
 ]

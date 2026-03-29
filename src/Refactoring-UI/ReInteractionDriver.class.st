@@ -218,7 +218,7 @@ ReInteractionDriver >> hasFailedApplicabilityPreconditions [
 { #category : 'private exe' }
 ReInteractionDriver >> hasFailedBehaviorPreservingPreconditions [
 
-	^ self subclassResponsibility 
+	self subclassResponsibility 
 ]
 
 { #category : 'ui - requests' }
@@ -336,8 +336,7 @@ ReInteractionDriver >> runRefactoring [
 
 	self configureRefactoring.
 	self hasFailedApplicabilityPreconditions ifTrue: [ ^ self "applicability failed" ].
-	self gatherUserInput ifFalse: [ ^ self "user abandons" ]. 
-	self setBehaviorPreservingPreconditions.
+	self gatherUserInput ifFalse: [ ^ self "user abandons" ].
 	self hasFailedBehaviorPreservingPreconditions
 		ifTrue: [ self handleBreakingChanges ]
 		ifFalse: [ self applyChanges ]
@@ -367,10 +366,4 @@ ReInteractionDriver >> selectDialogForBreakingChanges: aDialog [
 	
 	selectDialogForBreakingChanges := aDialog 
 	
-]
-
-{ #category : 'private exe' }
-ReInteractionDriver >> setBehaviorPreservingPreconditions [
-
-	self subclassResponsibility 
 ]

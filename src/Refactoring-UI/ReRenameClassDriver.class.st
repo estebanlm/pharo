@@ -146,11 +146,6 @@ ReRenameClassDriver >> requestNewNameBasedOn: aName [
 	^ newName
 ]
 
-{ #category : 'private exe' }
-ReRenameClassDriver >> setBehaviorPreservingPreconditions [
-	"There is only one and it doesn't impact the choices the user has"
-]
-
 { #category : 'validation' }
 ReRenameClassDriver >> validateName: aName onPresenter: presenter [
 

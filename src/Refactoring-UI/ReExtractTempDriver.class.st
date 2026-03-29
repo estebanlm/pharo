@@ -78,6 +78,13 @@ ReExtractTempDriver >> getVariableName: initialAnswer errorMessage: message [
 		  openModal
 ]
 
+{ #category : 'initialization' }
+ReExtractTempDriver >> hasFailedBehaviorPreservingPreconditions [
+
+	notCheckVarName := refactoring preconditionCheckVariableName.
+	^ refactoring failedBreakingChangePreconditions isNotEmpty 
+]
+
 { #category : 'configuration' }
 ReExtractTempDriver >> instantiateRefactoring [
 
@@ -115,10 +122,4 @@ ReExtractTempDriver >> runRefactoring [
 		[ varName isEmptyOrNil not and: [ failed isEmpty ] ].
 	
 		refactoring failedBreakingChangePreconditions ifEmpty: [ self applyChanges ] ifNotEmpty: [ self handleBreakingChanges ]
-]
-
-{ #category : 'initialization' }
-ReExtractTempDriver >> setBehaviorPreservingPreconditions [
-
-	notCheckVarName := refactoring preconditionCheckVariableName
 ]

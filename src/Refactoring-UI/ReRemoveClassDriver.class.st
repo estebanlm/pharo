@@ -85,7 +85,10 @@ ReRemoveClassDriver >> hasFailedApplicabilityPreconditions [
 { #category : 'private ex' }
 ReRemoveClassDriver >> hasFailedBehaviorPreservingPreconditions [
 
-	^ haveNoReferences check | emptyClasses check | noSubclasses check
+	haveNoReferences := refactoring preconditionHaveNoReferences.
+	emptyClasses := refactoring preconditionEmptyClasses.
+	noSubclasses := refactoring preconditionHaveNoSubclasses.
+	^ refactoring failedBreakingChangePreconditions isNotEmpty 
 
 ]
 
@@ -125,14 +128,4 @@ ReRemoveClassDriver >> scopes: refactoringScopes classes: aColclasses [
 	scopes := refactoringScopes.
 	model := self refactoringScopeOn: scopes first.
 	classes := aColclasses
-]
-
-{ #category : 'private execution' }
-ReRemoveClassDriver >> setBehaviorPreservingPreconditions [
-	
-	haveNoReferences := refactoring preconditionHaveNoReferences.
-	emptyClasses := refactoring preconditionEmptyClasses.
-	noSubclasses := refactoring preconditionHaveNoSubclasses
-
-	
 ]

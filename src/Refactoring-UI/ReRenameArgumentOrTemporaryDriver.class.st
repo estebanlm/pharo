@@ -69,6 +69,13 @@ ReRenameArgumentOrTemporaryDriver >> defaultSelectDialog [
 		  yourself
 ]
 
+{ #category : 'initialization' }
+ReRenameArgumentOrTemporaryDriver >> hasFailedBehaviorPreservingPreconditions [
+
+	notCheckVarName := refactoring preconditionCheckVariableName.
+	^ refactoring failedBreakingChangePreconditions isNotEmpty 
+]
+
 { #category : 'configuration' }
 ReRenameArgumentOrTemporaryDriver >> instantiateRefactoring [
 
@@ -139,15 +146,9 @@ ReRenameArgumentOrTemporaryDriver >> runRefactoring [
 				detect: [ :condition | condition check ]
 				ifFound: [ :condition | self inform: condition errorString ] ].
 
-	self setBehaviorPreservingPreconditions.
+	self hasFailedBehaviorPreservingPreconditions.
 
 	refactoring failedBreakingChangePreconditions ifEmpty: [ self applyChanges ] ifNotEmpty: [ self handleBreakingChanges ]
-]
-
-{ #category : 'initialization' }
-ReRenameArgumentOrTemporaryDriver >> setBehaviorPreservingPreconditions [
-
-	notCheckVarName := refactoring preconditionCheckVariableName
 ]
 
 { #category : 'accessing' }

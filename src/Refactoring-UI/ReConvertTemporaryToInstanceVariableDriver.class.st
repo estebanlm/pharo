@@ -79,6 +79,14 @@ ReConvertTemporaryToInstanceVariableDriver >> defaultSelectDialog [
 		  yourself
 ]
 
+{ #category : 'initialization' }
+ReConvertTemporaryToInstanceVariableDriver >> hasFailedBehaviorPreservingPreconditions [
+
+	notMultipleTempOccurences := refactoring preconditionNoMultipleTempOccurences.
+	noReadBeforeWritten := refactoring preconditionNoReadBeforeWritten.
+	^ refactoring failedBreakingChangePreconditions isNotEmpty 
+]
+
 { #category : 'configuration' }
 ReConvertTemporaryToInstanceVariableDriver >> instantiateRefactoring [
 
@@ -103,7 +111,7 @@ ReConvertTemporaryToInstanceVariableDriver >> runRefactoring [
 	refactoring failedApplicabilityPreconditions ifNotEmpty: [ :conditions |
 			self informConditions: conditions.
 			^ false ].
-	self setBehaviorPreservingPreconditions.
+	self hasFailedBehaviorPreservingPreconditions.
 	notMultipleTempOccurences check & noReadBeforeWritten check
 		ifTrue: [ self applyChanges ]
 		ifFalse: [ self handleBreakingChanges ]
@@ -116,11 +124,4 @@ ReConvertTemporaryToInstanceVariableDriver >> scopes: aScope class: aClass selec
 	variable := aVariable.
 	selector := aSelector.
 	class := aClass
-]
-
-{ #category : 'initialization' }
-ReConvertTemporaryToInstanceVariableDriver >> setBehaviorPreservingPreconditions [
-
-	notMultipleTempOccurences := refactoring preconditionNoMultipleTempOccurences.
-	noReadBeforeWritten := refactoring preconditionNoReadBeforeWritten 
 ]

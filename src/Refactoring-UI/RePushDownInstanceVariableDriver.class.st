@@ -51,7 +51,7 @@ RePushDownInstanceVariableDriver >> browseMethods [
 RePushDownInstanceVariableDriver >> configureAndRunRefactoring [
 
 	self configureRefactoring.
-	self setBehaviorPreservingPreconditions.
+	self hasFailedBehaviorPreservingPreconditions.
 	refactoring refactorings do: [ :r |
 		r failedBreakingChangePreconditions ifEmpty: [ self applyChanges ] ifNotEmpty: [ self handleBreakingChanges ] ]
 ]
@@ -72,6 +72,13 @@ RePushDownInstanceVariableDriver >> defaultSelectDialog [
 RePushDownInstanceVariableDriver >> gatherUserInput [
 
 	variables := self selectVariables.
+]
+
+{ #category : 'initialization' }
+RePushDownInstanceVariableDriver >> hasFailedBehaviorPreservingPreconditions [
+
+	referencesInstanceVariableCollection := refactoring refactorings collect: [ :r | r preconditionReferencesInstanceVariable ].
+	^ refactoring failedBreakingChangePreconditions isNotEmpty 
 ]
 
 { #category : 'configuration' }
@@ -124,12 +131,6 @@ RePushDownInstanceVariableDriver >> selectVariables [
 	dialog isOk ifFalse: [ ^ nil ].
 
 	^ dialog presenter selectedItems
-]
-
-{ #category : 'initialization' }
-RePushDownInstanceVariableDriver >> setBehaviorPreservingPreconditions [
-
-	referencesInstanceVariableCollection := refactoring refactorings collect: [ :r | r preconditionReferencesInstanceVariable ]
 ]
 
 { #category : 'accessing' }

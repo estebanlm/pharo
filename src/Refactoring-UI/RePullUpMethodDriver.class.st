@@ -111,7 +111,7 @@ RePullUpMethodDriver >> configureAndRunRefactoring [
 	refactoring failedApplicabilityPreconditions 
 		ifNotEmpty: [ ^ self alertFailedPreconditions ].
 
-	self setBehaviorPreservingPreconditions.
+	self hasFailedBehaviorPreservingPreconditions.
 	refactoring failedBreakingChangePreconditions ifEmpty: [ self applyChanges ] ifNotEmpty: [ self handleBreakingChanges ]
 ]
 
@@ -169,6 +169,18 @@ RePullUpMethodDriver >> defaultSelectDialog [
 { #category : 'execution' }
 RePullUpMethodDriver >> gatherUserInput [
 	self selectMethodsAndClass
+]
+
+{ #category : 'initialization' }
+RePullUpMethodDriver >> hasFailedBehaviorPreservingPreconditions [
+
+	notOverrides := refactoring preconditionNoOverrides.
+	notInstVarRefs := refactoring preconditionNoReferencesToInstVars.
+	notSharedVarRefs := refactoring preconditionNoReferencesToSharedVars.
+	notSupersendsSent := refactoring preconditionNoSupersendsSent.
+	notSupersendsReceived := refactoring preconditionNoSupersendsReceived.
+	notSuperclassDefiner := refactoring preconditionNoSuperclassDefiner.
+	^ refactoring failedBreakingChangePreconditions isNotEmpty 
 ]
 
 { #category : 'configuration' }
@@ -268,15 +280,4 @@ RePullUpMethodDriver >> selectMethodsAndClass [
 	
 	superclass := nil.
 	methods := nil
-]
-
-{ #category : 'initialization' }
-RePullUpMethodDriver >> setBehaviorPreservingPreconditions [
-
-	notOverrides := refactoring preconditionNoOverrides.
-	notInstVarRefs := refactoring preconditionNoReferencesToInstVars.
-	notSharedVarRefs := refactoring preconditionNoReferencesToSharedVars.
-	notSupersendsSent := refactoring preconditionNoSupersendsSent.
-	notSupersendsReceived := refactoring preconditionNoSupersendsReceived.
-	notSuperclassDefiner := refactoring preconditionNoSuperclassDefiner
 ]
