@@ -191,6 +191,12 @@ ReInteractionDriver >> furtherActionFor: aReport [
 	aReport browse
 ]
 
+{ #category : 'as yet unclassified' }
+ReInteractionDriver >> handleApplicabilityPreconditions [
+
+	self subclassResponsibility 
+]
+
 { #category : 'execution' }
 ReInteractionDriver >> handleBreakingChanges [
 
@@ -200,6 +206,12 @@ ReInteractionDriver >> handleBreakingChanges [
 	selection ifNil: [ ^ false ].
 	selection action.
 	^ true
+]
+
+{ #category : 'testing' }
+ReInteractionDriver >> hasFailedBehaviorPreservingPreconditions [
+
+	^ self subclassResponsibility 
 ]
 
 { #category : 'ui - requests' }
@@ -315,7 +327,12 @@ ReInteractionDriver >> requestDialog: aDialog [
 { #category : 'execution' }
 ReInteractionDriver >> runRefactoring [
 
-	self subclassResponsibility
+	self configureRefactoring.
+	self handleApplicabilityPreconditions.
+	self setBehaviorPreservingPreconditions.
+	self hasFailedBehaviorPreservingPreconditions
+		ifTrue: [ self handleBreakingChanges ]
+		ifFalse: [ self applyChanges ]
 ]
 
 { #category : 'accessing' }
@@ -342,4 +359,10 @@ ReInteractionDriver >> selectDialogForBreakingChanges: aDialog [
 	
 	selectDialogForBreakingChanges := aDialog 
 	
+]
+
+{ #category : 'initialization' }
+ReInteractionDriver >> setBehaviorPreservingPreconditions [
+
+	self subclassResponsibility 
 ]
