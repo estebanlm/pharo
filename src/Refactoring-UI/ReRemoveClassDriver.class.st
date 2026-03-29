@@ -109,7 +109,7 @@ ReRemoveClassDriver >> runRefactoring [
 	
 	self configureRefactoring.
 	refactoring failedApplicabilityPreconditions 
-		ifNotEmpty: [ ^ self inform: 'The class should exist and not be a metaclass' ].
+		ifNotEmpty: [ ^ self inform: refactoring failedApplicabilityErrorMessage ].
 	self setBreakingChangesPreconditions.
 	haveNoReferences check & emptyClasses check & noSubclasses check
 			ifTrue: [ self applyChanges ]
