@@ -78,14 +78,6 @@ RePushDownMethodDriver >> changes [
 
 ]
 
-{ #category : 'execution' }
-RePushDownMethodDriver >> configureAndRunRefactoring [
-
-	self configureRefactoring.
-	self hasFailedBehaviorPreservingPreconditions.
-	refactoring failedBreakingChangePreconditions ifEmpty: [ self applyChanges ] ifNotEmpty: [ self handleBreakingChanges ]
-]
-
 { #category : 'configuration' }
 RePushDownMethodDriver >> defaultSelectDialog [
 
@@ -101,7 +93,15 @@ RePushDownMethodDriver >> defaultSelectDialog [
 { #category : 'execution' }
 RePushDownMethodDriver >> gatherUserInput [
 
-	self selectMethods
+	self selectMethods.
+	methods ifNil: [ ^ false ].
+	^ true
+]
+
+{ #category : 'private ex' }
+RePushDownMethodDriver >> hasFailedApplicabilityPreconditions [ 
+
+	^ refactoring failedApplicabilityPreconditions isNotEmpty
 ]
 
 { #category : 'private exe' }
@@ -113,7 +113,7 @@ RePushDownMethodDriver >> hasFailedBehaviorPreservingPreconditions [
 	refersToSelector := refactoring preconditionMethodsReferToSelector.
 	allSubclassesDirectlyDefines := refactoring preconditionAllSubclassesDirectlyDefines.
 	
-	^ isAbstract | subclassesSendSuper | subclassDirectlyDefines | refersToSelector | allSubclassesDirectlyDefines 
+	^ refactoring failedBreakingChangePreconditions isNotEmpty 
 ]
 
 { #category : 'configuration' }
@@ -183,15 +183,6 @@ RePushDownMethodDriver >> removeSuperclassMethod [
 	selectorsToRemove := selectorsToRemove asSet.
 	selectorsToRemove do: [ :each | refactoring generateChangesFor: (RBRemoveMethodTransformation selector: each from: class) ].
 	self openPreviewWithChanges: refactoring changes
-]
-
-{ #category : 'execution' }
-RePushDownMethodDriver >> runRefactoring [
-
-	"the user can still select if needed. Nil = cancel refactoring"
-	self gatherUserInput.
-	methods ifNil: [ ^ self ].
-	self configureAndRunRefactoring
 ]
 
 { #category : 'execution' }
