@@ -192,6 +192,13 @@ ReInteractionDriver >> furtherActionFor: aReport [
 ]
 
 { #category : 'execution' }
+ReInteractionDriver >> gatherUserInput [
+	"In this hood driver gathers inputs from user.
+	Return false if opration was unsuccessful (like user wants to abandon), and true otherwise"
+	^ true
+]
+
+{ #category : 'execution' }
 ReInteractionDriver >> handleBreakingChanges [
 
 	| selection dialog |
@@ -328,7 +335,8 @@ ReInteractionDriver >> requestDialog: aDialog [
 ReInteractionDriver >> runRefactoring [
 
 	self configureRefactoring.
-	self handleApplicabilityPreconditions.
+	self hasFailedApplicabilityPreconditions ifTrue: [ ^ self "applicability failed" ].
+	self gatherUserInput ifFalse: [ ^ self "user abandons" ]. 
 	self setBehaviorPreservingPreconditions.
 	self hasFailedBehaviorPreservingPreconditions
 		ifTrue: [ self handleBreakingChanges ]
