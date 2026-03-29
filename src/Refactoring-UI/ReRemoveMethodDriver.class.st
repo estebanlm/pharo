@@ -61,6 +61,19 @@ ReRemoveMethodDriver >> defaultSelectDialog [
 		yourself
 ]
 
+{ #category : 'execution' }
+ReRemoveMethodDriver >> handleApplicabilityPreconditions [ 
+
+	refactoring failedApplicabilityPreconditions 
+		ifNotEmpty: [ ^ self inform: 'The method does not exist' ]
+]
+
+{ #category : 'execution' }
+ReRemoveMethodDriver >> hasFailedBehaviorPreservingPreconditions [
+
+	 ^ haveNoSenders check not
+]
+
 { #category : 'configuration' }
 ReRemoveMethodDriver >> instantiateRefactoring [
 
@@ -70,21 +83,6 @@ ReRemoveMethodDriver >> instantiateRefactoring [
 	^ ReRemoveMethodsRefactoring
        model: model
        classSelectorMapping: classSelectorMapping
-]
-
-{ #category : 'execution' }
-ReRemoveMethodDriver >> runRefactoring [
-
-	self configureRefactoring.
-
-	refactoring failedApplicabilityPreconditions 
-		ifNotEmpty: [ ^ self inform: 'The method does not exist' ].
-	
-	haveNoSenders := refactoring preconditionHaveNoSenders.
-
-	haveNoSenders check
-			ifTrue: [ self applyChanges ]
-			ifFalse: [ self handleBreakingChanges ]
 ]
 
 { #category : 'initialization' }
@@ -101,4 +99,10 @@ ReRemoveMethodDriver >> scopes: refactoringScopes methods: aMethods [
 	scopes := refactoringScopes.
 	model := self refactoringScopeOn: scopes first.
 	methods := aMethods
+]
+
+{ #category : 'execution' }
+ReRemoveMethodDriver >> setBehaviorPreservingPreconditions [ 
+	
+	haveNoSenders := refactoring preconditionHaveNoSenders
 ]
