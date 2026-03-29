@@ -62,10 +62,11 @@ ReRemoveMethodDriver >> defaultSelectDialog [
 ]
 
 { #category : 'execution' }
-ReRemoveMethodDriver >> handleApplicabilityPreconditions [ 
+ReRemoveMethodDriver >> hasFailedApplicabilityPreconditions [ 
 
 	refactoring failedApplicabilityPreconditions 
-		ifNotEmpty: [ ^ self inform: 'The method does not exist' ]
+		ifNotEmpty: [ self inform: 'The method does not exist'. ^ true ].
+	^ false
 ]
 
 { #category : 'execution' }

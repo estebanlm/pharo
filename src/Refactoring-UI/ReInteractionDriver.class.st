@@ -191,12 +191,6 @@ ReInteractionDriver >> furtherActionFor: aReport [
 	aReport browse
 ]
 
-{ #category : 'private ex' }
-ReInteractionDriver >> handleApplicabilityPreconditions [
-
-	self subclassResponsibility 
-]
-
 { #category : 'execution' }
 ReInteractionDriver >> handleBreakingChanges [
 
@@ -206,6 +200,12 @@ ReInteractionDriver >> handleBreakingChanges [
 	selection ifNil: [ ^ false ].
 	selection action.
 	^ true
+]
+
+{ #category : 'private ex' }
+ReInteractionDriver >> hasFailedApplicabilityPreconditions [
+
+	self subclassResponsibility 
 ]
 
 { #category : 'private exe' }

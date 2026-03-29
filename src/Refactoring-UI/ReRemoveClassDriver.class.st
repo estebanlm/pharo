@@ -75,11 +75,11 @@ ReRemoveClassDriver >> defaultSelectDialog [
 ]
 
 { #category : 'execution' }
-ReRemoveClassDriver >> handleApplicabilityPreconditions [ 
+ReRemoveClassDriver >> hasFailedApplicabilityPreconditions [ 
 
 	refactoring failedApplicabilityPreconditions 
-		ifNotEmpty: [ ^ self inform: refactoring failedApplicabilityErrorMessage ]
-
+		ifNotEmpty: [ self inform: refactoring failedApplicabilityErrorMessage. ^ true ].
+	^ false
 ]
 
 { #category : 'private ex' }
