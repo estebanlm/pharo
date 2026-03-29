@@ -118,7 +118,7 @@ ReExtractTempDriver >> runRefactoring [
 ]
 
 { #category : 'initialization' }
-ReExtractTempDriver >> setBreakingChangesPreconditions [
+ReExtractTempDriver >> setBehaviorPreservingPreconditions [
 
 	notCheckVarName := refactoring preconditionCheckVariableName
 ]

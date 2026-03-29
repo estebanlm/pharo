@@ -111,7 +111,7 @@ RePullUpMethodDriver >> configureAndRunRefactoring [
 	refactoring failedApplicabilityPreconditions 
 		ifNotEmpty: [ ^ self alertFailedPreconditions ].
 
-	self setBreakingChangesPreconditions.
+	self setBehaviorPreservingPreconditions.
 	refactoring failedBreakingChangePreconditions ifEmpty: [ self applyChanges ] ifNotEmpty: [ self handleBreakingChanges ]
 ]
 
@@ -271,7 +271,7 @@ RePullUpMethodDriver >> selectMethodsAndClass [
 ]
 
 { #category : 'initialization' }
-RePullUpMethodDriver >> setBreakingChangesPreconditions [
+RePullUpMethodDriver >> setBehaviorPreservingPreconditions [
 
 	notOverrides := refactoring preconditionNoOverrides.
 	notInstVarRefs := refactoring preconditionNoReferencesToInstVars.

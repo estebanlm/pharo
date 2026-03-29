@@ -82,7 +82,7 @@ RePushDownMethodDriver >> changes [
 RePushDownMethodDriver >> configureAndRunRefactoring [
 
 	self configureRefactoring.
-	self setBreakingChangesPreconditions.
+	self setBehaviorPreservingPreconditions.
 	refactoring failedBreakingChangePreconditions ifEmpty: [ self applyChanges ] ifNotEmpty: [ self handleBreakingChanges ]
 ]
 
@@ -201,7 +201,7 @@ RePushDownMethodDriver >> selectMethods [
 ]
 
 { #category : 'initialization' }
-RePushDownMethodDriver >> setBreakingChangesPreconditions [
+RePushDownMethodDriver >> setBehaviorPreservingPreconditions [
 
 	isAbstract := refactoring preconditionIsAbstract.
 	subclassesSendSuper := refactoring preconditionSubclassesDontSendSuper.

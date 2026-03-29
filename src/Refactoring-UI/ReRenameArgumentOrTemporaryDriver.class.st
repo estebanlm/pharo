@@ -139,13 +139,13 @@ ReRenameArgumentOrTemporaryDriver >> runRefactoring [
 				detect: [ :condition | condition check ]
 				ifFound: [ :condition | self inform: condition errorString ] ].
 
-	self setBreakingChangesPreconditions.
+	self setBehaviorPreservingPreconditions.
 
 	refactoring failedBreakingChangePreconditions ifEmpty: [ self applyChanges ] ifNotEmpty: [ self handleBreakingChanges ]
 ]
 
 { #category : 'initialization' }
-ReRenameArgumentOrTemporaryDriver >> setBreakingChangesPreconditions [
+ReRenameArgumentOrTemporaryDriver >> setBehaviorPreservingPreconditions [
 
 	notCheckVarName := refactoring preconditionCheckVariableName
 ]

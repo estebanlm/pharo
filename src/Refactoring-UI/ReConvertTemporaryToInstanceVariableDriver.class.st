@@ -103,7 +103,7 @@ ReConvertTemporaryToInstanceVariableDriver >> runRefactoring [
 	refactoring failedApplicabilityPreconditions ifNotEmpty: [ :conditions |
 			self informConditions: conditions.
 			^ false ].
-	self setBreakingChangesPreconditions.
+	self setBehaviorPreservingPreconditions.
 	notMultipleTempOccurences check & noReadBeforeWritten check
 		ifTrue: [ self applyChanges ]
 		ifFalse: [ self handleBreakingChanges ]
@@ -119,7 +119,7 @@ ReConvertTemporaryToInstanceVariableDriver >> scopes: aScope class: aClass selec
 ]
 
 { #category : 'initialization' }
-ReConvertTemporaryToInstanceVariableDriver >> setBreakingChangesPreconditions [
+ReConvertTemporaryToInstanceVariableDriver >> setBehaviorPreservingPreconditions [
 
 	notMultipleTempOccurences := refactoring preconditionNoMultipleTempOccurences.
 	noReadBeforeWritten := refactoring preconditionNoReadBeforeWritten 

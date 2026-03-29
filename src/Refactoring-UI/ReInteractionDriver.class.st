@@ -191,7 +191,7 @@ ReInteractionDriver >> furtherActionFor: aReport [
 	aReport browse
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'private ex' }
 ReInteractionDriver >> handleApplicabilityPreconditions [
 
 	self subclassResponsibility 
@@ -208,7 +208,7 @@ ReInteractionDriver >> handleBreakingChanges [
 	^ true
 ]
 
-{ #category : 'testing' }
+{ #category : 'private exe' }
 ReInteractionDriver >> hasFailedBehaviorPreservingPreconditions [
 
 	^ self subclassResponsibility 
@@ -361,7 +361,7 @@ ReInteractionDriver >> selectDialogForBreakingChanges: aDialog [
 	
 ]
 
-{ #category : 'initialization' }
+{ #category : 'private exe' }
 ReInteractionDriver >> setBehaviorPreservingPreconditions [
 
 	self subclassResponsibility 

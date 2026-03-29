@@ -51,7 +51,7 @@ RePushDownInstanceVariableDriver >> browseMethods [
 RePushDownInstanceVariableDriver >> configureAndRunRefactoring [
 
 	self configureRefactoring.
-	self setBreakingChangesPreconditions.
+	self setBehaviorPreservingPreconditions.
 	refactoring refactorings do: [ :r |
 		r failedBreakingChangePreconditions ifEmpty: [ self applyChanges ] ifNotEmpty: [ self handleBreakingChanges ] ]
 ]
@@ -127,7 +127,7 @@ RePushDownInstanceVariableDriver >> selectVariables [
 ]
 
 { #category : 'initialization' }
-RePushDownInstanceVariableDriver >> setBreakingChangesPreconditions [
+RePushDownInstanceVariableDriver >> setBehaviorPreservingPreconditions [
 
 	referencesInstanceVariableCollection := refactoring refactorings collect: [ :r | r preconditionReferencesInstanceVariable ]
 ]

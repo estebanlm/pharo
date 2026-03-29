@@ -186,14 +186,14 @@ ReExtractMethodDriver >> runRefactoring [
 	newMessage ifNil: [ "The user has cancelled the dialog" ^ self ].
 	refactoring newSelector: newMessage selector.
 	
-	self setBreakingChangesPreconditions. 
+	self setBehaviorPreservingPreconditions. 
 	refactoring failedBreakingChangePreconditions
 		ifEmpty: [ self applyChanges ]
 		ifNotEmpty: [ self handleBreakingChanges ]
 ]
 
 { #category : 'configuration' }
-ReExtractMethodDriver >> setBreakingChangesPreconditions [
+ReExtractMethodDriver >> setBehaviorPreservingPreconditions [
 
 	notOverride := refactoring preconditionNoOverrides.
 	sameExitPoint := refactoring preconditionHasSameExitPoint

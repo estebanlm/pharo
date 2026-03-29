@@ -86,7 +86,7 @@ ReViolentRemoveClassDriver >> runRefactoring [
 
 	self configureRefactoring.
 	refactoring failedApplicabilityPreconditions ifNotEmpty: [ ^ self inform: 'The class should exist and not be a metaclass' ].
-	self setBreakingChangesPreconditions.
+	self setBehaviorPreservingPreconditions.
 	haveNoReferences check
 		ifTrue: [ self applyChanges ]
 		ifFalse: [ self handleBreakingChanges ]
@@ -101,7 +101,7 @@ ReViolentRemoveClassDriver >> scopes: refactoringScopes classes: aColclasses [
 ]
 
 { #category : 'private execution' }
-ReViolentRemoveClassDriver >> setBreakingChangesPreconditions [
+ReViolentRemoveClassDriver >> setBehaviorPreservingPreconditions [
 	
 	haveNoReferences := refactoring preconditionHaveNoReferences.
 
