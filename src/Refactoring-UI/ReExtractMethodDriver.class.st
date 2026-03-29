@@ -109,6 +109,23 @@ ReExtractMethodDriver >> extractMethod [
 	^ self applyChanges
 ]
 
+{ #category : 'execution' }
+ReExtractMethodDriver >> gatherUserInput [
+
+	newMessage := self requestNewMessage.
+	newMessage ifNil: [ "The user has cancelled the dialog" ^ false ].
+	refactoring newSelector: newMessage selector.
+	^ true
+]
+
+{ #category : 'execution' }
+ReExtractMethodDriver >> hasFailedApplicabilityPreconditions [ 
+	
+	refactoring failedApplicabilityPreconditions 
+		ifNotEmpty: [ self inform: self failedPreconditionsErrorString. ^ true ].
+	^ false
+]
+
 { #category : 'private exe' }
 ReExtractMethodDriver >> hasFailedBehaviorPreservingPreconditions [
 
@@ -181,21 +198,4 @@ ReExtractMethodDriver >> requestNewMessage [
 			dialog := self requestDialogWith: methodName.
 			dialog cancelled ifTrue: [ ^ nil ] ].
 	^ dialog methodName
-]
-
-{ #category : 'execution' }
-ReExtractMethodDriver >> runRefactoring [
-
-	self configureRefactoring.
-	
-	refactoring failedApplicabilityPreconditions 
-		ifNotEmpty: [ ^ self inform: self failedPreconditionsErrorString ].
-	newMessage := self requestNewMessage.
-	newMessage ifNil: [ "The user has cancelled the dialog" ^ self ].
-	refactoring newSelector: newMessage selector.
-	
-	self hasFailedBehaviorPreservingPreconditions. 
-	refactoring failedBreakingChangePreconditions
-		ifEmpty: [ self applyChanges ]
-		ifNotEmpty: [ self handleBreakingChanges ]
 ]
