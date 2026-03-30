@@ -135,7 +135,10 @@ OCAbstractMethodScope >> lookupDefiningContextForVariable: var startingFrom: aCo
 
 	| nextContext |
 	nextContext := self nextOuterScopeContextOf: aContext.
-	nextContext ifNil: [ self error: var name, ' optimized out' ].
+	nextContext
+	 ifNil: [  (var isArgumentVariable )
+        ifTrue: [ ^aContext ]
+        ifFalse: [ self error: var name, ' optimized out' ] ].
 	^self = var scope
 		ifFalse: [ self outerScope lookupDefiningContextForVariable: var startingFrom: nextContext ]
 		ifTrue: [ aContext ]
