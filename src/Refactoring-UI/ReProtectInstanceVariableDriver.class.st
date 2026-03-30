@@ -13,6 +13,12 @@ Class {
 	#tag : 'Drivers'
 }
 
+{ #category : 'accessing' }
+ReProtectInstanceVariableDriver class >> driverName [
+
+	^ 'Protect Instance Variable'
+]
+
 { #category : 'configuration' }
 ReProtectInstanceVariableDriver >> instantiateRefactoring [
 
