@@ -214,7 +214,9 @@ DateAndTimeUnixEpochTest >> testMeridianAbbreviation [
 
 { #category : 'tests' }
 DateAndTimeUnixEpochTest >> testMiddleOf [
-	self assert: (aDateAndTime middleOf: '2:00:00:00' asDuration) equals: (Timespan starting: (Date readFrom: '31-12-1969' pattern: 'd-m-y') duration: 2 days)
+	self 
+		assert: (aDateAndTime middleOf: (Duration fromString: '2:00:00:00'))
+		equals: (Timespan starting: (Date readFrom: '31-12-1969' pattern: 'd-m-y') duration: 2 days)
 ]
 
 { #category : 'tests' }
@@ -266,7 +268,8 @@ DateAndTimeUnixEpochTest >> testNanoSecond [
 
 { #category : 'tests' }
 DateAndTimeUnixEpochTest >> testNoon [
-	self assert: aDateAndTime noon equals: '1970-01-01T12:00:00+00:00' asDateAndTime
+
+	self assert: aDateAndTime noon equals: (DateAndTime fromString: '1970-01-01T12:00:00+00:00')
 ]
 
 { #category : 'tests' }
