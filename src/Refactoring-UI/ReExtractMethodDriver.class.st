@@ -118,14 +118,6 @@ ReExtractMethodDriver >> gatherUserInput [
 	^ true
 ]
 
-{ #category : 'execution' }
-ReExtractMethodDriver >> hasFailedApplicabilityPreconditions [ 
-	
-	refactoring failedApplicabilityPreconditions 
-		ifNotEmpty: [ self inform: self failedPreconditionsErrorString. ^ true ].
-	^ false
-]
-
 { #category : 'private exe' }
 ReExtractMethodDriver >> hasFailedBehaviorPreservingPreconditions [
 

@@ -47,15 +47,6 @@ RePushDownInstanceVariableDriver >> browseMethods [
 	(application toolNamed: #messageList) browse: violators
 ]
 
-{ #category : 'execution' }
-RePushDownInstanceVariableDriver >> configureAndRunRefactoring [
-
-	self configureRefactoring.
-	self hasFailedBehaviorPreservingPreconditions.
-	refactoring refactorings do: [ :r |
-		r failedBreakingChangePreconditions ifEmpty: [ self applyChanges ] ifNotEmpty: [ self handleBreakingChanges ] ]
-]
-
 { #category : 'configuration' }
 RePushDownInstanceVariableDriver >> defaultSelectDialog [
 
@@ -72,6 +63,8 @@ RePushDownInstanceVariableDriver >> defaultSelectDialog [
 RePushDownInstanceVariableDriver >> gatherUserInput [
 
 	variables := self selectVariables.
+	variables ifNil: [ ^ false ].
+	^ true
 ]
 
 { #category : 'initialization' }
@@ -98,15 +91,6 @@ RePushDownInstanceVariableDriver >> labelBasedOnBreakingChanges [
 					  referencesInstanceVariableCollection first violationMessageOn: stream.
 					  stream cr ].
 			  stream nextPutAll: 'Select a strategy' ]
-]
-
-{ #category : 'execution' }
-RePushDownInstanceVariableDriver >> runRefactoring [
-	"the user can still select if needed. Nil = cancel refactoring"
-
-	self gatherUserInput.
-	variables ifNil: [ ^ self ].
-	self configureAndRunRefactoring
 ]
 
 { #category : 'accessing' }

@@ -68,15 +68,6 @@ ReMoveMethodsToClassSideDriver >> defaultSelectDialog [
 ]
 
 { #category : 'execution' }
-ReMoveMethodsToClassSideDriver >> runRefactoring [
-	
-	refactoring failedBreakingChangePreconditions
-		ifEmpty: [ self applyChanges ]
-		ifNotEmpty: [ self handleBreakingChanges ]
-
-]
-
-{ #category : 'execution' }
 ReMoveMethodsToClassSideDriver >> scopes: scopesList methods: methods [
 
 	scopes := scopesList.

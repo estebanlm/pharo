@@ -32,15 +32,6 @@ ReReplaceMessageSendDriver >> instantiateRefactoring [
 		   inAllClasses: true) newArgs: selector newArgs
 ]
 
-{ #category : 'execution' }
-ReReplaceMessageSendDriver >> runRefactoring [
-
-	self configureRefactoring.
-	refactoring failedApplicabilityPreconditions ifNotEmpty: [ :conditions |
-		^ RBRefactoringError signal: (String streamContents: [ :stream | conditions first violationMessageOn: stream ]) ].
-	self applyChanges
-]
-
 { #category : 'initialization' }
 ReReplaceMessageSendDriver >> scopes: refactoringScopes class: aClass selector: aSelector oldSelector: aSecondSelector [
 

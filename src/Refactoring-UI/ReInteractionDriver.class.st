@@ -210,9 +210,11 @@ ReInteractionDriver >> handleBreakingChanges [
 ]
 
 { #category : 'private ex' }
-ReInteractionDriver >> hasFailedApplicabilityPreconditions [
-
-	self subclassResponsibility 
+ReInteractionDriver >> hasFailedApplicabilityPreconditions [ 
+	
+	refactoring failedApplicabilityPreconditions 
+		ifNotEmpty: [ self inform: self failedPreconditionsErrorString. ^ true ].
+	^ false
 ]
 
 { #category : 'private exe' }

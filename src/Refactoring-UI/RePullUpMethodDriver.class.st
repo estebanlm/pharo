@@ -100,21 +100,6 @@ RePullUpMethodDriver >> changes [
 
 ]
 
-{ #category : 'execution' }
-RePullUpMethodDriver >> configureAndRunRefactoring [
-
-	self configureRefactoring. 
-	"Pay attention that the applicability preconditions do  not include checking the superclass for a 
-	method with the same name because during an interaction we when to let the user the possibility to 
-	do actions to handle this specific case. This is why similarly method in direct superclass is checked 
-	but in the breaking change precondtions."
-	refactoring failedApplicabilityPreconditions 
-		ifNotEmpty: [ ^ self alertFailedPreconditions ].
-
-	self hasFailedBehaviorPreservingPreconditions.
-	refactoring failedBreakingChangePreconditions ifEmpty: [ self applyChanges ] ifNotEmpty: [ self handleBreakingChanges ]
-]
-
 { #category : 'copying' }
 RePullUpMethodDriver >> copyDownMethods [
 
@@ -168,7 +153,9 @@ RePullUpMethodDriver >> defaultSelectDialog [
 
 { #category : 'execution' }
 RePullUpMethodDriver >> gatherUserInput [
-	self selectMethodsAndClass
+
+	self selectMethodsAndClass methods ifNil: [ ^ false ].
+	^ true
 ]
 
 { #category : 'initialization' }
@@ -246,15 +233,6 @@ RePullUpMethodDriver >> pullUpReferencedSharedVars [
 	notSharedVarRefs referencedSharedVariables do: [ :sharedVar | 
 		"We add the pushUpVariable transformation to the refactoring previous transformations"
 		refactoring pullUpSharedVariable: sharedVar ]
-]
-
-{ #category : 'execution' }
-RePullUpMethodDriver >> runRefactoring [
-
-	"the user can still select if needed. Nil = cancel refactoring"
-	self gatherUserInput.
-	methods ifNil: [ ^ self ].
-	self configureAndRunRefactoring
 ]
 
 { #category : 'execution' }

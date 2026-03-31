@@ -106,7 +106,7 @@ ReExtractTempDriver >> labelBasedOnBreakingChanges [
 ]
 
 { #category : 'execution' }
-ReExtractTempDriver >> runRefactoring [ 
+ReExtractTempDriver >> runRefactoring [
 
 	| varName failed errorString |
 	self configureRefactoring.
@@ -117,9 +117,9 @@ ReExtractTempDriver >> runRefactoring [
 		varName := self getVariableName: varName errorMessage: errorString.
 		varName ifNil: [ ^ self ].
 		refactoring variableName: varName.
-		failed := refactoring failedApplicabilityPreconditions.
-	] doWhileFalse: 
-		[ varName isEmptyOrNil not and: [ failed isEmpty ] ].
-	
-		refactoring failedBreakingChangePreconditions ifEmpty: [ self applyChanges ] ifNotEmpty: [ self handleBreakingChanges ]
+		failed := refactoring failedApplicabilityPreconditions ] doWhileFalse: [ varName isEmptyOrNil not and: [ failed isEmpty ] ].
+
+	self hasFailedBehaviorPreservingPreconditions
+		ifTrue: [ self handleBreakingChanges ]
+		ifFalse: [ self applyChanges ]
 ]

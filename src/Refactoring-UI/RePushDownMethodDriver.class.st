@@ -98,12 +98,6 @@ RePushDownMethodDriver >> gatherUserInput [
 	^ true
 ]
 
-{ #category : 'private ex' }
-RePushDownMethodDriver >> hasFailedApplicabilityPreconditions [ 
-
-	^ refactoring failedApplicabilityPreconditions isNotEmpty
-]
-
 { #category : 'private exe' }
 RePushDownMethodDriver >> hasFailedBehaviorPreservingPreconditions [
 

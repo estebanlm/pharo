@@ -70,19 +70,6 @@ ReRenameClassDriver >> gatherUserInput [
 	^ true
 ]
 
-{ #category : 'private ex' }
-ReRenameClassDriver >> hasFailedApplicabilityPreconditions [ 
-
-	refactoring doesClassToBeRenamedExist
-		ifFalse: [ self inform: 'The class ', oldName, ' does not exist.'. ^ true ].
-		
-	"if we see a metaclass then we could take the instance side"
-	refactoring isMetaclass 
-		ifTrue: [ self inform: 'Please provide a class and not a metaclass: ', oldName, ' is a metaclass.'. ^ true ].
-
-	^ false
-]
-
 { #category : 'private exe' }
 ReRenameClassDriver >> hasFailedBehaviorPreservingPreconditions [ 
 

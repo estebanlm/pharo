@@ -104,19 +104,6 @@ ReConvertTemporaryToInstanceVariableDriver >> labelBasedOnBreakingChanges [
 			  stream nextPutAll: 'Select a strategy' ]
 ]
 
-{ #category : 'execution' }
-ReConvertTemporaryToInstanceVariableDriver >> runRefactoring [
-
-	self configureRefactoring.
-	refactoring failedApplicabilityPreconditions ifNotEmpty: [ :conditions |
-			self informConditions: conditions.
-			^ false ].
-	self hasFailedBehaviorPreservingPreconditions.
-	notMultipleTempOccurences check & noReadBeforeWritten check
-		ifTrue: [ self applyChanges ]
-		ifFalse: [ self handleBreakingChanges ]
-]
-
 { #category : 'instance creation' }
 ReConvertTemporaryToInstanceVariableDriver >> scopes: aScope class: aClass selector: aSelector variable: aVariable [
 

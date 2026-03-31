@@ -77,7 +77,7 @@ ReViolentRemoveClassDriver >> hasFailedBehaviorPreservingPreconditions [
 { #category : 'configuration' }
 ReViolentRemoveClassDriver >> instantiateRefactoring [
 
-	^ RBRemoveClassesTransformation model: model classNames: (classes collect: [ :cl | cl name ])
+	^ ReRemoveClassesTransformation model: model classNames: (classes collect: [ :cl | cl name ])
 ]
 
 { #category : 'ui - dialogs' }
@@ -87,17 +87,6 @@ ReViolentRemoveClassDriver >> labelBasedOnBreakingChanges [
 			  haveNoReferences violationMessageOn: stream.
 			  stream cr.
 			  stream nextPutAll: 'Select a strategy' ]
-]
-
-{ #category : 'execution' }
-ReViolentRemoveClassDriver >> runRefactoring [
-
-	self configureRefactoring.
-	refactoring failedApplicabilityPreconditions ifNotEmpty: [ ^ self inform: 'The class should exist and not be a metaclass' ].
-	self hasFailedBehaviorPreservingPreconditions.
-	haveNoReferences check
-		ifTrue: [ self applyChanges ]
-		ifFalse: [ self handleBreakingChanges ]
 ]
 
 { #category : 'initialization' }
