@@ -22,12 +22,12 @@ ReGenerateAccessorsDriver class >> driverName [
 ]
 
 { #category : 'configuration' }
-ReGenerateAccessorsDriver >> configureRefactoring [
+ReGenerateAccessorsDriver >> instantiateRefactoring [
 
-	refactoring := ReUpFrontPreconditionCheckingCompositeRefactoring new
-		               model: model;
-		               refactorings: (selectedVariables collect: [ :eachSlot | self refactoringForSlot: eachSlot ]);
-		               yourself
+	^ ReUpFrontPreconditionCheckingCompositeRefactoring new
+		  model: model;
+		  refactorings: (selectedVariables collect: [ :eachSlot | self refactoringForSlot: eachSlot ]);
+		  yourself
 ]
 
 { #category : 'execution' }
@@ -42,13 +42,6 @@ ReGenerateAccessorsDriver >> refactoringForSlot: aSlot [
 	^ scopeInstanceSide
 		  ifFalse: [ self refactoringClass model: model classVariable: aSlot class: self targetClass name ]
 		  ifTrue: [ self refactoringClass model: model instanceVariable: aSlot class: self targetClass name ]
-]
-
-{ #category : 'configuration' }
-ReGenerateAccessorsDriver >> runRefactoring [
-
-	self configureRefactoring.
-	self applyChanges
 ]
 
 { #category : 'accessing' }

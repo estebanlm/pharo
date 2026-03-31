@@ -57,6 +57,25 @@ ReRenameClassDriver >> defaultSelectDialog [
 		yourself
 ]
 
+{ #category : 'execution' }
+ReRenameClassDriver >> gatherUserInput [ 
+	"usually we do not spawn a dialog out of the blue but we should ask the application.
+	It means that the driver should get the application from the tool that invoked it."
+	newName := self requestNewNameBasedOn: oldName.
+	shouldEscape ifTrue: [ ^ false "user wants to exit" ].
+
+	[ refactoring isValidClassName check & refactoring isNotGlobal check ] whileFalse: [ 
+			newName := self requestNewNameBasedOn: newName.
+			shouldEscape ifTrue: [ ^ false ] ].
+	^ true
+]
+
+{ #category : 'private exe' }
+ReRenameClassDriver >> hasFailedBehaviorPreservingPreconditions [ 
+
+	^ refactoring failedBreakingChangePreconditions isNotEmpty
+]
+
 { #category : 'initialization' }
 ReRenameClassDriver >> initialize [ 
 	
@@ -112,30 +131,6 @@ ReRenameClassDriver >> requestNewNameBasedOn: aName [
 
 	refactoring newName: newName.
 	^ newName
-]
-
-{ #category : 'execution' }
-ReRenameClassDriver >> runRefactoring [
-	
-	self configureRefactoring.
-	refactoring doesClassToBeRenamedExist
-		ifFalse: [ self inform: 'The class ', oldName, ' does not exist.'. ^ self ].
-	
-	"if we see a metaclass then we could take the instance side"
-	refactoring isMetaclass 
-		ifTrue: [ self inform: 'Please provide a class and not a metaclass: ', oldName, ' is a metaclass.'. ^ self ].
-	"usually we do not spawn a dialog out of the blue but we should ask the application.
-	It means that the driver should get the application from the tool that invoked it."
-
-	newName := self requestNewNameBasedOn: oldName.
-	shouldEscape ifTrue: [ ^ self ].
-
-	[ refactoring isValidClassName check & refactoring isNotGlobal check ] whileFalse: [ 
-			newName := self requestNewNameBasedOn: newName.
-			shouldEscape ifTrue: [ ^ self ] ].
-
-	refactoring failedBreakingChangePreconditions ifEmpty: [ self applyChanges ] ifNotEmpty: [ self handleBreakingChanges ]
-	
 ]
 
 { #category : 'validation' }
