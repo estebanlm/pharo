@@ -115,6 +115,14 @@ TimeTest >> testAsDuration [
 ]
 
 { #category : 'tests' }
+TimeTest >> testAsMilliSeconds [
+
+	self 
+		assert: aTime asMilliSeconds
+	 	equals: 45296000
+]
+
+{ #category : 'tests' }
 TimeTest >> testAsNanoSeconds [
 	self assert: aTime asNanoSeconds equals: 45296000000000
 ]

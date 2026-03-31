@@ -59,7 +59,7 @@ DateAndTimeUnixEpochTest >> testAsMonth [
 
 { #category : 'tests' }
 DateAndTimeUnixEpochTest >> testAsNanoSeconds [
-	self assert: aDateAndTime asNanoSeconds equals: 0 asDuration asNanoSeconds
+	self assert: aDateAndTime asNanoSeconds equals: 0
 ]
 
 { #category : 'tests' }
