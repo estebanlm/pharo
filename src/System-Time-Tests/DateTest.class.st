@@ -201,6 +201,26 @@ DateTest >> testDayOfWeek [
 ]
 
 { #category : 'tests' }
+DateTest >> testDayOfYear [
+
+	self assert: (Date year: 2018 month: 9 day: 28) dayOfYear equals: 271.
+	
+	self 
+		assert: (Date year: 2018 month: 2 day: 15) dayOfYear 
+		equals: 31 + 15.
+	self 
+		assert: (Date year: 2018 month: 3 day: 15) dayOfYear 
+		equals: 31 + 28 + 15.
+	self deny: (Date year: 2018 month: 3 day: 15) isLeapYear.
+	
+	self assert: (Date year: 2020 month: 3 day: 15) isLeapYear.
+	self 
+		assert: (Date year: 2020 month: 3 day: 15) dayOfYear 
+		equals: 31 + 29 + 15.
+
+]
+
+{ #category : 'tests' }
 DateTest >> testDaysInMonthForYear [
 
 	self assert: (Date daysInMonth: #February forYear: 2008) equals: 29.
@@ -550,8 +570,12 @@ DateTest >> testSubtractDate [
 { #category : 'tests' }
 DateTest >> testSubtractDays [
 
-	self assert: (january23rd2004 subtractDays: 0) equals: (Date readFrom: '23-1-2004' pattern: 'd-m-y').
-	self assert: (january23rd2004 subtractDays: 30) equals: (Date readFrom: '24-12-2003' pattern: 'd-m-y')
+	self 
+		assert: (january23rd2004 subtractDays: 0) 
+		equals: (Date readFrom: '23-1-2004' pattern: 'd-m-y').
+	self 
+		assert: (january23rd2004 subtractDays: 30) 
+		equals: (Date readFrom: '24-12-2003' pattern: 'd-m-y')
 ]
 
 { #category : 'tests' }

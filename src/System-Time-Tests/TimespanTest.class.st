@@ -119,8 +119,11 @@ TimespanTest >> testAsDate [
 
 { #category : 'tests' }
 TimespanTest >> testAsDateAndTime [
-	self assert: aTimespan asDateAndTime equals: jan01
-	"MessageNotUnderstood: Date class>>starting:"
+	
+	self 
+		assert: aTimespan asDateAndTime 
+		equals: jan01
+	
 ]
 
 { #category : 'tests' }

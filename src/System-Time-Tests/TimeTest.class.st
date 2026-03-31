@@ -99,7 +99,10 @@ TimeTest >> testAsDate [
 
 { #category : 'tests' }
 TimeTest >> testAsDateAndTime [
-	self assert: aTime asDateAndTime equals: DateAndTime current midnight + aTime
+	
+	self 
+		assert: aTime asDateAndTime 
+		equals: DateAndTime current midnight + aTime
 ]
 
 { #category : 'tests' }

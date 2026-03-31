@@ -34,7 +34,9 @@ YearTest >> testOffset [
 
 	dt := DateAndTime fromString: '2018-01-01T00:00:00+10'.
 	newYear := Year starting: dt duration: 0. "duration is ignored"
-	self assert: newYear asDateAndTime offset equals: dt offset
+	self 
+		assert: newYear asDateAndTime offset 
+		equals: dt offset
 ]
 
 { #category : 'tests' }
