@@ -59,7 +59,7 @@ RePushDownMethodInSomeClassesDriver >> model: aRBNamespace scopes: refactoringSc
 { #category : 'resources' }
 RePushDownMethodInSomeClassesDriver >> refactoring [
 
-	refactoring :=  RBPushDownMethodRefactoring
+	refactoring :=  RePushDownMethodRefactoring
 		model: model
 		pushDown: (methods collect: [ :each | each selector ])
 		from: class

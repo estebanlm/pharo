@@ -5,7 +5,7 @@ All references to the temporary variable in this method are replaced by the valu
 The initialization and declaration of this variable will be removed. You need to select the variable and its initial assignment code to apply this refactoring.
 "
 Class {
-	#name : 'RBInlineTemporaryRefactoring',
+	#name : 'ReInlineTemporaryRefactoring',
 	#superclass : 'RBMethodRefactoring',
 	#instVars : [
 		'sourceInterval',
@@ -20,7 +20,7 @@ Class {
 }
 
 { #category : 'instance creation' }
-RBInlineTemporaryRefactoring class >> inline: anInterval from: aSelector in: aClass [
+ReInlineTemporaryRefactoring class >> inline: anInterval from: aSelector in: aClass [
 	^ self new
 		inline: anInterval
 		from: aSelector
@@ -28,7 +28,7 @@ RBInlineTemporaryRefactoring class >> inline: anInterval from: aSelector in: aCl
 ]
 
 { #category : 'instance creation' }
-RBInlineTemporaryRefactoring class >> model: aRBSmalltalk inline: anInterval from: aSelector in: aClass [
+ReInlineTemporaryRefactoring class >> model: aRBSmalltalk inline: anInterval from: aSelector in: aClass [
 	^ self new
 		model: aRBSmalltalk;
 		inline: anInterval
@@ -38,32 +38,36 @@ RBInlineTemporaryRefactoring class >> model: aRBSmalltalk inline: anInterval fro
 ]
 
 { #category : 'preconditions' }
-RBInlineTemporaryRefactoring >> applicabilityPreconditions [ 
-	
+ReInlineTemporaryRefactoring >> applicabilityPreconditions [
+
 	^ {
-		(ReDefinesSelectorsCondition new definesSelectors: (Array with: selector) in: class).
-		(ReIsValidInstanceVariableName new name: assignmentNode variable name).
-		(ReSingleAssignmentCondition new
-			variableName: assignmentNode variable name; definingNode: sourceTree).
-		(ReVariablesNotReadBeforeWrittenCondition new 
-			variables: {assignmentNode variable name}; subtree: sourceTree)
-	}
+		  (ReDefinesSelectorsCondition new definesSelectors: (Array with: selector) in: class).
+		  (ReIsValidInstanceVariableName new name: assignmentNode variable name).
+		  (ReSingleAssignmentCondition new
+			   variableName: assignmentNode variable name;
+			   definingNode: sourceTree).
+		  (ReSingleReadCondition new
+			   variableName: assignmentNode variable name;
+			   definingNode: sourceTree).
+		  (ReVariablesNotReadBeforeWrittenCondition new
+			   variables: { assignmentNode variable name };
+			   subtree: sourceTree) }
 ]
 
 { #category : 'transforming' }
-RBInlineTemporaryRefactoring >> compileMethod [
+ReInlineTemporaryRefactoring >> compileMethod [
 	class compileTree: sourceTree
 ]
 
 { #category : 'initialization' }
-RBInlineTemporaryRefactoring >> inline: anInterval from: aSelector in: aClass [
+ReInlineTemporaryRefactoring >> inline: anInterval from: aSelector in: aClass [
 	class := self classObjectFor: aClass.
 	selector := aSelector.
 	sourceInterval := anInterval
 ]
 
 { #category : 'transforming' }
-RBInlineTemporaryRefactoring >> prepareForExecution [
+ReInlineTemporaryRefactoring >> prepareForExecution [
 	
 	sourceTree := class parseTreeForSelector: selector.
 	sourceTree ifNil: [ self refactoringError: 'Could not parse source' ].
@@ -77,7 +81,7 @@ RBInlineTemporaryRefactoring >> prepareForExecution [
 ]
 
 { #category : 'transforming' }
-RBInlineTemporaryRefactoring >> privateTransform [
+ReInlineTemporaryRefactoring >> privateTransform [
 	self
 		replaceAssignment;
 		replaceReferences;
@@ -85,14 +89,14 @@ RBInlineTemporaryRefactoring >> privateTransform [
 ]
 
 { #category : 'transforming' }
-RBInlineTemporaryRefactoring >> replaceAssignment [
+ReInlineTemporaryRefactoring >> replaceAssignment [
 	assignmentNode parent isSequence
 		ifTrue: [assignmentNode parent removeNode: assignmentNode]
 		ifFalse: [assignmentNode replaceWith: assignmentNode value]
 ]
 
 { #category : 'transforming' }
-RBInlineTemporaryRefactoring >> replaceReferences [
+ReInlineTemporaryRefactoring >> replaceReferences [
 	| rewriter |
 	rewriter := self parseTreeRewriter.
 	rewriter replaceTree: assignmentNode variable

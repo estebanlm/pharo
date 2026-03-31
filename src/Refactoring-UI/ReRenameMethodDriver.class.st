@@ -187,7 +187,7 @@ ReRenameMethodDriver >> requestNewMessage [
 		              arguments: parameters.
 	dialog := self requestDialogWith: methodName.
 	
-	dialog ifNil: [ shouldEscape := true. ^ self ].
+	dialog cancelled ifTrue: [ shouldEscape := true. ^ self ].
 
 	^ dialog methodName
 ]
@@ -200,6 +200,7 @@ ReRenameMethodDriver >> runRefactoring [
 	failedConditions := OrderedCollection empty.
 	[
 		newMessage := self requestNewMessage.
+		shouldEscape ifTrue: [ ^ self ].
 		self configureMessage.
 
 		refactoring isMethodDefinitionUnchanged ifTrue: [ ^ self ].

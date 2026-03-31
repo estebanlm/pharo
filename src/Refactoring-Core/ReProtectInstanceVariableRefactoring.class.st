@@ -6,7 +6,7 @@ I take subclasses and sibling classes into account, preventing breaking changes.
 Also if any subclass redefines an accessor for the variable, I will not apply changes for it. 
 "
 Class {
-	#name : 'RBProtectInstanceVariableRefactoring',
+	#name : 'ReProtectInstanceVariableRefactoring',
 	#superclass : 'RBVariableRefactoring',
 	#category : 'Refactoring-Core-Refactorings',
 	#package : 'Refactoring-Core',
@@ -14,13 +14,16 @@ Class {
 }
 
 { #category : 'preconditions' }
-RBProtectInstanceVariableRefactoring >> applicabilityPreconditions [
+ReProtectInstanceVariableRefactoring >> applicabilityPreconditions [
 
-	^ { (RBCondition definesInstanceVariable: variableName in: class) }
+	^ { (ReDirectlyDefinesInstanceVariableCondition
+		   classNamed: class name
+		   inModel: self model
+		   instanceVariables: { variableName }) }
 ]
 
 { #category : 'private - accessing' }
-RBProtectInstanceVariableRefactoring >> getterSetterMethods [
+ReProtectInstanceVariableRefactoring >> getterSetterMethods [
 	"Getter/setters are methods are accessors that are not redefined in subclasses."
 	
 	| matcher |
@@ -43,7 +46,7 @@ RBProtectInstanceVariableRefactoring >> getterSetterMethods [
 ]
 
 { #category : 'transforming' }
-RBProtectInstanceVariableRefactoring >> inline: aSelector [
+ReProtectInstanceVariableRefactoring >> inline: aSelector [
 	self onError:
 			[self generateChangesFor: (RBInlineAllSendersRefactoring
 						model: self model
@@ -53,7 +56,7 @@ RBProtectInstanceVariableRefactoring >> inline: aSelector [
 ]
 
 { #category : 'transforming' }
-RBProtectInstanceVariableRefactoring >> privateTransform [
+ReProtectInstanceVariableRefactoring >> privateTransform [
 	self setOption: #shouldNotCreateExtraBindings toUse: [:ref :string | true].
 	self getterSetterMethods do: [:each | self inline: each]
 ]
