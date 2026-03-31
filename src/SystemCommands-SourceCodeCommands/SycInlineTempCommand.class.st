@@ -16,6 +16,19 @@ SycInlineTempCommand class >> canBeExecutedInContext: aSourceCodeContext [
 	^ (super canBeExecutedInContext: aSourceCodeContext) and: [ aSourceCodeContext isTempVariableSelected]
 ]
 
+{ #category : 'converting' }
+SycInlineTempCommand >> asRefactorings [ 
+	| assignment |
+	assignment := sourceNode methodNode assignmentNodes
+		detect: [:each | each variable = sourceNode ].
+
+	^ { ReInlineTemporaryRefactoring
+		inline: assignment sourceInterval
+		from: method selector
+		in: method origin }
+
+]
+
 { #category : 'accessing' }
 SycInlineTempCommand >> defaultMenuIconName [
 	^ ##smallRightFlush
