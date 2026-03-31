@@ -205,7 +205,7 @@ TimeTest >> testHour [
 
 { #category : 'tests' }
 TimeTest >> testLessThan [
-	self assert: aTime < (Time readFrom: '12:34:57' readStream)
+	self assert: aTime < (Time fromString: '12:34:57')
 ]
 
 { #category : 'tests' }

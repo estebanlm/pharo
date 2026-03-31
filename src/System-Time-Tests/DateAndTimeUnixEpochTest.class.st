@@ -146,7 +146,7 @@ DateAndTimeUnixEpochTest >> testDaysLeftInYear [
 
 { #category : 'tests' }
 DateAndTimeUnixEpochTest >> testDuration [
-	self assert: aDateAndTime duration equals: 0 asDuration
+	self assert: aDateAndTime duration equals: (Duration seconds: 0)
 ]
 
 { #category : 'tests' }
@@ -203,8 +203,8 @@ DateAndTimeUnixEpochTest >> testJulianDayNumber [
 
 { #category : 'tests' }
 DateAndTimeUnixEpochTest >> testLessThan [
-	self assert: aDateAndTime  < (aDateAndTime + '1:00:00:00').
-	self assert: aDateAndTime + -1 < aDateAndTime
+	self assert: aDateAndTime  < (aDateAndTime + (Duration fromString: '1:00:00:00')).
+	self assert: aDateAndTime + (Duration seconds: -1) < aDateAndTime
 ]
 
 { #category : 'tests' }

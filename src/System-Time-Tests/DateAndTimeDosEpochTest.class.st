@@ -210,7 +210,7 @@ DateAndTimeDosEpochTest >> testDuration [
 
 	self 
 		assert: aDateAndTime duration 
-		equals: (Duration second: 0)
+		equals: (Duration seconds: 0)
 ]
 
 { #category : 'tests' }
@@ -278,8 +278,8 @@ DateAndTimeDosEpochTest >> testJulianDayNumber [
 
 { #category : 'tests' }
 DateAndTimeDosEpochTest >> testLessThan [
-	self assert: aDateAndTime  < (aDateAndTime + '1:00:00:00').
-	self assert: aDateAndTime + -1 < aDateAndTime
+	self assert: aDateAndTime  < (aDateAndTime + (Duration fromString: '1:00:00:00')).
+	self assert: aDateAndTime + (Duration seconds: -1) < aDateAndTime
 ]
 
 { #category : 'tests' }
