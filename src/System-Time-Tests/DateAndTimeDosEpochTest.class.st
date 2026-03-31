@@ -289,7 +289,7 @@ DateAndTimeDosEpochTest >> testMeridianAbbreviation [
 
 { #category : 'tests' }
 DateAndTimeDosEpochTest >> testMiddleOf [
-	self assert: (aDateAndTime middleOf: '2:00:00:00' asDuration)
+	self assert: (aDateAndTime middleOf: (Duration fromString: '2:00:00:00'))
 	     equals: (Timespan starting: (Date readFrom: '31-12-1979' pattern: 'd-m-y') duration: 2 days)
 ]
 
