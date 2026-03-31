@@ -39,8 +39,8 @@ RePushDownMethodInSomeClassesDriver >> gatherUserInput [
 { #category : 'configuration' }
 RePushDownMethodInSomeClassesDriver >> instantiateRefactoring [
 
-	^ RBPushDownMethodRefactoring
-		model: model
+	^ RePushDownMethodRefactoring
+		model: model 
 		pushDown: (methods collect: [ :each | each selector ])
 		from: class
 		in: classes.
