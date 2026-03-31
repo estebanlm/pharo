@@ -1,5 +1,5 @@
 Class {
-	#name : 'RBInlineMethodParametrizedTest',
+	#name : 'ReInlineMethodParametrizedTest',
 	#superclass : 'RBAbstractRefactoringTest',
 	#category : 'Refactoring-Transformations-Tests-SingleParametrized',
 	#package : 'Refactoring-Transformations-Tests',
@@ -7,19 +7,19 @@ Class {
 }
 
 { #category : 'tests' }
-RBInlineMethodParametrizedTest class >> testParameters [
+ReInlineMethodParametrizedTest class >> testParameters [
 	^ ParametrizedTestMatrix new
 		addCase: { #rbClass -> RBInlineMethodRefactoring };
 		yourself
 ]
 
 { #category : 'accessing' }
-RBInlineMethodParametrizedTest >> constructor [
+ReInlineMethodParametrizedTest >> constructor [
 	^ #inline:inMethod:forClass:
 ]
 
 { #category : 'mocking' }
-RBInlineMethodParametrizedTest >> rbModelForInliningMethodTest [
+ReInlineMethodParametrizedTest >> rbModelForInliningMethodTest [
 
 	| newModel |
 	newModel := self modelWithoutRealClasses:
@@ -227,7 +227,7 @@ RBInlineMethodParametrizedTest >> rbModelForInliningMethodTest [
 ]
 
 { #category : 'failure tests' }
-RBInlineMethodParametrizedTest >> testFailureBadInterval [
+ReInlineMethodParametrizedTest >> testFailureBadInterval [
 	self shouldFail:
 		(self createRefactoringWithArguments: { (13 to: 23) . #testMethod . RBClassDataForRefactoringTest }).
 	self shouldFail:
@@ -239,7 +239,7 @@ RBInlineMethodParametrizedTest >> testFailureBadInterval [
 ]
 
 { #category : 'failure tests' }
-RBInlineMethodParametrizedTest >> testFailureInlineMethodForSuperSendThatAlsoSendsSuper [
+ReInlineMethodParametrizedTest >> testFailureInlineMethodForSuperSendThatAlsoSendsSuper [
 
 	| refactoring |
 	model := self rbModelForInliningMethodTest.
@@ -251,13 +251,13 @@ RBInlineMethodParametrizedTest >> testFailureInlineMethodForSuperSendThatAlsoSen
 ]
 
 { #category : 'failure tests' }
-RBInlineMethodParametrizedTest >> testFailureNonExistantSelector [
+ReInlineMethodParametrizedTest >> testFailureNonExistantSelector [
 	self shouldFail: (self createRefactoringWithArguments:
 		{ (14 to: 17) . #checkClass1: . RBClassDataForRefactoringTest })
 ]
 
 { #category : 'failure tests' }
-RBInlineMethodParametrizedTest >> testFailureOverriden [
+ReInlineMethodParametrizedTest >> testFailureOverriden [
 
 	self shouldWarn: (self createRefactoringWithArguments: {
 				 (15 to: 26).
@@ -266,7 +266,7 @@ RBInlineMethodParametrizedTest >> testFailureOverriden [
 ]
 
 { #category : 'failure tests' }
-RBInlineMethodParametrizedTest >> testFailurePrimitive [
+ReInlineMethodParametrizedTest >> testFailurePrimitive [
 
 	self shouldFail: (self createRefactoringWithArguments: {
 				 (14 to: 23).
@@ -275,7 +275,7 @@ RBInlineMethodParametrizedTest >> testFailurePrimitive [
 ]
 
 { #category : 'failure tests' }
-RBInlineMethodParametrizedTest >> testFailureReturn [
+ReInlineMethodParametrizedTest >> testFailureReturn [
 
 	self shouldFail: (self createRefactoringWithArguments: {
 				 (418 to: 485).
@@ -284,7 +284,7 @@ RBInlineMethodParametrizedTest >> testFailureReturn [
 ]
 
 { #category : 'tests' }
-RBInlineMethodParametrizedTest >> testInlineMethod [
+ReInlineMethodParametrizedTest >> testInlineMethod [
 	| refactoring |
 	refactoring := self createRefactoringWithArguments:
 		{ (500 to: 549) .#sentNotImplementedInApplication . RBBasicLintRuleTestData class }.
@@ -333,7 +333,7 @@ RBInlineMethodParametrizedTest >> testInlineMethod [
 ]
 
 { #category : 'tests' }
-RBInlineMethodParametrizedTest >> testInlineMethod1 [
+ReInlineMethodParametrizedTest >> testInlineMethod1 [
 	| refactoring |
 	refactoring := self createRefactoringWithArguments:
 		{ (39 to: 84) . #caller . RBClassDataForRefactoringTest }.
@@ -353,7 +353,7 @@ RBInlineMethodParametrizedTest >> testInlineMethod1 [
 ]
 
 { #category : 'tests' }
-RBInlineMethodParametrizedTest >> testInlineMethod2 [
+ReInlineMethodParametrizedTest >> testInlineMethod2 [
 	| refactoring methodName |
 	methodName := #caller1.
 	refactoring := self createRefactoringWithArguments:
@@ -375,7 +375,7 @@ RBInlineMethodParametrizedTest >> testInlineMethod2 [
 ]
 
 { #category : 'tests' }
-RBInlineMethodParametrizedTest >> testInlineMethod3 [
+ReInlineMethodParametrizedTest >> testInlineMethod3 [
 	| refactoring methodName |
 	methodName := #caller2.
 	refactoring := self createRefactoringWithArguments:
@@ -389,7 +389,7 @@ RBInlineMethodParametrizedTest >> testInlineMethod3 [
 ]
 
 { #category : 'tests' }
-RBInlineMethodParametrizedTest >> testInlineMethod4 [
+ReInlineMethodParametrizedTest >> testInlineMethod4 [
 	| refactoring |
 	refactoring := self createRefactoringWithArguments:
 		{ (31 to: 112) . #inlineJunk . RBClassDataForRefactoringTest }.
@@ -415,7 +415,7 @@ RBInlineMethodParametrizedTest >> testInlineMethod4 [
 ]
 
 { #category : 'tests' }
-RBInlineMethodParametrizedTest >> testInlineMethod5 [
+ReInlineMethodParametrizedTest >> testInlineMethod5 [
 	| refactoring |
 
 	refactoring := self createRefactoringWithArguments:
@@ -427,7 +427,7 @@ RBInlineMethodParametrizedTest >> testInlineMethod5 [
 ]
 
 { #category : 'tests' }
-RBInlineMethodParametrizedTest >> testInlineMethodForSuperSend [
+ReInlineMethodParametrizedTest >> testInlineMethodForSuperSend [
 	| refactoring |
 	model := self rbModelForInliningMethodTest.
 	(model classNamed: #ReRenameVariableChange)
@@ -452,7 +452,7 @@ RBInlineMethodParametrizedTest >> testInlineMethodForSuperSend [
 ]
 
 { #category : 'tests' }
-RBInlineMethodParametrizedTest >> testInlineRecursiveCascadedMethod [
+ReInlineMethodParametrizedTest >> testInlineRecursiveCascadedMethod [
 	| refactoring |
 	refactoring := self createRefactoringWithArguments:
 		{ (33 to: 62) . #inlineMethod . RBClassDataForRefactoringTest }.
@@ -468,7 +468,7 @@ RBInlineMethodParametrizedTest >> testInlineRecursiveCascadedMethod [
 ]
 
 { #category : 'tests' }
-RBInlineMethodParametrizedTest >> testModelInlineRecursiveMethod [
+ReInlineMethodParametrizedTest >> testModelInlineRecursiveMethod [
 	| refactoring class |
 	class := model classNamed: #Object.
 	class compile: 'foo self bar. self foo. self bar' classified: #(#accessing).
