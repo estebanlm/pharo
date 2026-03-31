@@ -298,15 +298,24 @@ DateAndTimeEpochTest >> testNow [
 
 { #category : 'tests' }
 DateAndTimeEpochTest >> testOffset [
-	self assert: aDateAndTime offset equals: '0:00:00:00' asDuration.
-	self assert: (aDateAndTime offset: '-0:12:00:00') equals: '1900-12-31T12:00:00-12:00' asDateAndTime.
-	self assert: (aDateAndTime offset: '0:12:00:00') equals: '1901-01-01T12:00:00+12:00' asDateAndTime
+	self 
+		assert: aDateAndTime offset 
+		equals: (Duration fromString: '0:00:00:00').
+	self 
+		assert: (aDateAndTime offset: (Duration fromString: '-0:12:00:00')) 
+		equals: (DateAndTime fromString: '1900-12-31T12:00:00-12:00').
+	self 
+		assert: (aDateAndTime offset: (Duration fromString: '0:12:00:00'))
+		equals: (DateAndTime fromString: '1901-01-01T12:00:00+12:00')
 ]
 
 { #category : 'tests' }
 DateAndTimeEpochTest >> testPlus [
-	self assert: aDateAndTime + '0:00:00:00' equals: aDateAndTime.
-	self assert: aDateAndTime + 0 equals: aDateAndTime.
+	self 
+		assert: aDateAndTime + (Duration fromString: '0:00:00:00') 
+		equals: aDateAndTime.
+	self 
+		assert: aDateAndTime + (Duration seconds: 0) equals: aDateAndTime.
 	self
 		assert: aDateAndTime + aDuration
 		equals:
@@ -319,7 +328,6 @@ DateAndTimeEpochTest >> testPlus [
 				second: 4
 				nanoSecond: 5
 				offset: 0 hours)
-	" I believe this is a bug in the nanosecond part of (DateAndTime >> year:month:day:hour:minute:second:nanoSecond:offset:)"
 ]
 
 { #category : 'tests' }

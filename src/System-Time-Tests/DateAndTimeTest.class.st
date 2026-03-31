@@ -339,15 +339,22 @@ DateAndTimeTest >> testOffset [
 		offset: 1 hours.
 	dateAndTime2 := dateAndTime1 offset: 1 hour.
 	self assert: dateAndTime1 equals: dateAndTime2.
-	self assert: dateAndTime1 localSeconds equals: dateAndTime2 localSeconds.
+	
+	self 
+		assert: dateAndTime1 localSeconds 
+		equals: dateAndTime2 localSeconds.
 
 	dateAndTime2 := dateAndTime1 offset: -1 hour.
 	self assert: dateAndTime1 equals: dateAndTime2.
-	self deny: dateAndTime1 localSeconds identicalTo: dateAndTime2 localSeconds.
+	self 
+		deny: dateAndTime1 localSeconds 
+		identicalTo: dateAndTime2 localSeconds.
 
 	dateAndTime2 := dateAndTime1 offset: -2 hour.
 	self assert: dateAndTime1 equals: dateAndTime2.
-	self deny: dateAndTime1 localSeconds identicalTo: dateAndTime2 localSeconds
+	self 
+		deny: dateAndTime1 localSeconds 
+		identicalTo: dateAndTime2 localSeconds
 ]
 
 { #category : 'tests - epoch' }

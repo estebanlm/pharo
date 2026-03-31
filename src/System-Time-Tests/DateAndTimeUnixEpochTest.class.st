@@ -279,8 +279,12 @@ DateAndTimeUnixEpochTest >> testNow [
 
 { #category : 'tests' }
 DateAndTimeUnixEpochTest >> testOffset [
-	self assert: aDateAndTime offset equals: '0:00:00:00' asDuration.
-	self assert: (aDateAndTime offset: '0:12:00:00') equals: '1970-01-01T12:00:00+12:00' asDateAndTime
+	self 
+		assert: aDateAndTime offset 
+		equals: (Duration fromString: '0:00:00:00').
+	self 
+		assert: (aDateAndTime offset: (Duration fromString:'0:12:00:00')) 
+		equals: (DateAndTime fromString: '1970-01-01T12:00:00+12:00')
 ]
 
 { #category : 'tests' }
