@@ -17,6 +17,9 @@ Look at #createVariableRefactoring: implementors for details.
 Class {
 	#name : 'SycRefactorVariableCommand',
 	#superclass : 'SycVariableCommand',
+	#instVars : [
+		'refactoringScopes'
+	],
 	#category : 'SystemCommands-VariableCommands',
 	#package : 'SystemCommands-VariableCommands'
 }
@@ -51,4 +54,11 @@ SycRefactorVariableCommand >> createRefactorings: variableRefactoringClass using
 SycRefactorVariableCommand >> execute [
 
 	self executeRefactorings
+]
+
+{ #category : 'execution' }
+SycRefactorVariableCommand >> prepareFullExecutionInContext: aToolContext [
+
+	super prepareFullExecutionInContext: aToolContext.
+	refactoringScopes := toolContext refactoringScopes
 ]

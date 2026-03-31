@@ -5,7 +5,6 @@ Class {
 	#name : 'SycPushUpVariableCommand',
 	#superclass : 'SycRefactorVariableCommand',
 	#instVars : [
-		'refactoringScopes',
 		'variable'
 	],
 	#category : 'SystemCommands-VariableCommands',
@@ -50,7 +49,6 @@ SycPushUpVariableCommand >> executeRefactorings [
 SycPushUpVariableCommand >> prepareFullExecutionInContext: aToolContext [
 
 	super prepareFullExecutionInContext: aToolContext.
-	refactoringScopes := aToolContext refactoringScopes.
 	toolContext := aToolContext.
 	variable := toolContext lastSelectedVariable
 ]

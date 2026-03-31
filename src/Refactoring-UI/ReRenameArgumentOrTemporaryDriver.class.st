@@ -79,7 +79,7 @@ ReRenameArgumentOrTemporaryDriver >> hasFailedBehaviorPreservingPreconditions [
 { #category : 'configuration' }
 ReRenameArgumentOrTemporaryDriver >> instantiateRefactoring [
 
-	^ RBRenameArgumentOrTemporaryRefactoring
+	^ ReRenameArgumentOrTemporaryRefactoring
 		  renameTemporaryFrom: sourceNode sourceInterval
 		  in: method origin
 		  selector: method selector
@@ -141,7 +141,7 @@ ReRenameArgumentOrTemporaryDriver >> runRefactoring [
 
 		refactoring applicabilityPreconditionsOfTheNewName allSatisfy: [ :condition | condition check ] ] whileFalse: [
 			refactoring applicabilityPreconditionsOfTheNewName
-				detect: [ :condition | condition check ]
+				detect: [ :condition | condition check not ]
 				ifFound: [ :condition | self inform: condition errorString ] ].
 
 	self hasFailedBehaviorPreservingPreconditions
