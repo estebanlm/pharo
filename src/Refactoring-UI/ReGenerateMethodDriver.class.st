@@ -58,6 +58,7 @@ ReGenerateMethodDriver >> gatherUserInput [
 	selection ifNil: [ ^ false ].
 	selection ifEmpty: [ ^ false ].
 	selectedVariables := selection.
+	self configureRefactoring.
 	^ true
 ]
 

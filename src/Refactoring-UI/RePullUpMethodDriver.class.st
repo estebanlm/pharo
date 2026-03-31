@@ -154,7 +154,8 @@ RePullUpMethodDriver >> defaultSelectDialog [
 { #category : 'execution' }
 RePullUpMethodDriver >> gatherUserInput [
 
-	self selectMethodsAndClass methods ifNil: [ ^ false ].
+	self selectMethodsAndClass.
+	methods ifNil: [ ^ false ].
 	^ true
 ]
 
@@ -233,6 +234,17 @@ RePullUpMethodDriver >> pullUpReferencedSharedVars [
 	notSharedVarRefs referencedSharedVariables do: [ :sharedVar | 
 		"We add the pushUpVariable transformation to the refactoring previous transformations"
 		refactoring pullUpSharedVariable: sharedVar ]
+]
+
+{ #category : 'execution' }
+RePullUpMethodDriver >> runRefactoring [
+
+	self gatherUserInput ifFalse: [ ^ self ].
+	self configureRefactoring.
+	self hasFailedApplicabilityPreconditions ifTrue: [ ^ self ].
+	self hasFailedBehaviorPreservingPreconditions
+		ifTrue: [ self handleBreakingChanges ]
+		ifFalse: [ self applyChanges ]
 ]
 
 { #category : 'execution' }

@@ -80,8 +80,7 @@ ReRemoveClassDriver >> hasFailedBehaviorPreservingPreconditions [
 	haveNoReferences := refactoring preconditionHaveNoReferences.
 	emptyClasses := refactoring preconditionEmptyClasses.
 	noSubclasses := refactoring preconditionHaveNoSubclasses.
-	^ refactoring failedBreakingChangePreconditions isNotEmpty 
-
+	^ (haveNoReferences check & emptyClasses check & noSubclasses check) not
 ]
 
 { #category : 'configuration' }
