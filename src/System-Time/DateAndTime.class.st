@@ -702,9 +702,9 @@ DateAndTime >> asMonth [
 
 { #category : 'converting' }
 DateAndTime >> asNanoSeconds [
-	"Answer the number of nanoseconds since midnight"
+	"Answer the number of nanoseconds."
 
-	^ self asDuration asNanoSeconds
+	^ (seconds * NanosInSecond) + nanos
 ]
 
 { #category : 'converting' }
