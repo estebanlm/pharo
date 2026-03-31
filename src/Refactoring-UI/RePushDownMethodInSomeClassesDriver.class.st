@@ -31,7 +31,6 @@ RePushDownMethodInSomeClassesDriver class >> driverName [
 { #category : 'execution' }
 RePushDownMethodInSomeClassesDriver >> gatherUserInput [
 
-	super gatherUserInput.
 	classes := self selectClasses.
 	classes ifNil: [ ^ false ].
 	^ true
@@ -39,7 +38,7 @@ RePushDownMethodInSomeClassesDriver >> gatherUserInput [
 
 { #category : 'configuration' }
 RePushDownMethodInSomeClassesDriver >> instantiateRefactoring [
-	classes := {  }.
+
 	^ RBPushDownMethodRefactoring
 		model: model
 		pushDown: (methods collect: [ :each | each selector ])
@@ -64,6 +63,17 @@ RePushDownMethodInSomeClassesDriver >> refactoring [
 		pushDown: (methods collect: [ :each | each selector ])
 		from: class
 		in: classes.
+]
+
+{ #category : 'execution' }
+RePushDownMethodInSomeClassesDriver >> runRefactoring [
+
+	self gatherUserInput ifFalse: [ ^ self ].
+	self configureRefactoring.
+	self hasFailedApplicabilityPreconditions ifTrue: [ ^ self ].
+	self hasFailedBehaviorPreservingPreconditions
+		ifTrue: [ self handleBreakingChanges ]
+		ifFalse: [ self applyChanges ]
 ]
 
 { #category : 'execution' }
