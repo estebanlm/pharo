@@ -28,7 +28,7 @@ RePushDownInstanceVariableDriver >> breakingChoices [
 
 	| choices |
 	choices := OrderedCollection new.
-	choices add: (RePushDownMethodTransformationChoice new driver: self).
+	choices add: (RePushDownInstanceVariableTransformationChoice new driver: self).
 	(referencesInstanceVariableCollection anySatisfy: [ :precond | precond isFalse ]) ifTrue: [
 		choices add: (ReBrowseMethodsChoice new driver: self) ].
 
@@ -64,6 +64,7 @@ RePushDownInstanceVariableDriver >> gatherUserInput [
 
 	variables := self selectVariables.
 	variables ifNil: [ ^ false ].
+	self configureRefactoring.
 	^ true
 ]
 
@@ -91,6 +92,13 @@ RePushDownInstanceVariableDriver >> labelBasedOnBreakingChanges [
 					  referencesInstanceVariableCollection first violationMessageOn: stream.
 					  stream cr ].
 			  stream nextPutAll: 'Select a strategy' ]
+]
+
+{ #category : 'execution' }
+RePushDownInstanceVariableDriver >> pushDownInstanceVariable [
+
+	refactoring privateTransform.
+	self openPreviewWithChanges: refactoring changes
 ]
 
 { #category : 'accessing' }

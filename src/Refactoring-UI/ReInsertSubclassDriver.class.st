@@ -73,6 +73,7 @@ ReInsertSubclassDriver >> gatherUserInput [
 
 	subclass ifNil: [ self requestClass ].
 	subclass ifNil: [ ^ false ].
+	refactoring className: subclass.
 	^ true
 ]
 

@@ -74,10 +74,11 @@ ReInsertSuperclassDriver >> dialogTitleForClassSelection [
 ]
 
 { #category : 'execution' }
-ReInsertSuperclassDriver >> gatherUserInput [ 
+ReInsertSuperclassDriver >> gatherUserInput [
 
 	subclass ifNil: [ self requestClass ].
 	subclass ifNil: [ ^ false ].
+	refactoring className: subclass.
 	^ true
 ]
 

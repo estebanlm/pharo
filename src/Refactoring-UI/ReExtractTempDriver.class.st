@@ -65,6 +65,21 @@ ReExtractTempDriver >> extract: anInterval from: aSelector in: aClass [
 	class := aClass
 ]
 
+{ #category : 'execution' }
+ReExtractTempDriver >> gatherUserInput [
+
+	| varName failed errorString |
+	varName := ''.
+	failed := nil.
+	[
+		errorString := failed ifNil: [ '' ] ifNotNil: [ self failedPreconditionsErrorString: failed ].
+		varName := self getVariableName: varName errorMessage: errorString.
+		varName ifNil: [ ^ false ].
+		refactoring variableName: varName.
+		failed := refactoring failedApplicabilityPreconditions ] doWhileFalse: [ varName isEmptyOrNil not and: [ failed isEmpty ] ].
+	^ true
+]
+
 { #category : 'user requests' }
 ReExtractTempDriver >> getVariableName: initialAnswer errorMessage: message [
 
@@ -103,23 +118,4 @@ ReExtractTempDriver >> labelBasedOnBreakingChanges [
 							  cond violationMessageOn: stream.
 							  stream cr ] ].
 			  stream nextPutAll: 'Select the strategies to apply' ]
-]
-
-{ #category : 'execution' }
-ReExtractTempDriver >> runRefactoring [
-
-	| varName failed errorString |
-	self configureRefactoring.
-	varName := ''.
-	failed := nil.
-	[
-		errorString := failed ifNil: [ '' ] ifNotNil: [ self failedPreconditionsErrorString: failed ].
-		varName := self getVariableName: varName errorMessage: errorString.
-		varName ifNil: [ ^ self ].
-		refactoring variableName: varName.
-		failed := refactoring failedApplicabilityPreconditions ] doWhileFalse: [ varName isEmptyOrNil not and: [ failed isEmpty ] ].
-
-	self hasFailedBehaviorPreservingPreconditions
-		ifTrue: [ self handleBreakingChanges ]
-		ifFalse: [ self applyChanges ]
 ]

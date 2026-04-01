@@ -341,7 +341,8 @@ ReInteractionDriver >> runRefactoring [
 	self hasFailedApplicabilityPreconditions ifTrue: [ ^ self "applicability failed" ].
 	self hasFailedBehaviorPreservingPreconditions
 		ifTrue: [ self handleBreakingChanges ]
-		ifFalse: [ self applyChanges ]
+		ifFalse: [ self applyChanges ].
+	^ true
 ]
 
 { #category : 'accessing' }

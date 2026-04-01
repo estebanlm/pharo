@@ -156,6 +156,8 @@ RePullUpMethodDriver >> gatherUserInput [
 
 	self selectMethodsAndClass.
 	methods ifNil: [ ^ false ].
+	refactoring selectors: (methods collect: [ :each | each selector ]).
+	refactoring superClass: superclass.
 	^ true
 ]
 
@@ -176,9 +178,9 @@ RePullUpMethodDriver >> instantiateRefactoring [
 
 	^ RePullUpMethodRefactoring
        model: model
-       pullUp: (methods collect: [ :each | each selector ])
+       pullUp: #()
        from: class name
-       to: superclass name
+       to: ''
 ]
 
 { #category : 'ui - dialogs' }
@@ -234,17 +236,6 @@ RePullUpMethodDriver >> pullUpReferencedSharedVars [
 	notSharedVarRefs referencedSharedVariables do: [ :sharedVar | 
 		"We add the pushUpVariable transformation to the refactoring previous transformations"
 		refactoring pullUpSharedVariable: sharedVar ]
-]
-
-{ #category : 'execution' }
-RePullUpMethodDriver >> runRefactoring [
-
-	self gatherUserInput ifFalse: [ ^ self ].
-	self configureRefactoring.
-	self hasFailedApplicabilityPreconditions ifTrue: [ ^ self ].
-	self hasFailedBehaviorPreservingPreconditions
-		ifTrue: [ self handleBreakingChanges ]
-		ifFalse: [ self applyChanges ]
 ]
 
 { #category : 'execution' }

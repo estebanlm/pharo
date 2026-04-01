@@ -33,6 +33,7 @@ RePushDownMethodInSomeClassesDriver >> gatherUserInput [
 
 	classes := self selectClasses.
 	classes ifNil: [ ^ false ].
+	refactoring classes: classes.
 	^ true
 ]
 
@@ -43,7 +44,7 @@ RePushDownMethodInSomeClassesDriver >> instantiateRefactoring [
 		model: model 
 		pushDown: (methods collect: [ :each | each selector ])
 		from: class
-		in: classes.
+		in: #().
 ]
 
 { #category : 'initialization' }
@@ -53,27 +54,6 @@ RePushDownMethodInSomeClassesDriver >> model: aRBNamespace scopes: refactoringSc
 	scopes := refactoringScopes.
 	methods := methodsList.
 	class := methods first origin
-]
-
-{ #category : 'resources' }
-RePushDownMethodInSomeClassesDriver >> refactoring [
-
-	refactoring :=  RePushDownMethodRefactoring
-		model: model
-		pushDown: (methods collect: [ :each | each selector ])
-		from: class
-		in: classes.
-]
-
-{ #category : 'execution' }
-RePushDownMethodInSomeClassesDriver >> runRefactoring [
-
-	self gatherUserInput ifFalse: [ ^ self ].
-	self configureRefactoring.
-	self hasFailedApplicabilityPreconditions ifTrue: [ ^ self ].
-	self hasFailedBehaviorPreservingPreconditions
-		ifTrue: [ self handleBreakingChanges ]
-		ifFalse: [ self applyChanges ]
 ]
 
 { #category : 'execution' }
