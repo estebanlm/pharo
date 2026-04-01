@@ -241,7 +241,7 @@ TraitedMetaclass >> localSelectors [
 { #category : 'organization' }
 TraitedMetaclass >> methodInstaller [
 
-	^ OCTraitMethodInstaller new
+	^ OCTraitMethodInstaller new forExtendedBehavior
 ]
 
 { #category : 'initialization' }

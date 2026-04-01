@@ -34,6 +34,14 @@ OCMethodInstaller >> changeStamp: anObject [
 	changeStamp := anObject
 ]
 
+{ #category : 'configuring' }
+OCMethodInstaller >> forExtendedBehavior [
+
+	^ OCBehaviorWithExtensionInstaller new
+		behaviorInstaller: self;
+		yourself
+]
+
 { #category : 'accessing' }
 OCMethodInstaller >> initialize [
 

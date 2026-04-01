@@ -550,12 +550,12 @@ OpalCompiler >> install [
 	method := self compile.
 	method ifNil: [ ^ nil ].
 
-	self methodClass methodInstaller
+	(self methodClass methodInstaller
 		priorMethod: self priorMethod;
 		logged: self logged;
 		changeStamp: changeStamp;
-		protocol: protocol;
-		install: method into: self methodClass compiler: self.
+		protocol: protocol)
+			install: method into: self methodClass compiler: self.
 	^ method
 ]
 

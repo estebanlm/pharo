@@ -52,56 +52,10 @@ Behavior >> compile: sourceCode classified: protocol withStamp: changeStamp noti
 Behavior >> compile: sourceCode classified: protocol withStamp: changeStamp notifying: requestor logSource: logSource [
 	"Return the selector of the compiled method"
 
-	^ self
-		compile: sourceCode
-		classified: protocol
-		withStamp: changeStamp
-		notifying: requestor
-		logSource: logSource
-		recompileDependencies: true
-]
-
-{ #category : '*OpalCompiler-Core' }
-Behavior >> compile: sourceCode classified: protocol withStamp: changeStamp notifying: requestor logSource: logSource recompileDependencies: recompileDependencies [
-	"Return the selector of the compiled method"
-
-	| method compiler ast aliasingSelectors |
-	
-	sourceCode ifEmpty: [ Error signal: 'The source code should not be empty' ].
-	compiler := self compiler
-		            source: sourceCode;
-		            requestor: requestor;
-		            failBlock: (requestor ifNotNil: [ [ ^ nil ] ]);
-		            "no failblock if no requestor"
-						"compatibility: permit undeclared if no requestor"
-						permitUndeclared: false;
-		            permitFaulty: false;
-		            protocol: protocol;
-		            changeStamp: changeStamp;
-		            logged: logSource.
-
-	ast := compiler parse.
-
-	ast sendNodes do: [ :send | send selector: (OCSelectorNode value: (self package visibleSelectorForSymbol: send selector)) ].
-
-	method := compiler install.
-	
-	"Wait! There was maybe an extension with the same name here!
-	If that's the case, we need to mark the extension as a conflict."
-	self selectors
-		select: [ :e | e isScopedSelector and: [ e symbol = method selector ] ]
-		thenDo: [ :selector | selector bindAliasIn: self ].
-		
-	"We are compiling a normal method.
-	We need to alias it locally if superclasses are extended/aliased.
-	If a subclass has a method with the same selector, this should have been aliased before"
-	aliasingSelectors := (self allSuperclasses flatCollect: [ :aSuperclass |
-		                      aSuperclass methodDict keys select: [ :selector |
-			                      selector isScopedSelector and: [ selector asSymbol = ast selector ] ] ]) asSet.
-	aliasingSelectors do: [ :k | self methodDict at: k put: method ].
-
-
-	^ ast selector
+	^ self compile: sourceCode notifying: requestor methodInstaller: (self methodInstaller
+			   logged: logSource;
+			   changeStamp: changeStamp;
+			   protocol: protocol)
 ]
 
 { #category : '*OpalCompiler-Core' }
@@ -112,7 +66,6 @@ Behavior >> compile: selector from: oldClass [
 	method := oldClass compiledMethodAt: selector.
 	compiler := oldClass compiler
 		             source: method sourceCode;
-		             priorMethod: method;
 		             class: self;
 		             permitFaulty: true;
 		             logged: true.
@@ -138,6 +91,31 @@ Behavior >> compile: code notifying: requestor [
 	a PositionableStream. This method also saves the source code."
 
 	^ self compile: code classified: nil notifying: requestor
+]
+
+{ #category : '*OpalCompiler-Core' }
+Behavior >> compile: sourceCode notifying: requestor methodInstaller: methodInstaller [
+	"Return the selector of the compiled method"
+
+	| method compiler ast |
+	
+	sourceCode ifEmpty: [ Error signal: 'The source code should not be empty' ].
+	compiler := self compiler
+		            source: sourceCode;
+		            requestor: requestor;
+		            failBlock: (requestor ifNotNil: [ [ ^ nil ] ]);
+		            "no failblock if no requestor"
+						"compatibility: permit undeclared if no requestor"
+						permitUndeclared: false;
+		            permitFaulty: false.
+
+	ast := compiler parse.
+
+	ast sendNodes do: [ :send | send selector: (OCSelectorNode value: (self package visibleSelectorForSymbol: send selector)) ].
+
+	method := compiler compile.
+	methodInstaller install: method into: self compiler: compiler.
+	^ ast selector
 ]
 
 { #category : '*OpalCompiler-Core' }

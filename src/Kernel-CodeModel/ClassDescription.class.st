@@ -587,7 +587,7 @@ ClassDescription >> localSlots [
 { #category : 'organization' }
 ClassDescription >> methodInstaller [
 
-	^ OCAnnouncingMethodInstaller new
+	^ OCAnnouncingMethodInstaller new forExtendedBehavior
 ]
 
 { #category : 'protocols' }
