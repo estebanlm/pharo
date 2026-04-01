@@ -41,8 +41,14 @@ DateAndTimeLeapTest >> testAsDuration [
 
 { #category : 'tests' }
 DateAndTimeLeapTest >> testAsLocal [
-	self assert: aDateAndTime asLocal equals: aDateAndTime.
-	self assert: aDateAndTime asLocal equals: (aDateAndTime offset: aDateAndTime class localOffset)
+
+
+	self 
+		assert: aDateAndTime asLocal 
+		equals: aDateAndTime.
+	self 
+		assert: aDateAndTime asLocal 
+		equals: (aDateAndTime offset: aDateAndTime class localOffset)
 ]
 
 { #category : 'tests' }
@@ -54,8 +60,13 @@ DateAndTimeLeapTest >> testAsMonth [
 
 { #category : 'tests' }
 DateAndTimeLeapTest >> testAsNanoSeconds [
-	self assert: aDateAndTime asNanoSeconds equals: aDuration asNanoSeconds.
-	self assert: aDateAndTime asNanoSeconds equals: 48780000000000
+
+	self 
+		assert: aDateAndTime asNanoSeconds 
+		equals: aDuration asNanoSeconds.
+	self 
+		assert: aDateAndTime asNanoSeconds 
+		equals: 48780000000000
 ]
 
 { #category : 'tests' }
@@ -186,7 +197,7 @@ DateAndTimeLeapTest >> testMiddleOf [
 
 { #category : 'tests' }
 DateAndTimeLeapTest >> testMidnight [
-	self assert: aDateAndTime midnight equals: '2004-02-29T00:00:00+02:00' asDateAndTime
+	self assert: aDateAndTime midnight equals: (DateAndTime fromString:  '2004-02-29T00:00:00+02:00')
 ]
 
 { #category : 'tests' }
@@ -214,7 +225,7 @@ DateAndTimeLeapTest >> testNanoSecond [
 
 { #category : 'tests' }
 DateAndTimeLeapTest >> testNoon [
-	self assert: aDateAndTime noon equals: '2004-02-29T12:00:00+02:00' asDateAndTime
+	self assert: aDateAndTime noon equals: (DateAndTime fromString: '2004-02-29T12:00:00+02:00')
 ]
 
 { #category : 'tests' }
@@ -264,14 +275,18 @@ DateAndTimeLeapTest >> testTicksOffset [
 
 { #category : 'tests' }
 DateAndTimeLeapTest >> testTimeZone [
-	aDateAndTime := '2004-02-29T13:33:00+00:00' asDateAndTime.
+
+	aDateAndTime := (DateAndTime fromString: '2004-02-29T13:33:00+00:00').
 	self assert: aDateAndTime timeZone name equals: 'Universal Time'.
 	self assert: aDateAndTime timeZone abbreviation 	equals: 'UTC'
 ]
 
 { #category : 'tests' }
 DateAndTimeLeapTest >> testUtcOffset [
-     self assert: (aDateAndTime offset: '0:02:00:00') equals: '2004-02-29T13:33:00+02:00' asDateAndTime
+	
+	self 
+		assert: (aDateAndTime offset: (Duration fromString: '0:02:00:00')) 
+		equals: (DateAndTime fromString: '2004-02-29T13:33:00+02:00')
 ]
 
 { #category : 'tests' }

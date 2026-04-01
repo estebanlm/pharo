@@ -373,7 +373,10 @@ DateAndTimeUnixEpochTest >> testTommorrow [
 
 { #category : 'tests' }
 DateAndTimeUnixEpochTest >> testUtcOffset [
-	self assert: (aDateAndTime offset: '0:12:00:00') equals: '1970-01-01T12:00:00+12:00' asDateAndTime
+
+	self 
+		assert: (aDateAndTime offset: (Duration fromString: '0:12:00:00')) 
+		equals: (DateAndTime fromString: '1970-01-01T12:00:00+12:00')
 ]
 
 { #category : 'tests' }

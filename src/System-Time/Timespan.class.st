@@ -378,13 +378,13 @@ Timespan >> offset [
 ]
 
 { #category : 'accessing' }
-Timespan >> offset: anOffset [
+Timespan >> offset: aDuration [
 	"Answer a <Timespan> equivalent to the receiver but with its local time
 	being offset from UTC by offset.
 	Unlike #translateTo: this will NOT change the absolute in UTC "
 
 	^ self class
-		starting: (self start offset: anOffset)
+		starting: (self start offset: aDuration)
 		duration: self duration
 ]
 

@@ -113,11 +113,14 @@ DateAndTimeTest >> testAsTimeUTC [
 
 { #category : 'tests' }
 DateAndTimeTest >> testAsUnixTimeIndependentOfTimezone [
+
 	| datetimeWithOffset datetimeWithoutOffset |
 	datetimeWithoutOffset := DateAndTime current offset: Duration zero.
 	datetimeWithOffset := datetimeWithoutOffset offset: (Duration hours: 1).
 
-	self assert: datetimeWithOffset asUnixTime equals: datetimeWithoutOffset asUnixTime
+	self 
+		assert: datetimeWithOffset asUnixTime 
+		equals: datetimeWithoutOffset asUnixTime
 ]
 
 { #category : 'tests' }
@@ -168,9 +171,11 @@ DateAndTimeTest >> testDateTimeDenotation1 [
 		                 minute: 0
 		                 second: 0
 		                 offset: 0 hours.
-	twoPmUTCInLocalTimeOfDetroit := twoPmInLondon offset: -5 hours.
+	twoPmUTCInLocalTimeOfDetroit := twoPmInLondon offset: (Duration hours: -5).
 	nineAmInDetroit := DateAndTime fromString: '2004-11-02T09:00:00-05:00'.
-	self assert: twoPmUTCInLocalTimeOfDetroit equals: nineAmInDetroit
+	self 
+		assert: twoPmUTCInLocalTimeOfDetroit 
+		equals: nineAmInDetroit
 ]
 
 { #category : 'tests' }
@@ -188,9 +193,11 @@ DateAndTimeTest >> testDateTimeDenotation2 [
 		                       minute: 30
 		                       second: 0
 		                       offset: 0 hours.
-	lateEveningInLocalTimeOfMoscow := lateEveningInLondon offset: 3 hours.
+	lateEveningInLocalTimeOfMoscow := lateEveningInLondon offset: (Duration hours: 3).
 	localMoscowTimeFromDenotation := DateAndTime fromString: '2004-12-01T02:30:00+03:00'.
-	self assert: lateEveningInLocalTimeOfMoscow equals: localMoscowTimeFromDenotation
+	self 
+		assert: lateEveningInLocalTimeOfMoscow 
+		equals: localMoscowTimeFromDenotation
 ]
 
 { #category : 'tests' }
@@ -337,20 +344,20 @@ DateAndTimeTest >> testOffset [
 		minute: 2
 		second: 3
 		offset: 1 hours.
-	dateAndTime2 := dateAndTime1 offset: 1 hour.
+	dateAndTime2 := dateAndTime1 offset: (Duration hours: 1).
 	self assert: dateAndTime1 equals: dateAndTime2.
 	
 	self 
 		assert: dateAndTime1 localSeconds 
 		equals: dateAndTime2 localSeconds.
 
-	dateAndTime2 := dateAndTime1 offset: -1 hour.
+	dateAndTime2 := dateAndTime1 offset: (Duration hours: -1).
 	self assert: dateAndTime1 equals: dateAndTime2.
 	self 
 		deny: dateAndTime1 localSeconds 
 		identicalTo: dateAndTime2 localSeconds.
 
-	dateAndTime2 := dateAndTime1 offset: -2 hour.
+	dateAndTime2 := dateAndTime1 offset: (Duration hours: -2).
 	self assert: dateAndTime1 equals: dateAndTime2.
 	self 
 		deny: dateAndTime1 localSeconds 
@@ -364,16 +371,22 @@ DateAndTimeTest >> testPharoEpoch [
 			| localEpoch |
 			localEpoch := DateAndTime fromString: '1901-01-01T00:00:00'.
 			self deny: DateAndTime epoch equals: localEpoch.
-			self deny: ((DateAndTime fromSeconds: 0) offset: 0) equals: localEpoch ].
+			self 
+				deny: ((DateAndTime fromSeconds: 0) offset: (Duration seconds: 0))
+				equals: localEpoch ].
 
 	self useTimeZone: 'UTC' during: [
 			| localEpoch |
 			localEpoch := DateAndTime fromString: '1901-01-01T00:00:00'.
 			self assert: DateAndTime epoch equals: localEpoch.
-			self assert: ((DateAndTime fromSeconds: 0) offset: 0) equals: localEpoch ].
+			self assert: ((DateAndTime fromSeconds: 0) offset: (Duration seconds: 0)) equals: localEpoch ].
 
-	self assert: DateAndTime epoch equals: (DateAndTime fromString: '1901-01-01T00:00:00+00:00').
-	self assert: ((DateAndTime fromSeconds: 0) offset: 0) equals: '1901-01-01T00:00:00+00:00' asDateAndTime
+	self 
+		assert: DateAndTime epoch 
+		equals: (DateAndTime fromString: '1901-01-01T00:00:00+00:00').
+	self 
+		assert: ((DateAndTime fromSeconds: 0) offset: (Duration seconds: 0)) 
+		equals: (DateAndTime fromString: '1901-01-01T00:00:00+00:00')
 ]
 
 { #category : 'tests' }
@@ -643,6 +656,7 @@ DateAndTimeTest >> testSecondsSinceMidnightLocalTime [
 
 { #category : 'tests' }
 DateAndTimeTest >> testSecondsSinceMidnightLocalTimeNormalization [
+
 	| dateAndTime|
 
 	"Check offset: changes from times defined in UTC"

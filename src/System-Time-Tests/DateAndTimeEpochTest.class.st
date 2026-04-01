@@ -165,7 +165,7 @@ DateAndTimeEpochTest >> testDuration [
 
 { #category : 'tests' }
 DateAndTimeEpochTest >> testEpoch [
-	self assert: aDateAndTime equals: '1901-01-01T00:00:00+00:00' asDateAndTime
+	self assert: aDateAndTime equals: (DateAndTime fromString: '1901-01-01T00:00:00+00:00')
 ]
 
 { #category : 'tests' }
@@ -228,10 +228,9 @@ DateAndTimeEpochTest >> testMeridianAbbreviation [
 
 { #category : 'tests' }
 DateAndTimeEpochTest >> testMiddleOf [
-	
 	self 
 		assert: (aDateAndTime middleOf: (Duration fromString: '2:00:00:00'))
-	   equals: (Timespan starting: (Date readFrom: '31-12-1979' pattern: 'd-m-y') duration: 2 days)
+		equals: (Timespan starting: (Date readFrom: '31-12-1900' pattern: 'd-m-y') duration: 2 days)
 ]
 
 { #category : 'tests' }
@@ -288,7 +287,7 @@ DateAndTimeEpochTest >> testNew [
 
 { #category : 'tests' }
 DateAndTimeEpochTest >> testNoon [
-	self assert: aDateAndTime noon equals: '1901-01-01T12:00:00+00:00' asDateAndTime
+	self assert: aDateAndTime noon equals: (DateAndTime fromString:  '1901-01-01T12:00:00+00:00')
 ]
 
 { #category : 'tests' }
@@ -395,7 +394,10 @@ DateAndTimeEpochTest >> testTommorrow [
 
 { #category : 'tests' }
 DateAndTimeEpochTest >> testUtcOffset [
-	self assert: (aDateAndTime offset: '0:12:00:00') equals: '1901-01-01T12:00:00+12:00' asDateAndTime
+
+	self 
+		assert: (aDateAndTime offset: (Duration fromString: '0:12:00:00')) 
+		equals: (DateAndTime fromString: '1901-01-01T12:00:00+12:00')
 ]
 
 { #category : 'tests' }

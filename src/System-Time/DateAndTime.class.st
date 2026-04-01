@@ -110,7 +110,7 @@ DateAndTime class >> dosEpoch [
 DateAndTime class >> epoch [
   "Answer a DateAndTime representing the epoch: 1 January 1901"
 
-  ^ (self julianDayNumber: Epoch) offset: 0
+  ^ (self julianDayNumber: Epoch) offset: (Duration seconds: 0)
 ]
 
 { #category : 'instance creation' }
@@ -704,9 +704,9 @@ DateAndTime >> asMonth [
 
 { #category : 'converting' }
 DateAndTime >> asNanoSeconds [
-	"Answer the number of nanoseconds."
+	"Answer the number of nanoseconds since midnight"
 
-	^ (seconds * NanosInSecond) + nanos
+	^ self asDuration asNanoSeconds
 ]
 
 { #category : 'converting' }
@@ -733,7 +733,7 @@ DateAndTime >> asUTC [
 
 	^ offset isZero
 		ifTrue: [ self ]
-		ifFalse: [ self offset: 0 ]
+		ifFalse: [ self offset: (Duration seconds: 0) ]
 ]
 
 { #category : 'converting' }
@@ -1277,7 +1277,7 @@ DateAndTime >> truncated [
 { #category : 'accessing' }
 DateAndTime >> withoutOffset [
 
-	^ self offset: 0
+	^ self offset: (Duration seconds: 0)
 ]
 
 { #category : 'accessing' }
