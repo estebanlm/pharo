@@ -405,13 +405,15 @@ DateAndTimeTest >> testPrintString [
 	self assert: dt printString equals: '2004-11-02T14:03:05.000012345+05:00'.
 	self assert: (DateAndTime fromString: '2002-05-16T17:20:45.1+01:01') printString equals: '2002-05-16T17:20:45.1+01:01'.
 	self assert: (DateAndTime fromString: '2002-05-16T17:20:45.02+01:01') printString equals: '2002-05-16T17:20:45.02+01:01'.
-	self assert: '2002-05-16T17:20:45.000000009+01:01' asDateAndTime printString equals: '2002-05-16T17:20:45.000000009+01:01'.
-	self assert: '2002-05-16T17:20:45+00:00' asDateAndTime printString equals: '2002-05-16T17:20:45+00:00'.
-	self assert: '2002-05-16T17:20:45+01:57' asDateAndTime printString equals: '2002-05-16T17:20:45+01:57'.
-	self assert: '2002-05-16T17:20:45-02:34' asDateAndTime printString equals: '2002-05-16T17:20:45-02:34'.
-	self assert: '2002-05-16T17:20:45+00:00' asDateAndTime printString equals: '2002-05-16T17:20:45+00:00'.
-	self assert: '1997-04-26T01:02:03+01:02:3' asDateAndTime printString equals: '1997-04-26T01:02:03+01:02:3'. "When no offset is provided, the local one is used"
-	dtNoOffset := '2002-05-16T17:20' asDateAndTime.
+	self
+		assert: (DateAndTime fromString: '2002-05-16T17:20:45.000000009+01:01') printString
+		equals: '2002-05-16T17:20:45.000000009+01:01'.
+	self assert: (DateAndTime fromString: '2002-05-16T17:20:45+00:00') printString equals: '2002-05-16T17:20:45+00:00'.
+	self assert: (DateAndTime fromString: '2002-05-16T17:20:45+01:57') printString equals: '2002-05-16T17:20:45+01:57'.
+	self assert: (DateAndTime fromString: '2002-05-16T17:20:45-02:34') printString equals: '2002-05-16T17:20:45-02:34'.
+	self assert: (DateAndTime fromString: '2002-05-16T17:20:45+00:00') printString equals: '2002-05-16T17:20:45+00:00'.
+	self assert: (DateAndTime fromString: '1997-04-26T01:02:03+01:02:3') printString equals: '1997-04-26T01:02:03+01:02:3'. "When no offset is provided, the local one is used"
+	dtNoOffset := DateAndTime fromString: '2002-05-16T17:20'.
 	self assert: (('2002-05-16T17:20:00*' match: dtNoOffset printString) and: [ dtNoOffset offset = DateAndTime localOffset ])
 ]
 
@@ -439,12 +441,14 @@ DateAndTimeTest >> testPrintStringSecond [
 
 	self assert: (DateAndTime fromString: '-1199-01-05T20:33:14.321-05:00') printString equals: '-1199-01-05T20:33:14.321-05:00'.
 	self assert: (DateAndTime fromString: '2002-05-16T17:20:45.1+01:01') printString equals: '2002-05-16T17:20:45.1+01:01'.
-	self assert: '2002-05-16T17:20:45.02+01:01' asDateAndTime printString equals: '2002-05-16T17:20:45.02+01:01'.
-	self assert: '2002-05-16T17:20:45.000000009+01:01' asDateAndTime printString equals: '2002-05-16T17:20:45.000000009+01:01'.
-	self assert: '2002-05-16T17:20:45+01:57' asDateAndTime printString equals: '2002-05-16T17:20:45+01:57'.
-	self assert: '2002-05-16T17:20:45-02:34' asDateAndTime printString equals: '2002-05-16T17:20:45-02:34'.
-	self assert: '2002-05-16T17:20:45+00:00' asDateAndTime printString equals: '2002-05-16T17:20:45+00:00'.
-	self assert: '1997-04-26T01:02:03+01:02:3' asDateAndTime printString equals: '1997-04-26T01:02:03+01:02:3'
+	self assert: (DateAndTime fromString: '2002-05-16T17:20:45.02+01:01') printString equals: '2002-05-16T17:20:45.02+01:01'.
+	self
+		assert: (DateAndTime fromString: '2002-05-16T17:20:45.000000009+01:01') printString
+		equals: '2002-05-16T17:20:45.000000009+01:01'.
+	self assert: (DateAndTime fromString: '2002-05-16T17:20:45+01:57') printString equals: '2002-05-16T17:20:45+01:57'.
+	self assert: (DateAndTime fromString: '2002-05-16T17:20:45-02:34') printString equals: '2002-05-16T17:20:45-02:34'.
+	self assert: (DateAndTime fromString: '2002-05-16T17:20:45+00:00') printString equals: '2002-05-16T17:20:45+00:00'.
+	self assert: (DateAndTime fromString: '1997-04-26T01:02:03+01:02:3') printString equals: '1997-04-26T01:02:03+01:02:3'
 ]
 
 { #category : 'tests' }
@@ -453,13 +457,17 @@ DateAndTimeTest >> testReadFrom [
 	self assert: (DateAndTime fromString: '-1199-01-05T20:33:14.321-05:00') printString equals: '-1199-01-05T20:33:14.321-05:00'.
 	self assert: (DateAndTime fromString: '2002-05-16T17:20:45.1+01:01') printString equals: '2002-05-16T17:20:45.1+01:01'.
 	self assert: (DateAndTime fromString: '2002-05-16T17:20:45.02+01:01') printString equals: '2002-05-16T17:20:45.02+01:01'.
-	self assert: '2002-05-16T17:20:45.000000009+01:01' asDateAndTime printString equals: '2002-05-16T17:20:45.000000009+01:01'.
-	self assert: '2002-05-16T17:20' asDateAndTime translateToUTC printString equals: '2002-05-16T17:20:00+00:00'.
-	self assert: '2002-05-16T17:20:45' asDateAndTime translateToUTC printString equals: '2002-05-16T17:20:45+00:00'.
-	self assert: '2002-05-16T17:20:45+01:57' asDateAndTime printString equals: '2002-05-16T17:20:45+01:57'.
-	self assert: '2002-05-16T17:20:45-02:34' asDateAndTime equals: '2002-05-16T17:20:45-02:34' asDateAndTime.
-	self assert: '2002-05-16T17:20:45+00:00' asDateAndTime equals: '2002-05-16T17:20:45+00:00' asDateAndTime.
-	self assert: '1997-04-26T01:02:03+01:02:3' asDateAndTime equals: '1997-04-26T01:02:03+01:02:3' asDateAndTime
+	self
+		assert: (DateAndTime fromString: '2002-05-16T17:20:45.000000009+01:01') printString
+		equals: '2002-05-16T17:20:45.000000009+01:01'.
+	self assert: (DateAndTime fromString: '2002-05-16T17:20') translateToUTC printString equals: '2002-05-16T17:20:00+00:00'.
+	self assert: (DateAndTime fromString: '2002-05-16T17:20:45') translateToUTC printString equals: '2002-05-16T17:20:45+00:00'.
+	self assert: (DateAndTime fromString: '2002-05-16T17:20:45+01:57') printString equals: '2002-05-16T17:20:45+01:57'.
+	self assert: (DateAndTime fromString: '2002-05-16T17:20:45-02:34') equals: (DateAndTime fromString: '2002-05-16T17:20:45-02:34').
+	self assert: (DateAndTime fromString: '2002-05-16T17:20:45+00:00') equals: (DateAndTime fromString: '2002-05-16T17:20:45+00:00').
+	self
+		assert: (DateAndTime fromString: '1997-04-26T01:02:03+01:02:3')
+		equals: (DateAndTime fromString: '1997-04-26T01:02:03+01:02:3')
 ]
 
 { #category : 'tests' }
@@ -467,8 +475,8 @@ DateAndTimeTest >> testReadFromDateOnly [
 
 	self assert: (DateAndTime fromString: '2014-02-19') translateToUTC printString equals: '2014-02-19T00:00:00+00:00'.
 	self assert: (DateAndTime fromString: '2014-02-19Z') printString equals: '2014-02-19T00:00:00+00:00'.
-	self assert: '2014-02-19T+07:00' asDateAndTime printString equals: '2014-02-19T00:00:00+07:00'.
-	self assert: '2014-02-19 -05:00' asDateAndTime printString equals: '2014-02-19T00:00:00-05:00'
+	self assert: (DateAndTime fromString: '2014-02-19T+07:00') printString equals: '2014-02-19T00:00:00+07:00'.
+	self assert: (DateAndTime fromString: '2014-02-19 -05:00') printString equals: '2014-02-19T00:00:00-05:00'
 ]
 
 { #category : 'tests - offset' }
@@ -514,7 +522,9 @@ DateAndTimeTest >> testReadFromSecond [
 	self assert: (DateAndTime fromString: '-1199-01-05T20:33:14.321-05:00') printString equals: '-1199-01-05T20:33:14.321-05:00'.
 	self assert: (DateAndTime fromString: '2002-05-16T17:20:45.1+01:01') printString equals: '2002-05-16T17:20:45.1+01:01'.
 	self assert: (DateAndTime fromString: '2002-05-16T17:20:45.02+01:01') printString equals: '2002-05-16T17:20:45.02+01:01'.
-	self assert: '2002-05-16T17:20:45.000000009+01:01' asDateAndTime printString equals: '2002-05-16T17:20:45.000000009+01:01'.
+	self
+		assert: (DateAndTime fromString: '2002-05-16T17:20:45.000000009+01:01') printString
+		equals: '2002-05-16T17:20:45.000000009+01:01'.
 	self assert: '2002-05-16T17:20' asDateAndTime translateToUTC printString equals: '2002-05-16T17:20:00+00:00'.
 	self assert: '2002-05-16T17:20:45' asDateAndTime translateToUTC printString equals: '2002-05-16T17:20:45+00:00'.
 	self assert: '2002-05-16T17:20:45+01:57' asDateAndTime printString equals: '2002-05-16T17:20:45+01:57'.

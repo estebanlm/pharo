@@ -151,7 +151,8 @@ DateAndTimeUnixEpochTest >> testDuration [
 
 { #category : 'tests' }
 DateAndTimeUnixEpochTest >> testEpoch [
-	self assert: aDateAndTime equals: '1970-01-01T00:00:00+00:00' asDateAndTime
+
+	self assert: aDateAndTime equals: (DateAndTime fromString: '1970-01-01T00:00:00+00:00')
 ]
 
 { #category : 'tests' }
