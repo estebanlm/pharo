@@ -242,6 +242,9 @@ OCASTSemanticAnalyzer >> visitInlinedBlockNode: aBlockNode [
 { #category : 'visiting' }
 OCASTSemanticAnalyzer >> visitMessageNode: aMessageNode [
 	
+	"Bind the message selector to the runtime selector visible in the package"
+	aMessageNode selector: (OCSelectorNode value: (scope targetClass package visibleSelectorForSymbol: aMessageNode selector)).
+	
 	super visitMessageNode: aMessageNode.
 	aMessageNode isSuperSend ifTrue: [ aMessageNode superOf: scope targetClass ]
 ]

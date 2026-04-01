@@ -97,7 +97,7 @@ Behavior >> compile: code notifying: requestor [
 Behavior >> compile: sourceCode notifying: requestor methodInstaller: methodInstaller [
 	"Return the selector of the compiled method"
 
-	| method compiler ast |
+	| method compiler |
 	
 	sourceCode ifEmpty: [ Error signal: 'The source code should not be empty' ].
 	compiler := self compiler
@@ -109,13 +109,9 @@ Behavior >> compile: sourceCode notifying: requestor methodInstaller: methodInst
 						permitUndeclared: false;
 		            permitFaulty: false.
 
-	ast := compiler parse.
-
-	ast sendNodes do: [ :send | send selector: (OCSelectorNode value: (self package visibleSelectorForSymbol: send selector)) ].
-
 	method := compiler compile.
 	methodInstaller install: method into: self compiler: compiler.
-	^ ast selector
+	^ method selector
 ]
 
 { #category : '*OpalCompiler-Core' }

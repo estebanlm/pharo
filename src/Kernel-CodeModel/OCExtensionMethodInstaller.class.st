@@ -19,11 +19,22 @@ OCExtensionMethodInstaller >> initialize [
 { #category : 'installing' }
 OCExtensionMethodInstaller >> install: method into: extension compiler: compiler [
 
-	| scopedSelector visibleExtensions methodCopyInExtendedClass selectorSymbol packagesToRecompile |
-	super install: method into: extension compiler: compiler.
+	| literalIndex scopedSelector visibleExtensions methodCopyInExtendedClass selectorSymbol packagesToRecompile |
 
-	scopedSelector := method selector.
-	selectorSymbol := scopedSelector symbol.
+	selectorSymbol := method selector.
+	scopedSelector := extension internScopedSelector: selectorSymbol.
+	
+	"If this is the first appearance of the selector, we just created it, and we need to patch the selector."
+	literalIndex := method literals indexOf: selectorSymbol.
+	
+	"We need to set the selector, which is sometimes in a method properties and sometimes in the literal frame.
+	Thus, patching the literal will not be enough."
+	method selector: scopedSelector.
+	literalIndex > 0 ifTrue: [
+		"Then, patching the literal should fix also sends to this selector in the method"
+		method literalAt: literalIndex put: scopedSelector ].
+	
+	super install: method into: extension compiler: compiler.
 	
 	"If the extension overwrites a normal method, then install a conflict method"
 	visibleExtensions := scopedSelector extensionsOn: extension extendedClass.
