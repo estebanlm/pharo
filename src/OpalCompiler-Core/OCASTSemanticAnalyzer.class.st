@@ -243,7 +243,12 @@ OCASTSemanticAnalyzer >> visitInlinedBlockNode: aBlockNode [
 OCASTSemanticAnalyzer >> visitMessageNode: aMessageNode [
 	
 	"Bind the message selector to the runtime selector visible in the package"
-	aMessageNode selector: (OCSelectorNode value: (scope targetClass package visibleSelectorForSymbol: aMessageNode selector)).
+	| newSelectorNode oldKeywordPositions |
+	newSelectorNode := aMessageNode selectorNode copy.
+	oldKeywordPositions := aMessageNode keywordsPositions.
+	newSelectorNode value: (scope targetClass package visibleSelectorForSymbol: aMessageNode selector).
+	aMessageNode selector: newSelectorNode.
+	aMessageNode keywordsPositions: oldKeywordPositions.
 	
 	super visitMessageNode: aMessageNode.
 	aMessageNode isSuperSend ifTrue: [ aMessageNode superOf: scope targetClass ]
