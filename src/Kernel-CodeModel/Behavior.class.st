@@ -1832,11 +1832,6 @@ Behavior >> superclass: aClass [
 	"Note: Do not use 'aClass isKindOf: Behavior' here
 		in case we recompile from Behavior itself."
 		<reflection: 'Class structural modification - Hierarchy modification'>
-	aClass
-		ifNil: [ self basicSuperclass: aClass.
-			Object flushCache.
-			^ self
-			].	"If the class is not nil it should update the class hierarchy correctly, using the classs builder"
 	^ self classInstaller
 		update: self
 		to: [ :builder | builder superclass: aClass ]
