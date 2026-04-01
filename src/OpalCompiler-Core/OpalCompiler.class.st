@@ -550,7 +550,7 @@ OpalCompiler >> install [
 	method := self compile.
 	method ifNil: [ ^ nil ].
 
-	OCAnnouncingMethodInstaller new
+	self methodClass methodInstaller
 		priorMethod: self priorMethod;
 		logged: self logged;
 		changeStamp: changeStamp;

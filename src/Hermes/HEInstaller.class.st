@@ -252,7 +252,7 @@ HEInstaller >> rebuildMethod: hermesMethod into: aClass [
 	hermesMethod bytecode doWithIndex: [ :e :idx |
 		newMethod at: idx + literalSpace put: e ].
 
-	OCAnnouncingMethodInstaller new
+	aClass methodInstaller
 		logged: false;
 		protocol: hermesMethod protocol;
 			install: newMethod
