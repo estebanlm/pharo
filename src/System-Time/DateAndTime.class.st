@@ -706,7 +706,18 @@ DateAndTime >> asMonth [
 DateAndTime >> asNanoSeconds [
 	"Answer the number of nanoseconds since midnight"
 
-	^ self asDuration asNanoSeconds
+	"The current implementation is faster than 
+		^ (self hours * SecondsInHour * NanosInSecond) + (self minutes * SecondsInMinute * NanosInSecond) + nanos
+		263,638,393 iterations in 5 seconds. 52727678.600 per second
+		
+		^ self asDuration asNanoSeconds 
+			273,990,397 iterations in 5 seconds 3 milliseconds. 54765220.268 per second 
+		
+		current implementation: 
+			844,369,613 iterations in 5 seconds 2 milliseconds. 168806400.040 per second
+		"
+	
+	^ (self localSeconds * NanosInSecond) + nanos
 ]
 
 { #category : 'converting' }

@@ -24,7 +24,7 @@ DateAndTimeLeapTest >> setUp [
 	aDateAndTime := (DateAndTime
 		year: 2004 month: 2 day: 29
 		hour: 13 minute: 33 second: 0
-		offset: 2 hours).
+		offset: (Duration hours: 2)).
 	aTimeZone := TimeZone default.
 	aDuration := Duration days: 0 hours: 13 minutes: 33 seconds: 0 nanoSeconds: 0
 ]
@@ -60,9 +60,9 @@ DateAndTimeLeapTest >> testAsMonth [
 
 { #category : 'tests' }
 DateAndTimeLeapTest >> testAsNanoSeconds [
-
+	
 	self 
-		assert: aDateAndTime asNanoSeconds 
+		assert: aDateAndTime asNanoSeconds
 		equals: aDuration asNanoSeconds.
 	self 
 		assert: aDateAndTime asNanoSeconds 
