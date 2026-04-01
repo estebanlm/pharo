@@ -23,7 +23,9 @@ OCExtensionMethodInstaller >> install: method into: extension compiler: compiler
 	super install: method into: extension compiler: compiler.
 
 	scopedSelector := method selector.
-	selectorSymbol := scopedSelector symbol. "If the extension overwrites a normal method, then install a conflict method"
+	selectorSymbol := scopedSelector symbol.
+	
+	"If the extension overwrites a normal method, then install a conflict method"
 	visibleExtensions := scopedSelector extensionsOn: extension extendedClass.
 	methodCopyInExtendedClass := (extension extendedClass methodDictionary includesKey: selectorSymbol)
 		                             ifTrue: [
