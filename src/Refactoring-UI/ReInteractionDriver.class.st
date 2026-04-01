@@ -342,7 +342,7 @@ ReInteractionDriver >> runRefactoring [
 	self hasFailedBehaviorPreservingPreconditions
 		ifTrue: [ self handleBreakingChanges ]
 		ifFalse: [ self applyChanges ].
-	^ true
+
 ]
 
 { #category : 'accessing' }
