@@ -73,6 +73,14 @@ ReInsertSuperclassDriver >> dialogTitleForClassSelection [
 	^ 'Insert new superclass of ' , superclass name
 ]
 
+{ #category : 'execution' }
+ReInsertSuperclassDriver >> gatherUserInput [ 
+
+	subclass ifNil: [ self requestClass ].
+	subclass ifNil: [ ^ false ].
+	^ true
+]
+
 { #category : 'configuration' }
 ReInsertSuperclassDriver >> instantiateRefactoring [
 	"self ensureSuperclassInModel."
@@ -108,18 +116,6 @@ ReInsertSuperclassDriver >> requestClass [
 				comment: dialog presenter commentPresenterText.
 			dialog close ];
 		openModal
-]
-
-{ #category : 'execution' }
-ReInsertSuperclassDriver >> runRefactoring [
-
-	subclass ifNil: [ self requestClass ].
-	subclass ifNil: [ ^ false ].
-	self configureRefactoring.
-	refactoring failedApplicabilityPreconditions
-		ifNotEmpty: [ : conditions | self informConditions: conditions. ^ false ].
-	self applyChanges.
-	^ true
 ]
 
 { #category : 'accessing' }
