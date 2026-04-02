@@ -25,16 +25,6 @@ ReProtectInstanceVariableDriver >> instantiateRefactoring [
 	^ ReProtectInstanceVariableRefactoring variable: variable name class: class
 ]
 
-{ #category : 'execution' }
-ReProtectInstanceVariableDriver >> runRefactoring [
-
-	self configureRefactoring.
-	refactoring failedApplicabilityPreconditions ifNotEmpty: [ :conditions |
-			self informConditions: conditions.
-			^ false ].
-	self applyChanges
-]
-
 { #category : 'instance creation' }
 ReProtectInstanceVariableDriver >> scopes: aScope variable: aVariable class: aClass [
 

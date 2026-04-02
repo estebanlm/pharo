@@ -26,17 +26,6 @@ ReInlineTemporaryDriver >> instantiateRefactoring [
 	^ ReInlineTemporaryRefactoring inline: interval from: selector in: class
 ]
 
-{ #category : 'execution' }
-ReInlineTemporaryDriver >> runRefactoring [
-
-	self configureRefactoring.
-
-	refactoring failedApplicabilityPreconditions ifNotEmpty: [ :conditions |
-			self informConditions: conditions.
-			^ false ].
-	self applyChanges
-]
-
 { #category : 'instance creation' }
 ReInlineTemporaryDriver >> scopes: refactoringScopes interval: anInterval selector: aSelector class: aClass [
 
