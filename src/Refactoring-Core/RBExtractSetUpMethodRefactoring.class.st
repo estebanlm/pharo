@@ -94,7 +94,7 @@ RBExtractSetUpMethodRefactoring >> checkSingleAssignment: varName [
 				[self
 					refactoringError: 'Cannot extract assignments to temporaries without all references'].
 	modifiedParseTree body removeTemporaryNamed: varName.
-	self generateChangesFor: (RBTemporaryToInstanceVariableRefactoring
+	self generateChangesFor: (ReTemporaryToInstanceVariableRefactoring
 		model: self model
 		class: class
 		selector: selector

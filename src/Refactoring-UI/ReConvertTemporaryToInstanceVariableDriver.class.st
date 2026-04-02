@@ -90,7 +90,7 @@ ReConvertTemporaryToInstanceVariableDriver >> hasFailedBehaviorPreservingPrecond
 { #category : 'configuration' }
 ReConvertTemporaryToInstanceVariableDriver >> instantiateRefactoring [
 
-	^ RBTemporaryToInstanceVariableRefactoring class: class selector: selector variable: variable
+	^ ReTemporaryToInstanceVariableRefactoring class: class selector: selector variable: variable
 ]
 
 { #category : 'ui - dialogs' }

@@ -253,7 +253,7 @@ ReInlineMethodParametrizedTest >> testFailureInlineMethodForSuperSendThatAlsoSen
 { #category : 'failure tests' }
 ReInlineMethodParametrizedTest >> testFailureNonExistantSelector [
 	self shouldFail: (self createRefactoringWithArguments:
-		{ (14 to: 17) . #checkClass1: . RBClassDataForRefactoringTest })
+		{ (14 to: 17) . #checkClass1: . RBClassDataForRefactoringTest }) 
 ]
 
 { #category : 'failure tests' }
@@ -449,6 +449,25 @@ ReInlineMethodParametrizedTest >> testInlineMethodForSuperSend [
 									undo := undo1.
 									self removeOldVariable.
 									^undo')
+]
+
+{ #category : 'tests' }
+ReInlineMethodParametrizedTest >> testInlineMethodProvidingMethodToInline [
+
+	| refactoring methodName |
+	methodName := #provideInlineMethod.
+	refactoring := RBInlineMethodRefactoring
+		               inline: (25 to: 62)
+		               inMethod: methodName
+		               forClass: RBClassDataForRefactoringTest
+		               usingMethod: RBBasicLintRuleTestData >> #classBlock.
+
+	self executeRefactoring: refactoring.
+
+	self
+		assert: ((refactoring model classNamed: #RBClassDataForRefactoringTest) parseTreeForSelector: methodName)
+		equals: (self parseMethod: 'provideInlineMethod
+	^ self anInstVar + 5 + 3')
 ]
 
 { #category : 'tests' }
