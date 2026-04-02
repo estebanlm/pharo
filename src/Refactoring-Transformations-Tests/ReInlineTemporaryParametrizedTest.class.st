@@ -1,5 +1,5 @@
 Class {
-	#name : 'RBInlineTemporaryParametrizedTest',
+	#name : 'ReInlineTemporaryParametrizedTest',
 	#superclass : 'RBAbstractRefactoringTest',
 	#category : 'Refactoring-Transformations-Tests-Parametrized',
 	#package : 'Refactoring-Transformations-Tests',
@@ -7,19 +7,19 @@ Class {
 }
 
 { #category : 'tests' }
-RBInlineTemporaryParametrizedTest class >> testParameters [
+ReInlineTemporaryParametrizedTest class >> testParameters [
 	^ ParametrizedTestMatrix new
-		addCase: { #rbClass -> RBInlineTemporaryRefactoring };
+		addCase: { #rbClass -> ReInlineTemporaryRefactoring };
 		yourself
 ]
 
 { #category : 'accessing' }
-RBInlineTemporaryParametrizedTest >> constructor [
+ReInlineTemporaryParametrizedTest >> constructor [
 	^ #inline:from:in:
 ]
 
 { #category : 'failure tests' }
-RBInlineTemporaryParametrizedTest >> testFailureInlineTemporaryBadInterval [
+ReInlineTemporaryParametrizedTest >> testFailureInlineTemporaryBadInterval [
 
 	self shouldFail: (self createRefactoringWithArguments: {
 				 (29 to: 100).
@@ -28,7 +28,7 @@ RBInlineTemporaryParametrizedTest >> testFailureInlineTemporaryBadInterval [
 ]
 
 { #category : 'failure tests' }
-RBInlineTemporaryParametrizedTest >> testFailureInlineTemporaryMultipleRead [
+ReInlineTemporaryParametrizedTest >> testFailureInlineTemporaryMultipleRead [
 
 	self shouldFail: (self createRefactoringWithArguments: {
 				 (38 to: 62).
@@ -37,7 +37,7 @@ RBInlineTemporaryParametrizedTest >> testFailureInlineTemporaryMultipleRead [
 ]
 
 { #category : 'failure tests' }
-RBInlineTemporaryParametrizedTest >> testFailureInlineTemporaryMutlipleAssignment [
+ReInlineTemporaryParametrizedTest >> testFailureInlineTemporaryMutlipleAssignment [
 
 	self shouldFail: (self createRefactoringWithArguments: {
 				 (58 to: 81).
@@ -46,7 +46,7 @@ RBInlineTemporaryParametrizedTest >> testFailureInlineTemporaryMutlipleAssignmen
 ]
 
 { #category : 'failure tests' }
-RBInlineTemporaryParametrizedTest >> testFailureInlineTemporaryReadBeforeWritten [
+ReInlineTemporaryParametrizedTest >> testFailureInlineTemporaryReadBeforeWritten [
 
 	self shouldFail: (self createRefactoringWithArguments: {
 				 (48 to: 56).
@@ -55,7 +55,7 @@ RBInlineTemporaryParametrizedTest >> testFailureInlineTemporaryReadBeforeWritten
 ]
 
 { #category : 'tests' }
-RBInlineTemporaryParametrizedTest >> testInlineTemporary [
+ReInlineTemporaryParametrizedTest >> testInlineTemporary [
 	| refactoring |
 	refactoring := self createRefactoringWithArguments:
 		{ (24 to: 72) . #inlineMethod . RBClassDataForRefactoringTest }.
