@@ -31,12 +31,12 @@ ReRenameVariableDriver class >> shouldPreviewChangesByDefault [
 ReRenameVariableDriver >> gatherUserInput [
 
 	| failedConditions newName |
+	refactoring preconditionDirectlyDefinesVariable check ifFalse: [ ^ false ].
 	[
 		shouldEscape := false.
 		newName := self requestNewNameBasedOn: previouslyProposedName.
 		shouldEscape ifTrue: [ ^ false ].
 		refactoring newName: newName.
-		refactoring preconditionDirectlyDefinesVariable check ifFalse: [ ^ false ].
 		failedConditions := refactoring failedApplicabilityPreconditions.
 		failedConditions isEmpty ] whileFalse: [ failedConditions do: [ :cond | self informError: cond ] ].
 
