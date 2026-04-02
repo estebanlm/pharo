@@ -253,7 +253,7 @@ RBInlineMethodParametrizedTest >> testFailureInlineMethodForSuperSendThatAlsoSen
 { #category : 'failure tests' }
 RBInlineMethodParametrizedTest >> testFailureNonExistantSelector [
 	self shouldFail: (self createRefactoringWithArguments:
-		{ (14 to: 17) . #checkClass1: . RBClassDataForRefactoringTest })
+		{ (14 to: 17) . #checkClass1: . RBClassDataForRefactoringTest }) 
 ]
 
 { #category : 'failure tests' }
