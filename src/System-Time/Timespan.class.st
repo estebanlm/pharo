@@ -442,7 +442,7 @@ Timespan >> translateTo: aTimeZone [
 { #category : 'enumerating' }
 Timespan >> translateToUTC [
 	" Move this represenation to UTC"
-	^ self translateTo: 0
+	^ self translateTo: (Duration zero)
 ]
 
 { #category : 'enumerating' }
