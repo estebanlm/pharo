@@ -42,12 +42,10 @@ ClyTextEditor >> implementorsOfIt [
 ClyTextEditor >> methodSourceContainingIt [
 	"Open a browser class comments which contain the current selection somewhere in them."
 
-	| query pattern |
-	
-	self lineSelectAndEmptyCheck: [^ self].
+	| pattern |
+	self lineSelectAndEmptyCheck: [ ^ self ].
 	pattern := self selection string.
-	query := (ClyMethodSourcesQuery withString: pattern), (ClyClassCommentsQuery withString: pattern).
-	self browser spawnQueryBrowserOn: query
+	(Smalltalk tools toolNamed: #messageList) browseMethodsWithSourceString: pattern
 ]
 
 { #category : '*Calypso-SystemTools-QueryBrowser' }
