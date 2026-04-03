@@ -4,57 +4,47 @@ Don't edit these classes. They are used else where for tests. Changing anything 
 Class {
 	#name : 'MockTest',
 	#superclass : 'TestCase',
-	#classInstVars : [
-		'ignore'
+	#classVars : [
+		'ShouldIgnore'
 	],
-	#category : 'TestRunner-FakeTests',
-	#package : 'TestRunner-FakeTests'
+	#category : 'TestRunner-FakeTests-Mock Tests',
+	#package : 'TestRunner-FakeTests',
+	#tag : 'Mock Tests'
 }
 
 { #category : 'accessing' }
-MockTest class >> doNotIgnoreTest [
+MockTest class >> doNotIgnore [ 
 
-	ignore := false
+	ShouldIgnore := false
 ]
 
 { #category : 'accessing' }
-MockTest class >> ignoreTest [
+MockTest class >> ignore [ 
 
-	ignore := true
+	ShouldIgnore := true
 ]
 
 { #category : 'class initialization' }
-MockTest class >> initialize [
+MockTest class >> initialize [ 
+		
+	self ignore
+]
 
-	self ignoreTest
+{ #category : 'running' }
+MockTest >> setUp [ 
+
+	super setUp.
+	self shouldIgnore ifTrue: [ self skip ]
 ]
 
 { #category : 'accessing' }
-MockTest class >> shouldBeIgnored [
+MockTest >> shouldIgnore [
 
-	^ ignore ifNil: [ ignore := true ]
+	^ ShouldIgnore 
 ]
 
-{ #category : 'asserting' }
-MockTest >> doNotIgnoreTest [
+{ #category : 'accessing' }
+MockTest >> shouldIgnore: anObject [
 
-	self class doNotIgnoreTest
-]
-
-{ #category : 'asserting' }
-MockTest >> ignore [ 
-
-	self shouldBeIgnored ifTrue: [ ^ self skip ]
-]
-
-{ #category : 'asserting' }
-MockTest >> ignoreTest [
-
-	self class ignoreTest
-]
-
-{ #category : 'asserting' }
-MockTest >> shouldBeIgnored [
-
-	^ self class shouldBeIgnored
+	ShouldIgnore := anObject
 ]
