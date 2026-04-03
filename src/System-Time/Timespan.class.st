@@ -368,7 +368,7 @@ Timespan >> monthsDo: aBlock [
 
 { #category : 'accessing' }
 Timespan >> next [
-
+	
 	^ self class starting: (start + duration) duration: duration
 ]
 

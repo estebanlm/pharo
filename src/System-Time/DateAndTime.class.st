@@ -110,7 +110,7 @@ DateAndTime class >> dosEpoch [
 DateAndTime class >> epoch [
   "Answer a DateAndTime representing the epoch: 1 January 1901"
 
-  ^ (self julianDayNumber: Epoch) offset: (Duration seconds: 0)
+  ^ (self julianDayNumber: Epoch) offset: Duration zero
 ]
 
 { #category : 'instance creation' }
@@ -123,7 +123,8 @@ DateAndTime class >> fromDosTimestamp: anInteger [
 DateAndTime class >> fromInternalTime: anInteger [
 	"Answer an instance of the receiver with the time represented by anInteger. Pharo internal time is an integer representing time in the local timezone with an epoch of 1 Jan. 1901"
 
-	^(self fromSeconds: anInteger offset: 0) translateTo: self localOffset
+	^ (self fromSeconds: anInteger offset: Duration zero) 
+		translateTo: self localOffset
 ]
 
 { #category : 'instance creation' }
@@ -365,7 +366,7 @@ DateAndTime class >> readSeparateDateAndTimeFrom: stream [
 DateAndTime class >> readTimezoneOffsetFrom: stream [
 	"Read and return an optional timezone offset in the form of
 	[+|-]hh[[separator]mm[[separator]ss]] or Z from stream as a duration.
-	If there is no offset, return the local offset."
+	If there is no offset, return the local offset, a Duration."
 
 	^self readTimezoneOffsetFrom: stream default: self localOffset
 ]
@@ -374,7 +375,7 @@ DateAndTime class >> readTimezoneOffsetFrom: stream [
 DateAndTime class >> readTimezoneOffsetFrom: stream default: defaultOffset [
 	"Read and return an optional timezone offset in the form of
 	[+|-]hh[[separator]mm[[separator]ss]] or Z from stream as a duration.
-	If there is no offset, return the defaultOffset."
+	If there is no offset, return the defaultOffset, a Duration."
 
 	| sign hour minute second |
 	(stream peekFor: $Z) ifTrue: [ ^ Duration zero ].
@@ -744,7 +745,7 @@ DateAndTime >> asUTC [
 
 	^ offset isZero
 		ifTrue: [ self ]
-		ifFalse: [ self offset: (Duration seconds: 0) ]
+		ifFalse: [ self offset: Duration zero ]
 ]
 
 { #category : 'converting' }
@@ -1053,14 +1054,29 @@ DateAndTime >> offset [
 ]
 
 { #category : 'accessing' }
-DateAndTime >> offset: anOffset [
+DateAndTime >> offset: aDuration [
 	"Answer a <DateAndTime> equivalent to the receiver but with its local time
-	being offset from UTC by offset.
+	being offset from UTC by offset, a Duration.
 	Unlike #translateTo: this will NOT change the absolute in UTC "
 
-	^ self class basicNew
-		ticks: self ticks offset: anOffset asDuration;
-		yourself
+	"We want to remove asDuration from SmallInteger and friends.
+	so for now we explicit check."
+	
+	aDuration class = Duration 
+		ifTrue: [  
+		^ self class basicNew
+		 	 ticks: self ticks offset: aDuration;
+			  yourself ]
+		ifFalse: [  
+		^ self class basicNew
+		 	 ticks: self ticks offset: (Duration seconds: aDuration);
+			  yourself ]
+		"since asDuration was defined as
+			SmallInteger>>asDuration 
+				^ Duration seconds: self
+		
+		It feels to me that there is a bug the duration should not be in seconds but in hours.		
+				"
 ]
 
 { #category : 'accessing' }
@@ -1260,22 +1276,24 @@ DateAndTime >> translateTo: anOffset [
 	t = (t offset: 2 hours).
 	t = (t translateTo: 2 hours).
 	"
-	self dayMonthYearDo: [ :day :month :year|
-		^ self class
-			year: year
-			month: month
-			day: day
-			hour: self hour
-			minute: self minute
-			second: self second
-			nanoSecond: self  nanoSecond
-			offset: anOffset asDuration ]
+
+	self dayMonthYearDo: [ :day :month :year |
+			^ self class
+				  year: year
+				  month: month
+				  day: day
+				  hour: self hour
+				  minute: self minute
+				  second: self second
+				  nanoSecond: self nanoSecond
+				  offset: anOffset ]
 ]
 
 { #category : 'accessing' }
 DateAndTime >> translateToUTC [
 	" Move this represenation to UTC"
-	^ self translateTo: 0 asDuration
+	
+	^ self translateTo: Duration zero
 ]
 
 { #category : 'accessing' }
@@ -1288,7 +1306,7 @@ DateAndTime >> truncated [
 { #category : 'accessing' }
 DateAndTime >> withoutOffset [
 
-	^ self offset: (Duration seconds: 0)
+	^ self offset: Duration zero
 ]
 
 { #category : 'accessing' }
