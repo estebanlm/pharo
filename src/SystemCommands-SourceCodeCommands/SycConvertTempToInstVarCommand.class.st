@@ -4,9 +4,6 @@ I am a command to convert a temp variable in instance variable.
 Class {
 	#name : 'SycConvertTempToInstVarCommand',
 	#superclass : 'SycSourceCodeRefactoringCommand',
-	#instVars : [
-		'refactoringScopes'
-	],
 	#category : 'SystemCommands-SourceCodeCommands',
 	#package : 'SystemCommands-SourceCodeCommands'
 }
@@ -40,11 +37,4 @@ SycConvertTempToInstVarCommand >> executeRefactorings [
 		   class: method origin
 		   selector: method selector
 		   variable: sourceNode name) runRefactoring
-]
-
-{ #category : 'execution' }
-SycConvertTempToInstVarCommand >> prepareFullExecutionInContext: aToolContext [
-
-	super prepareFullExecutionInContext: aToolContext.
-	refactoringScopes := aToolContext refactoringScopes.
 ]

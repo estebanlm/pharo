@@ -95,6 +95,7 @@ RePushDownMethodDriver >> gatherUserInput [
 
 	self selectMethods.
 	methods ifNil: [ ^ false ].
+	refactoring selectors: (methods collect: [ :each | each selector ]).
 	^ true
 ]
 
@@ -115,7 +116,7 @@ RePushDownMethodDriver >> instantiateRefactoring [
 
 	^ RePushDownMethodRefactoring
 		  model: model
-		  pushDown: (methods collect: [ :each | each selector ])
+		  pushDown: #()
 		  from: class name
 ]
 
