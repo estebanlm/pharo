@@ -85,30 +85,66 @@ DateAndTimeTest >> testAsDos [
 
 { #category : 'tests' }
 DateAndTimeTest >> testAsTime [
+
 	| dateAndTime |
-
-	dateAndTime := DateAndTime year: 1000 day: 100 hour: 1 minute: 2 second: 3 offset: 0 asDuration.
+	dateAndTime := DateAndTime
+		               year: 1000
+		               day: 100
+		               hour: 1
+		               minute: 2
+		               second: 3
+		               offset:  Duration zero.
 	self assert: dateAndTime asTime equals: (Time hour: 1 minute: 2 second: 3).
 
-	dateAndTime := DateAndTime year: 1000 day: 100 hour: 1 minute: 2 second: 3 offset: 5 hours.
+	dateAndTime := DateAndTime
+		               year: 1000
+		               day: 100
+		               hour: 1
+		               minute: 2
+		               second: 3
+		               offset: 5 hours.
 	self assert: dateAndTime asTime equals: (Time hour: 1 minute: 2 second: 3).
 
-	dateAndTime := DateAndTime year: 1000 day: 100 hour: 1 minute: 2 second: 3 offset: -5 hours.
+	dateAndTime := DateAndTime
+		               year: 1000
+		               day: 100
+		               hour: 1
+		               minute: 2
+		               second: 3
+		               offset: -5 hours.
 	self assert: dateAndTime asTime equals: (Time hour: 1 minute: 2 second: 3)
 ]
 
 { #category : 'tests' }
 DateAndTimeTest >> testAsTimeUTC [
-	| dateAndTime |
 
-	dateAndTime := DateAndTime year: 1000 day: 100 hour: 1 minute: 2 second: 3 offset: 0 asDuration.
+	| dateAndTime |
+	dateAndTime := DateAndTime
+		               year: 1000
+		               day: 100
+		               hour: 1
+		               minute: 2
+		               second: 3
+		               offset:  Duration zero.
 	self assert: dateAndTime asTimeUTC equals: (Time hour: 1 minute: 2 second: 3).
 
-	dateAndTime := DateAndTime year: 1000 day: 100 hour: 1 minute: 2 second: 3 offset: -5 hours.
+	dateAndTime := DateAndTime
+		               year: 1000
+		               day: 100
+		               hour: 1
+		               minute: 2
+		               second: 3
+		               offset: -5 hours.
 	self assert: dateAndTime asTimeUTC equals: (Time hour: 6 minute: 2 second: 3).
 
-	dateAndTime := DateAndTime year: 1000 day: 100 hour: 1 minute: 2 second: 3 offset: 5 hours.
-	self assert: dateAndTime asTimeUTC equals: (Time hour: 24+1-5 minute: 2 second: 3)
+	dateAndTime := DateAndTime
+		               year: 1000
+		               day: 100
+		               hour: 1
+		               minute: 2
+		               second: 3
+		               offset: 5 hours.
+	self assert: dateAndTime asTimeUTC equals: (Time hour: 24 + 1 - 5 minute: 2 second: 3)
 ]
 
 { #category : 'tests' }
@@ -253,7 +289,7 @@ DateAndTimeTest >> testFromMethodTimestamp [
 
 	self 
 		assert: (DateAndTime fromMethodTimestamp: '2025-04-25T14:50:52.000000+02:00') 
-		equals: (DateAndTime year: 2025 month: 4 day: 25 hour: 14 minute: 50 second: 52 nanoSecond: 0 offset: 2 hours).
+		equals: (DateAndTime year: 2025 month: 4 day: 25 hour: 14 minute: 50 second: 52 nanoSecond: 0 offset: (Duration hours: 2)).
 
 	self assert: (DateAndTime fromMethodTimestamp: '4/3/2025 23:17') isNil
 ]
@@ -280,7 +316,7 @@ DateAndTimeTest >> testInstanceCreation [
 		minute: 3
 		second: 4
 		nanoSecond: 5
-		offset: 6 hours.
+		offset: (Duration hours: 6).
 	self
 		assert: t julianDayNumber equals: 1721427;
 		assert: t offset equals: 6 hours;
@@ -328,7 +364,7 @@ DateAndTimeTest >> testNotSymmetricWithString [
 		minute: 3
 		second: 4
 		nanoSecond: 5
-		offset: 6 hours.
+		offset: (Duration hours: 6).
 	t2 := '0001-01-02T02:03:04.000000005+06:00'.
 	self deny: t1 equals: t2.
 	self deny: t2 equals: t1
@@ -372,20 +408,20 @@ DateAndTimeTest >> testPharoEpoch [
 			localEpoch := DateAndTime fromString: '1901-01-01T00:00:00'.
 			self deny: DateAndTime epoch equals: localEpoch.
 			self 
-				deny: ((DateAndTime fromSeconds: 0) offset: (Duration seconds: 0))
+				deny: ((DateAndTime fromSeconds: 0) offset:  Duration zero)
 				equals: localEpoch ].
 
 	self useTimeZone: 'UTC' during: [
 			| localEpoch |
 			localEpoch := DateAndTime fromString: '1901-01-01T00:00:00'.
 			self assert: DateAndTime epoch equals: localEpoch.
-			self assert: ((DateAndTime fromSeconds: 0) offset: (Duration seconds: 0)) equals: localEpoch ].
+			self assert: ((DateAndTime fromSeconds: 0) offset:  Duration zero) equals: localEpoch ].
 
 	self 
 		assert: DateAndTime epoch 
 		equals: (DateAndTime fromString: '1901-01-01T00:00:00+00:00').
 	self 
-		assert: ((DateAndTime fromSeconds: 0) offset: (Duration seconds: 0)) 
+		assert: ((DateAndTime fromSeconds: 0) offset:  Duration zero) 
 		equals: (DateAndTime fromString: '1901-01-01T00:00:00+00:00')
 ]
 
@@ -603,7 +639,7 @@ DateAndTimeTest >> testReflexive [
 	t := DateAndTime
 			year: 1 month: 1 day: 2
 			hour: 2 minute: 3 second: 4 nanoSecond: 5
-			offset: 6 hours.
+			offset: (Duration hours: 6).
 	self assert: t equals: t
 ]
 
@@ -718,7 +754,7 @@ DateAndTimeTest >> testSimpleAccessors [
 		minute: 3
 		second: 4
 		nanoSecond: 5
-		offset: 6 hours.
+		offset: (Duration hours: 6).
 	self
 		assert: t hours equals: t hours;
 		assert: t minutes equals: t minute;
@@ -752,7 +788,7 @@ DateAndTimeTest >> testSymmetric [
 		minute: 3
 		second: 4
 		nanoSecond: 5
-		offset: 6 hours.
+		offset: (Duration hours: 6).
 	t2 := DateAndTime
 		year: 1
 		month: 1
@@ -761,7 +797,7 @@ DateAndTimeTest >> testSymmetric [
 		minute: 3
 		second: 4
 		nanoSecond: 5
-		offset: 6 hours.
+		offset: (Duration hours: 6).
 	self assert: t2 equals: t1.
 	self assert: t1 equals: t2
 ]
@@ -811,15 +847,15 @@ DateAndTimeTest >> testTransitive [
 	t1 := DateAndTime
 			year: 1 month: 1 day: 2
 			hour: 2 minute: 3 second: 4 nanoSecond: 5
-			offset: 6 hours.
+			offset: (Duration hours: 6).
 	t2 := DateAndTime
 			year: 1 month: 1 day: 2
 			hour: 2 minute: 3 second: 4 nanoSecond: 5
-			offset: 6 hours.
+			offset: (Duration hours: 6).
 	t3 := DateAndTime
 			year: 1 month: 1 day: 2
 			hour: 2 minute: 3 second: 4 nanoSecond: 5
-			offset: 6 hours.
+			offset: (Duration hours: 6).
 	self assert: ((t1 = t2) & (t2 = t3) ==> (t1 = t3))
 ]
 

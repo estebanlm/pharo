@@ -55,7 +55,8 @@ DateAndTimeEpochTest >> testAsDateAndTime [
 
 { #category : 'tests' }
 DateAndTimeEpochTest >> testAsDuration [
-	self assert: aDateAndTime asDuration equals: 0 asDuration
+
+	self assert: aDateAndTime asDuration equals: Duration zero
 ]
 
 { #category : 'tests' }
@@ -73,12 +74,13 @@ DateAndTimeEpochTest >> testAsMonth [
 
 { #category : 'tests' }
 DateAndTimeEpochTest >> testAsNanoSeconds [
-	self assert: aDateAndTime asNanoSeconds equals: (Duration seconds: 0) asNanoSeconds
+	self assert: aDateAndTime asNanoSeconds equals:  Duration zero asNanoSeconds
 ]
 
 { #category : 'tests' }
 DateAndTimeEpochTest >> testAsSeconds [
-	self assert: aDateAndTime asSeconds equals: 0 asDuration asSeconds
+
+	self assert: aDateAndTime asSeconds equals:  Duration zero asSeconds
 ]
 
 { #category : 'tests' }
@@ -160,7 +162,8 @@ DateAndTimeEpochTest >> testDaysLeftInYear [
 
 { #category : 'tests' }
 DateAndTimeEpochTest >> testDuration [
-	self assert: aDateAndTime duration equals: 0 asDuration
+
+	self assert: aDateAndTime duration equals:  Duration zero
 ]
 
 { #category : 'tests' }
@@ -230,7 +233,7 @@ DateAndTimeEpochTest >> testMeridianAbbreviation [
 DateAndTimeEpochTest >> testMiddleOf [
 	self 
 		assert: (aDateAndTime middleOf: (Duration fromString: '2:00:00:00'))
-		equals: (Timespan starting: (Date readFrom: '31-12-1900' pattern: 'd-m-y') duration: 2 days)
+		equals: (Timespan starting: (Date readFrom: '31-12-1900' pattern: 'd-m-y') duration: (Duration days: 2))
 ]
 
 { #category : 'tests' }
@@ -253,8 +256,8 @@ DateAndTimeEpochTest >> testMinus [
 				minute: 56
 				second: 55
 				nanoSecond: 999999995
-				offset: 0 hours)
-	" I believe this Failure is a bug in the nanosecond part of (DateAndTime >> year:month:day:hour:minute:second:nanoSecond:offset:)"
+				offset:  Duration zero)
+
 ]
 
 { #category : 'tests' }
@@ -314,7 +317,7 @@ DateAndTimeEpochTest >> testPlus [
 		assert: aDateAndTime + (Duration fromString: '0:00:00:00') 
 		equals: aDateAndTime.
 	self 
-		assert: aDateAndTime + (Duration seconds: 0) equals: aDateAndTime.
+		assert: aDateAndTime +  Duration zero equals: aDateAndTime.
 	self
 		assert: aDateAndTime + aDuration
 		equals:
@@ -326,7 +329,7 @@ DateAndTimeEpochTest >> testPlus [
 				minute: 3
 				second: 4
 				nanoSecond: 5
-				offset: 0 hours)
+				offset: Duration zero)
 ]
 
 { #category : 'tests' }
@@ -370,8 +373,11 @@ DateAndTimeEpochTest >> testTo [
 
 { #category : 'tests' }
 DateAndTimeEpochTest >> testToBy [
-	self assert: (aDateAndTime to: aDateAndTime + 10 days by: 5 days) equals: (DateAndTime new to: DateAndTime new + 10 days by: 5 days)
-	"MessageNotUnderstood: UndefinedObject>>starting:ending:  where UndefinedObject is Timespan "
+
+	self 
+		assert: (aDateAndTime to: aDateAndTime + 10 days by: 5 days) 
+		equals: (DateAndTime new to: DateAndTime new + 10 days by: 5 days)
+	
 ]
 
 { #category : 'tests' }
@@ -455,7 +461,7 @@ DateAndTimeEpochTest >> testYearMonthDayHourMinuteSecondNanosSecondOffset [
 				minute: 0
 				second: 0
 				nanoSecond: 0
-				offset: 0 hours).
+				offset: Duration zero).
 	self
 		assert:
 			(DateAndTime
@@ -483,8 +489,8 @@ DateAndTimeEpochTest >> testYearMonthDayHourMinuteSecondNanosSecondOffset [
 				minute: 3
 				second: 4
 				nanoSecond: 5
-				offset: 0 hours)
-	" I believe this is a bug in the nanosecond part of (DateAndTime >> year:month:day:hour:minute:second:nanoSecond:offset:)"" I believe this is a bug in the nanosecond part of (DateAndTime >> year:month:day:hour:minute:second:nanoSecond:offset:)"
+				offset: Duration zero)
+	
 ]
 
 { #category : 'tests' }

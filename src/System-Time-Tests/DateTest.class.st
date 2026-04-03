@@ -163,9 +163,9 @@ DateTest >> testBasicPrinting [
 { #category : 'tests' }
 DateTest >> testBetweenAnd [
 
-	self assert: (Date today between: Date today - 1 and: Date today + 1).
-	self deny: (Date today between: Date today + 1 and: Date today + 2).
-	self deny: (Date today between: Date today - 2 and: Date today - 1)
+	self assert: (Date today between: Date today + (Duration hours: -1) and: Date today + (Duration hours: 1)).
+	self deny: (Date today between: Date today + (Duration hours: 1)  and: Date today + (Duration hours: 2)).
+	self deny: (Date today between: Date today - (Duration hours: 2) and: Date today - (Duration hours: 1) )
 ]
 
 { #category : 'tests' }
@@ -282,17 +282,17 @@ DateTest >> testFromDays [
 	| march18th1627 epochFromDays june2nd1973FromDays march18th1627FromDays january23rd2004FromDays |
 
 	epochFromDays := self dateClass fromDays: 0.
-	self assert: epochFromDays equals: (self epoch translateTo: 0).
+	self assert: epochFromDays equals: (self epoch translateTo:  Duration zero).
 
 	june2nd1973FromDays := self dateClass fromDays: (june2nd1973 - self epoch) asDays.
-	self assert: june2nd1973FromDays equals: (june2nd1973 translateTo: 0).
+	self assert: june2nd1973FromDays equals: (june2nd1973 translateTo: Duration zero).
 
 	march18th1627 := Date readFrom: '18-3-1627' pattern: 'd-m-y'.
 	march18th1627FromDays := self dateClass fromDays: (march18th1627 - self epoch) asDays.
-	self assert: march18th1627FromDays equals: (march18th1627 translateTo: 0).
+	self assert: march18th1627FromDays equals: (march18th1627 translateTo:  Duration zero).
 
 	january23rd2004FromDays := self dateClass fromDays: 103*365 "years" + 22 "days since Jan 1" + 25 "leap days".
-	self assert: january23rd2004FromDays equals: (january23rd2004 translateTo: 0)
+	self assert: january23rd2004FromDays equals: (january23rd2004 translateTo:  Duration zero)
 ]
 
 { #category : 'tests' }
@@ -391,8 +391,8 @@ DateTest >> testIsOnOrAfter [
 DateTest >> testIsOnOrBefore [
 
 	| tzm8 tzp10 |
-	tzm8 := january23rd2004 translateTo: -8.
-	tzp10 := january23rd2004 translateTo: 10.
+	tzm8 := january23rd2004 translateTo: (Duration hours: -8).
+	tzp10 := january23rd2004 translateTo: (Duration hours: 10).
 
 	self
 		assert: (tzm8 isOnOrBefore: tzp10);
@@ -404,7 +404,9 @@ DateTest >> testIsOnOrBefore [
 { #category : 'tests' }
 DateTest >> testJulianDayNumber [
 
-	self assert: (january23rd2004 translateTo: 0) equals: (Date julianDayNumber: ((4713+2004)*365 +1323) offset: 0 hour)
+	self 
+		assert: (january23rd2004 translateTo:  Duration zero) 
+		equals: (Date julianDayNumber: ((4713+2004)*365 +1323) offset:  Duration zero)
 ]
 
 { #category : 'tests' }
@@ -470,6 +472,22 @@ DateTest >> testNext [
 ]
 
 { #category : 'tests' }
+DateTest >> testNextLeapYear [
+
+	| date |
+	date := (Date year: 2020 month: 2 day: 28).
+	self assert: date next equals: (Date readFrom: '29-2-2020' pattern: 'd-m-y')
+]
+
+{ #category : 'tests' }
+DateTest >> testNextOverYear [
+
+	| date |
+	date := (Date year: 2018 month: 12 day: 31).
+	self assert: date next equals: (Date readFrom: '1-1-2019' pattern: 'd-m-y')
+]
+
+{ #category : 'tests' }
 DateTest >> testPrevious [
 
 	| previousDay |
@@ -481,6 +499,14 @@ DateTest >> testPrevious [
 DateTest >> testPreviousByName [
 
 	self assert: (january23rd2004 previous: #Friday) equals: (Date readFrom: '16-1-2004' pattern: 'd-m-y')
+]
+
+{ #category : 'tests' }
+DateTest >> testPreviousOverYear [
+
+	| date |
+	date := (Date year: 2018 month: 1 day: 1).
+	self assert: date previous equals: (Date readFrom: '31-12-2017' pattern: 'd-m-y')
 ]
 
 { #category : 'tests' }

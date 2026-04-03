@@ -250,7 +250,7 @@ TimespanTest >> testEnd [
 				minute: 59
 				second: 59
 				nanoSecond: 999999999
-				offset: 0 hours)
+				offset: Duration zero)
 ]
 
 { #category : 'tests' }

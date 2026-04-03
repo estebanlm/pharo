@@ -52,7 +52,7 @@ DateAndTimeDosEpochTest >> testAsDuration [
 
 	self 
 		assert: aDateAndTime asDuration 
-		equals: (Duration seconds: 0)
+		equals: Duration zero
 ]
 
 { #category : 'tests' }
@@ -79,7 +79,7 @@ DateAndTimeDosEpochTest >> testAsNanoSeconds [
 
 	self 
 		assert: aDateAndTime asNanoSeconds 
-		equals: (Duration seconds: 0) asNanoSeconds
+		equals: Duration zero asNanoSeconds
 ]
 
 { #category : 'tests' }
@@ -210,7 +210,7 @@ DateAndTimeDosEpochTest >> testDuration [
 
 	self 
 		assert: aDateAndTime duration 
-		equals: (Duration seconds: 0)
+		equals: Duration zero
 ]
 
 { #category : 'tests' }
@@ -289,8 +289,10 @@ DateAndTimeDosEpochTest >> testMeridianAbbreviation [
 
 { #category : 'tests' }
 DateAndTimeDosEpochTest >> testMiddleOf [
-	self assert: (aDateAndTime middleOf: (Duration fromString: '2:00:00:00'))
-	     equals: (Timespan starting: (Date readFrom: '31-12-1979' pattern: 'd-m-y') duration: 2 days)
+	
+	self 
+		assert: (aDateAndTime middleOf: (Duration fromString: '2:00:00:00'))
+		equals: (Timespan starting: (Date readFrom: '31-12-1979' pattern: 'd-m-y') duration: 2 days)
 ]
 
 { #category : 'tests' }
@@ -310,7 +312,7 @@ DateAndTimeDosEpochTest >> testMinus [
 	
 	self 
 		assert: aDateAndTime - aDuration 
-		equals: (DateAndTime year: 1979 month: 12 day: 30 hour: 21 minute: 56 second: 55 nanoSecond: 999999995 offset: 0 hours)
+		equals: (DateAndTime year: 1979 month: 12 day: 30 hour: 21 minute: 56 second: 55 nanoSecond: 999999995 offset:  Duration zero)
 ]
 
 { #category : 'tests' }
@@ -363,9 +365,15 @@ DateAndTimeDosEpochTest >> testOffset [
 
 { #category : 'tests' }
 DateAndTimeDosEpochTest >> testPlus [
-	self assert: aDateAndTime + '0:00:00:00' equals: aDateAndTime.
-	self assert: aDateAndTime + 0 equals: aDateAndTime.
-	self assert: aDateAndTime + aDuration equals: (DateAndTime year: 1980 month: 1 day: 2 hour: 2 minute: 3 second: 4 nanoSecond: 5 offset: 0 hours)
+	self 
+		assert: aDateAndTime + (Duration fromString: '0:00:00:00') 
+		equals: aDateAndTime.
+	self 
+		assert: aDateAndTime +  Duration zero
+		equals: aDateAndTime.
+	self 
+		assert: aDateAndTime + aDuration 
+		equals: (DateAndTime year: 1980 month: 1 day: 2 hour: 2 minute: 3 second: 4 nanoSecond: 5 offset:  Duration zero)
 ]
 
 { #category : 'tests' }
@@ -475,10 +483,14 @@ DateAndTimeDosEpochTest >> testYearMonthDayHourMinuteSecond [
 
 { #category : 'tests' }
 DateAndTimeDosEpochTest >> testYearMonthDayHourMinuteSecondNanosSecondOffset [
-	self assert: aDateAndTime equals: (DateAndTime year: 1980 month: 1 day: 1 hour: 0 minute: 0 second: 0 nanoSecond: 0 offset:0 hours ).
-	self assert: ((DateAndTime year: 1 month: 1 day: 1 hour: 0 minute: 0 second: 0 nanoSecond: 0 offset: 0 hours ) +
-				(Duration days: 1 hours: 2 minutes: 3 seconds: 4  nanoSeconds: 5) ) equals:
-				(DateAndTime year: 1 month: 1 day: 2 hour: 2 minute: 3 second: 4 nanoSecond: 5 offset: 0 hours)
+	self 
+		assert: aDateAndTime 
+		equals: (DateAndTime year: 1980 month: 1 day: 1 hour: 0 minute: 0 second: 0 nanoSecond: 0 offset:  Duration zero).
+	self 
+		assert: ((DateAndTime year: 1 month: 1 day: 1 hour: 0 minute: 0 second: 0 nanoSecond: 0 offset:  Duration zero) 
+			+ (Duration days: 1 hours: 2 minutes: 3 seconds: 4  nanoSeconds: 5) ) 
+		equals:
+				(DateAndTime year: 1 month: 1 day: 2 hour: 2 minute: 3 second: 4 nanoSecond: 5 offset:  Duration zero)
 ]
 
 { #category : 'tests' }

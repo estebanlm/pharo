@@ -31,7 +31,10 @@ DateAndTimeLeapTest >> setUp [
 
 { #category : 'tests' }
 DateAndTimeLeapTest >> testAsDate [
-	self assert: aDateAndTime asDate equals:  ((Date readFrom: '29-2-2004' pattern: 'd-m-y') translateTo: 2 hours)
+
+	self 
+		assert: aDateAndTime asDate 
+		equals: ((Date readFrom: '29-2-2004' pattern: 'd-m-y') translateTo: (Duration hours: 2))
 ]
 
 { #category : 'tests' }
@@ -53,9 +56,10 @@ DateAndTimeLeapTest >> testAsLocal [
 
 { #category : 'tests' }
 DateAndTimeLeapTest >> testAsMonth [
+
 	self
 		assert: aDateAndTime asMonth
-		equals: ((Month year: 2004 month: 'February') translateTo: 2 hours)
+		equals: ((Month year: 2004 month: 'February') translateTo: (Duration hours: 2))
 ]
 
 { #category : 'tests' }
@@ -87,7 +91,10 @@ DateAndTimeLeapTest >> testAsUTC [
 
 { #category : 'tests' }
 DateAndTimeLeapTest >> testAsWeek [
-	self assert: aDateAndTime asWeek equals: ((Week starting: (Date readFrom: '29-2-2004' pattern: 'd-m-y')) translateTo: 2 hours)
+
+	self 
+		assert: aDateAndTime asWeek 
+		equals: ((Week starting: (Date readFrom: '29-2-2004' pattern: 'd-m-y')) translateTo: 2 hours)
 ]
 
 { #category : 'tests' }
@@ -187,12 +194,24 @@ DateAndTimeLeapTest >> testMeridianAbbreviation [
 
 { #category : 'tests' }
 DateAndTimeLeapTest >> testMiddleOf [
-	self assert: (aDateAndTime middleOf: aDuration)
-		  equals:
-	 (Timespan 
-		starting: 
-			(DateAndTime year: 2004 month: 2 day: 29 hour: 6 minute: 46 second: 30 offset: 2 hours)
-		duration: (Duration days: 0 hours: 13 minutes: 33 seconds: 0 nanoSeconds: 0 ))
+
+	self 
+		assert: (aDateAndTime middleOf: aDuration) 
+		equals: (Timespan
+			 starting: (DateAndTime
+					  year: 2004
+					  month: 2
+					  day: 29
+					  hour: 6
+					  minute: 46
+					  second: 30
+					  offset: (Duration hours: 2))
+			 duration: (Duration
+					  days: 0
+					  hours: 13
+					  minutes: 33
+					  seconds: 0
+					  nanoSeconds: 0))
 ]
 
 { #category : 'tests' }

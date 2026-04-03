@@ -538,7 +538,7 @@ DurationTest >> testNanoSeconds [
 
 { #category : 'tests' }
 DurationTest >> testNegated [
-	self assert: aDuration + aDuration negated equals: (Duration seconds: 0)
+	self assert: aDuration + aDuration negated equals:  Duration zero
 ]
 
 { #category : 'tests' }
