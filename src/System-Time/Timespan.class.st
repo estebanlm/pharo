@@ -62,7 +62,7 @@ Timespan >> - operand [
 
 	^ (operand respondsTo: #asDateAndTime)
 	 	ifTrue: [ self start - operand ]
-	 	ifFalse: [ self + (operand negated) ]
+	 	ifFalse: [ self + operand negated ]
 ]
 
 { #category : 'arithmetic' }
@@ -418,6 +418,12 @@ Timespan >> start: aDateAndTime [
 	"Store the start DateAndTime of this timespan"
 
 	start := aDateAndTime asDateAndTime
+]
+
+{ #category : 'arithmetic' }
+Timespan >> subtractReceiverToDateAndTime: aDateAndTime [
+
+	^ aDateAndTime - self asDateAndTime
 ]
 
 { #category : 'enumerating' }

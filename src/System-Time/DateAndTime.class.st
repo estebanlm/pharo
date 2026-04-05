@@ -620,15 +620,16 @@ DateAndTime >> + operand [
 DateAndTime >> - operand [
 	"operand conforms to protocol DateAndTime or protocol Duration"
 
-	^ (operand respondsTo: #asDateAndTime)
-		ifTrue: [
-			| other |
-			other := operand asDateAndTime.
-			Duration
-				seconds: (SecondsInDay * (julianDayNumber - other julianDayNumberUTC))
-							+ (seconds - other secondsSinceMidnightUTC)
-				nanoSeconds: nanos - other nanoSecond ]
-		ifFalse: [ self + operand negated ]
+	^ operand subtractReceiverToDateAndTime: self 
+	
+	"^ (operand respondsTo: #asDateAndTime)
+		  ifTrue: [
+				  | other |
+				  other := operand asDateAndTime.
+				  Duration
+					  seconds: SecondsInDay * (julianDayNumber - other julianDayNumberUTC) + (seconds - other secondsSinceMidnightUTC)
+					  nanoSeconds: nanos - other nanoSecond ]
+		  ifFalse: [ self + operand negated ]"
 ]
 
 { #category : 'arithmetic' }
@@ -1210,6 +1211,15 @@ DateAndTime >> setJdn: julDays seconds: secs nano: nanoSecs offset: anOffset [
 	nanos := nanoSecs.
 	offset := anOffset.
 	self normalizeSecondsAndNanos
+]
+
+{ #category : 'arithmetic' }
+DateAndTime >> subtractReceiverToDateAndTime: aDateAndTime [
+	"Subtract the receiver to the argument."
+	
+	^ Duration
+		  seconds: SecondsInDay * (aDateAndTime julianDayNumberUTC - julianDayNumber) + (aDateAndTime secondsSinceMidnightUTC - seconds)
+		  nanoSeconds: aDateAndTime nanoSecond - nanos
 ]
 
 { #category : 'private' }

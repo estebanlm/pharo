@@ -76,39 +76,31 @@ TimespanTest >> testAccessing [
 
 { #category : 'tests' }
 TimespanTest >> testArithmetic [
-	| ts1 ts2 d |
 
+	| ts1 ts2 d |
 	ts1 := timespan + 2 days.
 	ts2 := ts1 - 2 days.
-	d := ts1
-		-
-			(DateAndTime
-				year: 2003
-				month: 03
-				day: 20).
+	self assert: timespan equals: ts2.
+	
+	d := ts1 - (DateAndTime year: 2003 month: 03 day: 20).
 
 	self
-		assert: ts1 start
-			equals:
-			(DateAndTime
-				year: 2003
-				month: 03
-				day: 24
-				hour: 12
-				minute: 0
-				second: 0);
+		assert: ts1 start equals: (DateAndTime
+				 year: 2003
+				 month: 03
+				 day: 24
+				 hour: 12
+				 minute: 0
+				 second: 0);
 		assert: ts1 duration equals: timespan duration;
 		assert: ts2 start equals: timespan start;
 		assert: ts2 duration equals: timespan duration.
 
-	self
-		assert: d
-		equals:
-			(Duration
-				days: 4
-				hours: 12
-				minutes: 0
-				seconds: 0)
+	self assert: d equals: (Duration
+			 days: 4
+			 hours: 12
+			 minutes: 0
+			 seconds: 0)
 ]
 
 { #category : 'tests' }
@@ -441,7 +433,7 @@ TimespanTest >> testSubclassArithmetic [
 					 	Month current.
 						(Week starting: DateAndTime now).
 						Date today.
-						Timespan starting: (DateAndTime now) duration: 1 hour }.
+						Timespan starting: DateAndTime now duration: 1 hour }.
 	timespans do:
 		[ :ts |
 			self assert: ts + aDay - ts equals: aDay.
