@@ -14,7 +14,7 @@ Example
 ```
 "
 Class {
-	#name : 'RBRenamePackageRefactoring',
+	#name : 'ReRenamePackageRefactoring',
 	#superclass : 'RBPackageRefactoring',
 	#instVars : [
 		'package'
@@ -25,7 +25,7 @@ Class {
 }
 
 { #category : 'instance creation' }
-RBRenamePackageRefactoring class >> model: aRBSmalltalk rename: aSymbol to: aNewName [
+ReRenamePackageRefactoring class >> model: aRBSmalltalk rename: aSymbol to: aNewName [
 	^ self new
 		model: aRBSmalltalk;
 		packageName: aSymbol newName: aNewName;
@@ -33,13 +33,13 @@ RBRenamePackageRefactoring class >> model: aRBSmalltalk rename: aSymbol to: aNew
 ]
 
 { #category : 'instance creation' }
-RBRenamePackageRefactoring class >> rename: aString to: aNewName [
+ReRenamePackageRefactoring class >> rename: aString to: aNewName [
 	^ self new
 		packageName: aString newName: aNewName
 ]
 
 { #category : 'preconditions' }
-RBRenamePackageRefactoring >> applicabilityPreconditions [
+ReRenamePackageRefactoring >> applicabilityPreconditions [
 
 	^ super applicabilityPreconditions, {
 		 (RBCondition
@@ -54,28 +54,33 @@ RBRenamePackageRefactoring >> applicabilityPreconditions [
 ]
 
 { #category : 'transforming' }
-RBRenamePackageRefactoring >> manifestClassNameFor: aPackageName [
+ReRenamePackageRefactoring >> manifestClassNameFor: aPackageName [
 	"Returns a symbol representing a suitable name for a Manifest class for the given package"
 
 	^('Manifest', (aPackageName select: [:each | each isAlphaNumeric ])) asSymbol
 ]
 
 { #category : 'initialization' }
-RBRenamePackageRefactoring >> packageName: aName newName: aNewName [
+ReRenamePackageRefactoring >> packageName: aName newName: aNewName [
 	packageName := aName asSymbol.
 	package := self model packageNamed: packageName.
 	newName := aNewName asSymbol
 ]
 
 { #category : 'transforming' }
-RBRenamePackageRefactoring >> privateTransform [
+ReRenamePackageRefactoring >> prepareForExecution [
+    package := self model packageNamed: packageName
+]
+
+{ #category : 'transforming' }
+ReRenamePackageRefactoring >> privateTransform [
 
 	self renamePackage.
 	self renameManifestClass
 ]
 
 { #category : 'transforming' }
-RBRenamePackageRefactoring >> renameManifestClass [
+ReRenamePackageRefactoring >> renameManifestClass [
 	|refactoring manifest|
 	manifest := package realPackage packageManifestOrNil.
 	manifest ifNotNil: [
@@ -87,6 +92,6 @@ RBRenamePackageRefactoring >> renameManifestClass [
 ]
 
 { #category : 'transforming' }
-RBRenamePackageRefactoring >> renamePackage [
+ReRenamePackageRefactoring >> renamePackage [
 	self model renamePackage: package to: newName
 ]
