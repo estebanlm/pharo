@@ -14,7 +14,10 @@ String >> asDateAndTime [
 String >> asDuration [
  	"Convert from [-]D:HH:MM:SS[.S] format. What is between [] implies optional elements"
 	
-	"self deprecated: 'Use Duration fromString: ' transformWith: '`@rec asDuration' -> 'Duration fromString: `@rec'."
+	self 
+		deprecated: 'Use Duration fromString: ' 
+		transformWith: '`@rec asDuration' -> 'Duration fromString: `@rec'.
+	
  	^ Duration fromString: self
 ]
 

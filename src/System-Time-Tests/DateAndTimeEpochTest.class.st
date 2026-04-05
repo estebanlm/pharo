@@ -243,21 +243,18 @@ DateAndTimeEpochTest >> testMidnight [
 
 { #category : 'tests' }
 DateAndTimeEpochTest >> testMinus [
-	self assert: aDateAndTime - aDateAndTime equals: '0:00:00:00' asDuration.
-	self assert: aDateAndTime - '0:00:00:00' asDuration equals: aDateAndTime.
-	self
-		assert: aDateAndTime - aDuration
-		equals:
-			(DateAndTime
-				year: 1900
-				month: 12
-				day: 30
-				hour: 21
-				minute: 56
-				second: 55
-				nanoSecond: 999999995
-				offset:  Duration zero)
 
+	self assert: aDateAndTime - aDateAndTime equals: (Duration fromString: '0:00:00:00').
+	self assert: aDateAndTime - (Duration fromString: '0:00:00:00') equals: aDateAndTime.
+	self assert: aDateAndTime - aDuration equals: (DateAndTime
+			 year: 1900
+			 month: 12
+			 day: 30
+			 hour: 21
+			 minute: 56
+			 second: 55
+			 nanoSecond: 999999995
+			 offset: Duration zero)
 ]
 
 { #category : 'tests' }

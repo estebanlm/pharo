@@ -3,7 +3,9 @@ Extension { #name : 'Number' }
 { #category : '*System-Time' }
 Number >> asDuration [
 
-	self deprecated: '' transformWith: '`@rec asDuration' -> 'Duration seconds: `@rec'.
+	self 
+		deprecated: 'Do not under smalltalk integers as receiver but invoke explicitly the Duration class' 
+		transformWith: '`@rec asDuration' -> 'Duration seconds: `@rec'.
  	^ Duration seconds: self asInteger
 ]
 
