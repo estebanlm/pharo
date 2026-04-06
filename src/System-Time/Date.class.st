@@ -216,7 +216,7 @@ Date class >> yesterday [
 Date >> addDays: dayCount [
 	"((Date year: 2018 month: 9 day: 28) addDays: 3) printString >>> '1 October 2018'"
 
-	^ (self asDateAndTime + (dayCount days)) asDate
+	^ (self asDateAndTime + dayCount days) asDate
 ]
 
 { #category : 'adding' }
