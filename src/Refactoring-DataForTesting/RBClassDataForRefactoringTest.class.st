@@ -452,6 +452,12 @@ RBClassDataForRefactoringTest >> precedence [
 	^self isArray ifFalse: [self block + 5 * 34] ifTrue: [self printString = 10]
 ]
 
+{ #category : 'inline' }
+RBClassDataForRefactoringTest >> provideInlineMethod [
+
+	^ RBBasicLintRuleTestData new classBlock + 3
+]
+
 { #category : 'accessing' }
 RBClassDataForRefactoringTest >> referencesConditionFor: aClass [
 	| environment association |

@@ -109,6 +109,23 @@ ReExtractMethodDriver >> extractMethod [
 	^ self applyChanges
 ]
 
+{ #category : 'execution' }
+ReExtractMethodDriver >> gatherUserInput [
+
+	newMessage := self requestNewMessage.
+	newMessage ifNil: [ "The user has cancelled the dialog" ^ false ].
+	refactoring newSelector: newMessage selector.
+	^ true
+]
+
+{ #category : 'private exe' }
+ReExtractMethodDriver >> hasFailedBehaviorPreservingPreconditions [
+
+	notOverride := refactoring preconditionNoOverrides.
+	sameExitPoint := refactoring preconditionHasSameExitPoint.
+	^ refactoring failedBreakingChangePreconditions isNotEmpty 
+]
+
 { #category : 'configuration' }
 ReExtractMethodDriver >> instantiateRefactoring [
 	"here we do not fully configure the refactoring because we are missing information such as the signature.
@@ -173,28 +190,4 @@ ReExtractMethodDriver >> requestNewMessage [
 			dialog := self requestDialogWith: methodName.
 			dialog cancelled ifTrue: [ ^ nil ] ].
 	^ dialog methodName
-]
-
-{ #category : 'execution' }
-ReExtractMethodDriver >> runRefactoring [
-
-	self configureRefactoring.
-	
-	refactoring failedApplicabilityPreconditions 
-		ifNotEmpty: [ ^ self inform: self failedPreconditionsErrorString ].
-	newMessage := self requestNewMessage.
-	newMessage ifNil: [ "The user has cancelled the dialog" ^ self ].
-	refactoring newSelector: newMessage selector.
-	
-	self setBreakingChangesPreconditions. 
-	refactoring failedBreakingChangePreconditions
-		ifEmpty: [ self applyChanges ]
-		ifNotEmpty: [ self handleBreakingChanges ]
-]
-
-{ #category : 'configuration' }
-ReExtractMethodDriver >> setBreakingChangesPreconditions [
-
-	notOverride := refactoring preconditionNoOverrides.
-	sameExitPoint := refactoring preconditionHasSameExitPoint
 ]

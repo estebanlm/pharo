@@ -4,8 +4,9 @@ Class {
 	#classInstVars : [
 		'data'
 	],
-	#category : 'TestRunner-FakeTests',
-	#package : 'TestRunner-FakeTests'
+	#category : 'TestRunner-FakeTests-Mock Tests',
+	#package : 'TestRunner-FakeTests',
+	#tag : 'Mock Tests'
 }
 
 { #category : 'initialization' }
@@ -35,8 +36,6 @@ DependencyTest class >> reset [
 { #category : 'asserting' }
 DependencyTest >> assertCountThenIncrement: anObject [
 
-	self skipOnPharoCITestingEnvironment.
-	self ignore.
 	self assert: self count equals: anObject .
 	self class incrementData
 ]

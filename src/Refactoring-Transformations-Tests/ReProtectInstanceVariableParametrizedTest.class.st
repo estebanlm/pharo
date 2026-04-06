@@ -1,5 +1,5 @@
 Class {
-	#name : 'RBProtectInstanceVariableParametrizedTest',
+	#name : 'ReProtectInstanceVariableParametrizedTest',
 	#superclass : 'RBWithDifferentConstructorsParametrizedTest',
 	#category : 'Refactoring-Transformations-Tests-SingleParametrized',
 	#package : 'Refactoring-Transformations-Tests',
@@ -7,18 +7,17 @@ Class {
 }
 
 { #category : 'tests' }
-RBProtectInstanceVariableParametrizedTest class >> testParameters [
-self flag: 'need change tranformation to have the same behavior of ref'.
+ReProtectInstanceVariableParametrizedTest class >> testParameters [
+
 	^ ParametrizedTestMatrix new
-		addCase: { #rbClass -> RBProtectInstanceVariableRefactoring .
-					  #constructor -> #variable:class: };
-	"	addCase: { #rbClass -> RBProtectVariableTransformation .
-					  #constructor -> #instanceVariable:class: };
-	"	yourself
+		  addCase: {
+				  (#rbClass -> ReProtectInstanceVariableRefactoring).
+				  (#constructor -> #variable:class:) };
+		  yourself
 ]
 
 { #category : 'running' }
-RBProtectInstanceVariableParametrizedTest >> setUp [
+ReProtectInstanceVariableParametrizedTest >> setUp [
 
 	super setUp.
 	model := self modelOnClasses: {
@@ -29,7 +28,7 @@ RBProtectInstanceVariableParametrizedTest >> setUp [
 ]
 
 { #category : 'failure tests' }
-RBProtectInstanceVariableParametrizedTest >> testFailureVariableNotDefined [
+ReProtectInstanceVariableParametrizedTest >> testFailureVariableNotDefined [
 
 	self shouldFail: (self createRefactoringWithModel: model andArguments:
 			 { 'rewrite'. #RBSubclassOfClassToRename }).
@@ -38,7 +37,7 @@ RBProtectInstanceVariableParametrizedTest >> testFailureVariableNotDefined [
 ]
 
 { #category : 'tests' }
-RBProtectInstanceVariableParametrizedTest >> testProtectInstanceVariable [
+ReProtectInstanceVariableParametrizedTest >> testProtectInstanceVariable [
 	| refactoring class |
 	refactoring := self createRefactoringWithModel: model andArguments:
 		{('rewrite' , 'Rule1') . #RBSubclassOfClassToRename}.
@@ -53,7 +52,7 @@ RBProtectInstanceVariableParametrizedTest >> testProtectInstanceVariable [
 ]
 
 { #category : 'tests' }
-RBProtectInstanceVariableParametrizedTest >> testProtectInstanceVariableWithAccessorFromTheSuperclass [
+ReProtectInstanceVariableParametrizedTest >> testProtectInstanceVariableWithAccessorFromTheSuperclass [
 
 	| refactoring sibling |
 	refactoring := self createRefactoringWithModel: model andArguments: {
@@ -65,7 +64,7 @@ RBProtectInstanceVariableParametrizedTest >> testProtectInstanceVariableWithAcce
 ]
 
 { #category : 'tests' }
-RBProtectInstanceVariableParametrizedTest >> testProtectInstanceVariableWithAccessorInSubclass [
+ReProtectInstanceVariableParametrizedTest >> testProtectInstanceVariableWithAccessorInSubclass [
 
 	| refactoring subclass |
 	refactoring := self createRefactoringWithModel: model andArguments: {

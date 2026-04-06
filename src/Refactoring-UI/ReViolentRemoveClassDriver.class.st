@@ -66,6 +66,14 @@ ReViolentRemoveClassDriver >> defaultSelectDialog [
 yourself
 ]
 
+{ #category : 'private execution' }
+ReViolentRemoveClassDriver >> hasFailedBehaviorPreservingPreconditions [
+	
+	haveNoReferences := refactoring preconditionHaveNoReferences.
+
+	^ refactoring failedBreakingChangePreconditions isNotEmpty 
+]
+
 { #category : 'configuration' }
 ReViolentRemoveClassDriver >> instantiateRefactoring [
 
@@ -81,29 +89,10 @@ ReViolentRemoveClassDriver >> labelBasedOnBreakingChanges [
 			  stream nextPutAll: 'Select a strategy' ]
 ]
 
-{ #category : 'execution' }
-ReViolentRemoveClassDriver >> runRefactoring [
-
-	self configureRefactoring.
-	refactoring failedApplicabilityPreconditions ifNotEmpty: [ ^ self inform: 'The class should exist and not be a metaclass' ].
-	self setBreakingChangesPreconditions.
-	haveNoReferences check
-		ifTrue: [ self applyChanges ]
-		ifFalse: [ self handleBreakingChanges ]
-]
-
 { #category : 'initialization' }
 ReViolentRemoveClassDriver >> scopes: refactoringScopes classes: aColclasses [
 
 	scopes := refactoringScopes.
 	model := self refactoringScopeOn: scopes first.
 	classes := aColclasses
-]
-
-{ #category : 'private execution' }
-ReViolentRemoveClassDriver >> setBreakingChangesPreconditions [
-	
-	haveNoReferences := refactoring preconditionHaveNoReferences.
-
-	
 ]

@@ -28,10 +28,26 @@ ReRenameVariableDriver class >> shouldPreviewChangesByDefault [
 ]
 
 { #category : 'private' }
+ReRenameVariableDriver >> gatherUserInput [
+
+	| failedConditions newName |
+	refactoring preconditionDirectlyDefinesVariable check ifFalse: [ ^ false ].
+	[
+		shouldEscape := false.
+		newName := self requestNewNameBasedOn: previouslyProposedName.
+		shouldEscape ifTrue: [ ^ false ].
+		refactoring newName: newName.
+		failedConditions := refactoring failedApplicabilityPreconditions.
+		failedConditions isEmpty ] whileFalse: [ failedConditions do: [ :cond | self informError: cond ] ].
+
+	^ true
+]
+
+{ #category : 'private' }
 ReRenameVariableDriver >> informError: cond [
 
 	self informDialog
-		label: cond errorString;
+		message: cond errorString;
 		title: 'Invalid name';
 		openModal
 ]
@@ -43,21 +59,6 @@ ReRenameVariableDriver >> instantiateRefactoring [
 		model: model 
 		variable: oldName 
 		class: class
-]
-
-{ #category : 'private' }
-ReRenameVariableDriver >> prepareRefactoringInteractively [
-
-	| failedConditions newName |
-	[
-	newName := self requestNewNameBasedOn: previouslyProposedName.
-	shouldEscape ifTrue: [ ^ self ].
-	refactoring newName: newName.
-	failedConditions := refactoring failedApplicabilityPreconditions.
-	failedConditions isEmpty ] whileFalse: [
-		failedConditions do: [ :cond |
-			self informError: cond 
-			 ] ]
 ]
 
 { #category : 'factory method' }
@@ -82,21 +83,6 @@ ReRenameVariableDriver >> requestNewNameBasedOn: aName [
 	previouslyProposedName := newName.
 
 	^ newName
-]
-
-{ #category : 'execution' }
-ReRenameVariableDriver >> runRefactoring [
-
-	self configureRefactoring.
-	shouldEscape := false.
-	"We cannot rename something that doesn'e exist.
-	If we don't check this before `prepareRefactoringInteractively` 
-	it will loop indefinetely since this precondition will always fail."
-	refactoring preconditionDirectlyDefinesVariable check ifFalse: [ ^ self ].
-	self prepareRefactoringInteractively.
-	shouldEscape ifTrue: [ ^ self ].
-
-	self applyChanges
 ]
 
 { #category : 'initialization' }

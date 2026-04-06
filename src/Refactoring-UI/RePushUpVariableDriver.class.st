@@ -38,13 +38,6 @@ RePushUpVariableDriver >> refactoringClass [
 		  ifFalse: [ RePullUpInstanceVariableRefactoring ]
 ]
 
-{ #category : 'execution' }
-RePushUpVariableDriver >> runRefactoring [
-
-	self configureRefactoring.
-	self applyChanges
-]
-
 { #category : 'factory method' }
 RePushUpVariableDriver >> scopes: aCollection variable: varName shared: isSharedVar to: aClass [ 
 
