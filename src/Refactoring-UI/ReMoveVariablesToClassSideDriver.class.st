@@ -22,12 +22,6 @@ ReMoveVariablesToClassSideDriver class >> scopes: scopesList variables: aCollect
 ]
 
 { #category : 'execution' }
-ReMoveVariablesToClassSideDriver >> runRefactoring [
-
-	self applyChanges
-]
-
-{ #category : 'execution' }
 ReMoveVariablesToClassSideDriver >> scopes: scopesList variables: variables [
 
 	scopes := scopesList.

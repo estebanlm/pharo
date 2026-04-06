@@ -4,9 +4,6 @@ I am a command to move given instance variable to its class side
 Class {
 	#name : 'SycMoveInstanceVariableToClassSideCommand',
 	#superclass : 'SycRefactorVariableCommand',
-	#instVars : [
-		'refactoringScopes'
-	],
 	#category : 'SystemCommands-VariableCommands',
 	#package : 'SystemCommands-VariableCommands'
 }
@@ -34,5 +31,5 @@ SycMoveInstanceVariableToClassSideCommand >> prepareFullExecutionInContext: aToo
 
 	super prepareFullExecutionInContext: aToolContext.
 	toolContext := aToolContext.
-	refactoringScopes := toolContext refactoringScopes
+
 ]

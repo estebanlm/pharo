@@ -2,17 +2,13 @@ Extension { #name : 'SystemNavigation' }
 
 { #category : '*Tool-Base' }
 SystemNavigation >> allMethodsWithSourceString: aString matchCase: caseSensitive [
-	"Answer a SortedCollection of all the methods that contain, in source code, aString as a substring.  Search the class comments also"
 
-	| list addMethod addComment |
+	| list addMethod |
 	list := OrderedCollection new.
-	addMethod := [ :mrClass :mrSel | list add: (mrClass>>mrSel)].
-	addComment := [ :mrClass | list add: (RGCommentDefinition realClass: mrClass)].
-	self allBehaviorsDo: [:each |
-		each selectorsDo: [:sel |
-			((each >> sel) sourceCode includesSubstring: aString caseSensitive: caseSensitive)
-					ifTrue: [ addMethod value: each value: sel ]].
-			(each comment includesSubstring: aString caseSensitive: caseSensitive) ifTrue: [ addComment value: each]	].
+	addMethod := [ :mrClass :mrSel | list add: mrClass >> mrSel ].
+	self allBehaviorsDo: [ :each |
+			each selectorsDo: [ :sel |
+				((each >> sel) sourceCode includesSubstring: aString caseSensitive: caseSensitive) ifTrue: [ addMethod value: each value: sel ] ] ].
 	^ list
 ]
 
@@ -262,7 +258,7 @@ SystemNavigation >> browseMessageList: messageList name: labelString autoSelect:
 	^ (self tools toolNamed: #messageList) new
 		  methods: methods;
 		  title: labelString;
-		  autoSelect: autoSelectString;
+		  highlight: autoSelectString;
 		  refreshingBlock: aBlock;
 		  open
 ]

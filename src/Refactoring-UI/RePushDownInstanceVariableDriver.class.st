@@ -28,7 +28,7 @@ RePushDownInstanceVariableDriver >> breakingChoices [
 
 	| choices |
 	choices := OrderedCollection new.
-	choices add: (RePushDownMethodTransformationChoice new driver: self).
+	choices add: (RePushDownInstanceVariableTransformationChoice new driver: self).
 	(referencesInstanceVariableCollection anySatisfy: [ :precond | precond isFalse ]) ifTrue: [
 		choices add: (ReBrowseMethodsChoice new driver: self) ].
 
@@ -47,15 +47,6 @@ RePushDownInstanceVariableDriver >> browseMethods [
 	(application toolNamed: #messageList) browse: violators
 ]
 
-{ #category : 'execution' }
-RePushDownInstanceVariableDriver >> configureAndRunRefactoring [
-
-	self configureRefactoring.
-	self setBreakingChangesPreconditions.
-	refactoring refactorings do: [ :r |
-		r failedBreakingChangePreconditions ifEmpty: [ self applyChanges ] ifNotEmpty: [ self handleBreakingChanges ] ]
-]
-
 { #category : 'configuration' }
 RePushDownInstanceVariableDriver >> defaultSelectDialog [
 
@@ -72,6 +63,16 @@ RePushDownInstanceVariableDriver >> defaultSelectDialog [
 RePushDownInstanceVariableDriver >> gatherUserInput [
 
 	variables := self selectVariables.
+	variables ifNil: [ ^ false ].
+	self configureRefactoring.
+	^ true
+]
+
+{ #category : 'initialization' }
+RePushDownInstanceVariableDriver >> hasFailedBehaviorPreservingPreconditions [
+
+	referencesInstanceVariableCollection := refactoring refactorings collect: [ :r | r preconditionReferencesInstanceVariable ].
+	^ refactoring failedBreakingChangePreconditions isNotEmpty 
 ]
 
 { #category : 'configuration' }
@@ -94,12 +95,10 @@ RePushDownInstanceVariableDriver >> labelBasedOnBreakingChanges [
 ]
 
 { #category : 'execution' }
-RePushDownInstanceVariableDriver >> runRefactoring [
-	"the user can still select if needed. Nil = cancel refactoring"
+RePushDownInstanceVariableDriver >> pushDownInstanceVariable [
 
-	self gatherUserInput.
-	variables ifNil: [ ^ self ].
-	self configureAndRunRefactoring
+	refactoring privateTransform.
+	self openPreviewWithChanges: refactoring changes
 ]
 
 { #category : 'accessing' }
@@ -124,12 +123,6 @@ RePushDownInstanceVariableDriver >> selectVariables [
 	dialog isOk ifFalse: [ ^ nil ].
 
 	^ dialog presenter selectedItems
-]
-
-{ #category : 'initialization' }
-RePushDownInstanceVariableDriver >> setBreakingChangesPreconditions [
-
-	referencesInstanceVariableCollection := refactoring refactorings collect: [ :r | r preconditionReferencesInstanceVariable ]
 ]
 
 { #category : 'accessing' }

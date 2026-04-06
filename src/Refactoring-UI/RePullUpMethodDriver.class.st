@@ -100,21 +100,6 @@ RePullUpMethodDriver >> changes [
 
 ]
 
-{ #category : 'execution' }
-RePullUpMethodDriver >> configureAndRunRefactoring [
-
-	self configureRefactoring. 
-	"Pay attention that the applicability preconditions do  not include checking the superclass for a 
-	method with the same name because during an interaction we when to let the user the possibility to 
-	do actions to handle this specific case. This is why similarly method in direct superclass is checked 
-	but in the breaking change precondtions."
-	refactoring failedApplicabilityPreconditions 
-		ifNotEmpty: [ ^ self alertFailedPreconditions ].
-
-	self setBreakingChangesPreconditions.
-	refactoring failedBreakingChangePreconditions ifEmpty: [ self applyChanges ] ifNotEmpty: [ self handleBreakingChanges ]
-]
-
 { #category : 'copying' }
 RePullUpMethodDriver >> copyDownMethods [
 
@@ -168,7 +153,24 @@ RePullUpMethodDriver >> defaultSelectDialog [
 
 { #category : 'execution' }
 RePullUpMethodDriver >> gatherUserInput [
-	self selectMethodsAndClass
+
+	self selectMethodsAndClass.
+	methods ifNil: [ ^ false ].
+	refactoring selectors: (methods collect: [ :each | each selector ]).
+	refactoring superClass: superclass.
+	^ true
+]
+
+{ #category : 'initialization' }
+RePullUpMethodDriver >> hasFailedBehaviorPreservingPreconditions [
+
+	notOverrides := refactoring preconditionNoOverrides.
+	notInstVarRefs := refactoring preconditionNoReferencesToInstVars.
+	notSharedVarRefs := refactoring preconditionNoReferencesToSharedVars.
+	notSupersendsSent := refactoring preconditionNoSupersendsSent.
+	notSupersendsReceived := refactoring preconditionNoSupersendsReceived.
+	notSuperclassDefiner := refactoring preconditionNoSuperclassDefiner.
+	^ refactoring failedBreakingChangePreconditions isNotEmpty 
 ]
 
 { #category : 'configuration' }
@@ -176,9 +178,9 @@ RePullUpMethodDriver >> instantiateRefactoring [
 
 	^ RePullUpMethodRefactoring
        model: model
-       pullUp: (methods collect: [ :each | each selector ])
+       pullUp: #()
        from: class name
-       to: superclass name
+       to: ''
 ]
 
 { #category : 'ui - dialogs' }
@@ -237,15 +239,6 @@ RePullUpMethodDriver >> pullUpReferencedSharedVars [
 ]
 
 { #category : 'execution' }
-RePullUpMethodDriver >> runRefactoring [
-
-	"the user can still select if needed. Nil = cancel refactoring"
-	self gatherUserInput.
-	methods ifNil: [ ^ self ].
-	self configureAndRunRefactoring
-]
-
-{ #category : 'execution' }
 RePullUpMethodDriver >> selectMethodsAndClass [
 	| dialog classes |
 	
@@ -268,15 +261,4 @@ RePullUpMethodDriver >> selectMethodsAndClass [
 	
 	superclass := nil.
 	methods := nil
-]
-
-{ #category : 'initialization' }
-RePullUpMethodDriver >> setBreakingChangesPreconditions [
-
-	notOverrides := refactoring preconditionNoOverrides.
-	notInstVarRefs := refactoring preconditionNoReferencesToInstVars.
-	notSharedVarRefs := refactoring preconditionNoReferencesToSharedVars.
-	notSupersendsSent := refactoring preconditionNoSupersendsSent.
-	notSupersendsReceived := refactoring preconditionNoSupersendsReceived.
-	notSuperclassDefiner := refactoring preconditionNoSuperclassDefiner
 ]
