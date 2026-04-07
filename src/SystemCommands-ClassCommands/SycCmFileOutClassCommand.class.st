@@ -37,19 +37,17 @@ SycCmFileOutClassCommand >> executeRefactoring [
 				fileRef := fileReference.
 				fileouter := Fileouter new.
 				codeObjects do: [ :each | fileouter addFullClass: each ].
-				fileouter fileoutOnFileReference: fileReference.
-				];
+				fileouter fileoutOnFileReference: fileReference ];
 		openModal.
-		
+
 	dialog := SpConfirmDialog new.
 	ok := dialog
 		      title: 'Do you want to browse natively the fileout?';
-		      label: 'Are you sure?';
+		      message: 'Are you sure?';
 		      acceptLabel: 'Sure!';
 		      cancelLabel: 'No, forget it';
 		      openModal.
 	ok ifTrue: [ fileRef openInOSFileBrowser ]
-		
 ]
 
 { #category : 'accessing' }
