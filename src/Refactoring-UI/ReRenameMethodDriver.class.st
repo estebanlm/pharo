@@ -114,6 +114,12 @@ ReRenameMethodDriver >> gatherUserInput [
 	^ true
 ]
 
+{ #category : 'private exe' }
+ReRenameMethodDriver >> hasFailedBehaviorPreservingPreconditions [
+
+	^ refactoring failedBreakingChangePreconditions isNotEmpty
+]
+
 { #category : 'initialization' }
 ReRenameMethodDriver >> initialize [ 
 	
