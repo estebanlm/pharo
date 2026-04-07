@@ -5,7 +5,6 @@ Class {
 	#name : 'SycPushUpVariableCommand',
 	#superclass : 'SycRefactorVariableCommand',
 	#instVars : [
-		'variable'
 	],
 	#category : 'SystemCommands-VariableCommands',
 	#package : 'SystemCommands-VariableCommands'
