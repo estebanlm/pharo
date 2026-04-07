@@ -35,7 +35,7 @@ CoGlobalSelectorFetcher >> entriesDo: aBlock [
 												 '(' , (e copyFrom: 1 to: parent selector size) , ')' , (e copyFrom: parent selector size + 1 to: e size);
 											 contents: (e copyFrom: parent selector size + 1 to: e size);
 											 node: astNode;
-											 fetcher: self;
+											 fetcherName: self class name;
 											 selector: e) ] ] ] ]. "Otherwise, just go wide"
 
 	self systemNavigation allSelectorsStartingWith: filter completionString do: [ :e |
