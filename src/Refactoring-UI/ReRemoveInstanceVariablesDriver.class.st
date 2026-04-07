@@ -61,6 +61,12 @@ ReRemoveInstanceVariablesDriver >> defaultSelectDialog [
 		yourself
 ]
 
+{ #category : 'private exe' }
+ReRemoveInstanceVariablesDriver >> hasFailedBehaviorPreservingPreconditions [
+
+	^ refactoring failedBreakingChangePreconditions isNotEmpty
+]
+
 { #category : 'configuration' }
 ReRemoveInstanceVariablesDriver >> instantiateRefactoring [
 
