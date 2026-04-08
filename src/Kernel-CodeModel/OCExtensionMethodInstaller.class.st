@@ -9,7 +9,7 @@ Class {
 	#tag : 'Methods'
 }
 
-{ #category : 'accessing' }
+{ #category : 'initialization' }
 OCExtensionMethodInstaller >> initialize [
 
 	super initialize.

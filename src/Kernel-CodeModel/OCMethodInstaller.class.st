@@ -42,7 +42,7 @@ OCMethodInstaller >> forExtendedBehavior [
 		yourself
 ]
 
-{ #category : 'accessing' }
+{ #category : 'initialization' }
 OCMethodInstaller >> initialize [
 
 	super initialize.
