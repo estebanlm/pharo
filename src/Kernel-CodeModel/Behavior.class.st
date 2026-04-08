@@ -68,18 +68,6 @@ Behavior >> addObsoleteSubclass: aClass [
 ]
 
 { #category : 'adding-removing methods' }
-Behavior >> addSelector: selector withMethod: compiledMethod [
-
-	<reflection: 'Class structural modification - Selector/Method modification'>
-	self deprecated: 'Use #methodInstaller instead'.
-
-	"This method installer does not announce"
-	self methodInstaller
-		logged: false;
-		install: compiledMethod into: self compiler: nil
-]
-
-{ #category : 'adding-removing methods' }
 Behavior >> addSelectorSilently: selector withMethod: compiledMethod [
 	"Add the message selector with the corresponding compiled method to the
 	receiver's method dictionary.

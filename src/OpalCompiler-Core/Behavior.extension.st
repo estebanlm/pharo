@@ -32,7 +32,7 @@ Behavior >> compile: sourceCode classified: protcol notifying: requestor [
 	^ self
 		  compile: sourceCode
 		  classified: protcol
-		  withStamp: nil
+		  withStamp: DateAndTime now
 		  notifying: requestor
 ]
 
