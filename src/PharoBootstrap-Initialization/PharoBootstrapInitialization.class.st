@@ -141,10 +141,6 @@ PharoBootstrapInitialization class >> initializeCommandLineHandlerAndErrorHandli
 	Behavior initialize.
 	Class initialize.
 	Package initialize.
-	"Next three lines are for the deprecated aliases. This should be removed in Pharo 13"
-	PackageTag initialize.
-	PackageOrganizer initialize.
-	PackageConflictError initialize.
 
 	'Initializing sources' traceCr.
 	SourcesManager initialize.
