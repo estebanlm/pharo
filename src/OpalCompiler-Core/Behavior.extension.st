@@ -12,7 +12,12 @@ Behavior >> compile: code [
 	The argument is either a string or an object that converts to a string or a
 	PositionableStream on an object that converts to a string."
 
-	^ self compile: code classified: nil notifying: nil
+	^ self
+		  compile: code
+		  classified: nil
+		  withStamp: DateAndTime now
+		  notifying: nil
+		  logSource: self shouldLogSource
 ]
 
 { #category : '*OpalCompiler-Core' }
@@ -22,29 +27,11 @@ Behavior >> compile: sourceCode classified: protocol [
 		
 	The argument sourceCode is either a string or an object that converts to a string or a PositionableStream on an object that converts to a string."
 
-	^ self compile: sourceCode classified: protocol notifying: nil
-]
-
-{ #category : '*OpalCompiler-Core' }
-Behavior >> compile: sourceCode classified: protcol notifying: requestor [
-	 "Return the selector of the compiled method"
-
-	^ self
-		  compile: sourceCode
-		  classified: protcol
-		  withStamp: DateAndTime now
-		  notifying: requestor
-]
-
-{ #category : '*OpalCompiler-Core' }
-Behavior >> compile: sourceCode classified: protocol withStamp: changeStamp notifying: requestor [
-	"Return the selector of the compiled method"
-
 	^ self
 		  compile: sourceCode
 		  classified: protocol
-		  withStamp: changeStamp
-		  notifying: requestor
+		  withStamp: DateAndTime now
+		  notifying: nil
 		  logSource: self shouldLogSource
 ]
 
@@ -84,18 +71,6 @@ Behavior >> compile: selector from: oldClass [
 ]
 
 { #category : '*OpalCompiler-Core' }
-Behavior >> compile: code notifying: requestor [
-	"Compile the argument, code, as source code in the context of the
-	receiver and insEtall the result in the receiver's method dictionary. The
-	second argument, requestor, is to be notified if an error occurs. The
-	argument code is either a string or an object that converts to a string or
-	a PositionableStream. This method also saves the source code."
-
-	self deprecated: 'Use #compile:classified:notifying: instead'.
-	^ self compile: code classified: nil notifying: requestor
-]
-
-{ #category : '*OpalCompiler-Core' }
 Behavior >> compile: sourceCode notifying: requestor methodInstaller: methodInstaller [
 	"Return the selector of the compiled method"
 
@@ -112,6 +87,20 @@ Behavior >> compile: sourceCode notifying: requestor methodInstaller: methodInst
 		            permitFaulty: false.
 
 	method := compiler compile.
+
+	compiler compilationResult ifNotNil: [
+		requestor ifNotNil: [ 
+			compiler ast allNotices sorted do: [ :n |
+			| check |
+			check := compiler checkNotice: n.
+			check ifNil: [ ^ self compile: requestor text asString notifying: requestor methodInstaller: methodInstaller ].
+			check ifFalse: [
+				compiler ast: nil.
+				^ compiler failBlock ifNotNil: [ :block | block cull: n ] ifNil: [ nil ].
+				] ] ].
+		].
+
+	1haltOnce.
 	methodInstaller install: method into: self compiler: compiler.
 	^ method selector
 ]
@@ -147,7 +136,13 @@ Behavior >> compileSilently: sourceCode classified: protocolName [
 Behavior >> compileSilently: sourceCode classified: protocolName notifying: requestor [
 	"Compile the code and classify the resulting method in the given protocol, leaving no trail in the system log, nor in any change set, nor in the 'recent submissions' list."
 
-	^ self codeChangeAnnouncer suspendAllWhile: [ self compile: sourceCode classified: protocolName notifying: requestor ]
+	^ self codeChangeAnnouncer suspendAllWhile: [
+			  self
+				  compile: sourceCode
+				  classified: protocolName
+				  withStamp: DateAndTime now
+				  notifying: requestor
+				  logSource: self shouldLogSource ]
 ]
 
 { #category : '*OpalCompiler-Core' }

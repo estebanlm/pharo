@@ -40,7 +40,8 @@ Class {
 		'changeStamp',
 		'protocol',
 		'requestor',
-		'priorMethod'
+		'priorMethod',
+		'compilationResult'
 	],
 	#classInstVars : [
 		'overlayEnvironment'
@@ -351,6 +352,18 @@ OpalCompiler >> compilationContextClass: aClass [
 	compilationContextClass := aClass
 ]
 
+{ #category : 'accessing' }
+OpalCompiler >> compilationResult [
+
+	^ compilationResult
+]
+
+{ #category : 'accessing' }
+OpalCompiler >> compilationResult: anObject [
+
+	compilationResult := anObject
+]
+
 { #category : 'public access' }
 OpalCompiler >> compile [
 
@@ -361,6 +374,11 @@ OpalCompiler >> compile [
 	ast ifNil: [
 		result := self parse.
 		ast ifNil: [ "some failBlock" ^ result ] ].
+
+	(ast allNotices anySatisfy: [ :e | e isError ]) ifTrue: [
+		compilationResult := OCErrorCompilationResult new.
+		^ nil
+	].
 
 	self callPlugins.
 	(compilationContext isSemanticAnalysisNeeded or: [ ast scope isNil ]) 
@@ -635,20 +653,12 @@ OpalCompiler >> parse [
 
 	parser := self parserClass new.
 	parser initializeParserWith: source.
-	ast := self isScripting ifTrue: [ parser parseDoIt ] ifFalse: [ parser parseMethod ].
+	ast := self isScripting
+		ifTrue: [ parser parseDoIt ]
+		ifFalse: [ parser parseMethod ].
 
 	ast methodNode compilationContext: self compilationContext.
 	self doSemanticAnalysis.
-
-	self permitFaulty ifFalse: [
-		ast allNotices sorted do: [ :n |
-			| check |
-			check := self checkNotice: n.
-			check ifNil: [ ^ ast ].
-			check ifFalse: [
-				ast := nil.
-				^ self failBlock ifNotNil: [ :block | block cull: n ] ifNil: [ nil ].
-				] ] ].
 
 	^ ast
 ]
