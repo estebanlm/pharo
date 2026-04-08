@@ -254,7 +254,6 @@ HEInstaller >> rebuildMethod: hermesMethod into: aClass [
 
 	aClass methodInstaller
 		logged: false;
-		changeStamp: DateAndTime now;
 		protocol: hermesMethod protocol;
 			install: newMethod
 			into: aClass
