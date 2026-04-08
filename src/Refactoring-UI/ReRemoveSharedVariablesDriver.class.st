@@ -60,12 +60,6 @@ ReRemoveSharedVariablesDriver >> defaultSelectDialog [
 		yourself
 ]
 
-{ #category : 'private exe' }
-ReRemoveSharedVariablesDriver >> hasFailedBehaviorPreservingPreconditions [
-
-	^ refactoring failedBreakingChangePreconditions isNotEmpty
-]
-
 { #category : 'configuration' }
 ReRemoveSharedVariablesDriver >> instantiateRefactoring [
 
