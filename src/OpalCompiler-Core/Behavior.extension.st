@@ -91,16 +91,17 @@ Behavior >> compile: sourceCode notifying: requestor methodInstaller: methodInst
 	compiler compilationResult ifNotNil: [
 		requestor ifNotNil: [ 
 			compiler ast allNotices sorted do: [ :n |
-			| check |
-			check := compiler checkNotice: n.
-			check ifNil: [ ^ self compile: requestor text asString notifying: requestor methodInstaller: methodInstaller ].
-			check ifFalse: [
-				compiler ast: nil.
-				^ compiler failBlock ifNotNil: [ :block | block cull: n ] ifNil: [ nil ].
-				] ] ].
+				| check isInteractive |
+				isInteractive := requestor notNil and: [
+					(requestor respondsTo: #interactive) not or: [ requestor interactive ] ].
+				check := compiler checkNotice: n requestor: requestor isInteractive: isInteractive.
+				check ifNil: [ ^ self compile: requestor text asString notifying: requestor methodInstaller: methodInstaller ].
+				check ifFalse: [
+					compiler ast: nil.
+					^ compiler failBlock ifNotNil: [ :block | block cull: n ] ifNil: [ nil ].
+					] ] ].
 		].
 
-	1haltOnce.
 	methodInstaller install: method into: self compiler: compiler.
 	^ method selector
 ]

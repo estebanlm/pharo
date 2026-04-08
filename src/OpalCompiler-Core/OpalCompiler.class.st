@@ -264,8 +264,8 @@ OpalCompiler >> changeStamp: aString [
 	changeStamp := aString
 ]
 
-{ #category : 'private' }
-OpalCompiler >> checkNotice: aNotice [
+{ #category : 'as yet unclassified' }
+OpalCompiler >> checkNotice: aNotice requestor: aRequestor isInteractive: isInteractive [
 	"This method handles all the logic of error handling.
 	
 	Error handing in the compiler is only performed at one place, after the parsing/semantic analysis/other parse plugins.
@@ -287,44 +287,29 @@ OpalCompiler >> checkNotice: aNotice [
 
 	aNotice isWarning ifTrue: [ ^ true ].
 	(aNotice isUndeclaredNotice and: [ self permitUndeclared ]) ifTrue: [
-		OCUndeclaredVariableWarning new
-			notice: aNotice;
-			signal.
-		^ true ].
-
-	self requestor ifNotNil: [
-		"A requestor is available. We are in quirks mode and are expected to do UI things."
-		"Reparation menu in quirks mode:
+			OCUndeclaredVariableWarning new
+				notice: aNotice;
+				signal.
+			^ true ].
+		
+	"A requestor is available. We are in quirks mode and are expected to do UI things." "Reparation menu in quirks mode:
 		* require a requestor (because quirks mode, and also some reparations expect a requestor)
 		* require interactive mode (because GUI)
 		* require method definition becase some reparation assume it's a method body"
-		self isInteractive ifTrue: [
+	isInteractive ifTrue: [
 			aNotice reparator ifNotNil: [ :reparator |
-				| res |
-				res := reparator
-					requestor: requestor;
-					openMenu.
-				res ifNil: [ ^ true "reparation unneded, let AST as is" ].
-				res ifFalse: [ ^ false "operation cancelled, fail" ].
-				self parse: requestor text. "some reparation was done, reparse"
-				^ nil ] ].
+					| res |
+					res := reparator
+						       requestor: aRequestor;
+						       openMenu.
+					res ifNil: [ ^ true "reparation unneded, let AST as is" ].
+					res ifFalse: [ ^ false "operation cancelled, fail" ].
+					self parse: aRequestor text. "some reparation was done, reparse"
+					^ nil ] ]. "Quirks mode: otherwise, push the error message to the requestor"
 
-		"Quirks mode: otherwise, push the error message to the requestor"
-		requestor
-			notify: aNotice messageText , ' ->'
-			at: aNotice position
-			in: aNotice node source.
-		
-		"Quirks mode: Then leave"
-		^ false ].
-
-	"If a failBlock is provided in non-requestor mode,
-	we honor it and do not signal exceptions"
-	self failBlock ifNotNil: [ ^ false ].
-
-	aNotice signalError.
-
-	^ true "Error was resumed, so we consider it's OK to continue"
+	aRequestor notify: aNotice messageText , ' ->' at: aNotice position in: aNotice node source.
+	"Quirks mode: Then leave"
+	^ false
 ]
 
 { #category : 'accessing' }
@@ -582,17 +567,6 @@ OpalCompiler >> install: aSource [
 
 	self source: aSource.
 	^ self install
-]
-
-{ #category : 'testing' }
-OpalCompiler >> isInteractive [
-
-	self requestor ifNil: [ ^ false ].
-	"we asume requestors are interactive, but they can override.
-	this should be simplified "
-	^ (self requestor respondsTo: #interactive)
-		  ifTrue: [ self requestor interactive ]
-		  ifFalse: [ true ]
 ]
 
 { #category : 'accessing' }
