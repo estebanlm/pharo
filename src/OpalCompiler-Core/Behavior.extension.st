@@ -12,7 +12,7 @@ Behavior >> compile: code [
 	The argument is either a string or an object that converts to a string or a
 	PositionableStream on an object that converts to a string."
 
-	^self compile: code notifying: nil
+	^ self compile: code classified: nil notifying: nil
 ]
 
 { #category : '*OpalCompiler-Core' }
@@ -67,6 +67,7 @@ Behavior >> compile: selector from: oldClass [
 	compiler := oldClass compiler
 		             source: method sourceCode;
 		             class: self;
+						priorMethod: method;
 		             permitFaulty: true;
 		             logged: true.
 	
@@ -90,6 +91,7 @@ Behavior >> compile: code notifying: requestor [
 	argument code is either a string or an object that converts to a string or
 	a PositionableStream. This method also saves the source code."
 
+	self deprecated: 'Use #compile:classified:notifying: instead'.
 	^ self compile: code classified: nil notifying: requestor
 ]
 
