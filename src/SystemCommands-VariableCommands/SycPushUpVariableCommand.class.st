@@ -4,8 +4,6 @@ I am a command to push up given variables
 Class {
 	#name : 'SycPushUpVariableCommand',
 	#superclass : 'SycRefactorVariableCommand',
-	#instVars : [
-	],
 	#category : 'SystemCommands-VariableCommands',
 	#package : 'SystemCommands-VariableCommands'
 }

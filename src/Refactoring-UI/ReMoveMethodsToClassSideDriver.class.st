@@ -70,12 +70,6 @@ ReMoveMethodsToClassSideDriver >> defaultSelectDialog [
 		  yourself
 ]
 
-{ #category : 'private exe' }
-ReMoveMethodsToClassSideDriver >> hasFailedBehaviorPreservingPreconditions [
-
-	^ refactoring failedBreakingChangePreconditions isNotEmpty
-]
-
 { #category : 'configuration' }
 ReMoveMethodsToClassSideDriver >> instantiateRefactoring [
 
