@@ -39,8 +39,10 @@ ReRemoveInstanceVariablesDriver >> breakingChoices [
 { #category : 'execution' }
 ReRemoveInstanceVariablesDriver >> browseInstanceVariableReferences [
 
-	(Smalltalk tools toolNamed: #messageList) browse: refactoring violators
-		
+	| violators |
+	violators := refactoring refactorings flatCollect: [ :each | each preconditionHasReferences violators ].
+
+	(Smalltalk tools toolNamed: #messageList) browse: violators
 ]
 
 { #category : 'configuration' }
