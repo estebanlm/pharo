@@ -35,6 +35,17 @@ ReInstanceVariableHasNoReferences >> initialize [
 	violators := OrderedCollection new
 ]
 
+{ #category : 'displaying' }
+ReInstanceVariableHasNoReferences >> violationMessageOn: aStream [
+
+	violators ifEmpty: [ ^ self ].
+	^ aStream
+		  nextPutAll: 'The variable variable ';
+		  nextPutAll: instanceVariable;
+		  nextPutAll: 'is referenced in:';
+		  nextPutAll: (violators collect: [ :m | m selector ]) asArray asString
+]
+
 { #category : 'accessing' }
 ReInstanceVariableHasNoReferences >> violators [
 

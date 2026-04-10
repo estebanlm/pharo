@@ -56,11 +56,12 @@ ReRemoveInstanceVariablesDriver >> configureRefactoring [
 ReRemoveInstanceVariablesDriver >> defaultSelectDialog [
 
 	^ super defaultSelectDialog
-		title: 'There are references to variables!';
-		items: self breakingChoices;
-		display: [ :each | each description ];
-		displayIcon: [ :each | self iconNamed: each systemIconName ];
-		yourself
+		  title: 'There are references to variables!';
+		  message: self labelBasedOnBreakingChanges;
+		  items: self breakingChoices;
+		  display: [ :each | each description ];
+		  displayIcon: [ :each | self iconNamed: each systemIconName ];
+		  yourself
 ]
 
 { #category : 'configuration' }
@@ -71,6 +72,17 @@ ReRemoveInstanceVariablesDriver >> instantiateRefactoring [
 		refactorings: (variables collect: [:each | 
 				ReRemoveInstanceVariableRefactoring model: model remove: each from: class]);
 		yourself
+]
+
+{ #category : 'ui - dialogs' }
+ReRemoveInstanceVariablesDriver >> labelBasedOnBreakingChanges [
+
+	^ String streamContents: [ :stream |
+			  refactoring failedBreakingChangePreconditions do: [ :cond |
+					  cond check ifFalse: [
+							  cond violationMessageOn: stream.
+							  stream cr ] ].
+			  stream nextPutAll: 'Select the strategies to apply' ]
 ]
 
 { #category : 'initialization' }
