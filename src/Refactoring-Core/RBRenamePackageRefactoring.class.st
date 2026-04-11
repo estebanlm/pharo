@@ -45,13 +45,8 @@ RBRenamePackageRefactoring >> applicabilityPreconditions [
         {
             (RePackageNamesAreDifferentCondition new
                 packageName: packageName;
-                newName: newName;
-                yourself).
-
-            (ReTargetPackageDoesNotExistCondition new
-                newName: newName;
-                packageOrganizer: self packageOrganizer;
-                yourself) "Cyril: I am not sure we should use #packageOrganizer. Maybe we should ask the environment the package manager. But currently the image does not know yet how to work with multiple package managers/modules."
+                newName: newName).
+				self preconditionTargetPackageNotExist
         }
 ]
 
@@ -62,10 +57,23 @@ RBRenamePackageRefactoring >> manifestClassNameFor: aPackageName [
 	^('Manifest', (aPackageName select: [:each | each isAlphaNumeric ])) asSymbol
 ]
 
+{ #category : 'class management' }
+ReRenamePackageRefactoring >> newName: aNewName [
+    newName := aNewName
+]
+
 { #category : 'initialization' }
 RBRenamePackageRefactoring >> packageName: aName newName: aNewName [
 	packageName := aName asSymbol.
 	newName := aNewName asSymbol
+]
+
+{ #category : 'preconditions' }
+ReRenamePackageRefactoring >> preconditionTargetPackageNotExist [  
+    ^ (RePackageExistsCondition 
+        new
+        packageName: newName;
+        packageOrganizer: self packageOrganizer) not
 ]
 
 { #category : 'transforming' }
@@ -78,6 +86,11 @@ RBRenamePackageRefactoring >> privateTransform [
 
 	self renamePackage.
 	self renameManifestClass
+]
+
+{ #category : 'class management' }
+ReRenamePackageRefactoring >> rename: aName [
+    packageName := aName
 ]
 
 { #category : 'transforming' }

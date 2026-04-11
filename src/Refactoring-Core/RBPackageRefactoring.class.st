@@ -39,9 +39,9 @@ RBPackageRefactoring class >> packageName: aName [
 RBPackageRefactoring >> applicabilityPreconditions [
     ^ super applicabilityPreconditions,
         {
-            (ReSourcePackageExistsCondition new
+            (RePackageExistsCondition new
                 packageName: packageName;
-                packageOrganizer: self packageOrganizer)"Cyril: I am not sure we should use #packageOrganizer. Maybe we should ask the environment the package manager. But currently the image does not know yet how to work with multiple package managers/modules."
+                packageOrganizer: self packageOrganizer)
         }
 ]
 

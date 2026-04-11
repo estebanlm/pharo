@@ -29,10 +29,10 @@ RePackageConditionsTest >> testNamesAreSame [
 ]
 
 { #category : 'tests' }
-RePackageConditionsTest >> testSourcePackageDoesNotExist [
+RePackageConditionsTest >> testPackageDoesNotExist [
     | condition organizer |
     organizer := self packageOrganizer.
-    condition := ReSourcePackageExistsCondition new
+    condition := RePackageExistsCondition new
         packageName: #'PackageNotExist';
         packageOrganizer: organizer.
     self deny: condition check.
@@ -40,37 +40,13 @@ RePackageConditionsTest >> testSourcePackageDoesNotExist [
 ]
 
 { #category : 'tests' }
-RePackageConditionsTest >> testSourcePackageExists [
+RePackageConditionsTest >> testPackageExists [
     | condition organizer |
     organizer := self packageOrganizer.
-    condition := ReSourcePackageExistsCondition new
+    condition := RePackageExistsCondition new
         packageName: #'Refactoring-Core';
         packageOrganizer: organizer;
         yourself.
     self assert: condition check.
     self assert: condition violators isEmpty.
-]
-
-{ #category : 'tests' }
-RePackageConditionsTest >> testTargetPackageDoesNotExist [
-    | condition organizer |
-    organizer := self packageOrganizer.
-    condition := ReTargetPackageDoesNotExistCondition new
-        newName: #'PackageNotExist';
-        packageOrganizer: organizer;
-        yourself.
-    self assert: condition check.
-    self assert: condition violators isEmpty.
-]
-
-{ #category : 'tests' }
-RePackageConditionsTest >> testTargetPackageExists [
-    | condition organizer |
-    organizer := self packageOrganizer.
-    condition := ReTargetPackageDoesNotExistCondition new
-        newName: #'Refactoring-Core';
-        packageOrganizer: organizer;
-        yourself.
-    self deny: condition check.
-    self assert: condition violators isNotEmpty.
 ]
