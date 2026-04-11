@@ -10,11 +10,6 @@ Class {
 }
 
 { #category : 'private' }
-CoSnippetEntry >> browse [
-	self
-]
-
-{ #category : 'private' }
 CoSnippetEntry >> browseCompletionItem [
 	self
 ]

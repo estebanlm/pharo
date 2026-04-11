@@ -72,12 +72,6 @@ CoEntry >> beginsWith: aString [
 ]
 
 { #category : 'private' }
-CoEntry >> browse [
-
-	self browseCompletionItem
-]
-
-{ #category : 'private' }
 CoEntry >> browseCompletionItem [
 	self subclassResponsibility
 ]
