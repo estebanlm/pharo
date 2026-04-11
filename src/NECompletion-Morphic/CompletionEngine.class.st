@@ -347,7 +347,7 @@ CompletionEngine >> replaceTokenInEditorWith: aString [
 	aString content is free and will inserted as a replacement as is, except for a possible ending space that will not be inserted if there is already a space in the text.
 
 	The caret will be moved at the end of the inserted string, or between the first double spaces.
-	This rule allows to put the cursor inside an inserted keyword selector where each keyword is separated by two spaces.
+	This rule allows one to put the cursor inside an inserted keyword selector where each keyword is separated by two spaces.
 	e.g. after replacing with `'between:  and:'`, the caret is set after the first keyword.
 
 	The completion context uses this API to insert text into the text editor"
