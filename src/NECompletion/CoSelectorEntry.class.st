@@ -2,8 +2,8 @@
 I represent a selector of a method
 "
 Class {
-	#name : 'NECSelectorEntry',
-	#superclass : 'NECSymbolEntry',
+	#name : 'CoSelectorEntry',
+	#superclass : 'CoSymbolEntry',
 	#instVars : [
 		'selector'
 	],
@@ -13,7 +13,7 @@ Class {
 }
 
 { #category : 'ui related' }
-NECSelectorEntry >> browse [
+CoSelectorEntry >> browseCompletionItem [
 
 	| class |
 	class := node receiver propertyAt: #type ifAbsent: nil.
@@ -32,7 +32,7 @@ NECSelectorEntry >> browse [
 ]
 
 { #category : 'private' }
-NECSelectorEntry >> findMethodAndDo: foundBlock ifAbsent: notfoundBlock [
+CoSelectorEntry >> findMethodAndDo: foundBlock ifAbsent: notfoundBlock [
 
 	| theClass result implementors |
 	theClass := node isMessage
@@ -51,12 +51,12 @@ NECSelectorEntry >> findMethodAndDo: foundBlock ifAbsent: notfoundBlock [
 ]
 
 { #category : 'private' }
-NECSelectorEntry >> implementorsDescription: aSymbol [
+CoSelectorEntry >> implementorsDescription: aSymbol [
 	| implementors output |
 	output := WriteStream on: String new.
 	implementors := self systemNavigation allImplementorsOf: aSymbol.
 	implementors isEmpty 
-		ifTrue: [ ^ NECEntryDescription
+		ifTrue: [ ^ CoEntryDescription
 			label: self emptyLabel 
 			title: '(no implementors)'
 			description: 'This is just a symbol.' ].
@@ -66,21 +66,21 @@ NECSelectorEntry >> implementorsDescription: aSymbol [
 			nextPutAll: each methodClass printString;
 			cr ].
 	
-	^ NECEntryDescription
+	^ CoEntryDescription
 		label: self label
 		title: '(Implementors)'
 		description: output contents
 ]
 
 { #category : 'accessing' }
-NECSelectorEntry >> label [
+CoSelectorEntry >> label [
 
 	node isMessage ifFalse: [ ^ '' ].
 	^ super label.
 ]
 
 { #category : 'accessing' }
-NECSelectorEntry >> rawLabel [
+CoSelectorEntry >> rawLabel [
 
 	^ self node receiver
 		propertyAt: #type
@@ -90,13 +90,13 @@ NECSelectorEntry >> rawLabel [
 ]
 
 { #category : 'accessing' }
-NECSelectorEntry >> selector [
+CoSelectorEntry >> selector [
 
 	^ selector ifNil: [ contents ]
 ]
 
 { #category : 'accessing' }
-NECSelectorEntry >> selector: anObject [
+CoSelectorEntry >> selector: anObject [
 
 	selector := anObject
 ]

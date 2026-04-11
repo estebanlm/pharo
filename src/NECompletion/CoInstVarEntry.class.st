@@ -2,19 +2,19 @@
 I represent an instance variable.
 "
 Class {
-	#name : 'NECInstVarEntry',
-	#superclass : 'NECVariableEntry',
+	#name : 'CoInstVarEntry',
+	#superclass : 'CoVariableEntry',
 	#category : 'NECompletion-Model',
 	#package : 'NECompletion',
 	#tag : 'Model'
 }
 
 { #category : 'accessing' }
-NECInstVarEntry >> hightlightSymbol [
+CoInstVarEntry >> hightlightSymbol [
 	^ #instVar
 ]
 
 { #category : 'accessing' }
-NECInstVarEntry >> rawLabel [
+CoInstVarEntry >> rawLabel [
 	^ 'instance variable'
 ]

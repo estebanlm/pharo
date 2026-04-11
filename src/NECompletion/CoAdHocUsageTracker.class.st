@@ -2,7 +2,7 @@
 Tracks how often completion entries are used
 "
 Class {
-	#name : 'NECUsageTracker',
+	#name : 'CoAdHocUsageTracker',
 	#superclass : 'Object',
 	#classVars : [
 		'UsageCounts'
@@ -13,7 +13,7 @@ Class {
 }
 
 { #category : 'tracking' }
-NECUsageTracker class >> incrementUsageFor: aString [
+CoAdHocUsageTracker class >> incrementUsageFor: aString [
 	UsageCounts ifNil: [ UsageCounts := Dictionary new ].
 	UsageCounts at: aString ifAbsentPut: [ 0 ].
 	UsageCounts at: aString put: (UsageCounts at: aString) + 1.
@@ -24,13 +24,13 @@ NECUsageTracker class >> incrementUsageFor: aString [
 ]
 
 { #category : 'class initialization' }
-NECUsageTracker class >> reset [
+CoAdHocUsageTracker class >> reset [
      <script>
      UsageCounts := nil
 ]
 
 { #category : 'tracking' }
-NECUsageTracker class >> usageCountFor: aString [
+CoAdHocUsageTracker class >> usageCountFor: aString [
 	UsageCounts ifNil: [ ^ 0 ].
 	^ UsageCounts at: aString ifAbsent: [ 0 ].
 

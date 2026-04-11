@@ -61,7 +61,7 @@ CoStaticBenchmarks class >> messageBenchmarksOnNECompletion [
 	<script>
 	
 	(CoStaticBenchmarksMessage new
-    	scope: (CoBenchmarkPackage on: CompletionSorter package);
+    	scope: (CoBenchmarkPackage on: CoCompletionSorter package);
     	builder: CoASTHeuristicsResultSetBuilder new;
     	run) inspect
 

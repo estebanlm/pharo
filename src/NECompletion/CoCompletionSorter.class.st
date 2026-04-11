@@ -6,7 +6,7 @@ Strategy pattern that describes the sorting functionality.
 Sorter allSubclasses collect: #kind an OrderedCollection('' 'alphabetical' '' '')
 "
 Class {
-	#name : 'CompletionSorter',
+	#name : 'CoCompletionSorter',
 	#superclass : 'Object',
 	#instVars : [
 		'context'
@@ -17,22 +17,22 @@ Class {
 }
 
 { #category : 'description' }
-CompletionSorter class >> kind [
+CoCompletionSorter class >> kind [
 	^ ''
 ]
 
 { #category : 'accessing' }
-CompletionSorter >> context [
+CoCompletionSorter >> context [
 	^ context
 ]
 
 { #category : 'accessing' }
-CompletionSorter >> context: anObject [
+CoCompletionSorter >> context: anObject [
 	context := anObject
 ]
 
 { #category : 'sorting' }
-CompletionSorter >> sortCompletionList: aList [
+CoCompletionSorter >> sortCompletionList: aList [
 
 	self shouldBeImplemented
 ]

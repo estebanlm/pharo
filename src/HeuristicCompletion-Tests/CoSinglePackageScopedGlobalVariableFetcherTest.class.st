@@ -42,7 +42,7 @@ CoSinglePackageScopedGlobalVariableFetcherTest >> testFirstPackageLevel [
 	fetcher filter: (CoBeginsWithFilter caseSensitive: false filterString: 'AI').
 	
 	expectedElements := {
-		NECGlobalEntry contents: 'AInP1' node: nil }.
+		CoGlobalEntry contents: 'AInP1' node: nil }.
 	
 	fetchedElements := self fetcher next: 1.
 	expected := { self firstExpectedElement }.
@@ -62,7 +62,7 @@ CoSinglePackageScopedGlobalVariableFetcherTest >> testResetShouldRestartGenerato
 	fetcher filter: (CoBeginsWithFilter caseSensitive: false filterString: 'AI').
 	
 	expectedElements := {
-		NECGlobalEntry contents: 'AInP1' node: nil }.
+		CoGlobalEntry contents: 'AInP1' node: nil }.
 	
 	self fetcher upToEnd; reset.
 	fetchedElements := self fetcher next: expectedElements size + 1.

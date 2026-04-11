@@ -2,14 +2,14 @@
 I represent self, super and thisContext and in addion true, false, nil
 "
 Class {
-	#name : 'NECSpecialVariableEntry',
-	#superclass : 'NECVariableEntry',
+	#name : 'CoSpecialVariableEntry',
+	#superclass : 'CoVariableEntry',
 	#category : 'NECompletion-Model',
 	#package : 'NECompletion',
 	#tag : 'Model'
 }
 
 { #category : 'accessing' }
-NECSpecialVariableEntry >> label [
+CoSpecialVariableEntry >> label [
 	^ contents
 ]

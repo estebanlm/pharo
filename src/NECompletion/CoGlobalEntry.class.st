@@ -2,19 +2,19 @@
 I represent a global variable.
 "
 Class {
-	#name : 'NECGlobalEntry',
-	#superclass : 'NECVariableEntry',
+	#name : 'CoGlobalEntry',
+	#superclass : 'CoVariableEntry',
 	#category : 'NECompletion-Model',
 	#package : 'NECompletion',
 	#tag : 'Model'
 }
 
 { #category : 'accessing' }
-NECGlobalEntry >> hightlightSymbol [
+CoGlobalEntry >> hightlightSymbol [
 	^ #globalVar
 ]
 
 { #category : 'accessing' }
-NECGlobalEntry >> rawLabel [
+CoGlobalEntry >> rawLabel [
 	^ 'global'
 ]

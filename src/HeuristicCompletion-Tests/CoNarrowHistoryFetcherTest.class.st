@@ -27,7 +27,7 @@ CoNarrowHistoryFetcherTest >> testNarrowingAndUnnarrowingReturnsSameResult [
 		asCC
 		as3
 		asCCC
-	) collect: [ :s | NECSelectorEntry new contents: s ])) withNarrowHistory.
+	) collect: [ :s | #CoSelectorEntry new contents: s ])) withNarrowHistory.
 	fetcher := fetcher
 		           narrowFilter: (CoCaseSensitiveBeginsWithFilter filterString: 'as')
 		           narrowKey: 'as'.
@@ -59,7 +59,7 @@ CoNarrowHistoryFetcherTest >> testNarrowingReturnsSameElementsThatCallingDirectl
 		asCC
 		as3
 		asCCC
-	) collect: [ :s | NECSelectorEntry new contents: s ])) withNarrowHistory.
+	) collect: [ :s | #CoSelectorEntry new contents: s ])) withNarrowHistory.
 	fetcher := fetcher narrowFilter: (CoCaseSensitiveBeginsWithFilter filterString: 'asL') narrowKey: 'as'.
 	originalSearch := fetcher next: 10.
 
@@ -71,7 +71,7 @@ CoNarrowHistoryFetcherTest >> testNarrowingReturnsSameElementsThatCallingDirectl
 		asCC
 		as3
 		asCCC
-	) collect: [ :s | NECSelectorEntry new contents: s ])) withNarrowHistory.
+	) collect: [ :s | #CoSelectorEntry new contents: s ])) withNarrowHistory.
 	fetcher := fetcher narrowFilter: (CoCaseSensitiveBeginsWithFilter filterString: 'as') narrowKey: 'as'.
 	fetcher next: 10.
 	fetcher := fetcher narrowFilter: (CoCaseSensitiveBeginsWithFilter filterString: 'asL') narrowKey: 'asL'.
@@ -93,7 +93,7 @@ CoNarrowHistoryFetcherTest >> testUnnarrowingAndThenNarrowingReturnsSameResult [
 		asCC
 		as3
 		asCCC
-	) collect: [ :s | NECSelectorEntry new contents: s ])) withNarrowHistory.
+	) collect: [ :s | #CoSelectorEntry new contents: s ])) withNarrowHistory.
 	fetcher := fetcher
 		           narrowFilter: (CoCaseSensitiveBeginsWithFilter filterString: 'as')
 		           narrowKey: 'as'.

@@ -4,7 +4,7 @@ I represent a completion entry that is management by a ECModel and shown in the 
 Each of my subclass will represent a specific kind of entity. For example a globalvariable, self...
 "
 Class {
-	#name : 'NECEntry',
+	#name : 'CoEntry',
 	#superclass : 'Object',
 	#instVars : [
 		'contents',
@@ -23,39 +23,39 @@ Class {
 }
 
 { #category : 'instance creation' }
-NECEntry class >> contents: aString node: aNode [
+CoEntry class >> contents: aString node: aNode [
 	^ self new contents: aString node: aNode
 ]
 
 { #category : 'accessing' }
-NECEntry class >> originDisplayed: aBoolean [
+CoEntry class >> originDisplayed: aBoolean [
 
 	OriginDisplayed := aBoolean
 ]
 
 { #category : 'accessing' }
-NECEntry class >> spaceAfterCompletion [
+CoEntry class >> spaceAfterCompletion [
 
 	^ SpaceAfterCompletion
 ]
 
 { #category : 'accessing' }
-NECEntry class >> spaceAfterCompletion: aBoolean [
+CoEntry class >> spaceAfterCompletion: aBoolean [
 
 	SpaceAfterCompletion := aBoolean
 ]
 
 { #category : 'operations' }
-NECEntry >> <= aECEntry [
+CoEntry >> <= aECEntry [
 	^ contents <= aECEntry contents
 ]
 
 { #category : 'operations' }
-NECEntry >> activateOn: aCompletionContext [
+CoEntry >> activateOn: aCompletionContext [
 
 	| entryContents |
 	"Log the usage"
-	NECUsageTracker incrementUsageFor: self contents.
+	CoAdHocUsageTracker incrementUsageFor: self contents.
 	
 	"By default insert the contents of the entry instead of the token in the text editor"
 	entryContents := self contents asSymbol separateKeywords.
@@ -66,67 +66,73 @@ NECEntry >> activateOn: aCompletionContext [
 ]
 
 { #category : 'matching' }
-NECEntry >> beginsWith: aString [
+CoEntry >> beginsWith: aString [
 
 	^ self contents beginsWith: aString
 ]
 
 { #category : 'private' }
-NECEntry >> browse [
+CoEntry >> browse [
+
+	self browseCompletionItem
+]
+
+{ #category : 'private' }
+CoEntry >> browseCompletionItem [
 	self subclassResponsibility
 ]
 
 { #category : 'accessing' }
-NECEntry >> contents [
+CoEntry >> contents [
 	^ contents
 ]
 
 { #category : 'accessing' }
-NECEntry >> contents: aString [
+CoEntry >> contents: aString [
 	contents := aString
 ]
 
 { #category : 'accessing' }
-NECEntry >> contents: aString node: aNode [
+CoEntry >> contents: aString node: aNode [
 
 	contents := aString.
 	node := aNode
 ]
 
 { #category : 'detail information' }
-NECEntry >> createDescription [
+CoEntry >> createDescription [
 	
-	^ NECEntryDescription label: self contents
+	^ CoEntryDescription label: self contents
 ]
 
 { #category : 'operations' }
-NECEntry >> description [
+CoEntry >> description [
 
 	^ description ifNil: [ description := self createDescription ]
 ]
 
 { #category : 'accessing' }
-NECEntry >> displayedContents [
+CoEntry >> displayedContents [
 	"displayedContents offers the possibility to display a different information in the menu than the one returned when the user select an entry. By default displayContents is delegating to contents."
 
 	^ displayedContents ifNil: [ self contents ]
 ]
 
 { #category : 'accessing' }
-NECEntry >> displayedContents: aString [ 
+CoEntry >> displayedContents: aString [ 
 	"displayedContents offers the possibility to display a different information in the menu than the one returned when the user select an entry. By default displayContents is delegating to contents."
 
 	displayedContents := aString
 ]
 
 { #category : 'accessing' }
-NECEntry >> fetcher [
+CoEntry >> fetcher [
 
 	^ fetcherName
 ]
 
 { #category : 'accessing' }
-NECEntry >> fetcher: anObject [
+CoEntry >> fetcher: anObject [
 	self 
 		deprecated: 'Use fetcherName: instead' 
 		transformWith: '`@rec fetcher: `@arg' -> '`@rec fetcherName: `@arg class name'.
@@ -134,24 +140,24 @@ NECEntry >> fetcher: anObject [
 ]
 
 { #category : 'accessing' }
-NECEntry >> fetcherName [
+CoEntry >> fetcherName [
 	
 	^ fetcherName
 ]
 
 { #category : 'accessing' }
-NECEntry >> fetcherName: aString [
+CoEntry >> fetcherName: aString [
 	
 	fetcherName := aString
 ]
 
 { #category : 'accessing' }
-NECEntry >> hightlightSymbol [
+CoEntry >> hightlightSymbol [
 	^nil
 ]
 
 { #category : 'accessing' }
-NECEntry >> label [ 
+CoEntry >> label [ 
 
 	| typeString |
 	typeString := self rawLabel.
@@ -160,25 +166,25 @@ NECEntry >> label [
 ]
 
 { #category : 'accessing' }
-NECEntry >> node [
+CoEntry >> node [
 
 	^ node
 ]
 
 { #category : 'accessing' }
-NECEntry >> node: anObject [
+CoEntry >> node: anObject [
 
 	node := anObject
 ]
 
 { #category : 'accessing' }
-NECEntry >> originDisplayed [
+CoEntry >> originDisplayed [
 
 	^ OriginDisplayed ifNil: [ OriginDisplayed := false ]
 ]
 
 { #category : 'printing' }
-NECEntry >> printOn: aStream [
+CoEntry >> printOn: aStream [
 	aStream
 		nextPutAll: self class name;
 		nextPut: $(;
@@ -191,6 +197,6 @@ NECEntry >> printOn: aStream [
 ]
 
 { #category : 'accessing' }
-NECEntry >> rawLabel [
+CoEntry >> rawLabel [
 	^ 'unknown'
 ]

@@ -1,6 +1,6 @@
 Class {
-	#name : 'NECSnippetEntry',
-	#superclass : 'NECEntry',
+	#name : 'CoSnippetEntry',
+	#superclass : 'CoEntry',
 	#instVars : [
 		'shortString'
 	],
@@ -10,24 +10,29 @@ Class {
 }
 
 { #category : 'private' }
-NECSnippetEntry >> browse [
+CoSnippetEntry >> browse [
+	self
+]
+
+{ #category : 'private' }
+CoSnippetEntry >> browseCompletionItem [
 	self
 ]
 
 { #category : 'accessing' }
-NECSnippetEntry >> createDescription [
+CoSnippetEntry >> createDescription [
 	
-	^ NECEntryDescription 
+	^ CoEntryDescription 
 		label: 'Snippet replacement' title: shortString , ' into ' description: self contents
 ]
 
 { #category : 'accessing' }
-NECSnippetEntry >> rawLabel [
+CoSnippetEntry >> rawLabel [
 	^ 'snippet'
 ]
 
 { #category : 'private' }
-NECSnippetEntry >> shortString: aString [ 
+CoSnippetEntry >> shortString: aString [ 
 	
 	shortString := aString
 ]
