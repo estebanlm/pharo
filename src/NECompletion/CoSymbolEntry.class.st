@@ -2,15 +2,15 @@
 I represent a symbol, there might be a method with this selector
 "
 Class {
-	#name : 'NECSymbolEntry',
-	#superclass : 'NECEntry',
+	#name : 'CoSymbolEntry',
+	#superclass : 'CoEntry',
 	#category : 'NECompletion-Model',
 	#package : 'NECompletion',
 	#tag : 'Model'
 }
 
 { #category : 'private' }
-NECSymbolEntry >> browse [
+CoSymbolEntry >> browseCompletionItem [
 	| class |
 	class := node propertyAt: #type ifAbsent: nil.
 	class ifNil: [ SystemNavigation new browseAllImplementorsOf: self selector. ^true].
@@ -28,7 +28,7 @@ NECSymbolEntry >> browse [
 ]
 
 { #category : 'detail information' }
-NECSymbolEntry >> createDescription [
+CoSymbolEntry >> createDescription [
 	"Creates description either from looking up the method in a class,
 	or in the system."
 
@@ -41,7 +41,7 @@ NECSymbolEntry >> createDescription [
 ]
 
 { #category : 'private' }
-NECSymbolEntry >> emptyLabel [
+CoSymbolEntry >> emptyLabel [
 	
 	| stringForEmpty |
 	stringForEmpty := self rawLabel.
@@ -50,7 +50,7 @@ NECSymbolEntry >> emptyLabel [
 ]
 
 { #category : 'detail information' }
-NECSymbolEntry >> findMethodAndDo: foundBlock ifAbsent: notfoundBlock [
+CoSymbolEntry >> findMethodAndDo: foundBlock ifAbsent: notfoundBlock [
 	| result  implementors |
 
 	implementors := self systemNavigation allImplementorsOf: self selector.
@@ -64,12 +64,12 @@ NECSymbolEntry >> findMethodAndDo: foundBlock ifAbsent: notfoundBlock [
 ]
 
 { #category : 'private' }
-NECSymbolEntry >> implementorsDescription: aSymbol [
+CoSymbolEntry >> implementorsDescription: aSymbol [
 	| implementors output |
 	output := WriteStream on: String new.
 	implementors := self systemNavigation allImplementorsOf: aSymbol.
 	implementors isEmpty 
-		ifTrue: [ ^ NECEntryDescription
+		ifTrue: [ ^ CoEntryDescription
 			label: self emptyLabel 
 			title: '(no implementors)'
 			description: 'This is just symbol.' ].
@@ -79,14 +79,14 @@ NECSymbolEntry >> implementorsDescription: aSymbol [
 			nextPutAll: each methodClass printString;
 			cr ].
 
-	^ NECEntryDescription
+	^ CoEntryDescription
 		label: self label
 		title: '(Implementors)'
 		description: output contents
 ]
 
 { #category : 'private' }
-NECSymbolEntry >> methodSourceDescription: aClass method: aCompiledMethod [
+CoSymbolEntry >> methodSourceDescription: aClass method: aCompiledMethod [
 	"I return if it's a class or a method, its class name, and the implementation."
 	
 	| styler styledText |
@@ -95,20 +95,20 @@ NECSymbolEntry >> methodSourceDescription: aClass method: aCompiledMethod [
 	styler classOrMetaClass: aClass.
 	styledText := styler styledTextFor: (aCompiledMethod sourceCode) asText.
 
-	^ NECEntryDescription
+	^ CoEntryDescription
 		label: self label
 		title: aClass printString
 		description: styledText
 ]
 
 { #category : 'private' }
-NECSymbolEntry >> rawLabel [
+CoSymbolEntry >> rawLabel [
 	
 	^ 'symbol'
 ]
 
 { #category : 'accessing' }
-NECSymbolEntry >> selector [
+CoSymbolEntry >> selector [
 
 	^ contents
 ]

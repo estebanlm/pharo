@@ -15,7 +15,7 @@ Class {
 CoGlobalSymbolFetcher >> entriesDo: aBlock [
 
 	self systemNavigation allSymbolsStartingWith: filter completionString do: [ :e |
-			aBlock value: ((NECSymbolEntry contents: e node: astNode)
+			aBlock value: ((CoSymbolEntry contents: e node: astNode)
 					 fetcherName: self class name;
 					 yourself) ]
 ]

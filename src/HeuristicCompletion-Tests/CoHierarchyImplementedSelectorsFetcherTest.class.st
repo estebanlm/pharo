@@ -14,22 +14,22 @@ CoHierarchyImplementedSelectorsFetcherTest >> setUp [
 		           completionClass: self completionClass;
 		           forHierarchy.
 	expectedElements := {
-		                    ((NECSelectorEntry contents: 'ma' node: nil)
+		                    ((CoSelectorEntry contents: 'ma' node: nil)
 			                     fetcherName: fetcher class name;
 			                     yourself).
-		                    ((NECSelectorEntry contents: 'mb' node: nil)
+		                    ((CoSelectorEntry contents: 'mb' node: nil)
 			                     fetcherName: fetcher class name;
 			                     yourself).
-		                    ((NECSelectorEntry contents: 'mc' node: nil)
+		                    ((CoSelectorEntry contents: 'mc' node: nil)
 			                     fetcherName: fetcher class name;
 			                     yourself).
-		                    ((NECSelectorEntry contents: 'superma' node: nil)
+		                    ((CoSelectorEntry contents: 'superma' node: nil)
 			                     fetcherName: fetcher class name;
 			                     yourself).
-		                    ((NECSelectorEntry contents: 'supermb' node: nil)
+		                    ((CoSelectorEntry contents: 'supermb' node: nil)
 			                     fetcherName: fetcher class name;
 			                     yourself).
-		                    ((NECSelectorEntry contents: 'supermc' node: nil)
+		                    ((CoSelectorEntry contents: 'supermc' node: nil)
 			                     fetcherName: fetcher class name;
 			                     yourself) }
 ]

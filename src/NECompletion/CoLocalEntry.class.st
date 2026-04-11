@@ -2,14 +2,14 @@
 I represent a local variable: either a temporary variables, a block temporary or a method arguments.
 "
 Class {
-	#name : 'NECLocalEntry',
-	#superclass : 'NECVariableEntry',
+	#name : 'CoLocalEntry',
+	#superclass : 'CoVariableEntry',
 	#category : 'NECompletion-Model',
 	#package : 'NECompletion',
 	#tag : 'Model'
 }
 
 { #category : 'accessing' }
-NECLocalEntry >> rawLabel [
+CoLocalEntry >> rawLabel [
 	^ 'local variable'
 ]

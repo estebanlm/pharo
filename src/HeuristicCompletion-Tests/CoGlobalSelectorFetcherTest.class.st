@@ -16,13 +16,13 @@ CoGlobalSelectorFetcherTest >> setUp [
 	fetcher filter: (CoCaseSensitiveBeginsWithFilter filterString: 'm').
 
 	expectedElements := {
-		                    ((NECSelectorEntry contents: 'ma' node: nil)
+		                    ((CoSelectorEntry contents: 'ma' node: nil)
 			                     fetcherName: fetcher class name;
 			                     yourself).
-		                    ((NECSelectorEntry contents: 'mb' node: nil)
+		                    ((CoSelectorEntry contents: 'mb' node: nil)
 			                     fetcherName: fetcher class name;
 			                     yourself).
-		                    ((NECSelectorEntry contents: 'mc' node: nil)
+		                    ((CoSelectorEntry contents: 'mc' node: nil)
 			                     fetcherName: fetcher class name;
 			                     yourself) }
 ]

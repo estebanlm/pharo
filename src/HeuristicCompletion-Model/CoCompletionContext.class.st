@@ -59,7 +59,7 @@ CoCompletionContext >> completionAt: aNumber [
 	| entry |
 
 	entry := (self entries at: aNumber) contents asSymbol separateKeywords.
-	^ NECEntry spaceAfterCompletion
+	^ CoEntry spaceAfterCompletion
 		ifTrue: [ entry, ' ' ]
 		ifFalse: [ entry ]
 ]

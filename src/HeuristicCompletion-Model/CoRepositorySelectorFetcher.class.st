@@ -27,7 +27,7 @@ CoRepositorySelectorFetcher >> entriesDo: aBlock [
 
 	friendSelectors do: [ :sel |
 			
-					aBlock value: ((NECSelectorEntry contents: sel node: astNode)
+					aBlock value: ((CoSelectorEntry contents: sel node: astNode)
 							 fetcherName: self class name;
 							 yourself) ] 
 ]

@@ -2,19 +2,19 @@
 I represent a class Variable
 "
 Class {
-	#name : 'NECClassVarEntry',
-	#superclass : 'NECVariableEntry',
+	#name : 'CoClassVarEntry',
+	#superclass : 'CoVariableEntry',
 	#category : 'NECompletion-Model',
 	#package : 'NECompletion',
 	#tag : 'Model'
 }
 
 { #category : 'accessing' }
-NECClassVarEntry >> hightlightSymbol [
+CoClassVarEntry >> hightlightSymbol [
 	^ #classVar
 ]
 
 { #category : 'accessing' }
-NECClassVarEntry >> rawLabel [
+CoClassVarEntry >> rawLabel [
 	^ 'class variable'
 ]

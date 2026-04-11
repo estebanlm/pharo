@@ -2,7 +2,7 @@
 A simple anouncement is announced when an item in the menu list is selected.
 "
 Class {
-	#name : 'CompletionItemSelected',
+	#name : 'CoCompletionItemSelected',
 	#superclass : 'Announcement',
 	#instVars : [
 		'item',
@@ -16,49 +16,49 @@ Class {
 }
 
 { #category : 'accessing' }
-CompletionItemSelected >> entries [
+CoCompletionItemSelected >> entries [
 
 	^ entries
 ]
 
 { #category : 'accessing' }
-CompletionItemSelected >> entries: anObject [
+CoCompletionItemSelected >> entries: anObject [
 
 	entries := anObject
 ]
 
 { #category : 'accessing' }
-CompletionItemSelected >> index [
+CoCompletionItemSelected >> index [
 
 	^ index
 ]
 
 { #category : 'accessing' }
-CompletionItemSelected >> index: aNumber [
+CoCompletionItemSelected >> index: aNumber [
 
 	index := aNumber
 ]
 
 { #category : 'accessing' }
-CompletionItemSelected >> selectedItem [
+CoCompletionItemSelected >> selectedItem [
 
 	^ item
 ]
 
 { #category : 'accessing' }
-CompletionItemSelected >> selectedItem: anObject [
+CoCompletionItemSelected >> selectedItem: anObject [
 
 	item := anObject
 ]
 
 { #category : 'accessing' }
-CompletionItemSelected >> token [
+CoCompletionItemSelected >> token [
 
 	^ token
 ]
 
 { #category : 'accessing' }
-CompletionItemSelected >> token: anObject [
+CoCompletionItemSelected >> token: anObject [
 
 	token := anObject
 ]

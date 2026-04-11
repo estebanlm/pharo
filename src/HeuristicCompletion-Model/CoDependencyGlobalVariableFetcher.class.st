@@ -79,7 +79,7 @@ CoDependencyGlobalVariableFetcher >> entriesDo: aBlock [
 	already seen classes from the namespace. In fact this is not needed because 
 	the heuristics handles the repettion of proposition. 
 	So here we default to the configuration and following fetcher."
-			aBlock value: ((NECGlobalEntry contents: depClassName node: nil)
+			aBlock value: ((CoGlobalEntry contents: depClassName node: nil)
 					 fetcherName: self class name;
 					 yourself) ]
 ]
