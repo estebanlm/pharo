@@ -45,19 +45,13 @@ SycRenamePackageCommand >> execute [
 
 	^ ((ReRenamePackageDriver newApplication: self application)
 		scopes: refactoringScopes
-		packageName: package name
-		newName: newName) runRefactoring
+		packageName: package name) runRefactoring
 ]
 
 { #category : 'execution' }
 SycRenamePackageCommand >> prepareFullExecutionInContext: aToolContext [
 	super prepareFullExecutionInContext: aToolContext.
-
 	package := aToolContext lastSelectedPackage.
 	refactoringScopes := aToolContext refactoringScopes.
-	newName := self morphicUIManager
-		request: 'New name of the package'
-		initialAnswer: package name
-		title: 'Rename a package'.
-	newName isEmptyOrNil ifTrue: [ ^ CmdCommandAborted signal ]
+	
 ]

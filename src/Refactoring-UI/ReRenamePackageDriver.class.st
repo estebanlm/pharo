@@ -3,7 +3,8 @@ Class {
 	#superclass : 'ReInteractionDriver',
 	#instVars : [
 		'packageName',
-		'newName'
+		'newName',
+		'shouldEscape'
 	],
 	#category : 'Refactoring-UI-Drivers',
 	#package : 'Refactoring-UI',
@@ -16,30 +17,42 @@ ReRenamePackageDriver class >> driverName [
 	^ 'Rename package'
 ]
 
+{ #category : 'execution' }
+ReRenamePackageDriver >> gatherUserInput [
+	 
+	 shouldEscape := false.
+    newName := self requestNewNameBasedOn: packageName.
+    shouldEscape ifTrue: [ ^ false ].
+    ^ true
+]
+
 { #category : 'configuration' }
 ReRenamePackageDriver >> instantiateRefactoring [
+    ^ ReRenamePackageRefactoring new
+        model: model;
+        rename: packageName;
+        yourself
+]
 
-	^ (ReRenamePackageRefactoring
-		model: model
-		rename: packageName
-		to: newName)
+{ #category : 'private' }
+ReRenamePackageDriver >> requestNewNameBasedOn: aName [
+
+    newName := self defaultRequestDialog
+        title: 'Rename a package';
+        message: 'Enter new package name';
+        text: aName;
+        openModal.
+    newName ifNil: [
+        shouldEscape := true.
+        ^ self ].
+    refactoring newName: newName.
+    ^ newName
 ]
 
 { #category : 'execution' }
-ReRenamePackageDriver >> runRefactoring [
-
-	self configureRefactoring.
-	refactoring failedApplicabilityPreconditions ifNotEmpty: [ :conditions |
-		self informConditions: conditions.
-		^ false ].
-	self applyChanges
-]
-
-{ #category : 'execution' }
-ReRenamePackageDriver >> scopes: refactoringScopes packageName: aName newName: aNewName [
+ReRenamePackageDriver >> scopes: refactoringScopes packageName: aName [
 
 	scopes := refactoringScopes.
 	model := self refactoringScopeOn: scopes first.
 	packageName := aName.
-	newName := aNewName
 ]
