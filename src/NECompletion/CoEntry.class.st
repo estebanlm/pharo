@@ -27,6 +27,27 @@ CoEntry class >> contents: aString node: aNode [
 	^ self new contents: aString node: aNode
 ]
 
+{ #category : 'class initialization' }
+CoEntry class >> initialize [
+
+	CoEntry deprecatedAliases: { #NECEntry }.
+	CoGlobalEntry deprecatedAliases: {#NECGlobalEntry}.
+CoSelectorEntry deprecatedAliases: {#NECSelectorEntry}.
+CoEntry deprecatedAliases: {#NECEntry}.
+CoTypingVisitor deprecatedAliases: {#NECTypingVisitor}.
+CoLocalEntry deprecatedAliases: {#NECLocalEntry}.
+CoClassVarEntry deprecatedAliases: {#NECClassVarEntry}.
+CoSymbolEntry deprecatedAliases: {#NECSymbolEntry}.
+CoCompletionSorter deprecatedAliases: {#NECNECmpletionSorter}.
+CoEntryDescription deprecatedAliases: {#NECEntryDescription}.
+CoInstVarEntry deprecatedAliases: {#NECInstVarEntry}.
+CoVariableEntry deprecatedAliases: {#NECVariableEntry}.
+CoSnippetEntry deprecatedAliases: {#NECSnippetEntry}.
+CoCompletionItemSelected deprecatedAliases: {#NECNECmpletionItemSelected}.
+CoAdHocUsageTracker deprecatedAliases: {#NECAdHocUsageTracker}.
+CoSpecialVariableEntry deprecatedAliases: {#NECSpecialVariableEntry}.
+]
+
 { #category : 'accessing' }
 CoEntry class >> originDisplayed: aBoolean [
 
