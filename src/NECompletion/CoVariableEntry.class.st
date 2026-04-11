@@ -31,14 +31,14 @@ CoVariableEntry >> createDescription [
 	| clazz |
 	clazz := self classOrNil.
 	^ clazz 
-		ifNil: [ CoEntryDescription label: self label ] 
+		ifNil: [ CoEntryDescription label: self label ]
 		ifNotNil: [
-			  clazz isClass
-				  ifFalse: [ "we have few globals but we should handle them correctly" 
-						CoEntryDescription label: self label ]
-				  ifTrue: [ 
-						CoEntryDescription 
-							label: self label 
-							title: clazz printString 
-							description: clazz comment ] ]
+			clazz isClass
+				ifFalse: [ "we have few globals but we should handle them correctly" 
+					CoEntryDescription label: self label ]
+				ifTrue: [ 
+					CoEntryDescription 
+						label: self label 
+						title: clazz printString 
+						description: clazz comment ] ]
 ]

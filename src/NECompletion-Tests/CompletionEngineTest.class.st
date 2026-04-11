@@ -160,7 +160,7 @@ CompletionEngineTest >> tearDown [
 	super tearDown
 ]
 
-{ #category : 'tests - keyboard' }
+{ #category : 'tests - interaction' }
 CompletionEngineTest >> testCompletionOpenOnUnderscore [
 
 	"If the caret is at the end of a word, replace the entire word"
