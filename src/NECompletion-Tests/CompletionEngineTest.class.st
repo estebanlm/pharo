@@ -160,228 +160,6 @@ CompletionEngineTest >> tearDown [
 	super tearDown
 ]
 
-{ #category : 'tests' }
-CompletionEngineTest >> testCompletionAfterKeyword [
-
-	self setEditorTextWithCaret: 'self foo:| baz'.
-	self assert: interactionEngine completionToken equals: 'foo:'.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'self bar| baz'.
-
-	self setEditorTextWithCaret: 'self"x"foo:|"x"baz'.
-	self assert: interactionEngine completionToken equals: 'foo:'.
-	self assert: interactionEngine tokenToReplace equals: 'foo:'.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'self"x"bar|"x"baz'.
-
-	self setEditorTextWithCaret: 'self.foo:|.baz'.
-	self assert: interactionEngine completionToken equals: 'foo:'.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'self.bar|.baz'.
-
-	self setEditorTextWithCaret: 'self:=foo:|:=baz'.
-	self assert: interactionEngine completionToken equals: 'foo:'.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'self:=bar|:=baz'.
-
-	self setEditorTextWithCaret: 'foo:|'.
-	self assert: interactionEngine completionToken equals: 'foo:'.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'bar|'
-]
-
-{ #category : 'tests' }
-CompletionEngineTest >> testCompletionAfterWord [
-
-	self setEditorTextWithCaret: 'self foo| baz'.
-	self assert: interactionEngine completionToken equals: 'foo'.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'self bar| baz'.
-
-	self setEditorTextWithCaret: 'self"x"foo|"x"baz'.
-	self assert: interactionEngine completionToken equals: 'foo'.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'self"x"bar|"x"baz'.
-
-	self setEditorTextWithCaret: 'self.foo|.baz'.
-	self assert: interactionEngine completionToken equals: 'foo'.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'self.bar|.baz'.
-
-	self setEditorTextWithCaret: 'self:=foo|:=baz'.
-	self assert: interactionEngine completionToken equals: 'foo'.
-	self assert: interactionEngine tokenToReplace equals: 'foo'.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'self:=bar|:=baz'.
-
-	self setEditorTextWithCaret: 'foo|'.
-	self assert: interactionEngine completionToken equals: 'foo'.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'bar|'
-]
-
-{ #category : 'tests' }
-CompletionEngineTest >> testCompletionBeforeKeywordColumn [
-
-	self setEditorTextWithCaret: 'self foo|: baz'.
-	self assert: interactionEngine completionToken equals: 'foo'.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'self bar| baz'.
-
-	self setEditorTextWithCaret: 'self"x"foo|:"x"baz'.
-	self assert: interactionEngine completionToken equals: 'foo'.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'self"x"bar|"x"baz'.
-
-	self setEditorTextWithCaret: 'self.foo|:.baz'.
-	self assert: interactionEngine completionToken equals: 'foo'.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'self.bar|.baz'.
-
-	self setEditorTextWithCaret: 'self:=foo|::=baz'.
-	self assert: interactionEngine completionToken equals: 'foo'.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'self:=bar|:=baz'.
-
-	self setEditorTextWithCaret: 'foo|:'.
-	self assert: interactionEngine completionToken equals: 'foo'.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'bar|'
-]
-
-{ #category : 'tests' }
-CompletionEngineTest >> testCompletionBeforeWord [
-
-	self setEditorTextWithCaret: 'self |foo baz'.
-	self assert: interactionEngine completionToken equals: ''.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'self bar|foo baz'.
-
-	self setEditorTextWithCaret: 'self"x"|foo"x"baz'.
-	self assert: interactionEngine completionToken equals: ''.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'self"x"bar|foo"x"baz'.
-
-	self setEditorTextWithCaret: 'self.|foo.baz'.
-	self assert: interactionEngine completionToken equals: ''.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'self.bar|foo.baz'.
-
-	self setEditorTextWithCaret: 'self:=|foo:=baz'.
-	self assert: interactionEngine completionToken equals: ''.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'self:=bar|foo:=baz'.
-
-	self setEditorTextWithCaret: '|foo'.
-	self assert: interactionEngine completionToken equals: ''.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'bar|foo'
-]
-
-{ #category : 'tests' }
-CompletionEngineTest >> testCompletionOnBinary [
-	"For the moment, binary selectors cannot be completed."
-
-	self setEditorTextWithCaret: 'self +|+ baz'.
-	self assert: interactionEngine completionToken equals: ''.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'self +bar|+ baz'
-]
-
-{ #category : 'tests' }
-CompletionEngineTest >> testCompletionOnFirstLetter [
-
-	self setEditorTextWithCaret: 'self f|oo baz'.
-	self assert: interactionEngine completionToken equals: 'f'.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'self bar| baz'.
-
-	self setEditorTextWithCaret: 'self"x"f|oo"x"baz'.
-	self assert: interactionEngine completionToken equals: 'f'.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'self"x"bar|"x"baz'.
-
-	self setEditorTextWithCaret: 'self.f|oo.baz'.
-	self assert: interactionEngine completionToken equals: 'f'.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'self.bar|.baz'.
-
-	self setEditorTextWithCaret: 'self:=f|oo:=baz'.
-	self assert: interactionEngine completionToken equals: 'f'.
-	self assert: interactionEngine tokenToReplace equals: 'foo'.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'self:=bar|:=baz'.
-
-	self setEditorTextWithCaret: 'f|oo'.
-	self assert: interactionEngine completionToken equals: 'f'.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'bar|'
-]
-
-{ #category : 'tests' }
-CompletionEngineTest >> testCompletionOnNoWord [
-
-	self setEditorTextWithCaret: 'self | baz'.
-	self assert: interactionEngine completionToken equals: ''.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'self bar| baz'.
-
-	self setEditorTextWithCaret: 'self"x"|"x"baz'.
-	self assert: interactionEngine completionToken equals: ''.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'self"x"bar|"x"baz'.
-
-	self setEditorTextWithCaret: 'self.|.baz'.
-	self assert: interactionEngine completionToken equals: ''.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'self.bar|.baz'.
-
-	self setEditorTextWithCaret: 'self:=|:=baz'.
-	self assert: interactionEngine completionToken equals: ''.
-	self assert: interactionEngine tokenToReplace equals: ''.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'self:=bar|:=baz'.
-
-	self setEditorTextWithCaret: ' | '.
-	self assert: interactionEngine completionToken equals: ''.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: ' bar| '.
-
-	self setEditorTextWithCaret: '|'.
-	self assert: interactionEngine completionToken equals: ''.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'bar|'
-]
-
-{ #category : 'tests' }
-CompletionEngineTest >> testCompletionOnSingleLetter [
-
-	self setEditorTextWithCaret: 'self f| baz'.
-	self assert: interactionEngine completionToken equals: 'f'.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'self bar| baz'.
-
-	self setEditorTextWithCaret: 'self"x"f|"x"baz'.
-	self assert: interactionEngine completionToken equals: 'f'.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'self"x"bar|"x"baz'.
-
-	self setEditorTextWithCaret: 'self.f|.baz'.
-	self assert: interactionEngine completionToken equals: 'f'.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'self.bar|.baz'.
-
-	self setEditorTextWithCaret: 'self:=f|:=baz'.
-	self assert: interactionEngine completionToken equals: 'f'.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'self:=bar|:=baz'.
-
-	self setEditorTextWithCaret: 'f|'.
-	self assert: interactionEngine completionToken equals: 'f'.
-	interactionEngine context replaceTokenInEditorWith: 'bar'.
-	self assert: self editorTextWithCaret equals: 'bar|'
-]
-
 { #category : 'tests - keyboard' }
 CompletionEngineTest >> testCompletionOpenOnUnderscore [
 
@@ -524,6 +302,36 @@ CompletionEngineTest >> testReplaceKeywordTokenWithCaretInTheMiddleOfWordWithFol
 	self assert: editor text asString equals: 'self mEthOdThatDoesNotExist: something that follows'
 ]
 
+{ #category : 'tests' }
+CompletionEngineTest >> testReplaceTokenAfterKeyword [
+
+	self setEditorTextWithCaret: 'self foo:| baz'.
+	self assert: interactionEngine completionToken equals: 'foo:'.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'self bar| baz'.
+
+	self setEditorTextWithCaret: 'self"x"foo:|"x"baz'.
+	self assert: interactionEngine completionToken equals: 'foo:'.
+	self assert: interactionEngine tokenToReplace equals: 'foo:'.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'self"x"bar|"x"baz'.
+
+	self setEditorTextWithCaret: 'self.foo:|.baz'.
+	self assert: interactionEngine completionToken equals: 'foo:'.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'self.bar|.baz'.
+
+	self setEditorTextWithCaret: 'self:=foo:|:=baz'.
+	self assert: interactionEngine completionToken equals: 'foo:'.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'self:=bar|:=baz'.
+
+	self setEditorTextWithCaret: 'foo:|'.
+	self assert: interactionEngine completionToken equals: 'foo:'.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'bar|'
+]
+
 { #category : 'tests - interaction' }
 CompletionEngineTest >> testReplaceTokenAfterMovingCaretToMiddleOfWordWithFollowingWordsReplacesEntireWord [
 
@@ -544,8 +352,200 @@ CompletionEngineTest >> testReplaceTokenAfterMovingCaretToMiddleOfWordWithFollow
 	self assert: editor text equals: 'self toto something that follows'
 ]
 
+{ #category : 'tests' }
+CompletionEngineTest >> testReplaceTokenAfterWord [
+
+	self setEditorTextWithCaret: 'self foo| baz'.
+	self assert: interactionEngine completionToken equals: 'foo'.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'self bar| baz'.
+
+	self setEditorTextWithCaret: 'self"x"foo|"x"baz'.
+	self assert: interactionEngine completionToken equals: 'foo'.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'self"x"bar|"x"baz'.
+
+	self setEditorTextWithCaret: 'self.foo|.baz'.
+	self assert: interactionEngine completionToken equals: 'foo'.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'self.bar|.baz'.
+
+	self setEditorTextWithCaret: 'self:=foo|:=baz'.
+	self assert: interactionEngine completionToken equals: 'foo'.
+	self assert: interactionEngine tokenToReplace equals: 'foo'.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'self:=bar|:=baz'.
+
+	self setEditorTextWithCaret: 'foo|'.
+	self assert: interactionEngine completionToken equals: 'foo'.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'bar|'
+]
+
+{ #category : 'tests' }
+CompletionEngineTest >> testReplaceTokenBeforeKeywordColumn [
+
+	self setEditorTextWithCaret: 'self foo|: baz'.
+	self assert: interactionEngine completionToken equals: 'foo'.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'self bar| baz'.
+
+	self setEditorTextWithCaret: 'self"x"foo|:"x"baz'.
+	self assert: interactionEngine completionToken equals: 'foo'.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'self"x"bar|"x"baz'.
+
+	self setEditorTextWithCaret: 'self.foo|:.baz'.
+	self assert: interactionEngine completionToken equals: 'foo'.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'self.bar|.baz'.
+
+	self setEditorTextWithCaret: 'self:=foo|::=baz'.
+	self assert: interactionEngine completionToken equals: 'foo'.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'self:=bar|:=baz'.
+
+	self setEditorTextWithCaret: 'foo|:'.
+	self assert: interactionEngine completionToken equals: 'foo'.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'bar|'
+]
+
+{ #category : 'tests' }
+CompletionEngineTest >> testReplaceTokenBeforeWord [
+
+	self setEditorTextWithCaret: 'self |foo baz'.
+	self assert: interactionEngine completionToken equals: ''.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'self bar|foo baz'.
+
+	self setEditorTextWithCaret: 'self"x"|foo"x"baz'.
+	self assert: interactionEngine completionToken equals: ''.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'self"x"bar|foo"x"baz'.
+
+	self setEditorTextWithCaret: 'self.|foo.baz'.
+	self assert: interactionEngine completionToken equals: ''.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'self.bar|foo.baz'.
+
+	self setEditorTextWithCaret: 'self:=|foo:=baz'.
+	self assert: interactionEngine completionToken equals: ''.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'self:=bar|foo:=baz'.
+
+	self setEditorTextWithCaret: '|foo'.
+	self assert: interactionEngine completionToken equals: ''.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'bar|foo'
+]
+
+{ #category : 'tests' }
+CompletionEngineTest >> testReplaceTokenOnBinary [
+	"For the moment, binary selectors cannot be completed."
+
+	self setEditorTextWithCaret: 'self +|+ baz'.
+	self assert: interactionEngine completionToken equals: ''.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'self +bar|+ baz'
+]
+
+{ #category : 'tests' }
+CompletionEngineTest >> testReplaceTokenOnFirstLetter [
+
+	self setEditorTextWithCaret: 'self f|oo baz'.
+	self assert: interactionEngine completionToken equals: 'f'.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'self bar| baz'.
+
+	self setEditorTextWithCaret: 'self"x"f|oo"x"baz'.
+	self assert: interactionEngine completionToken equals: 'f'.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'self"x"bar|"x"baz'.
+
+	self setEditorTextWithCaret: 'self.f|oo.baz'.
+	self assert: interactionEngine completionToken equals: 'f'.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'self.bar|.baz'.
+
+	self setEditorTextWithCaret: 'self:=f|oo:=baz'.
+	self assert: interactionEngine completionToken equals: 'f'.
+	self assert: interactionEngine tokenToReplace equals: 'foo'.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'self:=bar|:=baz'.
+
+	self setEditorTextWithCaret: 'f|oo'.
+	self assert: interactionEngine completionToken equals: 'f'.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'bar|'
+]
+
+{ #category : 'tests' }
+CompletionEngineTest >> testReplaceTokenOnNoWord [
+
+	self setEditorTextWithCaret: 'self | baz'.
+	self assert: interactionEngine completionToken equals: ''.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'self bar| baz'.
+
+	self setEditorTextWithCaret: 'self"x"|"x"baz'.
+	self assert: interactionEngine completionToken equals: ''.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'self"x"bar|"x"baz'.
+
+	self setEditorTextWithCaret: 'self.|.baz'.
+	self assert: interactionEngine completionToken equals: ''.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'self.bar|.baz'.
+
+	self setEditorTextWithCaret: 'self:=|:=baz'.
+	self assert: interactionEngine completionToken equals: ''.
+	self assert: interactionEngine tokenToReplace equals: ''.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'self:=bar|:=baz'.
+
+	self setEditorTextWithCaret: ' | '.
+	self assert: interactionEngine completionToken equals: ''.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: ' bar| '.
+
+	self setEditorTextWithCaret: '|'.
+	self assert: interactionEngine completionToken equals: ''.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'bar|'
+]
+
+{ #category : 'tests' }
+CompletionEngineTest >> testReplaceTokenOnSingleLetter [
+
+	self setEditorTextWithCaret: 'self f| baz'.
+	self assert: interactionEngine completionToken equals: 'f'.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'self bar| baz'.
+
+	self setEditorTextWithCaret: 'self"x"f|"x"baz'.
+	self assert: interactionEngine completionToken equals: 'f'.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'self"x"bar|"x"baz'.
+
+	self setEditorTextWithCaret: 'self.f|.baz'.
+	self assert: interactionEngine completionToken equals: 'f'.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'self.bar|.baz'.
+
+	self setEditorTextWithCaret: 'self:=f|:=baz'.
+	self assert: interactionEngine completionToken equals: 'f'.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'self:=bar|:=baz'.
+
+	self setEditorTextWithCaret: 'f|'.
+	self assert: interactionEngine completionToken equals: 'f'.
+	interactionEngine context replaceTokenInEditorWith: 'bar'.
+	self assert: self editorTextWithCaret equals: 'bar|'
+]
+
 { #category : 'tests - interaction' }
-CompletionEngineTest >> testReplaceTokenWithAditionalSpace [
+CompletionEngineTest >> testReplaceTokenWithAdditionalSpace [
 
 	"If the caret is at the end of a word, replace the entire word"
 
@@ -663,7 +663,7 @@ CompletionEngineTest >> testReplaceTokenWithCaretOnEndOfWordReplacesEntireWord [
 ]
 
 { #category : 'tests' }
-CompletionEngineTest >> testReplaceWithSpaces [
+CompletionEngineTest >> testReplaceTokenWithSpaces [
 
 	self setEditorTextWithCaret: 'self fo|o baz'.
 	self assert: interactionEngine completionToken equals: 'fo'.
@@ -713,7 +713,7 @@ CompletionEngineTest >> testReplaceWithSpaces [
 ]
 
 { #category : 'tests' }
-CompletionEngineTest >> testReplaceWithSpaces2 [
+CompletionEngineTest >> testReplaceTokenWithSpaces2 [
 
 	self setEditorTextWithCaret: 'self fo|o.'.
 	self assert: interactionEngine completionToken equals: 'fo'.
@@ -762,7 +762,7 @@ CompletionEngineTest >> testReplaceWithSpaces2 [
 ]
 
 { #category : 'tests' }
-CompletionEngineTest >> testReplaceWithSpaces3 [
+CompletionEngineTest >> testReplaceTokenWithSpaces3 [
 
 	self setEditorTextWithCaret: 'self fo|'.
 	self assert: interactionEngine completionToken equals: 'fo'.
