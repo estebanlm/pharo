@@ -24,3 +24,10 @@ ReTransformation >> changesToDisplayIn: aBrowser [
 	^ self changes changes
 		flatCollect: [ :e | e changesToDisplayIn: aBrowser ]
 ]
+
+{ #category : 'preconditions' }
+ReTransformation >> failedBreakingChangePreconditions [
+	"Return an empty collection since transformations don't have behavior preserving preconditions"
+
+	^ {  } 
+]

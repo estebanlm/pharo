@@ -24,6 +24,9 @@ ReGenerateAccessorsDriver class >> driverName [
 { #category : 'execution' }
 ReGenerateAccessorsDriver >> gatherUserInput [
 
+	(refactoring refactorings allSatisfy: [ :each | each findGetterMethod notNil and: [ each findSetterMethod notNil ] ]) ifTrue: [
+			InformativeNotification signal: 'Accessors already exist for selected variables.'.
+			^ false ].
 	^ true
 ]
 
