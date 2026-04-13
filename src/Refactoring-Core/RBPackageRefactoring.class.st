@@ -37,12 +37,12 @@ RBPackageRefactoring class >> packageName: aName [
 
 { #category : 'preconditions' }
 RBPackageRefactoring >> applicabilityPreconditions [
-    ^ super applicabilityPreconditions,
-        {
-            (RePackageExistsCondition new
-                packageName: packageName;
-                packageOrganizer: self packageOrganizer)
-        }
+
+	^ { (RBCondition
+		   withBlock: [ "Cyril: I am not sure we should use #packageOrganizer. Maybe we should ask the environment the package manager. But currently the image does not know yet how to work with multiple package managers/modules."
+			   self packageOrganizer hasPackage: packageName ]
+		   errorString:
+		   'The package ' , packageName , ' does not exist in the system') }
 ]
 
 { #category : 'accessing' }
