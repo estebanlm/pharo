@@ -34,3 +34,9 @@ OCProgramNode >> owningScope [
 OCProgramNode >> scope [
 	^ self methodOrBlockNode scope
 ]
+
+{ #category : '*OpalCompiler-Core' }
+OCProgramNode >> scopeForContext: aContext [
+
+	^ self scope
+]
