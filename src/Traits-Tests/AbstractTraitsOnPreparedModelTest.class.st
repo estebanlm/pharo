@@ -235,10 +235,8 @@ AbstractTraitsOnPreparedModelTest >> setUp [
 AbstractTraitsOnPreparedModelTest >> setUpTranslatingRequiresFixture [
 	self c6: (self
 				newClass: #C6
-				superclass: ProtoObject
+				superclass: nil
 				traits: { }).
-	ProtoObject removeSubclass: self c6.
-	self c6 superclass: nil.
 	self c7: (self
 				newClass: #C7
 				superclass: self c6
@@ -257,10 +255,8 @@ AbstractTraitsOnPreparedModelTest >> setUpTranslatingRequiresFixture [
 AbstractTraitsOnPreparedModelTest >> setUpTrivialRequiresFixture [
 	self c3: (self
 				newClass: #C3
-				superclass: ProtoObject
+				superclass: nil
 				traits: { }).
-	ProtoObject removeSubclass: self c3.
-	self c3 superclass: nil.
 	self c3 compile: 'foo ^self bla' classified: #accessing
 ]
 
@@ -268,10 +264,8 @@ AbstractTraitsOnPreparedModelTest >> setUpTrivialRequiresFixture [
 AbstractTraitsOnPreparedModelTest >> setUpTwoLevelRequiresFixture [
 	self c4: (self
 				newClass: #C4
-				superclass: ProtoObject
+				superclass: nil
 				traits: { }).
-	ProtoObject removeSubclass: self c4.
-	self c4 superclass: nil.
 	self c5: (self
 				newClass: #C5
 				superclass: self c4
