@@ -8,7 +8,7 @@ I change all the references of the classes that are defined within the package, 
 Example
 ---------
 ```
-(RBRenamePackageRefactoring 
+(ReRenamePackageRefactoring 
 				rename: (self getPackageNamed: #'Refactoring-Tests-Core')
 				to: #'Refactoring-Core-Test') execute.
 ```
@@ -47,7 +47,7 @@ ReRenamePackageRefactoring >> applicabilityPreconditions [
 			 errorString:
 			 'The new package name is the same as the old package name.').
 		 (RBCondition
-			 withBlock: [ 
+			 withBlock: [ "Cyril: I am not sure we should use #packageOrganizer. Maybe we should ask the environment the package manager. But currently the image does not know yet how to work with multiple package managers/modules."
 				 (self packageOrganizer hasPackage: newName) not ]
 			 errorString:
 			 'The system already includes a package named ' , newName) }
@@ -68,6 +68,12 @@ ReRenamePackageRefactoring >> newName: aNewName [
 { #category : 'transforming' }
 ReRenamePackageRefactoring >> prepareForExecution [
     package := self model packageNamed: packageName
+]
+
+{ #category : 'initialization' }
+ReRenamePackageRefactoring >> packageName: aName newName: aNewName [
+	packageName := aName asSymbol.
+	newName := aNewName asSymbol
 ]
 
 { #category : 'transforming' }
