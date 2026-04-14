@@ -25,6 +25,18 @@ RBRemoveParameterRefactoring class >> model: aRBSmalltalk removeParameter: aStri
 ]
 
 { #category : 'instance creation' }
+RBRemoveParameterRefactoring class >> model: aRBSmalltalk removeParameter: aString in: aClass selector: aSelector index: anIndex [
+
+	^ self new
+		  model: aRBSmalltalk;
+		  removeParameter: aString
+		  in: aClass
+		  selector: aSelector
+		  index: anIndex;
+		  yourself
+]
+
+{ #category : 'instance creation' }
 RBRemoveParameterRefactoring class >> removeParameter: aString in: aClass selector: aSelector [
 	^ self new
 		removeParameter: aString
@@ -64,4 +76,13 @@ RBRemoveParameterRefactoring >> removeParameter: aString in: aClass selector: aS
 	oldSelector := aSelector.
 	class := self classObjectFor: aClass.
 	argument := aString
+]
+
+{ #category : 'initialization' }
+RBRemoveParameterRefactoring >> removeParameter: aString in: aClass selector: aSelector index: anIndex [
+
+	oldSelector := aSelector.
+	class := self classObjectFor: aClass.
+	argument := aString.
+	parameterIndex := anIndex
 ]
