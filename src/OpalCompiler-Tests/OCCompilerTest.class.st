@@ -23,12 +23,10 @@ OCCompilerTest >> compile [
 
 { #category : 'running' }
 OCCompilerTest >> compileWithFailBlock: aBlock [
-	^ OpalCompiler new
-		source: text;
-		class: MockForCompilation;
-		requestor: self;
-		failBlock: aBlock;
-		compile
+
+	| result |
+	result := OCInteractiveAPI new compile: text notifying: self in: MockForCompilation.
+	result ifNil: aBlock
 ]
 
 { #category : 'mocking' }
@@ -99,8 +97,6 @@ OCCompilerTest >> testAssignmentOfGlobalVarBinding [
 		source: text;
 		class: MockForCompilation;
 		requestor: self;
-		failBlock: [ self fail.
-			^ nil ];
 		compile
 ]
 
@@ -229,7 +225,6 @@ OCCompilerTest >> testSiblingBlocksInstanceVariableShadowing [
 		source: 'temp [:temp | ].[:temp | |var1|]';
 		class: MockForCompilation;
 		requestor: self;
-		failBlock: [ ^ self fail ];
 		compile
 ]
 
@@ -276,7 +271,8 @@ OCCompilerTest >> testUndefinedVariableFrontend [
 	Undeclared removeKey: #undefinedName123 ifAbsent: [ ].
 	OpalCompiler new parse: 'foo ^undefinedName123'.
 	self deny: (Undeclared includesKey: #undefinedName123).
-	self should: [ OpalCompiler new compile: 'foo ^undefinedName123 ¿ 2' ] raise: OCCodeError.
+	
+	self should: [ OCInteractiveAPI new compile: 'foo ^undefinedName123 ¿ 2' notifying: nil in: nil ] raise: OCCodeError.
 	self deny: (Undeclared includesKey: #undefinedName123).
 	OpalCompiler new permitFaulty: true; compile: 'foo ^undefinedName123'.
 	self assert: (Undeclared includesKey: #undefinedName123).

@@ -49,54 +49,47 @@ OCAnnotationTest >> testAnnotationBinding [
 	| plugin result |
 	plugin := OCDynamicASTCompilerPlugin
 		          newFromTransformBlock: [ :ast | "In fact, there is no transformation"
-			          (OCParseTreeSearcher new
-				           matches: '@binding: `@arg'
-				           do: [ :node :ans | "Static syntax check"
-					           node arguments first isVariable
-						           ifFalse: [ "Not a variable, add a syntax error"
-							           node arguments first addError: 'Variable expected'.
-							           "Also add a compile-time error for faulty modes"
-							           node receiver emitValueBlock: [ :methodBuilder |
-								           methodBuilder
-									           pushLiteralVariable: OCRuntimeSyntaxError binding;
-									           pushLiteral: 'Variable expected';
-									           send: #signal: ] ]
-						           ifTrue: [ "It's a real variable, to use the binding.
+				          (OCParseTreeSearcher new matches: '@binding: `@arg' do: [ :node :ans | "Static syntax check"
+						           node arguments first isVariable
+							           ifFalse: [ "Not a variable, add a syntax error"
+									           node arguments first addError: 'Variable expected'. "Also add a compile-time error for faulty modes"
+									           node receiver emitValueBlock: [ :methodBuilder |
+											           methodBuilder
+												           pushLiteralVariable: OCRuntimeSyntaxError binding;
+												           pushLiteral: 'Variable expected';
+												           send: #signal: ] ]
+							           ifTrue: [ "It's a real variable, to use the binding.
 						              Note: currenlty variables are not bound yet, but they will be when the block is evaluated"
-							           node receiver emitValueBlock: [ :methodBuilder |
-								           methodBuilder pushLiteral:
-									           node arguments first variable ] ] ]) executeTree:
-				          ast.
-			          ast ]
-		          andPriority: 0.
-
-	"Use plugin with compiler"
-	result := Object compiler
+								           node receiver emitValueBlock: [ :methodBuilder | methodBuilder pushLiteral: node arguments first variable ] ] ])
+					          executeTree: ast.
+				          ast ]
+		          andPriority: 0. "Use plugin with compiler"
+	result := OpalEvaluator new
 		          addParsePlugin: plugin;
 		          evaluate: '@binding: Object'.
 	self assert: result class equals: GlobalVariable.
 	self assert: result key equals: #Object.
 	self assert: result value equals: Object.
 
-	result := Object compiler
+	result := OpalEvaluator new
 		          addParsePlugin: plugin;
 		          evaluate: '@binding: self'.
 	self assert: result class equals: SelfVariable.
 
-	result := Object compiler
+	result := OpalEvaluator new
 		          addParsePlugin: plugin;
 		          failBlock: [ :n |
-			          self assert: n messageText equals: 'Variable expected'.
-			          #failed ];
+				          self assert: n messageText equals: 'Variable expected'.
+				          #failed ];
 		          evaluate: '@binding: 42'.
 	self assert: result equals: #failed.
 
 	self
 		should: [
-			Object compiler
-				addParsePlugin: plugin;
-				permitFaulty: true;
-				evaluate: '@binding: 42' ]
+				OpalEvaluator new
+					addParsePlugin: plugin;
+					permitFaulty: true;
+					evaluate: '@binding: 42' ]
 		raise: OCRuntimeSyntaxError
 ]
 

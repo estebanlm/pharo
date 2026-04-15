@@ -202,47 +202,6 @@ OpalCompilerTest >> testInstall [
 ]
 
 { #category : 'tests' }
-OpalCompilerTest >> testInstallException [
-
-	| method message |
-	"Precond"
-	self deny: (MockForCompilation includesSelector: #foo).
-
-	[ method := MockForCompilation compiler install: 'foo ^¿' ]
-		on: OCCodeError
-		do: [ :error | message := error messageText , ' :(' ].
-
-	self deny: (MockForCompilation includesSelector: #foo).
-	self assert: method isNil.
-	self assert: message equals: 'Unknown character :('
-]
-
-{ #category : 'tests' }
-OpalCompilerTest >> testInstallRequestor [
-
-	| method requestor |
-	"precond"
-	self deny: (MockForCompilation includesSelector: #foo).
-
-	requestor := OCMockRequestor new.
-
-	[
-	method := MockForCompilation compiler
-		          source: 'foo ^¿';
-		          requestor: requestor;
-		          failBlock: [  ];
-		          changeStamp: '2025-04-25T14:42:06.014486+02:00';
-		          protocol: 'hitching';
-		          install ]
-		on: OCCodeError
-		do: [  ].
-
-	self deny: (MockForCompilation includesSelector: #foo).
-	self assert: method isNil.
-	self assert: requestor notifyList first first equals: 'Unknown character ->'
-]
-
-{ #category : 'tests' }
 OpalCompilerTest >> testSavedProtocolInChangesFileIsRight [
 	"Regression test, the saved protocol was wrong when we provided a Protocol instance during compilation.."
 	

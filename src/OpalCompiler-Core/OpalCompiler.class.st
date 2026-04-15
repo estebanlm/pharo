@@ -35,7 +35,6 @@ Class {
 		'compilationContextClass',
 		'permitFaulty',
 		'permitUndeclared',
-		'failBlock',
 		'logged',
 		'changeStamp',
 		'protocol',
@@ -360,9 +359,8 @@ OpalCompiler >> compile [
 		result := self parse.
 		ast ifNil: [ "some failBlock" ^ result ] ].
 
-	(ast allNotices anySatisfy: [ :e | e isError ]) ifTrue: [
+	(ast allNotices anySatisfy: [ :e | e isErrorOn: self ]) ifTrue: [
 		compilationResult := OCErrorCompilationResult new.
-		^ nil
 	].
 
 	self callPlugins.
@@ -462,7 +460,9 @@ OpalCompiler >> evaluate [
 	| value doItMethod |
 	self isScripting: true.
 	doItMethod := self compile.
-	ast ifNil: [ ^ doItMethod ].
+	ast ifNil: [ ^ nil ].
+	doItMethod ifNil: [ ^ nil ].
+
 	value := self semanticScope evaluateDoIt: doItMethod.
 
 	self logged == true ifTrue: [ self semanticScope announceDoItEvaluation: source by: self class codeSupportAnnouncer ].
@@ -475,18 +475,6 @@ OpalCompiler >> evaluate: textOrString [
 	^self
 		source: textOrString;
 		evaluate
-]
-
-{ #category : 'accessing' }
-OpalCompiler >> failBlock [
-
-	^ failBlock
-]
-
-{ #category : 'accessing' }
-OpalCompiler >> failBlock: aBlock [
-
-	failBlock := aBlock
 ]
 
 { #category : 'public access' }

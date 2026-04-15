@@ -161,26 +161,44 @@ DebugContext >> recompileCurrentMethodTo: aText notifying: aNotifyer [
 
 	| classOrTraitOfMethod selector |
 	self context method isDoIt ifFalse: [
-		selector := self selectedClass compiler parseSelector: aText.
-		(self checkSelectorUnchanged: selector) ifFalse: [ ^ nil ] ].
+			selector := self selectedClass compiler parseSelector: aText.
+			(self checkSelectorUnchanged: selector) ifFalse: [ ^ nil ] ].
 
 	(self selectedClass includesSelector: selector) ifFalse: [
-		^ self selectedClass compiler
-			  protocol: self selectedMessageCategoryName;
-			  isScripting: self selectedMessageName isDoIt;
-			  requestor: aNotifyer;
-			  compile: aText ].
+			self selectedMessageName isDoIt
+				ifTrue: [
+						self selectedClass compiler
+							protocol: self selectedMessageCategoryName;
+							isScripting: self selectedMessageName isDoIt;
+							requestor: aNotifyer;
+							compile: aText ]
+				ifFalse: [
+						self selectedClass
+							compile: aText asString
+							classified: self selectedMessageCategoryName
+							withStamp: DateAndTime now
+							notifying: aNotifyer
+							logSource: self selectedClass shouldLogSource ].
+			^ self selectedClass >> self selectedMessageName ].
 
-	classOrTraitOfMethod := self
-		                        confirmOnTraitOverwrite: selector
-		                        inClass: self selectedClass.
+	classOrTraitOfMethod := self confirmOnTraitOverwrite: selector inClass: self selectedClass.
 	classOrTraitOfMethod ifNil: [ ^ nil ].
 
-	^ classOrTraitOfMethod compiler
-		  protocol: self selectedMessageCategoryName;
-		  isScripting: self selectedMessageName isDoIt;
-		  requestor: aNotifyer;
-		  install: aText
+	self selectedMessageName isDoIt
+		ifTrue: [
+				classOrTraitOfMethod compiler
+					protocol: self selectedMessageCategoryName;
+					isScripting: self selectedMessageName isDoIt;
+					requestor: aNotifyer;
+					compile: aText ]
+		ifFalse: [
+				classOrTraitOfMethod
+					compile: aText asString
+					classified: self selectedMessageCategoryName
+					withStamp: DateAndTime now
+					notifying: aNotifyer
+					logSource: classOrTraitOfMethod shouldLogSource ].
+	^ classOrTraitOfMethod >> self selectedMessageName
 ]
 
 { #category : 'accessing' }

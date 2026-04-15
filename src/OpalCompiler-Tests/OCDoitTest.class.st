@@ -129,10 +129,11 @@ OCDoitTest >> testDoItHaltBinding [
 
 { #category : 'tests' }
 OCDoitTest >> testDoItRequestorEvalError [
+
 	| value |
-	value  := OpalCompiler new
-	requestor: self;
-	evaluate: '1('.
+	value := OpalEvaluator new
+		failBlock: [ nil ];
+		evaluate: '1('.
 
 	self assert: value isNil
 ]

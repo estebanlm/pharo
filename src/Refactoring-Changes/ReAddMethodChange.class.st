@@ -51,7 +51,6 @@ ReAddMethodChange >> accept: aText notifying: aController [
 		source: aText asString;
 		class:  self changeClass;
 		requestor: aController;
-		failBlock: [ ^ false ];
 		compile.
 
 	self

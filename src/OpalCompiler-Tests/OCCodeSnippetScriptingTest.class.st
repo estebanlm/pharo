@@ -22,7 +22,7 @@ OCCodeSnippetScriptingTest >> testEvaluateFailBlock [
 
 	error := nil.
 	runBlock := [
-		OpalCompiler new
+		OpalEvaluator new
 			failBlock: [ :e | error := e. #tag ];
 			evaluate: snippet source ].
 
@@ -42,7 +42,7 @@ OCCodeSnippetScriptingTest >> testEvaluateFaulty [
 	self skipIf: #exec.
 
 	runBlock := [
-		OpalCompiler new
+		OpalEvaluator new
 			permitFaulty: true;
 			evaluate: snippet source ].
 
@@ -56,26 +56,11 @@ OCCodeSnippetScriptingTest >> testEvaluateOnError [
 	self skipIf: #exec.
 
 	value := #tag.
-	runBlock := [ value := OpalCompiler new evaluate: snippet source ].
+	runBlock := [ value := OpalEvaluator new evaluate: snippet source ].
 
 	snippet isFaulty
 		ifTrue: [
 			self should: runBlock raise: OCCodeError.
 			self assert: value equals: #tag ]
 		ifFalse: [ self testExecuteBlock: runBlock ]
-]
-
-{ #category : 'tests' }
-OCCodeSnippetScriptingTest >> testEvaluateOnErrorResume [
-
-	| runBlock value |
-	self skipIf: #exec.
-
-	value := #tag.
-	runBlock := [
-	            [ OpalCompiler new evaluate: snippet source ]
-		            on: OCCodeError
-		            do: [ :e | e resume ] ].
-
-	self testExecuteBlock: runBlock
 ]

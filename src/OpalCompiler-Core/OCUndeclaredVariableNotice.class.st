@@ -7,6 +7,19 @@ Class {
 }
 
 { #category : 'testing' }
+OCUndeclaredVariableNotice >> isErrorOn: anOpalCompiler [ 
+	
+	| permitFaulty |	
+	"I'm an error if the compiler does not allow faults.
+	Otherwise, I'm a warning"
+	
+	"I'm an error if the setting is not set"
+	permitFaulty := anOpalCompiler permitUndeclared.
+	^ permitFaulty ifNil: [ true ]
+		ifNotNil: [ permitFaulty not ]
+]
+
+{ #category : 'testing' }
 OCUndeclaredVariableNotice >> isUndeclaredNotice [
 
 	^ true

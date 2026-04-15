@@ -74,35 +74,13 @@ Behavior >> compile: selector from: oldClass [
 Behavior >> compile: sourceCode notifying: requestor methodInstaller: methodInstaller [
 	"Return the selector of the compiled method"
 
-	| method compiler |
-	
-	sourceCode ifEmpty: [ Error signal: 'The source code should not be empty' ].
-	compiler := self compiler
-		            source: sourceCode;
-		            requestor: requestor;
-		            failBlock: (requestor ifNotNil: [ [ ^ nil ] ]);
-		            "no failblock if no requestor"
-						"compatibility: permit undeclared if no requestor"
-						permitUndeclared: false;
-		            permitFaulty: false.
+	| compilerFacade method |
+	compilerFacade := OCInteractiveAPI new.
 
-	method := compiler compile.
+	method := compilerFacade compile: sourceCode notifying: requestor in: self.
+	method ifNil: [ ^ nil ].
 
-	compiler compilationResult ifNotNil: [
-		requestor ifNotNil: [ 
-			compiler ast allNotices sorted do: [ :n |
-				| check isInteractive |
-				isInteractive := requestor notNil and: [
-					(requestor respondsTo: #interactive) not or: [ requestor interactive ] ].
-				check := compiler checkNotice: n requestor: requestor isInteractive: isInteractive.
-				check ifNil: [ ^ self compile: requestor text asString notifying: requestor methodInstaller: methodInstaller ].
-				check ifFalse: [
-					compiler ast: nil.
-					^ compiler failBlock ifNotNil: [ :block | block cull: n ] ifNil: [ nil ].
-					] ] ].
-		].
-
-	methodInstaller install: method into: self compiler: compiler.
+	methodInstaller install: method into: self compiler: compilerFacade compiler.
 	^ method selector
 ]
 
