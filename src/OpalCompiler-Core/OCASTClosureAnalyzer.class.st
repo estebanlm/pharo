@@ -8,7 +8,9 @@ Class {
 	#instVars : [
 		'scope',
 		'currentBlockIsClean',
-		'currentBlockAccessesSelf'
+		'currentBlockAccessesSelf',
+		'currentBlockHasNonLocalReturn',
+		'currentBlockHasIncomingVariables'
 	],
 	#category : 'OpalCompiler-Core-Semantics',
 	#package : 'OpalCompiler-Core',
@@ -35,11 +37,14 @@ OCASTClosureAnalyzer >> visitBlockNode: aBlockNode [
 	"By default, block closures are clean.
 	We now prove by checking the children that it is still the case.
 	If not the case, we will mark it as not clean"
-	| parentBlockIsClean parentBlockAccessesSelf |
+	| parentBlockAccessesSelf parentBlockHasIncomingVariables parentBlockHasNonLocalReturn |
 	parentBlockAccessesSelf := currentBlockAccessesSelf.
-	parentBlockIsClean := currentBlockIsClean.
-	currentBlockIsClean := true.
+	parentBlockHasIncomingVariables := currentBlockHasIncomingVariables.
+	parentBlockHasNonLocalReturn := currentBlockHasNonLocalReturn.
+	
 	currentBlockAccessesSelf := false.
+	currentBlockHasIncomingVariables := false.
+	currentBlockHasNonLocalReturn := false.
 	
 	self visitArgumentNodes: aBlockNode arguments.
 	scope := aBlockNode scope.
@@ -48,14 +53,16 @@ OCASTClosureAnalyzer >> visitBlockNode: aBlockNode [
 	self visitNode: aBlockNode body.
 	aBlockNode temporaries do: [ :each | self lookupAndFixBinding: each ].
 	
-	scope hasEscapingVars ifTrue: [ currentBlockIsClean := false ].
-	scope isClean: currentBlockIsClean.
+	scope hasEscapingVars ifTrue: [ currentBlockHasIncomingVariables := true ].
+	scope isClean: (currentBlockHasIncomingVariables not and: [ currentBlockHasNonLocalReturn not and: [ currentBlockAccessesSelf not ] ]).
 
 	"We come back to the parent scope.
 	Restore the value of the analysis for the current scope"
 	scope := scope popScope.
-	currentBlockIsClean := parentBlockIsClean ifNotNil: [ parentBlockIsClean and: [ currentBlockAccessesSelf not ] ].
-	currentBlockAccessesSelf := parentBlockAccessesSelf
+	currentBlockAccessesSelf := parentBlockAccessesSelf ifNotNil: [ parentBlockAccessesSelf or: [ currentBlockAccessesSelf ] ].
+	currentBlockHasNonLocalReturn := parentBlockHasNonLocalReturn ifNotNil: [ parentBlockHasNonLocalReturn or: [ currentBlockHasNonLocalReturn ] ].
+	currentBlockHasIncomingVariables := parentBlockHasIncomingVariables.
+	
 ]
 
 { #category : 'visiting' }
@@ -86,7 +93,7 @@ OCASTClosureAnalyzer >> visitMethodNode: aMethodNode [
 { #category : 'visiting' }
 OCASTClosureAnalyzer >> visitReturnNode: aReturnNode [
 
-	currentBlockIsClean := false.
+	currentBlockHasNonLocalReturn := true.
 	^ super visitReturnNode: aReturnNode
 ]
 
@@ -98,8 +105,8 @@ OCASTClosureAnalyzer >> visitVariableNode: aVariableNode [
 	accessesSelf := variableBinding isInstanceVariable or: [ variableBinding isSelfVariable or: [ variableBinding isSuperVariable ] ].
 	
 	accessesSelf ifTrue: [ currentBlockAccessesSelf := true ].
-	(accessesSelf or: [ variableBinding isLocalVariable and: [ variableBinding scope ~= scope ] ])
-		ifTrue: [ currentBlockIsClean := false ].
+	(variableBinding isLocalVariable and: [ variableBinding scope ~= scope ])
+		ifTrue: [ currentBlockHasIncomingVariables := true ].
 
 	^ super visitVariableNode: aVariableNode
 ]
