@@ -6,7 +6,8 @@ Class {
 	#name : 'OCASTClosureAnalyzer',
 	#superclass : 'OCProgramNodeVisitor',
 	#instVars : [
-		'scope'
+		'scope',
+		'currentBlockIsClean'
 	],
 	#category : 'OpalCompiler-Core-Semantics',
 	#package : 'OpalCompiler-Core',
@@ -29,12 +30,22 @@ OCASTClosureAnalyzer >> visitArgumentNode: aVariableNode [
 { #category : 'visiting' }
 OCASTClosureAnalyzer >> visitBlockNode: aBlockNode [
 	"here look at the temps and make copying vars / tempVector out of them"
+	
+	"By default, block closures are clean.
+	We now prove by checking the children that it is still the case.
+	If not the case, we will mark it as not clean"
+	currentBlockIsClean := true.
+	
 	self visitArgumentNodes: aBlockNode arguments.
 	scope := aBlockNode scope.
 	scope moveEscapingWritesToTempVector.
 	scope copyEscapingReads.
 	self visitNode: aBlockNode body.
 	aBlockNode temporaries do: [ :each | self lookupAndFixBinding: each ].
+	
+	scope hasEscapingVars ifTrue: [ currentBlockIsClean := false ].
+	scope isClean: currentBlockIsClean.
+	
 	scope := scope popScope
 ]
 
@@ -58,4 +69,22 @@ OCASTClosureAnalyzer >> visitMethodNode: aMethodNode [
 	scope copyEscapingReads.
 	self visitNode: aMethodNode body.
 	aMethodNode temporaries do: [ :each | self lookupAndFixBinding: each ]
+]
+
+{ #category : 'visiting' }
+OCASTClosureAnalyzer >> visitReturnNode: aReturnNode [
+
+	currentBlockIsClean := false.
+	^ super visitReturnNode: aReturnNode
+]
+
+{ #category : 'visiting' }
+OCASTClosureAnalyzer >> visitVariableNode: aVariableNode [
+
+	| accessesSelf variableBinding |
+	variableBinding := aVariableNode variable.
+	accessesSelf := variableBinding isInstanceVariable or: [ variableBinding isSelfVariable or: [ variableBinding isSuperVariable ] ].
+	accessesSelf ifTrue: [ currentBlockIsClean := false ].
+
+	^ super visitVariableNode: aVariableNode
 ]

@@ -10,7 +10,8 @@ Class {
 		'tempVector',
 		'id',
 		'tempVectorVar',
-		'node'
+		'node',
+		'isClean'
 	],
 	#category : 'OpalCompiler-Core-Semantics',
 	#package : 'OpalCompiler-Core',
@@ -109,7 +110,22 @@ OCAbstractMethodScope >> initialize [
 	tempVars :=  OrderedDictionary new.
 	tempVector  := OrderedDictionary new.
 	copiedVars := OrderedDictionary new.
-	id := 0
+	id := 0.
+	
+	"Closures are not clean unless proven otherwise"
+	isClean := false.
+]
+
+{ #category : 'accessing' }
+OCAbstractMethodScope >> isClean [
+
+	^ isClean
+]
+
+{ #category : 'accessing' }
+OCAbstractMethodScope >> isClean: anObject [
+
+	isClean := anObject
 ]
 
 { #category : 'temp vars' }
@@ -147,11 +163,40 @@ OCAbstractMethodScope >> lookupDefiningContextForVariable: var startingFrom: aCo
 { #category : 'lookup' }
 OCAbstractMethodScope >> lookupVar: name [
 
+	| found |
+	"Return a variable or nil if not found"
+
+	"Be aware that this method is used in two different phases:
+	 - at compile time, it's first called to do name resolution. 
+	   During this phase, no block scope is marked as clean, so we do a full name resolution.
+	   We return self/super/instvars/outer vars even if the block *will* be clean.	
+	 - at runtime, after block scopes are marked as clean/not clean, we cut the variable lookup"
+
+
+	"If the variable is defined locally, just return it"
 	copiedVars at: name ifPresent: [:v | ^ v].
 	tempVector at: name ifPresent: [:v | ^ v].
 	tempVars at: name ifPresent: [:v | ^ v].
 	name = self tempVectorName ifTrue: [ ^ self tempVectorVar ].
-	^ super lookupVar: name
+	
+	"Otherwise, look it up in the enclosing context.
+	But be careful of satisfying the clean block rules."
+	
+	found := super lookupVar: name.
+	found ifNil: [ ^ found ].
+	
+	(self isBlockScope and: [ self isClean ])
+		ifFalse: [ ^ found ].
+	
+	"We are in a block scope, do not return self, super, ivar, temps nor args"
+	(found isSelfVariable or: [ found isSuperVariable ])
+		ifTrue: [ ^ nil ].
+	
+	found isInstanceVariable ifTrue: [ ^ nil ].
+	found isLocalVariable ifTrue: [ ^ nil ].
+	
+	"The rest of variables (e.g., globals, thisContext) are visible!"
+	^ found
 ]
 
 { #category : 'scope' }
