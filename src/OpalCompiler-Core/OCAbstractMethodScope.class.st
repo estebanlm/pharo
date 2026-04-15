@@ -161,7 +161,6 @@ OCAbstractMethodScope >> lookupDefiningContextForVariable: var startingFrom: aCo
 { #category : 'lookup' }
 OCAbstractMethodScope >> lookupVar: name [
 
-	| found |
 	"Return a variable or nil if not found"
 
 	"Be aware that this method is used in two different phases:
@@ -177,24 +176,7 @@ OCAbstractMethodScope >> lookupVar: name [
 	tempVars at: name ifPresent: [:v | ^ v].
 	name = self tempVectorName ifTrue: [ ^ self tempVectorVar ].
 	
-	"Otherwise, look it up in the enclosing context.
-	But be careful of satisfying the clean block rules."
-	
-	found := super lookupVar: name.
-	found ifNil: [ ^ found ].
-	
-	(self isBlockScope and: [ self isClean ])
-		ifFalse: [ ^ found ].
-	
-	"We are in a block scope, do not return self, super, ivar, temps nor args"
-	(found isSelfVariable or: [ found isSuperVariable ])
-		ifTrue: [ ^ nil ].
-	
-	found isInstanceVariable ifTrue: [ ^ nil ].
-	found isLocalVariable ifTrue: [ ^ nil ].
-	
-	"The rest of variables (e.g., globals, thisContext) are visible!"
-	^ found
+	^ super lookupVar: name
 ]
 
 { #category : 'scope' }
