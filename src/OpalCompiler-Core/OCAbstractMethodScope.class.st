@@ -150,14 +150,12 @@ OCAbstractMethodScope >> lookupDefiningContextForVariable: var startingFrom: aCo
 	"Is this the definition context for var? If it not, we look in the outer context using the corresponding outer scope. If found, we return the context"
 
 	| nextContext |
+	self = var scope ifTrue: [ ^ aContext ].
+	
 	nextContext := self nextOuterScopeContextOf: aContext.
-	nextContext
-	 ifNil: [  (var isArgumentVariable )
-        ifTrue: [ ^aContext ]
-        ifFalse: [ self error: var name, ' optimized out' ] ].
-	^self = var scope
-		ifFalse: [ self outerScope lookupDefiningContextForVariable: var startingFrom: nextContext ]
-		ifTrue: [ aContext ]
+	nextContext ifNil: [ self error: var name, ' optimized out' ].
+	
+	^ self outerScope lookupDefiningContextForVariable: var startingFrom: nextContext
 ]
 
 { #category : 'lookup' }
