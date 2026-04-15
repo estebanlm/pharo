@@ -47,13 +47,13 @@ SycRemoveMessageArgumentCommand >> computeArgumentName [
 
 { #category : 'execution' }
 SycRemoveMessageArgumentCommand >> createRefactoring [
-	
-	^(RBRemoveParameterRefactoring
-		model: model
-		removeParameter: argumentName
-		in: refactoredClass
-		selector: originalMessage selector)
-		newSelector: self resultMessageSelector
+
+	^ (RBRemoveParameterRefactoring
+		   model: model
+		   removeParameter: argumentName 
+		   in: refactoredClass
+		   selector: originalMessage selector
+		   index: (originalMessage argumentNames indexOf: argumentName)) newSelector: self resultMessageSelector
 ]
 
 { #category : 'accessing' }
