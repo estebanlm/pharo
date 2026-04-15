@@ -7,7 +7,8 @@ Class {
 	#superclass : 'OCProgramNodeVisitor',
 	#instVars : [
 		'scope',
-		'currentBlockIsClean'
+		'currentBlockIsClean',
+		'currentBlockAccessesSelf'
 	],
 	#category : 'OpalCompiler-Core-Semantics',
 	#package : 'OpalCompiler-Core',
@@ -34,9 +35,11 @@ OCASTClosureAnalyzer >> visitBlockNode: aBlockNode [
 	"By default, block closures are clean.
 	We now prove by checking the children that it is still the case.
 	If not the case, we will mark it as not clean"
-	| parentBlockIsClean |
+	| parentBlockIsClean parentBlockAccessesSelf |
+	parentBlockAccessesSelf := currentBlockAccessesSelf.
 	parentBlockIsClean := currentBlockIsClean.
 	currentBlockIsClean := true.
+	currentBlockAccessesSelf := false.
 	
 	self visitArgumentNodes: aBlockNode arguments.
 	scope := aBlockNode scope.
@@ -51,7 +54,8 @@ OCASTClosureAnalyzer >> visitBlockNode: aBlockNode [
 	"We come back to the parent scope.
 	Restore the value of the analysis for the current scope"
 	scope := scope popScope.
-	currentBlockIsClean := parentBlockIsClean 
+	currentBlockIsClean := parentBlockIsClean ifNotNil: [ parentBlockIsClean and: [ currentBlockAccessesSelf not ] ].
+	currentBlockAccessesSelf := parentBlockAccessesSelf
 ]
 
 { #category : 'visiting' }
@@ -93,6 +97,7 @@ OCASTClosureAnalyzer >> visitVariableNode: aVariableNode [
 	variableBinding := aVariableNode variable.
 	accessesSelf := variableBinding isInstanceVariable or: [ variableBinding isSelfVariable or: [ variableBinding isSuperVariable ] ].
 	
+	accessesSelf ifTrue: [ currentBlockAccessesSelf := true ].
 	(accessesSelf or: [ variableBinding isLocalVariable and: [ variableBinding scope ~= scope ] ])
 		ifTrue: [ currentBlockIsClean := false ].
 
