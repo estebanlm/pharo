@@ -34,6 +34,8 @@ OCASTClosureAnalyzer >> visitBlockNode: aBlockNode [
 	"By default, block closures are clean.
 	We now prove by checking the children that it is still the case.
 	If not the case, we will mark it as not clean"
+	| parentBlockIsClean |
+	parentBlockIsClean := currentBlockIsClean.
 	currentBlockIsClean := true.
 	
 	self visitArgumentNodes: aBlockNode arguments.
@@ -45,8 +47,11 @@ OCASTClosureAnalyzer >> visitBlockNode: aBlockNode [
 	
 	scope hasEscapingVars ifTrue: [ currentBlockIsClean := false ].
 	scope isClean: currentBlockIsClean.
-	
-	scope := scope popScope
+
+	"We come back to the parent scope.
+	Restore the value of the analysis for the current scope"
+	scope := scope popScope.
+	currentBlockIsClean := parentBlockIsClean 
 ]
 
 { #category : 'visiting' }
@@ -57,7 +62,10 @@ OCASTClosureAnalyzer >> visitLocalVariableNode: aVariableNode [
 	var isTempVectorTemp ifTrue: [ | vectorVar |
 		vectorVar := scope lookupVar: var vectorName.
 		scope addCopyingTempToAllScopesUpToDefTemp: vectorVar].
-	var isCopying ifTrue: [scope addCopyingTempToAllScopesUpToDefTemp: var]
+	var isCopying ifTrue: [scope addCopyingTempToAllScopesUpToDefTemp: var].
+	
+	"Continue the iteration so we call other defined hooks"
+	super visitLocalVariableNode: aVariableNode
 ]
 
 { #category : 'visiting' }
@@ -84,7 +92,9 @@ OCASTClosureAnalyzer >> visitVariableNode: aVariableNode [
 	| accessesSelf variableBinding |
 	variableBinding := aVariableNode variable.
 	accessesSelf := variableBinding isInstanceVariable or: [ variableBinding isSelfVariable or: [ variableBinding isSuperVariable ] ].
-	accessesSelf ifTrue: [ currentBlockIsClean := false ].
+	
+	(accessesSelf or: [ variableBinding isLocalVariable and: [ variableBinding scope ~= scope ] ])
+		ifTrue: [ currentBlockIsClean := false ].
 
 	^ super visitVariableNode: aVariableNode
 ]
