@@ -40,6 +40,12 @@ BaselineOfKernel >> baseline: spec [
 						className: 'BaselineOfZincCharacterEncoding';
 						repository: (self packageRepositoryURLForSpec: spec);
 						loads: #( 'Tests' )];
+					
+				baseline: 'System-SessionManager-Tests' with: [ 
+					spec
+						className: 'BaselineOfSystemSessionManager';
+						repository: (self packageRepositoryURLForSpec: spec);
+						loads: #( 'Tests' )];
 				package: 'Announcements-Core';
 				package: 'Collections-Abstract';
 				package: 'Collections-DoubleLinkedList';
@@ -107,5 +113,5 @@ BaselineOfKernel >> baseline: spec [
 				with:
 					{ 'Collections-Abstract-Tests'. 'Collections-DoubleLinkedList-Tests'. 'Collections-Native-Tests'. 'Collections-Sequenceable-Tests'. 'Collections-Streams-Tests'. 'Collections-Strings-Tests'.
 					'Collections-Support-Tests'. 'Collections-Unordered-Tests'. 'Collections-Weak-Tests'. 'Kernel-Tests'. 'Kernel-CodeModel-Tests'. 'Announcements-Core-Tests'. 'System-Platforms-Tests'.
-					 'Files-Tests'. 'System-Finalization-Tests'. 'Zinc-Character-Encoding-Tests'. 'System-Time-Tests' } ]
+					 'Files-Tests'. 'System-Finalization-Tests'. 'Zinc-Character-Encoding-Tests'. 'System-Time-Tests'. 'System-SessionManager-Tests' } ]
 ]
