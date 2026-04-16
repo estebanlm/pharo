@@ -12,7 +12,6 @@ Class {
 	#superclass : 'CmdCommand',
 	#instVars : [
 		'package',
-		'newName',
 		'refactoringScopes'
 	],
 	#category : 'SystemCommands-PackageCommands',

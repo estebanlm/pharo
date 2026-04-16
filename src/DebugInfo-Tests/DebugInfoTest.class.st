@@ -721,6 +721,20 @@ DebugInfoTest >> testReadLocalBlockArgumentVariable [
 ]
 
 { #category : 'tests - read variables' }
+DebugInfoTest >> testReadLocalBlockArgumentVariableCleanBlock [
+
+	| debugInfo context |
+	context := [ :blockArgument | thisContext copy ] value: 7.
+
+	debugInfo := self newDebugInfoFor: context method.
+
+	self
+		assert:
+		(debugInfo readVariableNamed: #blockArgument fromContext: context)
+		equals: 7
+]
+
+{ #category : 'tests - read variables' }
 DebugInfoTest >> testReadLocalBlockTempVectorTemporaryVariableFromClosure [
 	"This test is tricky.
 	
