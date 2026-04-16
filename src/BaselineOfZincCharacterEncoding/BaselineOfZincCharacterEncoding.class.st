@@ -1,27 +1,9 @@
 Class {
 	#name : 'BaselineOfZincCharacterEncoding',
 	#superclass : 'BaselineOf',
-	#category : 'BaselineOfKernel',
-	#package : 'BaselineOfKernel'
+	#category : 'BaselineOfZincCharacterEncoding',
+	#package : 'BaselineOfZincCharacterEncoding'
 }
-
-{ #category : 'accessing' }
-BaselineOfZincCharacterEncoding class >> additionalPackagesPackageNames [
-
-	^ self packagesOfGroupNamed: #AdditionalPackages
-]
-
-{ #category : 'accessing' }
-BaselineOfZincCharacterEncoding class >> corePackageNames [
-
-	^ self packagesOfGroupNamed: #Core
-]
-
-{ #category : 'accessing' }
-BaselineOfZincCharacterEncoding class >> testsPackageNames [
-
-	^ self packagesOfGroupNamed: #Tests
-]
 
 { #category : 'baselines' }
 BaselineOfZincCharacterEncoding >> baseline: spec [
