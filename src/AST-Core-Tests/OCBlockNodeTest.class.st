@@ -32,26 +32,26 @@ OCBlockNodeTest >> testHasNonLocalReturn [
 OCBlockNodeTest >> testIsClean [
 	| escpWrite escpRead |
 	escpRead := escpWrite := 1.
-	self deny: [ self yourself ] sourceNode isClean.
-	self deny: [ ^ 1 ] sourceNode isClean.
-	self deny: [ { 1 . ^2 }  ] sourceNode isClean.
-	self deny: [ testSelector foo ] sourceNode isClean.
-	self deny: [ escpRead foo ] sourceNode isClean.
-	self deny: [ escpWrite := 2 ] sourceNode isClean.
+	self deny: [ self yourself ] sourceNode scope isClean.
+	self deny: [ ^ 1 ] sourceNode scope isClean.
+	self deny: [ { 1 . ^2 }  ] sourceNode scope isClean.
+	self deny: [ testSelector foo ] sourceNode scope isClean.
+	self deny: [ escpRead foo ] sourceNode scope isClean.
+	self deny: [ escpWrite := 2 ] sourceNode scope isClean.
 
-	self deny: [[ self yourself ]] sourceNode isClean.
-	self deny: [[ ^ 1 ]] sourceNode isClean.
-	self deny: [[ testSelector foo ]] sourceNode isClean.
-	self deny: [[ escpRead foo ]] sourceNode isClean.
-	self deny: [[ escpWrite := 2 ]] sourceNode isClean.
-	self assert: [  ] sourceNode isClean.
-	self assert: [ thisContext ] sourceNode isClean.
-	self assert: [ 1 + 2 ] sourceNode isClean.
-	self assert: [ :a | a + 2 ] sourceNode isClean.
-	self assert: [ :a :b | a + b + 3 ] sourceNode isClean.
-	self assert: [ | a | a := 1. a + 3 ] sourceNode isClean.
+	self deny: [[ self yourself ]] sourceNode scope isClean.
+	self deny: [[ ^ 1 ]] sourceNode scope isClean.
+	self deny: [[ testSelector foo ]] sourceNode scope isClean.
+	self deny: [[ escpRead foo ]] sourceNode scope isClean.
+	self deny: [[ escpWrite := 2 ]] sourceNode scope isClean.
+	self assert: [  ] sourceNode scope isClean.
+	self assert: [ thisContext ] sourceNode scope isClean.
+	self assert: [ 1 + 2 ] sourceNode scope isClean.
+	self assert: [ :a | a + 2 ] sourceNode scope isClean.
+	self assert: [ :a :b | a + b + 3 ] sourceNode scope isClean.
+	self assert: [ | a | a := 1. a + 3 ] sourceNode scope isClean.
 
-	self assert: [ true ifTrue: [  ] ]  sourceNode isClean.
+	self assert: [ true ifTrue: [  ] ]  sourceNode scope isClean.
 	"optimized blocks"
 	self assert: [
 		| local2 | true ifTrue: [local2 := 1 ] ] isClean. "optimized blocks are clean"

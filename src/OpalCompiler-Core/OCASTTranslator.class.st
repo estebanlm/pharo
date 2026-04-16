@@ -601,7 +601,7 @@ OCASTTranslator >> visitBlockNode: aBlockNode [
 
 	aBlockNode isInlined ifTrue: [^ self visitInlinedBlockNode: aBlockNode ].
 	(self compilationContext optionConstantBlockClosure and: [aBlockNode isConstant and: [ aBlockNode numArgs < 4  ]]) ifTrue: [ ^ self visitConstantBlockNode: aBlockNode].
-	(self compilationContext optionCleanBlockClosure and: [ aBlockNode isClean ]) ifTrue: [ ^ self visitCleanBlockNode: aBlockNode].
+	(self compilationContext optionCleanBlockClosure and: [ aBlockNode scope isClean ]) ifTrue: [ ^ self visitCleanBlockNode: aBlockNode].
 
 	compiledBlock := self subTranslator translateFullBlock: aBlockNode.
 

@@ -8,7 +8,7 @@ I change all the references of the classes that are defined within the package, 
 Example
 ---------
 ```
-(RBRenamePackageRefactoring 
+(ReRenamePackageRefactoring 
 				rename: (self getPackageNamed: #'Refactoring-Tests-Core')
 				to: #'Refactoring-Core-Test') execute.
 ```
@@ -60,11 +60,9 @@ ReRenamePackageRefactoring >> manifestClassNameFor: aPackageName [
 	^('Manifest', (aPackageName select: [:each | each isAlphaNumeric ])) asSymbol
 ]
 
-{ #category : 'initialization' }
-ReRenamePackageRefactoring >> packageName: aName newName: aNewName [
-	packageName := aName asSymbol.
-	package := self model packageNamed: packageName.
-	newName := aNewName asSymbol
+{ #category : 'accessing' }
+ReRenamePackageRefactoring >> newName: aNewName [
+    newName := aNewName asSymbol
 ]
 
 { #category : 'transforming' }
@@ -72,11 +70,22 @@ ReRenamePackageRefactoring >> prepareForExecution [
     package := self model packageNamed: packageName
 ]
 
+{ #category : 'initialization' }
+ReRenamePackageRefactoring >> packageName: aName newName: aNewName [
+	packageName := aName asSymbol.
+	newName := aNewName asSymbol
+]
+
 { #category : 'transforming' }
 ReRenamePackageRefactoring >> privateTransform [
 
 	self renamePackage.
 	self renameManifestClass
+]
+
+{ #category : 'class management' }
+ReRenamePackageRefactoring >> rename: aName [
+    packageName := aName asSymbol
 ]
 
 { #category : 'transforming' }

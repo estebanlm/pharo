@@ -34,13 +34,18 @@ BaselineOfKernel >> baseline: spec [
 						className: 'BaselineOfFiles';
 						repository: (self packageRepositoryURLForSpec: spec);
 						loads: #( 'Tests' )];
-					
+
+				baseline: 'Zinc-Character-Encoding-Tests' with: [ 
+					spec
+						className: 'BaselineOfZincCharacterEncoding';
+						repository: (self packageRepositoryURLForSpec: spec);
+						loads: #( 'Tests' )];
+
 				baseline: 'Sytem-Platforms-Tests' with: [ 
 					spec
 						className: 'BaselineOfSystemPlatforms';
 						repository: (self packageRepositoryURLForSpec: spec);
 						loads: #( 'Tests' )];
-
 				package: 'Announcements-Core';
 				package: 'Collections-Abstract';
 				package: 'Collections-DoubleLinkedList';
@@ -90,7 +95,6 @@ BaselineOfKernel >> baseline: spec [
 				package: 'Kernel-CodeModel-Tests';
 				package: 'Announcements-Core-Tests';
 				package: 'System-Finalization-Tests';
-				package: 'Zinc-Character-Encoding-Tests';
 				package: 'System-Time-Tests'.
 
 			"The order of packages in the groups are important for the bootstrap! It define the load order."
