@@ -1,8 +1,8 @@
 Class {
 	#name : 'BaselineOfSystemSessionManager',
 	#superclass : 'BaselineOf',
-	#category : 'baselineOfSystemSessionManager',
-	#package : 'baselineOfSystemSessionManager'
+	#category : 'BaselineOfSystemSessionManager',
+	#package : 'BaselineOfSystemSessionManager'
 }
 
 { #category : 'baselines' }
