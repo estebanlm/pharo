@@ -640,6 +640,7 @@ Object >> doesNotUnderstand: aMessage [
 
 	<reflection: 'Message sending and code execution - Control message passing'>
 	<debuggerCompleteToSender>
+	<dnuEntryPoint>
 	 "Handle the fact that there was an attempt to send the given message to the receiver but the receiver does not understand this message (typically sent from the machine when a message is sent to the receiver and no method is defined for that selector)."
 
 	^ aMessage selector handleDoesNotUnderstand: aMessage to: self
