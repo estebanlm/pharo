@@ -7,7 +7,6 @@ Class {
 	#superclass : 'OCProgramNodeVisitor',
 	#instVars : [
 		'scope',
-		'currentBlockIsClean',
 		'currentBlockAccessesSelf',
 		'currentBlockHasNonLocalReturn',
 		'currentBlockHasIncomingVariables'
