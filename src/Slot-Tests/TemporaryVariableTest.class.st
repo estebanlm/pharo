@@ -61,6 +61,24 @@ TemporaryVariableTest >> testReadNodes [
 ]
 
 { #category : 'tests' }
+TemporaryVariableTest >> testReadTemporaryVariableInCleanBlock [
+	
+	| context |
+	context := [ | b | b := 2 . thisContext copy ] value.
+	
+	self assert: (context readVariableNamed: #b) equals: 2
+]
+
+{ #category : 'tests' }
+TemporaryVariableTest >> testReadTemporaryVariableInNonCleanBlock [
+	
+	| context outer |
+	context := [ | b | b := 2 . outer . thisContext copy ] value.
+	
+	self assert: (context readVariableNamed: #b) equals: 2
+]
+
+{ #category : 'tests' }
 TemporaryVariableTest >> testReadTemporaryVariablesMethod [
 	| tempVar |
 	tempVar := thisContext lookupVar: #tempVar.
