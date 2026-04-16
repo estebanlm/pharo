@@ -29,7 +29,12 @@ BaselineOfKernel >> baseline: spec [
 	<baseline>
 	spec for: #common do: [
 			spec
-				baseline: 'Files' with: [ spec repository: 'github://NathanMalenge/pharo/src' ];
+				baseline: 'Files-Tests' with: [ 
+					spec
+						className: 'BaselineOfFiles';
+						repository: (self packageRepositoryURLForSpec: spec);
+						loads: #( 'Tests' )];
+
 				baseline: 'Zinc-Character-Encoding-Tests' with: [ 
 					spec
 						className: 'BaselineOfZincCharacterEncoding';
@@ -82,7 +87,6 @@ BaselineOfKernel >> baseline: spec [
 				package: 'Collections-Weak-Tests' with: [ spec requires: #( 'Collections-Unordered-Tests' ) ];
 				package: 'Kernel-Tests';
 				package: 'Kernel-CodeModel-Tests';
-				package: 'Files-Tests' with: [spec requires: #('Files')];
 				package: 'Announcements-Core-Tests';
 				package: 'System-Platforms-Tests';
 				package: 'System-Finalization-Tests';
