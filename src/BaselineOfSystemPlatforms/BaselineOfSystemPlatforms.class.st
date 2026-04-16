@@ -1,6 +1,6 @@
 Class {
 	#name : 'BaselineOfSystemPlatforms',
-	#superclass : 'Object',
+	#superclass : 'BaselineOf',
 	#category : 'BaselineOfSystemPlatforms',
 	#package : 'BaselineOfSystemPlatforms'
 }
