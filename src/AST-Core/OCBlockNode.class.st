@@ -386,21 +386,6 @@ OCBlockNode >> scope: aScopedNode [
 ]
 
 { #category : 'accessing' }
-OCBlockNode >> scopeForContext: aContext [
-
-	"When we are creating a AST scope from a context, and the context is for a clean block. 
-	We need to return an scope with only the block scope, detached from the outerscope. 
-	I return a copy, because the scopes are kept in the AST cache and changing it will affect the 
-	compilation of the whole method"
-
-	self isClean ifFalse: [ ^ self scope ].
-	
-	^ self scope copy
-		outerScope: nil;
-		yourself
-]
-
-{ #category : 'accessing' }
 OCBlockNode >> startWithoutParentheses [
 	^ left
 ]
