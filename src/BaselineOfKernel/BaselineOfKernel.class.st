@@ -29,6 +29,7 @@ BaselineOfKernel >> baseline: spec [
 	<baseline>
 	spec for: #common do: [
 			spec
+				baseline: 'Files' with: [ spec repository: 'github://NathanMalenge/pharo/src' ];
 				package: 'Announcements-Core';
 				package: 'Collections-Abstract';
 				package: 'Collections-DoubleLinkedList';
@@ -76,7 +77,7 @@ BaselineOfKernel >> baseline: spec [
 				package: 'Collections-Weak-Tests' with: [ spec requires: #( 'Collections-Unordered-Tests' ) ];
 				package: 'Kernel-Tests';
 				package: 'Kernel-CodeModel-Tests';
-				package: 'Files-Tests';
+				package: 'Files-Tests' with: [spec requires: #('Files')];
 				package: 'Announcements-Core-Tests';
 				package: 'System-Platforms-Tests';
 				package: 'System-Finalization-Tests';
