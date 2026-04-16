@@ -29,6 +29,7 @@ BaselineOfKernel >> baseline: spec [
 	<baseline>
 	spec for: #common do: [
 			spec
+				baseline: 'ZincCharacterEncoding' with: [ spec repository: 'github://NathanMalenge/pharo/src' ];
 				package: 'Announcements-Core';
 				package: 'Collections-Abstract';
 				package: 'Collections-DoubleLinkedList';
@@ -80,7 +81,7 @@ BaselineOfKernel >> baseline: spec [
 				package: 'Announcements-Core-Tests';
 				package: 'System-Platforms-Tests';
 				package: 'System-Finalization-Tests';
-				package: 'Zinc-Character-Encoding-Tests';
+				package: 'Zinc-Character-Encoding-Tests' with: [ spec requires: #('ZincCharacterEncoding') ];
 				package: 'System-Time-Tests'.
 
 			"The order of packages in the groups are important for the bootstrap! It define the load order."
