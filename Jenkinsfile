@@ -182,9 +182,10 @@ def bootstrapImage(){
         def isoTesters = [:]
         isoTesters['SUnit'] = { defineIsoTestStage("SUnit", "SUnit", "Tests", "\'SUnit-Tests\'  \'SUnit-Visitor-Tests\'  \'SUnit-MockObjects-Tests\'") }
         isoTesters['Kernel'] = { defineIsoTestStage("Kernel", "Kernel", "Tests", "\'Kernel-Tests\'  \'Kernel-CodeModel-Tests\'") }
-        isoTesters['Compiler'] = { defineIsoTestStage("Compiler", "Compiler", "Tests", "\'OpalCompiler-Tests\'  \'DebugInfo-Tests\' \'Kernel-Extended-Tests\' \'Kernel-Tests-WithCompiler\'") }
+        isoTesters['Compiler'] = { defineIsoTestStage("Compiler", "Compiler", "Tests", "\'OpalCompiler-Tests\'  \'DebugInfo-Tests\' \'Kernel-Extended-Tests\' \'Kernel-Tests-WithCompiler\'") }      
         isoTesters['Files'] = { defineIsoTestStage("Files", "Files", "Tests", "\'Files-Tests\'") }
         isoTesters['Zinc-Character-Encoding'] = { defineIsoTestStage("Zinc-Character-Encoding", "ZincCharacterEncoding", "Tests", "\'Zinc-Character-Encoding-Tests\'") }
+        isoTesters['System-Platforms'] = { defineIsoTestStage("System-Platforms", "SystemPlatforms", "Tests", "\'System-Platforms-Tests\'") }  
         parallel isoTesters
 
         stage ("Full Image") {

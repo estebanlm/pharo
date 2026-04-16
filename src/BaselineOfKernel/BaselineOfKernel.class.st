@@ -40,6 +40,12 @@ BaselineOfKernel >> baseline: spec [
 						className: 'BaselineOfZincCharacterEncoding';
 						repository: (self packageRepositoryURLForSpec: spec);
 						loads: #( 'Tests' )];
+
+				baseline: 'System-Platforms-Tests' with: [ 
+					spec
+						className: 'BaselineOfSystemPlatforms';
+						repository: (self packageRepositoryURLForSpec: spec);
+						loads: #( 'Tests' )];
 				package: 'Announcements-Core';
 				package: 'Collections-Abstract';
 				package: 'Collections-DoubleLinkedList';
@@ -88,7 +94,6 @@ BaselineOfKernel >> baseline: spec [
 				package: 'Kernel-Tests';
 				package: 'Kernel-CodeModel-Tests';
 				package: 'Announcements-Core-Tests';
-				package: 'System-Platforms-Tests';
 				package: 'System-Finalization-Tests';
 				package: 'System-Time-Tests'.
 
