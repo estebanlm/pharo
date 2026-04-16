@@ -185,6 +185,8 @@ def bootstrapImage(){
         isoTesters['Compiler'] = { defineIsoTestStage("Compiler", "Compiler", "Tests", "\'OpalCompiler-Tests\'  \'DebugInfo-Tests\' \'Kernel-Extended-Tests\' \'Kernel-Tests-WithCompiler\'") }
         isoTesters['Files'] = { defineIsoTestStage("Files", "Files", "Tests", "\'Files-Tests\'") }
         isoTesters['Zinc-Character-Encoding'] = { defineIsoTestStage("Zinc-Character-Encoding", "ZincCharacterEncoding", "Tests", "\'Zinc-Character-Encoding-Tests\'") }
+        isoTesters['System-SessionManager'] = { defineIsoTestStage("System-SessionManager", "SystemSessionManager", "Tests", "\'System-SessionManager-Tests\'") }
+        
         parallel isoTesters
 
         stage ("Full Image") {
