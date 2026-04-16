@@ -1,7 +1,12 @@
-Extension { #name : 'ZnCharacterEncoderTest' }
+Class {
+	#name : 'ZnEncoderFromUrlTest',
+	#superclass : 'TestCase',
+	#category : 'Zinc-Resource-Meta-Tests',
+	#package : 'Zinc-Resource-Meta-Tests'
+}
 
-{ #category : '*Zinc-HTTP' }
-ZnCharacterEncoderTest >> testByteEncoderFromUrl [
+{ #category : 'testing' }
+ZnEncoderFromUrlTest >> testByteEncoderFromUrl [
 	| encoderFromUrl iso88592 bytes characters |
 	encoderFromUrl := ZnByteEncoder newFromUrl: 'http://files.pharo.org/extra/unicode/8859-2.TXT'.
 	iso88592 := ZnCharacterEncoder newForEncoding: #iso88592.
