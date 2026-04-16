@@ -15,6 +15,13 @@ BaselineOfGeneralTests >> baseline: spec [
 	spec for: #common do: [
 		spec
 			baseline: 'Debugging' with: [ spec loads: #Tests from: repository ];
+			
+			baseline: 'SessionManagerTests' with: [ 
+                spec 
+                    className: 'BaselineOfSystemSessionManager';
+                    repository: repository;
+                    loads: #('Tests') ];
+
 			package: 'NumberParser-Tests';
 			package: 'Fuel-Core-Tests';
 			package: 'FormCanvas-Tests';

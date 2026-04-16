@@ -27,25 +27,23 @@ BaselineOfKernel class >> testsPackageNames [
 BaselineOfKernel >> baseline: spec [
 
 	<baseline>
+	| repository |
+	repository := self packageRepositoryURLForSpec: spec.
+	
 	spec for: #common do: [
 			spec
 				baseline: 'Files-Tests' with: [ 
 					spec
 						className: 'BaselineOfFiles';
-						repository: (self packageRepositoryURLForSpec: spec);
+						repository: repository;
 						loads: #( 'Tests' )];
 
 				baseline: 'Zinc-Character-Encoding-Tests' with: [ 
 					spec
 						className: 'BaselineOfZincCharacterEncoding';
-						repository: (self packageRepositoryURLForSpec: spec);
+						repository: repository;
 						loads: #( 'Tests' )];
-					
-				baseline: 'System-SessionManager-Tests' with: [ 
-					spec
-						className: 'BaselineOfSystemSessionManager';
-						repository: (self packageRepositoryURLForSpec: spec);
-						loads: #( 'Tests' )];
+				
 				package: 'Announcements-Core';
 				package: 'Collections-Abstract';
 				package: 'Collections-DoubleLinkedList';
@@ -113,5 +111,5 @@ BaselineOfKernel >> baseline: spec [
 				with:
 					{ 'Collections-Abstract-Tests'. 'Collections-DoubleLinkedList-Tests'. 'Collections-Native-Tests'. 'Collections-Sequenceable-Tests'. 'Collections-Streams-Tests'. 'Collections-Strings-Tests'.
 					'Collections-Support-Tests'. 'Collections-Unordered-Tests'. 'Collections-Weak-Tests'. 'Kernel-Tests'. 'Kernel-CodeModel-Tests'. 'Announcements-Core-Tests'. 'System-Platforms-Tests'.
-					 'Files-Tests'. 'System-Finalization-Tests'. 'Zinc-Character-Encoding-Tests'. 'System-Time-Tests'. 'System-SessionManager-Tests' } ]
+					 'Files-Tests'. 'System-Finalization-Tests'. 'Zinc-Character-Encoding-Tests'. 'System-Time-Tests' } ]
 ]
