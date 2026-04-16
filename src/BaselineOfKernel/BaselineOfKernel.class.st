@@ -41,7 +41,7 @@ BaselineOfKernel >> baseline: spec [
 						repository: (self packageRepositoryURLForSpec: spec);
 						loads: #( 'Tests' )];
 
-				baseline: 'Sytem-Platforms-Tests' with: [ 
+				baseline: 'System-Platforms-Tests' with: [ 
 					spec
 						className: 'BaselineOfSystemPlatforms';
 						repository: (self packageRepositoryURLForSpec: spec);
