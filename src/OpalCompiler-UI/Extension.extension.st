@@ -1,6 +1,6 @@
 Extension { #name : 'Extension' }
 
-{ #category : '*OpalCompiler-Core' }
+{ #category : '*OpalCompiler-UI' }
 Extension >> compile: sourceCode classified: protocol withStamp: changeStamp notifying: requestor logSource: logSource [
 	"Return the selector of the compiled method"
 

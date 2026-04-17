@@ -44,16 +44,6 @@ Behavior >> compile: sourceCode classified: protocol withStamp: changeStamp logS
 ]
 
 { #category : '*OpalCompiler-Core' }
-Behavior >> compile: sourceCode classified: protocol withStamp: changeStamp notifying: requestor logSource: logSource [
-	"Return the selector of the compiled method"
-
-	^ self compile: sourceCode notifying: requestor methodInstaller: (self methodInstaller
-			   logged: logSource;
-			   changeStamp: changeStamp;
-			   protocol: protocol)
-]
-
-{ #category : '*OpalCompiler-Core' }
 Behavior >> compile: selector from: oldClass [
 	"Compile the method associated with selector in the receiver's method dictionary."
 
@@ -95,20 +85,6 @@ Behavior >> compile: sourceCode methodInstaller: methodInstaller [
 ]
 
 { #category : '*OpalCompiler-Core' }
-Behavior >> compile: sourceCode notifying: requestor methodInstaller: methodInstaller [
-	"Return the selector of the compiled method"
-
-	| compilerFacade method |
-	compilerFacade := OCInteractiveAPI new.
-
-	method := compilerFacade compile: sourceCode notifying: requestor in: self.
-	method ifNil: [ ^ nil ].
-
-	methodInstaller install: method into: self compiler: compilerFacade compiler.
-	^ method selector
-]
-
-{ #category : '*OpalCompiler-Core' }
 Behavior >> compileAll [
 	^ self compileAllFrom: self
 ]
@@ -125,26 +101,18 @@ Behavior >> compileAllFrom: oldClass [
 Behavior >> compileSilently: sourceCode [
 	"Compile the code and classify the resulting method in the given protocol, leaving no trail in the system log, nor in any change set, nor in the 'recent submissions' list. This should only be used when you know for sure that the compilation will succeed."
 
-	^ self compileSilently: sourceCode classified: 'not defined protocol' notifying: nil
+	^ self compileSilently: sourceCode classified: 'not defined protocol'
 ]
 
 { #category : '*OpalCompiler-Core' }
 Behavior >> compileSilently: sourceCode classified: protocolName [
 	"Compile the code and classify the resulting method in the given protocol, leaving no trail in the system log, nor in any change set, nor in the 'recent submissions' list. This should only be used when you know for sure that the compilation will succeed."
 
-	^ self compileSilently: sourceCode classified: protocolName notifying: nil
-]
-
-{ #category : '*OpalCompiler-Core' }
-Behavior >> compileSilently: sourceCode classified: protocolName notifying: requestor [
-	"Compile the code and classify the resulting method in the given protocol, leaving no trail in the system log, nor in any change set, nor in the 'recent submissions' list."
-
 	^ self codeChangeAnnouncer suspendAllWhile: [
 			  self
 				  compile: sourceCode
 				  classified: protocolName
 				  withStamp: DateAndTime now
-				  notifying: requestor
 				  logSource: self shouldLogSource ]
 ]
 
