@@ -98,7 +98,7 @@ OCInteractiveAPI >> compiler: anObject [
 	compiler := anObject
 ]
 
-{ #category : 'compiling' }
+{ #category : 'initialization' }
 OCInteractiveAPI >> initialize [
 
 	super initialize.
