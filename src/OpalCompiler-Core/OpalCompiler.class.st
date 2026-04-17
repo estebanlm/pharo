@@ -372,18 +372,9 @@ OpalCompiler >> decompileMethod: aCompiledMethod [
 { #category : 'public access' }
 OpalCompiler >> doCompile [
 
-	| result |
-	"Policy: compiling is non-faulty by default"
-	self permitFaulty ifNil: [ self permitFaulty: false ].
-
-	ast ifNil: [
-		result := self parse.
-		ast ifNil: [ "some failBlock" ^ result ] ].
-
-	(ast allNotices anySatisfy: [ :e | e isErrorOn: self ]) ifTrue: [
-		^ OCErrorCompilationResult new
-			ast: ast;
-			yourself ].
+	| parseResult |
+	parseResult := self doParse.	
+	parseResult isError ifTrue: [ ^ parseResult ].
 
 	self callPlugins.
 	(compilationContext isSemanticAnalysisNeeded or: [ ast scope isNil ]) 
@@ -393,6 +384,26 @@ OpalCompiler >> doCompile [
 	^ OCSuccessCompilationResult new
 		compiledMethod: self generateMethod;
 		yourself
+]
+
+{ #category : 'public access' }
+OpalCompiler >> doParse [
+	"Policy: compiling is non-faulty by default"
+
+	self permitFaulty ifNil: [ self permitFaulty: false ].
+
+	ast ifNil: [
+		self parse.
+		ast ifNil: [ ^ OCErrorCompilationResult new yourself ] ].
+
+	(ast allNotices anySatisfy: [ :e | e isErrorOn: self ]) ifTrue: [
+			^ OCErrorCompilationResult new
+				  ast: ast;
+				  yourself ].
+
+	^ OCSuccessCompilationResult new
+		  compiledMethod: ast;
+		  yourself
 ]
 
 { #category : 'private' }
@@ -578,6 +589,17 @@ OpalCompiler >> newCompile [
 
 	| result |
 	result := self doCompile.
+	result isError ifTrue: [ 
+		^ result signalError ].
+	
+	^ result compiledMethod
+]
+
+{ #category : 'public access' }
+OpalCompiler >> newParse [
+
+	| result |
+	result := self doParse.
 	result isError ifTrue: [ 
 		^ result signalError ].
 	
