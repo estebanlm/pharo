@@ -538,19 +538,6 @@ RubSmalltalkEditorTest >> testBestNodeWithValidValueMidSource [
 ]
 
 { #category : 'tests' }
-RubSmalltalkEditorTest >> testCompileForIn [
-
-	| editor method |
-	editor := RubSmalltalkEditor new.
-
-	method := editor compile: '40+2' for: nil in: nil.
-	self assert: (nil executeMethod: method) equals: 42.
-
-	method := editor compile: '40+¿' for: nil in: nil.
-	self should: [ nil executeMethod: method ] raise: OCRuntimeSyntaxError
-]
-
-{ #category : 'tests' }
 RubSmalltalkEditorTest >> testCompletionEngineInstanceIsNotUsedIfNil [
 	
 	| current |

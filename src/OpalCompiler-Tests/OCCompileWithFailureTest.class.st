@@ -37,7 +37,7 @@ OCCompileWithFailureTest >> testEvalSimpleMethodWithError [
 	cm := (compiler := OpalCompiler new)
 				source: 'method 3+';
 				permitFaulty: true;
-				compile.
+				newCompile.
 
 	self assert: compiler ast isMethod.
 	self assert: compiler ast isFaulty.
@@ -53,7 +53,7 @@ OCCompileWithFailureTest >> testParenthesis [
     isScripting: true;
     requestor: self;
     permitFaulty: true;
-    compile.
+    newCompile.
 	self assert: compiler ast isDoIt.
 	self assert: compiler ast isFaulty.
 	self should: [cm valueWithReceiver: nil] raise: OCRuntimeSyntaxError

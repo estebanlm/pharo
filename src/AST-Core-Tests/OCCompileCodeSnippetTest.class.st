@@ -7,18 +7,18 @@ Class {
 }
 
 { #category : 'helpers' }
-OCCompileCodeSnippetTest >> compileSnippet: anOCCodeSnippet [ 
+OCCompileCodeSnippetTest >> compileSnippet: anOCCodeSnippet [
 
-	^ [ OpalCompiler new
-		  permitFaulty: true;
-		  isScripting: anOCCodeSnippet isScripting;
-		  compile: anOCCodeSnippet source ]
-	on: OCCodeError do: [ :e |
-		"Compilation should success, because its the *faulty* mode".
-		"If this is expected, then just return nil"
-		anOCCodeSnippet ifSkip: #compile then: [^ nil ].
-		"Otherwise, pass the error"
-		e pass ]
+	^ [
+		  OpalCompiler new
+			  permitFaulty: true;
+			  isScripting: anOCCodeSnippet isScripting;
+			  source: anOCCodeSnippet source;
+			  newCompile ]
+		  on: OCCompilationError
+		  do: [ :e | "Compilation should success, because its the *faulty* mode"
+				  anOCCodeSnippet ifSkip: #compile then: [ ^ nil ]. "If this is expected, then just return nil" "Otherwise, pass the error"
+				  e pass ]
 ]
 
 { #category : 'helpers' }

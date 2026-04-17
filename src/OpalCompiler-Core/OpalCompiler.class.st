@@ -263,54 +263,6 @@ OpalCompiler >> changeStamp: aString [
 	changeStamp := aString
 ]
 
-{ #category : 'as yet unclassified' }
-OpalCompiler >> checkNotice: aNotice requestor: aRequestor isInteractive: isInteractive [
-	"This method handles all the logic of error handling.
-	
-	Error handing in the compiler is only performed at one place, after the parsing/semantic analysis/other parse plugins.
-	Each ASTNotice in the AST is then checked with this method.
-
-	There is only three outcomes:
-	* If this method returns true (OK), then the work of the compiler can continue.
-	  Next notice is then processed.
-	  Or, if this that was the last notice, compilation and cie can be performed.
-	* If this method returns false (not OK), then the compilation is cancelled.
-	  The failBlock will be invoked.
-	* If this method returns nil (stop checking), then skip the rest of the notice checks.
-	  This one is used in case of reparation, where a new (checked) AST is produced.
-
-	Errors that may happen later in the backend are consireded internal errors and should not occur (bugs).
-
-	This method is a little long because it handles the requestor (quirks) mode.
-	"
-
-	aNotice isWarning ifTrue: [ ^ true ].
-	(aNotice isUndeclaredNotice and: [ self permitUndeclared ]) ifTrue: [
-			OCUndeclaredVariableWarning new
-				notice: aNotice;
-				signal.
-			^ true ].
-		
-	"A requestor is available. We are in quirks mode and are expected to do UI things." "Reparation menu in quirks mode:
-		* require a requestor (because quirks mode, and also some reparations expect a requestor)
-		* require interactive mode (because GUI)
-		* require method definition becase some reparation assume it's a method body"
-	isInteractive ifTrue: [
-			aNotice reparator ifNotNil: [ :reparator |
-					| res |
-					res := reparator
-						       requestor: aRequestor;
-						       openMenu.
-					res ifNil: [ ^ true "reparation unneded, let AST as is" ].
-					res ifFalse: [ ^ false "operation cancelled, fail" ].
-					self parse: aRequestor text. "some reparation was done, reparse"
-					^ nil ] ]. "Quirks mode: otherwise, push the error message to the requestor"
-
-	aRequestor notify: aNotice messageText , ' ->' at: aNotice position in: aNotice node source.
-	"Quirks mode: Then leave"
-	^ false
-]
-
 { #category : 'accessing' }
 OpalCompiler >> class: aClass [
 	self compilationContext class: aClass
@@ -415,6 +367,32 @@ OpalCompiler >> decompileMethod: aCompiledMethod [
 			on: Error
 			do: [ OCMethodNode errorMethodNode: aCompiledMethod selector errorMessage: 'Decompilation failed'.  ] ]
 		ifAbsent: [ OCMethodNode errorMethodNode: aCompiledMethod selector errorMessage: 'No decompiler available'. ]
+]
+
+{ #category : 'public access' }
+OpalCompiler >> doCompile [
+
+	| result |
+	"Policy: compiling is non-faulty by default"
+	self permitFaulty ifNil: [ self permitFaulty: false ].
+
+	ast ifNil: [
+		result := self parse.
+		ast ifNil: [ "some failBlock" ^ result ] ].
+
+	(ast allNotices anySatisfy: [ :e | e isErrorOn: self ]) ifTrue: [
+		^ OCErrorCompilationResult new
+			ast: ast;
+			yourself ].
+
+	self callPlugins.
+	(compilationContext isSemanticAnalysisNeeded or: [ ast scope isNil ]) 
+		ifTrue: [ 
+			self doSemanticAnalysis ].
+
+	^ OCSuccessCompilationResult new
+		compiledMethod: self generateMethod;
+		yourself
 ]
 
 { #category : 'private' }
@@ -593,6 +571,17 @@ OpalCompiler >> needRequestorScope [
 	"Because requestor do not have a real API, introspection is used."
 	(self requestor respondsTo: #needRequestorScope) ifFalse: [ ^ false ].
 	^ self requestor needRequestorScope
+]
+
+{ #category : 'public access' }
+OpalCompiler >> newCompile [
+
+	| result |
+	result := self doCompile.
+	result isError ifTrue: [ 
+		^ result signalError ].
+	
+	^ result compiledMethod
 ]
 
 { #category : 'public access' }

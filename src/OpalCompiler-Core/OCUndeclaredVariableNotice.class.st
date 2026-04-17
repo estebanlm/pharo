@@ -14,7 +14,7 @@ OCUndeclaredVariableNotice >> isErrorOn: anOpalCompiler [
 	Otherwise, I'm a warning"
 	
 	"I'm an error if the setting is not set"
-	permitFaulty := anOpalCompiler permitUndeclared.
+	permitFaulty := anOpalCompiler permitUndeclared or: [ anOpalCompiler permitFaulty ].
 	^ permitFaulty ifNil: [ true ]
 		ifNotNil: [ permitFaulty not ]
 ]

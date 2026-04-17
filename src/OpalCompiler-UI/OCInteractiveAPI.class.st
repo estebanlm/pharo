@@ -9,10 +9,58 @@ Class {
 }
 
 { #category : 'compiling' }
+OCInteractiveAPI >> checkNotice: aNotice requestor: aRequestor isInteractive: isInteractive [
+	"This method handles all the logic of error handling.
+	
+	Error handing in the compiler is only performed at one place, after the parsing/semantic analysis/other parse plugins.
+	Each ASTNotice in the AST is then checked with this method.
+
+	There is only three outcomes:
+	* If this method returns true (OK), then the work of the compiler can continue.
+	  Next notice is then processed.
+	  Or, if this that was the last notice, compilation and cie can be performed.
+	* If this method returns false (not OK), then the compilation is cancelled.
+	  The failBlock will be invoked.
+	* If this method returns nil (stop checking), then skip the rest of the notice checks.
+	  This one is used in case of reparation, where a new (checked) AST is produced.
+
+	Errors that may happen later in the backend are consireded internal errors and should not occur (bugs).
+
+	This method is a little long because it handles the requestor (quirks) mode.
+	"
+
+	aNotice isWarning ifTrue: [ ^ true ].
+	(aNotice isUndeclaredNotice and: [ compiler permitUndeclared ]) ifTrue: [
+			OCUndeclaredVariableWarning new
+				notice: aNotice;
+				signal.
+			^ true ].
+		
+	"A requestor is available. We are in quirks mode and are expected to do UI things." "Reparation menu in quirks mode:
+		* require a requestor (because quirks mode, and also some reparations expect a requestor)
+		* require interactive mode (because GUI)
+		* require method definition becase some reparation assume it's a method body"
+	isInteractive ifTrue: [
+			aNotice reparator ifNotNil: [ :reparator |
+					| res |
+					res := reparator
+						       requestor: aRequestor;
+						       openMenu.
+					res ifNil: [ ^ true "reparation unneded, let AST as is" ].
+					res ifFalse: [ ^ false "operation cancelled, fail" ].
+					compiler parse: aRequestor text. "some reparation was done, reparse"
+					^ nil ] ]. "Quirks mode: otherwise, push the error message to the requestor"
+
+	aRequestor notify: aNotice messageText , ' ->' at: aNotice position in: aNotice node source.
+	"Quirks mode: Then leave"
+	^ false
+]
+
+{ #category : 'compiling' }
 OCInteractiveAPI >> compile: sourceCode notifying: requestor in: behavior [
 	"Return the selector of the compiled method"
 
-	| method |
+	| compilationResult |
 	sourceCode ifEmpty: [ Error signal: 'The source code should not be empty' ].
 	compiler := behavior compiler
 		            source: sourceCode;
@@ -20,18 +68,18 @@ OCInteractiveAPI >> compile: sourceCode notifying: requestor in: behavior [
 		            "compatibility: permit undeclared if no requestor"permitUndeclared: false;
 		            permitFaulty: false.
 
-	method := compiler compile.
+	compilationResult := compiler doCompile.
 
-	compiler compilationResult ifNotNil: [
+	compilationResult isError ifTrue: [
 			compiler ast allNotices sorted do: [ :n |
 					| check isInteractive |
 					requestor ifNil: [ n signalError ] ifNotNil: [
 							isInteractive := requestor notNil and: [ (requestor respondsTo: #interactive) not or: [ requestor interactive ] ].
-							check := compiler checkNotice: n requestor: requestor isInteractive: isInteractive.
+							check := self checkNotice: n requestor: requestor isInteractive: isInteractive.
 							check ifNil: [ ^ self compile: requestor text asString notifying: requestor in: behavior ].
 							check ifFalse: [ ^ nil ] ] ] ].
 
-	^ method
+	^ compilationResult compiledMethod
 ]
 
 { #category : 'accessing' }

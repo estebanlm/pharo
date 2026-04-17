@@ -49,7 +49,7 @@ OCDoItVariableTest >> testDoItCompilation [
 		source: 'temp + 2';
 		isScripting: true;
 		bindings: { var };
-		compile.
+		newCompile.
 	self assert: (doIt valueWithReceiver: self) equals: 102
 ]
 

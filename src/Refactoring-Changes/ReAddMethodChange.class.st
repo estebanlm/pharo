@@ -51,7 +51,7 @@ ReAddMethodChange >> accept: aText notifying: aController [
 		source: aText asString;
 		class:  self changeClass;
 		requestor: aController;
-		compile.
+		newCompile.
 
 	self
 		class: self changeClass

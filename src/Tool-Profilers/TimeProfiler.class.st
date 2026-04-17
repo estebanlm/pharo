@@ -135,26 +135,6 @@ TimeProfiler >> blockCode [
 ]
 
 { #category : 'actions' }
-TimeProfiler >> blockCode: aString notifying: aRequestor [
-	"Treat the current selection as an expression; evaluate and tally it."
-	|  compiledMethod |
-	aString ifNil: [^ self].
-	blockSource := aString.
-	compiledMethod := Smalltalk compiler
-		source: ('self runBlock: [', aString, ']');
-		context: self doItContext;
-		requestor: self;
-		compile.
-	self showResult: ( compiledMethod valueWithReceiver: self).
-	self changed: #blockCode.
-	self changed: #summaryText.
-	self changed: #fullReport.
-	self selection: nil.
-	self updateList.
-	self startState
-]
-
-{ #category : 'actions' }
 TimeProfiler >> browseItem [
 	self selectedNode ifNotNil: [:current | current browseItem ]
 ]

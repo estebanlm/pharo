@@ -90,14 +90,18 @@ OCCompilerTest >> testAssignmentOfClassNameBinding [
 
 { #category : 'tests - readonly vars' }
 OCCompilerTest >> testAssignmentOfGlobalVarBinding [
-	self initializeErrorMessage.
+
 	text := 'temp | | OCCompilerTestTestVar := 2'.
-	self initializeErrorMessage.
-	OpalCompiler new
-		source: text;
-		class: MockForCompilation;
-		requestor: self;
-		compile
+
+	self
+		should: [
+				OpalCompiler new
+					source: text;
+					class: MockForCompilation;
+					requestor: self;
+					newCompile ]
+		raise: OCCompilationError
+		with: [ :err | self assert: err messageText equals: 'Error while compiling' ]
 ]
 
 { #category : 'tests' }
@@ -225,7 +229,7 @@ OCCompilerTest >> testSiblingBlocksInstanceVariableShadowing [
 		source: 'temp [:temp | ].[:temp | |var1|]';
 		class: MockForCompilation;
 		requestor: self;
-		compile
+		newCompile
 ]
 
 { #category : 'tests - shadowing' }
@@ -236,7 +240,7 @@ OCCompilerTest >> testSiblingBlocksTempShadowing [
 	OpalCompiler new
 		source: 'temp [:temp | ]. [:temp | ]';
 		class: MockForCompilation;
-		compile
+		newCompile
 ]
 
 { #category : 'tests' }
