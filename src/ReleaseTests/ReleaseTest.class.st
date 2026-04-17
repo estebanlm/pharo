@@ -545,6 +545,15 @@ ReleaseTest >> testShouldWorldMorphBeAfterFontClassesInStartupList [
 ]
 
 { #category : 'tests' }
+ReleaseTest >> testStartUpSessionList [
+	"This test documents issue http://code.google.com/p/pharo/issues/detail?id=838"
+
+	| startupList |
+	startupList := SessionManager default startupList collect: [ :each | each handlerId ].
+	self assert: (startupList indexOf: #Delay) < (startupList indexOf: #GlobalIdentifier)
+]
+
+{ #category : 'tests' }
 ReleaseTest >> testTestCasesEndsWithTestOrTestCase [
 	self assertValidLintRule: ReTestClassNameShouldEndWithTestRule new
 ]
