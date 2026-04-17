@@ -10,12 +10,13 @@ Context >> astScope [
 	we still end up getting the scope we want"
 
 	| node |
+
 	node :=  self sourceNodeExecuted.
 	"if we get back a block, this is a block that just got pushed. We are not interested in
 	that but it's outer block"
 	^node isBlock
 		ifTrue: [ node parent methodOrBlockNode scope ]
-		ifFalse: [node methodOrBlockNode scope ]
+		ifFalse: [ node methodOrBlockNode scope ]
 ]
 
 { #category : '*OpalCompiler-Core' }

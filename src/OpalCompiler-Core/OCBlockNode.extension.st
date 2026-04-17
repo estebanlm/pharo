@@ -25,19 +25,6 @@ OCBlockNode >> ir: aIRMethodNode [
 ]
 
 { #category : '*OpalCompiler-Core' }
-OCBlockNode >> isClean [
-	"a block is clean if..."
-	"it or any embedded blocks do not need self"
-	self isAccessingSelf ifTrue: [ ^ false ].
-	"it or any embedded blocks do not need the outer context to return"
-	self hasNonLocalReturn ifTrue: [ ^ false ].
-	"there are no escaping vars accessed from the outer"
-	self scope hasEscapingVars ifTrue: [ ^ false ].
-	^true
-
-]
-
-{ #category : '*OpalCompiler-Core' }
 OCBlockNode >> isInlined [
 	parent isMessage ifFalse: [ ^ false ].
 	parent methodCompilationContextOrNil ifNotNil:[:c | c optionInlineNone ifTrue: [ ^false ]].

@@ -349,12 +349,12 @@ RubSmalltalkEditor >> completionAround: aBlock keyDown: anEvent [
 
 { #category : 'completion engine' }
 RubSmalltalkEditor >> completionAround: aBlock keyStroke: anEvent [
-	"I'm a editor for Smalltalk, so, do completion around"
+	"I'm a editor for Pharo code, so, do completion around"
 
-	self isCompletionEnabled ifFalse: [ ^ aBlock value ].
-
-	(completionEngine handleKeystrokeBefore: anEvent editor: self) ifTrue: [ ^ self ].
-
+	self isCompletionEnabled 
+		ifFalse: [ ^ aBlock value ].
+	(completionEngine handleKeystrokeBefore: anEvent editor: self)
+		ifTrue: [ ^ self ].
 	aBlock value.
 	completionEngine handleKeystrokeAfter: anEvent editor: self
 ]

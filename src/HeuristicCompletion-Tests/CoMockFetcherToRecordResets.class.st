@@ -17,7 +17,7 @@ Class {
 { #category : 'enumerating' }
 CoMockFetcherToRecordResets >> entriesDo: aBlock [
 
-	1 to: 1000 do: [ :anIndex | (NECGlobalEntry contents: anIndex printString node: nil) ]
+	1 to: 1000 do: [ :anIndex | (CoGlobalEntry contents: anIndex printString node: nil) ]
 ]
 
 { #category : 'initialization' }

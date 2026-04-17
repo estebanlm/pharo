@@ -117,7 +117,7 @@ RFASTTranslator >> visitBlockNode: aBlockNode [
 				ifTrue: [ self emitMetaLinkInstead: aBlockNode ]
 				ifFalse: [
 	compiledBlock := self subTranslator translateFullBlock: aBlockNode.
-	(self compilationContext optionCleanBlockClosure and: [ aBlockNode isClean ])
+	(self compilationContext optionCleanBlockClosure and: [ aBlockNode scope isClean ])
 		ifTrue: [ methodBuilder pushLiteral: (CleanBlockClosure compiledBlock: compiledBlock)]
 		ifFalse: [methodBuilder pushFullClosureCompiledBlock: compiledBlock copiedValues: aBlockNode scope inComingCopiedVarNames  ].
 	].

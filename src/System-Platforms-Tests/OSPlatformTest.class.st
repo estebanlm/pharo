@@ -51,12 +51,3 @@ OSPlatformTest >> testNewFileInWorkingDirectory [
 		equals: OSPlatform current currentWorkingDirectoryPath asPath.
 	file delete
 ]
-
-{ #category : 'tests' }
-OSPlatformTest >> testStartUpList [
-	"This test documents issue http://code.google.com/p/pharo/issues/detail?id=838"
-
-	| startupList |
-	startupList := SessionManager default startupList collect: [ :each | each handlerId ].
-	self assert: (startupList indexOf: #Delay) < (startupList indexOf: #GlobalIdentifier)
-]

@@ -12,7 +12,7 @@ Class {
 	#superclass : 'CmdCommand',
 	#instVars : [
 		'package',
-		'newName'
+		'refactoringScopes'
 	],
 	#category : 'SystemCommands-PackageCommands',
 	#package : 'SystemCommands-PackageCommands'
@@ -42,17 +42,15 @@ SycRenamePackageCommand >> description [
 { #category : 'execution' }
 SycRenamePackageCommand >> execute [
 
-	(RBRenamePackageRefactoring rename: package name to: newName) execute
+	^ ((ReRenamePackageDriver newApplication: self application)
+		scopes: refactoringScopes
+		packageName: package name) runRefactoring
 ]
 
 { #category : 'execution' }
 SycRenamePackageCommand >> prepareFullExecutionInContext: aToolContext [
 	super prepareFullExecutionInContext: aToolContext.
-
 	package := aToolContext lastSelectedPackage.
-	newName := self morphicUIManager
-		request: 'New name of the package'
-		initialAnswer: package name
-		title: 'Rename a package'.
-	newName isEmptyOrNil | (newName = package name) ifTrue: [ ^ CmdCommandAborted signal ]
+	refactoringScopes := aToolContext refactoringScopes.
+	
 ]

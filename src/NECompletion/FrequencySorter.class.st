@@ -3,7 +3,7 @@ Sort a list of completions by frequency of usage
 "
 Class {
 	#name : 'FrequencySorter',
-	#superclass : 'CompletionSorter',
+	#superclass : 'CoCompletionSorter',
 	#category : 'NECompletion-Sorting',
 	#package : 'NECompletion',
 	#tag : 'Sorting'
@@ -15,8 +15,8 @@ FrequencySorter >> sortCompletionList: anOrderedCollection [
 	^ anOrderedCollection
 		sort: [ :a :b |
 			| countA countB |
-			countA := NECUsageTracker usageCountFor: a contents.
-			countB := NECUsageTracker usageCountFor: b contents.
+			countA := CoAdHocUsageTracker usageCountFor: a contents.
+			countB := CoAdHocUsageTracker usageCountFor: b contents.
 			(countA = countB)
 				ifTrue: [ a contents < b contents ]
 				ifFalse: [ countA > countB ]

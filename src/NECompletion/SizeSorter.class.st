@@ -7,7 +7,7 @@ I return a list sorted by size.
 "
 Class {
 	#name : 'SizeSorter',
-	#superclass : 'CompletionSorter',
+	#superclass : 'CoCompletionSorter',
 	#category : 'NECompletion-Sorting',
 	#package : 'NECompletion',
 	#tag : 'Sorting'

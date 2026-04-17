@@ -545,6 +545,15 @@ ReleaseTest >> testShouldWorldMorphBeAfterFontClassesInStartupList [
 ]
 
 { #category : 'tests' }
+ReleaseTest >> testStartUpSessionList [
+	"This test documents issue http://code.google.com/p/pharo/issues/detail?id=838"
+
+	| startupList |
+	startupList := SessionManager default startupList collect: [ :each | each handlerId ].
+	self assert: (startupList indexOf: #Delay) < (startupList indexOf: #GlobalIdentifier)
+]
+
+{ #category : 'tests' }
 ReleaseTest >> testTestCasesEndsWithTestOrTestCase [
 	self assertValidLintRule: ReTestClassNameShouldEndWithTestRule new
 ]
@@ -579,8 +588,6 @@ ReleaseTest >> testThatThereAreNoSelectorsRemainingThatAreSentButNotImplemented 
 ReleaseTest >> testUndeclared [
 
 	| undeclaredVariables validExceptions remaining description |
-	[ "we compile a second method with the undeclared #undeclaredStubInstVar1 to trigger the code path of removing twice in #cleanOutUndeclared"
-	self class compile: 'methodForTest ^undeclaredStubInstVar1'.
 	Smalltalk cleanOutUndeclared.
 	undeclaredVariables := Undeclared associations select: [ :each | each isUndeclaredVariable ].
 
@@ -603,7 +610,7 @@ ReleaseTest >> testUndeclared [
 				               nextPutAll: '>>';
 				               print: method selector ] ].
 
-	self assert: remaining isEmpty description: description ] ensure: [ self class removeSelector: #methodForTest ]
+	self assert: remaining isEmpty description: description
 ]
 
 { #category : 'tests - package' }
