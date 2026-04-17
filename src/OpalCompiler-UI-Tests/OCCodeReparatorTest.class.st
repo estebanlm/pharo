@@ -138,18 +138,14 @@ OCCodeReparatorTest >> testSubstituteVariableAtInterval [
 { #category : 'tests' }
 OCCodeReparatorTest >> testUndeclaredVariable [
 
-	| requestor method flag |
+	| requestor method |
 	requestor := OCMockRequestor new.
 	requestor text: 'griffle ^ goo'.
 
-	flag := false.
-	method := [ OCInteractiveAPI new compile: requestor text notifying: nil in: MockForCompilation ]
-		on: OCUndeclaredVariableWarning , OCCodeError
-		do: [ :e |
-			flag := true.
-			e resume "continue" ].
+	method := OCInteractiveAPI new
+		permitUndeclared: true;
+		compile: requestor text notifying: nil in: MockForCompilation.
 
-	self assert: flag.
 	self assert: method isCompiledMethod.
 	self assert: method literals first isUndeclaredVariable.
 	self assert: method sourceCode withSeparatorsCompacted equals: 'griffle ^ goo'

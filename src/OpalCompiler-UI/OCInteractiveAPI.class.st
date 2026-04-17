@@ -2,7 +2,9 @@ Class {
 	#name : 'OCInteractiveAPI',
 	#superclass : 'Object',
 	#instVars : [
-		'compiler'
+		'compiler',
+		'permitFaulty',
+		'permitUndeclared'
 	],
 	#category : 'OpalCompiler-UI',
 	#package : 'OpalCompiler-UI'
@@ -65,8 +67,9 @@ OCInteractiveAPI >> compile: sourceCode notifying: requestor in: behavior [
 	compiler := behavior compiler
 		            source: sourceCode;
 		            requestor: requestor;
-		            "compatibility: permit undeclared if no requestor"permitUndeclared: false;
-		            permitFaulty: false.
+		            "compatibility: permit undeclared if no requestor"
+		            permitUndeclared: self permitUndeclared;
+		            permitFaulty: self permitFaulty.
 
 	compilationResult := compiler doCompile.
 
@@ -77,7 +80,8 @@ OCInteractiveAPI >> compile: sourceCode notifying: requestor in: behavior [
 							isInteractive := requestor notNil and: [ (requestor respondsTo: #interactive) not or: [ requestor interactive ] ].
 							check := self checkNotice: n requestor: requestor isInteractive: isInteractive.
 							check ifNil: [ ^ self compile: requestor text asString notifying: requestor in: behavior ].
-							check ifFalse: [ ^ nil ] ] ] ].
+							check ifFalse: [ ^ nil ] ] ].
+			^ nil ].
 
 	^ compilationResult compiledMethod
 ]
@@ -92,4 +96,35 @@ OCInteractiveAPI >> compiler [
 OCInteractiveAPI >> compiler: anObject [
 
 	compiler := anObject
+]
+
+{ #category : 'compiling' }
+OCInteractiveAPI >> initialize [
+
+	super initialize.
+	permitFaulty := false
+]
+
+{ #category : 'accessing' }
+OCInteractiveAPI >> permitFaulty [
+
+	^ permitFaulty
+]
+
+{ #category : 'accessing' }
+OCInteractiveAPI >> permitFaulty: anObject [
+
+	permitFaulty := anObject
+]
+
+{ #category : 'accessing' }
+OCInteractiveAPI >> permitUndeclared [
+
+	^ permitUndeclared ifNil: [ permitFaulty ]
+]
+
+{ #category : 'accessing' }
+OCInteractiveAPI >> permitUndeclared: anObject [
+
+	permitUndeclared := anObject
 ]
