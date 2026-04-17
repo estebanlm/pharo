@@ -70,20 +70,6 @@ ReRemoveSharedVariablesDriver >> instantiateRefactoring [
 		yourself
 ]
 
-{ #category : 'execution' }
-ReRemoveSharedVariablesDriver >> runRefactoring [
-
-	self configureRefactoring.
-	
-	refactoring failedApplicabilityPreconditions 
-		ifNotEmpty: [ ^ self inform: 'The shared variable does not exist' ].
-
-	refactoring failedBreakingChangePreconditions
-		ifEmpty: [ self applyChanges ]
-		ifNotEmpty: [ self handleBreakingChanges ]
-
-]
-
 { #category : 'initialization' }
 ReRemoveSharedVariablesDriver >> scopes: refactoringScopes variables: aCollection for: aClass [
 	

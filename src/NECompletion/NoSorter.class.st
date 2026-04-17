@@ -7,7 +7,7 @@ This class is created to pass the test.
 "
 Class {
 	#name : 'NoSorter',
-	#superclass : 'CompletionSorter',
+	#superclass : 'CoCompletionSorter',
 	#category : 'NECompletion-Sorting',
 	#package : 'NECompletion',
 	#tag : 'Sorting'

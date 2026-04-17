@@ -31,18 +31,20 @@ RePushDownMethodInSomeClassesDriver class >> driverName [
 { #category : 'execution' }
 RePushDownMethodInSomeClassesDriver >> gatherUserInput [
 
-	super gatherUserInput.
-	classes := self selectClasses
+	classes := self selectClasses.
+	classes ifNil: [ ^ false ].
+	refactoring classes: classes.
+	^ true
 ]
 
 { #category : 'configuration' }
 RePushDownMethodInSomeClassesDriver >> instantiateRefactoring [
 
-	^ RBPushDownMethodRefactoring
-		model: model
+	^ RePushDownMethodRefactoring
+		model: model 
 		pushDown: (methods collect: [ :each | each selector ])
 		from: class
-		in: classes.
+		in: #().
 ]
 
 { #category : 'initialization' }
@@ -52,25 +54,6 @@ RePushDownMethodInSomeClassesDriver >> model: aRBNamespace scopes: refactoringSc
 	scopes := refactoringScopes.
 	methods := methodsList.
 	class := methods first origin
-]
-
-{ #category : 'resources' }
-RePushDownMethodInSomeClassesDriver >> refactoring [
-
-	refactoring :=  RBPushDownMethodRefactoring
-		model: model
-		pushDown: (methods collect: [ :each | each selector ])
-		from: class
-		in: classes.
-]
-
-{ #category : 'execution' }
-RePushDownMethodInSomeClassesDriver >> runRefactoring [
-
-	self gatherUserInput.
-	methods ifNil: [ ^ self ].
-	classes ifNil: [ ^ self ].
-	self configureAndRunRefactoring 
 ]
 
 { #category : 'execution' }

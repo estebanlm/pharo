@@ -28,18 +28,30 @@ ReGenerateMethodDriver class >> isAbstract [
 	^ self = ReGenerateMethodDriver
 ]
 
-{ #category : 'execution' }
-ReGenerateMethodDriver >> configureRefactoring [
-
-	refactoring := self refactoringClass 
-		className: self targetClass name
-		variables: selectedVariables
-]
-
 { #category : 'configuration' }
 ReGenerateMethodDriver >> dialogTitle [
 
 	self subclassResponsibility 
+]
+
+{ #category : 'execution' }
+ReGenerateMethodDriver >> gatherUserInput [
+
+	| dialog selection |
+	dialog := SpSelectMultipleDialog newApplication: self application.
+	dialog
+		title: self dialogTitle;
+		message: 'Please select the variable(s)';
+		items: self targetClass instanceVariableNames;
+		display: [ :each | each displayString ];
+		displayIcon: [ :each | self iconNamed: each systemIconName ];
+		yourself.
+	selection := dialog openModal.
+	selection ifNil: [ ^ false ].
+	selection ifEmpty: [ ^ false ].
+	selectedVariables := selection.
+	self configureRefactoring.
+	^ true
 ]
 
 { #category : 'configuration' }
@@ -54,31 +66,6 @@ ReGenerateMethodDriver >> instantiateRefactoring [
 ReGenerateMethodDriver >> refactoringClass [
 
 	^ self subclassResponsibility
-]
-
-{ #category : 'execution' }
-ReGenerateMethodDriver >> runRefactoring [
-	| dialog selection |
-	
-"I do not use defaultSelectDialog because it is used mainly for choices selection 
-	when breaking changes. Here this is for doing something else. "
-
-	dialog := SpSelectMultipleDialog newApplication: self application.
-	dialog
-		title: self dialogTitle;
-		message: 'Please select the variable(s)';
-		items: self targetClass instanceVariableNames;
-		display: [ :each | each displayString ];
-		displayIcon: [ :each | self iconNamed: each systemIconName ];
-		yourself.
-	selection := dialog openModal.
-	selection ifNil: [ ^ false ].
-	selection ifEmpty: [ ^ self ].
-	selectedVariables := selection.
-	self configureRefactoring.
-	self applyChanges.
-	
-	^ true
 ]
 
 { #category : 'accessing' }

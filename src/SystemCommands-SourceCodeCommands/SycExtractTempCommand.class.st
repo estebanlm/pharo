@@ -10,9 +10,6 @@ Internal Representation and Key Implementation Points.
 Class {
 	#name : 'SycExtractTempCommand',
 	#superclass : 'SycSourceCodeRefactoringCommand',
-	#instVars : [
-		'refactoringScopes'
-	],
 	#category : 'SystemCommands-SourceCodeCommands',
 	#package : 'SystemCommands-SourceCodeCommands'
 }
@@ -40,10 +37,4 @@ SycExtractTempCommand >> execute [
 		  from: method selector
 		  in: method origin;
 		  scopes: refactoringScopes) runRefactoring
-]
-
-{ #category : 'execution' }
-SycExtractTempCommand >> prepareFullExecutionInContext: aSourceCodeContext [
-	super prepareFullExecutionInContext: aSourceCodeContext.
-	refactoringScopes := aSourceCodeContext refactoringScopes
 ]

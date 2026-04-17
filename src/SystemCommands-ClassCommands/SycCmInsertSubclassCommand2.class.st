@@ -30,7 +30,7 @@ SycCmInsertSubclassCommand2 >> executeRefactoring [
 	dialog openModal.
 	driver := (ReInsertSubclassDriver superclass: self targetClass packageNames: self packageNames) scopes: refactoringScopes .
 	choice = 'Add' ifTrue: [ driver beSibling ].
-	driver runRefactoring ifFalse: [ ^ self ].
+	driver runRefactoring. 
 	newClassName := driver subclass
 ]
 

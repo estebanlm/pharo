@@ -22,8 +22,8 @@ CoGlobalVariableFetcherAdditionalTest >> setUp [
 	completionClass := CoMockClass new name: 'CoInP1'. 
 	
 	expectedElements := {
-		NECGlobalEntry contents: 'AIGlobal' node: nil .
-		NECGlobalEntry contents: 'AIa' node: nil.
+		CoGlobalEntry contents: 'AIGlobal' node: nil .
+		CoGlobalEntry contents: 'AIa' node: nil.
 		  }
 ]
 
@@ -46,8 +46,8 @@ CoGlobalVariableFetcherAdditionalTest >> testCaseSensitive [
 
 	"This should only return 'AIGlobal' and 'AIa' ignoring 'aiGlobal' or 'aiSomething'"
 	expected := {
-		NECGlobalEntry contents: 'AIGlobal' node: nil .
-		NECGlobalEntry contents: 'AIa' node: nil
+		CoGlobalEntry contents: 'AIGlobal' node: nil .
+		CoGlobalEntry contents: 'AIa' node: nil
 	}.
 
 	self assert: fetchedElements size equals: 2.

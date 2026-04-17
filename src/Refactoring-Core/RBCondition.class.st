@@ -168,7 +168,7 @@ RBCondition class >> hasSuperclass: aClass [
 RBCondition class >> hierarchyOf: aClass canUnderstand: aSelector [
 	^self new
 		block: [aClass hierarchyDefinesMethod: aSelector]
-		errorString: aClass printString , ' <1? and/or part of it''s Hierarchy already: and/or part of it''s Hierarchy do not> understand<1?s:> ' , aSelector printString
+		errorString: 'Cannot rename: ', aSelector printString,  ' the new selector already exists in ' , aClass name printString 
 ]
 
 { #category : 'instance creation' }

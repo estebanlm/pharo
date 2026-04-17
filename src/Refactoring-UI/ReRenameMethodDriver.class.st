@@ -91,6 +91,29 @@ ReRenameMethodDriver >> defaultSelectDialog [
 		yourself
 ]
 
+{ #category : 'execution' }
+ReRenameMethodDriver >> gatherUserInput [
+
+	| failedConditions |
+	failedConditions := OrderedCollection empty.
+	[
+		newMessage := self requestNewMessage.
+		shouldEscape ifTrue: [ ^ false ].
+		self configureMessage.
+
+		refactoring isMethodDefinitionUnchanged ifTrue: [ ^ false ].
+		shouldEscape ifTrue: [ ^ false ].
+
+		failedConditions := refactoring failedApplicabilityPreconditions.
+		failedConditions do: [ :cond |
+				self informDialog
+					message: cond errorString;
+					title: 'Invalid method name';
+					openModal ] ] doWhileFalse: [ failedConditions isEmpty ].
+
+	^ true
+]
+
 { #category : 'initialization' }
 ReRenameMethodDriver >> initialize [ 
 	
@@ -187,33 +210,9 @@ ReRenameMethodDriver >> requestNewMessage [
 		              arguments: parameters.
 	dialog := self requestDialogWith: methodName.
 	
-	dialog ifNil: [ shouldEscape := true. ^ self ].
+	dialog cancelled ifTrue: [ shouldEscape := true. ^ self ].
 
 	^ dialog methodName
-]
-
-{ #category : 'execution' }
-ReRenameMethodDriver >> runRefactoring [
-
-	| failedConditions |
-	self configureRefactoring.
-
-	failedConditions := OrderedCollection empty.
-	[
-		newMessage := self requestNewMessage.
-		self configureMessage.
-
-		refactoring isMethodDefinitionUnchanged ifTrue: [ ^ self ].
-		shouldEscape ifTrue: [ ^ self ]. "What is the use of this variable: shouldEscape?"
-
-		failedConditions := refactoring failedApplicabilityPreconditions.
-		failedConditions do: [ :cond |
-				self informDialog
-					message: cond errorString;
-					title: 'Invalid method name';
-					openModal ] ] doWhileFalse: [ failedConditions isEmpty ].
-
-	refactoring failedBreakingChangePreconditions ifEmpty: [ self applyChanges ] ifNotEmpty: [ self handleBreakingChanges ]
 ]
 
 { #category : 'initialization' }

@@ -83,6 +83,20 @@ ReDuplicateClassDriver >> dialogTitleForClassSelection [
 	^ 'Duplicate class ' , className
 ]
 
+{ #category : 'execution' }
+ReDuplicateClassDriver >> gatherUserInput [
+
+	self requestNewClass.
+	requestDialog window isCancelled ifTrue: [ ^ false ].
+	refactoring
+		superclassName: requestDialog selectedSuperclass name;
+		className: requestDialog newClassName;
+		packageName: requestDialog packageName;
+		packageTagName: requestDialog tagName.
+
+	^ true
+]
+
 { #category : 'configuration' }
 ReDuplicateClassDriver >> instantiateRefactoring [
 
@@ -133,32 +147,6 @@ ReDuplicateClassDriver >> requestNewClass [
 	^ requestDialog
 		openModal;
 		yourself
-]
-
-{ #category : 'execution' }
-ReDuplicateClassDriver >> runRefactoring [
-
-	self configureRefactoring.
-	self requestNewClass.
-	requestDialog window isCancelled ifTrue: [ ^ nil ].
-	refactoring
-		superclassName: requestDialog selectedSuperclass name;
-		className: requestDialog newClassName;
-		packageName: requestDialog packageName;
-		packageTagName: requestDialog tagName.
-
-	self applyChanges
-]
-
-{ #category : 'execution' }
-ReDuplicateClassDriver >> runRefactoring: aReCopyClassRefactoring [ 
-	"This is the same as #runRefactoring, but instead of automatically configuring a new empty refactoring we use aReCopyClassRefactoring"
-
-	refactoring := aReCopyClassRefactoring.
-	self requestNewClass.
-	requestDialog window isCancelled
-		ifTrue: [ ^ nil ].
-	self applyChanges 
 ]
 
 { #category : 'accessing' }

@@ -15,10 +15,22 @@ CoRepeatedHierarchyImplementedSelectorsFetcherTest >> setUp [
 		            forHierarchy) withoutRepetition withNarrowHistory.
 	self completionClass superclass selectors: (self completionClass superclass selectors copyWith: 'ma').
 	expectedElements := {
-		                    (NECSelectorEntry contents: 'ma' node: nil) fetcher: fetcher; yourself.
-		                    (NECSelectorEntry contents: 'mb' node: nil) fetcher: fetcher; yourself.
-		                    (NECSelectorEntry contents: 'mc' node: nil) fetcher: fetcher; yourself.
-		                    (NECSelectorEntry contents: 'superma' node: nil) fetcher: fetcher; yourself.
-		                    (NECSelectorEntry contents: 'supermb' node: nil) fetcher: fetcher; yourself.
-		                    (NECSelectorEntry contents: 'supermc' node: nil)  fetcher: fetcher; yourself}
+		                    ((CoSelectorEntry contents: 'ma' node: nil)
+			                     fetcherName: fetcher class name;
+			                     yourself).
+		                    ((CoSelectorEntry contents: 'mb' node: nil)
+			                     fetcherName: fetcher class name;
+			                     yourself).
+		                    ((CoSelectorEntry contents: 'mc' node: nil)
+			                     fetcherName: fetcher class name;
+			                     yourself).
+		                    ((CoSelectorEntry contents: 'superma' node: nil)
+			                     fetcherName: fetcher class name;
+			                     yourself).
+		                    ((CoSelectorEntry contents: 'supermb' node: nil)
+			                     fetcherName: fetcher class name;
+			                     yourself).
+		                    ((CoSelectorEntry contents: 'supermc' node: nil)
+			                     fetcherName: fetcher class name;
+			                     yourself) }
 ]

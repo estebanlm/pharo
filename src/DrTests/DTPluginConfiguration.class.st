@@ -70,6 +70,13 @@ DTPluginConfiguration >> packagesSelected: packages [
 	packagesSelected := packages
 ]
 
+{ #category : 'converting' }
+DTPluginConfiguration >> suite [
+
+	"for compatibility with TestRunner"
+	^ self asTestSuite 
+]
+
 { #category : 'accessing' }
 DTPluginConfiguration >> testSuite [
 	^ testSuite

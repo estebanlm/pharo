@@ -94,11 +94,11 @@ CoSinglePackageScopedGlobalVariableFetcherAlternateTest >> setUp [
 	fetcher filter: (CoBeginsWithFilter caseSensitive: false filterString: 'Ai').
 
 	expectedElements := {
-		NECGlobalEntry contents: 'Ai12' node: nil .
-		NECGlobalEntry contents: 'Ai13' node: nil .
-		NECGlobalEntry contents: 'Ai2' node: nil .
-		NECGlobalEntry contents: 'Ai23' node: nil .
-		NECGlobalEntry contents: 'Ai3' node: nil 
+		CoGlobalEntry contents: 'Ai12' node: nil .
+		CoGlobalEntry contents: 'Ai13' node: nil .
+		CoGlobalEntry contents: 'Ai2' node: nil .
+		CoGlobalEntry contents: 'Ai23' node: nil .
+		CoGlobalEntry contents: 'Ai3' node: nil 
 		}
 ]
 

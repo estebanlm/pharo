@@ -314,7 +314,10 @@ EncoderForSistaV1 class >> bindingWriteScanBlockFor: litVarIndex using: scanner 
 
 { #category : 'instruction stream support' }
 EncoderForSistaV1 class >> bytecodeSize: bytecode [
-	"Answer the number of bytes in the bytecode."
+	"Answer the number of bytes in the bytecode.
+	
+	This method does not take extensions into account.
+	Use #instructionsSizeAt:of:"
 	bytecode < 224 ifTrue: [^1].
 	bytecode < 248 ifTrue: [^2].
 	^3
@@ -487,7 +490,7 @@ EncoderForSistaV1 class >> isCreateBlockAt: pc in: method [
 	| byte |
 	byte := self nonExtensionBytecodeAt: pc in: method.
 	^ byte = 250 or: [
-		  (method sourceNodeForPC: pc) in: [ :node | "Clean blocks are created as PushConstant" node isBlock and: [ node isClean ] ] ]
+		  (method sourceNodeForPC: pc) in: [ :node | "Clean blocks are created as PushConstant" node isBlock and: [ node scope isClean ] ] ]
 ]
 
 { #category : 'block closure support' }
