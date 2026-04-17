@@ -1,7 +1,12 @@
-Extension { #name : 'StringTest' }
+Class {
+	#name : 'FileStringTest',
+	#superclass : 'TestCase',
+	#category : 'FileSystem-Core-Tests',
+	#package : 'FileSystem-Core-Tests'
+}
 
-{ #category : '*FileSystem-Core-Tests' }
-StringTest >> testAsFileLocatorOrReferenceReturnsALocatorWhenStringRefersToAKnownOrigin [
+{ #category : 'tests' }
+FileStringTest >> testAsFileLocatorOrReferenceReturnsALocatorWhenStringRefersToAKnownOrigin [
 	| pathString locator |
 	pathString := (FileLocator home / 'foo') fullName.
 
@@ -15,8 +20,8 @@ StringTest >> testAsFileLocatorOrReferenceReturnsALocatorWhenStringRefersToAKnow
 		equals: pathString
 ]
 
-{ #category : '*FileSystem-Core-Tests' }
-StringTest >> testAsFileLocatorOrReferenceReturnsAReferenceWhenStringDoesNotReferToAKnownOrigin [
+{ #category : 'tests' }
+FileStringTest >> testAsFileLocatorOrReferenceReturnsAReferenceWhenStringDoesNotReferToAKnownOrigin [
 	| fileRef result |
 	fileRef := '/foo' asFileReference.
 
