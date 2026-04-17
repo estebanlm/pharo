@@ -193,6 +193,7 @@ def bootstrapImage(){
         isoTesters['Announcements-Core'] = { defineIsoTestStage("Announcements-Core", "Announcements", "\'Announcements-Core-Tests\'") } 
         isoTesters['Shift-ClassBuilder'] = { defineIsoTestStage("Shift-ClassBuilder", "Shift", "\'Shift-ClassBuilder-Tests\'") }        
         isoTesters['System-CommandLineHandler'] = { defineIsoTestStage("System-CommandLineHandler", "SystemCommandLineHandler", "\'System-CommandLineHandler-Tests\'") }        
+        isoTesters['FileSystem'] = { defineIsoTestStage("FileSystem", "FileSystem", "\'FileSystem-Core-Tests\' \'FileSystem-Disk-Tests\' \'FileSystem-Tests-Attributes\'") }        
         parallel isoTesters
 
         stage ("Full Image") {
