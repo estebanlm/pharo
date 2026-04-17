@@ -16,7 +16,6 @@ Behavior >> compile: code [
 		  compile: code
 		  classified: nil
 		  withStamp: DateAndTime now
-		  notifying: nil
 		  logSource: self shouldLogSource
 ]
 
@@ -31,8 +30,17 @@ Behavior >> compile: sourceCode classified: protocol [
 		  compile: sourceCode
 		  classified: protocol
 		  withStamp: DateAndTime now
-		  notifying: nil
 		  logSource: self shouldLogSource
+]
+
+{ #category : '*OpalCompiler-Core' }
+Behavior >> compile: sourceCode classified: protocol withStamp: changeStamp logSource: logSource [
+	"Return the selector of the compiled method"
+
+	^ self compile: sourceCode methodInstaller: (self methodInstaller
+			   logged: logSource;
+			   changeStamp: changeStamp;
+			   protocol: protocol)
 ]
 
 { #category : '*OpalCompiler-Core' }
@@ -68,6 +76,22 @@ Behavior >> compile: selector from: oldClass [
 	newMethod sourcePointer: method sourcePointer.
 	selector == newMethod selector ifFalse: [
 		self error: 'selector changed!' ]
+]
+
+{ #category : '*OpalCompiler-Core' }
+Behavior >> compile: sourceCode methodInstaller: methodInstaller [
+	"Return the selector of the compiled method"
+
+	| method compiler |
+	sourceCode ifEmpty: [ Error signal: 'The source code should not be empty' ].
+	compiler := self compiler
+		            source: sourceCode;
+		            "compatibility: permit undeclared if no requestor"
+		            permitUndeclared: false;
+		            permitFaulty: false.
+	method := compiler newCompile.
+	methodInstaller install: method into: self compiler: compiler.
+	^ method selector
 ]
 
 { #category : '*OpalCompiler-Core' }
