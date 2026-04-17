@@ -15,7 +15,7 @@ Class {
 { #category : 'running' }
 IVsAndClassVarNamesConflictTest >> setUp [
 	super setUp.
-	classFactory := ClassFactoryForTestCase environment: SystemEnvironment new
+	classFactory := ClassFactoryForTestCase environment: testingEnvironment
 ]
 
 { #category : 'running' }
