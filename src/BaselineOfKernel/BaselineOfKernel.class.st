@@ -27,19 +27,23 @@ BaselineOfKernel class >> testsPackageNames [
 BaselineOfKernel >> baseline: spec [
 
 	<baseline>
+	| repository |
+	repository := self packageRepositoryURLForSpec: spec.
+	
 	spec for: #common do: [
 			spec
 				baseline: 'Files-Tests' with: [ 
 					spec
 						className: 'BaselineOfFiles';
-						repository: (self packageRepositoryURLForSpec: spec);
+						repository: repository;
 						loads: #( 'Tests' )];
 
 				baseline: 'Zinc-Character-Encoding-Tests' with: [ 
 					spec
 						className: 'BaselineOfZincCharacterEncoding';
-						repository: (self packageRepositoryURLForSpec: spec);
+						repository: repository;
 						loads: #( 'Tests' )];
+				
 
 				baseline: 'System-Platforms-Tests' with: [ 
 					spec
