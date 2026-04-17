@@ -186,8 +186,8 @@ def bootstrapImage(){
         isoTesters['Files'] = { defineIsoTestStage("Files", "Files", "Tests", "\'Files-Tests\'") }
         isoTesters['Zinc-Character-Encoding'] = { defineIsoTestStage("Zinc-Character-Encoding", "ZincCharacterEncoding", "Tests", "\'Zinc-Character-Encoding-Tests\'") }
         isoTesters['System-SessionManager'] = { defineIsoTestStage("System-SessionManager", "SystemSessionManager", "Tests", "\'System-SessionManager-Tests\'") }
-        
         isoTesters['System-Platforms'] = { defineIsoTestStage("System-Platforms", "SystemPlatforms", "Tests", "\'System-Platforms-Tests\'") }  
+        isoTesters['Shift-Class-Builder'] = { defineIsoTestStage("Shift-Class-Builder", "Shift", "Tests", "\'Shift-Class-Builder-Tests\'") }        
         parallel isoTesters
 
         stage ("Full Image") {
