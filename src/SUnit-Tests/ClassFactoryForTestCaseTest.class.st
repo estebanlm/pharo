@@ -33,7 +33,7 @@ ClassFactoryForTestCaseTest >> organization [
 { #category : 'running' }
 ClassFactoryForTestCaseTest >> setUp [
 	super setUp.
-	factory := ClassFactoryForTestCase new
+	factory := ClassFactoryForTestCase environment: testingEnvironment
 ]
 
 { #category : 'running' }

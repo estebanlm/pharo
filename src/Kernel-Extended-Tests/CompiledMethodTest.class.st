@@ -37,7 +37,6 @@ CompiledMethodTest >> packageNameForTests [
 { #category : 'running' }
 CompiledMethodTest >> setUp [
 	super setUp.
-	testingEnvironment := Smalltalk globals.
 	someClass := SomeClassForCompiledMethodTests
 ]
 
@@ -1020,15 +1019,15 @@ CompiledMethodTest >> testWritesUndeclared [
 	"x is an ivar"
 	method := self someClass compiler compile: 'x ^ x := 0'.
 	self deny: method usesUndeclareds.
-	self assert: (self executeMethod: method) equals: 0.
+	self assert: (self someClass new executeMethod: method) equals: 0.
 
 	"undeclaredxyz is not declared"
 	method := self someClass compiler permitFaulty: true; compile: 'z ^ undeclaredxyz := 1'.
 	self assert: method usesUndeclareds.
-	self should: [ self executeMethod: method ] raise: UndeclaredVariableWrite.
+	self should: [ self someClass new executeMethod: method ] raise: UndeclaredVariableWrite.
 	self
 		assert:
-			([ self executeMethod: method ]
+			([ self someClass new executeMethod: method ]
 				on: UndeclaredVariableWrite
 				do: [:e | e resume])
 		equals: 1.
@@ -1036,10 +1035,10 @@ CompiledMethodTest >> testWritesUndeclared [
 	"check same behavior in blocks"
 	method := self someClass compiler permitFaulty: true; compile: 'msg ^ self in: [ :anObject | undeclaredxyz := 2 ]'.
 	self assert: method usesUndeclareds.
-	self should: [ self executeMethod: method ] raise: UndeclaredVariableWrite.
+	self should: [ self someClass new executeMethod: method ] raise: UndeclaredVariableWrite.
 	self
 		assert:
-			([ self executeMethod: method ]
+			([ self someClass new executeMethod: method ]
 				on: UndeclaredVariableWrite
 				do: [:e | e resume])
 		equals: 2

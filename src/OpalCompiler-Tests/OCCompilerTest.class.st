@@ -24,9 +24,14 @@ OCCompilerTest >> compile [
 { #category : 'running' }
 OCCompilerTest >> compileWithFailBlock: aBlock [
 
-	| result |
-	result := OCInteractiveAPI new compile: text notifying: self in: MockForCompilation.
-	result ifNil: aBlock
+	| result compiler |
+	compiler := MockForCompilation compiler
+		            source: text;
+		            "compatibility: permit undeclared if no requestor"
+		            permitUndeclared: false;
+		            permitFaulty: false.
+	result := compiler doCompile.
+	result isError ifTrue: [ aBlock cull: result ]
 ]
 
 { #category : 'mocking' }
@@ -81,9 +86,12 @@ OCCompilerTest >> testAssignmentOfClassNameBinding [
 	text := 'temp | | MockForCompilation := nil'.
 
 	self
-		compileWithFailBlock: [ self assert: errorMessage equals: 'Assignment to read-only variable ->'.
-			self assert: errorLocation equals: 10.
-			self assert: errorSource contents equals: 'temp | | MockForCompilation := nil'.
+		compileWithFailBlock: [ :result | | error |
+			self assert: result ast allNotices size equals: 1.
+			error := result ast allNotices first.
+			self assert: error messageText equals: 'Assignment to read-only variable'.
+			self assert: error position equals: 10.
+			self assert: error node parent sourceCode equals: 'MockForCompilation := nil'.
 			^ nil ].
 	self fail
 ]
