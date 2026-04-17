@@ -65,15 +65,15 @@ ReRenamePackageRefactoring >> newName: aNewName [
     newName := aNewName asSymbol
 ]
 
-{ #category : 'transforming' }
-ReRenamePackageRefactoring >> prepareForExecution [
-    package := self model packageNamed: packageName
-]
-
 { #category : 'initialization' }
 ReRenamePackageRefactoring >> packageName: aName newName: aNewName [
 	packageName := aName asSymbol.
 	newName := aNewName asSymbol
+]
+
+{ #category : 'transforming' }
+ReRenamePackageRefactoring >> prepareForExecution [
+    package := self model packageNamed: packageName
 ]
 
 { #category : 'transforming' }
