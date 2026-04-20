@@ -169,7 +169,7 @@ ShiftClassBuilderTest >> testChevronIsWorkingOnClassSide [
 		               layout: WeakLayout;
 		               traits: { TViewModelMock };
 		               sharedVariables: { #AAA };
-		               sharedPools: { #TextConstants };
+		               sharedPools: { #TestPool };
 		               tag: 'boring';
 		               package: self packageNameForTest.
 
@@ -307,7 +307,7 @@ ShiftClassBuilderTest >> testExistingClassWithClassSlot [
 		               traits: { TViewModelMock };
 		               sharedVariables: { #BBB };
 		               classSlots: #( AAA );
-		               sharedPools: { #TextConstants };
+		               sharedPools: { #TestPool };
 		               tag: 'boring';
 		               package: self packageNameForTest.
 
@@ -341,7 +341,7 @@ ShiftClassBuilderTest >> testExistingClassWithClassSlotThenWeRemoveIt [
 		               traits: { TViewModelMock };
 		               sharedVariables: { #BBB };
 		               classSlots: #( AAA );
-		               sharedPools: { #TextConstants };
+		               sharedPools: { #TestPool };
 		               tag: 'boring';
 		               package: self packageNameForTest.
 
