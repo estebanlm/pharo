@@ -61,6 +61,7 @@ BackwardCompatibility >> defaultAction [
         self shouldTransform ifTrue: [ self transform ]
     ]
 ]
+
 { #category : 'private' }
 BackwardCompatibility >> logTranscript [
 
