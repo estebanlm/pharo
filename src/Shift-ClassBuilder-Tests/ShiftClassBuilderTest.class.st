@@ -230,8 +230,8 @@ ShiftClassBuilderTest >> testClassSlots [
 { #category : 'tests - class creation' }
 ShiftClassBuilderTest >> testClassTraits [
 
-	builder classTraits: {TViewModel classSide}.
-	self assert: builder classTraitComposition equals: {TViewModel classSide} asTraitComposition
+	builder classTraits: {TViewModelMock classSide}.
+	self assert: builder classTraitComposition equals: {TViewModelMock classSide} asTraitComposition
 ]
 
 { #category : 'tests - mandatory' }

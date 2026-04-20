@@ -200,7 +200,7 @@ ShClassInstallerTest >> testCreatedClassWithAllElements [
 			            layout: WeakLayout;
 			            traits: { TViewModelMock };
 			            sharedVariables: { #AAA };
-			            sharedPools: { #TextConstants };
+			            sharedPools: { #TestPool };
 			            tag: 'boring';
 			            package: self generatedClassesPackageName ].
 
@@ -211,7 +211,7 @@ ShClassInstallerTest >> testCreatedClassWithAllElements [
 	self assert: newClass traitComposition equals: { TViewModelMock } asTraitComposition.
 	self assert: newClass class traitComposition equals: { TViewModelMock classSide } asTraitComposition.
 	self assert: newClass classVarNames equals: #( AAA ).
-	self assertCollection: newClass sharedPools hasSameElements: { TextConstants }.
+	self assertCollection: newClass sharedPools hasSameElements: { TestPool }.
 	self assert: newClass package name equals: self generatedClassesPackageName.
 	self assert: newClass packageTag name equals: 'boring'
 ]
