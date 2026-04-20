@@ -320,7 +320,7 @@ ShiftClassBuilderTest >> testExistingClassWithClassSlot [
 		               layout: WeakLayout;
 		               traits: { TViewModelMock };
 		               sharedVariables: { #BBB };
-		               sharedPools: { #TextConstants };
+		               sharedPools: { #TestPool };
 		               tag: 'boring';
 		               package: self packageNameForTest.
 
