@@ -141,8 +141,11 @@ Build Url: ${env.BUILD_URL}
   }}}
 }
 
-def defineIsoTestStage(stageName, projectName, testGroup, testPackages){
+
+
+def defineIsoTestStage(stageName, projectName, testPackages){
     stage("Tests-ISO-" + stageName) {
+        def testGroup = "Tests"
         timeout(2) {
             dir(env.STAGE_NAME) {
                 def PHARO_MAJOR = shellOutput('git describe --tags --first-parent | cut -d\'-\' -f 1 | cut -c 2- | cut -d\'.\' -f 1-1')
@@ -180,14 +183,14 @@ def bootstrapImage(){
         }
         
         def isoTesters = [:]
-        isoTesters['SUnit'] = { defineIsoTestStage("SUnit", "SUnit", "Tests", "\'SUnit-Tests\'  \'SUnit-Visitor-Tests\'  \'SUnit-MockObjects-Tests\'") }
-        isoTesters['Kernel'] = { defineIsoTestStage("Kernel", "Kernel", "Tests", "\'Kernel-Tests\'  \'Kernel-CodeModel-Tests\'") }
-        isoTesters['Compiler'] = { defineIsoTestStage("Compiler", "Compiler", "Tests", "\'OpalCompiler-Tests\'  \'DebugInfo-Tests\' \'Kernel-Extended-Tests\' \'Kernel-Tests-WithCompiler\'") }      
-        isoTesters['Files'] = { defineIsoTestStage("Files", "Files", "Tests", "\'Files-Tests\'") }
-        isoTesters['Zinc-Character-Encoding'] = { defineIsoTestStage("Zinc-Character-Encoding", "ZincCharacterEncoding", "Tests", "\'Zinc-Character-Encoding-Tests\'") }
-        isoTesters['System-SessionManager'] = { defineIsoTestStage("System-SessionManager", "SystemSessionManager", "Tests", "\'System-SessionManager-Tests\'") }
-        isoTesters['System-Platforms'] = { defineIsoTestStage("System-Platforms", "SystemPlatforms", "Tests", "\'System-Platforms-Tests\'") }  
-        isoTesters['Announcements-Core'] = { defineIsoTestStage("Announcements-Core", "Announcements", "Tests", "\'Announcements-Core-Tests\'") } 
+        isoTesters['SUnit'] = { defineIsoTestStage("SUnit", "SUnit", "\'SUnit-Tests\'  \'SUnit-Visitor-Tests\'  \'SUnit-MockObjects-Tests\'") }
+        isoTesters['Kernel'] = { defineIsoTestStage("Kernel", "Kernel", "\'Kernel-Tests\'  \'Kernel-CodeModel-Tests\'") }
+        isoTesters['Compiler'] = { defineIsoTestStage("Compiler", "Compiler", "\'OpalCompiler-Tests\'  \'DebugInfo-Tests\' \'Kernel-Extended-Tests\' \'Kernel-Tests-WithCompiler\'") }      
+        isoTesters['Files'] = { defineIsoTestStage("Files", "Files", "\'Files-Tests\'") }
+        isoTesters['Zinc-Character-Encoding'] = { defineIsoTestStage("Zinc-Character-Encoding", "ZincCharacterEncoding", "\'Zinc-Character-Encoding-Tests\'") }
+        isoTesters['System-SessionManager'] = { defineIsoTestStage("System-SessionManager", "SystemSessionManager", "\'System-SessionManager-Tests\'") }
+        isoTesters['System-Platforms'] = { defineIsoTestStage("System-Platforms", "SystemPlatforms", "\'System-Platforms-Tests\'") }  
+        isoTesters['Announcements-Core'] = { defineIsoTestStage("Announcements-Core", "Announcements", "\'Announcements-Core-Tests\'") } 
         parallel isoTesters
 
         stage ("Full Image") {
