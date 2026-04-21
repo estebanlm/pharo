@@ -90,18 +90,17 @@ ReleaseTest >> knownProcesses [
 	"(self actualProcesses difference: self knownProcesses) do: [ :each | each suspend; terminate ]."
 
 	^ {
-		Processor activeProcess.
-		Processor backgroundProcess.
-		FinalizationProcess runningFinalizationProcess.
-		SmalltalkImage current lowSpaceWatcherProcess.
-		MorphicUIManager uiProcess.
-		CurrentExecutionEnvironment value watchDogProcess.
-		Delay schedulingProcess.
-		TKTWatchDog onDuty pharoProcess.
-		OSSDL2Driver eventLoopProcess.
-		TFCallbackQueue uniqueInstance callbackProcess.
-		(Smalltalk classNamed: #StThreadSafeTranscript) ifNotNil: [ :aClass | aClass uniqueInstance workerProcess ] 
-	} asSet
+		  Processor activeProcess.
+		  Processor backgroundProcess.
+		  FinalizationProcess runningFinalizationProcess.
+		  SmalltalkImage current lowSpaceWatcherProcess.
+		  MorphicUIManager uiProcess.
+		  CurrentExecutionEnvironment value watchDogProcess.
+		  Delay schedulingProcess.
+		  TKTWatchDog onDuty pharoProcess.
+		  OSSDL2Driver eventLoopProcess.
+		  TFCallbackQueue uniqueInstance callbackProcess.
+		  ((Smalltalk classNamed: #StThreadSafeTranscript) ifNotNil: [ :aClass | aClass defaultInstance workerProcess ]) } asSet
 ]
 
 { #category : 'tests - variables' }
