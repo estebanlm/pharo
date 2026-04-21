@@ -20,8 +20,7 @@ DeprecationTest >> testNoInfiniteLoopWhenShowWarningIsTrue [
     "Regression test for https://github.com/pharo-project/pharo/issues/19396"
     
     | oldShowWarning oldActivateTransformations classFactory |
-	<ignoreNotImplementedSelectors: #(sendsDeprecatedMessageWithTransform)>
-	
+	  <ignoreNotImplementedSelectors: #(sendsDeprecatedMessageWithTransform)>
     classFactory := ClassFactoryForTestCase new.
     classFactory
         silentlyCompile: 'sendsDeprecatedMessageWithTransform ^ self deprecatedMessageWithTransform'
