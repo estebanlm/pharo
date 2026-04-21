@@ -120,7 +120,8 @@ ReInteractionDriver >> application: anApplication [
 ReInteractionDriver >> applyChanges [
 
 	| applied |
-	forTesting ifTrue: [ ^ self changes ].
+
+	forTesting ifTrue: [ ^ self ].
 	applied := self openPreviewWithChanges: self changes "it looks like there is a bug in Spec" "stoppedBeforeApplyingRefactoring := applied isCancelled not
 	isCancelled returns always true so I will use it when this will be fixed in spec."
 ]
