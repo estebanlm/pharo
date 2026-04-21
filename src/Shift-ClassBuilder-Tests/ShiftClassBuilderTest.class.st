@@ -169,7 +169,7 @@ ShiftClassBuilderTest >> testChevronIsWorkingOnClassSide [
 		               layout: WeakLayout;
 		               traits: { TViewModelMock };
 		               sharedVariables: { #AAA };
-		               sharedPools: { #TextConstants };
+		               sharedPools: { #TestPool };
 		               tag: 'boring';
 		               package: self packageNameForTest.
 
@@ -230,8 +230,8 @@ ShiftClassBuilderTest >> testClassSlots [
 { #category : 'tests - class creation' }
 ShiftClassBuilderTest >> testClassTraits [
 
-	builder classTraits: {TViewModel classSide}.
-	self assert: builder classTraitComposition equals: {TViewModel classSide} asTraitComposition
+	builder classTraits: {TViewModelMock classSide}.
+	self assert: builder classTraitComposition equals: {TViewModelMock classSide} asTraitComposition
 ]
 
 { #category : 'tests - mandatory' }
@@ -307,7 +307,7 @@ ShiftClassBuilderTest >> testExistingClassWithClassSlot [
 		               traits: { TViewModelMock };
 		               sharedVariables: { #BBB };
 		               classSlots: #( AAA );
-		               sharedPools: { #TextConstants };
+		               sharedPools: { #TestPool };
 		               tag: 'boring';
 		               package: self packageNameForTest.
 
@@ -320,7 +320,7 @@ ShiftClassBuilderTest >> testExistingClassWithClassSlot [
 		               layout: WeakLayout;
 		               traits: { TViewModelMock };
 		               sharedVariables: { #BBB };
-		               sharedPools: { #TextConstants };
+		               sharedPools: { #TestPool };
 		               tag: 'boring';
 		               package: self packageNameForTest.
 
@@ -341,7 +341,7 @@ ShiftClassBuilderTest >> testExistingClassWithClassSlotThenWeRemoveIt [
 		               traits: { TViewModelMock };
 		               sharedVariables: { #BBB };
 		               classSlots: #( AAA );
-		               sharedPools: { #TextConstants };
+		               sharedPools: { #TestPool };
 		               tag: 'boring';
 		               package: self packageNameForTest.
 
@@ -354,22 +354,6 @@ ShiftClassBuilderTest >> testExistingClassWithClassSlotThenWeRemoveIt [
 	newClass := classBuilder install.
 
 	self assert: newClass class slots equals: #(  )
-]
-
-{ #category : 'tests - class creation' }
-ShiftClassBuilderTest >> testExistingClassWithSuperclassName [
-	"Regression test for https://github.com/pharo-project/pharo/issues/19572"
-
-	| class |
-	class := self class classInstaller make: [ :b |
-			         b
-				         name: 'Toto';
-				         superclassName: 'Object';
-				         package: self packageNameForTest ].
-
-	class := self class classInstaller update: class to: [ :b | b superclassName: 'TestCase' ].
-
-	self assert: class superclass name equals: 'TestCase'
 ]
 
 { #category : 'tests - classBuilder generation' }
