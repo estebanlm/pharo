@@ -12,3 +12,9 @@ Class {
 	#package : 'Shift-ClassBuilder-Tests',
 	#tag : 'Mock'
 }
+
+{ #category : 'initialization' }
+TestPool2 >> initialize [
+    <ignoreUnusedClassVariables: #( D E )>
+    super initialize.
+]
