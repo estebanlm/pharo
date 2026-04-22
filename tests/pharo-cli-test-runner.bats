@@ -12,7 +12,7 @@ teardown() {
 
 @test "test --help prints help" {
   run_pharo test --help
-  assert_output --partial "Usage: test [--help] [--junit-xml-output] [--shuffle-seed <shuffle-seed-value>] [--stage-name <stage-name-value>] [--no-xterm] [--fail-on-error] [--fail-on-failure] [--save] [--rename] [<PACKAGE>]"
+  assert_output --partial "Usage: test [--help] [--junit-xml-output] [--shuffle-seed <shuffle-seed-value>] [--stage-name <stage-name-value>] [--project-name <project-name-value>] [--no-xterm] [--fail-on-error] [--fail-on-failure] [--save] [--rename] [<PACKAGE>]"
   assert_success
 }
 
