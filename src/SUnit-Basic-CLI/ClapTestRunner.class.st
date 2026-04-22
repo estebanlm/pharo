@@ -163,24 +163,24 @@ ClapTestRunner >> testPackages [
 
 { #category : 'accessing' }
 ClapTestRunner >> testPackagesForProject: aProjectName [
-	"get the test packages associated with a projectName by its baseline"
-	| baselineClass project version testsGroup packageNames |
+	"Get the test packages associated with a projectName by its baseline, resolving nested groups recursively"
+	| version resolveBlock |
+	
+	version := (Smalltalk at: ('BaselineOf' , aProjectName) asSymbol) project version.
+	
+	resolveBlock := [ :specName |
+		| spec |
+		spec := version packageNamed: specName ifAbsent: [ nil ].
+		spec 
+			ifNil: [ #() ]
+			ifNotNil: [ 
+				spec class name = #MetacelloGroupSpec
+					ifTrue: [ spec includes flatCollect: [ :each | resolveBlock value: each ] ]
+					ifFalse: [ { spec name } ]
+			] 
+	].
 
-	baselineClass := Smalltalk 
-        at: ('BaselineOf' , aProjectName) asSymbol 
-        ifAbsent: [ ^ #() ].
-
-	project := baselineClass project.
-	version := project version. 
-
-	testsGroup := version packageNamed: 'Tests' ifAbsent: [ nil ].
-
-	packageNames := testsGroup 
-    	ifNotNil: [ testsGroup includes ] 
-    	ifNil: [ #() ].
-
-	^ packageNames.
-
+	^ (resolveBlock value: 'Tests') asSet asArray "delete duplicates"
 ]
 
 { #category : 'accessing' }
