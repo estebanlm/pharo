@@ -18,8 +18,8 @@ ClapTestRunner class >> commandSpecification [
 		description: 'A Test runner to run test suites from a shell';
 		addFlag: #'junit-xml-output' description: 'Output results in JUnit-compatible XML format';
 		addFlagWithPositional: #'shuffle-seed' description: 'an integer specifying the seed used to shuffle the tests';
-		addFlagWithPositional: #'stage-name' description: 'adds a prefix to the generated xml, this is useful
-when running in the CI infrastructure';
+		addFlagWithPositional: #'stage-name' description: 'adds a prefix to the generated xml, this is useful when running in the CI infrastructure';
+		addFlagWithPositional: #'project-name' description: 'a string specifying the name of the project, this is useful to get the test parameters associated (test packages...)';
 		addFlag: #'no-xterm' description: 'use this option when no xterm available';
 		addFlag: #'fail-on-error' description: 'if there is a test error, it will exit with error code 1';
 		addFlag: #'fail-on-failure' description: 'if there is a test error or failure, it will exit with error code 1';
@@ -81,6 +81,14 @@ ClapTestRunner >> informResults: results [
 { #category : 'accessing' }
 ClapTestRunner >> packages [
 	^ self positional: #PACKAGE
+]
+
+{ #category : 'accessing' }
+ClapTestRunner >> projectName [
+    "Return project name in the form of a String (ex: 'FileSystem'), or nil if flag is missing"
+    ^ (self hasFlag: #'project-name')
+        ifTrue: [ (self positional: #'project-name') value ]
+        ifFalse: [ nil ]
 ]
 
 { #category : 'execution' }
