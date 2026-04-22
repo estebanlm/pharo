@@ -80,7 +80,17 @@ ClapTestRunner >> informResults: results [
 
 { #category : 'accessing' }
 ClapTestRunner >> packages [
-	^ self positional: #PACKAGE
+	"Collects all test package names by merging explicit positional PACKAGE arguments with implicit test packages retrieved from the project's baseline via the --project-name flag"
+	| explicitNames projectNames |
+	
+	explicitNames := (self positional: #PACKAGE ifAbsent: [ #() ]) 
+		collect: [ :each | each value ].
+	
+	projectNames := self projectName 
+		ifNotNil: [ :name | self testPackagesForProject: name ]
+		ifNil: [ #() ].
+		
+	^ explicitNames asArray , projectNames asArray
 ]
 
 { #category : 'accessing' }
@@ -149,6 +159,28 @@ ClapTestRunner >> testPackages [
 	packages := Set new.
 	self packages do: [ :packageName | self addPackagesMatching: packageName to: packages ].
 	^ packages 
+]
+
+{ #category : 'accessing' }
+ClapTestRunner >> testPackagesForProject: aProjectName [
+	"get the test packages associated with a projectName by its baseline"
+	| baselineClass project version testsGroup packageNames |
+
+	baselineClass := Smalltalk 
+        at: ('BaselineOf' , aProjectName) asSymbol 
+        ifAbsent: [ ^ #() ].
+
+	project := baselineClass project.
+	version := project version. 
+
+	testsGroup := version packageNamed: 'Tests' ifAbsent: [ nil ].
+
+	packageNames := testsGroup 
+    	ifNotNil: [ testsGroup includes ] 
+    	ifNil: [ #() ].
+
+	^ packageNames.
+
 ]
 
 { #category : 'accessing' }
