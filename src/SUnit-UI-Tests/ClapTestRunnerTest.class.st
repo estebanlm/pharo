@@ -87,6 +87,56 @@ ClapTestRunnerTest >> testDefaultTestRunnerIsVTermTestRunner [
 ]
 
 { #category : 'tests' }
+ClapTestRunnerTest >> testResolvePackagesForGeneralProject [
+	"Tests that a baseline mixing direct packages and nested groups in its Tests group is resolved correctly"
+	| runner packages |
+    runner := ClapTestRunner new.
+    packages := runner testPackagesForProject: 'Calypso'.
+    
+    "check the group 'MinimalEnvironmentTests' has been resolved"
+    self assert: (packages includes: 'Calypso-SystemQueries-Tests').
+    
+    "Check a direct package in the 'Tests' group"
+    self assert: (packages includes: 'Calypso-Browser-Tests').
+    
+    "Check there is no list in the list "
+    self assert: (packages allSatisfy: [ :each | each isString ]).
+]
+
+{ #category : 'tests' }
+ClapTestRunnerTest >> testResolvePackagesForGroups [
+	"Tests that nested groups in baselines are correctly resolved recursively"
+	| runner packages |
+	runner := ClapTestRunner new.
+	packages := runner testPackagesForProject: 'Shift'.
+	
+	self assert: packages isNotEmpty.
+	self assert: (packages includes: 'Shift-ClassBuilder-Tests').
+]
+
+{ #category : 'tests' }
+ClapTestRunnerTest >> testResolvePackagesForProjectWithoutTestsGroup [
+	"Tests a project that has a baseline but no 'Tests' group"
+	| runner packages |
+	runner := ClapTestRunner new.
+
+	packages := runner testPackagesForProject: 'UnifiedFFI'. 
+	
+	self assert: packages isEmpty.
+]
+
+{ #category : 'tests' }
+ClapTestRunnerTest >> testResolvePackagesForUnknownProject [
+	"Tests that an unknown project returns an empty collection without crashing"
+	| runner packages |
+	runner := ClapTestRunner new.
+	
+	packages := runner testPackagesForProject: 'ThisProjectDoesNotExist404'.
+	
+	self assert: packages isEmpty.
+]
+
+{ #category : 'tests' }
 ClapTestRunnerTest >> testShouldFailOnErrorIsFalseWhenFailOnErrorFlagAbsent [
 
 	| command |

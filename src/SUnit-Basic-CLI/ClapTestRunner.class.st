@@ -166,7 +166,7 @@ ClapTestRunner >> testPackagesForProject: aProjectName [
 	"Get the test packages associated with a projectName by its baseline, resolving nested groups recursively"
 	| version resolveBlock |
 	
-	version := (Smalltalk at: ('BaselineOf' , aProjectName) asSymbol) project version.
+	version := (Smalltalk at: ('BaselineOf' , aProjectName) asSymbol ifAbsent: [ ^ #() ]) project version.
 	
 	resolveBlock := [ :specName |
 		| spec |
