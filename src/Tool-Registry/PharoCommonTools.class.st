@@ -38,8 +38,8 @@ PharoCommonTools class >> menuHistoryOn: aBuilder [
 		parent: #Tools;
 		label: 'Load Compleshion History';
 		icon: (self iconNamed: #smallLoadProject);
-		help: 'Load History an extension of Compleshion';
-		order: 100;
+		help: 'Load History (an extension of Compleshion)';
+		order: 110;
 		action: [
 				Metacello new
   baseline: 'ExtendedHeuristicCompletionHistory';
