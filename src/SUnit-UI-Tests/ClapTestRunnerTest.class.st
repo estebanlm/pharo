@@ -91,27 +91,14 @@ ClapTestRunnerTest >> testResolvePackagesForGeneralProject [
 	"Tests that a baseline mixing direct packages and nested groups in its Tests group is resolved correctly"
 	| runner packages |
     runner := ClapTestRunner new.
-    packages := runner testPackagesForProject: 'Calypso'.
+    packages := runner testPackagesForProject: 'ClapMockGeneralProject'.
     
-    "check the group 'MinimalEnvironmentTests' has been resolved"
-    self assert: (packages includes: 'Calypso-SystemQueries-Tests').
-    
-    "Check a direct package in the 'Tests' group"
-    self assert: (packages includes: 'Calypso-Browser-Tests').
+    self assert: (packages includes: 'FakePackage1').
+    self assert: (packages includes: 'FakePackage2').
+	 self assert: (packages includes: 'FakePackage-Tests').
     
     "Check there is no list in the list "
     self assert: (packages allSatisfy: [ :each | each isString ]).
-]
-
-{ #category : 'tests' }
-ClapTestRunnerTest >> testResolvePackagesForGroups [
-	"Tests that nested groups in baselines are correctly resolved recursively"
-	| runner packages |
-	runner := ClapTestRunner new.
-	packages := runner testPackagesForProject: 'Shift'.
-	
-	self assert: packages isNotEmpty.
-	self assert: (packages includes: 'Shift-ClassBuilder-Tests').
 ]
 
 { #category : 'tests' }
@@ -120,7 +107,7 @@ ClapTestRunnerTest >> testResolvePackagesForProjectWithoutTestsGroup [
 	| runner packages |
 	runner := ClapTestRunner new.
 
-	packages := runner testPackagesForProject: 'UnifiedFFI'. 
+	packages := runner testPackagesForProject: 'ClapMockNoTestGroup'. 
 	
 	self assert: packages isEmpty.
 ]
