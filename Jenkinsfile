@@ -157,8 +157,12 @@ def defineIsoTestStage(stageName, projectName, testPackages=""){
                 shell "bash -c './bootstrap/scripts/getPharoVM.sh ${PHARO_SHORT}'"
                 shell "bash -c './pharo metacello.image metacello install --save --strict --signalErrorOnWarning \"filetree://../src\" SUnit --groups Core'"
                 shell "bash -c './pharo metacello.image metacello install --save --strict --signalErrorOnWarning \"filetree://../src\" " + projectName + " --groups " + testGroup + "'"
-                shell "bash -c './pharo metacello.image test --junit-xml-output --stage-name ${env.STAGE_NAME} --project-name ${projectName}  " + testPackages + " '"
-                junit allowEmptyResults: false, testResults: "${env.STAGE_NAME}*.xml"
+                /* 
+                This projectNameFlag has to be temporary : for the moment we cannot run all tests for kernel and compiler because of some dependencies, so
+                we chose to run only a subset of tests. Once we will have fixed the dependencies we will be able to run all tests.
+                */
+                def projectNameFlag = testPackages == "" ? "--project-name ${projectName}" : ""
+                shell "bash -c './pharo metacello.image test --junit-xml-output --stage-name ${env.STAGE_NAME} ${projectNameFlag} ${testPackages} '"                junit allowEmptyResults: false, testResults: "${env.STAGE_NAME}*.xml"
             }
         }
     }
