@@ -96,6 +96,7 @@ ClapTestRunnerTest >> testResolvePackagesForGeneralProject [
     self assert: (packages includes: 'FakePackage1').
     self assert: (packages includes: 'FakePackage2').
 	 self assert: (packages includes: 'FakePackage-Tests').
+	 self assert: (packages includes: 'Core') not.
     
     "Check there is no list in the list "
     self assert: (packages allSatisfy: [ :each | each isString ]).
