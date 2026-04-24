@@ -2,8 +2,8 @@
 
 load test_helper.bash
 
-BASE_TEST_COUNT=20
-TOTAL_TEST_COUNT=21
+BASE_TEST_COUNT=19
+TOTAL_TEST_COUNT=20
 
 setup() {
   setup-workdir
