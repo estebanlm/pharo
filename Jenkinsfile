@@ -147,7 +147,7 @@ def defineIsoTestStage(stageName, projectName, testPackages=""){
     stage("Tests-ISO-" + stageName) {
         def testGroup = "Tests"
         timeout(2) {
-            dir(env.STAGE_NAME) {
+            dir(env.STAGE_NAME){
                 def PHARO_MAJOR = shellOutput('git describe --tags --first-parent | cut -d\'-\' -f 1 | cut -c 2- | cut -d\'.\' -f 1-1')
                 def PHARO_MINOR = shellOutput('git describe --tags --first-parent | cut -d\'-\' -f 1 | cut -c 2- | cut -d\'.\' -f 2-2')
                 def PHARO_SHORT = PHARO_MAJOR + PHARO_MINOR
