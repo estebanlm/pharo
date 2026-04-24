@@ -29,7 +29,7 @@ StRequestDialogMock >> message: aString [
 { #category : 'visiting' }
 StRequestDialogMock >> onAccept: aBlock [
 
-	^ self
+	^ self 
 ]
 
 { #category : 'api - events' }
