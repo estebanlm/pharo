@@ -51,12 +51,6 @@ BaselineOfKernel >> baseline: spec [
 						repository: repository;
 						loads: #( 'Tests' )];
 					
-				baseline: 'Collections' with: [ 
-					spec 
-						className: 'BaselineOfCollections';
-						repository: repository;
-						loads: #('Kernel') ];
-					
 				baseline: 'Collections-Tests' with: [ 
 					spec 
 						className: 'BaselineOfCollections';
@@ -71,6 +65,15 @@ BaselineOfKernel >> baseline: spec [
 						loads: #( 'Tests' )];
 					
 				package: 'Announcements-Core';
+				package: 'Collections-Abstract';
+				package: 'Collections-DoubleLinkedList';
+				package: 'Collections-Native';
+				package: 'Collections-Sequenceable';
+				package: 'Collections-Streams';
+				package: 'Collections-Strings';
+				package: 'Collections-Support';
+				package: 'Collections-Unordered';
+				package: 'Collections-Weak';
 				package: 'Files';
 				package: 'Hermes';
 				package: 'Kernel';
@@ -105,7 +108,8 @@ BaselineOfKernel >> baseline: spec [
 			"The order of packages in the groups are important for the bootstrap! It define the load order."
 			spec
 				group: 'Core'
-				with: { 'Announcements-Core'. 'Collections'. 'Files'. 'Hermes'. 'Kernel'. 'Kernel-CodeModel'.
+				with: { 'Announcements-Core'. 'Collections-Abstract'. 'Collections-DoubleLinkedList'. 'Collections-Native'. 'Collections-Sequenceable'.
+					'Collections-Streams'. 'Collections-Strings'. 'Collections-Support'. 'Collections-Unordered'. 'Collections-Weak'. 'Files'. 'Hermes'. 'Kernel'. 'Kernel-CodeModel'.
 					'Kernel-BytecodeEncoders'. 'Transcript-NonInteractive'. 'PharoBootstrap-Initialization'. 'Shift-ClassBuilder'. 'System-Announcements'.
 					'System-CommandLineHandler'. 'System-Finalization'. 'System-Platforms'. 'System-SessionManager'.
 					'System-Support'. 'Zinc-Character-Encoding-Core' };
