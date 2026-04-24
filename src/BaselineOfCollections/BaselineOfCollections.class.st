@@ -29,11 +29,11 @@ BaselineOfCollections >> baseline: spec [
 				package: 'Collections-Abstract-Tests' with: [ spec requires: #( 'Collections-Abstract' ) ];
 				package: 'Collections-DoubleLinkedList-Tests' with: [ spec requires: #( 'Collections-DoubleLinkedList' ) ];
 				package: 'Collections-Native-Tests' with: [ spec requires: #( 'Collections-Native' ) ];
-				package: 'Collections-Sequenceable-Tests' with: [ spec requires: #( 'Collections-Sequenceable' ) ];
+				package: 'Collections-Sequenceable-Tests' with: [ spec requires: #( 'Collections-Sequenceable' 'Collections-Arithmetic') ];
 				package: 'Collections-Streams-Tests' with: [ spec requires: #( 'Collections-Streams' ) ];
 				package: 'Collections-Strings-Tests' with: [ spec requires: #( 'Collections-Strings' ) ];
 				package: 'Collections-Support-Tests' with: [ spec requires: #( 'Collections-Support' ) ];
-				package: 'Collections-Unordered-Tests' with: [ spec requires: #( 'Collections-Unordered' ) ];
+				package: 'Collections-Unordered-Tests' with: [ spec requires: #( 'Collections-Unordered' 'Collections-Arithmetic') ];
 				package: 'Collections-Weak-Tests' with: [ spec requires: #( 'Collections-Weak' 'Collections-Unordered-Tests') ];
 				
 				package: 'Collections-Arithmetic-Tests' with: [ spec requires: #( 'Collections-Arithmetic' ) ];
