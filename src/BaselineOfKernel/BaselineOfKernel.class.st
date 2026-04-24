@@ -48,8 +48,21 @@ BaselineOfKernel >> baseline: spec [
 				baseline: 'System-Platforms-Tests' with: [ 
 					spec
 						className: 'BaselineOfSystemPlatforms';
-						repository: (self packageRepositoryURLForSpec: spec);
+						repository: repository;
 						loads: #( 'Tests' )];
+					
+				baseline: 'Collections' with: [ 
+					spec 
+						className: 'BaselineOfCollections';
+						repository: repository;
+						loads: #('Kernel') ];
+					
+				baseline: 'Collections-Tests' with: [ 
+					spec 
+						className: 'BaselineOfCollections';
+						repository: repository;
+						loads: #('KernelTests') ];
+					
 					
 				baseline: 'Announcements-Core-Tests' with: [ 
 					spec
@@ -58,15 +71,6 @@ BaselineOfKernel >> baseline: spec [
 						loads: #( 'Tests' )];
 					
 				package: 'Announcements-Core';
-				package: 'Collections-Abstract';
-				package: 'Collections-DoubleLinkedList';
-				package: 'Collections-Native';
-				package: 'Collections-Sequenceable';
-				package: 'Collections-Streams';
-				package: 'Collections-Strings';
-				package: 'Collections-Support';
-				package: 'Collections-Unordered';
-				package: 'Collections-Weak';
 				package: 'Files';
 				package: 'Hermes';
 				package: 'Kernel';
@@ -93,15 +97,6 @@ BaselineOfKernel >> baseline: spec [
 				package: 'System-Version';
 				package: 'Multilingual-Encodings';
 				
-				package: 'Collections-Abstract-Tests';
-				package: 'Collections-DoubleLinkedList-Tests';
-				package: 'Collections-Native-Tests';
-				package: 'Collections-Sequenceable-Tests';
-				package: 'Collections-Streams-Tests';
-				package: 'Collections-Strings-Tests';
-				package: 'Collections-Support-Tests';
-				package: 'Collections-Unordered-Tests';
-				package: 'Collections-Weak-Tests' with: [ spec requires: #( 'Collections-Unordered-Tests' ) ];
 				package: 'Kernel-Tests';
 				package: 'Kernel-CodeModel-Tests';
 				package: 'System-Finalization-Tests';
@@ -110,8 +105,7 @@ BaselineOfKernel >> baseline: spec [
 			"The order of packages in the groups are important for the bootstrap! It define the load order."
 			spec
 				group: 'Core'
-				with: { 'Announcements-Core'. 'Collections-Abstract'. 'Collections-DoubleLinkedList'. 'Collections-Native'. 'Collections-Sequenceable'.
-					'Collections-Streams'. 'Collections-Strings'. 'Collections-Support'. 'Collections-Unordered'. 'Collections-Weak'. 'Files'. 'Hermes'. 'Kernel'. 'Kernel-CodeModel'.
+				with: { 'Announcements-Core'. 'Collections'. 'Files'. 'Hermes'. 'Kernel'. 'Kernel-CodeModel'.
 					'Kernel-BytecodeEncoders'. 'Transcript-NonInteractive'. 'PharoBootstrap-Initialization'. 'Shift-ClassBuilder'. 'System-Announcements'.
 					'System-CommandLineHandler'. 'System-Finalization'. 'System-Platforms'. 'System-SessionManager'.
 					'System-Support'. 'Zinc-Character-Encoding-Core' };
@@ -120,7 +114,6 @@ BaselineOfKernel >> baseline: spec [
 					'System-NumberPrinting'. 'System-Version'. 'Multilingual-Encodings' };
 				group: 'Tests'
 				with:
-					{ 'Collections-Abstract-Tests'. 'Collections-DoubleLinkedList-Tests'. 'Collections-Native-Tests'. 'Collections-Sequenceable-Tests'. 'Collections-Streams-Tests'. 'Collections-Strings-Tests'.
-					'Collections-Support-Tests'. 'Collections-Unordered-Tests'. 'Collections-Weak-Tests'. 'Kernel-Tests'. 'Kernel-CodeModel-Tests'. 'Announcements-Core-Tests'. 'System-Platforms-Tests'.
+					{ 'Collections-Tests'. 'Kernel-Tests'. 'Kernel-CodeModel-Tests'. 'Announcements-Core-Tests'. 'System-Platforms-Tests'.
 					 'Files-Tests'. 'System-Finalization-Tests'. 'Zinc-Character-Encoding-Tests'. 'System-Time-Tests' } ]
 ]
