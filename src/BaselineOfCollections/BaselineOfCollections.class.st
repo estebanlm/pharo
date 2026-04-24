@@ -25,11 +25,12 @@ BaselineOfCollections >> baseline: spec [
 				package: 'Collections-Atomic';
 				package: 'Collections-Stack';
 				
+				package: 'SortFunctions-Core';
 				
 				package: 'Collections-Abstract-Tests' with: [ spec requires: #( 'Collections-Abstract' ) ];
 				package: 'Collections-DoubleLinkedList-Tests' with: [ spec requires: #( 'Collections-DoubleLinkedList' ) ];
 				package: 'Collections-Native-Tests' with: [ spec requires: #( 'Collections-Native' ) ];
-				package: 'Collections-Sequenceable-Tests' with: [ spec requires: #( 'Collections-Sequenceable' 'Collections-Arithmetic' 'Collections-Strings' 'Collections-Support') ];
+				package: 'Collections-Sequenceable-Tests' with: [ spec requires: #( 'Collections-Sequenceable' 'SortFunctions-Core') ];
 				package: 'Collections-Streams-Tests' with: [ spec requires: #( 'Collections-Streams' ) ];
 				package: 'Collections-Strings-Tests' with: [ spec requires: #( 'Collections-Strings' ) ];
 				package: 'Collections-Support-Tests' with: [ spec requires: #( 'Collections-Support' ) ];
