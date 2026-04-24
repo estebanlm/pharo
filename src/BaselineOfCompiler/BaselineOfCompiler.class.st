@@ -22,11 +22,18 @@ BaselineOfCompiler >> baseline: spec [
 
 	<baseline>
 	spec for: #common do: [
+			
+			spec baseline: 'CollectionsTests' with: [
+            spec
+                repository: (self packageRepositoryURLForSpec: spec);
+                className: 'BaselineOfCollections';
+                loads: #( 'Collections-Abstract-Tests' 'Collections-Unordered-Tests' 'Collections-Support-Tests' ) ].
+		
 			spec baseline: 'KernelTests' with: [
 				spec
 					repository: (self packageRepositoryURLForSpec: spec);
 					className: 'BaselineOfKernel';
-					loads: #( 'Collections-Abstract-Tests' 'Kernel-Tests' 'Collections-Unordered-Tests' 'Collections-Support-Tests' 'System-Time-Tests') ].
+					loads: #(  'Kernel-Tests' 'System-Time-Tests') ].
 
 			spec baseline: 'CoreTraits' with: [
 				spec
@@ -40,7 +47,7 @@ BaselineOfCompiler >> baseline: spec [
 				package: 'Collections-Atomic';
 				package: 'Collections-Stack';
 				package: 'Collections-Atomic-Tests';
-				package: 'Collections-Stack-Tests' with: [ spec requires: #( 'KernelTests' ) ];
+				package: 'Collections-Stack-Tests' with: [ spec requires: #( 'KernelTests' 'CollectionsTests') ];
 
 				package: 'ClassDefinitionPrinters';
 
@@ -56,8 +63,8 @@ BaselineOfCompiler >> baseline: spec [
 				package: 'OpalCompiler-Core';
 				package: 'DebugInfo';
 
-				package: 'Kernel-Extended-Tests' with: [ spec requires: #( 'KernelTests' 'CoreTraits' ) ];
-				package: 'Kernel-Tests-WithCompiler' with: [ spec requires: #( 'KernelTests' ) ];
+				package: 'Kernel-Extended-Tests' with: [ spec requires: #( 'KernelTests' 'CollectionsTests' 'CoreTraits' ) ];
+				package: 'Kernel-Tests-WithCompiler' with: [ spec requires: #( 'KernelTests' 'CollectionsTests') ];
 
 				package: 'AST-Core-Tests';
 
