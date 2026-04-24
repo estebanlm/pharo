@@ -89,3 +89,53 @@ PharoOptionsHandlerTest >> testCanFilterPreferencesFileWhenArgumentIsNotFirstOrL
 		assert: optionsHandler filteredArguments 
 		equals: #('foo' 'bar')
 ]
+
+{ #category : 'tests' }
+PharoOptionsHandlerTest >> testCanHandleInteractiveFlag [
+
+	| arguments handler |
+	arguments := #('--interactive' 'foo' '--help').
+	handler := PharoOptionsHandler forArguments: arguments.
+	
+	self assert: handler filteredArguments equals: #('foo' '--help')
+]
+
+{ #category : 'tests' }
+PharoOptionsHandlerTest >> testCanHandleNoDefaultPreferences [
+
+	| arguments handler |
+	arguments := #('--no-default-preferences' 'foo' '--help').
+	handler := PharoOptionsHandler forArguments: arguments.
+	
+
+	self assert: handler isOmittingPreferences.
+	self deny: handler isOverridingPreferences.
+	self assert: handler filteredArguments equals: #('foo' '--help')
+]
+
+{ #category : 'tests' }
+PharoOptionsHandlerTest >> testCanHandlePreferencesFile [
+
+	| arguments handler |
+	arguments := #('--preferences-file=prefs.file' 'foo' '--help').
+	handler := PharoOptionsHandler forArguments: arguments.
+	
+
+	self deny: handler isOmittingPreferences.
+	self assert: handler isOverridingPreferences.
+	self assert: handler preferencesFile basename equals: 'prefs.file'.
+	self assert: handler filteredArguments equals: #('foo' '--help')
+]
+
+{ #category : 'tests' }
+PharoOptionsHandlerTest >> testPharoCommandLineHandlerDoesNotRemoveArgumentsIfNoPreferencesArgument [
+
+	| arguments handler |
+	arguments := #('foo' '--help').
+	handler := PharoOptionsHandler forArguments: arguments.
+	
+
+	self deny: handler isOmittingPreferences.
+	self deny: handler isOverridingPreferences.
+	self assert: handler filteredArguments equals: #('foo' '--help')
+]
