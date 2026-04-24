@@ -21,6 +21,13 @@ BaselineOfGeneralTests >> baseline: spec [
                     className: 'BaselineOfSystemSessionManager';
                     repository: repository;
                     loads: #('Tests') ];
+			
+		  baseline: 'System-CommandLineHandler-Tests' with: [ 
+                spec 
+                    className: 'BaselineOfSystemCommandLineHandler';
+                    repository: repository;
+                    loads: #('Tests') ];
+
 
 			package: 'NumberParser-Tests';
 			package: 'Fuel-Core-Tests';
@@ -63,7 +70,6 @@ BaselineOfGeneralTests >> baseline: spec [
 			package: 'Zinc-Tests';
 			"requires Zinc-Resource-Meta-Tests"package:
 			'System-Identification-Tests';
-			package: 'System-CommandLineHandler-Tests';
 			package: 'Transcript-NonInteractive-Tests';
 			package: 'PharoDocComment-Tests' "standalone" ]
 ]
