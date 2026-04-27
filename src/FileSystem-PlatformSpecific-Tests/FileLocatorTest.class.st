@@ -7,8 +7,8 @@ Class {
 	#instVars : [
 		'locator'
 	],
-	#category : 'FileSystem-Disk-Tests',
-	#package : 'FileSystem-Disk-Tests'
+	#category : 'FileSystem-PlatformSpecific-Tests',
+	#package : 'FileSystem-PlatformSpecific-Tests'
 }
 
 { #category : 'compatibility tests' }
