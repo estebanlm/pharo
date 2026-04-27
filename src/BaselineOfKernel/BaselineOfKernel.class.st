@@ -50,6 +50,13 @@ BaselineOfKernel >> baseline: spec [
 						className: 'BaselineOfSystemPlatforms';
 						repository: (self packageRepositoryURLForSpec: spec);
 						loads: #( 'Tests' )];
+					
+				baseline: 'Announcements-Core-Tests' with: [ 
+					spec
+						className: 'BaselineOfAnnouncements';
+						repository: repository;
+						loads: #( 'Tests' )];
+					
 				package: 'Announcements-Core';
 				package: 'Collections-Abstract';
 				package: 'Collections-DoubleLinkedList';
@@ -97,7 +104,6 @@ BaselineOfKernel >> baseline: spec [
 				package: 'Collections-Weak-Tests' with: [ spec requires: #( 'Collections-Unordered-Tests' ) ];
 				package: 'Kernel-Tests';
 				package: 'Kernel-CodeModel-Tests';
-				package: 'Announcements-Core-Tests';
 				package: 'System-Finalization-Tests';
 				package: 'System-Time-Tests'.
 
