@@ -8,7 +8,7 @@ Class {
 { #category : 'tests' }
 FileStringTest >> testAsFileLocatorOrReferenceReturnsALocatorWhenStringRefersToAKnownOrigin [
 	| pathString locator |
-	pathString := (FileLocator home / 'foo') fullName.
+	pathString := (FileLocator home / 'foo') asFileReference.
 
 	locator := pathString asFileLocatorOrReference.
 
@@ -17,7 +17,7 @@ FileStringTest >> testAsFileLocatorOrReferenceReturnsALocatorWhenStringRefersToA
 		equals: #home.
 	self
 		assert: locator fullName
-		equals: pathString
+		equals: pathString fullName
 ]
 
 { #category : 'tests' }

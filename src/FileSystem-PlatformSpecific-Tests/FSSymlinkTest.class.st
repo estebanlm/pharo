@@ -1,12 +1,12 @@
 Class {
-	#name : 'FSSymlinkTests',
+	#name : 'FSSymlinkTest',
 	#superclass : 'TestCase',
 	#category : 'FileSystem-PlatformSpecific-Tests',
 	#package : 'FileSystem-PlatformSpecific-Tests'
 }
 
 { #category : 'tests' }
-FSSymlinkTests >> testDeleteSymbolicLink [
+FSSymlinkTest >> testDeleteSymbolicLink [
 	"The delete visitor should not follow symbolic links and should delete them as a file."
 	| tempDir aDir bDir symbolicLink symlinkCommand status |
 
@@ -35,7 +35,7 @@ FSSymlinkTests >> testDeleteSymbolicLink [
 ]
 
 { #category : 'tests' }
-FSSymlinkTests >> testSymbolicLink [
+FSSymlinkTest >> testSymbolicLink [
 	"The delete visitor should not follow symbolic links and should delete them as a file."
 	| tempDir aDir bDir symbolicLink symlinkCommand status |
 
@@ -64,7 +64,7 @@ FSSymlinkTests >> testSymbolicLink [
 ]
 
 { #category : 'tests' }
-FSSymlinkTests >> testSymbolicLinkInMemory [
+FSSymlinkTest >> testSymbolicLinkInMemory [
 	"Confirm that in-memory files behave as expected with symbolic link requests.
 	That is... symbolic links aren't supported, to #isSymlink always returns false and the targetFileReference is always the original file"
 	| file |
@@ -77,7 +77,7 @@ FSSymlinkTests >> testSymbolicLinkInMemory [
 ]
 
 { #category : 'tests' }
-FSSymlinkTests >> testSymbolicLinkTargetPath [
+FSSymlinkTest >> testSymbolicLinkTargetPath [
 	
 	| tempDir dDir symbolicLink symlinkCommand status |
 
