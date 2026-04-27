@@ -1,6 +1,6 @@
 Extension { #name : 'SmalltalkImage' }
 
-{ #category : '*FileSystem-Core' }
+{ #category : '*FileSystem-Disk' }
 SmalltalkImage >> imageFile [
 
 	^ FileLocator image
