@@ -69,13 +69,17 @@ DiskFileAttributesTest >> tempFileResource [
 { #category : 'tests' }
 DiskFileAttributesTest >> testAccessTime [
 
-	| resource accessTime |
-	resource := self tempFileResource.
-	self attributesCollectionDo: [ :each |
-		accessTime := each accessTime.
-		self assert: resource beforeCreationTime <= accessTime.
-		self assert: resource afterCreationTime >= accessTime.
-		]
+    | resource accessTime |
+    resource := self tempFileResource.
+    self attributesCollectionDo: [ :each |
+        accessTime := each accessTime.
+        self 
+            assert: resource beforeCreationTime <= accessTime 
+            description: 'FAIL: beforeCreationTime is greater than accessTime'.
+        self 
+            assert: resource afterCreationTime >= accessTime 
+            description: 'FAIL: afterCreationTime is less than accessTime'.
+    ]
 ]
 
 { #category : 'tests' }
@@ -85,8 +89,12 @@ DiskFileAttributesTest >> testCreationTime [
 	resource := self tempFileResource.
 	self attributesCollectionDo: [ :each |
 		creationTime := each creationTime.
-		self assert: resource beforeCreationTime <= creationTime.
-		self assert: resource afterCreationTime >= creationTime.
+		self 
+			assert: resource beforeCreationTime <= creationTime
+			description: 'FAIL: beforeCreationTime is greater than creationTime'.
+		self 
+			assert: resource afterCreationTime >= creationTime
+			description: 'FAIL: afterCreationTime is less than creationTime'.
 		]
 ]
 
@@ -206,8 +214,12 @@ DiskFileAttributesTest >> testModificationTime [
 	resource := self tempFileResource.
 	self attributesCollectionDo: [ :each |
 		modificationTime := each modificationTime.
-		self assert: resource beforeCreationTime <= modificationTime.
-		self assert: resource afterCreationTime >= modificationTime.
+		self 
+			assert: resource beforeCreationTime <= modificationTime
+			description: 'FAIL: beforemodificationTime is greater than modificationTime'.
+		self 
+			assert: resource beforeCreationTime >= modificationTime
+			description: 'FAIL: aftermodificationTime is less than modificationTime'.
 		]
 ]
 
