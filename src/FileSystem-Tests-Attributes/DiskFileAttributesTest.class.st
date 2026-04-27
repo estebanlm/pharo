@@ -75,10 +75,13 @@ DiskFileAttributesTest >> testAccessTime [
         accessTime := each accessTime.
         self 
             assert: resource beforeCreationTime <= accessTime 
-            description: 'FAIL: beforeCreationTime is greater than accessTime'.
+            description: ('FAIL: beforeCreationTime ({1}) is greater than accessTime ({2})' 
+                format: { resource beforeCreationTime. accessTime }).
+                
         self 
             assert: resource afterCreationTime >= accessTime 
-            description: 'FAIL: afterCreationTime is less than accessTime'.
+            description: ('FAIL: afterCreationTime ({1}) is less than accessTime ({2})' 
+                format: { resource afterCreationTime. accessTime }).
     ]
 ]
 
@@ -90,11 +93,14 @@ DiskFileAttributesTest >> testCreationTime [
 	self attributesCollectionDo: [ :each |
 		creationTime := each creationTime.
 		self 
-			assert: resource beforeCreationTime <= creationTime
-			description: 'FAIL: beforeCreationTime is greater than creationTime'.
-		self 
-			assert: resource afterCreationTime >= creationTime
-			description: 'FAIL: afterCreationTime is less than creationTime'.
+            assert: resource beforeCreationTime <= creationTime 
+            description: ('FAIL: beforeCreationTime ({1}) is greater than creationTime ({2})' 
+                format: { resource beforeCreationTime. creationTime }).
+                
+        self 
+            assert: resource afterCreationTime >= creationTime 
+            description: ('FAIL: afterCreationTime ({1}) is less than creationTime ({2})' 
+                format: { resource afterCreationTime. creationTime }).   
 		]
 ]
 
@@ -215,11 +221,14 @@ DiskFileAttributesTest >> testModificationTime [
 	self attributesCollectionDo: [ :each |
 		modificationTime := each modificationTime.
 		self 
-			assert: resource beforeCreationTime <= modificationTime
-			description: 'FAIL: beforemodificationTime is greater than modificationTime'.
-		self 
-			assert: resource beforeCreationTime >= modificationTime
-			description: 'FAIL: aftermodificationTime is less than modificationTime'.
+            assert: resource beforeCreationTime <= modificationTime 
+            description: ('FAIL: beforeCreationTime ({1}) is greater than modificationTime ({2})' 
+                format: { resource beforeCreationTime. modificationTime }).
+                
+        self 
+            assert: resource afterCreationTime >= modificationTime 
+            description: ('FAIL: afterCreationTime ({1}) is less than modificationTime ({2})' 
+                format: { resource afterCreationTime. modificationTime }).
 		]
 ]
 
