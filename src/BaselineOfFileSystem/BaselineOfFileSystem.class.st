@@ -25,13 +25,13 @@ BaselineOfFileSystem >> baseline: spec [
 			spec
 				package: 'FFI-Kernel';
 				package: 'FileSystem-Path';
-				package: 'FileSystem-Core';
-				package: 'FileSystem-Disk';
+				package: 'FileSystem-Core' with: [ spec requires: #('FileSystem-Path')] ;
+				package: 'FileSystem-Disk' with: [ spec requires: #('FileSystem-Core' 'FileSystem-Path')];
 				package: 'System-Sources-Files';
 				
-				package: 'FileSystem-Core-Tests';
-				package: 'FileSystem-Disk-Tests';
-				package: 'FileSystem-Tests-Attributes'.
+				package: 'FileSystem-Core-Tests' with: [ spec requires: #('FileSystem-Core' 'FileSystem-Disk' 'FileSystem-Path')];
+				package: 'FileSystem-Disk-Tests' with: [ spec requires: #('FileSystem-Core' 'FileSystem-Disk' 'FileSystem-Core-Tests')];
+				package: 'FileSystem-Tests-Attributes' with: [ spec requires: #('FileSystem-Core')].
 
 			spec
 				group: 'Core' with: {'FFI-Kernel'. 'FileSystem-Path'. 'FileSystem-Core'. 'FileSystem-Disk'. 'System-Sources-Files'};
