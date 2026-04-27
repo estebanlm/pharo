@@ -31,9 +31,13 @@ BaselineOfFileSystem >> baseline: spec [
 				
 				package: 'FileSystem-Core-Tests' with: [ spec requires: #('FileSystem-Core' 'FileSystem-Disk' 'FileSystem-Path')];
 				package: 'FileSystem-Disk-Tests' with: [ spec requires: #('FileSystem-Core' 'FileSystem-Disk' 'FileSystem-Core-Tests')];
-				package: 'FileSystem-Tests-Attributes' with: [ spec requires: #('FileSystem-Core')].
+				package: 'FileSystem-Tests-Attributes' with: [ spec requires: #('FileSystem-Core')];
+				package: 'FileSystem-Symlink-Tests' with: [ spec requires: #('FileSystem-Core')].
 
 			spec
 				group: 'Core' with: {'FFI-Kernel'. 'FileSystem-Path'. 'FileSystem-Core'. 'FileSystem-Disk'. 'System-Sources-Files'};
-				group: 'Tests' with: { 'FileSystem-Core-Tests'. 'FileSystem-Disk-Tests'. 'FileSystem-Tests-Attributes' } ]
+				"Basic Tests"
+				group: 'Tests' with: { 'FileSystem-Core-Tests'. 'FileSystem-Disk-Tests'. 'FileSystem-Tests-Attributes' };
+				"Tests depending on LibC/UFFI"
+				group: 'TestsFull' with: {'Tests'. 'FileSystem-Symlink-Tests'} ]
 ]
