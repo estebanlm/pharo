@@ -4,8 +4,8 @@ A WindowsResolverTest is a test class for testing the behavior of WindowsResolve
 Class {
 	#name : 'WindowsResolverTest',
 	#superclass : 'TestCase',
-	#category : 'FileSystem-Disk-Tests',
-	#package : 'FileSystem-Disk-Tests'
+	#category : 'FileSystem-PlatformSpecific-Tests',
+	#package : 'FileSystem-PlatformSpecific-Tests'
 }
 
 { #category : 'tests' }
