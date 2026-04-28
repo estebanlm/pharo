@@ -4,6 +4,9 @@ I run unit tests found in specified packages, and display their results to stand
 Class {
 	#name : 'ClapTestRunner',
 	#superclass : 'ClapPharoApplication',
+	#instVars : [
+		'environment'
+	],
 	#category : 'SUnit-Basic-CLI',
 	#package : 'SUnit-Basic-CLI'
 }
@@ -65,6 +68,13 @@ ClapTestRunner >> execute [
 	self runPackages
 ]
 
+{ #category : 'accessing' }
+ClapTestRunner >> hasProjectName [
+	"Return True if the project-name flag is set"
+
+	^ self hasFlag: #'project-name'
+]
+
 { #category : 'private - printing' }
 ClapTestRunner >> informResults: results [
 
@@ -78,6 +88,15 @@ ClapTestRunner >> informResults: results [
 				flush ]
 ]
 
+{ #category : 'initialization' }
+ClapTestRunner >> initialize [
+
+	super initialize.
+	
+	"Set the environment to look for baselines"
+	environment := self class environment
+]
+
 { #category : 'accessing' }
 ClapTestRunner >> packages [
 	"Collects all test package names by merging explicit positional PACKAGE arguments with implicit test packages retrieved from the project's baseline via the --project-name flag"
@@ -86,19 +105,18 @@ ClapTestRunner >> packages [
 	explicitNames := (self positional: #PACKAGE ifAbsent: [ #() ]) 
 		collect: [ :each | each value ].
 	
-	projectNames := self projectName 
-		ifNotNil: [ :name | self testPackagesForProject: name ]
-		ifNil: [ #() ].
+	projectNames := self hasProjectName 
+		ifTrue: [ self testPackagesForProject: self projectName ]
+		ifFalse: [ #() ].
 		
-	^ explicitNames asArray , projectNames asArray
+	^ explicitNames, projectNames 
 ]
 
 { #category : 'accessing' }
 ClapTestRunner >> projectName [
-    "Return project name in the form of a String (ex: 'FileSystem'), or nil if flag is missing"
-    ^ (self hasFlag: #'project-name')
-        ifTrue: [ (self positional: #'project-name') value ]
-        ifFalse: [ nil ]
+	"Return project name in the form of a String (ex: 'FileSystem'). Fails with an exception if the flag is missing."
+
+	^ (self positional: #'project-name') value
 ]
 
 { #category : 'execution' }
@@ -162,25 +180,25 @@ ClapTestRunner >> testPackages [
 ]
 
 { #category : 'accessing' }
+ClapTestRunner >> testPackagesForLoadableName: loadableName inMetacelloVersion: version [
+	"Get the test packages in the project version, resolving nested groups recursively.
+	loadableName is a group name or a package name"
+
+	| spec |
+	spec := version packageNamed: loadableName ifAbsent: [ ^ #(  ) ].
+	^ spec isGroupSpec
+		  ifTrue: [ spec includes flatCollect: [ :each | self testPackagesForLoadableName: each inMetacelloVersion: version ] ]
+		  ifFalse: [ { spec name } ]
+]
+
+{ #category : 'accessing' }
 ClapTestRunner >> testPackagesForProject: aProjectName [
 	"Get the test packages associated with a projectName by its baseline, resolving nested groups recursively"
-	| version resolveBlock |
-	
-	version := (Smalltalk at: ('BaselineOf' , aProjectName) asSymbol ifAbsent: [ ^ #() ]) project version.
-	
-	resolveBlock := [ :specName |
-		| spec |
-		spec := version packageNamed: specName ifAbsent: [ nil ].
-		spec 
-			ifNil: [ #() ]
-			ifNotNil: [ 
-				spec class name = #MetacelloGroupSpec
-					ifTrue: [ spec includes flatCollect: [ :each | resolveBlock value: each ] ]
-					ifFalse: [ { spec name } ]
-			] 
-	].
 
-	^ (resolveBlock value: 'Tests') asSet asArray "delete duplicates"
+	| version |
+	version := (environment at: ('BaselineOf' , aProjectName) asSymbol ifAbsent: [ ^ #(  ) ]) project version.
+
+	^ (self testPackagesForLoadableName: 'Tests' inMetacelloVersion: version) asSet asArray "delete duplicates"
 ]
 
 { #category : 'accessing' }
