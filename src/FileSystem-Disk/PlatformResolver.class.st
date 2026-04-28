@@ -4,9 +4,9 @@ I am an abstract superclass for platform-specific resolvers.
 Class {
 	#name : 'PlatformResolver',
 	#superclass : 'FileSystemResolver',
-	#category : 'FileSystem-Core-Base-Resolver',
-	#package : 'FileSystem-Core',
-	#tag : 'Base-Resolver'
+	#category : 'FileSystem-Disk-Resolvers',
+	#package : 'FileSystem-Disk',
+	#tag : 'Resolvers'
 }
 
 { #category : 'instance creation' }
