@@ -4,6 +4,9 @@ I run unit tests found in specified packages, and display their results to stand
 Class {
 	#name : 'ClapTestRunner',
 	#superclass : 'ClapPharoApplication',
+	#instVars : [
+		'environment'
+	],
 	#category : 'SUnit-Basic-CLI',
 	#package : 'SUnit-Basic-CLI'
 }
