@@ -243,7 +243,7 @@ DateAndTime class >> localOffset [
 DateAndTime class >> localTimeZone [
 	"Answer the local time zone"
 
-	^ LocalTimeZoneCache ifNil: [ LocalTimeZoneCache := TimeZone default ]
+	^ LocalTimeZoneCache ifNil: [ LocalTimeZoneCache := TimeZone local ]
 ]
 
 { #category : 'time zones' }

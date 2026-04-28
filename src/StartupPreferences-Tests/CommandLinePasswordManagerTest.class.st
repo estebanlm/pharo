@@ -7,8 +7,8 @@ Class {
 	#instVars : [
 		'passwordManager'
 	],
-	#category : 'System-CommandLineHandler-Tests-Utilities',
-	#package : 'System-CommandLineHandler-Tests',
+	#category : 'StartupPreferences-Tests-Utilities',
+	#package : 'StartupPreferences-Tests',
 	#tag : 'Utilities'
 }
 

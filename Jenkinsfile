@@ -196,7 +196,10 @@ def bootstrapImage(){
         isoTesters['Zinc-Character-Encoding'] = { defineIsoTestStage("Zinc-Character-Encoding", "ZincCharacterEncoding") }
         isoTesters['System-SessionManager'] = { defineIsoTestStage("System-SessionManager", "SystemSessionManager") }
         isoTesters['System-Platforms'] = { defineIsoTestStage("System-Platforms", "SystemPlatforms") }  
+        isoTesters['Announcements-Core'] = { defineIsoTestStage("Announcements-Core", "Announcements") } 
         isoTesters['Shift-ClassBuilder'] = { defineIsoTestStage("Shift-ClassBuilder", "Shift") }        
+        isoTesters['System-CommandLineHandler'] = { defineIsoTestStage("System-CommandLineHandler", "SystemCommandLineHandler") }        
+        isoTesters['FileSystem'] = { defineIsoTestStage("FileSystem", "FileSystem") }        
         parallel isoTesters
 
         stage ("Full Image") {

@@ -40,9 +40,9 @@ Class {
 	#classVars : [
 		'Resolver'
 	],
-	#category : 'FileSystem-Core-Public',
-	#package : 'FileSystem-Core',
-	#tag : 'Public'
+	#category : 'FileSystem-Disk-Resolvers',
+	#package : 'FileSystem-Disk',
+	#tag : 'Resolvers'
 }
 
 { #category : 'windows-origins' }

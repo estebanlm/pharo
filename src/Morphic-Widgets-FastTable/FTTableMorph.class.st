@@ -48,7 +48,8 @@ Class {
 		'needToggleAtMouseUp',
 		'function',
 		'resizable',
-		'selectionModeStrategy'
+		'selectionModeStrategy',
+		'lastIndexOnMouseDown'
 	],
 	#category : 'Morphic-Widgets-FastTable-Base',
 	#package : 'Morphic-Widgets-FastTable',
@@ -307,27 +308,11 @@ FTTableMorph >> disableFunction [
 
 { #category : 'event handling' }
 FTTableMorph >> doubleClick: event [
-
-	(self selectionModeStrategy selectableIndexContainingPoint:
-		 event cursorPoint) ifNotNil: [ :firstClickedIndex |
-		| pdcEvent |
-		pdcEvent := event asPseudoDoubleClickEvent.
-		(self selectionModeStrategy selectableIndexContainingPoint:
-			 pdcEvent secondEvent position) ifNotNil: [ :secondClickedIndex |
-			firstClickedIndex = secondClickedIndex
-				ifFalse: [
-					self selectionStrategy
-						selectIndex: secondClickedIndex
-						event: pdcEvent secondEvent ]
-				ifTrue: [
-					self selectedIndexes
-						detect: [ :i | i = secondClickedIndex ]
-						ifNone: [
-							self selectionStrategy
-								selectIndex: secondClickedIndex
-								event: pdcEvent secondEvent ].
-					self doAnnounce:
-						(FTStrongSelectionChanged index: secondClickedIndex event: event) ] ] ]
+	
+	(self selectionModeStrategy selectableIndexContainingPoint: event cursorPoint) 
+		ifNotNil: [ :index | 
+			lastIndexOnMouseDown = index ifTrue: [ 
+				self doAnnounce: (FTStrongSelectionChanged index: index event: event) ] ]
 ]
 
 { #category : 'drawing' }
@@ -791,6 +776,14 @@ FTTableMorph >> minWidth [
 FTTableMorph >> mouseDown: event [
 	"perform the click"
 
+	"I need to keep the index of the selected cell (row, most of the times) on mousedown 
+	 because there is a bug: rapid click on two different items in a list gets interpreted 
+	 as a double-click on the first item. This works because mouseDown: is triggered the 
+	 first time, but not the second (that goes directly to doubleClick:)
+	 https://github.com/pharo-project/pharo/issues/14168"
+	lastIndexOnMouseDown :=  self selectionModeStrategy 
+		selectableIndexContainingPoint: event cursorPoint.
+		
 	needToggleAtMouseUp ifTrue: [ ^ self ].
 
 	(self selectionModeStrategy selectableIndexContainingPoint: event cursorPoint)

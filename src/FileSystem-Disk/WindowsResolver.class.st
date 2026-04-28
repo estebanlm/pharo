@@ -4,9 +4,9 @@ I am an expert on Windows filesystem conventions. I resolve origins according to
 Class {
 	#name : 'WindowsResolver',
 	#superclass : 'PlatformResolver',
-	#category : 'FileSystem-Core-Base-Resolver',
-	#package : 'FileSystem-Core',
-	#tag : 'Base-Resolver'
+	#category : 'FileSystem-Disk-Resolvers',
+	#package : 'FileSystem-Disk',
+	#tag : 'Resolvers'
 }
 
 { #category : 'accessing' }

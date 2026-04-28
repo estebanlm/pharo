@@ -1,6 +1,14 @@
 Extension { #name : 'VirtualMachine' }
 
 { #category : '*FileSystem-Disk' }
+VirtualMachine >> binary [
+	"Answer the a file reference to the virtual machine binary."
+	"SmalltalkImage current vmBinary"
+
+	^ FileLocator vmBinary
+]
+
+{ #category : '*FileSystem-Disk' }
 VirtualMachine >> interpreterSourceDate [
 	"Return the date of changes given by `self interpreterSourceVersion`"
 	| dateString parts |

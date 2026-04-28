@@ -4,9 +4,8 @@ SUnit tests for PlatformResolver
 Class {
 	#name : 'PlatformResolverTest',
 	#superclass : 'FileSystemResolverTest',
-	#category : 'FileSystem-Core-Tests-Resolver',
-	#package : 'FileSystem-Core-Tests',
-	#tag : 'Resolver'
+	#category : 'FileSystem-PlatformSpecific-Tests',
+	#package : 'FileSystem-PlatformSpecific-Tests'
 }
 
 { #category : 'running' }
