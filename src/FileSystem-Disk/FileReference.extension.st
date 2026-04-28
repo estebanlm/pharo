@@ -1,6 +1,6 @@
 Extension { #name : 'FileReference' }
 
-{ #category : '*MonticelloRemoteRepositories' }
+{ #category : '*FileSystem-Disk' }
 FileReference class >> newTempFilePrefix: prefix suffix: suffix [
 	| tmpDir random fileName |
 
