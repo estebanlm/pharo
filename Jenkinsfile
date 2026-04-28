@@ -143,11 +143,11 @@ Build Url: ${env.BUILD_URL}
 
 
 
-def defineIsoTestStage(stageName, projectName, testPackages){
+def defineIsoTestStage(stageName, projectName, testPackages=""){
     stage("Tests-ISO-" + stageName) {
         def testGroup = "Tests"
         timeout(2) {
-            dir(env.STAGE_NAME) {
+            dir(env.STAGE_NAME){
                 def PHARO_MAJOR = shellOutput('git describe --tags --first-parent | cut -d\'-\' -f 1 | cut -c 2- | cut -d\'.\' -f 1-1')
                 def PHARO_MINOR = shellOutput('git describe --tags --first-parent | cut -d\'-\' -f 1 | cut -c 2- | cut -d\'.\' -f 2-2')
                 def PHARO_SHORT = PHARO_MAJOR + PHARO_MINOR
@@ -157,7 +157,13 @@ def defineIsoTestStage(stageName, projectName, testPackages){
                 shell "bash -c './bootstrap/scripts/getPharoVM.sh ${PHARO_SHORT}'"
                 shell "bash -c './pharo metacello.image metacello install --save --strict --signalErrorOnWarning \"filetree://../src\" SUnit --groups Core'"
                 shell "bash -c './pharo metacello.image metacello install --save --strict --signalErrorOnWarning \"filetree://../src\" " + projectName + " --groups " + testGroup + "'"
-                shell "bash -c './pharo metacello.image test --junit-xml-output --stage-name ${env.STAGE_NAME}  " + testPackages + " '"
+                /* 
+                Some Baselines do specify tests in the Tests group that do not run on isolation.
+                For that scenario, users can define an explicit list of packages as `testPackages`.
+                In that case, take the packages specified by the user instead of the project packages.
+                */
+                def testPackageArguments = testPackages == "" ? "--project-name ${projectName}" : testPackages
+                shell "bash -c './pharo metacello.image test --junit-xml-output --stage-name ${env.STAGE_NAME} ${testPackageArguments}'"
                 junit allowEmptyResults: false, testResults: "${env.STAGE_NAME}*.xml"
             }
         }
@@ -183,18 +189,18 @@ def bootstrapImage(){
         }
         
         def isoTesters = [:]
-        isoTesters['SUnit'] = { defineIsoTestStage("SUnit", "SUnit", "\'SUnit-Tests\'  \'SUnit-Visitor-Tests\'  \'SUnit-MockObjects-Tests\'") }
+        isoTesters['SUnit'] = { defineIsoTestStage("SUnit", "SUnit") }
         isoTesters['Kernel'] = { defineIsoTestStage("Kernel", "Kernel", "\'Kernel-Tests\'  \'Kernel-CodeModel-Tests\'") }
         isoTesters['Compiler'] = { defineIsoTestStage("Compiler", "Compiler", "\'OpalCompiler-Tests\'  \'DebugInfo-Tests\' \'Kernel-Extended-Tests\' \'Kernel-Tests-WithCompiler\'") }      
-        isoTesters['Files'] = { defineIsoTestStage("Files", "Files", "\'Files-Tests\'") }
-        isoTesters['Zinc-Character-Encoding'] = { defineIsoTestStage("Zinc-Character-Encoding", "ZincCharacterEncoding", "\'Zinc-Character-Encoding-Tests\'") }
-        isoTesters['System-SessionManager'] = { defineIsoTestStage("System-SessionManager", "SystemSessionManager", "\'System-SessionManager-Tests\'") }
-        isoTesters['System-Platforms'] = { defineIsoTestStage("System-Platforms", "SystemPlatforms", "\'System-Platforms-Tests\'") }  
-        isoTesters['Announcements-Core'] = { defineIsoTestStage("Announcements-Core", "Announcements", "\'Announcements-Core-Tests\'") } 
-        isoTesters['Shift-ClassBuilder'] = { defineIsoTestStage("Shift-ClassBuilder", "Shift", "\'Shift-ClassBuilder-Tests\'") }        
-        isoTesters['System-CommandLineHandler'] = { defineIsoTestStage("System-CommandLineHandler", "SystemCommandLineHandler", "\'System-CommandLineHandler-Tests\'") }        
-        isoTesters['System-Finalization'] = { defineIsoTestStage("System-Finalization", "SystemFinalization", "\'System-Finalization-Tests\'") }        
-        isoTesters['FileSystem'] = { defineIsoTestStage("FileSystem", "FileSystem", "\'FileSystem-Core-Tests\' \'FileSystem-Disk-Tests\' \'FileSystem-Tests-Attributes\'") }        
+        isoTesters['Files'] = { defineIsoTestStage("Files", "Files") }
+        isoTesters['Zinc-Character-Encoding'] = { defineIsoTestStage("Zinc-Character-Encoding", "ZincCharacterEncoding") }
+        isoTesters['System-SessionManager'] = { defineIsoTestStage("System-SessionManager", "SystemSessionManager") }
+        isoTesters['System-Platforms'] = { defineIsoTestStage("System-Platforms", "SystemPlatforms") }  
+        isoTesters['Announcements-Core'] = { defineIsoTestStage("Announcements-Core", "Announcements") } 
+        isoTesters['Shift-ClassBuilder'] = { defineIsoTestStage("Shift-ClassBuilder", "Shift") }        
+        isoTesters['System-CommandLineHandler'] = { defineIsoTestStage("System-CommandLineHandler", "SystemCommandLineHandler") }        
+        isoTesters['System-Finalization'] = { defineIsoTestStage("System-Finalization", "SystemFinalization") }        
+        isoTesters['FileSystem'] = { defineIsoTestStage("FileSystem", "FileSystem") }        
         parallel isoTesters
 
         stage ("Full Image") {
