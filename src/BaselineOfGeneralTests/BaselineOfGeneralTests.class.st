@@ -35,7 +35,6 @@ BaselineOfGeneralTests >> baseline: spec [
 			package: 'Collections-Arithmetic-Tests';
 			package: 'Metacello-CommandLine-Tests';
 			baseline: 'Epicea' with: [ spec loads: #Tests from: repository ];
-			package: 'FileSystem-Memory-Tests';
 			baseline: 'Fonts' with: [ spec loads: #Tests from: repository ];
 			baseline: 'FreeType' with: [ spec loads: #tests from: repository ];
 			package: 'Graphics-Tests';
