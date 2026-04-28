@@ -53,13 +53,14 @@ ClapDebugRunner >> startLoop [
 				nextPutAll: '(debug) > ';
 				flush.
 
-			input := in upToEnd.
+			input := in upTo: 10.
 
 			input ifNil: [ ^ self ].
 
 			tempRes := debugger executeCommand: input.
 			out
-				nextPutAll: 'You wrote :' , tempRes;
+				nextPutAll: 'You wrote :';
+				nextPutAll: tempRes;
 				lf;
 				flush ]
 ]
