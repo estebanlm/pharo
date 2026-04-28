@@ -6,7 +6,7 @@ I create new accessor methods for the variables and replace every read and write
 
 "
 Class {
-	#name : 'RBAbstractInstanceVariableRefactoring',
+	#name : 'ReAbstractInstanceVariableRefactoring',
 	#superclass : 'RBVariableRefactoring',
 	#instVars : [
 		'accessorsRefactoring'
@@ -17,7 +17,7 @@ Class {
 }
 
 { #category : 'transforming' }
-RBAbstractInstanceVariableRefactoring >> abstractReferences [
+ReAbstractInstanceVariableRefactoring >> abstractReferences [
 
 	"Precondition: createAccessors has been executed. Else the setter and getter method are not initialized."
 
@@ -39,7 +39,7 @@ RBAbstractInstanceVariableRefactoring >> abstractReferences [
 ]
 
 { #category : 'private - accessing' }
-RBAbstractInstanceVariableRefactoring >> accessorsRefactoring [
+ReAbstractInstanceVariableRefactoring >> accessorsRefactoring [
 
 	^ accessorsRefactoring
 		ifNil: [ accessorsRefactoring := ReCreateAccessorsForVariableTransformation
@@ -52,7 +52,7 @@ RBAbstractInstanceVariableRefactoring >> accessorsRefactoring [
 ]
 
 { #category : 'preconditions' }
-RBAbstractInstanceVariableRefactoring >> applicabilityPreconditions [
+ReAbstractInstanceVariableRefactoring >> applicabilityPreconditions [
 
 	^ { (RBCondition
 		   directlyDefinesInstanceVariable: variableName
@@ -60,18 +60,18 @@ RBAbstractInstanceVariableRefactoring >> applicabilityPreconditions [
 ]
 
 { #category : 'transforming' }
-RBAbstractInstanceVariableRefactoring >> createAccessors [
+ReAbstractInstanceVariableRefactoring >> createAccessors [
 	self generateChangesFor: self accessorsRefactoring
 ]
 
 { #category : 'preconditions' }
-RBAbstractInstanceVariableRefactoring >> preconditions [
+ReAbstractInstanceVariableRefactoring >> preconditions [
 
 	^ self applicabilityPreconditions & self breakingChangePreconditions
 ]
 
 { #category : 'transforming' }
-RBAbstractInstanceVariableRefactoring >> privateTransform [
+ReAbstractInstanceVariableRefactoring >> privateTransform [
 	self createAccessors.
 	self abstractReferences
 ]

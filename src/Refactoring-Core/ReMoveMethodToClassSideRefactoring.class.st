@@ -34,7 +34,7 @@ RBTransformationRuleTestData class >> rewriteUsing: searchReplacer
 "
 Class {
 	#name : 'ReMoveMethodToClassSideRefactoring',
-	#superclass : 'RBMoveMethodToClassRefactoring',
+	#superclass : 'ReMoveMethodToClassRefactoring',
 	#instVars : [
 		'parseTree'
 	],
