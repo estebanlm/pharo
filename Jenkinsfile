@@ -158,11 +158,12 @@ def defineIsoTestStage(stageName, projectName, testPackages=""){
                 shell "bash -c './pharo metacello.image metacello install --save --strict --signalErrorOnWarning \"filetree://../src\" SUnit --groups Core'"
                 shell "bash -c './pharo metacello.image metacello install --save --strict --signalErrorOnWarning \"filetree://../src\" " + projectName + " --groups " + testGroup + "'"
                 /* 
-                This projectNameFlag has to be temporary : for the moment we cannot run all tests for kernel and compiler because of some dependencies, so
-                we chose to run only a subset of tests. Once we will have fixed the dependencies we will be able to run all tests.
+                Some Baselines do specify tests in the Tests group that do not run on isolation.
+                For that scenario, users can define an explicit list of packages as `testPackages`.
+                In that case, take the packages specified by the user instead of the project packages.
                 */
-                def projectNameFlag = testPackages == "" ? "--project-name ${projectName}" : ""
-                shell "bash -c './pharo metacello.image test --junit-xml-output --stage-name ${env.STAGE_NAME} ${projectNameFlag} ${testPackages} '"                
+                def testPackageArguments = testPackages == "" ? "--project-name ${projectName}" : testPackages
+                shell "bash -c './pharo metacello.image test --junit-xml-output --stage-name ${env.STAGE_NAME} ${testPackageArguments}'"
                 junit allowEmptyResults: false, testResults: "${env.STAGE_NAME}*.xml"
             }
         }

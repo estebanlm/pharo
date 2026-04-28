@@ -19,7 +19,7 @@ ClapTestRunner class >> commandSpecification [
 		addFlag: #'junit-xml-output' description: 'Output results in JUnit-compatible XML format';
 		addFlagWithPositional: #'shuffle-seed' description: 'an integer specifying the seed used to shuffle the tests';
 		addFlagWithPositional: #'stage-name' description: 'adds a prefix to the generated xml, this is useful when running in the CI infrastructure';
-		addFlagWithPositional: #'project-name' description: 'a string specifying the name of the project, this is useful to get the test parameters associated (test packages...)';
+		addFlagWithPositional: #'project-name' description: 'the name of the metacello project, what follows the BaselineOf prefix, used to obtain the tests from the project Tests group';
 		addFlag: #'no-xterm' description: 'use this option when no xterm available';
 		addFlag: #'fail-on-error' description: 'if there is a test error, it will exit with error code 1';
 		addFlag: #'fail-on-failure' description: 'if there is a test error or failure, it will exit with error code 1';
