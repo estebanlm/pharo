@@ -57,6 +57,11 @@ BaselineOfKernel >> baseline: spec [
 						repository: repository;
 						loads: #( 'Tests' )];
 					
+				baseline: 'SystemFinalization' with: [ 
+					spec
+						repository: repository;
+						loads: #( 'Tests' )];
+					
 				package: 'Announcements-Core';
 				package: 'Collections-Abstract';
 				package: 'Collections-DoubleLinkedList';
@@ -104,7 +109,6 @@ BaselineOfKernel >> baseline: spec [
 				package: 'Collections-Weak-Tests' with: [ spec requires: #( 'Collections-Unordered-Tests' ) ];
 				package: 'Kernel-Tests';
 				package: 'Kernel-CodeModel-Tests';
-				package: 'System-Finalization-Tests';
 				package: 'System-Time-Tests'.
 
 			"The order of packages in the groups are important for the bootstrap! It define the load order."
@@ -122,5 +126,5 @@ BaselineOfKernel >> baseline: spec [
 				with:
 					{ 'Collections-Abstract-Tests'. 'Collections-DoubleLinkedList-Tests'. 'Collections-Native-Tests'. 'Collections-Sequenceable-Tests'. 'Collections-Streams-Tests'. 'Collections-Strings-Tests'.
 					'Collections-Support-Tests'. 'Collections-Unordered-Tests'. 'Collections-Weak-Tests'. 'Kernel-Tests'. 'Kernel-CodeModel-Tests'. 'Announcements-Core-Tests'. 'System-Platforms-Tests'.
-					 'Files-Tests'. 'System-Finalization-Tests'. 'Zinc-Character-Encoding-Tests'. 'System-Time-Tests' } ]
+					 'Files-Tests'. 'SystemFinalization'. 'Zinc-Character-Encoding-Tests'. 'System-Time-Tests' } ]
 ]

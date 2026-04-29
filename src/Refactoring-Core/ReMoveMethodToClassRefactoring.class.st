@@ -11,7 +11,7 @@ method
 
 "
 Class {
-	#name : 'RBMoveMethodToClassRefactoring',
+	#name : 'ReMoveMethodToClassRefactoring',
 	#superclass : 'RBMethodRefactoring',
 	#instVars : [
 		'method'
@@ -22,14 +22,14 @@ Class {
 }
 
 { #category : 'instance creation' }
-RBMoveMethodToClassRefactoring class >> method: aMethod class: aClass [
+ReMoveMethodToClassRefactoring class >> method: aMethod class: aClass [
 	^ self new
 		method: aMethod class: aClass;
 		yourself
 ]
 
 { #category : 'instance creation' }
-RBMoveMethodToClassRefactoring class >> model: aRBSmalltalk method: aMethod class: aClass [
+ReMoveMethodToClassRefactoring class >> model: aRBSmalltalk method: aMethod class: aClass [
 	^ self new
 		model: aRBSmalltalk;
 		method: aMethod class: aClass;
@@ -37,32 +37,32 @@ RBMoveMethodToClassRefactoring class >> model: aRBSmalltalk method: aMethod clas
 ]
 
 { #category : 'preconditions' }
-RBMoveMethodToClassRefactoring >> applicabilityPreconditions [
+ReMoveMethodToClassRefactoring >> applicabilityPreconditions [
 	"we only move if there is no method in the class. 
 	This is clearly wrong for a refactoring. but for now let us keep it. "
 	^ { (ReDefinesSelectorsCondition new definesSelectors: {method selector} in: class) not }
 ]
 
 { #category : 'transforming' }
-RBMoveMethodToClassRefactoring >> classModelOf: aClass [
+ReMoveMethodToClassRefactoring >> classModelOf: aClass [
 	^ self model classObjectFor: aClass
 ]
 
 { #category : 'accessing' }
-RBMoveMethodToClassRefactoring >> method [ 
+ReMoveMethodToClassRefactoring >> method [ 
 
 	^ method
 ]
 
 { #category : 'initialization' }
-RBMoveMethodToClassRefactoring >> method: aMethod class: aClassName [
+ReMoveMethodToClassRefactoring >> method: aMethod class: aClassName [
 
 	method := aMethod.
 	class := self classObjectFor: aClassName
 ]
 
 { #category : 'transforming' }
-RBMoveMethodToClassRefactoring >> privateTransform [
+ReMoveMethodToClassRefactoring >> privateTransform [
 	| oldClass newClass rbMethod originalProtocol |
 	oldClass := self classModelOf: method methodClass.
 	newClass := self classModelOf: class.
