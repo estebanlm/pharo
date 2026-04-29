@@ -219,7 +219,7 @@ OCProgramNode >> asDoit [
 	"The VM can only evaluate methods. wrap this ast in a doit MethodNode"
 
 	| source |
-	source := self source.
+	source := self sourceCode.
 	^ OCDoItMethodNode new
 		  body: self asSequenceNode;
 		  source: source
