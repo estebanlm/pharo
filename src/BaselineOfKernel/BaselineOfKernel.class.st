@@ -64,6 +64,11 @@ BaselineOfKernel >> baseline: spec [
 						repository: repository;
 						loads: #( 'Tests' )];
 					
+				baseline: 'SystemFinalization' with: [ 
+					spec
+						repository: repository;
+						loads: #( 'Tests' )];
+					
 				package: 'Announcements-Core';
 				package: 'Collections-Abstract';
 				package: 'Collections-DoubleLinkedList';
@@ -102,7 +107,6 @@ BaselineOfKernel >> baseline: spec [
 				
 				package: 'Kernel-Tests';
 				package: 'Kernel-CodeModel-Tests';
-				package: 'System-Finalization-Tests';
 				package: 'System-Time-Tests'.
 
 			"The order of packages in the groups are important for the bootstrap! It define the load order."

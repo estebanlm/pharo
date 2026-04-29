@@ -13,15 +13,6 @@ Class {
 	#package : 'SystemCommands-VariableCommands'
 }
 
-{ #category : 'execution' }
-SycAbstractVariableCommand >> asRefactorings [
-
-	^self
-		createRefactorings: RBAbstractInstanceVariableRefactoring
-		using: [ :refactoring :var |
-			refactoring variable: var name class: selectedClass name ]
-]
-
 { #category : 'accessing' }
 SycAbstractVariableCommand >> defaultMenuIconName [
 	^ #smallAdd
@@ -36,6 +27,15 @@ SycAbstractVariableCommand >> defaultMenuItemName [
 { #category : 'accessing' }
 SycAbstractVariableCommand >> description [
     ^ 'Replace direct accesses to an instance variable with calls to its getter or setter. Missing accessor methods will be generated automatically.'
+]
+
+{ #category : 'execution' }
+SycAbstractVariableCommand >> execute [
+
+	^ ((ReAbstractInstanceVariableDriver newApplication: self application)
+		   scopes: refactoringScopes
+		   name: variables first name
+		   class: selectedClass name) runRefactoring
 ]
 
 { #category : 'execution' }
