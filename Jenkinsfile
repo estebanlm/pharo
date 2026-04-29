@@ -191,15 +191,16 @@ def bootstrapImage(){
         def isoTesters = [:]
         isoTesters['SUnit'] = { defineIsoTestStage("SUnit") }
         isoTesters['Kernel'] = { defineIsoTestStage("Kernel", "\'Kernel-Tests\'  \'Kernel-CodeModel-Tests\'") }
-        isoTesters['Compiler'] = { defineIsoTestStage("Compiler", "\'OpalCompiler-Tests\'  \'DebugInfo-Tests\' \'Kernel-Extended-Tests\' \'Kernel-Tests-WithCompiler\'") }      
+        isoTesters['Compiler'] = { defineIsoTestStage("Compiler", "\'OpalCompiler-Tests\'  \'DebugInfo-Tests\' \'Kernel-Extended-Tests\' \'Kernel-Tests-WithCompiler\'") }
         isoTesters['Files'] = { defineIsoTestStage("Files") }
         isoTesters['Zinc-Character-Encoding'] = { defineIsoTestStage("ZincCharacterEncoding") }
         isoTesters['System-SessionManager'] = { defineIsoTestStage("SystemSessionManager") }
-        isoTesters['System-Platforms'] = { defineIsoTestStage("SystemPlatforms") }  
-        isoTesters['Announcements-Core'] = { defineIsoTestStage("Announcements") } 
-        isoTesters['Shift-ClassBuilder'] = { defineIsoTestStage("Shift") }        
-        isoTesters['System-CommandLineHandler'] = { defineIsoTestStage("SystemCommandLineHandler") }        
-        isoTesters['FileSystem'] = { defineIsoTestStage("FileSystem") }        
+        isoTesters['System-Platforms'] = { defineIsoTestStage("SystemPlatforms") }
+        isoTesters['Announcements-Core'] = { defineIsoTestStage("Announcements") }
+        isoTesters['Shift-ClassBuilder'] = { defineIsoTestStage("Shift") }
+        isoTesters['System-CommandLineHandler'] = { defineIsoTestStage("SystemCommandLineHandler") }
+        isoTesters['FileSystem'] = { defineIsoTestStage("FileSystem") }
+        isoTesters['System-Finalization'] = { defineIsoTestStage("SystemFinalization") }
         parallel isoTesters
 
         stage ("Full Image") {

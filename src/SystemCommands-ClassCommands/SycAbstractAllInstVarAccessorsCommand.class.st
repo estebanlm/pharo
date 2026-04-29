@@ -24,7 +24,7 @@ SycAbstractAllInstVarAccessorsCommand >> asRefactorings [
 			                | refactoring |
 			                refactoring := var
 				                               createRefactoring:
-				                               RBAbstractInstanceVariableRefactoring
+				                               ReAbstractInstanceVariableRefactoring
 				                               for: each key.
 			                env := refactoring model.
 			                refactoring ] ].
