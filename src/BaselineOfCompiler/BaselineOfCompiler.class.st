@@ -33,7 +33,7 @@ BaselineOfCompiler >> baseline: spec [
             spec
                 repository: (self packageRepositoryURLForSpec: spec);
                 className: 'BaselineOfCollections';
-                loads: #( ''Collections-Stack'' 'Collections-Atomic' 'Collections-Arithmetic' ) ].
+                loads: #( 'Collections-Stack' 'Collections-Atomic' 'Collections-Arithmetic' ) ].
 		
 			spec baseline: 'KernelTests' with: [
 				spec
