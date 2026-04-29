@@ -35,7 +35,7 @@ DoItChunkV100 >> description [
 ]
 
 { #category : 'importing' }
-DoItChunkV100 >> importFor: requestor logSource: logSource [
+DoItChunkV100 >> importWithLogSource: logSource [
 
 	(contents beginsWith: '----') ifTrue: [ ^ self ].
 
@@ -48,7 +48,6 @@ DoItChunkV100 >> importFor: requestor logSource: logSource [
 
 	^ self class compiler class new
 		  source: contents;
-		  requestor: requestor;
 		  logged: logSource;
 		  evaluate
 ]

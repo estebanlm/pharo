@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'compiler',
 		'permitFaulty',
-		'permitUndeclared'
+		'permitUndeclared',
+		'shouldSignalErrors'
 	],
 	#category : 'OpalCompiler-UI',
 	#package : 'OpalCompiler-UI'
@@ -62,22 +63,22 @@ OCInteractiveAPI >> checkNotice: aNotice requestor: aRequestor isInteractive: is
 OCInteractiveAPI >> compile: sourceCode notifying: requestor in: behavior [
 	"Return the selector of the compiled method"
 
-	| compilationResult |
+	| compilationResult theCompiler |
 	sourceCode ifEmpty: [ Error signal: 'The source code should not be empty' ].
-	compiler := behavior compiler
-		            source: sourceCode;
-		            requestor: requestor;
-		            "compatibility: permit undeclared if no requestor"
-		            permitUndeclared: self permitUndeclared;
-		            permitFaulty: self permitFaulty.
+	
+	theCompiler := (self compilerFor: behavior).
+	theCompiler ast ifNil: [ theCompiler source: sourceCode ].
 
-	compilationResult := compiler doCompile.
+	compilationResult := theCompiler doCompile.
 
 	compilationResult isError ifTrue: [
-			compiler ast allNotices sorted do: [ :n |
+			theCompiler ast allNotices sorted do: [ :n |
 					| check isInteractive |
+					
+					shouldSignalErrors ifTrue: [ n signalError ].
+					
 					requestor ifNil: [ n signalError ] ifNotNil: [
-							isInteractive := requestor notNil and: [ (requestor respondsTo: #interactive) not or: [ requestor interactive ] ].
+							isInteractive := (requestor respondsTo: #interactive) not or: [ requestor interactive ].
 							check := self checkNotice: n requestor: requestor isInteractive: isInteractive.
 							check ifNil: [ ^ self compile: requestor text asString notifying: requestor in: behavior ].
 							check ifFalse: [ ^ nil ] ] ].
@@ -88,21 +89,30 @@ OCInteractiveAPI >> compile: sourceCode notifying: requestor in: behavior [
 
 { #category : 'accessing' }
 OCInteractiveAPI >> compiler [
-
 	^ compiler
 ]
 
 { #category : 'accessing' }
-OCInteractiveAPI >> compiler: anObject [
+OCInteractiveAPI >> compiler: aCompiler [
 
-	compiler := anObject
+	compiler := aCompiler
+]
+
+{ #category : 'compiling' }
+OCInteractiveAPI >> compilerFor: behavior [
+
+	^ compiler ifNil: [
+			  compiler := behavior compiler
+				              permitUndeclared: self permitUndeclared;
+				              permitFaulty: self permitFaulty ]
 ]
 
 { #category : 'initialization' }
 OCInteractiveAPI >> initialize [
 
 	super initialize.
-	permitFaulty := false
+	permitFaulty := false.
+	shouldSignalErrors := false.
 ]
 
 { #category : 'accessing' }
@@ -127,4 +137,16 @@ OCInteractiveAPI >> permitUndeclared [
 OCInteractiveAPI >> permitUndeclared: anObject [
 
 	permitUndeclared := anObject
+]
+
+{ #category : 'accessing' }
+OCInteractiveAPI >> shouldSignalErrors [
+
+	^ shouldSignalErrors
+]
+
+{ #category : 'accessing' }
+OCInteractiveAPI >> shouldSignalErrors: anObject [
+
+	shouldSignalErrors := anObject
 ]

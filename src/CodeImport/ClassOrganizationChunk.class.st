@@ -41,7 +41,7 @@ ClassOrganizationChunk >> description [
 ]
 
 { #category : 'importing' }
-ClassOrganizationChunk >> importFor: aRequestor logSource: logSource [
+ClassOrganizationChunk >> importWithLogSource: logSource [
 
 	| targetClass protocolSpecs |
 	self existsBehavior ifFalse: [

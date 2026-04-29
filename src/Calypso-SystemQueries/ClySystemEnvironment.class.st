@@ -134,7 +134,6 @@ ClySystemEnvironment >> compileANewClassFrom: newClassDefinitionString notifying
 
 	compiler := (self classCompilerFor: oldClass)
 		            source: newClassDefinitionString;
-		            requestor: aController;
 		            logged: true.
 	
 	[newClass := compiler evaluate] 

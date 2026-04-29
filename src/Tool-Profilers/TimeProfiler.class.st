@@ -82,7 +82,6 @@ TimeProfiler class >> onBlock: block [
 	inst := self new.
 	result := inst runBlock: block.
 	inst open.
-	inst showResult: result.
 	^ result
 ]
 

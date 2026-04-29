@@ -106,7 +106,6 @@ OCCompilerTest >> testAssignmentOfGlobalVarBinding [
 				OpalCompiler new
 					source: text;
 					class: MockForCompilation;
-					requestor: self;
 					newCompile ]
 		raise: OCCompilationError
 		with: [ :err | self assert: err messageText equals: 'Error while compiling' ]
@@ -236,7 +235,6 @@ OCCompilerTest >> testSiblingBlocksInstanceVariableShadowing [
 	OpalCompiler new
 		source: 'temp [:temp | ].[:temp | |var1|]';
 		class: MockForCompilation;
-		requestor: self;
 		newCompile
 ]
 

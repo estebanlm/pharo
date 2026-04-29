@@ -53,7 +53,7 @@ MethodChunk >> handleMissingBehavior [
 ]
 
 { #category : 'importing' }
-MethodChunk >> importFor: requestor logSource: logSource [
+MethodChunk >> importWithLogSource: logSource [
 
 	self existsBehavior ifFalse: [ self handleMissingBehavior ].
 

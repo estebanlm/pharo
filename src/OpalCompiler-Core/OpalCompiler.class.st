@@ -302,25 +302,12 @@ OpalCompiler >> compilationResult: anObject [
 
 { #category : 'public access' }
 OpalCompiler >> compile [
-
-	| result |
-	"Policy: compiling is non-faulty by default"
-	self permitFaulty ifNil: [ self permitFaulty: false ].
-
-	ast ifNil: [
-		result := self parse.
-		ast ifNil: [ "some failBlock" ^ result ] ].
-
-	(ast allNotices anySatisfy: [ :e | e isErrorOn: self ]) ifTrue: [
-		compilationResult := OCErrorCompilationResult new.
-	].
-
-	self callPlugins.
-	(compilationContext isSemanticAnalysisNeeded or: [ ast scope isNil ]) 
-		ifTrue: [ 
-			self doSemanticAnalysis ].
-
-	^ self generateMethod
+	
+	^ OCInteractiveAPI new
+		compiler: self;
+		compile: source
+		notifying: requestor
+		in: self methodClass
 ]
 
 { #category : 'public access' }
@@ -448,7 +435,12 @@ OpalCompiler >> evaluate [
 
 	| value doItMethod |
 	self isScripting: true.
-	doItMethod := self compile.
+	doItMethod := OCInteractiveAPI new
+		shouldSignalErrors: true;
+		compiler: self;
+		compile: source
+		notifying: requestor
+		in: self methodClass.
 	ast ifNil: [ ^ nil ].
 	doItMethod ifNil: [ ^ nil ].
 

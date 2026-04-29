@@ -481,7 +481,6 @@ RubSmalltalkEditor >> evaluate: source andDo: aBlock [
 	"to improve: we need better reporting of errors, to revisit when unifying with Spec"
 	result := rcvr class compiler
 			source: source;
-			requestor: self;
 			context: ctxt;
 			receiver: rcvr;
 			permitFaulty: false;

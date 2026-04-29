@@ -20,21 +20,20 @@ OpalEvaluator >> addParsePlugin: anOCDynamicASTCompilerPlugin [
 { #category : 'accessing' }
 OpalEvaluator >> evaluate: aString [
 
-	| doItMethod |
+	| compilationResult |
 	compiler source: aString.
 	compiler permitFaulty: (permitFaultyEvaluation ifNil: [ false ]).
 	compiler permitUndeclared: compiler permitFaulty.
-	doItMethod := compiler compile.
+	compilationResult := compiler doCompile.
 
-	(compiler ast allNotices select: [ :e | e isErrorOn: compiler ]) sorted do: [ :n |
-		failBlock ifNotNil: [ ^ failBlock cull: n ].
-		n signalError ].
+	compilationResult isError ifTrue: [
+		(compilationResult ast allNotices select: [ :e | e isErrorOn: compiler ]) sorted do: [ :n |
+			failBlock ifNotNil: [ ^ failBlock cull: n ].
+			n signalError ].
+		^ nil
+	].
 
-
-	compiler ast ifNil: [ ^ nil ].
-	doItMethod ifNil: [ ^ nil ].
-
-	^ nil withArgs: #(  ) executeMethod: doItMethod
+	^ nil withArgs: #(  ) executeMethod: compilationResult compiledMethod
 ]
 
 { #category : 'accessing' }

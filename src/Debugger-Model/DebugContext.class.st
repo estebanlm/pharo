@@ -171,7 +171,8 @@ DebugContext >> recompileCurrentMethodTo: aText notifying: aNotifyer [
 							protocol: self selectedMessageCategoryName;
 							isScripting: self selectedMessageName isDoIt;
 							requestor: aNotifyer;
-							compile: aText ]
+							source: aText;
+							compile ]
 				ifFalse: [
 						self selectedClass
 							compile: aText asString
@@ -190,7 +191,8 @@ DebugContext >> recompileCurrentMethodTo: aText notifying: aNotifyer [
 					protocol: self selectedMessageCategoryName;
 					isScripting: self selectedMessageName isDoIt;
 					requestor: aNotifyer;
-					compile: aText ]
+					source: aText;
+					compile ]
 		ifFalse: [
 				classOrTraitOfMethod
 					compile: aText asString

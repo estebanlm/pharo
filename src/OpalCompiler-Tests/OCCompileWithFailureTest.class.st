@@ -13,11 +13,6 @@ Class {
 	#tag : 'Source'
 }
 
-{ #category : 'interactive error protocol' }
-OCCompileWithFailureTest >> notify: aMessage at: positon in: object [
-	"ingnore, for testEmptyBlockArg"
-]
-
 { #category : 'tests' }
 OCCompileWithFailureTest >> testEmptyBlockArg [
 	| result |
@@ -25,7 +20,6 @@ OCCompileWithFailureTest >> testEmptyBlockArg [
 	result := UndefinedObject compiler
     source: '^[ :]';
     isScripting: true;
-    requestor: self;
     parse.
 	self assert: result isDoIt.
 	self assert: result statements first isReturn
@@ -51,7 +45,6 @@ OCCompileWithFailureTest >> testParenthesis [
 	cm := (compiler := UndefinedObject compiler)
     source: 'self assert: pragma( numArgs equals: 0.';
     isScripting: true;
-    requestor: self;
     permitFaulty: true;
     newCompile.
 	self assert: compiler ast isDoIt.

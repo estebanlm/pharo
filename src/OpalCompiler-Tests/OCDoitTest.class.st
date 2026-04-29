@@ -141,11 +141,11 @@ OCDoitTest >> testDoItRequestorEvalError [
 { #category : 'tests' }
 OCDoitTest >> testDoItRequestorOptimized [
 
-	| value  |
+	| value |
 	"Check optimzied to:do:, we call lookupVar: on the synthesized limit var, see canAddBindingOf:"
 	value := OpalCompiler new
-		          requestor: self;
-		          evaluate: '
+		         bindings: { (self bindingOf: #requestorVarForTesting) };
+		         evaluate: '
 							| sum |
 							sum := 0.
 							1 to: requestorVarForTesting do: [:each | sum :=sum+1].
@@ -158,9 +158,8 @@ OCDoitTest >> testDoItRequestorOptimized [
 OCDoitTest >> testDoItRequestorReadRequestorVar [
 
 	| value  |
-	"we can read a variable from a requestor"
 	value := OpalCompiler new
-		          requestor: self;
+		          bindings: { (self bindingOf: #requestorVarForTesting) };
 		          evaluate: 'requestorVarForTesting'.
 
 	self assert: value equals: 5
@@ -172,7 +171,7 @@ OCDoitTest >> testDoItRequestorShadow [
 	| value  |
 	"we can shadow a var defined in the requestor without error"
 	value := OpalCompiler new
-		          requestor: self;
+		          bindings: { (self bindingOf: #requestorVarForTesting) };
 		          evaluate: '|requestorVarForTesting| requestorVarForTesting'.
 
 	self assert: value equals: nil
