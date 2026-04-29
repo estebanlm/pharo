@@ -82,6 +82,14 @@ FLSerializationTest >> deleteFilePath: aFilename [
 	(File named: aFilename) delete
 ]
 
+{ #category : 'running' }
+FLSerializationTest >> environmentOfTest [
+
+	"Use the global environment: the serialization should not write to it and only use it to check if a class is a class in the environment or not.
+	If not, it will serialize it (we want to avoid it!). If it is, it will just serialize the class name"
+	^ self class environment
+]
+
 { #category : 'testing' }
 FLSerializationTest >> expectedFailures [
 	"Global values are expected to be of type String. We'd need to modify string

@@ -165,22 +165,21 @@ DebugContext >> recompileCurrentMethodTo: aText notifying: aNotifyer [
 			(self checkSelectorUnchanged: selector) ifFalse: [ ^ nil ] ].
 
 	(self selectedClass includesSelector: selector) ifFalse: [
-			self selectedMessageName isDoIt
-				ifTrue: [
-						self selectedClass compiler
-							protocol: self selectedMessageCategoryName;
-							isScripting: self selectedMessageName isDoIt;
-							requestor: aNotifyer;
-							source: aText;
-							compile ]
-				ifFalse: [
-						self selectedClass
-							compile: aText asString
-							classified: self selectedMessageCategoryName
-							withStamp: DateAndTime now
-							notifying: aNotifyer
-							logSource: self selectedClass shouldLogSource ].
-			^ self selectedClass >> self selectedMessageName ].
+			^ self selectedMessageName isDoIt
+				  ifTrue: [
+						  self selectedClass compiler
+							  protocol: self selectedMessageCategoryName;
+							  isScripting: self selectedMessageName isDoIt;
+							  requestor: aNotifyer;
+							  source: aText;
+							  compile ]
+				  ifFalse: [
+						  self selectedClass
+							  compile: aText asString
+							  classified: self selectedMessageCategoryName
+							  withStamp: DateAndTime now
+							  notifying: aNotifyer
+							  logSource: self selectedClass shouldLogSource ] ].
 
 	classOrTraitOfMethod := self confirmOnTraitOverwrite: selector inClass: self selectedClass.
 	classOrTraitOfMethod ifNil: [ ^ nil ].

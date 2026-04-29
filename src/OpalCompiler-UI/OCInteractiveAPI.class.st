@@ -64,10 +64,11 @@ OCInteractiveAPI >> compile: sourceCode notifying: requestor in: behavior [
 	"Return the selector of the compiled method"
 
 	| compilationResult theCompiler |
-	sourceCode ifEmpty: [ Error signal: 'The source code should not be empty' ].
 	
 	theCompiler := (self compilerFor: behavior).
-	theCompiler ast ifNil: [ theCompiler source: sourceCode ].
+	theCompiler ast ifNil: [ 
+		sourceCode ifEmpty: [ Error signal: 'The source code should not be empty' ].
+		theCompiler source: sourceCode ].
 
 	compilationResult := theCompiler doCompile.
 
