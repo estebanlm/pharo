@@ -38,7 +38,8 @@ CommandLineDebugger >> executeCommand: aString [
 
 	command = 'exit' ifTrue: [ ^ self executeExit ].
 	command = 'print' ifTrue: [ ^ self executePrint: arguments ].
-	command = 'step' ifTrue: [ ^ self executeStep ].
+	command = 'step' ifTrue: [ ^ self executeStepInto ].
+	command = 'over' ifTrue: [ ^ self executeStepOver ].
 
 	^ self executeUnknownCommand: command
 ]
@@ -67,9 +68,23 @@ CommandLineDebugger >> executePrint: anExpression [
 ]
 
 { #category : 'execution' }
-CommandLineDebugger >> executeStep [
+CommandLineDebugger >> executeStepInto [
 
-	^ self
+	context ifNil: [ ^ 'No active debug session to step into.' ].
+
+	context stepInto.
+
+	^ 'Stepped'
+]
+
+{ #category : 'execution' }
+CommandLineDebugger >> executeStepOver [
+
+	context ifNil: [ ^ 'No active debug session to step over.' ].
+
+	context stepOver.
+
+	^ 'Stepped over'
 ]
 
 { #category : 'execution' }
