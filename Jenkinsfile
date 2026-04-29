@@ -143,8 +143,8 @@ Build Url: ${env.BUILD_URL}
 
 
 
-def defineIsoTestStage(stageName, projectName, testPackages=""){
-    stage("Tests-ISO-" + stageName) {
+def defineIsoTestStage(projectName, testPackages=""){
+    stage("Tests-ISO-" + projectName) {
         def testGroup = "Tests"
         timeout(2) {
             dir(env.STAGE_NAME){
@@ -189,18 +189,18 @@ def bootstrapImage(){
         }
         
         def isoTesters = [:]
-        isoTesters['SUnit'] = { defineIsoTestStage("SUnit", "SUnit") }
-        isoTesters['Kernel'] = { defineIsoTestStage("Kernel", "Kernel", "\'Kernel-Tests\'  \'Kernel-CodeModel-Tests\'") }
-        isoTesters['Compiler'] = { defineIsoTestStage("Compiler", "Compiler", "\'OpalCompiler-Tests\'  \'DebugInfo-Tests\' \'Kernel-Extended-Tests\' \'Kernel-Tests-WithCompiler\'") }      
-        isoTesters['Files'] = { defineIsoTestStage("Files", "Files") }
-        isoTesters['Zinc-Character-Encoding'] = { defineIsoTestStage("Zinc-Character-Encoding", "ZincCharacterEncoding") }
-        isoTesters['System-SessionManager'] = { defineIsoTestStage("System-SessionManager", "SystemSessionManager") }
-        isoTesters['System-Platforms'] = { defineIsoTestStage("System-Platforms", "SystemPlatforms") }  
-        isoTesters['Announcements-Core'] = { defineIsoTestStage("Announcements-Core", "Announcements") } 
-        isoTesters['Shift-ClassBuilder'] = { defineIsoTestStage("Shift-ClassBuilder", "Shift") }        
-        isoTesters['System-CommandLineHandler'] = { defineIsoTestStage("System-CommandLineHandler", "SystemCommandLineHandler") }        
-        isoTesters['System-Finalization'] = { defineIsoTestStage("System-Finalization", "SystemFinalization") }        
-        isoTesters['FileSystem'] = { defineIsoTestStage("FileSystem", "FileSystem") }        
+        isoTesters['SUnit'] = { defineIsoTestStage("SUnit") }
+        isoTesters['Kernel'] = { defineIsoTestStage("Kernel", "\'Kernel-Tests\'  \'Kernel-CodeModel-Tests\'") }
+        isoTesters['Compiler'] = { defineIsoTestStage("Compiler", "\'OpalCompiler-Tests\'  \'DebugInfo-Tests\' \'Kernel-Extended-Tests\' \'Kernel-Tests-WithCompiler\'") }
+        isoTesters['Files'] = { defineIsoTestStage("Files") }
+        isoTesters['Zinc-Character-Encoding'] = { defineIsoTestStage("ZincCharacterEncoding") }
+        isoTesters['System-SessionManager'] = { defineIsoTestStage("SystemSessionManager") }
+        isoTesters['System-Platforms'] = { defineIsoTestStage("SystemPlatforms") }
+        isoTesters['Announcements-Core'] = { defineIsoTestStage("Announcements") }
+        isoTesters['Shift-ClassBuilder'] = { defineIsoTestStage("Shift") }
+        isoTesters['System-CommandLineHandler'] = { defineIsoTestStage("SystemCommandLineHandler") }
+        isoTesters['FileSystem'] = { defineIsoTestStage("FileSystem") }
+        isoTesters['System-Finalization'] = { defineIsoTestStage("SystemFinalization") }
         parallel isoTesters
 
         stage ("Full Image") {
