@@ -29,7 +29,11 @@ BaselineOfCompiler >> baseline: spec [
                 className: 'BaselineOfCollections';
                 loads: #( 'Collections-Abstract-Tests' 'Collections-Unordered-Tests' 'Collections-Support-Tests' ) ].
 
-			
+			spec baseline: 'Collections' with: [
+            spec
+                repository: (self packageRepositoryURLForSpec: spec);
+                className: 'BaselineOfCollections';
+                loads: #( ''Collections-Stack'' 'Collections-Atomic' 'Collections-Arithmetic' ) ].
 		
 			spec baseline: 'KernelTests' with: [
 				spec
@@ -44,11 +48,6 @@ BaselineOfCompiler >> baseline: spec [
 					loads: #( 'core-traits' ) ].
 
 			spec
-
-				package: 'Collections-Arithmetic';
-				package: 'Collections-Atomic';
-				package: 'Collections-Stack';
-
 				package: 'ClassDefinitionPrinters';
 
 				package: 'CodeExport';
