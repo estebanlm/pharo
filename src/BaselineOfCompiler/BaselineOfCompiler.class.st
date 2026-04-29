@@ -28,6 +28,8 @@ BaselineOfCompiler >> baseline: spec [
                 repository: (self packageRepositoryURLForSpec: spec);
                 className: 'BaselineOfCollections';
                 loads: #( 'Collections-Abstract-Tests' 'Collections-Unordered-Tests' 'Collections-Support-Tests' ) ].
+
+			
 		
 			spec baseline: 'KernelTests' with: [
 				spec
@@ -46,8 +48,6 @@ BaselineOfCompiler >> baseline: spec [
 				package: 'Collections-Arithmetic';
 				package: 'Collections-Atomic';
 				package: 'Collections-Stack';
-				package: 'Collections-Atomic-Tests';
-				package: 'Collections-Stack-Tests' with: [ spec requires: #( 'KernelTests' 'CollectionsTests') ];
 
 				package: 'ClassDefinitionPrinters';
 
@@ -76,6 +76,6 @@ BaselineOfCompiler >> baseline: spec [
 				with: { 'AST-Core'. 'Collections-Arithmetic'. 'Collections-Atomic'. 'Collections-Stack'. 'ClassDefinitionPrinters'.
 					'CodeExport'. 'CodeImport'. 'CodeImport-Commands'. 'DebugInfo'. 'OpalCompiler-Core'. 'ParseTreeRewriter'. 'Deprecation' };
 				group: 'Tests'
-				with: { 'Collections-Atomic-Tests'. 'Collections-Stack-Tests'. 'Kernel-Extended-Tests'. 'Kernel-Tests-WithCompiler'.
+				with: { 'Kernel-Extended-Tests'. 'Kernel-Tests-WithCompiler'.
 					'AST-Core-Tests'. 'OpalCompiler-Tests'. 'DebugInfo-Tests'. 'CodeImport-Tests' } ]
 ]
