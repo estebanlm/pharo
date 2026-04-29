@@ -52,20 +52,18 @@ CommandLineDebugger >> executeExit [
 
 { #category : 'execution' }
 CommandLineDebugger >> executePrint: anExpression [
-    | evaluation |
-    
-    anExpression trim isEmpty ifTrue: [ ^ 'Nothing to print' ].
 
-    evaluation := self hasContext ifFalse: [ 
-            Smalltalk compiler evaluate: anExpression
-        ]
-        ifTrue: [ 
-            Smalltalk compiler 
-                context: context interruptedContext; 
-                evaluate: anExpression
-        ].
-    
-    ^ anExpression, ' : ', evaluation asString
+	| evaluation |
+	anExpression trim isEmpty ifTrue: [ ^ 'Nothing to print' ].
+
+	[
+		evaluation := self hasContext
+			              ifFalse: [ Smalltalk compiler evaluate: anExpression ]
+			              ifTrue: [ context evaluate: anExpression ] ]
+		on: Error
+		do: [ :ex | ^ 'Error evaluating: ' , anExpression ].
+
+	^ anExpression , ' : ' , evaluation asString
 ]
 
 { #category : 'execution' }
