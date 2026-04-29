@@ -27,12 +27,12 @@ ClapDebugRunner class >> commandSpecification [
 
 { #category : 'execution' }
 ClapDebugRunner >> execute [
+
 	self prepareImageAndExit.
-	
+
 	self startLoop.
 
-   self exitSuccess.
-
+	self exitSuccess
 ]
 
 { #category : 'execution' }
@@ -41,26 +41,44 @@ ClapDebugRunner >> startLoop [
 
 	| in out input tempRes debugger |
 	in := Stdio stdin.
+
 	out := Stdio stdout.
+
 	debugger := CommandLineDebugger new.
+
 	out
 		nextPutAll: ' Debug phase started :';
 		lf;
 		flush.
 
-	[ true ] whileTrue: [
-			out
-				nextPutAll: '(debug) > ';
-				flush.
+	out
+		nextPutAll: '(debug) > ';
+		flush.
 
-			input := in upTo: 10.
+	input := in next: 4.
 
-			input ifNil: [ ^ self ].
+	input = '' ifTrue: [ ^ self ].
 
-			tempRes := debugger executeCommand: input.
-			out
-				nextPutAll: 'You wrote :';
-				nextPutAll: tempRes;
-				lf;
-				flush ]
+	tempRes := debugger executeCommand: input.
+
+	out
+		nextPutAll: 'You wrote :';
+		nextPutAll: tempRes;
+		lf;
+		flush
+]
+
+{ #category : 'execution' }
+ClapDebugRunner >> startLoopTest [
+	"Test"
+
+	| line |
+	[
+    	line := Stdio stdin nextLine.
+    	line = 'quit'
+	] whileFalse: [
+    	Stdio stdout
+        nextPutAll: line;
+        lf.
+	].
 ]
