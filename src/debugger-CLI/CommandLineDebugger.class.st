@@ -1,3 +1,7 @@
+"
+A class to execute commands from command Line.
+We can parse commands and arguments, and execute the dedicated method
+"
 Class {
 	#name : 'CommandLineDebugger',
 	#superclass : 'Object',
@@ -17,9 +21,12 @@ CommandLineDebugger >> executeCommand: aString [
 	subString ifEmpty: [ ^ '' ].
 
 	command := subString first.
-	command = 'exit' ifTrue: [ ^ self executeExit ].
 
-	arguments := subString allButFirst joinUsing: ' '. "arguments de la commande pour le print ou autre plus tard"
+	arguments := subString allButFirst joinUsing: ' '.
+
+	command = 'exit' ifTrue: [ ^ self executeExit ].
+	command = 'print' ifTrue: [ ^ self executePrint: arguments ].
+	command = 'step' ifTrue: [ ^ self executeStep ].
 
 	^ self executeUnknownCommand: command
 ]
@@ -34,7 +41,12 @@ CommandLineDebugger >> executeExit [
 { #category : 'execution' }
 CommandLineDebugger >> executePrint: anExpression [
 
-	^ self
+	| evaluation |
+	anExpression trim ifEmpty: [ ^ 'Nothing to print' ].
+
+	evaluation := OpalCompiler new evaluate: anExpression.
+
+	^ anExpression , ' : ' , evaluation asString
 ]
 
 { #category : 'execution' }
