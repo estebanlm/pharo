@@ -6,11 +6,23 @@ Class {
 	#name : 'CommandLineDebugger',
 	#superclass : 'Object',
 	#instVars : [
-		'isActive'
+		'isActive',
+		'context'
 	],
 	#category : 'debugger-CLI',
 	#package : 'debugger-CLI'
 }
+
+{ #category : 'initialization' }
+CommandLineDebugger >> context [
+
+	^ context
+]
+
+{ #category : 'initialization' }
+CommandLineDebugger >> context: aDebugContext [
+    context := aDebugContext
+]
 
 { #category : 'execution' }
 CommandLineDebugger >> executeCommand: aString [
@@ -40,13 +52,20 @@ CommandLineDebugger >> executeExit [
 
 { #category : 'execution' }
 CommandLineDebugger >> executePrint: anExpression [
+    | evaluation |
+    
+    anExpression trim isEmpty ifTrue: [ ^ 'Nothing to print' ].
 
-	| evaluation |
-	anExpression trim ifEmpty: [ ^ 'Nothing to print' ].
-
-	evaluation := OpalCompiler new evaluate: anExpression.
-
-	^ anExpression , ' : ' , evaluation asString
+    evaluation := self hasContext ifFalse: [ 
+            Smalltalk compiler evaluate: anExpression
+        ]
+        ifTrue: [ 
+            Smalltalk compiler 
+                context: context interruptedContext; 
+                evaluate: anExpression
+        ].
+    
+    ^ anExpression, ' : ', evaluation asString
 ]
 
 { #category : 'execution' }
@@ -59,6 +78,12 @@ CommandLineDebugger >> executeStep [
 CommandLineDebugger >> executeUnknownCommand: aCommand [ 
 
 	^ 'Unknown command: ', aCommand
+]
+
+{ #category : 'initialization' }
+CommandLineDebugger >> hasContext [
+
+	^ context isNotNil
 ]
 
 { #category : 'initialization' }
