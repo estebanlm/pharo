@@ -1,8 +1,8 @@
 Class {
-	#name : 'TPropertiesMockTest',
+	#name : 'UserOfPropertyTest',
 	#superclass : 'TestCase',
-	#traits : 'TPropertiesTraitTest',
-	#classTraits : 'TPropertiesTraitTest classTrait',
+	#traits : 'TPropertiesTest',
+	#classTraits : 'TPropertiesTest classTrait',
 	#instVars : [
 		'keyAccess',
 		'removeKey'
@@ -12,10 +12,10 @@ Class {
 }
 
 { #category : 'requirements' }
-TPropertiesMockTest >> classWithProperties [
+UserOfPropertyTest >> classWithProperties [
 	| class |
 
-	class := TPropertiesMock new.
+	class := UserOfProperty new.
 	^ class
 		propertyAt: #a put: 'a';
 		propertyAt: #b put: 42;
@@ -25,11 +25,11 @@ TPropertiesMockTest >> classWithProperties [
 ]
 
 { #category : 'requirements' }
-TPropertiesMockTest >> keyNotIn [ 
+UserOfPropertyTest >> keyNotIn [ 
 	^#z
 ]
 
 { #category : 'requirements' }
-TPropertiesMockTest >> valueNotIn [ 
+UserOfPropertyTest >> valueNotIn [ 
 	^700
 ]

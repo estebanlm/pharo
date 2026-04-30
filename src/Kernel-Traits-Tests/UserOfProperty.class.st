@@ -1,5 +1,5 @@
 Class {
-	#name : 'TPropertiesMock',
+	#name : 'UserOfProperty',
 	#superclass : 'Object',
 	#traits : 'TProperties',
 	#classTraits : 'TProperties classTrait',

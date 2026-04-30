@@ -1,27 +1,27 @@
 Trait {
-	#name : 'TPropertiesTraitTest',
+	#name : 'TPropertiesTest',
 	#category : 'Kernel-Traits-Tests',
 	#package : 'Kernel-Traits-Tests'
 }
 
 { #category : 'requirements' }
-TPropertiesTraitTest >> classWithProperties [
+TPropertiesTest >> classWithProperties [
 	^self explicitRequirement 
 ]
 
 { #category : 'requirements' }
-TPropertiesTraitTest >> keyNotIn [ 
+TPropertiesTest >> keyNotIn [ 
 	^self explicitRequirement 
 ]
 
 { #category : 'requirements' }
-TPropertiesTraitTest >> supportsNilKey [
+TPropertiesTest >> supportsNilKey [
 
 ^true
 ]
 
 { #category : 'tests' }
-TPropertiesTraitTest >> testPropertyAt [ 
+TPropertiesTest >> testPropertyAt [ 
 	|class association|
 	class := self classWithProperties. 
 	association := class properties associations anyOne. 
@@ -30,7 +30,7 @@ TPropertiesTraitTest >> testPropertyAt [
 ]
 
 { #category : 'tests' }
-TPropertiesTraitTest >> testPropertyAtIfAbsent [
+TPropertiesTest >> testPropertyAtIfAbsent [
 	|class association|
 	class := self classWithProperties .
 	association := class properties associations anyOne.
@@ -45,7 +45,7 @@ TPropertiesTraitTest >> testPropertyAtIfAbsent [
 ]
 
 { #category : 'tests' }
-TPropertiesTraitTest >> testPropertyAtIfAbsentPut [
+TPropertiesTest >> testPropertyAtIfAbsentPut [
 	"self run: #testAtIfAbsentPut"
 
 	| class association |
@@ -64,7 +64,7 @@ TPropertiesTraitTest >> testPropertyAtIfAbsentPut [
 ]
 
 { #category : 'tests' }
-TPropertiesTraitTest >> testPropertyAtIfPresent [
+TPropertiesTest >> testPropertyAtIfPresent [
 	"self run: #testAtIfPresent"
 
 	| class association arg |
@@ -91,7 +91,7 @@ TPropertiesTraitTest >> testPropertyAtIfPresent [
 ]
 
 { #category : 'tests' }
-TPropertiesTraitTest >> testPropertyAtIfPresentIfAbsent [
+TPropertiesTest >> testPropertyAtIfPresentIfAbsent [
 	"self run: #testAtIfPresentIfAbsent"
 
 	| class association arg |
@@ -124,7 +124,7 @@ TPropertiesTraitTest >> testPropertyAtIfPresentIfAbsent [
 ]
 
 { #category : 'tests' }
-TPropertiesTraitTest >> testPropertyAtIfPresentIfAbsentPut [
+TPropertiesTest >> testPropertyAtIfPresentIfAbsentPut [
 	"self run: #testAtIfPresentIfAbsentPut"
 
 	| class association arg |
@@ -158,7 +158,7 @@ TPropertiesTraitTest >> testPropertyAtIfPresentIfAbsentPut [
 ]
 
 { #category : 'tests' }
-TPropertiesTraitTest >> testPropertyAtPutDict [
+TPropertiesTest >> testPropertyAtPutDict [
 	"Do not rename to testAtPut, will conflict with TPutBasicTest>>#testAtPut"
 
 	"self run: #testAtPutDict"
@@ -184,7 +184,7 @@ TPropertiesTraitTest >> testPropertyAtPutDict [
 ]
 
 { #category : 'tests' }
-TPropertiesTraitTest >> testPropertyAtPutNil [
+TPropertiesTest >> testPropertyAtPutNil [
 	"self run: #testAtPutNil"
 
 	| class keyIn newValue |
@@ -206,6 +206,6 @@ TPropertiesTraitTest >> testPropertyAtPutNil [
 ]
 
 { #category : 'requirements' }
-TPropertiesTraitTest >> valueNotIn [ 
+TPropertiesTest >> valueNotIn [ 
 	^ self explicitRequirement 
 ]
