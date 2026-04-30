@@ -58,8 +58,7 @@ ClyBrowserMorph >> browseUppercasedReferencesTo: aSymbol inNameRespolver: anEnvi
 	anEnvironment 
 		ifNil: [
 			^ {
-				  (self spawnQueryBrowserOn: (ClyClassReferencesQuery of: (self class environment at: aSymbol))) .
-				  #SendersWithouEnvironment 
+				  (Smalltalk tools toolNamed: #messageList) browseReferencesToClass: (self class environment at: aSymbol) 
 				} ].
 
 	(anEnvironment bindingOf: aSymbol) 
