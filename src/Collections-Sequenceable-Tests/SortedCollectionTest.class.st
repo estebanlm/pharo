@@ -585,8 +585,7 @@ SortedCollectionTest >> testFlatCollect [
 { #category : 'tests' }
 SortedCollectionTest >> testGroupedBySortedCollection [
 	| collection grouped |
-	collection := Object methods asSortedCollection: #selector ascending.
-
+	collection := Object methods asSortedCollection: [ :a :b | a selector <= b selector ].
 	grouped := collection groupedBy: #methodClass.
 
 	"do we retain the sortblock?"
@@ -854,7 +853,7 @@ SortedCollectionTest >> testSortBlock [
 { #category : 'tests - basic' }
 SortedCollectionTest >> testSortUsing [
 	| aSortedCollection |
-	aSortedCollection := (SortedCollection sortUsing: #yourself ascending)
+	aSortedCollection := (SortedCollection sortUsing: [ :a :b | a <= b ])
 		addAll: #(2 6 3 8 4 3 7 6);
 		yourself.
 	self assert: aSortedCollection asArray equals: #(2 3 3 4 6 6 7 8)
