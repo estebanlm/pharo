@@ -646,8 +646,10 @@ String >> asFourCode [
 
 { #category : 'converting' }
 String >> asHTMLString [
-	"Substitute the < & > into HTML compliant elements"
+	"Turn the '<', '>' and '&' into readable HTML characters "
 	"'<a>' asHTMLString >>> '&lt;a&gt;'"
+	"'&' asHTMLString >>> '&amp;'"
+	"'a' asHTMLString >>> 'a'"
 
 	^ self species new: self size streamContents: [ :s|
 		self do: [:c | s nextPutAll: c asHTMLString ]]
