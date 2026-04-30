@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'failBlock',
 		'permitFaultyEvaluation',
-		'compiler'
+		'compiler',
+		'logged'
 	],
 	#category : 'OpalCompiler-Core-FrontEnd',
 	#package : 'OpalCompiler-Core',
@@ -24,6 +25,7 @@ OpalEvaluator >> evaluate: aString [
 	compiler source: aString.
 	compiler permitFaulty: (permitFaultyEvaluation ifNil: [ false ]).
 	compiler permitUndeclared: compiler permitFaulty.
+	compiler logged: logged.
 	compilationResult := compiler doCompile.
 
 	compilationResult isError ifTrue: [
@@ -46,8 +48,15 @@ OpalEvaluator >> failBlock: aFullBlockClosure [
 OpalEvaluator >> initialize [
 
 	super initialize.
+	logged := false.
 	compiler := OpalCompiler new.
 	compiler isScripting: true
+]
+
+{ #category : 'accessing' }
+OpalEvaluator >> logged: aBoolean [
+
+	logged := aBoolean
 ]
 
 { #category : 'public access' }

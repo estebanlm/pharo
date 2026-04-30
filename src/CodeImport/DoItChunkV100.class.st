@@ -46,10 +46,9 @@ DoItChunkV100 >> importWithLogSource: logSource [
 	self isPackageAdditionChunk ifTrue: [ ^ self packageOrganizer ensurePackageMatching: self contentsAST arguments first value ].
 	self isClassAdditionChunk ifTrue: [ ^ OldClassDefinitionBuilder buildFromAST: self contentsAST ].
 
-	^ self class compiler class new
-		  source: contents;
-		  logged: logSource;
-		  evaluate
+	^ OpalEvaluator new
+		logged: logSource;
+		evaluate: contents
 ]
 
 { #category : 'importing' }
