@@ -1678,6 +1678,7 @@ Behavior >> selectorsDo: selectorBlock [
 Behavior >> selectorsWithArgs: numberOfArgs [
 	"Return all selectors defined in this class that take this number of arguments"
 	<reflection: 'Class structural inspection - Selectors and methods inspection'>
+	self deprecated: 'issue #19467'.
 	^ self selectors select: [:selector | selector numArgs = numberOfArgs]
 ]
 
