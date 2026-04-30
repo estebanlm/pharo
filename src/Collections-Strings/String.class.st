@@ -881,10 +881,10 @@ String >> caseInsensitiveLessOrEqual: aString [
 	"Answer whether the receiver sorts before or equal to aString.
 	The collation order is case insensitive."
 	
-	"('a' caseInsensitiveLessOrEqual: 'b') >>> (true) "
-	"('b' caseInsensitiveLessOrEqual: 'a') >>> (false) "
-	"('a' caseInsensitiveLessOrEqual: 'a') >>> (true) "
-	"('A' caseInsensitiveLessOrEqual: 'a') >>> (true) "
+	"('a' caseInsensitiveLessOrEqual: 'b') >>> true "
+	"('b' caseInsensitiveLessOrEqual: 'a') >>> false "
+	"('a' caseInsensitiveLessOrEqual: 'a') >>> true "
+	"('A' caseInsensitiveLessOrEqual: 'a') >>> true "
 	
 	^(self compare: aString caseSensitive: false) <= 2
 ]
@@ -894,10 +894,10 @@ String >> caseSensitiveLessOrEqual: aString [
 	"Answer whether the receiver sorts before or equal to aString.
 	The collation order is case sensitive."
 	
-	"('b' caseSensitiveLessOrEqual: 'a') >>> (false) "
-	"('a' caseSensitiveLessOrEqual: 'a') >>> (true) "
-	"('A' caseSensitiveLessOrEqual: 'a') >>> (true) "
-	"('a' caseSensitiveLessOrEqual: 'A') >>> (false) "
+	"('b' caseSensitiveLessOrEqual: 'a') >>> false "
+	"('a' caseSensitiveLessOrEqual: 'a') >>> true "
+	"('A' caseSensitiveLessOrEqual: 'a') >>> true "
+	"('a' caseSensitiveLessOrEqual: 'A') >>> false "
 	
 	^(self compare: aString caseSensitive: true) <= 2
 ]
