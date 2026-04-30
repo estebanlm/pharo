@@ -48,8 +48,15 @@ BaselineOfKernel >> baseline: spec [
 				baseline: 'System-Platforms-Tests' with: [ 
 					spec
 						className: 'BaselineOfSystemPlatforms';
-						repository: (self packageRepositoryURLForSpec: spec);
+						repository: repository;
 						loads: #( 'Tests' )];
+					
+				baseline: 'Collections-Tests' with: [ 
+					spec 
+						className: 'BaselineOfCollections';
+						repository: repository;
+						loads: #('KernelTests') ];
+					
 					
 				baseline: 'Announcements-Core-Tests' with: [ 
 					spec
@@ -98,15 +105,6 @@ BaselineOfKernel >> baseline: spec [
 				package: 'System-Version';
 				package: 'Multilingual-Encodings';
 				
-				package: 'Collections-Abstract-Tests';
-				package: 'Collections-DoubleLinkedList-Tests';
-				package: 'Collections-Native-Tests';
-				package: 'Collections-Sequenceable-Tests';
-				package: 'Collections-Streams-Tests';
-				package: 'Collections-Strings-Tests';
-				package: 'Collections-Support-Tests';
-				package: 'Collections-Unordered-Tests';
-				package: 'Collections-Weak-Tests' with: [ spec requires: #( 'Collections-Unordered-Tests' ) ];
 				package: 'Kernel-Tests';
 				package: 'Kernel-CodeModel-Tests';
 				package: 'System-Time-Tests'.
@@ -124,7 +122,6 @@ BaselineOfKernel >> baseline: spec [
 					'System-NumberPrinting'. 'System-Version'. 'Multilingual-Encodings' };
 				group: 'Tests'
 				with:
-					{ 'Collections-Abstract-Tests'. 'Collections-DoubleLinkedList-Tests'. 'Collections-Native-Tests'. 'Collections-Sequenceable-Tests'. 'Collections-Streams-Tests'. 'Collections-Strings-Tests'.
-					'Collections-Support-Tests'. 'Collections-Unordered-Tests'. 'Collections-Weak-Tests'. 'Kernel-Tests'. 'Kernel-CodeModel-Tests'. 'Announcements-Core-Tests'. 'System-Platforms-Tests'.
+					{ 'Collections-Tests'. 'Kernel-Tests'. 'Kernel-CodeModel-Tests'. 'Announcements-Core-Tests'. 'System-Platforms-Tests'.
 					 'Files-Tests'. 'SystemFinalization'. 'Zinc-Character-Encoding-Tests'. 'System-Time-Tests' } ]
 ]
