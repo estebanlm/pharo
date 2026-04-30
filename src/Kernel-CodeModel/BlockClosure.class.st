@@ -556,7 +556,7 @@ BlockClosure >> outerContext: ctxt [
 	outerContext := ctxt
 ]
 
-{ #category : 'not defined protocol' }
+{ #category : 'printing' }
 BlockClosure >> printOn: aStream [
 
 	aStream nextPutAll: '[ ] in ' , self homeMethod name asString
