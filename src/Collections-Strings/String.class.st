@@ -646,8 +646,10 @@ String >> asFourCode [
 
 { #category : 'converting' }
 String >> asHTMLString [
-	"Substitute the < & > into HTML compliant elements"
+	"Turn the '<', '>' and '&' into readable HTML characters "
 	"'<a>' asHTMLString >>> '&lt;a&gt;'"
+	"'&' asHTMLString >>> '&amp;'"
+	"'a' asHTMLString >>> 'a'"
 
 	^ self species new: self size streamContents: [ :s|
 		self do: [:c | s nextPutAll: c asHTMLString ]]
@@ -880,6 +882,12 @@ String >> capitalized [
 String >> caseInsensitiveLessOrEqual: aString [
 	"Answer whether the receiver sorts before or equal to aString.
 	The collation order is case insensitive."
+	
+	"('a' caseInsensitiveLessOrEqual: 'b') >>> true "
+	"('b' caseInsensitiveLessOrEqual: 'a') >>> false "
+	"('a' caseInsensitiveLessOrEqual: 'a') >>> true "
+	"('A' caseInsensitiveLessOrEqual: 'a') >>> true "
+	
 	^(self compare: aString caseSensitive: false) <= 2
 ]
 
@@ -887,6 +895,12 @@ String >> caseInsensitiveLessOrEqual: aString [
 String >> caseSensitiveLessOrEqual: aString [
 	"Answer whether the receiver sorts before or equal to aString.
 	The collation order is case sensitive."
+	
+	"('b' caseSensitiveLessOrEqual: 'a') >>> false "
+	"('a' caseSensitiveLessOrEqual: 'a') >>> true "
+	"('A' caseSensitiveLessOrEqual: 'a') >>> true "
+	"('a' caseSensitiveLessOrEqual: 'A') >>> false "
+	
 	^(self compare: aString caseSensitive: true) <= 2
 ]
 
