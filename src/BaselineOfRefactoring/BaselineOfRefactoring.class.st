@@ -12,9 +12,9 @@ BaselineOfRefactoring >> baseline: spec [
 	spec
 		package: 'Refactoring-Environment';
 		package: 'Refactoring-Changes' with: [ spec requires: #( 'Refactoring-Environment' ) ];
-		package: 'OpalCompiler-ToolFeatures';
+		package: 'Refactoring-CompilerSupport';
 		package: 'Refactoring-Transformations' with: [ spec requires: #( 'Refactoring-Core' ) ];
-		package: 'Refactoring-Core' with: [ spec requires: #( 'Refactoring-Changes' 'Refactoring-Environment' 'OpalCompiler-ToolFeatures' ) ];
+		package: 'Refactoring-Core' with: [ spec requires: #( 'Refactoring-Changes' 'Refactoring-Environment' 'Refactoring-CompilerSupport' ) ];
 		package: 'Refactoring-UI' with: [ spec requires: #( 'Refactoring-Transformations' ) ];
 		package: 'Refactoring-DataForTesting';
 		package: 'Refactoring-UI-Tests' with: [ spec requires: #( 'Refactoring-DataForTesting' ) ];
