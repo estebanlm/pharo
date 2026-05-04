@@ -11,9 +11,9 @@ Class {
 
 { #category : 'activation' }
 ClyShowMethodInheritanceCommand class >> browserContextMenuActivation [
-	<classAnnotation>
 
-	^CmdContextMenuActivation byItemOf: ClyQueryMenuGroup for: ClyMethod asCalypsoItemContext
+	<classAnnotation>
+	^ CmdContextMenuActivation byRootGroupItemOrder: 2 for: ClyMethod asCalypsoItemContext
 ]
 
 { #category : 'activation' }
@@ -33,8 +33,14 @@ ClyShowMethodInheritanceCommand >> createInheritanceScopeFrom: classes [
 ]
 
 { #category : 'accessing' }
+ClyShowMethodInheritanceCommand >> defaultMenuIconName [
+
+	^ #browse
+]
+
+{ #category : 'accessing' }
 ClyShowMethodInheritanceCommand >> defaultMenuItemName [
-	^'Inheritance'
+	^'Hierarchical implementors'
 ]
 
 { #category : 'accessing' }

@@ -48,7 +48,7 @@ ReProtectInstanceVariableRefactoring >> getterSetterMethods [
 { #category : 'transforming' }
 ReProtectInstanceVariableRefactoring >> inline: aSelector [
 	self onError:
-			[self generateChangesFor: (ReInlineAllSendersRefactoring
+			[self generateChangesFor: (ReInlineIntoLocalSendersRefactoring
 						model: self model
 						sendersOf: aSelector
 						in: class)]

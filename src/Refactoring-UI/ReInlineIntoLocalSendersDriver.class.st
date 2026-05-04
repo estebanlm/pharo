@@ -2,7 +2,7 @@
 I handle user interaction when invoking Inline All Senders Refactoring
 "
 Class {
-	#name : 'ReInlineAllSendersDriver',
+	#name : 'ReInlineIntoLocalSendersDriver',
 	#superclass : 'ReInteractionDriver',
 	#instVars : [
 		'class',
@@ -14,19 +14,19 @@ Class {
 }
 
 { #category : 'accessing' }
-ReInlineAllSendersDriver class >> driverName [
+ReInlineIntoLocalSendersDriver class >> driverName [
 
 	^ 'Inline All Senders'
 ]
 
 { #category : 'configuration' }
-ReInlineAllSendersDriver >> instantiateRefactoring [
+ReInlineIntoLocalSendersDriver >> instantiateRefactoring [
 
-	^ ReInlineAllSendersRefactoring model: model sendersOf: message in: class
+	^ ReInlineIntoLocalSendersRefactoring model: model sendersOf: message in: class
 ]
 
 { #category : 'instance creation' }
-ReInlineAllSendersDriver >> scopes: refactoringScopes message: originalMessage class: methodOrigin [
+ReInlineIntoLocalSendersDriver >> scopes: refactoringScopes message: originalMessage class: methodOrigin [
 
 	scopes := refactoringScopes.
 	model := self refactoringScopeOn: scopes first.

@@ -2,38 +2,38 @@
 I am a command to launch the Inline All Senders Refactoring: the call to this method in all other methods of this class is replaced by its implementation. 
 "
 Class {
-	#name : 'SycInlineAllSendersMessageCommand',
+	#name : 'SycInlineIntoLocalSendersMessageCommand',
 	#superclass : 'SycChangeMessageSignatureCommand',
 	#category : 'SystemCommands-MessageCommands',
 	#package : 'SystemCommands-MessageCommands'
 }
 
 { #category : 'testing' }
-SycInlineAllSendersMessageCommand class >> canBeExecutedInContext: aToolContext [
+SycInlineIntoLocalSendersMessageCommand class >> canBeExecutedInContext: aToolContext [
 	^ aToolContext isMethodSelected
 ]
 
 { #category : 'accessing' }
-SycInlineAllSendersMessageCommand >> defaultMenuIconName [
+SycInlineIntoLocalSendersMessageCommand >> defaultMenuIconName [
 	^#smallRightFlush
 ]
 
 { #category : 'accessing' }
-SycInlineAllSendersMessageCommand >> defaultMenuItemName [
+SycInlineIntoLocalSendersMessageCommand >> defaultMenuItemName [
 	^'Inline senders'
 ]
 
 { #category : 'execution' }
-SycInlineAllSendersMessageCommand >> execute [ 
+SycInlineIntoLocalSendersMessageCommand >> execute [ 
 
 	| methodOrigin |
 	methodOrigin := originalMessage contextUser compiledMethod origin.
-	((ReInlineAllSendersDriver newApplication: self application) scopes: refactoringScopes message: originalMessage selector class: methodOrigin)
+	((ReInlineIntoLocalSendersDriver newApplication: self application) scopes: refactoringScopes message: originalMessage selector class: methodOrigin)
 		runRefactoring  
 ]
 
 { #category : 'execution' }
-SycInlineAllSendersMessageCommand >> resultMessageSelector [
+SycInlineIntoLocalSendersMessageCommand >> resultMessageSelector [
 
 	^ originalMessage contextUser compiledMethod selector
 ]
