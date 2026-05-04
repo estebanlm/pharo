@@ -769,6 +769,12 @@ TraitTest >> testTraitHaveUsersInstanceVariable [
 ]
 
 { #category : 'tests' }
+TraitTest >> testTraitInitialize [
+	"this tests that #intialize is correctly setting the superclass to nil"
+	self assert: Trait new superclass isNil
+]
+
+{ #category : 'tests' }
 TraitTest >> testTraitRemoval [
 
 	| aClass aTrait |

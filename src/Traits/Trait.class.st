@@ -122,6 +122,12 @@ Trait >> expandedDefinitionStringFor: aPrinter [
 	^ aPrinter expandedTraitDefinitionString
 ]
 
+{ #category : 'initialization' }
+Trait >> initialize [
+	super initialize.
+	self basicSuperclass: nil
+]
+
 { #category : 'testing' }
 Trait >> isBaseTrait [
 	<reflection: 'Class structural inspection - Class kind testing'>
