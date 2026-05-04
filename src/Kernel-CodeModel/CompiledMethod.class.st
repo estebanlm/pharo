@@ -113,6 +113,11 @@ CompiledMethod >> codeForNoSource [
 	 ^(self compiler decompileMethod: self) formattedCode
 ]
 
+{ #category : 'accessing' }
+CompiledMethod >> compiledMethod [
+	^self
+]
+
 { #category : 'testing' }
 CompiledMethod >> containsHalt [
 
