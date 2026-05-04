@@ -16,8 +16,8 @@ Class {
 		'checkNewTemps',
 		'scopeStack'
 	],
-	#category : 'OpalCompiler-ToolFeatures',
-	#package : 'OpalCompiler-ToolFeatures'
+	#category : 'Refactoring-CompilerSupport',
+	#package : 'Refactoring-CompilerSupport'
 }
 
 { #category : 'accessing' }

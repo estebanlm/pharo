@@ -1,8 +1,8 @@
 Class {
 	#name : 'OCReturnNodeAdderVisitorTest',
 	#superclass : 'OCParseTreeTest',
-	#category : 'OpalCompiler-ToolFeatures-Tests',
-	#package : 'OpalCompiler-ToolFeatures-Tests'
+	#category : 'Refactoring-CompilerSupport-Tests',
+	#package : 'Refactoring-CompilerSupport-Tests'
 }
 
 { #category : 'tests' }

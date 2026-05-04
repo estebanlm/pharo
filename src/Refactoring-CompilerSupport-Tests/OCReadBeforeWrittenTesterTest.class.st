@@ -4,8 +4,8 @@ SUnit tests for ASTReadBeforeWrittenTester
 Class {
 	#name : 'OCReadBeforeWrittenTesterTest',
 	#superclass : 'OCParseTreeTest',
-	#category : 'OpalCompiler-ToolFeatures-Tests',
-	#package : 'OpalCompiler-ToolFeatures-Tests'
+	#category : 'Refactoring-CompilerSupport-Tests',
+	#package : 'Refactoring-CompilerSupport-Tests'
 }
 
 { #category : 'tests' }
