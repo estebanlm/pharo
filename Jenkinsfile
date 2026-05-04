@@ -201,6 +201,7 @@ def bootstrapImage(){
         isoTesters['System-CommandLineHandler'] = { defineIsoTestStage("SystemCommandLineHandler") }
         isoTesters['FileSystem'] = { defineIsoTestStage("FileSystem") }
         isoTesters['System-Finalization'] = { defineIsoTestStage("SystemFinalization") }
+        isoTesters['System-Support'] = { defineIsoTestStage("SystemSupport") }
         parallel isoTesters
 
         stage ("Full Image") {
