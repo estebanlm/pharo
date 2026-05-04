@@ -13,7 +13,7 @@ RBMethodName selector: 'color:' arguments:{'aColor'}.
 "
 Class {
 	#name : 'RBMethodName',
-	#superclass : 'Model',
+	#superclass : 'Object',
 	#instVars : [
 		'selector',
 		'arguments',
@@ -41,8 +41,9 @@ RBMethodName >> arguments [
 
 { #category : 'accessing' }
 RBMethodName >> arguments: nameCollection [
+
 	arguments := nameCollection.
-	self changed: #arguments
+	
 ]
 
 { #category : 'initialization' }
