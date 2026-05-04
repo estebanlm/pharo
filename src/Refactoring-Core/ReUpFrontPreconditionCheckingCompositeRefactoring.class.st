@@ -18,14 +18,6 @@ ReUpFrontPreconditionCheckingCompositeRefactoring >> applicabilityPreconditions 
 	^ refactorings flatCollect: [ :each |  each applicabilityPreconditions ] 
 ]
 
-{ #category : 'preconditions' }
-ReUpFrontPreconditionCheckingCompositeRefactoring >> breakingChangePreconditions [
-	"Return the list of the all the breakingChangePreconditions of the composite"
-
-	^ refactorings flatCollect: [ :each |
-		  each breakingChangePreconditions ]
-]
-
 { #category : 'accessing' }
 ReUpFrontPreconditionCheckingCompositeRefactoring >> privateTransform [
 	"pay attention we are not checking preconditions of children at this level"

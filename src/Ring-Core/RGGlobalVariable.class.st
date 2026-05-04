@@ -37,15 +37,3 @@ RGGlobalVariable >> isGlobalVariable [
 
 	^true
 ]
-
-{ #category : 'testing' }
-RGGlobalVariable >> isInstanceVariable [
-
-	^ false
-]
-
-{ #category : 'testing' }
-RGGlobalVariable >> isSuperVariable [
-
-	^ false
-]
