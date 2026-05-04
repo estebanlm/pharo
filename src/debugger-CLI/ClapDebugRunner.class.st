@@ -35,50 +35,28 @@ ClapDebugRunner >> execute [
 	self exitSuccess
 ]
 
-{ #category : 'execution' }
-ClapDebugRunner >> startLoop [
-	"For now, I just print the input to try it"
+{ #category : 'private - printing' }
+ClapDebugRunner >> informResults: results [
 
-	| in out input tempRes debugger |
-	in := Stdio stdin.
-
-	out := Stdio stdout.
-
-	debugger := CommandLineDebugger new.
-
-	out
-		nextPutAll: ' Debug phase started :';
-		lf;
-		flush.
-
-	out
-		nextPutAll: '(debug) > ';
-		flush.
-
-	input := in next: 4.
-
-	input = '' ifTrue: [ ^ self ].
-
-	tempRes := debugger executeCommand: input.
-
-	out
-		nextPutAll: 'You wrote :';
-		nextPutAll: tempRes;
-		lf;
-		flush
+	self outputStreamDo: [ :out |
+			(out << ('(debug) > {1} ' format: { results }))
+				<< OSPlatform current lineEnding;
+				flush ]
 ]
 
 { #category : 'execution' }
-ClapDebugRunner >> startLoopTest [
-	"Test"
+ClapDebugRunner >> startLoop [
 
-	| line |
-	[
-    	line := Stdio stdin nextLine.
-    	line = 'quit'
-	] whileFalse: [
-    	Stdio stdout
-        nextPutAll: line;
-        lf.
-	].
+	| input "in" tempRes debugger |
+	"in := Stdio stdin."
+	debugger := CommandLineDebugger new.
+
+	self inform: 'Debug phase started : '.
+
+	[ debugger isActive ] whileTrue: [
+			input := 'print 3+5'.
+
+			tempRes := debugger executeCommand: input asString.
+
+			self informResults: tempRes ]
 ]

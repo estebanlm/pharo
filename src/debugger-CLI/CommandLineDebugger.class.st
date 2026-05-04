@@ -37,7 +37,7 @@ CommandLineDebugger >> executeCommand: aString [
 	arguments := subString allButFirst joinUsing: ' '.
 
 	command = 'exit' ifTrue: [ ^ self executeExit ].
-	command = 'print' ifTrue: [ ^ self executePrint: arguments ].
+	command = 'print' ifTrue: [ ^ self executePrint: arguments asString ].
 	command = 'step' ifTrue: [ ^ self executeStepInto ].
 	command = 'over' ifTrue: [ ^ self executeStepOver ].
 
@@ -55,7 +55,7 @@ CommandLineDebugger >> executeExit [
 CommandLineDebugger >> executePrint: anExpression [
 
 	| evaluation |
-	anExpression trim isEmpty ifTrue: [ ^ 'Nothing to print' ].
+	anExpression trim ifEmpty: [ ^ 'Nothing to print' ].
 
 	[
 		evaluation := self hasContext
