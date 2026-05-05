@@ -153,6 +153,12 @@ ReRenameArgumentOrTemporaryDriver >> newName: anObject [
 	newName := anObject
 ]
 
+{ #category : 'configuration' }
+ReRenameArgumentOrTemporaryDriver >> requestDialog [
+
+	^ requestDialog
+]
+
 { #category : 'accessing' }
 ReRenameArgumentOrTemporaryDriver >> sourceNode [
 
