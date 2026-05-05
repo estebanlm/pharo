@@ -44,9 +44,11 @@ SycMoveMethodsToClassCommand >> execute [
 
 { #category : 'drag and drop support' }
 SycMoveMethodsToClassCommand >> prepareExecutionInDropContext: aToolContext [
+
 	super prepareExecutionInDropContext: aToolContext.
 	targetClass := aToolContext lastSelectedClass.
-	targetClass := aToolContext currentMetaLevelOf: targetClass
+	targetClass := aToolContext currentMetaLevelOf: targetClass.
+	refactoringScopes := aToolContext refactoringScopes
 ]
 
 { #category : 'execution' }
