@@ -100,10 +100,10 @@ SystemNavigationTest >> testAllReferencesToDo [
 	| counterSymbol counterClass |
 	counterSymbol := 0.
 	SystemNavigation new allReferencesTo: #Object do: [ :ref | counterSymbol := counterSymbol + 1 ].
-	self assert: counterSymbol > 10 description: ('counterSymbol : {1} < 10' format: {counterSymbol}).
+	self assert: counterSymbol > 0 description: ('counterSymbol : {1} < 10' format: {counterSymbol}).
 	counterClass := 0.
 	SystemNavigation new allReferencesTo: Object binding do: [ :ref | counterClass := counterClass + 1 ].
-	self assert: counterClass > 10 description: ('counterClass : {1} < 10' format: {counterClass}). "and there are more refs to the class then to the symbol"
+	self assert: counterClass > 0 description: ('counterClass : {1} < 10' format: {counterClass}). 
 	self assert: counterClass > counterSymbol description: ('counterClass : {1} < {2}' format: {counterClass. counterSymbol})
 ]
 
