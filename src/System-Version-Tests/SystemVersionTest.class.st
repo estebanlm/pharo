@@ -4,9 +4,8 @@ SUnit tests for SystemVersion.
 Class {
 	#name : 'SystemVersionTest',
 	#superclass : 'TestCase',
-	#category : 'System-Version-Tests-Image',
-	#package : 'System-Version-Tests',
-	#tag : 'Image'
+	#category : 'System-Version-Tests',
+	#package : 'System-Version-Tests'
 }
 
 { #category : 'utilities' }
