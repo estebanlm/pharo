@@ -76,14 +76,14 @@ TestSuite >> cleanTestSuite: aTestSuite [
 
 { #category : 'running' }
 TestSuite >> debug [
+
 	| result |
-	
 	result := TestResult new.
-	self runWith: [ :test | 
-		[ test debug: result ]
-		ensure: [
-			result dispatchResultsIntoHistory.
-			self testSuiteAnnouncer announce: (TestSuiteEnded result: result) ] ]
+	self runWith: [ :test |
+			[ test debug: result ] ensure: [
+					result dispatchResultsIntoHistory.
+					self testSuiteAnnouncer announce: (TestSuiteEnded result: result) ] ].
+	^ result
 ]
 
 { #category : 'accessing' }
