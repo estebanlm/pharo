@@ -76,6 +76,13 @@ OCMessageNode >> argumentNames [
 ]
 
 { #category : 'accessing' }
+OCMessageNode >> argumentPartStrings [
+
+	self deprecated: 'Use argumentNames instead' transformWith: '`@rcv argumentPartStrings' -> '`@rcv argumentNames'.
+	^ self argumentNames
+]
+
+{ #category : 'accessing' }
 OCMessageNode >> arguments [
 	^arguments ifNil: [#()] ifNotNil: [arguments]
 ]
