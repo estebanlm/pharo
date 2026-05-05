@@ -7,7 +7,8 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'isActive',
-		'context'
+		'context',
+		'process'
 	],
 	#category : 'debugger-CLI',
 	#package : 'debugger-CLI'
@@ -36,10 +37,9 @@ CommandLineDebugger >> executeCommand: aString [
 
 	arguments := subString allButFirst joinUsing: ' '.
 
-	command = 'exit' ifTrue: [ ^ self executeExit ].
-	command = 'print' ifTrue: [ ^ self executePrint: arguments asString ].
-	command = 'step' ifTrue: [ ^ self executeStepInto ].
-	command = 'over' ifTrue: [ ^ self executeStepOver ].
+	command = 'exit' ifTrue: [ ^ self executeExit ]. "command = 'print' ifTrue: [ ^ self executePrint: arguments asString ]."
+	(command = 'step' or: command = 's') ifTrue: [ ^ self executeStepInto ].
+	(command = 'printStack' or: command = 'ps') ifTrue: [ ^ self executePrintStack asString ].
 
 	^ self executeUnknownCommand: command
 ]
@@ -57,46 +57,36 @@ CommandLineDebugger >> executePrint: anExpression [
 	| evaluation |
 	anExpression trim ifEmpty: [ ^ 'Nothing to print' ].
 
-	[
-		evaluation := self hasContext
-			              ifFalse: [ Smalltalk compiler evaluate: anExpression ]
-			              ifTrue: [ context evaluate: anExpression ] ]
+	"[ evaluation := context evaluate: anExpression ]
 		on: Error
-		do: [ :ex | ^ 'Error evaluating: ' , anExpression ].
+		do: [ :ex | ^ 'Error evaluating: ' , anExpression ]."
 
 	^ anExpression , ' : ' , evaluation asString
 ]
 
 { #category : 'execution' }
-CommandLineDebugger >> executeStepInto [
+CommandLineDebugger >> executePrintStack [
 
-	context ifNil: [ ^ 'No active debug session to step into.' ].
+	| results stack |
+	results := context contextStack collect: [ :ctx | ctx asString ].
+	stack := results joinUsing: Character lf.
 
-	context stepInto.
-
-	^ 'Stepped'
+	^ 'Current call stack:' , String lf , stack
 ]
 
 { #category : 'execution' }
-CommandLineDebugger >> executeStepOver [
+CommandLineDebugger >> executeStepInto [
 
-	context ifNil: [ ^ 'No active debug session to step over.' ].
+	process step.
 
-	context stepOver.
-
-	^ 'Stepped over'
+	context := process suspendedContext.
+	^ 'Stepped to: ' , context asString , '(PC: ' , context pc asString , ')'
 ]
 
 { #category : 'execution' }
 CommandLineDebugger >> executeUnknownCommand: aCommand [ 
 
 	^ 'Unknown command: ', aCommand
-]
-
-{ #category : 'initialization' }
-CommandLineDebugger >> hasContext [
-
-	^ context isNotNil
 ]
 
 { #category : 'initialization' }
@@ -108,4 +98,16 @@ CommandLineDebugger >> initialize [
 { #category : 'initialization' }
 CommandLineDebugger >> isActive [
     ^ isActive
+]
+
+{ #category : 'initialization' }
+CommandLineDebugger >> process [
+
+	^ process
+]
+
+{ #category : 'initialization' }
+CommandLineDebugger >> process: aProcess [
+
+	process := aProcess
 ]
