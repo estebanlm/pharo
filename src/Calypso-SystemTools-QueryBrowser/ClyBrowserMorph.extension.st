@@ -71,7 +71,7 @@ ClyBrowserMorph >> browseUppercasedReferencesTo: aSymbol inNameRespolver: anEnvi
 					} ]
 				ifFalse: [ 
 					{
-					  (self spawnQueryBrowserOn: (ClyClassReferencesQuery of: envBinding)).
+					  (Smalltalk tools toolNamed: #messageList) browseReferencesToVariables: {envBinding }.
 					  #SendersWithEnvironment 
 					} ] ].
 ]

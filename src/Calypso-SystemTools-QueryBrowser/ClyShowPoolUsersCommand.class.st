@@ -42,8 +42,7 @@ ClyShowPoolUsersCommand >> defaultMenuItemName [
 { #category : 'execution' }
 ClyShowPoolUsersCommand >> execute [
 
-	browser spawnQueryBrowserOn:
-		(ClySharedPoolReferencesQuery to: classes first)
+	(Smalltalk tools toolNamed: #messageList) browseUsersOfSharedPool: classes first
 ]
 
 { #category : 'execution' }
