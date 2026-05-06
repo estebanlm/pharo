@@ -641,6 +641,13 @@ MessageTally >> method [
 	^method
 ]
 
+{ #category : 'accessing' }
+MessageTally >> originMethod [
+	"Return the compiled method associated to this tally"
+
+	^method
+]
+
 { #category : 'private' }
 MessageTally >> primitives: anInteger [
 
