@@ -247,7 +247,7 @@ OCProgramNodeTest >> testAllStatementsBlockWithTemps [
 	tree := self parserClass parseMethod:
 			'methodName
 				^ [ | tmp | tmp := 88 ] '.
-	self assert: tree allStatements size equals: 3
+	self assert: tree allStatements size equals: 2
 ]
 
 { #category : 'tests' }
@@ -300,7 +300,7 @@ OCProgramNodeTest >> testAllStatementsTemps [
 				| tmp1 tmp2 |
 				tmp1 + tmp2'.
 	stats := tree allStatements.
-	self assert: stats size equals: 3
+	self assert: stats size equals: 1
 ]
 
 { #category : 'tests' }

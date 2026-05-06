@@ -148,15 +148,6 @@ OCMethodNode >> allSequenceNodes [
 ]
 
 { #category : 'accessing' }
-OCMethodNode >> allStatements [
-	"return the statements including variable definition."
-
-	^ (OrderedCollection withAll: self temporaries)
-		  addAll: super allStatements;
-		  yourself
-]
-
-{ #category : 'accessing' }
 OCMethodNode >> argumentNames [
 	^ self arguments collect: [:each | each name] as: Array
 ]
