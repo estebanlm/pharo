@@ -71,7 +71,6 @@ ChangeRecord >> fileIn [
 				compile: self string
 				classified: protocol
 				withStamp: stamp
-				notifying: nil
 				logSource: self shouldLogSource ].
 	type == #doIt ifTrue: [
 			| string |

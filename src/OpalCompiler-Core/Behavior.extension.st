@@ -44,16 +44,6 @@ Behavior >> compile: sourceCode classified: protocol withStamp: changeStamp logS
 ]
 
 { #category : '*OpalCompiler-Core' }
-Behavior >> compile: sourceCode classified: protocol withStamp: changeStamp notifying: requestor logSource: logSource [
-	"Return the selector of the compiled method"
-
-	^ self compile: sourceCode notifying: requestor methodInstaller: (self methodInstaller
-			   logged: logSource;
-			   changeStamp: changeStamp;
-			   protocol: protocol)
-]
-
-{ #category : '*OpalCompiler-Core' }
 Behavior >> compile: selector from: oldClass [
 	"Compile the method associated with selector in the receiver's method dictionary."
 
