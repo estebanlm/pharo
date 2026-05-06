@@ -18,8 +18,12 @@ OCCodeSnippet >> doSemanticAnalysis [
 { #category : '*OpalCompiler-Tests' }
 OCCodeSnippet >> doSemanticAnalysisOnError: aBlock [
 
-	^ [ OpalCompiler new
-		  isScripting: isScripting;
-		  permitFaulty: false;
-		  parse: self source ] on: OCCodeError do: [ :e | aBlock value: e ]
+	^ [
+		  OpalCompiler new
+			  isScripting: isScripting;
+			  permitFaulty: false;
+			  source: self source;
+			  newParse ]
+		  on: OCCompilationError
+		  do: [ :e | aBlock value: e ]
 ]

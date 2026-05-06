@@ -131,7 +131,7 @@ ClassFactoryForTestCase >> deletePackages [
 { #category : 'accessing' }
 ClassFactoryForTestCase >> environment [
 
-	^ environment ifNil: [ self class environment ]
+	^ environment ifNil: [ self error: 'Cannot build test class without a test environment' ]
 ]
 
 { #category : 'accessing' }
@@ -254,7 +254,6 @@ ClassFactoryForTestCase >> silentlyCompile: aString in: aBehavior protocol: anot
 			  compile: aString
 			  classified: anotherString
 			  withStamp: DateAndTime now
-			  notifying: nil
 			  logSource: aBoolean ]
 ]
 

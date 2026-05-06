@@ -37,10 +37,9 @@ ContextDebuggingInfoTest >> testScopeOptimizedBlock [
 	get the corresponding scope of the optimized block"
 
 	| astScope method |
-
-	method := Smalltalk compiler
-							  class: Object;
-							  compile:  'test true ifTrue: [ ^ thisContext astScope ]'.
+	method := Object compiler
+		          source: 'test true ifTrue: [ ^ thisContext astScope ]';
+		          compileOrFail.
 	astScope := method valueWithReceiver: nil.
 
 	self assert: astScope class equals: OCOptimizedBlockScope
@@ -68,10 +67,9 @@ ContextDebuggingInfoTest >> testSourceNodeOptimizedBlock [
 	get the corresponding ASTnode of the ASTNode that created thisContext, the method in this case"
 
 	| sourceNode method |
-
-	method := Smalltalk compiler
-							  class: Object;
-							  compile:  'test 1 to: 1 do: [ :i | ^ thisContext sourceNode ]'.
+	method := Object compiler
+		          source: 'test 1 to: 1 do: [ :i | ^ thisContext sourceNode ]';
+		          compileOrFail.
 	sourceNode := method valueWithReceiver: nil.
 
 	self assert: sourceNode isMethod

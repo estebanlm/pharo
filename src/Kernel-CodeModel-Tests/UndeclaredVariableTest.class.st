@@ -17,7 +17,7 @@ UndeclaredVariableTest >> compile: source in: class [
 		            source: source;
 		            permitUndeclared: true;
 		            permitFaulty: false.
-	method := compiler compile.
+	method := compiler compileOrFail.
 	class methodInstaller install: method into: class compiler: compiler.
 	^ method selector
 ]
