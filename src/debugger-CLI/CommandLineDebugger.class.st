@@ -37,8 +37,10 @@ CommandLineDebugger >> executeCommand: aString [
 
 	arguments := subString allButFirst joinUsing: ' '.
 
+	command = 'help' ifTrue: [ ^ self printHelp ].
 	command = 'exit' ifTrue: [ ^ self executeExit ]. "command = 'print' ifTrue: [ ^ self executePrint: arguments asString ]."
 	(command = 'step' or: command = 's') ifTrue: [ ^ self executeStepInto ].
+	(command = 'over' or: command = 'o') ifTrue: [ ^ self executeStepOver ].
 	(command = 'printStack' or: command = 'ps') ifTrue: [ ^ self executePrintStack ].
 
 	^ self executeUnknownCommand: command
@@ -78,16 +80,44 @@ CommandLineDebugger >> executePrintStack [
 { #category : 'execution' }
 CommandLineDebugger >> executeStepInto [
 
-	process step.
+	[ process step ]
+		on: Error
+		do: [ :ex |
+				process isTerminated ifTrue: [ ^ self finishedDebugging ].
+				ex pass ].
+	context := process suspendedContext.
+
+	context ifNil: [ ^ self finishedDebugging ].
+
+	^ 'Stepped to: ' , context printString , '(PC: ' , context pc printString , ')'
+]
+
+{ #category : 'execution' }
+CommandLineDebugger >> executeStepOver [
+
+	[ process completeStep: context ]
+		on: Error
+		do: [ :ex |
+				process isTerminated ifTrue: [ ^ self finishedDebugging ].
+				ex pass ].
 
 	context := process suspendedContext.
-	^ 'Stepped to: ' , context printString , '(PC: ' , context pc printString , ')'
+	context ifNil: [ ^ self finishedDebugging ].
+
+	^ 'Stepped OVER to: ' , context printString , ' (PC: ' , context pc asString , ')'
 ]
 
 { #category : 'execution' }
 CommandLineDebugger >> executeUnknownCommand: aCommand [ 
 
 	^ 'Unknown command: ', aCommand
+]
+
+{ #category : 'execution' }
+CommandLineDebugger >> finishedDebugging [
+
+	isActive := false.
+	^ 'Execution finished. The program has ended.'
 ]
 
 { #category : 'initialization' }
@@ -99,6 +129,18 @@ CommandLineDebugger >> initialize [
 { #category : 'initialization' }
 CommandLineDebugger >> isActive [
     ^ isActive
+]
+
+{ #category : 'execution' }
+CommandLineDebugger >> printHelp [
+
+	^ '========== Available commands ==========
+	  step (or s) : execute next step
+	  over (or o) : execute step over
+	  printStack (or ps) : print the current Stack
+	  exit : kills the debugger'
+	
+
 ]
 
 { #category : 'initialization' }
