@@ -31,9 +31,9 @@ RePushDownMethodInSomeClassesDriver class >> driverName [
 { #category : 'execution' }
 RePushDownMethodInSomeClassesDriver >> gatherUserInput [
 
-	classes := self selectClasses.
+	self selectClasses.
 	classes ifNil: [ ^ false ].
-	refactoring classes: classes.
+	refactoring classes: (classes collect: [ :each | each name ]).
 	^ true
 ]
 
@@ -58,15 +58,15 @@ RePushDownMethodInSomeClassesDriver >> model: aRBNamespace scopes: refactoringSc
 
 { #category : 'execution' }
 RePushDownMethodInSomeClassesDriver >> selectClasses [
+
 	| dialog |
-	
 	dialog := (StVariablesSelectionPresenter newApplication: self application)
-		label: 'Push down in classes: '
-			withItems:(class subclasses sort: #name ascending) asOrderedCollection
-			selecting: class subclasses;
-		openDialog.
-	
-	dialog isOk ifFalse: [ ^ nil ].
-	
-	^ dialog selectedItems collect: [ :each | each name ]
+		          title: 'Push down in some classes'
+		          label: 'Push down in classes: '
+		          withItems: (class subclasses sort: #name ascending) asOrderedCollection
+		          selecting: class subclasses asOrderedCollection
+		          acceptBlock: [ :selectedClasses | classes := selectedClasses ];
+		          openModal.
+	dialog isOk ifTrue: [ ^ self ].
+	classes := nil
 ]
