@@ -6,6 +6,10 @@ Class {
 	#tag : 'Core'
 }
 
+{ #category : 'as yet unclassified' }
+RecompileTest >> foo [ | c | c := 43
+]
+
 { #category : 'tests' }
 RecompileTest >> testRecompileDoIt [
 

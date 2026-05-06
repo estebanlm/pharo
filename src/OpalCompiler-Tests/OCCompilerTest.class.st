@@ -186,9 +186,8 @@ OCCompilerTest >> testInstanceVariableShadowing [
 OCCompilerTest >> testNegativeZero [
 	self
 		assert:
-			(OpalCompiler new
-				source: '-0.0';
-				evaluate) hex
+			(OpalEvaluator new
+				evaluate: '-0.0') hex
 		equals: Float negativeZero hex
 ]
 
@@ -217,15 +216,14 @@ OCCompilerTest >> testPseudoVariableShadowing [
 
 { #category : 'literals' }
 OCCompilerTest >> testScaledDecimalLiterals [
-	"Equal ScaledDecimal with different scales should use different slots
-	This is related to http://bugs.squeak.org/view.php?id=6797"
+	"Equal ScaledDecimal with different scales should use different slots"
 
 	"This correctly works when evaluated separately"
 
-	self deny: (Smalltalk compiler evaluate: '0.5s1') scale equals: (Smalltalk compiler evaluate: '0.5s2') scale.
+	self deny: (OpalEvaluator new evaluate: '0.5s1') scale equals: (OpalEvaluator new evaluate: '0.5s2') scale.
 
 	"But not when evaluated together if literal reduction is too agressive"
-	self deny: (Smalltalk compiler evaluate: '0.5s1 scale =  0.5s2 scale')
+	self deny: (OpalEvaluator new evaluate: '0.5s1 scale =  0.5s2 scale')
 ]
 
 { #category : 'tests - shadowing' }
@@ -256,16 +254,16 @@ OCCompilerTest >> testUndefinedVariable [
 	Undeclared removeKey: #undefinedName123 ifAbsent: [ ].
 	self
 		assert: ( [ {
-			OpalCompiler new
+			OpalEvaluator new
 				permitFaulty: true;
 				evaluate: 'undefinedName123'.
-			OpalCompiler new
+			OpalEvaluator new
 				permitFaulty: true;
 				evaluate: 'undefinedName123 := 1'.
-			OpalCompiler new
+			OpalEvaluator new
 				permitFaulty: true;
 				evaluate: 'undefinedName123 := 2. undefinedName123'.
-			OpalCompiler new
+			OpalEvaluator new
 				permitFaulty: true;
 				evaluate: 'undefinedName123' }  ] on: UndeclaredVariableRead , UndeclaredVariableWrite do: [ :e | e resume: e class ] )
 		equals: { UndeclaredVariableRead. UndeclaredVariableWrite. UndeclaredVariableRead. UndeclaredVariableRead }.

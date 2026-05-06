@@ -53,6 +53,8 @@ OpalEvaluator >> evaluate: aString [
 	compiler logged: logged.
 	compiler bindings: bindings.
 	
+	receiver ifNotNil: [ 
+		compiler receiver: receiver ].
 	context ifNotNil: [
 		compiler context: context ].
 	

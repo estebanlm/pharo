@@ -13,7 +13,7 @@ Class {
 RePackageManifestShouldBePackagedInManifestTagRuleTest >> setUp [
 
 	super setUp.
-	classfactory := ClassFactoryForTestCase new.
+	classfactory := ClassFactoryForTestCase environment: SystemEnvironment new.
 ]
 
 { #category : 'running' }
