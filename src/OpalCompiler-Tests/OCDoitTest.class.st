@@ -52,7 +52,9 @@ OCDoitTest >> testDoItContextReadIvar [
 	"we can read this ivar from a doit when executing against thisContext"
 	ivarForTesting := #someValue.
 
-	method := thisContext compiler compile: 'ivarForTesting'.
+	method := thisContext compiler
+		          source: 'ivarForTesting';
+		          compileOrFail.
 	value := method valueWithReceiver: self.
 	self assert: value equals: #someValue
 ]
@@ -62,14 +64,14 @@ OCDoitTest >> testDoItContextReadIvarSubclass [
 
 	| ctx value method |
 	"Get a method compiled for a base class"
-	method := Object compiler compile: 'foo ^thisContext'.
+	method := Object compiler source: 'foo ^thisContext'; compileOrFail.
 	ctx := self executeMethod: method.
 
 	ivarForTesting := #someValue.
-	value := ctx compiler evaluate: 'ivarForTesting'.
+	value := OpalEvaluator new context: ctx; evaluate: 'ivarForTesting'.
 	self assert: value equals: #someValue.
 
-	value := ctx compiler evaluate: 'ivarForTesting := #someOtherValue'.
+	value := OpalEvaluator new context: ctx; evaluate: 'ivarForTesting := #someOtherValue'.
 	self assert: ivarForTesting equals: #someOtherValue
 ]
 
@@ -79,7 +81,7 @@ OCDoitTest >> testDoItContextReadTemp [
 	"we can read this temp from a doit when executing against thisContext"
 	tempForTesting := #someValue.
 
-	value := thisContext compiler evaluate: 'tempForTesting'.
+	value := OpalEvaluator new context: thisContext; evaluate:  'tempForTesting'.
 
 	self assert: value equals: #someValue
 ]
@@ -91,7 +93,7 @@ OCDoitTest >> testDoItContextReadThisContext [
 	"We can read read thisContext in a DoIt and it is the context that we evaluate against, not the context of the doit.
 	 We shadow the ThisContextVarable using a DoItVariable created by PseudoVariable>>#asDoItVariableFrom:"
 
-	value := thisContext compiler evaluate: 'thisContext'.
+	value := OpalEvaluator new context: thisContext; evaluate: 'thisContext'.
 	
 	"if we would not shadow, we would read the context of the DoIt"
 	self deny: value selector identicalTo: #DoIt.
@@ -105,7 +107,7 @@ OCDoitTest >> testDoItExtraBindings [
 	"We can use extra bindings in a DoIt"
 
 	| result |
-	result := OpalCompiler new
+	result := OpalEvaluator new
 		bindings: {  #binding -> 1};
 		evaluate: 'binding'.
 	self assert: result equals: 1
@@ -114,17 +116,19 @@ OCDoitTest >> testDoItExtraBindings [
 { #category : 'tests' }
 OCDoitTest >> testDoItHalt [
 
-	self should: [OpalCompiler new
-			evaluate: 'self halt'] raise: Halt
+	self should: [ OpalEvaluator new evaluate: 'self halt' ] raise: Halt
 ]
 
 { #category : 'tests' }
 OCDoitTest >> testDoItHaltBinding [
 	"We can evaluate with a halt and extra bindings"
 
-	self should: [OpalCompiler new
-			bindings: {#binding -> 1 };
-			evaluate: 'self halt'] raise: Halt
+	self
+		should: [
+				OpalEvaluator new
+					bindings: { (#binding -> 1) };
+					evaluate: 'self halt' ]
+		raise: Halt
 ]
 
 { #category : 'tests' }
@@ -142,8 +146,8 @@ OCDoitTest >> testDoItRequestorEvalError [
 OCDoitTest >> testDoItRequestorOptimized [
 
 	| value |
-	"Check optimzied to:do:, we call lookupVar: on the synthesized limit var, see canAddBindingOf:"
-	value := OpalCompiler new
+	"Check optimized to:do:, we call lookupVar: on the synthesized limit var, see canAddBindingOf:"
+	value := OpalEvaluator new
 		         bindings: { (self bindingOf: #requestorVarForTesting) };
 		         evaluate: '
 							| sum |
@@ -157,10 +161,10 @@ OCDoitTest >> testDoItRequestorOptimized [
 { #category : 'tests' }
 OCDoitTest >> testDoItRequestorReadRequestorVar [
 
-	| value  |
-	value := OpalCompiler new
-		          bindings: { (self bindingOf: #requestorVarForTesting) };
-		          evaluate: 'requestorVarForTesting'.
+	| value |
+	value := OpalEvaluator new
+		         bindings: { (self bindingOf: #requestorVarForTesting) };
+		         evaluate: 'requestorVarForTesting'.
 
 	self assert: value equals: 5
 ]
@@ -182,8 +186,9 @@ OCDoitTest >> testDoitContextCheckClass [
 	"if we create a parse tree for a doit in a context, the class should be correctly set"
 
 	| ast method |
-	method := thisContext compiler compile: 'self'.
-	ast := method ast.
-	"we expect that the class is set to the class of the context, which is self class"
+	method := thisContext compiler
+		          source: 'self';
+		          compileOrFail.
+	ast := method ast. "we expect that the class is set to the class of the context, which is self class"
 	self assert: ast methodClass equals: self class
 ]

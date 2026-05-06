@@ -6,7 +6,8 @@ Class {
 		'permitFaultyEvaluation',
 		'compiler',
 		'logged',
-		'bindings'
+		'bindings',
+		'context'
 	],
 	#category : 'OpalCompiler-Core-FrontEnd',
 	#package : 'OpalCompiler-Core',
@@ -25,6 +26,12 @@ OpalEvaluator >> bindings: aCollection [
 	bindings := aCollection
 ]
 
+{ #category : 'adding' }
+OpalEvaluator >> context: aContext [
+
+	context := aContext
+]
+
 { #category : 'accessing' }
 OpalEvaluator >> evaluate: aString [
 
@@ -35,6 +42,9 @@ OpalEvaluator >> evaluate: aString [
 	compiler logged: logged.
 	compiler bindings: bindings.
 	
+	context ifNotNil: [
+		compiler context: context ].
+	
 	compilationResult := compiler doCompile.
 
 	compilationResult isError ifTrue: [
@@ -44,7 +54,9 @@ OpalEvaluator >> evaluate: aString [
 		^ nil
 	].
 
-	^ nil withArgs: #(  ) executeMethod: compilationResult compiledMethod
+	"Evaluation happens on the dynamic context if any.
+	This means that `self` is bound to the context receiver"
+	^ (context ifNotNil: [ context receiver ]) withArgs: #(  ) executeMethod: compilationResult compiledMethod
 ]
 
 { #category : 'accessing' }
