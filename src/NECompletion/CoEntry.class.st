@@ -6,6 +6,8 @@ Each of my subclass will represent a specific kind of entity. For example a glob
 Class {
 	#name : 'CoEntry',
 	#superclass : 'Object',
+	#traits : 'TProperties',
+	#classTraits : 'TProperties classTrait',
 	#instVars : [
 		'contents',
 		'node',

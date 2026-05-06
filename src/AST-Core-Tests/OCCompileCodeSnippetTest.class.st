@@ -7,53 +7,51 @@ Class {
 }
 
 { #category : 'helpers' }
-OCCompileCodeSnippetTest >> compileSnippet: anOCCodeSnippet [ 
+OCCompileCodeSnippetTest >> compileSnippet: anOCCodeSnippet [
 
-	^ [ OpalCompiler new
-		  permitFaulty: true;
-		  isScripting: anOCCodeSnippet isScripting;
-		  compile: anOCCodeSnippet source ]
-	on: OCCodeError do: [ :e |
-		"Compilation should success, because its the *faulty* mode".
-		"If this is expected, then just return nil"
-		anOCCodeSnippet ifSkip: #compile then: [^ nil ].
-		"Otherwise, pass the error"
-		e pass ]
+	^ [
+		  OpalCompiler new
+			  permitFaulty: true;
+			  isScripting: anOCCodeSnippet isScripting;
+			  source: anOCCodeSnippet source;
+			  compileOrFail ]
+		  on: OCCompilationError
+		  do: [ :e | "Compilation should success, because its the *faulty* mode"
+				  anOCCodeSnippet ifSkip: #compile then: [ ^ nil ]. "If this is expected, then just return nil" "Otherwise, pass the error"
+				  e pass ]
 ]
 
 { #category : 'helpers' }
 OCCompileCodeSnippetTest >> compileSnippet: aSnippet onError: errorBlock [
 
 	^ [
-	  OpalCompiler new
-		  isScripting: aSnippet isScripting;
-		  compile: aSnippet source ]
-		  on: OCCodeError
+		  OpalCompiler new
+			  isScripting: aSnippet isScripting;
+			  source: aSnippet source;
+			  compileOrFail ]
+		  on: OCCompilationError
 		  do: [ :e | errorBlock cull: e ]
 ]
 
 { #category : 'tests' }
 OCCompileCodeSnippetTest >> testCompileFailBlock [
 
-	| method error |
-	error := nil.
-	method := OpalCompiler new
-		          isScripting: snippet isScripting;
-		          failBlock: [ :e |
-			          self assert: (snippet hasNotice: e).
-			          self assert: error isNil. "single invocation"
-			          error := e.
-			          #tag ];
-		          compile: snippet source.
+	| compilationResult |
+	compilationResult := OpalCompiler new
+		                     isScripting: snippet isScripting;
+		                     source: snippet source;
+		                     doCompile.
+
+	compilationResult isError ifTrue: [ 
+		compilationResult ast allNotices do: [ :n | 
+			self assert: (snippet hasNotice: n) ] ].
 
 	snippet isFaulty
-		ifTrue: [
-			self assert: error isNotNil.
-			self assert: method equals: #tag ]
+		ifTrue: [ self assert: compilationResult isError ]
 		ifFalse: [
-			self assert: error isNil.
-			self assert: method isCompiledMethod.
-			self testExecute: method ]
+				self deny: compilationResult isError.
+				self assert: compilationResult compiledMethod isCompiledMethod.
+				self testExecute: compilationResult compiledMethod ]
 ]
 
 { #category : 'tests' }
@@ -83,87 +81,63 @@ OCCompileCodeSnippetTest >> testCompileFaulty [
 { #category : 'tests' }
 OCCompileCodeSnippetTest >> testCompileOnError [
 
-	| method error |
-	error := nil.
+	| method |
 	method := self compileSnippet: snippet onError: [ :e |
-		          self assert:
-			          (snippet hasNotice: e messageText at: e position).
-		          self assert: error isNil. "single invocation"
-		          error := e ].
+		e compilationResult ast allNotices do: [ :n |
+			self assert: (snippet hasNotice: n).
+		].
+		^ self
+	].
+
 	snippet isFaulty
-		ifTrue: [ self assert: error isNotNil ]
+		ifTrue: [ self fail ]
 		ifFalse: [
-			self assert: error isNil.
-			self assert: method isCompiledMethod.
-			self testExecute: method ]
-]
-
-{ #category : 'tests' }
-OCCompileCodeSnippetTest >> testCompileOnErrorResume [
-
-	| method error |
-	error := nil.
-	method := self compileSnippet: snippet onError: [ :e |
-		          self assert:
-			          (snippet hasNotice: e messageText at: e position).
-		          error := e.
-		          e resume ].
-	self assert: snippet isFaulty equals: error isNotNil.
-	self assert: method isCompiledMethod.
-	self testExecute: method
+				self assert: method isCompiledMethod.
+				self testExecute: method ]
 ]
 
 { #category : 'tests' }
 OCCompileCodeSnippetTest >> testCompileUndeclaredFaultyFailBlock [
 
-	| method error |
-	error := nil.
-	method := OpalCompiler new
-		          isScripting: snippet isScripting;
-		          permitUndeclared: true;
-		          failBlock: [ :e |
-			          self assert: (snippet hasNotice: e).
-			          self assert: error isNil. "single invocation"
-			          error := e.
-			          #tag ];
-		          compile: snippet source.
+	| compilationResult |
+	compilationResult := OpalCompiler new
+		                     isScripting: snippet isScripting;
+		                     permitUndeclared: true;
+		                     source: snippet source;
+		                     doCompile.
+	compilationResult isError ifTrue: [
+		compilationResult ast allNotices do: [ :n |
+			self assert: (snippet hasNotice: n)
+	]].
 
 	snippet isFaultyMinusUndeclared
-		ifTrue: [
-			self assert: error isNotNil.
-			self assert: method equals: #tag ]
+		ifTrue: [ self assert: compilationResult isError ]
 		ifFalse: [
-			self assert: error isNil.
-			self assert: method isCompiledMethod.
-			self testExecute: method ]
+				self deny: compilationResult isError.
+				self assert: compilationResult compiledMethod isCompiledMethod.
+				self testExecute: compilationResult compiledMethod ]
 ]
 
 { #category : 'tests' }
 OCCompileCodeSnippetTest >> testCompileWithRequestor [
 
-	| requestor method |
-	requestor := OCMockRequestor new.
-	requestor interactive: false.
-	requestor isScripting: nil.
-	requestor text: nil.
-	method := OpalCompiler new
-		          isScripting: snippet isScripting;
-		          requestor: requestor;
-		          failBlock: [ "When a requestion is set, a failBlock MUST also be set or compilation might crash internally"
-			          | n |
-			          self assert: requestor notifyList size equals: 1.
-			          n := requestor notifyList first.
-			          self assert:
-					          (snippet
-						           hasNotice: (n first allButLast: 3)
-						           at: n second).
-			          self assert: snippet isFaulty.
-			          ^ self ];
-		          compile: snippet source.
+	| method compilationResult |
+	compilationResult := OpalCompiler new
+		                     isScripting: snippet isScripting;
+		                     source: snippet source;
+		                     doCompile.
+	compilationResult isError ifTrue: [
+			self assert: snippet isFaulty.
+			compilationResult ast allNotices do: [ :n |
+				self assert: (snippet hasNotice: n messageText at: n position) ].
+		"We verified the error case, exit"
+		^ self
+	].
 
-	"Still alive? (failBlock never called)"
+	"Now verify the success case"
 	self deny: snippet isFaulty.
-	self assert: requestor notifyList isEmpty.
+	
+	method := compilationResult compiledMethod.
 	self assert: method isCompiledMethod.
 	self testExecute: method
 ]
@@ -226,7 +200,7 @@ OCCompileCodeSnippetTest >> testDump [
 	| ast dump ast2 dump2 |
 	ast := snippet parse.
 	dump := ast dump.
-	ast2 := OpalCompiler new evaluate: dump.
+	ast2 := OpalEvaluator new evaluate: dump.
 	self assert: ast2 equals: ast.
 	dump2 := ast2 dump.
 	self assert: dump2 equals: dump

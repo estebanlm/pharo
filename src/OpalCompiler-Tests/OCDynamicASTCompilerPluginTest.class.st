@@ -20,7 +20,7 @@ OCDynamicASTCompilerPluginTest >> testCreateAndUseDynamicCompilerPlugin [
 		          andPriority: 0.
 
 	"Use plugin with compiler"
-	result := Object compiler
+	result := OpalEvaluator new
 		          addPlugin: plugin;
 		          evaluate: '42'.
 	self assert: result equals: 'meaning of life'

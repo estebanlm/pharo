@@ -82,7 +82,6 @@ TimeProfiler class >> onBlock: block [
 	inst := self new.
 	result := inst runBlock: block.
 	inst open.
-	inst showResult: result.
 	^ result
 ]
 
@@ -132,27 +131,6 @@ TimeProfiler >> blockCode [
 	^ block
 		ifNil: ['']
 		ifNotNil: [ blockSource ifNil: [ blockSource := block asString ]]
-]
-
-{ #category : 'actions' }
-TimeProfiler >> blockCode: aString notifying: aRequestor [
-	"Treat the current selection as an expression; evaluate and tally it."
-	|  compiledMethod |
-	aString ifNil: [^ self].
-	blockSource := aString.
-	compiledMethod := Smalltalk compiler
-		source: ('self runBlock: [', aString, ']');
-		context: self doItContext;
-		requestor: self;
-		failBlock: [^self];
-		compile.
-	self showResult: ( compiledMethod valueWithReceiver: self).
-	self changed: #blockCode.
-	self changed: #summaryText.
-	self changed: #fullReport.
-	self selection: nil.
-	self updateList.
-	self startState
 ]
 
 { #category : 'actions' }

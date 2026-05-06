@@ -12,7 +12,7 @@ Class {
 SelfEvaluatingObjectTest >> assertCode: code print: aString [
 
 	self
-		assert: (self class compiler evaluate: code) printString
+		assert: (OpalEvaluator new evaluate: code) printString
 		equals: aString
 ]
 

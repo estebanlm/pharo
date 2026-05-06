@@ -95,7 +95,7 @@ OCMethodNode >> generateMethod [
 	by OpalCompiler in a full compilation chain might be missing.
 	So use this method if you know what you are doing."
 
-	^ self compiler compile
+	^ self compiler compileOrFail
 ]
 
 { #category : '*OpalCompiler-Core' }

@@ -46,13 +46,14 @@ MetacelloRepositoryCommonTest >> project [
 
 { #category : 'running' }
 MetacelloRepositoryCommonTest >> setUp [
-    super setUp.
-    testingEnvironment
-        at: #'Metacello_Platform_Test_GlobalDictionary'
-        put:
-            (MCDictionaryRepository new
-                description: 'dictionary://Metacello_Platform_Test_GlobalDictionary';
-                yourself)
+
+	super setUp.
+	
+	"These tests are written to work on the global environment"
+	testingEnvironment := Smalltalk globals.
+	testingEnvironment at: #Metacello_Platform_Test_GlobalDictionary put: (MCDictionaryRepository new
+			 description: 'dictionary://Metacello_Platform_Test_GlobalDictionary';
+			 yourself)
 ]
 
 { #category : 'running' }

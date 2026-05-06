@@ -120,6 +120,8 @@ RBBrowserEnvironmentTest >> protocolsFor: aBrowserEnvironment [
 { #category : 'running' }
 RBBrowserEnvironmentTest >> setUp [
 	super setUp.
+	"These tests are written to work on the global environment"
+	testingEnvironment := Smalltalk globals.
 	universalEnvironment := RBBrowserEnvironment new
 ]
 

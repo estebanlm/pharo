@@ -35,12 +35,12 @@ Class {
 		'compilationContextClass',
 		'permitFaulty',
 		'permitUndeclared',
-		'failBlock',
 		'logged',
 		'changeStamp',
 		'protocol',
 		'requestor',
-		'priorMethod'
+		'priorMethod',
+		'compilationResult'
 	],
 	#classInstVars : [
 		'overlayEnvironment'
@@ -263,69 +263,6 @@ OpalCompiler >> changeStamp: aString [
 	changeStamp := aString
 ]
 
-{ #category : 'private' }
-OpalCompiler >> checkNotice: aNotice [
-	"This method handles all the logic of error handling.
-	
-	Error handing in the compiler is only performed at one place, after the parsing/semantic analysis/other parse plugins.
-	Each ASTNotice in the AST is then checked with this method.
-
-	There is only three outcomes:
-	* If this method returns true (OK), then the work of the compiler can continue.
-	  Next notice is then processed.
-	  Or, if this that was the last notice, compilation and cie can be performed.
-	* If this method returns false (not OK), then the compilation is cancelled.
-	  The failBlock will be invoked.
-	* If this method returns nil (stop checking), then skip the rest of the notice checks.
-	  This one is used in case of reparation, where a new (checked) AST is produced.
-
-	Errors that may happen later in the backend are consireded internal errors and should not occur (bugs).
-
-	This method is a little long because it handles the requestor (quirks) mode.
-	"
-
-	aNotice isWarning ifTrue: [ ^ true ].
-	(aNotice isUndeclaredNotice and: [ self permitUndeclared ]) ifTrue: [
-		OCUndeclaredVariableWarning new
-			notice: aNotice;
-			signal.
-		^ true ].
-
-	self requestor ifNotNil: [
-		"A requestor is available. We are in quirks mode and are expected to do UI things."
-		"Reparation menu in quirks mode:
-		* require a requestor (because quirks mode, and also some reparations expect a requestor)
-		* require interactive mode (because GUI)
-		* require method definition becase some reparation assume it's a method body"
-		self isInteractive ifTrue: [
-			aNotice reparator ifNotNil: [ :reparator |
-				| res |
-				res := reparator
-					requestor: requestor;
-					openMenu.
-				res ifNil: [ ^ true "reparation unneded, let AST as is" ].
-				res ifFalse: [ ^ false "operation cancelled, fail" ].
-				self parse: requestor text. "some reparation was done, reparse"
-				^ nil ] ].
-
-		"Quirks mode: otherwise, push the error message to the requestor"
-		requestor
-			notify: aNotice messageText , ' ->'
-			at: aNotice position
-			in: aNotice node source.
-		
-		"Quirks mode: Then leave"
-		^ false ].
-
-	"If a failBlock is provided in non-requestor mode,
-	we honor it and do not signal exceptions"
-	self failBlock ifNotNil: [ ^ false ].
-
-	aNotice signalError.
-
-	^ true "Error was resumed, so we consider it's OK to continue"
-]
-
 { #category : 'accessing' }
 OpalCompiler >> class: aClass [
 	self compilationContext class: aClass
@@ -351,31 +288,27 @@ OpalCompiler >> compilationContextClass: aClass [
 	compilationContextClass := aClass
 ]
 
-{ #category : 'public access' }
-OpalCompiler >> compile [
+{ #category : 'accessing' }
+OpalCompiler >> compilationResult [
 
-	| result |
-	"Policy: compiling is non-faulty by default"
-	self permitFaulty ifNil: [ self permitFaulty: false ].
+	^ compilationResult
+]
 
-	ast ifNil: [
-		result := self parse.
-		ast ifNil: [ "some failBlock" ^ result ] ].
+{ #category : 'accessing' }
+OpalCompiler >> compilationResult: anObject [
 
-	self callPlugins.
-	(compilationContext isSemanticAnalysisNeeded or: [ ast scope isNil ]) 
-		ifTrue: [ 
-			self doSemanticAnalysis ].
-
-	^ self generateMethod
+	compilationResult := anObject
 ]
 
 { #category : 'public access' }
-OpalCompiler >> compile: textOrString [
+OpalCompiler >> compileOrFail [
 
-	^self
-		source: textOrString;
-		compile
+	| result |
+	result := self doCompile.
+	result isError ifTrue: [ 
+		^ result signalError ].
+	
+	^ result compiledMethod
 ]
 
 { #category : 'accessing' }
@@ -416,6 +349,43 @@ OpalCompiler >> decompileMethod: aCompiledMethod [
 		ifAbsent: [ OCMethodNode errorMethodNode: aCompiledMethod selector errorMessage: 'No decompiler available'. ]
 ]
 
+{ #category : 'public access' }
+OpalCompiler >> doCompile [
+
+	| parseResult |
+	parseResult := self doParse.	
+	parseResult isError ifTrue: [ ^ parseResult ].
+
+	self callPlugins.
+	(compilationContext isSemanticAnalysisNeeded or: [ ast scope isNil ]) 
+		ifTrue: [ 
+			self doSemanticAnalysis ].
+
+	^ OCSuccessCompilationResult new
+		compiledMethod: self generateMethod;
+		yourself
+]
+
+{ #category : 'public access' }
+OpalCompiler >> doParse [
+	"Policy: compiling is non-faulty by default"
+
+	self permitFaulty ifNil: [ self permitFaulty: false ].
+
+	ast ifNil: [
+		self parse.
+		ast ifNil: [ ^ OCErrorCompilationResult new yourself ] ].
+
+	(ast allNotices anySatisfy: [ :e | e isErrorOn: self ]) ifTrue: [
+			^ OCErrorCompilationResult new
+				  ast: ast;
+				  yourself ].
+
+	^ OCSuccessCompilationResult new
+		  compiledMethod: ast;
+		  yourself
+]
+
 { #category : 'private' }
 OpalCompiler >> doSemanticAnalysis [
 
@@ -445,45 +415,6 @@ OpalCompiler >> encoderClass: aClass [
 OpalCompiler >> environment: anEnvironment [
 	"Set the environment (dictionary of class, traits and globals) used during the compilation"
 	self compilationContext environment: anEnvironment
-]
-
-{ #category : 'public access' }
-OpalCompiler >> evaluate [
-	"Compiles the sourceStream into a parse tree, then generates code into
-	 a method. If aContext is not nil, the text can refer to temporaries in that
-	 context (the Debugger uses this). If aRequestor is not nil, then it will receive
-	 a notify:at: message before the attempt to evaluate is aborted. Finally, the
-	 compiled method is invoked from here via withArgs:executeMethod:, hence
-	 the system no longer creates Doit method litter on errors."
-
-	| value doItMethod |
-	self isScripting: true.
-	doItMethod := self compile.
-	ast ifNil: [ ^ doItMethod ].
-	value := self semanticScope evaluateDoIt: doItMethod.
-
-	self logged == true ifTrue: [ self semanticScope announceDoItEvaluation: source by: self class codeSupportAnnouncer ].
-	^ value
-]
-
-{ #category : 'public access' }
-OpalCompiler >> evaluate: textOrString [
-
-	^self
-		source: textOrString;
-		evaluate
-]
-
-{ #category : 'accessing' }
-OpalCompiler >> failBlock [
-
-	^ failBlock
-]
-
-{ #category : 'accessing' }
-OpalCompiler >> failBlock: aBlock [
-
-	failBlock := aBlock
 ]
 
 { #category : 'public access' }
@@ -545,17 +476,17 @@ OpalCompiler >> generateMethod [
 OpalCompiler >> install [
 	"Compile and install a method in a class"
 
-	| method |
+	| method installer |
 	
-	method := self compile.
-	method ifNil: [ ^ nil ].
+	method := self compileOrFail.
 
-	(self methodClass methodInstaller
+	installer := self methodClass methodInstaller
 		priorMethod: self priorMethod;
 		logged: self logged;
 		changeStamp: changeStamp;
-		protocol: protocol)
-			install: method into: self methodClass compiler: self.
+		protocol: protocol.
+	self methodClass isExtension ifTrue: [ installer shouldRecompileDependencies: true ].
+	installer install: method into: self methodClass compiler: self.
 	^ method
 ]
 
@@ -564,17 +495,6 @@ OpalCompiler >> install: aSource [
 
 	self source: aSource.
 	^ self install
-]
-
-{ #category : 'testing' }
-OpalCompiler >> isInteractive [
-
-	self requestor ifNil: [ ^ false ].
-	"we asume requestors are interactive, but they can override.
-	this should be simplified "
-	^ (self requestor respondsTo: #interactive)
-		  ifTrue: [ self requestor interactive ]
-		  ifFalse: [ true ]
 ]
 
 { #category : 'accessing' }
@@ -616,6 +536,17 @@ OpalCompiler >> needRequestorScope [
 ]
 
 { #category : 'public access' }
+OpalCompiler >> newParse [
+
+	| result |
+	result := self doParse.
+	result isError ifTrue: [ 
+		^ result signalError ].
+	
+	^ result compiledMethod
+]
+
+{ #category : 'public access' }
 OpalCompiler >> options: anOptionsArray [
 
 	"Compatibility for those options"
@@ -635,20 +566,12 @@ OpalCompiler >> parse [
 
 	parser := self parserClass new.
 	parser initializeParserWith: source.
-	ast := self isScripting ifTrue: [ parser parseDoIt ] ifFalse: [ parser parseMethod ].
+	ast := self isScripting
+		ifTrue: [ parser parseDoIt ]
+		ifFalse: [ parser parseMethod ].
 
 	ast methodNode compilationContext: self compilationContext.
 	self doSemanticAnalysis.
-
-	self permitFaulty ifFalse: [
-		ast allNotices sorted do: [ :n |
-			| check |
-			check := self checkNotice: n.
-			check ifNil: [ ^ ast ].
-			check ifFalse: [
-				ast := nil.
-				^ self failBlock ifNotNil: [ :block | block cull: n ] ifNil: [ nil ].
-				] ] ].
 
 	^ ast
 ]
