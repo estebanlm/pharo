@@ -453,3 +453,10 @@ RGPackage >> traits [
 
 	^self definedTraits, self extendedTraits
 ]
+
+{ #category : 'extensions' }
+RGPackage >> visibleSelectorForSymbol: aString [
+	"Ring does not support scoped selectors"
+
+	^ aString
+]
