@@ -60,6 +60,12 @@ PackageTag >> classes [
 ]
 
 { #category : 'accessing' }
+PackageTag >> classesDo: aBlock [
+
+	^ classes do: aBlock
+]
+
+{ #category : 'accessing' }
 PackageTag >> codeChangeAnnouncer [
 
 	^ self environment codeChangeAnnouncer
