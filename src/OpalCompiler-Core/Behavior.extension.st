@@ -64,7 +64,7 @@ Behavior >> compile: selector from: oldClass [
 		             class: self;
 						 priorMethod: method;
 		             permitFaulty: true;
-		             logged: false.
+		             logged: true.
 
 	newMethod := compiler install.
 	
