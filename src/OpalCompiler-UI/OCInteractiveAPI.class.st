@@ -12,7 +12,7 @@ Class {
 }
 
 { #category : 'compiling' }
-OCInteractiveAPI >> checkNotice: aNotice requestor: aRequestor isInteractive: isInteractive [
+OCInteractiveAPI >> checkNotice: aNotice requestor: aRequestor [
 	"This method handles all the logic of error handling.
 	
 	Error handing in the compiler is only performed at one place, after the parsing/semantic analysis/other parse plugins.
@@ -38,22 +38,8 @@ OCInteractiveAPI >> checkNotice: aNotice requestor: aRequestor isInteractive: is
 				notice: aNotice;
 				signal.
 			^ true ].
-		
-	"A requestor is available. We are in quirks mode and are expected to do UI things." "Reparation menu in quirks mode:
-		* require a requestor (because quirks mode, and also some reparations expect a requestor)
-		* require interactive mode (because GUI)
-		* require method definition becase some reparation assume it's a method body"
-	isInteractive ifTrue: [
-			aNotice reparator ifNotNil: [ :reparator |
-					| res |
-					res := reparator
-						       requestor: aRequestor;
-						       openMenu.
-					res ifNil: [ ^ true "reparation unneded, let AST as is" ].
-					res ifFalse: [ ^ false "operation cancelled, fail" ].
-					compiler parse: aRequestor text. "some reparation was done, reparse"
-					^ nil ] ]. "Quirks mode: otherwise, push the error message to the requestor"
-
+			
+	"Quirks mode: otherwise, push the error message to the requestor"
 	aRequestor notify: aNotice messageText , ' ->' at: aNotice position in: aNotice node source.
 	"Quirks mode: Then leave"
 	^ false
@@ -64,23 +50,20 @@ OCInteractiveAPI >> compile: sourceCode notifying: requestor in: behavior [
 	"Return the selector of the compiled method"
 
 	| compilationResult theCompiler |
-	
-	theCompiler := (self compilerFor: behavior).
-	theCompiler ast ifNil: [ 
-		sourceCode ifEmpty: [ Error signal: 'The source code should not be empty' ].
-		theCompiler source: sourceCode ].
+	theCompiler := self compilerFor: behavior.
+	theCompiler ast ifNil: [
+			sourceCode ifEmpty: [ Error signal: 'The source code should not be empty' ].
+			theCompiler source: sourceCode ].
 
 	compilationResult := theCompiler doCompile.
 
 	compilationResult isError ifTrue: [
 			theCompiler ast allNotices sorted do: [ :n |
-					| check isInteractive |
-					
+					| check |
 					shouldSignalErrors ifTrue: [ n signalError ].
-					
+
 					requestor ifNil: [ n signalError ] ifNotNil: [
-							isInteractive := (requestor respondsTo: #interactive) not or: [ requestor interactive ].
-							check := self checkNotice: n requestor: requestor isInteractive: isInteractive.
+							check := self checkNotice: n requestor: requestor.
 							check ifNil: [ ^ self compile: requestor text asString notifying: requestor in: behavior ].
 							check ifFalse: [ ^ nil ] ] ].
 			^ nil ].

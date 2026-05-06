@@ -8,8 +8,7 @@ Class {
 		'errorMessage',
 		'errorLocation',
 		'errorSource',
-		'text',
-		'interactive'
+		'text'
 	],
 	#category : 'OpalCompiler-Tests-FromOld',
 	#package : 'OpalCompiler-Tests',
@@ -39,12 +38,6 @@ OCCompilerTest >> initializeErrorMessage [
 	errorMessage := nil.
 	errorLocation := nil.
 	errorSource := nil
-]
-
-{ #category : 'accessing' }
-OCCompilerTest >> interactive [
-
-	^ interactive ifNil: [ true ]
 ]
 
 { #category : 'mocking' }
