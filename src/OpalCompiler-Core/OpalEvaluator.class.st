@@ -5,7 +5,8 @@ Class {
 		'failBlock',
 		'permitFaultyEvaluation',
 		'compiler',
-		'logged'
+		'logged',
+		'bindings'
 	],
 	#category : 'OpalCompiler-Core-FrontEnd',
 	#package : 'OpalCompiler-Core',
@@ -19,6 +20,12 @@ OpalEvaluator >> addParsePlugin: anOCDynamicASTCompilerPlugin [
 ]
 
 { #category : 'accessing' }
+OpalEvaluator >> bindings: aCollection [
+
+	bindings := aCollection
+]
+
+{ #category : 'accessing' }
 OpalEvaluator >> evaluate: aString [
 
 	| compilationResult |
@@ -26,6 +33,8 @@ OpalEvaluator >> evaluate: aString [
 	compiler permitFaulty: (permitFaultyEvaluation ifNil: [ false ]).
 	compiler permitUndeclared: compiler permitFaulty.
 	compiler logged: logged.
+	compiler bindings: bindings.
+	
 	compilationResult := compiler doCompile.
 
 	compilationResult isError ifTrue: [
@@ -49,6 +58,7 @@ OpalEvaluator >> initialize [
 
 	super initialize.
 	logged := false.
+	bindings := #().
 	compiler := OpalCompiler new.
 	compiler isScripting: true
 ]

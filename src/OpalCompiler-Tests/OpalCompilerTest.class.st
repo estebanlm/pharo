@@ -9,7 +9,7 @@ Class {
 { #category : 'tests - bindings' }
 OpalCompilerTest >> testArrayBindingsWithUppercaseNameDoOverwriteGlobals [
 	| result |
-	result := Smalltalk compiler
+	result := OpalEvaluator new
 		bindings: {(#UndefinedObject -> Object)};
 		evaluate: 'UndefinedObject class'.
 	self assert: result equals: Object class
@@ -18,7 +18,7 @@ OpalCompilerTest >> testArrayBindingsWithUppercaseNameDoOverwriteGlobals [
 { #category : 'tests - bindings' }
 OpalCompilerTest >> testArrayBindingsWriteGlobals [
 	| result |
-	result := Smalltalk compiler
+	result := OpalEvaluator new
 		 bindings: {(#Object -> Point)};
        evaluate: 'Object := 42'.
 	self assert: result equals: 42
@@ -27,7 +27,7 @@ OpalCompilerTest >> testArrayBindingsWriteGlobals [
 { #category : 'tests - bindings' }
 OpalCompilerTest >> testArrayEvaluateWithBindings [
 	| result |
-	result := Smalltalk compiler
+	result := OpalEvaluator new
 		bindings: {(#a -> 3)};
 		evaluate: '1+a'.
 	self assert: result equals: 4
@@ -36,7 +36,7 @@ OpalCompilerTest >> testArrayEvaluateWithBindings [
 { #category : 'tests - bindings' }
 OpalCompilerTest >> testArrayEvaluateWithBindingsReadGlobal [
 | result |
-	result := Smalltalk compiler
+	result := OpalEvaluator new
 	bindings: {(#a -> 3)};
 	evaluate: 'OrderedCollection'.
 	self assert: result equals: OrderedCollection
@@ -45,7 +45,7 @@ OpalCompilerTest >> testArrayEvaluateWithBindingsReadGlobal [
 { #category : 'tests - bindings' }
 OpalCompilerTest >> testArrayEvaluateWithBindingsWithUppercaseName [
 	| result |
-	result := Smalltalk compiler
+	result := OpalEvaluator new
 		bindings: {(#MyVar -> 3)};
 		evaluate: '1+MyVar'.
 	self assert: result equals: 4
@@ -54,7 +54,7 @@ OpalCompilerTest >> testArrayEvaluateWithBindingsWithUppercaseName [
 { #category : 'tests - bindings' }
 OpalCompilerTest >> testBindingsWithUppercaseNameDoOverwriteGlobals [
 	| result |
-	result := Smalltalk compiler
+	result := OpalEvaluator new
 		bindings: {(#UndefinedObject -> Object)} asDictionary;
 		evaluate: 'UndefinedObject class'.
 	self assert: result equals: Object class
@@ -147,22 +147,22 @@ OpalCompilerTest >> testEvaluateWithBindingsSelfSuperThisContext [
 	| result |
 
 	"via #bindings: we can overwrite even self, super and thisContext"
-	result := Smalltalk compiler
+	result := OpalEvaluator new
 		bindings: {(#self -> 3)} asDictionary;
 		evaluate: '1+self'.
 	self assert: result equals: 4.
 
-	result := Smalltalk compiler
+	result := OpalEvaluator new
 		bindings: {(#super -> 3)} asDictionary;
 		evaluate: '1+super'.
 	self assert: result equals: 4.
 
-	result := Smalltalk compiler
+	result := OpalEvaluator new
 		bindings: {(#thisContext -> 3)} asDictionary;
 		evaluate: '1+thisContext'.
 	self assert: result equals: 4.
 	
-	result := Smalltalk compiler
+	result := OpalEvaluator new
 		bindings: {(#thisProcess -> 3)} asDictionary;
 		evaluate: '1+thisProcess'.
 	self assert: result equals: 4
@@ -227,7 +227,7 @@ OpalCompilerTest >> testSavedProtocolInChangesFileIsRight [
 OpalCompilerTest >> testShadowPseudoVariable [
 	"We can shadw PseudoVariables (here thisContext) and it works"
 	| result |
-	result := Smalltalk compiler
+	result := OpalEvaluator new
        evaluate: '| thisContext | thisContext := 42. ^thisContext'.
 	self assert: result equals: 42
 ]
