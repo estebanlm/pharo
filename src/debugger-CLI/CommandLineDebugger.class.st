@@ -24,6 +24,21 @@ CommandLineDebugger >> Exit [
 { #category : 'execution' }
 CommandLineDebugger >> Over [
 
+	[ self completeStep ]
+		on: Error
+		do: [ :ex |
+				process isTerminated ifTrue: [ ^ self finishedDebugging ].
+				ex pass ].
+
+	context := process suspendedContext.
+	context ifNil: [ ^ self finishedDebugging ].
+
+	^ 'Stepped OVER to: ' , context printString , ' (PC: ' , context pc asString , ')'
+]
+
+{ #category : 'execution' }
+CommandLineDebugger >> Over1 [
+
 	[ process completeStep: context ]
 		on: Error
 		do: [ :ex |
@@ -94,6 +109,17 @@ CommandLineDebugger >> UnknownCommand: aCommand [
 ]
 
 { #category : 'initialization' }
+CommandLineDebugger >> completeStep [
+
+	| callee |
+	process suspendedContext == context ifFalse: [ ^ process complete: (process calleeOf: context) ].
+	callee := process step.
+	callee == context ifTrue: [ ^ callee ].
+	context isDead ifTrue: [ ^ process suspendedContext ].
+	^ process complete: callee "finish send"
+]
+
+{ #category : 'initialization' }
 CommandLineDebugger >> context [
 
 	^ context
@@ -124,11 +150,6 @@ CommandLineDebugger >> executeCommand: aString [
 	(command = 'printCode' or: command = 'pc') ifTrue: [ ^ self PrintCode ].
 
 	^ self UnknownCommand: command
-]
-
-{ #category : 'execution' }
-CommandLineDebugger >> executePrintCode [
-    ^ context method sourceCode asString
 ]
 
 { #category : 'execution' }
