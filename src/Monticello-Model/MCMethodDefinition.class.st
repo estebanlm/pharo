@@ -226,7 +226,7 @@ MCMethodDefinition >> loadWithLoader: aLoader [
 
 	method := compiler compileOrFail.
 	methodInstaller := (actualClass methodInstaller
-			   logged: false;
+			   logged: true;
 			   changeStamp: timeStamp;
 			   protocol: category).
 	methodInstaller install: method into: actualClass compiler: compiler.

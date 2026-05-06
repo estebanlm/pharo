@@ -59,12 +59,15 @@ Behavior >> compile: selector from: oldClass [
 
 	| method newMethod compiler |
 	method := oldClass compiledMethodAt: selector.
+	
+	"The installer should not log the source code when recompiling.
+	We will reuse the same source as the old method"
 	compiler := oldClass compiler
 		             source: method sourceCode;
 		             class: self;
 						 priorMethod: method;
 		             permitFaulty: true;
-		             logged: true.
+		             logged: false.
 
 	newMethod := compiler install.
 	
