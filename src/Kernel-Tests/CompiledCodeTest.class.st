@@ -294,7 +294,7 @@ CompiledCodeTest >> testLiteralsDoNotConsiderTheInnerBlockLiterals [
 		Object.
 		self name ].
 		^#(#array) '; compileOrFail.
-	block := (self class compiler permitFaulty: true; evaluate: '[
+	block := (OpalEvaluator new permitFaulty: true; evaluate: '[
 		test := 1 - 2.
 		test := #(arrayInBlock).
 		Object.

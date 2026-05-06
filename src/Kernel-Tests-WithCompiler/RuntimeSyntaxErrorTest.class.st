@@ -32,7 +32,7 @@ RuntimeSyntaxErrorTest >> testFaultyInstalledMethod [
 RuntimeSyntaxErrorTest >> testFaultyScript [
 
 	[
-	OpalCompiler new
+	OpalEvaluator new
 		permitFaulty: true;
 		evaluate: '1+¿' ]
 		on: OCRuntimeSyntaxError

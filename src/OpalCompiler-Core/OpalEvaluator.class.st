@@ -7,7 +7,8 @@ Class {
 		'compiler',
 		'logged',
 		'bindings',
-		'context'
+		'context',
+		'receiver'
 	],
 	#category : 'OpalCompiler-Core-FrontEnd',
 	#package : 'OpalCompiler-Core',
@@ -20,6 +21,12 @@ OpalEvaluator >> addParsePlugin: anOCDynamicASTCompilerPlugin [
 	compiler addParsePlugin: anOCDynamicASTCompilerPlugin
 ]
 
+{ #category : 'adding' }
+OpalEvaluator >> addPlugin: aPlugin [
+
+	compiler addPlugin: aPlugin
+]
+
 { #category : 'accessing' }
 OpalEvaluator >> bindings: aCollection [
 
@@ -29,7 +36,11 @@ OpalEvaluator >> bindings: aCollection [
 { #category : 'adding' }
 OpalEvaluator >> context: aContext [
 
-	context := aContext
+	context := aContext.
+	
+	"Evaluation happens on the dynamic context if any.
+	This means that `self` is bound to the context receiver"
+	self receiver: aContext receiver
 ]
 
 { #category : 'accessing' }
@@ -54,9 +65,7 @@ OpalEvaluator >> evaluate: aString [
 		^ nil
 	].
 
-	"Evaluation happens on the dynamic context if any.
-	This means that `self` is bound to the context receiver"
-	^ (context ifNotNil: [ context receiver ]) withArgs: #(  ) executeMethod: compilationResult compiledMethod
+	^ receiver withArgs: #(  ) executeMethod: compilationResult compiledMethod
 ]
 
 { #category : 'accessing' }
@@ -85,4 +94,10 @@ OpalEvaluator >> logged: aBoolean [
 OpalEvaluator >> permitFaulty: aBoolean [ 
 	
 	permitFaultyEvaluation := aBoolean
+]
+
+{ #category : 'adding' }
+OpalEvaluator >> receiver: aReceiver [
+
+	receiver := aReceiver
 ]

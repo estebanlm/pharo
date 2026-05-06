@@ -51,19 +51,17 @@ OCValueNode >> evaluate [
 { #category : 'evaluating' }
 OCValueNode >> evaluateForContext: aContext [
 	"evaluate the AST taking variables from the context"
-	^ aContext compiler
-		  ast: self asDoit;
-		  evaluate
+
+	^ OpalEvaluator new
+		  context: aContext;
+		  evaluate: self sourceCode
 ]
 
 { #category : 'evaluating' }
 OCValueNode >> evaluateForReceiver: aReceiver [
 	"evaluate the AST binding self to the receiver and taking its variables"
 
-	^ aReceiver class compiler
-		  ast: self asDoit;
-		  receiver: aReceiver;
-		  evaluate
+	^ OpalEvaluator new receiver: aReceiver; evaluate: self sourceCode
 ]
 
 { #category : 'testing' }

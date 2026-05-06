@@ -41,7 +41,7 @@ OCDoitTest >> testDoItContextReadGlobal [
 	"we can read a global from a doit when executing against a context"
 
 	|  value |
-	value := thisContext compiler evaluate: 'Object'.
+	value := OpalEvaluator new context: thisContext; evaluate: 'Object'.
 	self assert: value equals: Object
 ]
 
@@ -174,7 +174,7 @@ OCDoitTest >> testDoItRequestorShadow [
 
 	| value  |
 	"we can shadow a var defined in the requestor without error"
-	value := OpalCompiler new
+	value := OpalEvaluator new
 		          bindings: { (self bindingOf: #requestorVarForTesting) };
 		          evaluate: '|requestorVarForTesting| requestorVarForTesting'.
 

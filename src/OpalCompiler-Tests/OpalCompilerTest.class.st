@@ -63,21 +63,10 @@ OpalCompilerTest >> testBindingsWithUppercaseNameDoOverwriteGlobals [
 { #category : 'tests - bindings' }
 OpalCompilerTest >> testBindingsWriteGlobals [
 	| result |
-	result := Smalltalk compiler
+	result := OpalEvaluator new
 		 bindings: {(#Object -> Point)} asDictionary;
        evaluate: 'Object := 42'.
 	self assert: result equals: 42
-]
-
-{ #category : 'tests' }
-OpalCompilerTest >> testCompileFromAnalysedAST [
-
-	| source ast value |
-	source := 'foo |a| a := 3. ^a+4'.
-	
-	ast := MockForCompilation compiler parse: source.
-	value := MockForCompilation compiler ast: ast; evaluate.
-	self assert: value equals: 7.
 ]
 
 { #category : 'tests' }
@@ -86,7 +75,7 @@ OpalCompilerTest >> testCompileSource [
 	source := 'tt ^3+4'.
 
 	"Compiled but uninstalled methods have a #source but no sourcePointer"
-	result := MockForCompilation compiler compile: source.
+	result := MockForCompilation compiler source: source; compileOrFail.
 	self assert: (result valueWithReceiver: nil) equals: 7.
 	self deny: result hasSourcePointer. "no sourcePointer"
 	self assert: (result propertyAt: #source) equals: source.
@@ -115,7 +104,7 @@ OpalCompilerTest >> testCompileSource [
 OpalCompilerTest >> testCompileWithNilClass [
 	"we shoud use UndefinedObject if the class is nil"
 	| method |
-	method := Smalltalk compiler compile: 'tst 1+2'.
+	method := OpalCompiler new source: 'tst 1+2'; compileOrFail.
 	self assert: method methodClass equals: UndefinedObject
 ]
 
@@ -123,11 +112,11 @@ OpalCompilerTest >> testCompileWithNilClass [
 OpalCompilerTest >> testCompilerUsingCleanBlockClosureHasBlockAsLiteral [
 
 	| compiler method |
-	compiler := Smalltalk compiler.
+	compiler := OpalCompiler new.
 	compiler compilationContext compilerOptions:
 		#(+ optionCleanBlockClosure ).
 
-	method := compiler compile: 'test #(1 2 3) do: [:e | e + 1]'.
+	method := compiler source: 'test #(1 2 3) do: [:e | e + 1]'; compileOrFail.
 
 	self assert: method literals second isEmbeddedBlock.
 	self assert: method literals second class equals: CleanBlockClosure
@@ -136,7 +125,7 @@ OpalCompilerTest >> testCompilerUsingCleanBlockClosureHasBlockAsLiteral [
 { #category : 'tests - bindings' }
 OpalCompilerTest >> testEvaluateWithBindings [
 	| result |
-	result := OpalCompiler new 
+	result := OpalEvaluator new
 		bindings: {(#a -> 3)} asDictionary;
 		evaluate: '1+a'.
 	self assert: result equals: 4
@@ -171,7 +160,7 @@ OpalCompilerTest >> testEvaluateWithBindingsSelfSuperThisContext [
 { #category : 'tests - bindings' }
 OpalCompilerTest >> testEvaluateWithBindingsWithUppercaseName [
 	| result |
-	result := Smalltalk compiler
+	result := OpalEvaluator new
 		bindings: {(#MyVar -> 3)} asDictionary;
 		evaluate: '1+MyVar'.
 	self assert: result equals: 4
