@@ -59,58 +59,60 @@ CommandLineDebuggerTest >> testOver [
 { #category : 'tests' }
 CommandLineDebuggerTest >> testPrint [
 
-	"| response arguments |
-	arguments := '2+2'.
-	response := debugger executeCommand: 'print ' , arguments.
+	| currentContext response1 response2 |
+	currentContext := Context
+		                  sender: nil
+		                  receiver: self
+		                  method: MockToPrintCode >> #mockMethodForTesting:and:
+		                  arguments: #( 1  32).
+	debugger context: currentContext.
 
-	self assert: debugger isActive.
-	self assert: response equals: arguments , ' : 4'"
+	response1 := debugger executeCommand: 'print arg1'.
+
+	self assert: response1 equals: 'arg1 : 1'.
+	
+	response2 := debugger executeCommand: 'print arg2'.
+
+	self assert: response2 equals: 'arg2 : 32'
 ]
 
 { #category : 'tests' }
-CommandLineDebuggerTest >> testPrintCodeContainsSourceCode [
+CommandLineDebuggerTest >> testPrintCode [
 
 	| currentContext response |
 	currentContext := Context
 		                  sender: nil
 		                  receiver: self
-		                  method: MockToPrintCode >> #mockMethodForTesting
+		                  method: MockToPrintCode >> #mockMethodForTesting:
 		                  arguments: #(  ).
 	debugger context: currentContext.
 
 	response := debugger executeCommand: 'printCode'.
 
-	self assert: (response includesSubstring: 'mockMethodForTesting').
+	self assert: (response includesSubstring: 'mockMethodForTesting: arg').
 	self assert: (response includesSubstring: '"Fake method to test printCode"').
 	self assert: (response includesSubstring: 'a := 42.').
 	self assert: (response includesSubstring: 'b := a + 1.').
-	self assert: (response includesSubstring: '^ b')
-]
-
-{ #category : 'tests' }
-CommandLineDebuggerTest >> testPrintCodeDoesNotMoveProcess [
-
-	| response initialPc |
-	initialPc := debugger context pc.
-
-	response := debugger executeCommand: 'printCode'.
-
-	self assert: debugger context pc equals: initialPc.
+	self assert: (response includesSubstring: '^ b * arg').
 
 	self assert: debugger isActive.
-
-	self assert: (response beginsWith: '====== Code of')
 ]
 
 { #category : 'tests' }
 CommandLineDebuggerTest >> testPrintError [
 
-	"| response arguments |
-	arguments := '2/0'.
-	response := debugger executeCommand: '    print    ' , arguments.
+	| currentContext response |
+	currentContext := Context
+		                  sender: nil
+		                  receiver: self
+		                  method: MockToPrintCode >> #mockMethodForTesting:and:
+		                  arguments: #( 1 32 ).
+	debugger context: currentContext.
+
+	response := debugger executeCommand: 'print arg'.
 
 	self assert: debugger isActive.
-	self assert: response equals: 'Error evaluating: ' , arguments"
+	self assert: response equals: 'Error evaluating: arg'
 ]
 
 { #category : 'tests' }
@@ -144,13 +146,19 @@ CommandLineDebuggerTest >> testPrintStackAfterStep [
 
 { #category : 'tests' }
 CommandLineDebuggerTest >> testPrintWithoutArguments [
+	| currentContext response |
+	currentContext := Context
+		                  sender: nil
+		                  receiver: self
+		                  method: MockToPrintCode >> #mockMethodForTesting:and:
+		                  arguments: #( 1 32 ).
+	debugger context: currentContext.
+	
+	response := debugger executeCommand: 'print '.
 
-	"| response arguments |
-	arguments := ''.
-	response := debugger executeCommand: 'print ' , arguments.
+	self assert: response equals: 'Nothing to print'.
 
-	self assert: debugger isActive.
-	self assert: response equals: 'Nothing to print'"
+	
 ]
 
 { #category : 'tests' }

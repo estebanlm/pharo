@@ -37,31 +37,15 @@ CommandLineDebugger >> Over [
 ]
 
 { #category : 'execution' }
-CommandLineDebugger >> Over1 [
-
-	[ process completeStep: context ]
-		on: Error
-		do: [ :ex |
-				process isTerminated ifTrue: [ ^ self finishedDebugging ].
-				ex pass ].
-
-	context := process suspendedContext.
-	context ifNil: [ ^ self finishedDebugging ].
-
-	^ 'Stepped OVER to: ' , context printString , ' (PC: ' , context pc asString , ')'
-]
-
-{ #category : 'execution' }
-CommandLineDebugger >> Print: anExpression [
+CommandLineDebugger >> Print: aVariable [
 
 	| evaluation |
-	anExpression trim ifEmpty: [ ^ 'Nothing to print' ].
-
-	"[ evaluation := context evaluate: anExpression ]
+	aVariable trim ifEmpty: [ ^ 'Nothing to print' ].
+	[
+		evaluation := context tempNamed: aVariable.
+		^ aVariable , ' : ' , evaluation asString ]
 		on: Error
-		do: [ :ex | ^ 'Error evaluating: ' , anExpression ]."
-
-	^ anExpression , ' : ' , evaluation asString
+		do: [ :ex | ^ 'Error evaluating: ' , aVariable ]
 ]
 
 { #category : 'execution' }
@@ -143,7 +127,8 @@ CommandLineDebugger >> executeCommand: aString [
 	arguments := subString allButFirst joinUsing: ' '.
 
 	command = 'help' ifTrue: [ ^ self printHelp ].
-	command = 'exit' ifTrue: [ ^ self Exit ]. "command = 'print' ifTrue: [ ^ self executePrint: arguments asString ]."
+	command = 'exit' ifTrue: [ ^ self Exit ].
+	command = 'print' ifTrue: [ ^ self Print: arguments asString ].
 	(command = 'step' or: command = 's') ifTrue: [ ^ self Step ].
 	(command = 'over' or: command = 'o') ifTrue: [ ^ self Over ].
 	(command = 'printStack' or: command = 'ps') ifTrue: [ ^ self PrintStack ].
