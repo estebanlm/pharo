@@ -39,7 +39,7 @@ CommandLineDebugger >> executeCommand: aString [
 
 	command = 'exit' ifTrue: [ ^ self executeExit ]. "command = 'print' ifTrue: [ ^ self executePrint: arguments asString ]."
 	(command = 'step' or: command = 's') ifTrue: [ ^ self executeStepInto ].
-	(command = 'printStack' or: command = 'ps') ifTrue: [ ^ self executePrintStack asString ].
+	(command = 'printStack' or: command = 'ps') ifTrue: [ ^ self executePrintStack ].
 
 	^ self executeUnknownCommand: command
 ]
@@ -67,11 +67,12 @@ CommandLineDebugger >> executePrint: anExpression [
 { #category : 'execution' }
 CommandLineDebugger >> executePrintStack [
 
-	| results stack |
+	| results remainingStackText firstOfStack |
 	results := context contextStack collect: [ :ctx | ctx asString ].
-	stack := results joinUsing: Character lf.
 
-	^ 'Current call stack:' , String lf , stack
+	firstOfStack := '------> ' , results first asString.
+	remainingStackText := (results allButFirst collect: [ :res | String tab , res ]) joinUsing: Character lf.
+	^ '==================== Call Stack ====================' , String lf , firstOfStack , String lf , remainingStackText
 ]
 
 { #category : 'execution' }
@@ -80,7 +81,7 @@ CommandLineDebugger >> executeStepInto [
 	process step.
 
 	context := process suspendedContext.
-	^ 'Stepped to: ' , context asString , '(PC: ' , context pc asString , ')'
+	^ 'Stepped to: ' , context printString , '(PC: ' , context pc printString , ')'
 ]
 
 { #category : 'execution' }
