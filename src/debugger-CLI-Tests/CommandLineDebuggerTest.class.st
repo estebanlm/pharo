@@ -31,13 +31,29 @@ CommandLineDebuggerTest >> testEmptyCommand [
 ]
 
 { #category : 'tests' }
-CommandLineDebuggerTest >> testExitCommand [
+CommandLineDebuggerTest >> testExit [
 
 	| response |
 	self assert: debugger isActive.
 	response := debugger executeCommand: 'exit'.
 	self deny: debugger isActive.
 	self assert: response equals: 'Bye!'
+]
+
+{ #category : 'tests' }
+CommandLineDebuggerTest >> testOver [
+	"testing that the Program Counter changed after executing step"
+
+	| response initialPc |
+	initialPc := debugger context pc.
+
+	response := debugger executeCommand: 'over'. 
+
+	self deny: debugger context pc equals: initialPc. 
+
+	self assert: debugger isActive. 
+
+	self assert: (response beginsWith: 'Stepped OVER to:')
 ]
 
 { #category : 'tests' }
@@ -52,6 +68,41 @@ CommandLineDebuggerTest >> testPrint [
 ]
 
 { #category : 'tests' }
+CommandLineDebuggerTest >> testPrintCodeContainsSourceCode [
+
+	| currentContext response |
+	currentContext := Context
+		                  sender: nil
+		                  receiver: self
+		                  method: MockToPrintCode >> #mockMethodForTesting
+		                  arguments: #(  ).
+	debugger context: currentContext.
+
+	response := debugger executeCommand: 'printCode'.
+
+	self assert: (response includesSubstring: 'mockMethodForTesting').
+	self assert: (response includesSubstring: '"Fake method to test printCode"').
+	self assert: (response includesSubstring: 'a := 42.').
+	self assert: (response includesSubstring: 'b := a + 1.').
+	self assert: (response includesSubstring: '^ b')
+]
+
+{ #category : 'tests' }
+CommandLineDebuggerTest >> testPrintCodeDoesNotMoveProcess [
+
+	| response initialPc |
+	initialPc := debugger context pc.
+
+	response := debugger executeCommand: 'printCode'.
+
+	self assert: debugger context pc equals: initialPc.
+
+	self assert: debugger isActive.
+
+	self assert: (response beginsWith: '====== Code of')
+]
+
+{ #category : 'tests' }
 CommandLineDebuggerTest >> testPrintError [
 
 	"| response arguments |
@@ -63,19 +114,7 @@ CommandLineDebuggerTest >> testPrintError [
 ]
 
 { #category : 'tests' }
-CommandLineDebuggerTest >> testPrintStackAfterStep [
-
-	| response contextAfterStep |
-	debugger executeCommand: 'step'.
-	contextAfterStep := debugger context.
-
-	response := debugger executeCommand: 'printStack'.
-
-	self assert: (response includesSubstring: contextAfterStep printString)
-]
-
-{ #category : 'tests' }
-CommandLineDebuggerTest >> testPrintStackCommand [
+CommandLineDebuggerTest >> testPrintStack [
 
 	| response initialPc |
 	initialPc := debugger context pc.
@@ -92,6 +131,18 @@ CommandLineDebuggerTest >> testPrintStackCommand [
 ]
 
 { #category : 'tests' }
+CommandLineDebuggerTest >> testPrintStackAfterStep [
+
+	| response contextAfterStep |
+	debugger executeCommand: 'step'.
+	contextAfterStep := debugger context.
+
+	response := debugger executeCommand: 'printStack'.
+
+	self assert: (response includesSubstring: contextAfterStep printString)
+]
+
+{ #category : 'tests' }
 CommandLineDebuggerTest >> testPrintWithoutArguments [
 
 	"| response arguments |
@@ -103,7 +154,7 @@ CommandLineDebuggerTest >> testPrintWithoutArguments [
 ]
 
 { #category : 'tests' }
-CommandLineDebuggerTest >> testStepCommand [
+CommandLineDebuggerTest >> testStep [
 	"testing that the Program Counter changed after executing step"
 
 	| response initialPc |

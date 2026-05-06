@@ -14,6 +14,85 @@ Class {
 	#package : 'debugger-CLI'
 }
 
+{ #category : 'execution' }
+CommandLineDebugger >> Exit [
+
+	isActive := false.
+	^ 'Bye!' 
+]
+
+{ #category : 'execution' }
+CommandLineDebugger >> Over [
+
+	[ process completeStep: context ]
+		on: Error
+		do: [ :ex |
+				process isTerminated ifTrue: [ ^ self finishedDebugging ].
+				ex pass ].
+
+	context := process suspendedContext.
+	context ifNil: [ ^ self finishedDebugging ].
+
+	^ 'Stepped OVER to: ' , context printString , ' (PC: ' , context pc asString , ')'
+]
+
+{ #category : 'execution' }
+CommandLineDebugger >> Print: anExpression [
+
+	| evaluation |
+	anExpression trim ifEmpty: [ ^ 'Nothing to print' ].
+
+	"[ evaluation := context evaluate: anExpression ]
+		on: Error
+		do: [ :ex | ^ 'Error evaluating: ' , anExpression ]."
+
+	^ anExpression , ' : ' , evaluation asString
+]
+
+{ #category : 'execution' }
+CommandLineDebugger >> PrintCode [
+
+	| currentMethod codeOfCurrentMethod identedCode |
+	currentMethod := context method.
+	codeOfCurrentMethod := currentMethod sourceCode asString.
+
+	identedCode := (codeOfCurrentMethod lines collect: [ :eachLine | String tab , eachLine ]) joinUsing: String lf.
+
+	^ '====== Code of ' , currentMethod printString , ' ======' , String lf , identedCode , String lf
+]
+
+{ #category : 'execution' }
+CommandLineDebugger >> PrintStack [
+
+	| results remainingStackText firstOfStack |
+	results := context contextStack collect: [ :ctx | ctx asString ].
+
+	firstOfStack := '------> ' , results first asString.
+	remainingStackText := (results allButFirst collect: [ :res | String tab , res ]) joinUsing: Character lf.
+	^ '==================== Call Stack ====================' , String lf , firstOfStack , String lf , remainingStackText
+]
+
+{ #category : 'execution' }
+CommandLineDebugger >> Step [
+
+	[ process step ]
+		on: Error
+		do: [ :ex |
+				process isTerminated ifTrue: [ ^ self finishedDebugging ].
+				ex pass ].
+	context := process suspendedContext.
+
+	context ifNil: [ ^ self finishedDebugging ].
+
+	^ 'Stepped to: ' , context printString , '(PC: ' , context pc printString , ')'
+]
+
+{ #category : 'execution' }
+CommandLineDebugger >> UnknownCommand: aCommand [ 
+
+	^ 'Unknown command: ', aCommand
+]
+
 { #category : 'initialization' }
 CommandLineDebugger >> context [
 
@@ -38,79 +117,18 @@ CommandLineDebugger >> executeCommand: aString [
 	arguments := subString allButFirst joinUsing: ' '.
 
 	command = 'help' ifTrue: [ ^ self printHelp ].
-	command = 'exit' ifTrue: [ ^ self executeExit ]. "command = 'print' ifTrue: [ ^ self executePrint: arguments asString ]."
-	(command = 'step' or: command = 's') ifTrue: [ ^ self executeStepInto ].
-	(command = 'over' or: command = 'o') ifTrue: [ ^ self executeStepOver ].
-	(command = 'printStack' or: command = 'ps') ifTrue: [ ^ self executePrintStack ].
+	command = 'exit' ifTrue: [ ^ self Exit ]. "command = 'print' ifTrue: [ ^ self executePrint: arguments asString ]."
+	(command = 'step' or: command = 's') ifTrue: [ ^ self Step ].
+	(command = 'over' or: command = 'o') ifTrue: [ ^ self Over ].
+	(command = 'printStack' or: command = 'ps') ifTrue: [ ^ self PrintStack ].
+	(command = 'printCode' or: command = 'pc') ifTrue: [ ^ self PrintCode ].
 
-	^ self executeUnknownCommand: command
+	^ self UnknownCommand: command
 ]
 
 { #category : 'execution' }
-CommandLineDebugger >> executeExit [
-
-	isActive := false.
-	^ 'Bye!' 
-]
-
-{ #category : 'execution' }
-CommandLineDebugger >> executePrint: anExpression [
-
-	| evaluation |
-	anExpression trim ifEmpty: [ ^ 'Nothing to print' ].
-
-	"[ evaluation := context evaluate: anExpression ]
-		on: Error
-		do: [ :ex | ^ 'Error evaluating: ' , anExpression ]."
-
-	^ anExpression , ' : ' , evaluation asString
-]
-
-{ #category : 'execution' }
-CommandLineDebugger >> executePrintStack [
-
-	| results remainingStackText firstOfStack |
-	results := context contextStack collect: [ :ctx | ctx asString ].
-
-	firstOfStack := '------> ' , results first asString.
-	remainingStackText := (results allButFirst collect: [ :res | String tab , res ]) joinUsing: Character lf.
-	^ '==================== Call Stack ====================' , String lf , firstOfStack , String lf , remainingStackText
-]
-
-{ #category : 'execution' }
-CommandLineDebugger >> executeStepInto [
-
-	[ process step ]
-		on: Error
-		do: [ :ex |
-				process isTerminated ifTrue: [ ^ self finishedDebugging ].
-				ex pass ].
-	context := process suspendedContext.
-
-	context ifNil: [ ^ self finishedDebugging ].
-
-	^ 'Stepped to: ' , context printString , '(PC: ' , context pc printString , ')'
-]
-
-{ #category : 'execution' }
-CommandLineDebugger >> executeStepOver [
-
-	[ process completeStep: context ]
-		on: Error
-		do: [ :ex |
-				process isTerminated ifTrue: [ ^ self finishedDebugging ].
-				ex pass ].
-
-	context := process suspendedContext.
-	context ifNil: [ ^ self finishedDebugging ].
-
-	^ 'Stepped OVER to: ' , context printString , ' (PC: ' , context pc asString , ')'
-]
-
-{ #category : 'execution' }
-CommandLineDebugger >> executeUnknownCommand: aCommand [ 
-
-	^ 'Unknown command: ', aCommand
+CommandLineDebugger >> executePrintCode [
+    ^ context method sourceCode asString
 ]
 
 { #category : 'execution' }
@@ -138,9 +156,9 @@ CommandLineDebugger >> printHelp [
 	  step (or s) : execute next step
 	  over (or o) : execute step over
 	  printStack (or ps) : print the current Stack
+	  printCode (or pc) : print current''s method code
 	  exit : kills the debugger'
 	
-
 ]
 
 { #category : 'initialization' }
