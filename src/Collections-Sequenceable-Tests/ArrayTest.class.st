@@ -824,8 +824,8 @@ ArrayTest >> testPrintingRecursive [
 ArrayTest >> testSelfEvaluating [
 
 	self assert: selfEvaluatingArray isSelfEvaluating.
-	self assert: literalArray equals: (self class compiler evaluate: literalArray printString).
-	self assert: selfEvaluatingArray equals: (self class compiler evaluate: selfEvaluatingArray printString).
+	self assert: literalArray equals: (OpalEvaluator new evaluate: literalArray printString).
+	self assert: selfEvaluatingArray equals: (OpalEvaluator new evaluate: selfEvaluatingArray printString).
 
 	self deny: recursiveArray isSelfEvaluating.
 	self deny: nonSEArray1 isSelfEvaluating
@@ -855,7 +855,7 @@ ArrayTest >> testSelfEvaluatingComplexCase [
 	complexArray := complexArray copyWith: complexArray.
 	self assert: complexArray isSelfEvaluating.
 
-	restoredArray := self class compiler evaluate:
+	restoredArray := OpalEvaluator new evaluate:
 		                 complexArray printString.
 	self assert: restoredArray equals: complexArray
 ]

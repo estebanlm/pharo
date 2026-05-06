@@ -102,7 +102,7 @@ ClapCodeEvaluator >> evaluate [
 { #category : 'execution' }
 ClapCodeEvaluator >> evaluateExpression [
 	
-	^ [ self class compiler evaluate: self source ]
+	^ [ OpalEvaluator new evaluate: self source ]
 		on: Error
 		do: [ :error | self handleError: error ]
 ]

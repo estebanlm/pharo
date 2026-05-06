@@ -26,7 +26,7 @@ ClassChunk >> description [
 ]
 
 { #category : 'importing' }
-ClassChunk >> importFor: requestor logSource: logSource [
+ClassChunk >> importWithLogSource: logSource [
 
 	| ast |
 	ast := OCParser parseExpression: contents.

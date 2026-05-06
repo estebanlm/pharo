@@ -15,11 +15,6 @@ Class {
 	#package : 'Refactoring-Changes'
 }
 
-{ #category : 'visiting' }
-ReChange >> accept: aText notifying: aController [
-	^ false
-]
-
 { #category : 'accessing' }
 ReChange >> changeForClass: aClassName selector: aSelector [
 

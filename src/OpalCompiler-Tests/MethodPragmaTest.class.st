@@ -278,7 +278,7 @@ MethodPragmaTest >> testCompileValue [
 { #category : 'tests - compiled' }
 MethodPragmaTest >> testDoublePragma [
 	| aCompiledMethod |
-	aCompiledMethod := OpalCompiler new compile: self methodDoublePragma.
+	aCompiledMethod := OpalCompiler new source: self methodDoublePragma; compileOrFail.
 
 	self assert: aCompiledMethod pragmas first selector equals: #hello:.
 	self assert: aCompiledMethod pragmas second selector equals: #hello:
@@ -336,7 +336,7 @@ MethodPragmaTest >> testNumArgs [
 { #category : 'tests - compiled' }
 MethodPragmaTest >> testPragmaAfterBeforTemp [
 	| aComiledMethod |
-	aComiledMethod := OpalCompiler new compile: self methodPragmaAfterBeforTemps.
+	aComiledMethod := OpalCompiler new source: self methodPragmaAfterBeforTemps; compileOrFail.
 
 	self assert: aComiledMethod pragmas first selector equals: #hello:.
 	self assert: aComiledMethod pragmas second selector equals: #world:
@@ -345,15 +345,15 @@ MethodPragmaTest >> testPragmaAfterBeforTemp [
 { #category : 'tests - compiled' }
 MethodPragmaTest >> testPragmaTwoParam [
 	| aCompiledMethod |
-	aCompiledMethod := OpalCompiler new compile: self methodPragmaTwoParam.
+	aCompiledMethod := OpalCompiler new source: self methodPragmaTwoParam; compileOrFail.
 
 	self assert: aCompiledMethod pragmas first selector equals: #hello:by:
 ]
 
 { #category : 'tests - compiled' }
-MethodPragmaTest >> testPragmaUnarayMessage [
+MethodPragmaTest >> testPragmaUnaryMessage [
 	| aCompiledMethod |
-	aCompiledMethod := OpalCompiler new compile: self methodPragmaUnarayMessage.
+	aCompiledMethod := OpalCompiler new source: self methodPragmaUnarayMessage; compileOrFail.
 
 	self assert: aCompiledMethod pragmas first selector equals: #hello
 ]
@@ -361,21 +361,21 @@ MethodPragmaTest >> testPragmaUnarayMessage [
 { #category : 'tests - compiled' }
 MethodPragmaTest >> testPrimitiveNumber [
 	| aCompiledMethod |
-	aCompiledMethod := OpalCompiler new compile: self methodPrimitive.
+	aCompiledMethod := OpalCompiler new source: self methodPrimitive; compileOrFail.
 	self assert: aCompiledMethod primitive equals: 4
 ]
 
 { #category : 'tests - compiled' }
 MethodPragmaTest >> testPrimitivePragmaNumber [
 	| aCompiledMethod |
-	aCompiledMethod := OpalCompiler new compile: self methodPrimitivePragma.
+	aCompiledMethod := OpalCompiler new source: self methodPrimitivePragma; compileOrFail.
 	self assert: aCompiledMethod primitive equals: 4
 ]
 
 { #category : 'tests - compiled' }
 MethodPragmaTest >> testPrimitiveString [
 	| aCompiledMethod |
-	aCompiledMethod := OpalCompiler new compile: self methodPrimitiveString.
+	aCompiledMethod := OpalCompiler new source: self methodPrimitiveString; compileOrFail.
 
 	self assert: aCompiledMethod primitive equals: 117
 ]
@@ -383,7 +383,7 @@ MethodPragmaTest >> testPrimitiveString [
 { #category : 'tests - compiled' }
 MethodPragmaTest >> testPrimitiveStringModule [
 	| aCompiledMethod |
-	aCompiledMethod := OpalCompiler new compile: self methodPrimitiveStringModule.
+	aCompiledMethod := OpalCompiler new source: self methodPrimitiveStringModule; compileOrFail.
 
 	self assert: aCompiledMethod primitive equals: 117
 ]
@@ -412,14 +412,14 @@ MethodPragmaTest >> testSendTo [
 { #category : 'tests - compiled' }
 MethodPragmaTest >> testSinglePragma [
 	| aCompiledMethod |
-	aCompiledMethod := OpalCompiler new compile: self methodSinglePragma.
+	aCompiledMethod := OpalCompiler new source: self methodSinglePragma; compileOrFail.
 	self assert: aCompiledMethod pragmas first selector equals: #hello:
 ]
 
 { #category : 'tests - compiled' }
 MethodPragmaTest >> testSourceNode [
 	| aCompiledMethod node1 node2|
-	aCompiledMethod := OpalCompiler new compile: self methodDoublePragmaIdentical.
+	aCompiledMethod := OpalCompiler new source: self methodDoublePragmaIdentical; compileOrFail.
 	
 	node1 := aCompiledMethod pragmas first sourceNode.
 	node2 := aCompiledMethod pragmas second sourceNode.

@@ -26,7 +26,7 @@ PackageAdditionChunk >> description [
 ]
 
 { #category : 'importing' }
-PackageAdditionChunk >> importFor: requestor logSource: logSource [
+PackageAdditionChunk >> importWithLogSource: logSource [
 	"SystemOrganization addCategory: #aCategory"
 
 	| ast |

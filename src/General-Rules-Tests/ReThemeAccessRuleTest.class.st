@@ -12,7 +12,7 @@ Class {
 { #category : 'running' }
 ReThemeAccessRuleTest >> setUp [
 	super setUp.
-	classfactory := ClassFactoryForTestCase new.
+	classfactory := ClassFactoryForTestCase environment: SystemEnvironment new.
 ]
 
 { #category : 'running' }
@@ -26,6 +26,9 @@ ReThemeAccessRuleTest >> tearDown [
 ReThemeAccessRuleTest >> testRuleForModel [
 
 	| model |
+	"Install smalltalk to allow the following code to compile"
+	classfactory environment at: #Smalltalk put: nil.
+
 	model := classfactory make: [ :builder | builder superclass: Model ].
 	model compile: 'method ^ Smalltalk ui theme' classified: 'test-helper'.
 	self assert: (self myCritiquesOnMethod: model >> #method) size equals: 1
@@ -35,6 +38,9 @@ ReThemeAccessRuleTest >> testRuleForModel [
 ReThemeAccessRuleTest >> testRuleForMorph [
 
 	| model |
+	"Install smalltalk to allow the following code to compile"
+	classfactory environment at: #Smalltalk put: nil.
+
 	model := classfactory make: [ :builder | builder superclass: Morph ].
 	model compile: 'method ^ Smalltalk ui theme' classified: 'test-helper'.
 	self assert: (self myCritiquesOnMethod: model >> #method) size equals: 1

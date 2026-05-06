@@ -146,7 +146,7 @@ TaAbstractComposition >> compile: selector into: aClass [
 	newMethod := aClass compiler
 		             source: sourceCode;
 		             permitUndeclared: true;
-		             compile.
+		             compileOrFail.
 		
 	selector == newMethod selector ifFalse: [ self error: 'selector changed!' ].
 

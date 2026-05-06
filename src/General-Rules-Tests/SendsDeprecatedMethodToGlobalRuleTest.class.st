@@ -43,7 +43,8 @@ SendsDeprecatedMethodToGlobalRuleTest >> setUp [
 	deprClass compile: self deprecatedMethodName, ' self deprecated: ''this method is deprecated'''.
 	deprClass compile: self nonDeprecatedMethodName.
 
-	testClass := Object newAnonymousSubclass
+	testClass := Object newAnonymousSubclass.
+	testClass environment: testingEnvironment
 ]
 
 { #category : 'running' }

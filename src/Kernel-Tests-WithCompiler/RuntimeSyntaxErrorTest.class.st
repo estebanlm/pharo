@@ -32,7 +32,7 @@ RuntimeSyntaxErrorTest >> testFaultyInstalledMethod [
 RuntimeSyntaxErrorTest >> testFaultyScript [
 
 	[
-	OpalCompiler new
+	OpalEvaluator new
 		permitFaulty: true;
 		evaluate: '1+¿' ]
 		on: OCRuntimeSyntaxError
@@ -53,17 +53,16 @@ RuntimeSyntaxErrorTest >> testFaultyUninstalledMethod [
 	| method |
 	method := OpalCompiler new
 		          permitFaulty: true;
-		          compile: 'foo 1+¿'.
+		          source: 'foo 1+¿';
+		          compileOrFail.
 
 	[ nil executeMethod: method ]
 		on: OCRuntimeSyntaxError
 		do: [ :error |
-			| ctx |
-			self assert: error class equals: OCRuntimeSyntaxError.
-			self assert: error messageText equals: 'Unknown character'.
-			self
-				assert: error description
-				equals: 'OCRuntimeSyntaxError: Unknown character'.
-			ctx := error signalContext filterDebuggerStack.
-			self assert: ctx sourceNodeExecuted sourceCode equals: '¿' ]
+				| ctx |
+				self assert: error class equals: OCRuntimeSyntaxError.
+				self assert: error messageText equals: 'Unknown character'.
+				self assert: error description equals: 'OCRuntimeSyntaxError: Unknown character'.
+				ctx := error signalContext filterDebuggerStack.
+				self assert: ctx sourceNodeExecuted sourceCode equals: '¿' ]
 ]
