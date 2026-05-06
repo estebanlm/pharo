@@ -215,10 +215,12 @@ CompiledMethodTest >> testEqualityClassSideMethod [
    	| method1 method2 |
 
 	method1 := TestCase class compiler
-			compile: 'aMethod'.
+			source: 'aMethod';
+			compileOrFail.
 
 	method2 := TestCase class compiler
-			compile: 'aMethod'.
+			source: 'aMethod';
+			compileOrFail.
 
  	self assert: method1 equals: method2
 ]
@@ -226,8 +228,12 @@ CompiledMethodTest >> testEqualityClassSideMethod [
 { #category : 'tests - comparing' }
 CompiledMethodTest >> testEqualityInstanceSideMethod [
 	| method1 method2 |
-	method1 := TestCase compiler compile: 'aMethod'.
-	method2 := TestCase compiler compile: 'aMethod'.
+	method1 := TestCase compiler
+			source: 'aMethod';
+			compileOrFail.
+	method2 := TestCase compiler
+			source: 'aMethod';
+			compileOrFail.
 
 	self assert: (method1 literalAt: method1 numLiterals) identicalTo: (method2 literalAt: method2 numLiterals).
 	self assert: method1 equals: method2
@@ -251,13 +257,13 @@ CompiledMethodTest >> testHasLiteralSuchThat [
 { #category : 'tests - testing' }
 CompiledMethodTest >> testHasNonLocalReturn [
 	| method |
-	method := self class compiler compile: 'm ^1'.
+	method := self class compiler source: 'm ^1'; compileOrFail.
 	self deny: [method hasNonLocalReturn ].
-	method := self class compiler compile: 'm self doSomething'.
+	method := self class compiler source: 'm self doSomething'; compileOrFail.
 	self deny: [method hasNonLocalReturn ].
-	method := self class compiler compile: 'm []'.
+	method := self class compiler source: 'm []'; compileOrFail.
 	self deny: [method hasNonLocalReturn ].
-	method := self class compiler compile: 'm [^self]'.
+	method := self class compiler source: 'm [^self]'; compileOrFail.
 	self assert: [method hasNonLocalReturn ]
 ]
 

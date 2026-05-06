@@ -13,28 +13,20 @@ OCAnnotationTest >> testAnnotationAST [
 	
 	The annotation (the full message node) is transformed into a simple literal node."
 
-	| plugin result |
+	| plugin result  |
 	plugin := OCDynamicASTCompilerPlugin
 		          newFromTransformBlock: [ :ast |
-			          (OCParseTreeRewriter new
-				           replace: '@meaning: `@arg'
-				           withValueFrom: [ :node |
-					           OCLiteralNode value:
-						           ((node arguments first isLiteralNode and: [
-							             node arguments first value = 42 ])
-							            ifTrue: [ 'meaning of life' ]
-							            ifFalse: [ 'no meaning' ]) ]) executeTree: ast.
-			          ast ]
+				          (OCParseTreeRewriter new replace: '@meaning: `@arg' withValueFrom: [ :node |
+						           OCLiteralNode value: ((node arguments first isLiteralNode and: [ node arguments first value = 42 ])
+								            ifTrue: [ 'meaning of life' ]
+								            ifFalse: [ 'no meaning' ]) ]) executeTree: ast.
+				          ast ]
 		          andPriority: 0.
 
-	"Use plugin with compiler"
-	result := Object compiler
+	result := OpalEvaluator new
 		          addParsePlugin: plugin;
-		          evaluate:
-			          '{@meaning: 42. @meaning: 12. @meaning: self error. 42}'.
-	self
-		assert: result
-		equals: { 'meaning of life'. 'no meaning'. 'no meaning'. 42 }
+		          evaluate: '{@meaning: 42. @meaning: 12. @meaning: self error. 42}'.
+	self assert: result equals: { 'meaning of life'. 'no meaning'. 'no meaning'. 42 }
 ]
 
 { #category : 'tests' }
@@ -63,7 +55,8 @@ OCAnnotationTest >> testAnnotationBinding [
 								           node receiver emitValueBlock: [ :methodBuilder | methodBuilder pushLiteral: node arguments first variable ] ] ])
 					          executeTree: ast.
 				          ast ]
-		          andPriority: 0. "Use plugin with compiler"
+		          andPriority: 0.
+	
 	result := OpalEvaluator new
 		          addParsePlugin: plugin;
 		          evaluate: '@binding: Object'.
@@ -103,27 +96,25 @@ OCAnnotationTest >> testAnnotationConstexprAST [
 	| plugin result |
 	plugin := OCDynamicASTCompilerPlugin
 		          newFromTransformBlock: [ :ast |
-			          (OCParseTreeRewriter new
-				           replace: '@constexpr: `@arg'
-				           withValueFrom: [ :node |
-					           | value |
-					           "Evaluate the argument, self is bound to the class"
-					           value := node arguments first evaluateForReceiver:
-						                    node methodNode methodClass instanceSide.
-					           OCLiteralNode value: value ]) executeTree: ast.
-			          ast ]
+				          (OCParseTreeRewriter new replace: '@constexpr: `@arg' withValueFrom: [ :node |
+						           | value |
+						           "Evaluate the argument, self is bound to the class"
+						           value := node arguments first evaluateForReceiver: node methodNode methodClass instanceSide.
+						           OCLiteralNode value: value ]) executeTree: ast.
+				          ast ]
 		          andPriority: 0.
 
 	result := Object compiler
 		          addParsePlugin: plugin;
-		          compile:
-			          'foo ^ @constexpr: ''The answer is '' , (19+23) asString'.
+		          source: 'foo ^ @constexpr: ''The answer is '' , (19+23) asString';
+		          compileOrFail.
 	self assert: (result literals includes: 'The answer is 42').
 	self assert: (nil executeMethod: result) equals: 'The answer is 42'.
 
 	result := Float compiler
 		          addParsePlugin: plugin;
-		          compile: 'foo ^ @constexpr: self pi'.
+		          source: 'foo ^ @constexpr: self pi';
+		          compileOrFail.
 	self assert: (result literals includes: Float pi).
 	self assert: (nil executeMethod: result) equals: Float pi
 ]
@@ -138,30 +129,25 @@ OCAnnotationTest >> testAnnotationConstexprIR [
 	| plugin result |
 	plugin := OCDynamicASTCompilerPlugin
 		          newFromTransformBlock: [ :ast | "In fact, there is no transformation. Just an addition to the annotation mark"
-			          (OCParseTreeSearcher new
-				           matches: '@constexpr: `@arg'
-				           do: [ :node :ans |
-					           | value |
-					           "Evaluate the argument, self is bound to the class"
-					           value := node arguments first evaluateForReceiver:
-						                    node methodNode methodClass instanceSide.
-					           "IR is just to store the value in literals and retrieve it at runtime"
-					           node receiver emitValueBlock: [ :methodBuilder |
-						           methodBuilder pushLiteral: value ] ]) executeTree:
-				          ast.
-			          ast ]
+				          (OCParseTreeSearcher new matches: '@constexpr: `@arg' do: [ :node :ans |
+						           | value |
+						           "Evaluate the argument, self is bound to the class"
+						           value := node arguments first evaluateForReceiver: node methodNode methodClass instanceSide. "IR is just to store the value in literals and retrieve it at runtime"
+						           node receiver emitValueBlock: [ :methodBuilder | methodBuilder pushLiteral: value ] ]) executeTree: ast.
+				          ast ]
 		          andPriority: 0.
 
 	result := Object compiler
 		          addParsePlugin: plugin;
-		          compile:
-			          'foo ^ @constexpr: ''The answer is '' , (19+23) asString'.
+		          source: 'foo ^ @constexpr: ''The answer is '' , (19+23) asString';
+		          compileOrFail.
 	self assert: (result literals includes: 'The answer is 42').
 	self assert: (nil executeMethod: result) equals: 'The answer is 42'.
 
 	result := Float compiler
 		          addParsePlugin: plugin;
-		          compile: 'foo ^ @constexpr: self pi'.
+		          source: 'foo ^ @constexpr: self pi';
+		          compileOrFail.
 	self assert: (result literals includes: Float pi).
 	self assert: (nil executeMethod: result) equals: Float pi
 ]
@@ -191,8 +177,7 @@ OCAnnotationTest >> testAnnotationIR [
 			          ast ]
 		          andPriority: 0.
 
-	"Use plugin with compiler"
-	result := Object compiler
+	result := OpalEvaluator new
 		          addParsePlugin: plugin;
 		          evaluate:
 			          '{@meaning: 42. @meaning: 12. @meaning: self error. 42}'.
