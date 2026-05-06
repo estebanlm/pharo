@@ -476,16 +476,17 @@ OpalCompiler >> generateMethod [
 OpalCompiler >> install [
 	"Compile and install a method in a class"
 
-	| method |
+	| method installer |
 	
 	method := self compileOrFail.
 
-	(self methodClass methodInstaller
+	installer := self methodClass methodInstaller
 		priorMethod: self priorMethod;
 		logged: self logged;
 		changeStamp: changeStamp;
-		protocol: protocol)
-			install: method into: self methodClass compiler: self.
+		protocol: protocol.
+	self methodClass isExtension ifTrue: [ installer shouldRecompileDependencies: true ].
+	installer install: method into: self methodClass compiler: self.
 	^ method
 ]
 

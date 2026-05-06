@@ -18,17 +18,6 @@ Extension >> addUserPackage: aPackage [
 	self userPackages add: aPackage
 ]
 
-{ #category : 'as yet unclassified' }
-Extension >> compile: sourceCode classified: protocol withStamp: changeStamp logSource: logSource [
-	"Return the selector of the compiled method"
-
-	^ self compile: sourceCode methodInstaller: (self methodInstaller
-			   logged: logSource;
-			   changeStamp: changeStamp;
-			   protocol: protocol;
-			   shouldRecompileDependencies: true)
-]
-
 { #category : 'accessing' }
 Extension >> defineScopedSelector: aSymbol [
 
@@ -64,6 +53,12 @@ Extension >> hasUserPackages [
 Extension >> internScopedSelector: aSymbol [
 
 	^ self package internScopedSelector: aSymbol
+]
+
+{ #category : 'testing' }
+Extension >> isExtension [
+
+	^ true
 ]
 
 { #category : 'organization' }

@@ -1,16 +1,6 @@
 Extension { #name : 'Behavior' }
 
 { #category : '*OpalCompiler-UI' }
-Behavior >> compile: sourceCode classified: protocol withStamp: changeStamp notifying: requestor logSource: logSource [
-	"Return the selector of the compiled method"
-
-	^ self compile: sourceCode notifying: requestor methodInstaller: (self methodInstaller
-			   logged: logSource;
-			   changeStamp: changeStamp;
-			   protocol: protocol)
-]
-
-{ #category : '*OpalCompiler-UI' }
 Behavior >> compile: sourceCode notifying: requestor methodInstaller: methodInstaller [
 	"Return the selector of the compiled method"
 

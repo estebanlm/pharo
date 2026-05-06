@@ -124,7 +124,7 @@ CharacterTest >> testPrintString [
 CharacterTest >> testPrintStringAll [
 
 	Character allByteCharacters do: [ :each |
-		self assert: (self class compiler evaluate: each printString) equals: each ]
+		self assert: (OpalEvaluator new evaluate: each printString) equals: each ]
 ]
 
 { #category : 'tests' }
@@ -153,5 +153,5 @@ CharacterTest >> testStoreString [
 CharacterTest >> testStoreStringAll [
 
 	Character allByteCharacters do: [ :each |
-		self assert: (self class compiler evaluate: each storeString) equals: each ]
+		self assert: (OpalEvaluator new evaluate: each storeString) equals: each ]
 ]

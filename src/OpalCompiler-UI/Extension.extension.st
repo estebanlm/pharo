@@ -8,5 +8,5 @@ Extension >> compile: sourceCode classified: protocol withStamp: changeStamp not
 			   logged: logSource;
 			   changeStamp: changeStamp;
 			   protocol: protocol;
-			   shouldRecompileDependencies: true)
+			   shouldRecompileDependencies: self isExtension)
 ]
