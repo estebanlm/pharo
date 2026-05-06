@@ -55,6 +55,12 @@ Extension >> internScopedSelector: aSymbol [
 	^ self package internScopedSelector: aSymbol
 ]
 
+{ #category : 'testing' }
+Extension >> isExtension [
+
+	^ true
+]
+
 { #category : 'organization' }
 Extension >> methodInstaller [
 

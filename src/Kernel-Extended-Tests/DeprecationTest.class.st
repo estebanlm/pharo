@@ -42,7 +42,7 @@ DeprecationTest >> testNoInfiniteLoopWhenShowWarningIsTrue [
 DeprecationTest >> testTransformingDeprecation [
 	<ignoreNotImplementedSelectors: #(sendsDeprecatedMessageWithTransform)>
 	| classFactory oldRaiseWarning oldActivateTransformations |
-	classFactory := ClassFactoryForTestCase new.
+	classFactory := ClassFactoryForTestCase environment: SystemEnvironment new.
 	classFactory 
 		silentlyCompile: 'sendsDeprecatedMessageWithTransform ^ self deprecatedMessageWithTransform'
 		in: ExampleForDeprecationTest.

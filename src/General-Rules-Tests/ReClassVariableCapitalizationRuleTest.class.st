@@ -13,7 +13,7 @@ Class {
 ReClassVariableCapitalizationRuleTest >> setUp [
 
 	super setUp.
-	classFactory := ClassFactoryForTestCase new
+	classFactory := ClassFactoryForTestCase environment: SystemEnvironment new
 	"Put here a common initialization logic for tests"
 ]
 

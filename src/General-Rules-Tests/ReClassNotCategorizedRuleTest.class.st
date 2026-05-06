@@ -13,7 +13,7 @@ Class {
 ReClassNotCategorizedRuleTest >> setUp [
 
 	super setUp.
-	classFactory := ClassFactoryForTestCase new
+	classFactory := ClassFactoryForTestCase environment: SystemEnvironment new
 ]
 
 { #category : 'running' }

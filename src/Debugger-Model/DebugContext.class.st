@@ -169,7 +169,8 @@ DebugContext >> recompileCurrentMethodTo: aText notifying: aNotifyer [
 			  protocol: self selectedMessageCategoryName;
 			  isScripting: self selectedMessageName isDoIt;
 			  requestor: aNotifyer;
-			  compile: aText ].
+			  source: aText;
+			  compile ].
 
 	classOrTraitOfMethod := self
 		                        confirmOnTraitOverwrite: selector
@@ -180,7 +181,8 @@ DebugContext >> recompileCurrentMethodTo: aText notifying: aNotifyer [
 		  protocol: self selectedMessageCategoryName;
 		  isScripting: self selectedMessageName isDoIt;
 		  requestor: aNotifyer;
-		  install: aText
+		  source: aText;
+		  install
 ]
 
 { #category : 'accessing' }

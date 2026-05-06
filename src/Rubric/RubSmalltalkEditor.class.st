@@ -314,26 +314,6 @@ RubSmalltalkEditor >> classNamesContainingIt [
 		caseSensitive: World currentHand shiftPressed
 ]
 
-{ #category : 'do-its' }
-RubSmalltalkEditor >> compile: source for: anObject in: evalContext [
-	| methodClass |
-	methodClass := evalContext
-		ifNil: [ anObject class ]
-		ifNotNil: [ evalContext methodClass ].
-	^self class compiler
-		source: source;
-		class: methodClass;
-		context: evalContext;
-		isScripting: true;
-		permitFaulty: true;
-		compile
-]
-
-{ #category : 'do-its' }
-RubSmalltalkEditor >> compileSelectionFor: anObject in: evalContext [
-	^ self compile: self selection for: anObject in: evalContext
-]
-
 { #category : 'completion engine' }
 RubSmalltalkEditor >> completionAround: aBlock keyDown: anEvent [
 	"I'm a editor for Smalltalk, so, do completion around"
@@ -433,39 +413,6 @@ RubSmalltalkEditor >> copySelection [
 ]
 
 { #category : 'do-its' }
-RubSmalltalkEditor >> debug: aStream [
-	| method receiver context |
-	receiver := self doItReceiver.
-	context := self doItContext.
-	method := self compile: aStream for: receiver in: context.
-	method ifNil: [ ^self ].
-	method isReturnSpecial
-		ifTrue: [ InformativeNotification signal: 'Nothing to debug, the expression is optimized'.
-			^ self ].
-	 self debug: method receiver: receiver in: context
-]
-
-{ #category : 'do-its' }
-RubSmalltalkEditor >> debug: aCompiledMethod receiver: anObject in: evalContext [
-
-	| process suspendedContext |
-	process := [
-		aCompiledMethod
-			valueWithReceiver: anObject
-			arguments: (aCompiledMethod numArgs = 0
-				ifTrue: [ #() ]
-				ifFalse: [ { evalContext } ] ) ]
-			newProcess.
-	suspendedContext := process suspendedContext.
-
-	(OupsDebugRequest newForContext: suspendedContext)
-		process: process;
-		compiledMethod: aCompiledMethod;
-		label: 'debug it';
-		submit
-]
-
-{ #category : 'do-its' }
 RubSmalltalkEditor >> debugHighlight [
 	"Treat the current highlight as an expression; evaluate and debugg it in a new debugger."
 
@@ -528,17 +475,22 @@ RubSmalltalkEditor >> editingMode [
 { #category : 'do-its' }
 RubSmalltalkEditor >> evaluate: source andDo: aBlock [
 	"Treat the current selection as an expression; evaluate it and invoke aBlock with the result."
+
 	| result rcvr ctxt |
 	rcvr := self doItReceiver.
 	ctxt := self doItContext.
+	
 	"to improve: we need better reporting of errors, to revisit when unifying with Spec"
-	result := rcvr class compiler
-			source: source;
-			requestor: self;
-			context: ctxt;
-			receiver: rcvr;
-			permitFaulty: false;
-			evaluate.
+	[
+		result := rcvr class compiler
+			          source: source;
+			          requestor: self;
+			          context: ctxt;
+			          receiver: rcvr;
+			          permitFaulty: false;
+			          evaluate ]
+		on: OCCodeError
+		do: [ :err | result := nil ].
 
 	^ aBlock value: result
 ]

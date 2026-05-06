@@ -177,7 +177,7 @@ SHTextStyler >> privateStyle: aText [
 		            source: aText asString;
 		            receiver: (self isScripting ifTrue: [ workspace ifNotNil: [ :w | w doItReceiver ] ]);
 		            isScripting: self isScripting;
-		            requestor: workspace.
+						bindings: (workspace ifNil: [#()] ifNotNil: [ workspace bindings]).
 
 	^ self style: aText ast: compiler parse
 ]

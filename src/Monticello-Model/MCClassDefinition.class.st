@@ -118,7 +118,7 @@ MCClassDefinition >> classTraitComposition: classTraitCompositionString [
 { #category : 'accessing' }
 MCClassDefinition >> classTraitCompositionCompiled [
 
-	^ (self class compiler evaluate: self classTraitCompositionString) asTraitComposition
+	^ (OpalEvaluator new evaluate: self classTraitCompositionString) asTraitComposition
 ]
 
 { #category : 'accessing' }
@@ -210,15 +210,15 @@ MCClassDefinition >> createClassInEnvironment: anEnvironent [
 
 { #category : 'installing' }
 MCClassDefinition >> createVariableFromString: aString [
-	^[ self class compiler evaluate: aString ] 
-		on: Error 
-		do: [ 
-			"if an error happens, we parse the slot definition to an ast.
+
+	^ [ OpalEvaluator new evaluate: aString ]
+		  on: Error
+		  do: [ "if an error happens, we parse the slot definition to an ast.
 			and create a UndefinedSlot"
-			| ast slotName |
-			ast := OCParser parseExpression: aString. 
-			slotName := ast receiver value. 
-			UndefinedSlot named: slotName ast: ast  ]
+				  | ast slotName |
+				  ast := OCParser parseExpression: aString.
+				  slotName := ast receiver value.
+				  UndefinedSlot named: slotName ast: ast ]
 ]
 
 { #category : 'printing' }
@@ -533,7 +533,8 @@ MCClassDefinition >> sortedVariables [
 MCClassDefinition >> sortedVariablesOfType: aSymbol [
 	"version for complex vars, { definition . definition }"
 
-	^ ((self selectVariables: aSymbol) asSortedCollection collect: [ :each | self class compiler evaluate: each ]) asArray
+	^ ((self selectVariables: aSymbol) asSortedCollection
+			collect: [ :each | OpalEvaluator new evaluate: each ]) asArray
 ]
 
 { #category : 'printing' }
@@ -611,7 +612,7 @@ MCClassDefinition >> traitComposition: traitCompositionString [
 { #category : 'accessing' }
 MCClassDefinition >> traitCompositionCompiled [
 
-	^ (self class compiler evaluate: self traitCompositionString) asTraitComposition
+	^ (OpalEvaluator new evaluate: self traitCompositionString) asTraitComposition
 ]
 
 { #category : 'accessing' }

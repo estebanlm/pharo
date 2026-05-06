@@ -128,7 +128,6 @@ Package >> addExtensionImport: anExtension [
 			compile: m sourceCode
 			classified: m protocol
 			withStamp: m timeStamp
-			notifying: nil
 			logSource: true ]
 ]
 

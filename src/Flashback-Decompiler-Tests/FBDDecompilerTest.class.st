@@ -654,7 +654,7 @@ FBDDecompilerTest >> testPragma [
 											<hello: 5>
 											<hello: 2>';
 		class: OCMockCompilationClass;
-		compile.
+		compileOrFail.
 
 	bytecode := aCompiledMethod symbolic asString substrings: String cr.
 	self assert: bytecode first equals: 'Quick return self'

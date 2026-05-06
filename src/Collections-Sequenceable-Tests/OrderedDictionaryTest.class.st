@@ -874,6 +874,15 @@ OrderedDictionaryTest >> testEqualsWhenKeyArentInTheSameOrder [
 		assertDictionary: dictionaryOne doesNotEqual: dictionaryTwo.
 ]
 
+{ #category : 'testing' }
+OrderedDictionaryTest >> testFlatCollect [
+
+	| res |
+ 	res := {#first -> -1. #second -> 5 . #three -> -33} as: OrderedDictionary.
+	res := res flatCollect: [ :e | { e abs } ].
+ 	self assert: res asSet equals: #(1 5 33) asSet
+]
+
 { #category : 'tests' }
 OrderedDictionaryTest >> testHash [
 	| dictionary otherDictionary internalDictionary otherInternalDictionary |
@@ -1380,9 +1389,9 @@ OrderedDictionaryTest >> testSize [
 OrderedDictionaryTest >> testStoreOn [
 	| print |
 	print := String streamContents: [ :s | self orderedAssociations storeOn: s ].
-	self assertDictionary: (self class compiler evaluate: print) equals: self orderedAssociations.
+	self assertDictionary: (OpalEvaluator new evaluate: print) equals: self orderedAssociations.
 	print := String streamContents: [ :s | self emptyDictionary storeOn: s ].
-	self assertDictionary: (self class compiler evaluate: print) equals: self emptyDictionary
+	self assertDictionary: (OpalEvaluator new evaluate: print) equals: self emptyDictionary
 ]
 
 { #category : 'tests' }

@@ -35,7 +35,7 @@ DoItChunkV100 >> description [
 ]
 
 { #category : 'importing' }
-DoItChunkV100 >> importFor: requestor logSource: logSource [
+DoItChunkV100 >> importWithLogSource: logSource [
 
 	(contents beginsWith: '----') ifTrue: [ ^ self ].
 
@@ -46,11 +46,9 @@ DoItChunkV100 >> importFor: requestor logSource: logSource [
 	self isPackageAdditionChunk ifTrue: [ ^ self packageOrganizer ensurePackageMatching: self contentsAST arguments first value ].
 	self isClassAdditionChunk ifTrue: [ ^ OldClassDefinitionBuilder buildFromAST: self contentsAST ].
 
-	^ self class compiler class new
-		  source: contents;
-		  requestor: requestor;
-		  logged: logSource;
-		  evaluate
+	^ OpalEvaluator new
+		logged: logSource;
+		evaluate: contents
 ]
 
 { #category : 'importing' }
