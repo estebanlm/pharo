@@ -874,6 +874,15 @@ OrderedDictionaryTest >> testEqualsWhenKeyArentInTheSameOrder [
 		assertDictionary: dictionaryOne doesNotEqual: dictionaryTwo.
 ]
 
+{ #category : 'testing' }
+OrderedDictionaryTest >> testFlatCollect [
+
+	| res |
+ 	res := {#first -> -1. #second -> 5 . #three -> -33} as: OrderedDictionary.
+	res := res flatCollect: [ :e | { e abs } ].
+ 	self assert: res asSet equals: #(1 5 33) asSet
+]
+
 { #category : 'tests' }
 OrderedDictionaryTest >> testHash [
 	| dictionary otherDictionary internalDictionary otherInternalDictionary |
