@@ -39,8 +39,10 @@ ReRemoveInstanceVariablesDriver >> breakingChoices [
 { #category : 'execution' }
 ReRemoveInstanceVariablesDriver >> browseInstanceVariableReferences [
 
-	(Smalltalk tools toolNamed: #messageList) browse: refactoring violators
-		
+	| violators |
+	violators := refactoring refactorings flatCollect: [ :each | each preconditionHasReferences violators ].
+
+	(Smalltalk tools toolNamed: #messageList) browse: violators
 ]
 
 { #category : 'configuration' }
@@ -54,11 +56,12 @@ ReRemoveInstanceVariablesDriver >> configureRefactoring [
 ReRemoveInstanceVariablesDriver >> defaultSelectDialog [
 
 	^ super defaultSelectDialog
-		title: 'There are references to variables!';
-		items: self breakingChoices;
-		display: [ :each | each description ];
-		displayIcon: [ :each | self iconNamed: each systemIconName ];
-		yourself
+		  title: 'There are references to variables!';
+		  message: self labelBasedOnBreakingChanges;
+		  items: self breakingChoices;
+		  display: [ :each | each description ];
+		  displayIcon: [ :each | self iconNamed: each systemIconName ];
+		  yourself
 ]
 
 { #category : 'configuration' }
@@ -71,27 +74,15 @@ ReRemoveInstanceVariablesDriver >> instantiateRefactoring [
 		yourself
 ]
 
-{ #category : 'execution' }
-ReRemoveInstanceVariablesDriver >> runRefactoring [
+{ #category : 'ui - dialogs' }
+ReRemoveInstanceVariablesDriver >> labelBasedOnBreakingChanges [
 
-	self configureRefactoring.
-	
-	"Normally from the IDE we should not get bogus variables."
-	"we could call the violatorMessages here to let the applicability preconditions do the job."
-	refactoring failedApplicabilityPreconditions 
-		ifNotEmpty: [ 
-			| str |
-			str := String streamContents: [ :s | 
-				s << 'The variable '.
-				refactoring refactorings do: [:r | s <<  r variableName]
-					separatedBy: [ str space ].
-				s <<  ' do(es) not exist' ].
-			^ self inform: str contents ].
-	
-	(refactoring breakingChangePreconditions allSatisfy: [:each | each check])
-		ifTrue: [ self applyChanges ]
-		ifFalse: [ self handleBreakingChanges ]
-
+	^ String streamContents: [ :stream |
+			  refactoring failedBreakingChangePreconditions do: [ :cond |
+					  cond check ifFalse: [
+							  cond violationMessageOn: stream.
+							  stream cr ] ].
+			  stream nextPutAll: 'Select the strategies to apply' ]
 ]
 
 { #category : 'initialization' }

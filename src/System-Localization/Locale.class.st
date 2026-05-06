@@ -161,11 +161,6 @@ Locale class >> languageSymbol: languageSymbol [
 	^self isoLanguage: (LanguageSymbols at: languageSymbol)
 ]
 
-{ #category : 'system startup' }
-Locale class >> localTimeZone [
-	^ LocalTimeZone new
-]
-
 { #category : 'announcing' }
 Locale class >> localeAnnouncer [
 	^localeAnnouncer ifNil: [ localeAnnouncer := Announcer new ]
@@ -184,14 +179,13 @@ Locale class >> platformEncodings [
 
 { #category : 'system startup' }
 Locale class >> startUp: resuming [
+
 	| newID |
-	resuming ifFalse: [^self].
-	DateAndTime localTimeZone: self localTimeZone.
-	(self activated)
-		ifTrue: [
-			newID := self current determineLocaleID.
-			newID ~= LocaleID current
-				ifTrue: [self switchToID: newID]]
+	resuming ifFalse: [ ^ self ].
+	self activated ifFalse: [ ^ self ].
+	
+	newID := self current determineLocaleID.
+	newID ~= LocaleID current ifTrue: [ self switchToID: newID ]
 ]
 
 { #category : 'accessing' }

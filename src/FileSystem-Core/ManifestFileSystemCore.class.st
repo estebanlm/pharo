@@ -17,5 +17,5 @@ Class {
 ManifestFileSystemCore class >> manuallyResolvedDependencies [
 
 	<ignoreForCoverage>
-	^ #(#'Zinc-Resource-Meta-Core' #'FileSystem-Disk')
+	^ #(#'Zinc-Resource-Meta-Core')
 ]

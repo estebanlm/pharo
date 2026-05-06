@@ -69,10 +69,50 @@ ReRenameArgumentOrTemporaryDriver >> defaultSelectDialog [
 		  yourself
 ]
 
+{ #category : 'execution' }
+ReRenameArgumentOrTemporaryDriver >> gatherUserInput [
+
+	| cancelled |
+	cancelled := false.
+	[
+		refactoring newName: ((requestDialog ifNil: [ self defaultRequestDialog ])
+				 title: 'Rename a temp variable';
+				 message: 'New name of the variable';
+				 text: sourceNode name;
+				 "We cannot return in this block so we save the result as a boolean to check it later."onCancel: [ cancelled := true ];
+				 openModal).
+
+		cancelled ifTrue: [
+				self inform: 'Refactoring cancelled'.
+				^ false ].
+
+		refactoring applicabilityPreconditionsOfTheNewName allSatisfy: [ :condition | condition check ] ] whileFalse: [
+			refactoring applicabilityPreconditionsOfTheNewName
+				detect: [ :condition | condition check not ]
+				ifFound: [ :condition | self inform: condition errorString ] ].
+	^ true
+]
+
+{ #category : 'private ex' }
+ReRenameArgumentOrTemporaryDriver >> hasFailedApplicabilityPreconditions [
+
+	(refactoring applicabilityPreconditionsIndependentOfTheNewName reject: [ :condition | condition check ]) ifNotEmpty: [
+			self inform: 'The interval selected is not right to rename a temporary variable.'.
+			^ true ].
+	^ false
+]
+
+{ #category : 'initialization' }
+ReRenameArgumentOrTemporaryDriver >> hasFailedBehaviorPreservingPreconditions [
+
+	notCheckVarName := refactoring preconditionCheckVariableName.
+	^ refactoring failedBreakingChangePreconditions isNotEmpty 
+]
+
 { #category : 'configuration' }
 ReRenameArgumentOrTemporaryDriver >> instantiateRefactoring [
 
-	^ RBRenameArgumentOrTemporaryRefactoring
+	^ ReRenameArgumentOrTemporaryRefactoring
 		  renameTemporaryFrom: sourceNode sourceInterval
 		  in: method origin
 		  selector: method selector
@@ -113,41 +153,10 @@ ReRenameArgumentOrTemporaryDriver >> newName: anObject [
 	newName := anObject
 ]
 
-{ #category : 'execution' }
-ReRenameArgumentOrTemporaryDriver >> runRefactoring [
+{ #category : 'configuration' }
+ReRenameArgumentOrTemporaryDriver >> requestDialog [
 
-	| cancelled |
-	self configureRefactoring.
-	refactoring prepareForExecution. "This is needed to set some info in the refactoring such as the parse tree or the defining node."
-
-	(refactoring applicabilityPreconditionsIndependentOfTheNewName reject: [ :condition | condition check ]) ifNotEmpty: [
-		^ self inform: 'The interval selected is not right to rename a temporary variable.' ].
-
-	cancelled := false.
-	[
-		refactoring newName: (self defaultRequestDialog
-				 title: 'Rename a temp variable';
-				 message: 'New name of the variable';
-				 text: sourceNode name;
-				 "We cannot return in this block so we save the result as a boolean to check it later."onCancel: [ cancelled := true ];
-				 openModal).
-
-		cancelled ifTrue: [ ^ self inform: 'Refactoring cancelled' ].
-
-		refactoring applicabilityPreconditionsOfTheNewName allSatisfy: [ :condition | condition check ] ] whileFalse: [
-			refactoring applicabilityPreconditionsOfTheNewName
-				detect: [ :condition | condition check ]
-				ifFound: [ :condition | self inform: condition errorString ] ].
-
-	self setBreakingChangesPreconditions.
-
-	refactoring failedBreakingChangePreconditions ifEmpty: [ self applyChanges ] ifNotEmpty: [ self handleBreakingChanges ]
-]
-
-{ #category : 'initialization' }
-ReRenameArgumentOrTemporaryDriver >> setBreakingChangesPreconditions [
-
-	notCheckVarName := refactoring preconditionCheckVariableName
+	^ requestDialog
 ]
 
 { #category : 'accessing' }

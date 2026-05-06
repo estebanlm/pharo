@@ -237,7 +237,7 @@ NECMenuMorph class >> titleFont [
 
 { #category : 'actions' }
 NECMenuMorph >> browse [
-	(self selectedEntry browse)
+	(self selectedEntry browseCompletionItem)
 		ifTrue: [ engine closeMenu ]
 ]
 
@@ -497,7 +497,7 @@ NECMenuMorph >> insertSelected [
 	
 	"Now we can handle the announcement"
 	selectionIndex := self selectedIndex.
-	self class environment codeChangeAnnouncer announce: (CompletionItemSelected new
+	self class environment codeChangeAnnouncer announce: (CoCompletionItemSelected new
 			 selectedItem: (context entries at: selectionIndex);
 			 token: context completionToken;
 			 entries: context entries;
@@ -668,7 +668,7 @@ NECMenuMorph >> show [
 
 { #category : 'actions' }
 NECMenuMorph >> showDetail [
-	detailMorph ifNotNil: [ ^ self browse ].
+	detailMorph ifNotNil: [ ^ self browseCompletionItem ].
 	self itemsCount isZero ifTrue: [ ^ self ].
 	detailMorph := NECDetailMorph new.
 	self updateDetail.

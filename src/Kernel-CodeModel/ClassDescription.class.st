@@ -25,39 +25,6 @@ ClassDescription class >> isAbstract [
 	^ self == ClassDescription
 ]
 
-{ #category : 'accessing - method dictionary' }
-ClassDescription >> addAndClassifySelector: selector withMethod: compiledMethod inProtocol: protocol [
-
-	<reflection: 'Class structural modification - Selector/Method modification'>
-	| priorMethod priorOrigin oldProtocol newProtocol |
-	self compiledMethodAt: selector ifPresent: [ :method |
-			priorMethod := method.
-			priorOrigin := method origin ].
-
-	super addSelectorSilently: selector withMethod: compiledMethod.
-
-	"Protocols are set even for anonymous classes"
-	oldProtocol := self protocolOfSelector: selector.
-	self codeChangeAnnouncer prevent: MethodRecategorized during: [ self classify: selector under: protocol ].
-
-	"If anonymous, do not announce any change."
-	self isAnonymous ifTrue: [ ^ self ].
-
-	newProtocol := self protocolOfSelector: selector.
-
-	
-	"The old protocol should never be nil. But we are not in an ideal world sadly :( We got reported some cases where some code was loaded but had an error during the loading preventing a method that got added to the method dictionary to have an associated protocol. If this happens, we consider that we categorize it for the first time to avoid announcing a MethodRecategorized with an old protocol that is nil."
-	(priorMethod isNil or: [ priorOrigin ~= compiledMethod origin or: [ oldProtocol isNil ] ])
-		ifTrue: [ "If we end up in this branch, it means the method is compiled for the first time in this class. BUT we have an edge case that is that during a class recompilation, we create a new instance of the class and add the methods from the old one to the new one. In that case, we should not add the new method to the package of the newProtocol because it is already present.
-			In order to know if we are in this edge case we can check if we have an old protocol already because we copy the protocols before the methods, but only in case the prior origin is the same as the origin. Else, it means that we are overrinding a method from a trait.."
-				((priorMethod isNotNil and: [ priorMethod isFromTrait ]) or: [ oldProtocol isNil ]) ifTrue: [
-					(self packageOrganizer packageForProtocol: newProtocol from: self) addMethod: compiledMethod ].
-				self codeChangeAnnouncer announce: (MethodAdded method: compiledMethod) ]
-		ifFalse: [ "If protocol changed and someone is from different package, I need to throw a method recategorized"
-				newProtocol = oldProtocol ifFalse: [ self announceRecategorizationOf: compiledMethod oldProtocol: oldProtocol ].
-				self codeChangeAnnouncer announce: (MethodModified methodChangedFrom: priorMethod to: compiledMethod oldProtocol: oldProtocol) ]
-]
-
 { #category : 'instance variables' }
 ClassDescription >> addInstVarNamed: aString [
 	"Add the argument, aString, as one of the receiver's instance variables."
@@ -83,27 +50,6 @@ ClassDescription >> addProtocol: aProtocol [
 	protocol isExtensionProtocol ifTrue: [ self packageOrganizer ensurePackageOfExtensionProtocol: protocol ].
 	self codeChangeAnnouncer  announce: (ProtocolAdded in: self protocol: protocol).
 	^ protocol
-]
-
-{ #category : 'accessing - method dictionary' }
-ClassDescription >> addSelector: selector withMethod: compiledMethod [
-	<reflection: 'Class structural modification - Selector/Method modification'>
-	self addAndClassifySelector: selector withMethod: compiledMethod inProtocol: nil
-]
-
-{ #category : 'accessing - method dictionary' }
-ClassDescription >> addSelectorSilently: selector withMethod: compiledMethod [
-
-	<reflection: 'Class structural modification - Selector/Method modification'>
-	super addSelectorSilently: selector withMethod: compiledMethod.
-	self instanceSide noteAddedSelector: selector meta: self isMeta
-]
-
-{ #category : 'instance variables' }
-ClassDescription >> addSlot: aSlot [
-
-	<reflection: 'Class structural modification - Slot modification'>
-	^self subclassResponsibility
 ]
 
 { #category : 'accessing - instances and variables' }
@@ -277,7 +223,6 @@ ClassDescription >> classify: selector under: aProtocol [
 	
 	"If we try to classify the method as an extension of its own package, just unclassify the method to avoid any weird state where the method could be considered as an extension or not depending on the interpretation."
 	(self isProtocolExtensionFromTheSamePackage: aProtocol) ifTrue: [
-		ExtensionPointsOwningPackageNotification signalFor: self package name.
 		^ self classify: selector under: Protocol unclassified ].
 
 	(newProtocol := self ensureProtocol: aProtocol) = oldProtocol ifTrue: [ ^ self ].
@@ -395,9 +340,9 @@ ClassDescription >> ensureProtocol: aProtocol [
 ClassDescription >> extendingPackages [
 	"the extending packages of a class are the packages that extend it."
 
-	^ (self localMethods , self classSide localMethods
-		   select: [ :each | each isExtension ]
-		   thenCollect: [ :each | each extensionPackage ]) asIdentitySet
+	^ (self localMethods , self classSide localMethods select: [ :each | each isExtension ])
+		  flatCollect: [ :each | each extensionPackages ]
+		  as: IdentitySet
 ]
 
 { #category : 'protocols' }
@@ -638,6 +583,12 @@ ClassDescription >> localSlots [
 	^ self slots select: [ :aSlot | aSlot isDefinedByOwningClass ]
 ]
 
+{ #category : 'organization' }
+ClassDescription >> methodInstaller [
+
+	^ OCAnnouncingMethodInstaller new forExtendedBehavior
+]
+
 { #category : 'protocols' }
 ClassDescription >> methodsInProtocol: protocol [
 
@@ -681,18 +632,6 @@ ClassDescription >> noteAddedSelector: aSelector meta: isMeta [
 	"A hook allowing some classes to react to adding of certain selectors"
 ]
 
-{ #category : 'compiling' }
-ClassDescription >> noteCompilationOf: aSelector [
-	"A hook allowing some classes to react to recompilation of certain selectors"
-	
-	^ self instanceSide noteCompilationOf: aSelector meta: self isMeta
-]
-
-{ #category : 'compiling' }
-ClassDescription >> noteCompilationOf: aSelector meta: isMeta [
-	"A hook allowing some classes to react to recompilation of certain selectors"
-]
-
 { #category : 'organization updating' }
 ClassDescription >> notifyOfRecategorizedSelector: selector from: oldProtocol to: newProtocol [
 	"If compiled method is not there, it meens it has been removed, not recategorized... so I skip
@@ -733,7 +672,8 @@ ClassDescription >> package: aPackage [
 { #category : 'accessing - packages' }
 ClassDescription >> package: aPackage tag: aTag [
 
-	^ (self packageOrganizer ensureTag: aTag inPackage: aPackage) addClass: self
+	self deprecated: 'Please use directly the package organizer'.
+	^ ((self packageOrganizer ensurePackage: aPackage) ensureTag: aTag) addClass: self
 ]
 
 { #category : 'accessing - packages' }
@@ -911,7 +851,7 @@ ClassDescription >> removeSelector: selector [
 
 	<reflection: 'Class structural modification - Selector/Method modification'>
 	| method origin |
-	method := self compiledMethodAt: selector ifAbsent: [ ^ nil ].
+	method := self compiledMethodAt: selector.
 	origin := method origin.
 
 	"Save the protocol in the properties so that method can still answer their protocol after been removed."
@@ -924,12 +864,6 @@ ClassDescription >> removeSelector: selector [
 	self codeChangeAnnouncer methodRemoved: method origin: origin
 ]
 
-{ #category : 'instance variables' }
-ClassDescription >> removeSlot: aSlot [
-	<reflection: 'Class structural modification - Slot modification'>
-	^self subclassResponsibility
-]
-
 { #category : 'protocols' }
 ClassDescription >> renameProtocol: anOldProtocol as: aNewProtocol [
 
@@ -940,7 +874,6 @@ ClassDescription >> renameProtocol: anOldProtocol as: aNewProtocol [
 	
 	"We should not be able to have a protocol that is an extension of the same class so let's skip the rename."
 	(self isProtocolExtensionFromTheSamePackage: aNewProtocol) ifTrue: [ 
-		ExtensionPointsOwningPackageNotification signalFor: self package name.
 		^ self ].
 
 		oldProtocol := self ensureProtocol: anOldProtocol.

@@ -15,13 +15,26 @@ BaselineOfGeneralTests >> baseline: spec [
 	spec for: #common do: [
 		spec
 			baseline: 'Debugging' with: [ spec loads: #Tests from: repository ];
+			
+			baseline: 'SessionManagerTests' with: [ 
+                spec 
+                    className: 'BaselineOfSystemSessionManager';
+                    repository: repository;
+                    loads: #('Tests') ];
+			
+		  baseline: 'System-CommandLineHandler-Tests' with: [ 
+                spec 
+                    className: 'BaselineOfSystemCommandLineHandler';
+                    repository: repository;
+                    loads: #('Tests') ];
+
+
 			package: 'NumberParser-Tests';
 			package: 'Fuel-Core-Tests';
 			package: 'FormCanvas-Tests';
 			package: 'Collections-Arithmetic-Tests';
 			package: 'Metacello-CommandLine-Tests';
 			baseline: 'Epicea' with: [ spec loads: #Tests from: repository ];
-			package: 'FileSystem-Memory-Tests';
 			baseline: 'Fonts' with: [ spec loads: #Tests from: repository ];
 			baseline: 'FreeType' with: [ spec loads: #tests from: repository ];
 			package: 'Graphics-Tests';
@@ -43,7 +56,6 @@ BaselineOfGeneralTests >> baseline: spec [
 			package: 'System-Hashing-Tests';
 			package: 'System-History-Tests';
 			package: 'System-Localization-Tests';
-			package: 'System-SessionManager-Tests';
 			package: 'System-Settings-Tests';
 			package: 'System-Support-Tests';
 			package: 'Text-Diff-Tests';
@@ -57,7 +69,6 @@ BaselineOfGeneralTests >> baseline: spec [
 			package: 'Zinc-Tests';
 			"requires Zinc-Resource-Meta-Tests"package:
 			'System-Identification-Tests';
-			package: 'System-CommandLineHandler-Tests';
 			package: 'Transcript-NonInteractive-Tests';
 			package: 'PharoDocComment-Tests' "standalone" ]
 ]

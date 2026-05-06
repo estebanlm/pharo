@@ -263,12 +263,13 @@ BlockClosureTest >> testLiteralEqual [
 	| methodToTest compiledBlocks |
 	methodToTest := self class compiler
 		options: #(+ optionCleanBlockClosure);
-		compile: 'twoCleanBlocks
+		source: 'twoCleanBlocks
 
 	| value |
 	[3].
 	"just two clean blocks"
-	[3].'.
+	[3].';
+		compileOrFail.
 
 	compiledBlocks := methodToTest literals select: [ :each | each isBlock ].
 	self assert: compiledBlocks size equals: 2.
@@ -420,7 +421,8 @@ BlockClosureTest >> testOneArgument [
 
 { #category : 'tests - printing' }
 BlockClosureTest >> testPrintOn [
-	self assert: (OCParser parseExpression: [ 1 + 2 ] printString) equals: (OCParser parseExpression: '[ 1 + 2 ]')
+
+	self assert: [ 1 + 2 ] printString equals: '[ ] in BlockClosureTest>>#testPrintOn'
 ]
 
 { #category : 'tests' }

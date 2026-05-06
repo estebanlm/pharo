@@ -91,10 +91,10 @@ MCMethodDefinitionTest >> testCannotLoadInvalidCodeInStrictMode [
 	[
 	definition loadWithLoader: loader.
 	self fail ]
-		on: OCCodeError
+		on: OCCompilationError
 		do: [ :error |
 			self
-				assert: error messageText
+				assert: error compilationResult ast allNotices first messageText
 				equals: 'Variable or expression expected' ]
 ]
 
@@ -116,9 +116,9 @@ MCMethodDefinitionTest >> testCannotLoadUndeclaredInStrictMode [
 	[
 	definition loadWithLoader: loader.
 	self fail ]
-		on: OCCodeError
+		on: OCCompilationError
 		do: [ :error |
-			self assert: error messageText equals: 'Undeclared variable named UNDECLARED in kjahs87' ]
+			self assert: error compilationResult ast allNotices first messageText equals: 'Undeclared variable named UNDECLARED in kjahs87' ]
 ]
 
 { #category : 'testing' }
@@ -166,6 +166,9 @@ MCMethodDefinitionTest >> testLoadAndUnload [
 MCMethodDefinitionTest >> testLoadInvalidCodeInLegacyMode [
 
 	| definition mockClass |
+	
+	<ignoreNotImplementedSelectors: #( kjahs87 )>
+	
 	testingEnvironment
 		at: #NoSuchClass
 		put: (mockClass := self mockClass).

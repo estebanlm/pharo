@@ -4,6 +4,9 @@ I run unit tests found in specified packages, and display their results to stand
 Class {
 	#name : 'ClapTestRunner',
 	#superclass : 'ClapPharoApplication',
+	#instVars : [
+		'environment'
+	],
 	#category : 'SUnit-Basic-CLI',
 	#package : 'SUnit-Basic-CLI'
 }
@@ -18,8 +21,8 @@ ClapTestRunner class >> commandSpecification [
 		description: 'A Test runner to run test suites from a shell';
 		addFlag: #'junit-xml-output' description: 'Output results in JUnit-compatible XML format';
 		addFlagWithPositional: #'shuffle-seed' description: 'an integer specifying the seed used to shuffle the tests';
-		addFlagWithPositional: #'stage-name' description: 'adds a prefix to the generated xml, this is useful
-when running in the CI infrastructure';
+		addFlagWithPositional: #'stage-name' description: 'adds a prefix to the generated xml, this is useful when running in the CI infrastructure';
+		addFlagWithPositional: #'project-name' description: 'the name of the metacello project, what follows the BaselineOf prefix, used to obtain the tests from the project Tests group';
 		addFlag: #'no-xterm' description: 'use this option when no xterm available';
 		addFlag: #'fail-on-error' description: 'if there is a test error, it will exit with error code 1';
 		addFlag: #'fail-on-failure' description: 'if there is a test error or failure, it will exit with error code 1';
@@ -65,6 +68,13 @@ ClapTestRunner >> execute [
 	self runPackages
 ]
 
+{ #category : 'accessing' }
+ClapTestRunner >> hasProjectName [
+	"Return True if the project-name flag is set"
+
+	^ self hasFlag: #'project-name'
+]
+
 { #category : 'private - printing' }
 ClapTestRunner >> informResults: results [
 
@@ -78,9 +88,35 @@ ClapTestRunner >> informResults: results [
 				flush ]
 ]
 
+{ #category : 'initialization' }
+ClapTestRunner >> initialize [
+
+	super initialize.
+	
+	"Set the environment to look for baselines"
+	environment := self class environment
+]
+
 { #category : 'accessing' }
 ClapTestRunner >> packages [
-	^ self positional: #PACKAGE
+	"Collects all test package names by merging explicit positional PACKAGE arguments with implicit test packages retrieved from the project's baseline via the --project-name flag"
+	| explicitNames projectNames |
+	
+	explicitNames := (self positional: #PACKAGE ifAbsent: [ #() ]) 
+		collect: [ :each | each value ].
+	
+	projectNames := self hasProjectName 
+		ifTrue: [ self testPackagesForProject: self projectName ]
+		ifFalse: [ #() ].
+		
+	^ explicitNames, projectNames 
+]
+
+{ #category : 'accessing' }
+ClapTestRunner >> projectName [
+	"Return project name in the form of a String (ex: 'FileSystem'). Fails with an exception if the flag is missing."
+
+	^ (self positional: #'project-name') value
 ]
 
 { #category : 'execution' }
@@ -141,6 +177,28 @@ ClapTestRunner >> testPackages [
 	packages := Set new.
 	self packages do: [ :packageName | self addPackagesMatching: packageName to: packages ].
 	^ packages 
+]
+
+{ #category : 'accessing' }
+ClapTestRunner >> testPackagesForLoadableName: loadableName inMetacelloVersion: version [
+	"Get the test packages in the project version, resolving nested groups recursively.
+	loadableName is a group name or a package name"
+
+	| spec |
+	spec := version packageNamed: loadableName ifAbsent: [ ^ #(  ) ].
+	^ spec isGroupSpec
+		  ifTrue: [ spec includes flatCollect: [ :each | self testPackagesForLoadableName: each inMetacelloVersion: version ] ]
+		  ifFalse: [ { spec name } ]
+]
+
+{ #category : 'accessing' }
+ClapTestRunner >> testPackagesForProject: aProjectName [
+	"Get the test packages associated with a projectName by its baseline, resolving nested groups recursively"
+
+	| version |
+	version := (environment at: ('BaselineOf' , aProjectName) asSymbol ifAbsent: [ ^ #(  ) ]) project version.
+
+	^ (self testPackagesForLoadableName: 'Tests' inMetacelloVersion: version) asSet asArray "delete duplicates"
 ]
 
 { #category : 'accessing' }

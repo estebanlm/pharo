@@ -127,11 +127,11 @@ CodeImporter >> codeDeclarations [
 { #category : 'public access' }
 CodeImporter >> evaluate [
 	" stripped down version of evaluateDeclarations"
+
 	| value |
-	self codeDeclarations do: [ :declaration |
-		value := declaration importFor: nil logSource: logSource  ].
+	self codeDeclarations do: [ :declaration | value := declaration importWithLogSource: logSource ].
 	self flushChangesFile.
-	^value
+	^ value
 ]
 
 { #category : 'evaluating' }

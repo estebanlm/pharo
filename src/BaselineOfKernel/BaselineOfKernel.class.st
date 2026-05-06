@@ -27,8 +27,48 @@ BaselineOfKernel class >> testsPackageNames [
 BaselineOfKernel >> baseline: spec [
 
 	<baseline>
+	| repository |
+	repository := self packageRepositoryURLForSpec: spec.
+	
 	spec for: #common do: [
 			spec
+				baseline: 'Files-Tests' with: [ 
+					spec
+						className: 'BaselineOfFiles';
+						repository: repository;
+						loads: #( 'Tests' )];
+
+				baseline: 'Zinc-Character-Encoding-Tests' with: [ 
+					spec
+						className: 'BaselineOfZincCharacterEncoding';
+						repository: repository;
+						loads: #( 'Tests' )];
+				
+
+				baseline: 'System-Platforms-Tests' with: [ 
+					spec
+						className: 'BaselineOfSystemPlatforms';
+						repository: repository;
+						loads: #( 'Tests' )];
+					
+				baseline: 'Collections-Tests' with: [ 
+					spec 
+						className: 'BaselineOfCollections';
+						repository: repository;
+						loads: #('KernelTests') ];
+					
+					
+				baseline: 'Announcements-Core-Tests' with: [ 
+					spec
+						className: 'BaselineOfAnnouncements';
+						repository: repository;
+						loads: #( 'Tests' )];
+					
+				baseline: 'SystemFinalization' with: [ 
+					spec
+						repository: repository;
+						loads: #( 'Tests' )];
+					
 				package: 'Announcements-Core';
 				package: 'Collections-Abstract';
 				package: 'Collections-DoubleLinkedList';
@@ -65,22 +105,8 @@ BaselineOfKernel >> baseline: spec [
 				package: 'System-Version';
 				package: 'Multilingual-Encodings';
 				
-				package: 'Collections-Abstract-Tests';
-				package: 'Collections-DoubleLinkedList-Tests';
-				package: 'Collections-Native-Tests';
-				package: 'Collections-Sequenceable-Tests';
-				package: 'Collections-Streams-Tests';
-				package: 'Collections-Strings-Tests';
-				package: 'Collections-Support-Tests';
-				package: 'Collections-Unordered-Tests';
-				package: 'Collections-Weak-Tests' with: [ spec requires: #( 'Collections-Unordered-Tests' ) ];
 				package: 'Kernel-Tests';
 				package: 'Kernel-CodeModel-Tests';
-				package: 'Files-Tests';
-				package: 'Announcements-Core-Tests';
-				package: 'System-Platforms-Tests';
-				package: 'System-Finalization-Tests';
-				package: 'Zinc-Character-Encoding-Tests';
 				package: 'System-Time-Tests'.
 
 			"The order of packages in the groups are important for the bootstrap! It define the load order."
@@ -96,7 +122,6 @@ BaselineOfKernel >> baseline: spec [
 					'System-NumberPrinting'. 'System-Version'. 'Multilingual-Encodings' };
 				group: 'Tests'
 				with:
-					{ 'Collections-Abstract-Tests'. 'Collections-DoubleLinkedList-Tests'. 'Collections-Native-Tests'. 'Collections-Sequenceable-Tests'. 'Collections-Streams-Tests'. 'Collections-Strings-Tests'.
-					'Collections-Support-Tests'. 'Collections-Unordered-Tests'. 'Collections-Weak-Tests'. 'Kernel-Tests'. 'Kernel-CodeModel-Tests'. 'Announcements-Core-Tests'. 'System-Platforms-Tests'.
-					 'Files-Tests'. 'System-Finalization-Tests'. 'Zinc-Character-Encoding-Tests'. 'System-Time-Tests' } ]
+					{ 'Collections-Tests'. 'Kernel-Tests'. 'Kernel-CodeModel-Tests'. 'Announcements-Core-Tests'. 'System-Platforms-Tests'.
+					 'Files-Tests'. 'SystemFinalization'. 'Zinc-Character-Encoding-Tests'. 'System-Time-Tests' } ]
 ]

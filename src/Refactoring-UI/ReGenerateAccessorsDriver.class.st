@@ -21,13 +21,22 @@ ReGenerateAccessorsDriver class >> driverName [
 	^ 'Generate accessors'
 ]
 
-{ #category : 'configuration' }
-ReGenerateAccessorsDriver >> configureRefactoring [
+{ #category : 'execution' }
+ReGenerateAccessorsDriver >> gatherUserInput [
 
-	refactoring := ReUpFrontPreconditionCheckingCompositeRefactoring new
-		               model: model;
-		               refactorings: (selectedVariables collect: [ :eachSlot | self refactoringForSlot: eachSlot ]);
-		               yourself
+	(refactoring refactorings allSatisfy: [ :each | each findGetterMethod notNil and: [ each findSetterMethod notNil ] ]) ifTrue: [
+			InformativeNotification signal: 'Accessors already exist for selected variables.'.
+			^ false ].
+	^ true
+]
+
+{ #category : 'configuration' }
+ReGenerateAccessorsDriver >> instantiateRefactoring [
+
+	^ ReUpFrontPreconditionCheckingCompositeRefactoring new
+		  model: model;
+		  refactorings: (selectedVariables collect: [ :eachSlot | self refactoringForSlot: eachSlot ]);
+		  yourself
 ]
 
 { #category : 'execution' }
@@ -44,21 +53,17 @@ ReGenerateAccessorsDriver >> refactoringForSlot: aSlot [
 		  ifTrue: [ self refactoringClass model: model instanceVariable: aSlot class: self targetClass name ]
 ]
 
-{ #category : 'configuration' }
-ReGenerateAccessorsDriver >> runRefactoring [
-
-	self configureRefactoring.
-	self applyChanges
-]
-
 { #category : 'accessing' }
 ReGenerateAccessorsDriver >> scopeInstanceSide: aBoolean [
 
 	scopeInstanceSide := aBoolean
 ]
 
-{ #category : 'configuration' }
-ReGenerateAccessorsDriver >> selectedVariables: aCollection [
+{ #category : 'initialization' }
+ReGenerateAccessorsDriver >> scopes: scopesList scopeInstanceSide: aBoolean selectedVariables: aCollection [
 
-	selectedVariables := aCollection
+	scopeInstanceSide := aBoolean.
+	selectedVariables := aCollection.
+	scopes := scopesList.
+	model := self refactoringScopeOn: scopesList first
 ]

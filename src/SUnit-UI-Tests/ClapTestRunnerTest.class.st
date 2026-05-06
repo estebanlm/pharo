@@ -87,6 +87,44 @@ ClapTestRunnerTest >> testDefaultTestRunnerIsVTermTestRunner [
 ]
 
 { #category : 'tests' }
+ClapTestRunnerTest >> testResolvePackagesForGeneralProject [
+	"Tests that a baseline mixing direct packages and nested groups in its Tests group is resolved correctly"
+	| runner packages |
+    runner := ClapTestRunner new.
+    packages := runner testPackagesForProject: 'ClapMockGeneralProject'.
+    
+    self assert: (packages includes: 'FakePackage1').
+    self assert: (packages includes: 'FakePackage2').
+	 self assert: (packages includes: 'FakePackage-Tests').
+	 self assert: (packages includes: 'Core') not.
+    
+    "Check there is no list in the list "
+    self assert: (packages allSatisfy: [ :each | each isString ]).
+]
+
+{ #category : 'tests' }
+ClapTestRunnerTest >> testResolvePackagesForProjectWithoutTestsGroup [
+	"Tests a project that has a baseline but no 'Tests' group"
+	| runner packages |
+	runner := ClapTestRunner new.
+
+	packages := runner testPackagesForProject: 'ClapMockNoTestGroup'. 
+	
+	self assert: packages isEmpty.
+]
+
+{ #category : 'tests' }
+ClapTestRunnerTest >> testResolvePackagesForUnknownProject [
+	"Tests that an unknown project returns an empty collection without crashing"
+	| runner packages |
+	runner := ClapTestRunner new.
+	
+	packages := runner testPackagesForProject: 'ThisProjectDoesNotExist404'.
+	
+	self assert: packages isEmpty.
+]
+
+{ #category : 'tests' }
 ClapTestRunnerTest >> testShouldFailOnErrorIsFalseWhenFailOnErrorFlagAbsent [
 
 	| command |

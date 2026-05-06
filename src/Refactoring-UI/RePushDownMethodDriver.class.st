@@ -78,14 +78,6 @@ RePushDownMethodDriver >> changes [
 
 ]
 
-{ #category : 'execution' }
-RePushDownMethodDriver >> configureAndRunRefactoring [
-
-	self configureRefactoring.
-	self setBreakingChangesPreconditions.
-	refactoring failedBreakingChangePreconditions ifEmpty: [ self applyChanges ] ifNotEmpty: [ self handleBreakingChanges ]
-]
-
 { #category : 'configuration' }
 RePushDownMethodDriver >> defaultSelectDialog [
 
@@ -101,15 +93,30 @@ RePushDownMethodDriver >> defaultSelectDialog [
 { #category : 'execution' }
 RePushDownMethodDriver >> gatherUserInput [
 
-	self selectMethods
+	self selectMethods.
+	methods ifNil: [ ^ false ].
+	refactoring selectors: (methods collect: [ :each | each selector ]).
+	^ true
+]
+
+{ #category : 'private exe' }
+RePushDownMethodDriver >> hasFailedBehaviorPreservingPreconditions [
+
+	isAbstract := refactoring preconditionIsAbstract.
+	subclassesSendSuper := refactoring preconditionSubclassesDontSendSuper.
+	subclassDirectlyDefines := refactoring preconditionSubclassesDirectlyDefines.
+	refersToSelector := refactoring preconditionMethodsReferToSelector.
+	allSubclassesDirectlyDefines := refactoring preconditionAllSubclassesDirectlyDefines.
+	
+	^ refactoring failedBreakingChangePreconditions isNotEmpty 
 ]
 
 { #category : 'configuration' }
 RePushDownMethodDriver >> instantiateRefactoring [
 
-	^ RBPushDownMethodRefactoring
+	^ RePushDownMethodRefactoring
 		  model: model
-		  pushDown: (methods collect: [ :each | each selector ])
+		  pushDown: #()
 		  from: class name
 ]
 
@@ -174,15 +181,6 @@ RePushDownMethodDriver >> removeSuperclassMethod [
 ]
 
 { #category : 'execution' }
-RePushDownMethodDriver >> runRefactoring [
-
-	"the user can still select if needed. Nil = cancel refactoring"
-	self gatherUserInput.
-	methods ifNil: [ ^ self ].
-	self configureAndRunRefactoring
-]
-
-{ #category : 'execution' }
 RePushDownMethodDriver >> selectMethods [
 
 	| dialog |
@@ -198,14 +196,4 @@ RePushDownMethodDriver >> selectMethods [
 	dialog isOk ifTrue: [ ^ self ].
 
 	methods:= nil
-]
-
-{ #category : 'initialization' }
-RePushDownMethodDriver >> setBreakingChangesPreconditions [
-
-	isAbstract := refactoring preconditionIsAbstract.
-	subclassesSendSuper := refactoring preconditionSubclassesDontSendSuper.
-	subclassDirectlyDefines := refactoring preconditionSubclassesDirectlyDefines.
-	refersToSelector := refactoring preconditionMethodsReferToSelector.
-	allSubclassesDirectlyDefines := refactoring preconditionAllSubclassesDirectlyDefines 
 ]

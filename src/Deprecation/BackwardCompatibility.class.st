@@ -54,11 +54,12 @@ BackwardCompatibility class >> backwardsCompatibilityWhile: aBlock [
 
 { #category : 'handling' }
 BackwardCompatibility >> defaultAction [
-
-	self class addLog: self.
-	self showWarning ifTrue: [ self logTranscript ].
-	self raiseWarning ifTrue: [ super defaultAction ].
-	self shouldTransform ifTrue: [ self transform ]
+    RecursionStopper during: [
+        self class addLog: self.
+        self showWarning ifTrue: [ self logTranscript ].
+        self raiseWarning ifTrue: [ super defaultAction ].
+        self shouldTransform ifTrue: [ self transform ]
+    ]
 ]
 
 { #category : 'private' }

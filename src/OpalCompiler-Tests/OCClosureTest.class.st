@@ -201,36 +201,36 @@ OCClosureTest >> testConstantBlockClosure [
 { #category : 'tests - empty' }
 OCClosureTest >> testEmptyBlockOneArgument [
 	self
-		assert: (self class compiler evaluate: '[ :a ] value: 1') isNil
+		assert: (OpalEvaluator new evaluate: '[ :a ] value: 1') isNil
 		description: 'Empty blocks in ST-80 should return nil'.
 	self
-		assert: (self class compiler evaluate: '[ :a | ] value: 1') isNil
+		assert: (OpalEvaluator new evaluate: '[ :a | ] value: 1') isNil
 		description: 'Empty blocks in ST-80 should return nil'.
 	self
-		assert: (self class compiler evaluate: '[ :a | | t | ] value: 1') isNil
+		assert: (OpalEvaluator new evaluate: '[ :a | | t | ] value: 1') isNil
 		description: 'Empty blocks in ST-80 should return nil'
 ]
 
 { #category : 'tests - empty' }
 OCClosureTest >> testEmptyBlockTwoArguments [
 	self
-		assert: (self class compiler evaluate: '[ :a :b ] value: 1 value: 2') isNil
+		assert: (OpalEvaluator new evaluate: '[ :a :b ] value: 1 value: 2') isNil
 		description: 'Empty blocks in ST-80 should return nil'.
 	self
-		assert: (self class compiler evaluate: '[ :a :b | ] value: 1 value: 2') isNil
+		assert: (OpalEvaluator new evaluate: '[ :a :b | ] value: 1 value: 2') isNil
 		description: 'Empty blocks in ST-80 should return nil'.
 	self
-		assert: (self class compiler evaluate: '[ :a :b | | t | ] value: 1 value: 2') isNil
+		assert: (OpalEvaluator new evaluate: '[ :a :b | | t | ] value: 1 value: 2') isNil
 		description: 'Empty blocks in ST-80 should return nil'
 ]
 
 { #category : 'tests - empty' }
 OCClosureTest >> testEmptyBlockZeroArguments [
 	self
-		assert: (self class compiler evaluate: '[ ] value') isNil
+		assert: (OpalEvaluator new evaluate: '[ ] value') isNil
 		description: 'Empty blocks in ST-80 should return nil'.
 	self
-		assert: (self class compiler evaluate: '[ | t | ] value') isNil
+		assert: (OpalEvaluator new evaluate: '[ | t | ] value') isNil
 		description: 'Empty blocks in ST-80 should return nil'
 ]
 

@@ -31,18 +31,20 @@ RePushDownMethodInSomeClassesDriver class >> driverName [
 { #category : 'execution' }
 RePushDownMethodInSomeClassesDriver >> gatherUserInput [
 
-	super gatherUserInput.
-	classes := self selectClasses
+	self selectClasses.
+	classes ifNil: [ ^ false ].
+	refactoring classes: (classes collect: [ :each | each name ]).
+	^ true
 ]
 
 { #category : 'configuration' }
 RePushDownMethodInSomeClassesDriver >> instantiateRefactoring [
 
-	^ RBPushDownMethodRefactoring
-		model: model
+	^ RePushDownMethodRefactoring
+		model: model 
 		pushDown: (methods collect: [ :each | each selector ])
 		from: class
-		in: classes.
+		in: #().
 ]
 
 { #category : 'initialization' }
@@ -54,36 +56,17 @@ RePushDownMethodInSomeClassesDriver >> model: aRBNamespace scopes: refactoringSc
 	class := methods first origin
 ]
 
-{ #category : 'resources' }
-RePushDownMethodInSomeClassesDriver >> refactoring [
-
-	refactoring :=  RBPushDownMethodRefactoring
-		model: model
-		pushDown: (methods collect: [ :each | each selector ])
-		from: class
-		in: classes.
-]
-
-{ #category : 'execution' }
-RePushDownMethodInSomeClassesDriver >> runRefactoring [
-
-	self gatherUserInput.
-	methods ifNil: [ ^ self ].
-	classes ifNil: [ ^ self ].
-	self configureAndRunRefactoring 
-]
-
 { #category : 'execution' }
 RePushDownMethodInSomeClassesDriver >> selectClasses [
+
 	| dialog |
-	
 	dialog := (StVariablesSelectionPresenter newApplication: self application)
-		label: 'Push down in classes: '
-			withItems:(class subclasses sort: #name ascending) asOrderedCollection
-			selecting: class subclasses;
-		openDialog.
-	
-	dialog isOk ifFalse: [ ^ nil ].
-	
-	^ dialog selectedItems collect: [ :each | each name ]
+		          title: 'Push down in some classes'
+		          label: 'Push down in classes: '
+		          withItems: (class subclasses sort: #name ascending) asOrderedCollection
+		          selecting: class subclasses asOrderedCollection
+		          acceptBlock: [ :selectedClasses | classes := selectedClasses ];
+		          openModal.
+	dialog isOk ifTrue: [ ^ self ].
+	classes := nil
 ]

@@ -72,11 +72,12 @@ TestResult class >> newTestDictionary [
 
 { #category : 'history' }
 TestResult class >> removeFromTestHistory: aSelector in: aTestCaseClass [
-	| lastRun |
 
+	| lastRun |
 	lastRun := self historyFor: aTestCaseClass.
-	#(#passed #failures #errors) do:
-		[ :set | (lastRun at: set) remove: aSelector ifAbsent: []]
+
+	#( #passed #failures #errors ) do: [ :set | (lastRun at: set) remove: aSelector ifAbsent: [ ] ].
+	aTestCaseClass historyAnnouncer announce: (TestSuiteEnded result: aTestCaseClass)
 ]
 
 { #category : 'exceptions' }
@@ -335,10 +336,10 @@ TestResult >> mergeWith: aTestResult [
 	"merge the given test result with the receiver"
 
 	timeStamp := DateAndTime now.
-	failures addAll: aTestResult failures.
-	errors addAll: aTestResult errors.
-	passed addAll: aTestResult passed.
-	skipped addAll: aTestResult skipped
+	failures addAll: (aTestResult failures difference: failures).
+	errors addAll: (aTestResult errors difference: errors).
+	passed addAll: (aTestResult passed difference: passed).
+	skipped addAll: (aTestResult skipped difference: skipped)
 ]
 
 { #category : 'compatibility' }
@@ -379,6 +380,20 @@ TestResult >> printOn: aStream [
 		nextPutAll: ', ';
 		print: self unexpectedPassCount;
 		nextPutAll: ' passed unexpected'
+]
+
+{ #category : 'removing' }
+TestResult >> removeError: aTestCase [
+	"remove the giving error from the errors set"
+
+	^ errors remove: aTestCase
+]
+
+{ #category : 'removing' }
+TestResult >> removeFailure: aTestCase [
+	"remove the giving failure from the failures set"
+
+	^ failures remove: aTestCase
 ]
 
 { #category : 'running' }

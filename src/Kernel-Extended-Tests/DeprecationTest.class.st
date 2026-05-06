@@ -16,10 +16,33 @@ DeprecationTest >> testMessageTextFromBlock [
 ]
 
 { #category : 'tests' }
+DeprecationTest >> testNoInfiniteLoopWhenShowWarningIsTrue [
+    "Regression test for https://github.com/pharo-project/pharo/issues/19396"
+    
+    | oldShowWarning oldActivateTransformations classFactory |
+	  <ignoreNotImplementedSelectors: #(sendsDeprecatedMessageWithTransform)>
+    classFactory := ClassFactoryForTestCase new.
+    classFactory
+        silentlyCompile: 'sendsDeprecatedMessageWithTransform ^ self deprecatedMessageWithTransform'
+        in: ExampleForDeprecationTest.
+    [
+        oldShowWarning := Deprecation showWarning.
+        oldActivateTransformations := Deprecation activateTransformations.
+        Deprecation showWarning: true.
+        Deprecation activateTransformations: true.
+        ExampleForDeprecationTest new sendsDeprecatedMessageWithTransform
+    ] ensure: [
+        Deprecation showWarning: oldShowWarning.
+        Deprecation activateTransformations: oldActivateTransformations ].
+    ExampleForDeprecationTest
+        removeSelector: #sendsDeprecatedMessageWithTransform
+]
+
+{ #category : 'tests' }
 DeprecationTest >> testTransformingDeprecation [
 	<ignoreNotImplementedSelectors: #(sendsDeprecatedMessageWithTransform)>
 	| classFactory oldRaiseWarning oldActivateTransformations |
-	classFactory := ClassFactoryForTestCase new.
+	classFactory := ClassFactoryForTestCase environment: SystemEnvironment new.
 	classFactory 
 		silentlyCompile: 'sendsDeprecatedMessageWithTransform ^ self deprecatedMessageWithTransform'
 		in: ExampleForDeprecationTest.

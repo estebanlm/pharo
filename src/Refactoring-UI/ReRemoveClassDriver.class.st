@@ -51,8 +51,7 @@ ReRemoveClassDriver >> breakingChoices [
 { #category : 'actions' }
 ReRemoveClassDriver >> browseReferences [
 
-	haveNoReferences violators do: [ :references |
-		(application toolNamed: #messageList) browse: (references collect: [ :ref | ref compiledMethod ]) ]
+	(application toolNamed: #messageList) browse: (haveNoReferences violators collect: [ :ref | ref compiledMethod ])
 ]
 
 { #category : 'actions' }
@@ -73,6 +72,18 @@ ReRemoveClassDriver >> defaultSelectDialog [
 		display: [ :each | each description ];
 		displayIcon: [ :each | self iconNamed: each systemIconName ]; 
 		yourself
+]
+
+{ #category : 'private ex' }
+ReRemoveClassDriver >> hasFailedBehaviorPreservingPreconditions [
+
+	haveNoReferences := refactoring preconditionHaveNoReferences.
+	emptyClasses := refactoring preconditionEmptyClasses.
+	noSubclasses := refactoring preconditionHaveNoSubclasses.
+	haveNoReferences check.
+	emptyClasses check.
+	noSubclasses check.
+	^ refactoring failedBreakingChangePreconditions isNotEmpty
 ]
 
 { #category : 'configuration' }
@@ -105,33 +116,10 @@ ReRemoveClassDriver >> removeClassAndPushStateToSubclasses [
 	self openPreviewWithChanges: refactoring removeClassesChanges
 ]
 
-{ #category : 'execution' }
-ReRemoveClassDriver >> runRefactoring [
-	
-	self configureRefactoring.
-	refactoring failedApplicabilityPreconditions 
-		ifNotEmpty: [ ^ self inform: 'The class should exist and not be a metaclass' ].
-	self setBreakingChangesPreconditions.
-	haveNoReferences check & emptyClasses check & noSubclasses check
-			ifTrue: [ self applyChanges ]
-			ifFalse: [ self handleBreakingChanges ]
-
-]
-
 { #category : 'initialization' }
 ReRemoveClassDriver >> scopes: refactoringScopes classes: aColclasses [
 
 	scopes := refactoringScopes.
 	model := self refactoringScopeOn: scopes first.
 	classes := aColclasses
-]
-
-{ #category : 'private execution' }
-ReRemoveClassDriver >> setBreakingChangesPreconditions [
-	
-	haveNoReferences := refactoring preconditionHaveNoReferences.
-	emptyClasses := refactoring preconditionEmptyClasses.
-	noSubclasses := refactoring preconditionHaveNoSubclasses
-
-	
 ]

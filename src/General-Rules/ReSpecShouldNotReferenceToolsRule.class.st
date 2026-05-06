@@ -15,12 +15,6 @@ ReSpecShouldNotReferenceToolsRule class >> ruleName [
 	^ 'Spec subclasses should not reference Smalltalk tools'
 ]
 
-{ #category : 'accessing' }
-ReSpecShouldNotReferenceToolsRule class >> severity [
-
-	^ #warning
-]
-
 { #category : 'running' }
 ReSpecShouldNotReferenceToolsRule >> basicCheck: aNode [
 

@@ -137,6 +137,11 @@ MCGitHubRepository >> downloadJSONTags [
 	^ self normalizeTagsData: jsonObject
 ]
 
+{ #category : 'accessing' }
+MCGitHubRepository >> httpsUrl [
+	^ 'https://github.com/', projectPath, '.git'
+]
+
 { #category : 'private' }
 MCGitHubRepository >> normalizeTagsData: jsonObject [
   "return a dictionay mapping the tag name to the commit SHA"
@@ -164,4 +169,9 @@ MCGitHubRepository >> normalizeTagsData: jsonObject [
 { #category : 'private' }
 MCGitHubRepository >> projectTagsUrlFor: projectPath2 [
   ^ 'https://api.github.com/repos/' , projectPath2 , '/tags'
+]
+
+{ #category : 'accessing' }
+MCGitHubRepository >> scpUrl [
+	^ 'git@github.com:', projectPath, '.git'
 ]

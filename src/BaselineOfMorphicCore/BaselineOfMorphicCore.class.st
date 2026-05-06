@@ -30,7 +30,6 @@ BaselineOfMorphicCore >> baseline: spec [
 			spec package: 'Graphics-Canvas'.
 			spec package: 'FormCanvas-Core'.
 			spec package: 'System-Model'.
-			spec package: 'FileSystem-Memory'.
 			spec package: 'FileSystem-Zip'.
 			spec package: 'Morphic-Core' with: [ spec requires: #( 'System-Model' ) ] ]
 ]

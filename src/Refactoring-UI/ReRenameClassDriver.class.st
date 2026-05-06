@@ -57,11 +57,25 @@ ReRenameClassDriver >> defaultSelectDialog [
 		yourself
 ]
 
+{ #category : 'execution' }
+ReRenameClassDriver >> gatherUserInput [ 
+	"usually we do not spawn a dialog out of the blue but we should ask the application.
+	It means that the driver should get the application from the tool that invoked it."
+	newName := self requestNewNameBasedOn: oldName.
+	shouldEscape ifTrue: [ ^ false "user wants to exit" ].
+
+	[ refactoring isValidClassName check & refactoring isNotGlobal check ] whileFalse: [ 
+			newName := self requestNewNameBasedOn: newName.
+			shouldEscape ifTrue: [ ^ false ] ].
+	^ true
+]
+
 { #category : 'initialization' }
-ReRenameClassDriver >> initialize [ 
-	
+ReRenameClassDriver >> initialize [
+
 	super initialize.
-	shouldEscape := false.
+	requestDialog := self defaultRequestDialog.
+	shouldEscape := false
 ]
 
 { #category : 'configuration' }
@@ -96,7 +110,7 @@ ReRenameClassDriver >> renameClass [
 { #category : 'execution' }
 ReRenameClassDriver >> requestNewNameBasedOn: aName [
 
-	newName := self defaultRequestDialog
+	newName := requestDialog 
 		           title: 'Please provide a new class name';
 		           message: 'The new name should be valid and not the one of an existing class.';
 		           validateAnswer: [ :string :presenter | self validateName: string onPresenter: presenter ];
@@ -112,30 +126,6 @@ ReRenameClassDriver >> requestNewNameBasedOn: aName [
 
 	refactoring newName: newName.
 	^ newName
-]
-
-{ #category : 'execution' }
-ReRenameClassDriver >> runRefactoring [
-	
-	self configureRefactoring.
-	refactoring doesClassToBeRenamedExist
-		ifFalse: [ self inform: 'The class ', oldName, ' does not exist.'. ^ self ].
-	
-	"if we see a metaclass then we could take the instance side"
-	refactoring isMetaclass 
-		ifTrue: [ self inform: 'Please provide a class and not a metaclass: ', oldName, ' is a metaclass.'. ^ self ].
-	"usually we do not spawn a dialog out of the blue but we should ask the application.
-	It means that the driver should get the application from the tool that invoked it."
-
-	newName := self requestNewNameBasedOn: oldName.
-	shouldEscape ifTrue: [ ^ self ].
-
-	[ refactoring isValidClassName check & refactoring isNotGlobal check ] whileFalse: [ 
-			newName := self requestNewNameBasedOn: newName.
-			shouldEscape ifTrue: [ ^ self ] ].
-
-	refactoring failedBreakingChangePreconditions ifEmpty: [ self applyChanges ] ifNotEmpty: [ self handleBreakingChanges ]
-	
 ]
 
 { #category : 'validation' }

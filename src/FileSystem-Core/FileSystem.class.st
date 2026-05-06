@@ -24,6 +24,7 @@ Class {
 	#package : 'FileSystem-Core',
 	#tag : 'Public'
 }
+
 { #category : 'system startup' }
 FileSystem class >> startUp: aBoolean [
 	"This is only here to deal with migration from older versions of

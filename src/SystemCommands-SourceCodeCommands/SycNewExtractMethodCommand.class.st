@@ -5,8 +5,7 @@ Class {
 	#name : 'SycNewExtractMethodCommand',
 	#superclass : 'SycSourceCodeRefactoringCommand',
 	#instVars : [
-		'selectedTextInterval',
-		'refactoringScopes'
+		'selectedTextInterval'
 	],
 	#category : 'SystemCommands-SourceCodeCommands',
 	#package : 'SystemCommands-SourceCodeCommands'

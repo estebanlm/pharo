@@ -53,6 +53,13 @@ Fraction >> raisedToInteger: anInteger [
 ]
 
 { #category : '*Math-Operations-Extensions' }
+Fraction >> reciprocal [
+
+	numerator abs = 1 ifTrue: [^denominator * numerator].
+	^self class numerator: denominator denominator: numerator
+]
+
+{ #category : '*Math-Operations-Extensions' }
 Fraction >> round: numberOfWishedDecimal [
 	"Round the decimal part of the receiver to be limited to the number of wished decimal. Only leave a fixed amount of decimal"
    "(1/3 round: 2) >>> (33/100) "

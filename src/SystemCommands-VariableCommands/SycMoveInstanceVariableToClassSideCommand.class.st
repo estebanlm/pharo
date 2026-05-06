@@ -4,12 +4,23 @@ I am a command to move given instance variable to its class side
 Class {
 	#name : 'SycMoveInstanceVariableToClassSideCommand',
 	#superclass : 'SycRefactorVariableCommand',
-	#instVars : [
-		'refactoringScopes'
-	],
 	#category : 'SystemCommands-VariableCommands',
 	#package : 'SystemCommands-VariableCommands'
 }
+
+{ #category : 'activation' }
+SycMoveInstanceVariableToClassSideCommand class >> fullBrowserMenuActivation [
+
+	<classAnnotation>
+	^ CmdContextMenuActivation byRootGroupItemFor: ClyFullBrowserVariableContext
+]
+
+{ #category : 'activation' }
+SycMoveInstanceVariableToClassSideCommand class >> sourceCodeMenuActivation [
+	<classAnnotation>
+
+	^SycSourceCodeMenuActivation byRootGroupItemOrder: 1.6 for: ClySourceCodeContext
+]
 
 { #category : 'accessing' }
 SycMoveInstanceVariableToClassSideCommand >> defaultMenuIconName [
@@ -34,5 +45,5 @@ SycMoveInstanceVariableToClassSideCommand >> prepareFullExecutionInContext: aToo
 
 	super prepareFullExecutionInContext: aToolContext.
 	toolContext := aToolContext.
-	refactoringScopes := toolContext refactoringScopes
+
 ]

@@ -19,23 +19,6 @@ WorldMorph >> acceptDroppingMorph: dropped event: evt [
 ]
 
 { #category : '*Morphic-Base' }
-WorldMorph >> dispatchKeystroke: anEvent [
-	"A keystroke was hit when no keyboard focus was set, so it is sent here to the world instead."
-
-	|  aChar ascii |
-	aChar := anEvent keyCharacter.
-	(ascii := aChar asciiValue) = 27 ifTrue: "escape key"
-		[^ self invokeWorldMenuFromEscapeKey].
-
-	(self navigationKey: anEvent) ifTrue: [^self].
-
-	"It was unhandled. Remember the keystroke."
-	self lastKeystroke: anEvent keyString.
-	self triggerEvent: #keyStroke.
-	super dispatchKeystroke: anEvent
-]
-
-{ #category : '*Morphic-Base' }
 WorldMorph >> install [
 
 	"This method should not be used. This is for backward compatibility and will be replaced

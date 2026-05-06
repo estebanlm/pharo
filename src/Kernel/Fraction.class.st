@@ -297,13 +297,6 @@ Fraction >> numerator [
 ]
 
 { #category : 'private' }
-Fraction >> reciprocal [
-
-	numerator abs = 1 ifTrue: [^denominator * numerator].
-	^self class numerator: denominator denominator: numerator
-]
-
-{ #category : 'private' }
 Fraction >> reduced [
 
 	| gcd numer denom |

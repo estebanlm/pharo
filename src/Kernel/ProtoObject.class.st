@@ -98,6 +98,7 @@ ProtoObject >> doesNotUnderstand: aMessage [
 
 	<reflection: 'Message sending and code execution - Control message passing'>
 	<debuggerCompleteToSender>
+	<dnuEntryPoint>
 
 	^ MessageNotUnderstood new
 		message: aMessage;

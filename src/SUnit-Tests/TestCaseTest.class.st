@@ -11,25 +11,25 @@ Class {
 
 { #category : 'events' }
 TestCaseTest >> testAnnouncement [
-	| announcements oldCollection suite unitTest result |
+	| announcements oldCollection suite unitTestClass result |
 	
-	unitTest := ClassFactoryForTestCaseTest.
+	unitTestClass := ClassFactoryForTestCaseTest.
 	announcements := Dictionary new.
-	unitTest resetAnnouncer.
+	unitTestClass resetAnnouncer.
 
-	self deny: unitTest shouldAnnounce.
-	self deny: unitTest new shouldAnnounce.
+	self deny: unitTestClass shouldAnnounce.
+	self deny: unitTestClass new shouldAnnounce.
 
-	unitTest announcer 
+	unitTestClass announcer 
 		when: TestCaseAnnouncement 
 		do: [ :ann | (announcements at: ann class ifAbsentPut: [ OrderedCollection new ]) add: ann ] 
 		for: self.
 
-	self assert: unitTest shouldAnnounce.
-	self assert: unitTest new shouldAnnounce.
+	self assert: unitTestClass shouldAnnounce.
+	self assert: unitTestClass new shouldAnnounce.
 
 	"We run SUnitTest"
-	suite := unitTest buildSuite.
+	suite := unitTestClass buildSuite.
 	result := suite run.
 
 	self assertEmpty: result failures.
@@ -47,8 +47,8 @@ TestCaseTest >> testAnnouncement [
 			TestCaseEnded }.
 
 	oldCollection := announcements copy.
-	unitTest resetAnnouncer.
-	unitTest debug: #testClassCreationInDifferentTags.
+	unitTestClass resetAnnouncer.
+	unitTestClass debug: #testClassCreationInDifferentTags.
 	self assert: announcements equals: oldCollection
 ]
 

@@ -9,7 +9,7 @@ Class {
 { #category : 'tests' }
 RBAbstractInstanceVariableParametrizedTest class >> testParameters [
 	^ ParametrizedTestMatrix new
-		addCase: { #rbClass -> RBAbstractInstanceVariableRefactoring .
+		addCase: { #rbClass -> ReAbstractInstanceVariableRefactoring .
 					  #constructor -> #variable:class: };
 		addCase: { #rbClass -> RBRemoveDirectAccessToVariableTransformation .
 					  #constructor -> #instanceVariable:class: };

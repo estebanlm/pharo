@@ -205,16 +205,6 @@ SmallFloat64 >> exponent [
 	^self negated exponent
 ]
 
-{ #category : 'truncation and round off' }
-SmallFloat64 >> fractionPart [
-	"Primitive. Answer a Float whose value is the difference between the
-	receiver and the receiver's asInteger value. Optional. See Object
-	documentation whatIsAPrimitive."
-
-	<primitive: 552>
-	^self - self truncated asFloat
-]
-
 { #category : 'comparing' }
 SmallFloat64 >> identityHash [
 	"We need the override since basicIdentityHash is already in SmallInteger range,

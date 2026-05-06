@@ -53,15 +53,23 @@ MethodChunk >> handleMissingBehavior [
 ]
 
 { #category : 'importing' }
-MethodChunk >> importFor: requestor logSource: logSource [
+MethodChunk >> importWithLogSource: logSource [
 
+	| compiler method |
 	self existsBehavior ifFalse: [ self handleMissingBehavior ].
 
-	^ (self targetClass compiler
-		   protocol: protocol;
-		   changeStamp: stamp;
-		   logged: logSource;
-		   install: contents) selector
+	compiler := self targetClass compiler.
+	compiler source: contents.
+	
+	method := compiler compileOrFail.
+
+	(self targetClass methodInstaller
+		logged: logSource;
+		changeStamp: stamp;
+		protocol: protocol)
+			install: method into: self targetClass compiler: compiler.
+
+	^ method selector
 ]
 
 { #category : 'testing' }

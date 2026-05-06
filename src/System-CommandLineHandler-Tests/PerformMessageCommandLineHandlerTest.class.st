@@ -18,7 +18,8 @@ PerformMessageCommandLineHandlerTest >> performCommandWithArguments: aCollection
 PerformMessageCommandLineHandlerTest >> performTest [
 
 	[ super performTest ]
-	on: Exit do: [ :exit | self fail: 'Exit with message: ', exit messageText ]
+		on: Exit 
+		do: [ :exit | self fail: 'Exit with message: ', exit messageText ]
 ]
 
 { #category : 'tests' }

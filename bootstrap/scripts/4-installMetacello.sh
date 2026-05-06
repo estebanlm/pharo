@@ -118,10 +118,16 @@ zip "${BOOTSTRAP_ARCHIVE_IMAGE_NAME}.zip" "${BOOTSTRAP_ARCHIVE_IMAGE_NAME}.image
 cp "${BOOTSTRAP_IMAGE_NAME}.image" "${COMPILER_IMAGE_NAME}.image"
 
 # Archive binary Hermes packages
+zip "monticello-src-packages.zip" pharo-local/package-cache/*.mcz
 zip "${HERMES_ARCHIVE_NAME}.zip" *.hermes hermesSUnitPackages.txt
 
 echo $(date -u) "[Compiler] Adding more Kernel packages"
-${VM} "${COMPILER_IMAGE_NAME}.image" perform --save BasicHermesTool load: --as-array $(cat hermesAdditionalKernelPackages.txt)
+${VM} "${COMPILER_IMAGE_NAME}.image" perform --save BasicHermesTool load: --as-array Math-Operations-Extensions.hermes
+${VM} "${COMPILER_IMAGE_NAME}.image" perform --save BasicHermesTool load: --as-array $(
+  tr ' ' '\n' < hermesAdditionalKernelPackages.txt |
+  grep -v '^Math-Operations-Extensions\.hermes$' |
+  tr '\n' ' '
+)
 
 # Now that System-Version is loaded, we can initialize the version
 ${VM} "${COMPILER_IMAGE_NAME}.image" perform  --save SystemVersion setMajor:minor:patch:suffix:build:commitHash: ${PHARO_MAJOR} ${PHARO_MINOR} ${PHARO_PATCH} ${PHARO_SUFFIX} ${BUILD_NUMBER} ${PHARO_COMMIT_HASH}

@@ -31,6 +31,16 @@ PharoDarkTheme class >> themeName [
 	^ 'Pharo Dark'
 ]
 
+{ #category : 'colors' }
+PharoDarkTheme >> badgeColor [
+	^ Color red alpha: 0.5
+]
+
+{ #category : 'colors' }
+PharoDarkTheme >> badgeTextColor [
+	^ self textColor
+]
+
 { #category : 'border-styles - buttons' }
 PharoDarkTheme >> buttonDisabledBorderStyleFor: aButton [
 

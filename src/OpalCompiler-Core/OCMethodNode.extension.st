@@ -58,7 +58,8 @@ OCMethodNode >> doSemanticAnalysisIn: behavior [
 
 { #category : '*OpalCompiler-Core' }
 OCMethodNode >> ensureCachedArgumentNames [
-	^self methodPropertyAt: #argumentNames put: self argumentNames
+
+	self argumentNames ifNotEmpty: [ self methodPropertyAt: #argumentNames put: self argumentNames ]
 ]
 
 { #category : '*OpalCompiler-Core' }
@@ -94,7 +95,7 @@ OCMethodNode >> generateMethod [
 	by OpalCompiler in a full compilation chain might be missing.
 	So use this method if you know what you are doing."
 
-	^ self compiler compile
+	^ self compiler compileOrFail
 ]
 
 { #category : '*OpalCompiler-Core' }

@@ -55,14 +55,6 @@ Behavior >> >> selector [
 	^self compiledMethodAt: selector
 ]
 
-{ #category : 'adding-removing methods' }
-Behavior >> addAndClassifySelector: selector withMethod: compiledMethod inProtocol: protocol [
-
-	<reflection: 'Class structural modification - Selector/Method modification'>
-
-	self addSelectorSilently: selector withMethod: compiledMethod.
-]
-
 { #category : 'obsolete subclasses' }
 Behavior >> addObsoleteSubclass: aClass [
 	"Weakly remember that aClass was a subclass of the receiver and is now obsolete"
@@ -76,20 +68,13 @@ Behavior >> addObsoleteSubclass: aClass [
 ]
 
 { #category : 'adding-removing methods' }
-Behavior >> addSelector: selector withMethod: compiledMethod [
-	<reflection: 'Class structural modification - Selector/Method modification'>
-	^ self addSelectorSilently: selector withMethod: compiledMethod
-]
-
-{ #category : 'adding-removing methods' }
 Behavior >> addSelectorSilently: selector withMethod: compiledMethod [
 	"Add the message selector with the corresponding compiled method to the
 	receiver's method dictionary.
 	Do this without sending system change notifications"
 	<reflection: 'Class structural modification - Selector/Method modification'>
 	self methodDict at: selector put: compiledMethod.
-	compiledMethod methodClass: self.
-	compiledMethod selector: selector.
+
 	"We record all selectors that are used as method names"
 	Symbol recordSelector: selector
 ]
@@ -588,81 +573,6 @@ Behavior >> codeChangeAnnouncer [
 Behavior >> codeSupportAnnouncer [
 
 	^ self environment codeSupportAnnouncer
-]
-
-{ #category : 'compiling' }
-Behavior >> compile: sourceCode classified: protocol [
-	"Compile the source code in the context of the receiver and install the result in the receiver's method dictionary under the given protocol (this can be a protocol or a protocol name).
-	Return the selector of the compiled method.
-		
-	The argument sourceCode is either a string or an object that converts to a string or a PositionableStream on an object that converts to a string."
-
-	^ self compile: sourceCode classified: protocol notifying: nil
-]
-
-{ #category : 'compiling' }
-Behavior >> compile: sourceCode classified: protcol notifying: requestor [
-	 "Return the selector of the compiled method"
-
-	^ self
-		  compile: sourceCode
-		  classified: protcol
-		  withStamp: nil
-		  notifying: requestor
-]
-
-{ #category : 'compiling' }
-Behavior >> compile: sourceCode classified: protocol withStamp: changeStamp notifying: requestor [
-	"Return the selector of the compiled method"
-
-	^ self
-		  compile: sourceCode
-		  classified: protocol
-		  withStamp: changeStamp
-		  notifying: requestor
-		  logSource: self shouldLogSource
-]
-
-{ #category : 'compiling' }
-Behavior >> compile: sourceCode classified: protocol withStamp: changeStamp notifying: requestor logSource: logSource [
-	"Return the selector of the compiled method"
-
-	| method |
-
-	method := self compiler
-		source: sourceCode;
-		requestor: requestor;
-		failBlock: (requestor ifNotNil: [ [ ^ nil ] ]); "no failblock if no requestor"
-		"compatibility: permit faulty code if no requestor"
-		permitFaulty: requestor isNil;
-		permitUndeclared: (requestor isNil);
-		protocol: protocol;
-		changeStamp: changeStamp;
-		logged: logSource;
-		install.
-
-	^ method selector
-]
-
-{ #category : 'compiling' }
-Behavior >> compileSilently: sourceCode [
-	"Compile the code and classify the resulting method in the given protocol, leaving no trail in the system log, nor in any change set, nor in the 'recent submissions' list. This should only be used when you know for sure that the compilation will succeed."
-
-	^ self compileSilently: sourceCode classified: 'not defined protocol' notifying: nil
-]
-
-{ #category : 'compiling' }
-Behavior >> compileSilently: sourceCode classified: protocolName [
-	"Compile the code and classify the resulting method in the given protocol, leaving no trail in the system log, nor in any change set, nor in the 'recent submissions' list. This should only be used when you know for sure that the compilation will succeed."
-
-	^ self compileSilently: sourceCode classified: protocolName notifying: nil
-]
-
-{ #category : 'compiling' }
-Behavior >> compileSilently: sourceCode classified: protocolName notifying: requestor [
-	"Compile the code and classify the resulting method in the given protocol, leaving no trail in the system log, nor in any change set, nor in the 'recent submissions' list."
-
-	^ self codeChangeAnnouncer suspendAllWhile: [ self compile: sourceCode classified: protocolName notifying: requestor ]
 ]
 
 { #category : 'accessing - method dictionary' }
@@ -1266,6 +1176,12 @@ Behavior >> isEphemeronClass [
 ]
 
 { #category : 'testing' }
+Behavior >> isExtension [
+
+	^ false
+]
+
+{ #category : 'testing' }
 Behavior >> isFixed [
 	"Answer whether the receiver does not have a variable (indexable) part."
 
@@ -1381,13 +1297,15 @@ Behavior >> isWords [
 Behavior >> localMethods [
 	"returns the methods of classes excluding the ones of the traits that the class uses"
 
-	^ self methods
+	^ self localSelectors collect: [ :e | self >> e ]
 ]
 
 { #category : 'accessing - method dictionary' }
 Behavior >> localSelectors [
 	<reflection: 'Class structural inspection - Selectors and methods inspection'>
-	^ self methodDict keys
+	^ self methodDict keys select: [ :s | 
+		(s isKindOf: ScopedSelector) not
+			or: [ s owner == self package ] ]
 ]
 
 { #category : 'accessing - method dictionary' }
@@ -1438,6 +1356,12 @@ Behavior >> methodDictionary [
 { #category : 'accessing - method dictionary' }
 Behavior >> methodDictionary: aDictionary [
 	self methodDict: aDictionary
+]
+
+{ #category : 'organization' }
+Behavior >> methodInstaller [
+
+	^ OCMethodInstaller new
 ]
 
 { #category : 'accessing' }
@@ -1540,11 +1464,6 @@ Behavior >> nonObsoleteClass [
 	^ self environment at: self originalName
 ]
 
-{ #category : 'compiling' }
-Behavior >> noteCompilationOf: aSelector [
-	"A hook allowing some classes to react to recompilation of certain selectors"
-]
-
 { #category : 'initialization' }
 Behavior >> obsolete [
 	"nothing to be done"
@@ -1639,6 +1558,21 @@ Behavior >> removeAllObsoleteSubclasses [
 	self basicObsoleteSubclasses removeKey: self ifAbsent: [  ]
 ]
 
+{ #category : 'accessing - method dictionary' }
+Behavior >> removeMethod: aMethod [
+	" Remove a method from the method dictionary including the original definition (if any) and all its aliases.
+	Low-level: it removes a method regardless of where it comes from or where it was defined"
+
+	<reflection: 'Class structural modification - Selector/Method modification'>
+
+	| aliasKeys |	
+	"Obtain all keys that alias to the same method"
+	aliasKeys := self methodDict keys select: [ :e |
+			(self methodDict at: e) == aMethod ].
+
+	aliasKeys do: [ :k | self methodDict removeKey: k ]
+]
+
 { #category : 'accessing - properties' }
 Behavior >> removePropertiesIfEmpty [
 	^ ClassProperties at: self ifPresent: [ :dict |
@@ -1665,10 +1599,17 @@ Behavior >> removeProperty: propName ifAbsent: aBlock [
 
 { #category : 'accessing - method dictionary' }
 Behavior >> removeSelector: aSelector [
-	"Assuming that the argument, selector (a Symbol), is a message selector in my method dictionary, remove it and its method."
+	" Remove a method defined locally.
+	That is, the method should be defined in this class and not be imported from other source (a trait or an extension).
+	
+	Assuming that the argument, selector (a Symbol), is a message selector in my method dictionary, remove it and its method. Fail if it is not the case.
+	
+	If a method with this selector has aliases, remove all aliases too."
 	<reflection: 'Class structural modification - Selector/Method modification'>
 
-	self methodDict removeKey: aSelector ifAbsent: []
+	| methodToRemove |
+	methodToRemove := self methodDict at: aSelector.
+	self removeMethod: methodToRemove
 ]
 
 { #category : 'adding-removing methods' }
@@ -1743,6 +1684,7 @@ Behavior >> selectorsDo: selectorBlock [
 Behavior >> selectorsWithArgs: numberOfArgs [
 	"Return all selectors defined in this class that take this number of arguments"
 	<reflection: 'Class structural inspection - Selectors and methods inspection'>
+	self deprecated: 'issue #19467'.
 	^ self selectors select: [:selector | selector numArgs = numberOfArgs]
 ]
 
@@ -1883,11 +1825,6 @@ Behavior >> superclass: aClass [
 	"Note: Do not use 'aClass isKindOf: Behavior' here
 		in case we recompile from Behavior itself."
 		<reflection: 'Class structural modification - Hierarchy modification'>
-	aClass
-		ifNil: [ self basicSuperclass: aClass.
-			Object flushCache.
-			^ self
-			].	"If the class is not nil it should update the class hierarchy correctly, using the classs builder"
 	^ self classInstaller
 		update: self
 		to: [ :builder | builder superclass: aClass ]

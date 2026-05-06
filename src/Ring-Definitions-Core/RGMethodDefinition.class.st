@@ -261,6 +261,7 @@ RGMethodDefinition >> fullName [
 	^self annotationNamed: self class fullNameKey
 		ifAbsentPut: [ (self parentName, '>>', self selector) asSymbol ]
 ]
+
 { #category : 'testing' }
 RGMethodDefinition >> hasStamp [
 

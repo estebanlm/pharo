@@ -3,6 +3,9 @@ Class {
 	#superclass : 'SycSourceCodeCommand',
 	#traits : 'TRefactoringCommandSupport',
 	#classTraits : 'TRefactoringCommandSupport classTrait',
+	#instVars : [
+		'refactoringScopes'
+	],
 	#category : 'SystemCommands-SourceCodeCommands',
 	#package : 'SystemCommands-SourceCodeCommands'
 }
@@ -30,4 +33,11 @@ SycSourceCodeRefactoringCommand >> executeRefactoring: refactoring [
 	[ refactoring first execute ]
 		on: RBRefactoringError
 		do: [ :e | self morphicUIManager alert: e messageText ]
+]
+
+{ #category : 'execution' }
+SycSourceCodeRefactoringCommand >> prepareFullExecutionInContext: aToolContext [
+
+	super prepareFullExecutionInContext: aToolContext.
+	refactoringScopes := aToolContext refactoringScopes.
 ]

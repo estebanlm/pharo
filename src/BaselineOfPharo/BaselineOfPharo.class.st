@@ -170,7 +170,7 @@ BaselineOfPharo class >> toplo [
 		newName: 'Toplo' 
 		owner: 'pharo-graphics' 
 		project: 'Toplo' 
-		version: 'dev'
+		version: 'Pharo14'
 ]
 
 { #category : 'repository urls' }

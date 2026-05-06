@@ -79,10 +79,18 @@ ReConvertTemporaryToInstanceVariableDriver >> defaultSelectDialog [
 		  yourself
 ]
 
+{ #category : 'initialization' }
+ReConvertTemporaryToInstanceVariableDriver >> hasFailedBehaviorPreservingPreconditions [
+
+	notMultipleTempOccurences := refactoring preconditionNoMultipleTempOccurences.
+	noReadBeforeWritten := refactoring preconditionNoReadBeforeWritten.
+	^ refactoring failedBreakingChangePreconditions isNotEmpty 
+]
+
 { #category : 'configuration' }
 ReConvertTemporaryToInstanceVariableDriver >> instantiateRefactoring [
 
-	^ RBTemporaryToInstanceVariableRefactoring class: class selector: selector variable: variable
+	^ ReTemporaryToInstanceVariableRefactoring class: class selector: selector variable: variable
 ]
 
 { #category : 'ui - dialogs' }
@@ -96,19 +104,6 @@ ReConvertTemporaryToInstanceVariableDriver >> labelBasedOnBreakingChanges [
 			  stream nextPutAll: 'Select a strategy' ]
 ]
 
-{ #category : 'execution' }
-ReConvertTemporaryToInstanceVariableDriver >> runRefactoring [
-
-	self configureRefactoring.
-	refactoring failedApplicabilityPreconditions ifNotEmpty: [ :conditions |
-			self informConditions: conditions.
-			^ false ].
-	self setBreakingChangesPreconditions.
-	notMultipleTempOccurences check & noReadBeforeWritten check
-		ifTrue: [ self applyChanges ]
-		ifFalse: [ self handleBreakingChanges ]
-]
-
 { #category : 'instance creation' }
 ReConvertTemporaryToInstanceVariableDriver >> scopes: aScope class: aClass selector: aSelector variable: aVariable [
 
@@ -116,11 +111,4 @@ ReConvertTemporaryToInstanceVariableDriver >> scopes: aScope class: aClass selec
 	variable := aVariable.
 	selector := aSelector.
 	class := aClass
-]
-
-{ #category : 'initialization' }
-ReConvertTemporaryToInstanceVariableDriver >> setBreakingChangesPreconditions [
-
-	notMultipleTempOccurences := refactoring preconditionNoMultipleTempOccurences.
-	noReadBeforeWritten := refactoring preconditionNoReadBeforeWritten 
 ]

@@ -21,7 +21,8 @@ Class {
 		'requestDialog',
 		'informDialog',
 		'stoppedBeforeApplyingRefactoring',
-		'selectDialogForBreakingChanges'
+		'selectDialogForBreakingChanges',
+		'forTesting'
 	],
 	#classInstVars : [
 		'shouldPreviewChanges'
@@ -120,6 +121,7 @@ ReInteractionDriver >> applyChanges [
 
 	| applied |
 
+	forTesting ifTrue: [ ^ self ].
 	applied := self openPreviewWithChanges: self changes "it looks like there is a bug in Spec" "stoppedBeforeApplyingRefactoring := applied isCancelled not
 	isCancelled returns always true so I will use it when this will be fixed in spec."
 ]
@@ -185,10 +187,29 @@ ReInteractionDriver >> failedPreconditionsErrorString: conditions [
 				  stream cr ] ]
 ]
 
+{ #category : 'accessing' }
+ReInteractionDriver >> forTesting [
+
+	^ forTesting
+]
+
+{ #category : 'accessing' }
+ReInteractionDriver >> forTesting: aBoolean [
+
+	forTesting := aBoolean
+]
+
 { #category : 'execution' }
 ReInteractionDriver >> furtherActionFor: aReport [
 	
 	aReport browse
+]
+
+{ #category : 'execution' }
+ReInteractionDriver >> gatherUserInput [
+	"In this hood driver gathers inputs from user.
+	Return false if opration was unsuccessful (like user wants to abandon), and true otherwise"
+	^ true
 ]
 
 { #category : 'execution' }
@@ -200,6 +221,20 @@ ReInteractionDriver >> handleBreakingChanges [
 	selection ifNil: [ ^ false ].
 	selection action.
 	^ true
+]
+
+{ #category : 'private ex' }
+ReInteractionDriver >> hasFailedApplicabilityPreconditions [ 
+	
+	refactoring failedApplicabilityPreconditions 
+		ifNotEmpty: [ self inform: self failedPreconditionsErrorString. ^ true ].
+	^ false
+]
+
+{ #category : 'private exe' }
+ReInteractionDriver >> hasFailedBehaviorPreservingPreconditions [
+
+	^ refactoring failedBreakingChangePreconditions isNotEmpty
 ]
 
 { #category : 'ui - requests' }
@@ -234,8 +269,8 @@ ReInteractionDriver >> informDialog: aDialog [
 ReInteractionDriver >> initialize [
 
 	super initialize.
-	stoppedBeforeApplyingRefactoring := false.
-	"for now unused but we should soon use it. Check applyChanges"
+	forTesting := false.
+	stoppedBeforeApplyingRefactoring := false "for now unused but we should soon use it. Check applyChanges"
 ]
 
 { #category : 'configuration' }
@@ -315,7 +350,13 @@ ReInteractionDriver >> requestDialog: aDialog [
 { #category : 'execution' }
 ReInteractionDriver >> runRefactoring [
 
-	self subclassResponsibility
+	self configureRefactoring.
+	self gatherUserInput ifFalse: [ ^ self "user abandons" ].
+	self hasFailedApplicabilityPreconditions ifTrue: [ ^ self "applicability failed" ].
+	self hasFailedBehaviorPreservingPreconditions
+		ifTrue: [ self handleBreakingChanges ]
+		ifFalse: [ self applyChanges ].
+
 ]
 
 { #category : 'accessing' }

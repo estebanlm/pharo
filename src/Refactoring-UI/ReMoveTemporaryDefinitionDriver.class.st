@@ -22,9 +22,9 @@ ReMoveTemporaryDefinitionDriver class >> driverName [
 ]
 
 { #category : 'resources' }
-ReMoveTemporaryDefinitionDriver >> configureRefactoring [
+ReMoveTemporaryDefinitionDriver >> instantiateRefactoring [ 
 
-	refactoring := RBMoveVariableDefinitionToSmallestValidScopeRefactoring 
+	^ RBMoveVariableDefinitionToSmallestValidScopeRefactoring 
 		bindTight: sourceNode sourceInterval 
 		in: method origin 
 		selector: method selector
@@ -41,19 +41,6 @@ ReMoveTemporaryDefinitionDriver >> method [
 ReMoveTemporaryDefinitionDriver >> method: anObject [
 
 	method := anObject
-]
-
-{ #category : 'execution' }
-ReMoveTemporaryDefinitionDriver >> runRefactoring [
-
-	self configureRefactoring.
-	refactoring prepareForExecution. 
-	"This is needed to set some info in the refactoring such as the parse tree or the defining node."
-	
-	[ refactoring eagerlyCheckApplicabilityPreconditions ] 
-		on: RBRefactoringError 
-		do: [ :ex| self application inform: 'The temp cannot be move closer'. ^ self ].
-	self applyChanges
 ]
 
 { #category : 'accessing' }

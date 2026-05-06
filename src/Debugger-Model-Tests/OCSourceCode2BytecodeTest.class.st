@@ -23,11 +23,12 @@ OCSourceCode2BytecodeTest class >> classVar [
 
 { #category : 'compiling' }
 OCSourceCode2BytecodeTest >> compile2method: sourceStream [
-			"Compile code without logging the source in the changes file"
-			^OpalCompiler new
-						source: sourceStream;
-						class: self class;
-						compile
+	"Compile code without logging the source in the changes file"
+
+	^ OpalCompiler new
+		  source: sourceStream;
+		  class: self class;
+		  compileOrFail
 ]
 
 { #category : 'accessing' }

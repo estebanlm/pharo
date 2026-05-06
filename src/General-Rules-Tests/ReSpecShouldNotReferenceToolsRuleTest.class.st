@@ -13,7 +13,7 @@ Class {
 ReSpecShouldNotReferenceToolsRuleTest >> setUp [
 
 	super setUp.
-	classFactory := ClassFactoryForTestCase new
+	classFactory := ClassFactoryForTestCase environment: SystemEnvironment new
 ]
 
 { #category : 'running' }
@@ -27,6 +27,8 @@ ReSpecShouldNotReferenceToolsRuleTest >> tearDown [
 ReSpecShouldNotReferenceToolsRuleTest >> testRule [
 
 	| class |
+	"Install the global so the following code compiles"
+	classFactory environment at: #Smalltalk put: nil.
 	class := classFactory make: [ :builder |
 		         builder superclass: StPresenter ].
 

@@ -758,6 +758,13 @@ VirtualMachine >> primVmPath [
 	^ ''
 ]
 
+{ #category : 'primitives' }
+VirtualMachine >> primVmVersion [
+
+	<primitive: 'primitiveVMVersion'>
+	^ nil
+]
+
 { #category : 'attributes' }
 VirtualMachine >> processHasThreadIdInstVar: aBoolean [
 	"The threaded VM needs to know if the 4th inst var of Process
@@ -815,7 +822,7 @@ VirtualMachine >> setGCParameters [
 	edenSize := self edenSpaceSize.
 	survivorSize := edenSize / 5.0. "David's paper uses 140Kb eden + 2 x 28kb survivor spaces; Spur uses the same ratios :-)"
 	averageObjectSize := 8 * self wordSize. "a good approximation"
-	numObjects := (proportion * survivorSize / averageObjectSize) rounded.
+	numObjects := (proportion * survivorSize // averageObjectSize).
 	self tenuringThreshold: numObjects  "tenure when more than this many objects survive the GC"
 ]
 
@@ -987,6 +994,15 @@ VirtualMachine >> versionLabel [
 { #category : 'accessing' }
 VirtualMachine >> vmFileName [
 	^ self fileName
+]
+
+{ #category : 'accessing' }
+VirtualMachine >> vmVersion [
+
+	^ self primVmVersion ifNil: [
+			  | string |
+			  string := self interpreterSourceVersion allButFirst.
+			  ((string splitOn: $+) first splitOn: $.) collect: [ :e | e asInteger ] as: Array ]
 ]
 
 { #category : 'gc' }

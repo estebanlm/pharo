@@ -41,6 +41,11 @@ MCBitbucketRepository class >> urlSchemes [
 	^ #(bitbucket)
 ]
 
+{ #category : 'accessing' }
+MCBitbucketRepository >> httpsUrl [
+	^ 'https://bitbucket.org/', projectPath, '.git'
+]
+
 { #category : 'private' }
 MCBitbucketRepository >> normalizeTagsData: jsonObject [
   "return a dictionay mapping the tag name to the commit SHA"
@@ -69,4 +74,9 @@ MCBitbucketRepository >> normalizeTagsData: jsonObject [
 { #category : 'private' }
 MCBitbucketRepository >> projectTagsUrlFor: projectPath2 [
   ^ 'https://bitbucket.org/api/1.0/repositories/' , projectPath2 , '/tags'
+]
+
+{ #category : 'accessing' }
+MCBitbucketRepository >> scpUrl [
+	^ 'git@bitbucket.org:', projectPath, '.git'
 ]

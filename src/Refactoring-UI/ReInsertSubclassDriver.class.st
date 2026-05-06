@@ -68,6 +68,15 @@ ReInsertSubclassDriver >> dialogTitleForClassSelection [
 	^ 'Insert subclass of ', superclass name
 ]
 
+{ #category : 'execution' }
+ReInsertSubclassDriver >> gatherUserInput [
+
+	subclass ifNil: [ self requestClass ].
+	subclass ifNil: [ ^ false ].
+	refactoring className: subclass.
+	^ true
+]
+
 { #category : 'initialization' }
 ReInsertSubclassDriver >> initialize [
 
@@ -111,22 +120,6 @@ ReInsertSubclassDriver >> requestClass [
 				comment: dialog presenter commentPresenterText.
 			dialog close ];
 		openModal
-]
-
-{ #category : 'execution' }
-ReInsertSubclassDriver >> runRefactoring [
-
-	subclass ifNil: [ self requestClass ].
-	subclass ifNil: [ ^ false ].
-	self configureRefactoring.
-	
-	"We suspect that the this is impossible to have failed applicability preconditions. 
-	Because the dialog is checking already a lot and in particular that the newclass should not already
-	exist."
-	refactoring failedApplicabilityPreconditions
-		ifNotEmpty: [ :conditions | self informConditions: conditions. ^ false].
-	self applyChanges.
-	^ true
 ]
 
 { #category : 'accessing' }

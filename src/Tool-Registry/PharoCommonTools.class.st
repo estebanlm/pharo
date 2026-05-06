@@ -31,6 +31,24 @@ PharoCommonTools class >> initialize [
 ]
 
 { #category : 'world menu' }
+PharoCommonTools class >> menuHistoryOn: aBuilder [
+
+	<worldMenu>
+	(aBuilder item: #LoadHistory)
+		parent: #Tools;
+		label: 'Load Compleshion History';
+		icon: (self iconNamed: #smallLoadProject);
+		help: 'Load History (an extension of Compleshion)';
+		order: 110;
+		action: [
+				Metacello new
+  baseline: 'ExtendedHeuristicCompletionHistory';
+  repository: 'github://omarabedelkader/HeuristicCompletion-History:v0.9.3/src';
+					onConflictUseIncoming;
+					load ]
+]
+
+{ #category : 'world menu' }
 PharoCommonTools class >> menuToploOn: aBuilder [
 
 	<worldMenu>

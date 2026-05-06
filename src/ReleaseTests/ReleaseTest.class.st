@@ -3,7 +3,10 @@ I contain tests that validate the integrity of the system.
 "
 Class {
 	#name : 'ReleaseTest',
-	#superclass : 'AbstractEnvironmentTestCase',
+	#superclass : 'TestCase',
+	#instVars : [
+		'testingEnvironment'
+	],
 	#category : 'ReleaseTests-Release',
 	#package : 'ReleaseTests',
 	#tag : 'Release'
@@ -90,18 +93,25 @@ ReleaseTest >> knownProcesses [
 	"(self actualProcesses difference: self knownProcesses) do: [ :each | each suspend; terminate ]."
 
 	^ {
-		Processor activeProcess.
-		Processor backgroundProcess.
-		FinalizationProcess runningFinalizationProcess.
-		SmalltalkImage current lowSpaceWatcherProcess.
-		MorphicUIManager uiProcess.
-		CurrentExecutionEnvironment value watchDogProcess.
-		Delay schedulingProcess.
-		TKTWatchDog onDuty pharoProcess.
-		OSSDL2Driver eventLoopProcess.
-		TFCallbackQueue uniqueInstance callbackProcess.
-		(Smalltalk classNamed: #StThreadSafeTranscript) ifNotNil: [ :aClass | aClass uniqueInstance workerProcess ] 
-	} asSet
+		  Processor activeProcess.
+		  Processor backgroundProcess.
+		  FinalizationProcess runningFinalizationProcess.
+		  SmalltalkImage current lowSpaceWatcherProcess.
+		  MorphicUIManager uiProcess.
+		  CurrentExecutionEnvironment value watchDogProcess.
+		  Delay schedulingProcess.
+		  TKTWatchDog onDuty pharoProcess.
+		  OSSDL2Driver eventLoopProcess.
+		  TFCallbackQueue uniqueInstance callbackProcess.
+		  ((Smalltalk classNamed: #StThreadSafeTranscript) ifNotNil: [ :aClass | aClass defaultInstance workerProcess ]) } asSet
+]
+
+{ #category : 'running' }
+ReleaseTest >> setUp [
+
+	super setUp.
+	"These tests are written to work on the global environment"
+	testingEnvironment := Smalltalk globals
 ]
 
 { #category : 'tests - variables' }
@@ -545,6 +555,15 @@ ReleaseTest >> testShouldWorldMorphBeAfterFontClassesInStartupList [
 ]
 
 { #category : 'tests' }
+ReleaseTest >> testStartUpSessionList [
+	"This test documents issue http://code.google.com/p/pharo/issues/detail?id=838"
+
+	| startupList |
+	startupList := SessionManager default startupList collect: [ :each | each handlerId ].
+	self assert: (startupList indexOf: #Delay) < (startupList indexOf: #GlobalIdentifier)
+]
+
+{ #category : 'tests' }
 ReleaseTest >> testTestCasesEndsWithTestOrTestCase [
 	self assertValidLintRule: ReTestClassNameShouldEndWithTestRule new
 ]
@@ -565,49 +584,20 @@ ReleaseTest >> testThatThereAreNoSelectorsRemainingThatAreSentButNotImplemented 
 	"There is a long term cleanup to fix 'selectors send but not implemented'.
 	 This test makes sure that we do not introduce new cases until we are down to one"
 
-	| knownFailures violations wantedAndValidViolations |
-	"String streamContents: [ :aStream | aStream << '#( '.  SystemNavigation default allSentButNotImplementedSelectors do: [ :m | .aStream << '''' << m printString  << ''' ' ]. aStream << ')' ]"
-	knownFailures := #( 'AthensCCWArcSegment>>#accept:' 'AthensCWArcSegment>>#accept:' 'AthensCairoCanvas>>#visitCubicSegment:'
-	                    'AthensCairoCanvas>>#visitQuadSegment:' 'AthensCloseSegment>>#accept:' 'AthensCubicSegment>>#accept:' 'AthensEllipticalArcSegment>>#accept:'
-	                    'AthensInteractiveScene>>#eventHandledByScene:' 'AthensLineSegment>>#accept:' 'AthensMoveSegment>>#accept:' 'AthensParagraph>>#compose:style:from:in:'
-	                    'AthensPolygon>>#paintFillsUsing:on:' 'BalloonEdgeData>>#stepToFirstScanLine' 'BalloonEdgeData>>#stepToNextScanLine'
-	                    'BalloonEngine>>#registerFills:' 'BalloonFillData>>#computeFill'
-	                    'ComplexBorderStyle>>#drawPolyPatchFrom:to:on:usingEnds:' 'ComplexBorderStyle>>#drawLineFrom:to:on:'
-	                    'Context>>#doPrimitive:method:receiver:args:' 'Context>>#failPrimitiveWith:' 'EDTest>>#prepareMethodVersionTest'
-	                    'ExternalDropHandler class>>#defaultHandler' 'FFICallbackArgumentReader>>#stackPointer' 'FFIFloat32>>#callbackReturnOn:for:'
-	                    'FFIFloatType>>#callbackReturnOn:for:' 'FFIIndirectFunctionResolution>>#resolveFunction:'
-	                    'IceTipHiedraAltComponentHistoryBrowser>>#newCommitRow:commit:'
-	                    'IceTipHiedraAltHistoryBrowser>>#newCommitRow:commit:' 'IceTipHiedraAltHistoryBrowser>>#initializeCommitList'
-	                    'InstructionStream>>#interpretNext3ByteSistaV1Instruction:for:extA:extB:'
-	                    'LazyListMorph>>#drawOnAthensCanvas:' 'MicrodownSpecComponentForTest class>>#open'
-	                    'PSMCClassChangeWrapper>>#remoteChosen' 'PolygonMorph>>#intersects:' 'RBBasicLintRuleTestData class>>#canCall:in:from:'
-	                    'RBBasicLintRuleTestData class>>#createMatcherFor:method:' 'RBBasicLintRuleTestData class>>#sentNotImplementedInApplication'
-	                    'RBBasicLintRuleTestData class>>#utilityMethods' 'RBClassDataForRefactoringTest>>#inlineComponent'
-	                    'RBClassDataForRefactoringTest>>#textInput:name:symbol:' 'RBClassDataForRefactoringTest>>#inlineFailed'
-	                    'RBClassDataForRefactoringTest>>#renderContentOn:' 'OCIRReconstructorBuilder>>#fixPushNilsForTemps'
-	                    'RBLintRuleTestData>>#runOnEnvironment:' 'RBTransformationDummyRuleTest class>>#initializeAfterLoad1'
-	                    'RBTransformationDummyRuleTest class>>#rewrite:methods:name:' 'RBTransformationRuleTestData class>>#initializeAfterLoad1'
-	                    'RBTransformationRuleTestData class>>#rewrite:methods:name:' 'RGChunkImporter>>#visitDoItChunk:' 'ReSentNotImplementedRuleTest>>#sampleMethod'
-	                    'RubSegmentMorph>>#intersects:' 'SpTreeColumn>>#rowMorphFor:' 'SpUIThemeDecoratorTest>>#testDoesNotUnderstand'
-	                    'SpWindowPresenter>>#notify:' 'SpMorphicBackend>>#executeSaveFileDialog:' 'MCMethodDefinitionTest>>#testLoadInvalidCodeInLegacyMode' ).
+	| violations |
 
 	violations := (SystemNavigation default allSentButNotImplementedSelectors collect: [ :method | method printString ]) asOrderedCollection.
+
 	"This next line is to ignore this for SmalltalkCI and not make external Pharo projects fail :("
 	violations removeAllSuchThat: [ :violation | violation beginsWithAnyOf: #( SCI SmalltalkCI ) ].
 
-	"There is a violation that we explicitly want for rule tesing"
-	wantedAndValidViolations := #( 'ReSentButNotUnderstoodBySuperRuleTest>>#sampleMethod' ).
-
-	violations removeAll: wantedAndValidViolations.
-	self assertEmpty: (violations difference: knownFailures)
+	self assertEmpty: violations
 ]
 
 { #category : 'tests - variables' }
 ReleaseTest >> testUndeclared [
 
 	| undeclaredVariables validExceptions remaining description |
-	[ "we compile a second method with the undeclared #undeclaredStubInstVar1 to trigger the code path of removing twice in #cleanOutUndeclared"
-	self class compile: 'methodForTest ^undeclaredStubInstVar1'.
 	Smalltalk cleanOutUndeclared.
 	undeclaredVariables := Undeclared associations select: [ :each | each isUndeclaredVariable ].
 
@@ -630,7 +620,7 @@ ReleaseTest >> testUndeclared [
 				               nextPutAll: '>>';
 				               print: method selector ] ].
 
-	self assert: remaining isEmpty description: description ] ensure: [ self class removeSelector: #methodForTest ]
+	self assert: remaining isEmpty description: description
 ]
 
 { #category : 'tests - package' }

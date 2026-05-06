@@ -30,7 +30,7 @@ RBTemporaryToInstanceVariableRefactoringTest >> testFailureOtherMethodDefinesTem
 	| class |
 	class := model classNamed: #Bar.
 	self
-		should: [ (RBTemporaryToInstanceVariableRefactoring class: class selector: #tempMethod variable: 'bar') generateChanges ]
+		should: [ (ReTemporaryToInstanceVariableRefactoring class: class selector: #tempMethod variable: 'bar') generateChanges ]
 		raise: RBRefactoringWarning
 ]
 
@@ -40,7 +40,7 @@ RBTemporaryToInstanceVariableRefactoringTest >> testFailureTemporaryVariableRead
 	| class |
 	class := model classNamed: #Foo1.
 	self
-		should: [ (RBTemporaryToInstanceVariableRefactoring class: class selector: #someMethod3 variable: 'temp2') generateChanges ]
+		should: [ (ReTemporaryToInstanceVariableRefactoring class: class selector: #someMethod3 variable: 'temp2') generateChanges ]
 		raise: RBRefactoringWarning
 ]
 
@@ -50,6 +50,6 @@ RBTemporaryToInstanceVariableRefactoringTest >> testTemporaryVariableUsedInSingl
 	| class |
 	class := model classNamed: #Foo1.
 	self
-		shouldnt: [ (RBTemporaryToInstanceVariableRefactoring class: class selector: #someMethod2 variable: 'temp') generateChanges ]
+		shouldnt: [ (ReTemporaryToInstanceVariableRefactoring class: class selector: #someMethod2 variable: 'temp') generateChanges ]
 		raise: RBRefactoringWarning
 ]

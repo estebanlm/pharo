@@ -33,13 +33,6 @@ Class {
 	#package : 'Calypso-SystemTools-OldToolCompatibillity'
 }
 
-{ #category : 'tools registration' }
-ClyOldMessageBrowserAdapter class >> beDefaultBrowser [
-	<script>
-	
-	self registerToolsOn: Smalltalk tools
-]
-
 { #category : 'opening' }
 ClyOldMessageBrowserAdapter class >> browse: methods [
 
@@ -89,12 +82,6 @@ ClyOldMessageBrowserAdapter class >> on: aNavigationEnvironment systemScope: aSy
 	^ ClyQueryBrowserMorph
 		on: aNavigationEnvironment 
 		systemScope: aSystemEnvironmentScope
-]
-
-{ #category : 'tools registration' }
-ClyOldMessageBrowserAdapter class >> registerToolsOn: registry [
-	
-	registry register: self as: #messageList
 ]
 
 { #category : 'accessing' }

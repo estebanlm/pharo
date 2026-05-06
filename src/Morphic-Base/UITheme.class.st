@@ -216,7 +216,7 @@ UITheme >> badgeColor [
 	^ Color red
 ]
 
-{ #category : 'basic-colors' }
+{ #category : 'colors' }
 UITheme >> badgeTextColor [
 	^ Color white
 ]

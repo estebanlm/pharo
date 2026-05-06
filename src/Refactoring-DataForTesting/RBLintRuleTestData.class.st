@@ -54,6 +54,12 @@ RBLintRuleTestData class >> someOtherFooMethod [
 ]
 
 { #category : 'accessing' }
+RBLintRuleTestData >> accessor [
+
+	^ nil
+]
+
+{ #category : 'accessing' }
 RBLintRuleTestData >> checkClass: aSmalllintContext [
 ]
 
@@ -111,6 +117,13 @@ RBLintRuleTestData >> junk [
 ]
 
 { #category : 'accessing' }
+RBLintRuleTestData >> methodWithBlockContainingReturn [
+    | b |
+    b := [ ^ 42 ].
+    ^ b value 
+]
+
+{ #category : 'accessing' }
 RBLintRuleTestData >> name [
 	^name
 ]
@@ -150,6 +163,8 @@ RBLintRuleTestData >> run [
 
 { #category : 'accessing' }
 RBLintRuleTestData >> runOnEnvironment: anEnvironment [
+
+	<ignoreNotImplementedSelectors: #(printOn:onEnvironment:)>
 	^Object printOn: self onEnvironment: anEnvironment
 ]
 

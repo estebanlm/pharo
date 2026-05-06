@@ -36,8 +36,8 @@ CoSnippetFetcher >> entriesDo: aBlock [
 	
 	| item |
 	item := Mapping at: filter completionString ifAbsent: [ nil ].
-	item ifNotNil: [ aBlock value: ((NECSnippetEntry new
+	item ifNotNil: [ aBlock value: ((CoSnippetEntry new
 														shortString: filter completionString ;
-														contents: item) fetcher: self; yourself) ].
+														contents: item) fetcherName: self class name; yourself) ].
 	
 ]

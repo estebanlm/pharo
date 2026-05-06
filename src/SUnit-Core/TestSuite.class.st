@@ -76,14 +76,14 @@ TestSuite >> cleanTestSuite: aTestSuite [
 
 { #category : 'running' }
 TestSuite >> debug [
+
 	| result |
-	
 	result := TestResult new.
-	self runWith: [ :test | 
-		[ test debug: result ]
-		ensure: [
-			result dispatchResultsIntoHistory.
-			self testSuiteAnnouncer announce: (TestSuiteEnded result: result) ] ]
+	self runWith: [ :test |
+			[ test debug: result ] ensure: [
+					result dispatchResultsIntoHistory.
+					self testSuiteAnnouncer announce: (TestSuiteEnded result: result) ] ].
+	^ result
 ]
 
 { #category : 'accessing' }
@@ -220,6 +220,13 @@ TestSuite >> shuffleSeed: aSeed [
 TestSuite >> shuffledTests [
 
 	^ self tests shuffledBy: randomGenerator
+]
+
+{ #category : 'accessing' }
+TestSuite >> suite [ 
+	"polymorphic method used by Test Runner"
+
+	^ self
 ]
 
 { #category : 'running' }

@@ -1,6 +1,14 @@
 Extension { #name : 'VirtualMachine' }
 
 { #category : '*FileSystem-Disk' }
+VirtualMachine >> binary [
+	"Answer the a file reference to the virtual machine binary."
+	"SmalltalkImage current vmBinary"
+
+	^ FileLocator vmBinary
+]
+
+{ #category : '*FileSystem-Disk' }
 VirtualMachine >> interpreterSourceDate [
 	"Return the date of changes given by `self interpreterSourceVersion`"
 	| dateString parts |
@@ -10,7 +18,7 @@ VirtualMachine >> interpreterSourceDate [
 	dateString first isDigit
 		ifTrue: [
 			"most probably the date is in ISO 8601 Format"
-			^ dateString asDateAndTime ].
+			^ DateAndTime fromString: dateString ].
 
 	"Otherwise assume the old format: DDD MMM DD HH:MM:SS YYYY +TTTT ..."
 	parts := dateString substrings first: 6.

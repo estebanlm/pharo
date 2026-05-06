@@ -1,19 +1,6 @@
 Extension { #name : 'CompiledMethod' }
 
 { #category : '*AST-Core' }
-CompiledMethod >> ast [
-	"return an AST for this method. The AST is cached. see class comment of ASTCache"
-	
-	"Workaround, see https://github.com/pharo-project/pharo/issues/14871
-	We force recompile to make sure the next call creates a correct BC to AST mapping"
-	
-	 ((self hasLiteral: #runtimeUndeclaredReadInContext:) or: [self hasLiteral: #runtimeUndeclaredWrite:inContext:])
- 			ifTrue: [self isInstalled ifTrue: [self recompile]].
-	
-	^ OCASTCache at: self
-]
-
-{ #category : '*AST-Core' }
 CompiledMethod >> comments [
 	"Answer a collection of strings representing the comments in the method. Return an empty collection if the method's source code does not contain a comment."
 

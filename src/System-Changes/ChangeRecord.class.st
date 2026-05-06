@@ -67,20 +67,16 @@ ChangeRecord >> fileIn [
 	"File the receiver in.  If I represent a method or a class-comment, file the method in and make a note of it in the recent-submissions list; if I represent a do-it, then, well, do it."
 
 	self methodClass ifNotNil: [ :methodClass |
-		methodClass
-			compile: self string
-			classified: protocol
-			withStamp: stamp
-			notifying: nil ].
+			methodClass
+				compile: self string
+				classified: protocol
+				withStamp: stamp
+				logSource: self shouldLogSource ].
 	type == #doIt ifTrue: [
-		| string |
-		string := self string.
-		(string beginsWith: '----') ifFalse: [
-			self class compiler evaluate: string ] ].
-	type == #classComment ifTrue: [
-		(Smalltalk globals at: class asSymbol)
-			comment: self string
-			stamp: stamp ]
+			| string |
+			string := self string.
+			(string beginsWith: '----') ifFalse: [ self class compiler evaluate: string ] ].
+	type == #classComment ifTrue: [ (Smalltalk globals at: class asSymbol) comment: self string stamp: stamp ]
 ]
 
 { #category : 'accessing' }
