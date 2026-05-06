@@ -47,19 +47,14 @@ Behavior >> compile: sourceCode classified: protocol withStamp: changeStamp logS
 Behavior >> compile: selector from: oldClass [
 	"Compile the method associated with selector in the receiver's method dictionary."
 
-	| method newMethod compiler ast |
+	| method newMethod compiler |
 	method := oldClass compiledMethodAt: selector.
 	compiler := oldClass compiler
 		             source: method sourceCode;
 		             class: self;
-						priorMethod: method;
+						 priorMethod: method;
 		             permitFaulty: true;
-		             logged: true.
-	
-	ast := compiler parse.
-
-	ast sendNodes do: [ :send | 
-		send selector: (OCSelectorNode value: (self package visibleSelectorForSymbol: send selector)) ].
+		             logged: false.
 
 	newMethod := compiler install.
 	
@@ -79,7 +74,7 @@ Behavior >> compile: sourceCode methodInstaller: methodInstaller [
 		            "compatibility: permit undeclared if no requestor"
 		            permitUndeclared: false;
 		            permitFaulty: false.
-	method := compiler newCompile.
+	method := compiler compileOrFail.
 	methodInstaller install: method into: self compiler: compiler.
 	^ method selector
 ]

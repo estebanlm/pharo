@@ -28,7 +28,7 @@ OCSourceCode2BytecodeTest >> compile2method: sourceStream [
 	^ OpalCompiler new
 		  source: sourceStream;
 		  class: self class;
-		  newCompile
+		  compileOrFail
 ]
 
 { #category : 'accessing' }

@@ -91,10 +91,10 @@ MCMethodDefinitionTest >> testCannotLoadInvalidCodeInStrictMode [
 	[
 	definition loadWithLoader: loader.
 	self fail ]
-		on: OCCodeError
+		on: OCCompilationError
 		do: [ :error |
 			self
-				assert: error messageText
+				assert: error compilationResult ast allNotices first messageText
 				equals: 'Variable or expression expected' ]
 ]
 

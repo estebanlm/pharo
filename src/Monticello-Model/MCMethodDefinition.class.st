@@ -224,7 +224,7 @@ MCMethodDefinition >> loadWithLoader: aLoader [
 		            permitUndeclared: aLoader isStrict not;
 		            source: source.
 
-	method := compiler newCompile.
+	method := compiler compileOrFail.
 	methodInstaller := (actualClass methodInstaller
 			   logged: false;
 			   changeStamp: timeStamp;

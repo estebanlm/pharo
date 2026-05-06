@@ -23,7 +23,7 @@ MCStWriterTest >> assertChunkIsWellFormed: chunk [
 		source: chunk;
 		class: UndefinedObject;
 		isScripting: true;
-		newCompile
+		compileOrFail
 ]
 
 { #category : 'asserting' }
@@ -39,7 +39,7 @@ MCStWriterTest >> assertMethodChunkIsWellFormed: chunk [
 	self class compiler
 		source: chunk;
 		class: UndefinedObject;
-		newCompile.
+		compileOrFail.
 	
 ]
 

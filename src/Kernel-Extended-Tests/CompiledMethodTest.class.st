@@ -321,7 +321,7 @@ CompiledMethodTest >> testIsFaulty [
 	cm := OpalCompiler new
 				source: 'method 3+';
 				permitFaulty: true;
-				newCompile.
+				compileOrFail.
 	self assert: cm isFaulty.
 	self deny: (OCASTTranslator>>#visitParseErrorNode:) isFaulty
 ]

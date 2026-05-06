@@ -300,6 +300,17 @@ OpalCompiler >> compilationResult: anObject [
 	compilationResult := anObject
 ]
 
+{ #category : 'public access' }
+OpalCompiler >> compileOrFail [
+
+	| result |
+	result := self doCompile.
+	result isError ifTrue: [ 
+		^ result signalError ].
+	
+	^ result compiledMethod
+]
+
 { #category : 'accessing' }
 OpalCompiler >> compiledBlockClass: aClass [
 
@@ -467,8 +478,7 @@ OpalCompiler >> install [
 
 	| method |
 	
-	method := self compile.
-	method ifNil: [ ^ nil ].
+	method := self compileOrFail.
 
 	(self methodClass methodInstaller
 		priorMethod: self priorMethod;
@@ -522,17 +532,6 @@ OpalCompiler >> needRequestorScope [
 	"Because requestor do not have a real API, introspection is used."
 	(self requestor respondsTo: #needRequestorScope) ifFalse: [ ^ false ].
 	^ self requestor needRequestorScope
-]
-
-{ #category : 'public access' }
-OpalCompiler >> newCompile [
-
-	| result |
-	result := self doCompile.
-	result isError ifTrue: [ 
-		^ result signalError ].
-	
-	^ result compiledMethod
 ]
 
 { #category : 'public access' }

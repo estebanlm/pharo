@@ -106,7 +106,7 @@ OCCompilerTest >> testAssignmentOfGlobalVarBinding [
 				OpalCompiler new
 					source: text;
 					class: MockForCompilation;
-					newCompile ]
+					compileOrFail ]
 		raise: OCCompilationError
 		with: [ :err | self assert: err messageText equals: 'Error while compiling' ]
 ]
@@ -235,7 +235,7 @@ OCCompilerTest >> testSiblingBlocksInstanceVariableShadowing [
 	OpalCompiler new
 		source: 'temp [:temp | ].[:temp | |var1|]';
 		class: MockForCompilation;
-		newCompile
+		compileOrFail
 ]
 
 { #category : 'tests - shadowing' }
@@ -246,7 +246,7 @@ OCCompilerTest >> testSiblingBlocksTempShadowing [
 	OpalCompiler new
 		source: 'temp [:temp | ]. [:temp | ]';
 		class: MockForCompilation;
-		newCompile
+		compileOrFail
 ]
 
 { #category : 'tests' }
@@ -281,9 +281,9 @@ OCCompilerTest >> testUndefinedVariableFrontend [
 	Undeclared removeKey: #undefinedName123 ifAbsent: [ ].
 	OpalCompiler new parse: 'foo ^undefinedName123'.
 	self deny: (Undeclared includesKey: #undefinedName123).
-	self should: [ OpalCompiler new source: 'foo ^undefinedName123 ¿ 2'; newCompile ] raise: OCCompilationError.
+	self should: [ OpalCompiler new source: 'foo ^undefinedName123 ¿ 2'; compileOrFail ] raise: OCCompilationError.
 	self deny: (Undeclared includesKey: #undefinedName123).
-	OpalCompiler new permitFaulty: true; source: 'foo ^undefinedName123'; newCompile.
+	OpalCompiler new permitFaulty: true; source: 'foo ^undefinedName123'; compileOrFail.
 	self assert: (Undeclared includesKey: #undefinedName123).
 
 	"Cleanup"

@@ -61,7 +61,7 @@ MethodChunk >> importWithLogSource: logSource [
 	compiler := self targetClass compiler.
 	compiler source: contents.
 	
-	method := compiler newCompile.
+	method := compiler compileOrFail.
 
 	(self targetClass methodInstaller
 		logged: logSource;

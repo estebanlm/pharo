@@ -11,7 +11,7 @@ OCArrayLiteralTest >> compile: methodSourceCode [
 
 	^ OpalCompiler new
 		source: methodSourceCode;
-		newCompile	
+		compileOrFail	
 ]
 
 { #category : 'tests' }

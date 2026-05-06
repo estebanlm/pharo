@@ -14,7 +14,7 @@ OCCompileCodeSnippetTest >> compileSnippet: anOCCodeSnippet [
 			  permitFaulty: true;
 			  isScripting: anOCCodeSnippet isScripting;
 			  source: anOCCodeSnippet source;
-			  newCompile ]
+			  compileOrFail ]
 		  on: OCCompilationError
 		  do: [ :e | "Compilation should success, because its the *faulty* mode"
 				  anOCCodeSnippet ifSkip: #compile then: [ ^ nil ]. "If this is expected, then just return nil" "Otherwise, pass the error"
@@ -28,7 +28,7 @@ OCCompileCodeSnippetTest >> compileSnippet: aSnippet onError: errorBlock [
 		  OpalCompiler new
 			  isScripting: aSnippet isScripting;
 			  source: aSnippet source;
-			  newCompile ]
+			  compileOrFail ]
 		  on: OCCompilationError
 		  do: [ :e | errorBlock cull: e ]
 ]
