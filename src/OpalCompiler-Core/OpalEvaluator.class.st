@@ -76,7 +76,7 @@ OpalEvaluator >> failBlock: aFullBlockClosure [
 	failBlock := aFullBlockClosure
 ]
 
-{ #category : 'accessing' }
+{ #category : 'initialization' }
 OpalEvaluator >> initialize [
 
 	super initialize.

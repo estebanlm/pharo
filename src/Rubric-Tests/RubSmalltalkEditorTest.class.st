@@ -599,16 +599,11 @@ RubSmalltalkEditorTest >> testEvaluateAndDo [
 	editor textArea: RubEditingArea new.
 
 	result := editor evaluate: '40+2' andDo: [ :value |
-		          self assert: value equals: 42.
-		          #flag ].
-	self assert: result equals: #flag.
-
-	"We for now ignore errors and return nil"
-	self
-		shouldnt: [
-		result := editor evaluate: '40+¿' andDo: [ :value | value ] ]
-		raise: OCRuntimeSyntaxError.
-	self assert: result isNil.
+			          self assert: value equals: 42.
+			          #flag ].
+	self assert: result equals: #flag. "We for now ignore errors and return nil"
+	self shouldnt: [ result := editor evaluate: '40+¿' andDo: [ :value | value ] ] raise: OCRuntimeSyntaxError.
+	self assert: result isNil
 ]
 
 { #category : 'tests - completion' }

@@ -475,16 +475,22 @@ RubSmalltalkEditor >> editingMode [
 { #category : 'do-its' }
 RubSmalltalkEditor >> evaluate: source andDo: aBlock [
 	"Treat the current selection as an expression; evaluate it and invoke aBlock with the result."
+
 	| result rcvr ctxt |
 	rcvr := self doItReceiver.
 	ctxt := self doItContext.
+	
 	"to improve: we need better reporting of errors, to revisit when unifying with Spec"
-	result := rcvr class compiler
-			source: source;
-			context: ctxt;
-			receiver: rcvr;
-			permitFaulty: false;
-			evaluate.
+	[
+		result := rcvr class compiler
+			          source: source;
+			          requestor: self;
+			          context: ctxt;
+			          receiver: rcvr;
+			          permitFaulty: false;
+			          evaluate ]
+		on: OCCodeError
+		do: [ :err | result := nil ].
 
 	^ aBlock value: result
 ]
