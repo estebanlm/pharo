@@ -37,28 +37,18 @@ CommandLineDebugger >> context: aDebugContext [
 ]
 
 { #category : 'execution' }
-CommandLineDebugger >> executeCommand: aString [
-	"Parses a string to change it into an executable command and executes it"
+CommandLineDebugger >> executeCommand: aCommand arg: arguments [
+	"executes the command with potential arguments"
 
-	| subString command arguments |
-	subString := aString trim substrings.
-	subString ifEmpty: [ ^ '' ].
+	aCommand = 'help' ifTrue: [ ^ self printHelp ].
+	aCommand = 'exit' ifTrue: [ ^ self exit ].
+	aCommand = 'print' ifTrue: [ ^ self print: arguments asString ].
+	(aCommand = 'step' or: aCommand = 's') ifTrue: [ ^ self step ].
+	(aCommand = 'over' or: aCommand = 'o') ifTrue: [ ^ self over ].
+	(aCommand = 'printStack' or: aCommand = 'ps') ifTrue: [ ^ self printStack ].
+	(aCommand = 'printCode' or: aCommand = 'pc') ifTrue: [ ^ self printCode ].
 
-	command := subString first.
-
-	arguments := subString allButFirst joinUsing: ' '.
-
-	[ context notNil and: [ #( DoIt newProcess ) includes: context method selector ] ] whileTrue: [ self step ]. "To skip the first lines"
-
-	command = 'help' ifTrue: [ ^ self printHelp ].
-	command = 'exit' ifTrue: [ ^ self exit ].
-	command = 'print' ifTrue: [ ^ self print: arguments asString ].
-	(command = 'step' or: command = 's') ifTrue: [ ^ self step ].
-	(command = 'over' or: command = 'o') ifTrue: [ ^ self over ].
-	(command = 'printStack' or: command = 'ps') ifTrue: [ ^ self printStack ].
-	(command = 'printCode' or: command = 'pc') ifTrue: [ ^ self printCode ].
-
-	^ self unknownCommand: command
+	^ self unknownCommand: aCommand
 ]
 
 { #category : 'execution' }
@@ -92,13 +82,29 @@ CommandLineDebugger >> over [
 	[ self completeStep ]
 		on: Error
 		do: [ :ex |
-				process isTerminated ifTrue: [ ^ self finishedDebugging ].
+				(ex value asString includesSubstring: 'computation has been terminated') ifTrue: [ ^ self finishedDebugging ].
 				ex pass ].
 
 	context := process suspendedContext.
 	context ifNil: [ ^ self finishedDebugging ].
 
 	^ 'Stepped OVER to: ' , context printString , ' (PC: ' , context pc asString , ')'
+]
+
+{ #category : 'execution' }
+CommandLineDebugger >> parsesAndExecuteCommand: aString [
+	"Parses a string to change it into an executable command and executes it"
+
+	| subString command arguments |
+	subString := aString trim substrings.
+	subString ifEmpty: [ ^ '' ].
+
+	command := subString first.
+
+	arguments := subString allButFirst joinUsing: ' '.
+	self skipInternalContexts.
+
+	^ self executeCommand: command arg: arguments
 ]
 
 { #category : 'execution' }
@@ -133,8 +139,8 @@ CommandLineDebugger >> printHelp [
 	  over (or o) : execute step over
 	  printStack (or ps) : print the current Stack
 	  printCode (or pc) : print current''s method code
-	  exit : kills the debugger'
-	
+	  exit : kills the debugger
+	  help : print this help'
 ]
 
 { #category : 'execution' }
@@ -158,6 +164,13 @@ CommandLineDebugger >> process [
 CommandLineDebugger >> process: aProcess [
 
 	process := aProcess
+]
+
+{ #category : 'execution' }
+CommandLineDebugger >> skipInternalContexts [
+	"To skip the first lines of the debugger"
+
+	[ context notNil and: [ #( DoIt newProcess ) includes: context method selector ] ] whileTrue: [ self step ]
 ]
 
 { #category : 'execution' }

@@ -24,7 +24,7 @@ CommandLineDebuggerTest >> setUp [
 CommandLineDebuggerTest >> testEmptyCommand [
 
 	| response |
-	response := debugger executeCommand: '          '.
+	response := debugger parsesAndExecuteCommand: '          '.
 
 	self assert: debugger isActive.
 	self assert: response equals: ''
@@ -35,7 +35,7 @@ CommandLineDebuggerTest >> testExit [
 
 	| response |
 	self assert: debugger isActive.
-	response := debugger executeCommand: 'exit'.
+	response := debugger parsesAndExecuteCommand: 'exit'.
 	self deny: debugger isActive.
 	self assert: response equals: 'Bye!'
 ]
@@ -47,11 +47,11 @@ CommandLineDebuggerTest >> testOver [
 	| response initialPc |
 	initialPc := debugger context pc.
 
-	response := debugger executeCommand: 'over'. 
+	response := debugger parsesAndExecuteCommand: 'over'.
 
-	self deny: debugger context pc equals: initialPc. 
+	self deny: debugger context pc equals: initialPc.
 
-	self assert: debugger isActive. 
+	self assert: debugger isActive.
 
 	self assert: (response beginsWith: 'Stepped OVER to:')
 ]
@@ -64,14 +64,14 @@ CommandLineDebuggerTest >> testPrint [
 		                  sender: nil
 		                  receiver: self
 		                  method: MockToPrintCode >> #mockMethodForTesting:and:
-		                  arguments: #( 1  32).
+		                  arguments: #( 1 32 ).
 	debugger context: currentContext.
 
-	response1 := debugger executeCommand: 'print arg1'.
+	response1 := debugger parsesAndExecuteCommand: 'print arg1'.
 
 	self assert: response1 equals: 'arg1 : 1'.
-	
-	response2 := debugger executeCommand: 'print arg2'.
+
+	response2 := debugger parsesAndExecuteCommand: 'print arg2'.
 
 	self assert: response2 equals: 'arg2 : 32'
 ]
@@ -87,7 +87,7 @@ CommandLineDebuggerTest >> testPrintCode [
 		                  arguments: #(  ).
 	debugger context: currentContext.
 
-	response := debugger executeCommand: 'printCode'.
+	response := debugger parsesAndExecuteCommand: 'printCode'.
 
 	self assert: (response includesSubstring: 'mockMethodForTesting: arg').
 	self assert: (response includesSubstring: '"Fake method to test printCode"').
@@ -95,7 +95,7 @@ CommandLineDebuggerTest >> testPrintCode [
 	self assert: (response includesSubstring: 'b := a + 1.').
 	self assert: (response includesSubstring: '^ b * arg').
 
-	self assert: debugger isActive.
+	self assert: debugger isActive
 ]
 
 { #category : 'tests' }
@@ -109,7 +109,7 @@ CommandLineDebuggerTest >> testPrintError [
 		                  arguments: #( 1 32 ).
 	debugger context: currentContext.
 
-	response := debugger executeCommand: 'print arg'.
+	response := debugger parsesAndExecuteCommand: 'print arg'.
 
 	self assert: debugger isActive.
 	self assert: response equals: 'Error evaluating: arg'
@@ -120,7 +120,7 @@ CommandLineDebuggerTest >> testPrintStack [
 
 	| response initialPc |
 	initialPc := debugger context pc.
-	response := debugger executeCommand: 'printStack'.
+	response := debugger parsesAndExecuteCommand: 'printStack'.
 
 
 	self assert: debugger context pc equals: initialPc.
@@ -136,16 +136,17 @@ CommandLineDebuggerTest >> testPrintStack [
 CommandLineDebuggerTest >> testPrintStackAfterStep [
 
 	| response contextAfterStep |
-	debugger executeCommand: 'step'.
+	debugger parsesAndExecuteCommand: 'step'.
 	contextAfterStep := debugger context.
 
-	response := debugger executeCommand: 'printStack'.
+	response := debugger parsesAndExecuteCommand: 'printStack'.
 
 	self assert: (response includesSubstring: contextAfterStep printString)
 ]
 
 { #category : 'tests' }
 CommandLineDebuggerTest >> testPrintWithoutArguments [
+
 	| currentContext response |
 	currentContext := Context
 		                  sender: nil
@@ -153,12 +154,10 @@ CommandLineDebuggerTest >> testPrintWithoutArguments [
 		                  method: MockToPrintCode >> #mockMethodForTesting:and:
 		                  arguments: #( 1 32 ).
 	debugger context: currentContext.
-	
-	response := debugger executeCommand: 'print '.
 
-	self assert: response equals: 'Nothing to print'.
+	response := debugger parsesAndExecuteCommand: 'print '.
 
-	
+	self assert: response equals: 'Nothing to print'
 ]
 
 { #category : 'tests' }
@@ -168,7 +167,7 @@ CommandLineDebuggerTest >> testStep [
 	| response initialPc |
 	initialPc := debugger context pc.
 
-	response := debugger executeCommand: 'step'.
+	response := debugger parsesAndExecuteCommand: 'step'.
 
 	self deny: debugger context pc equals: initialPc.
 
@@ -182,7 +181,7 @@ CommandLineDebuggerTest >> testUnknownCommand [
 
 	| response unknownCommand |
 	unknownCommand := 'thisIsAnUnknownCommand'.
-	response := debugger executeCommand: unknownCommand.
+	response := debugger parsesAndExecuteCommand: unknownCommand.
 
 	self assert: debugger isActive.
 	self assert: response equals: 'Unknown command: ' , unknownCommand

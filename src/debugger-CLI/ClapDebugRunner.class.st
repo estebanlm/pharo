@@ -118,7 +118,7 @@ ClapDebugRunner >> startLoop [
 
 	debuggingProcess := self createDebuggingProcess.
 	debuggingProcess ifNil: [
-			self inform: 'No expression found', String lf, 'usage: debug <expression>'.
+			self inform: 'No expression found' , String lf , 'usage: debug <expression>'.
 			^ self ].
 
 	debugger := CommandLineDebugger new
@@ -132,7 +132,7 @@ ClapDebugRunner >> startLoop [
 			self askTyping.
 			input := self readNextLineFrom: in.
 
-			tempRes := debugger executeCommand: input asString.
+			tempRes := debugger parsesAndExecuteCommand: input asString.
 
 			self informResults: tempRes ].
 	^ self
