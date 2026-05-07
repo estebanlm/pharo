@@ -39,10 +39,10 @@ ClapDebugRunner >> createDebuggingProcess [
 	"Extracts the expression, compiles it, and returns a suspended process."
 
 	| codeToDebug codeString blockToDebug process |
-	codeToDebug := self expressionToDebug.
-	codeString := codeToDebug isString
-		              ifTrue: [ codeToDebug ]
-		              ifFalse: [ codeToDebug joinUsing: ' ' ].
+	codeToDebug := self hasExpresion
+		               ifFalse: [ ^ nil ]
+		               ifTrue: [ self expressionToDebug ].
+	codeString := codeToDebug joinUsing: ' '.
 
 	blockToDebug := self class compiler evaluate: '[ ' , codeString , ' ]'.
 
@@ -117,6 +117,9 @@ ClapDebugRunner >> startLoop [
 	in := self context stdin.
 
 	debuggingProcess := self createDebuggingProcess.
+	debuggingProcess ifNil: [
+			self inform: 'No expression found', String lf, 'usage: debug <expression>'.
+			^ self ].
 
 	debugger := CommandLineDebugger new
 		            process: debuggingProcess;
