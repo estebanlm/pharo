@@ -117,9 +117,10 @@ OCTypingVisitorTest >> expectedNodeType: aNode [
 	aNode comments
 		select: [ :comment |
 			comment contents first = $< and: [ comment contents last = $> ] ]
-		thenDo: [ :comment |
-			^ self class compiler evaluate:
-				  (comment contents copyFrom: 2 to: comment contents size - 1) ].
+		thenDo: [ :comment | | typeString |
+			typeString := (comment contents copyFrom: 2 to: comment contents size - 1).
+			typeString ifEmpty: [ ^ nil ].
+			^ self class compiler evaluate: typeString ].
 	^ nil
 ]
 

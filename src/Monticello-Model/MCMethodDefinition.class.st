@@ -215,48 +215,21 @@ MCMethodDefinition >> isOverrideMethod [
 { #category : 'installing' }
 MCMethodDefinition >> loadWithLoader: aLoader [
 
-	| compiler ast method actualClass |
+	| compiler method actualClass methodInstaller |
 	actualClass := self actualClassIn: aLoader targetEnvironment.
 	actualClass ifNil: [ Error signal: 'Class not found: ' , className printString ].
 
 	compiler := actualClass compiler
-		            protocol: category;
-		            changeStamp: timeStamp;
 		            permitFaulty: aLoader isStrict not;
 		            permitUndeclared: aLoader isStrict not;
 		            source: source.
 
-	ast := compiler parse.
-
-	(actualClass isKindOf: Extension) ifTrue: [
-			| selectorSymbol scopedSelector |
-			selectorSymbol := ast selector.
-			scopedSelector := actualClass internScopedSelector: selectorSymbol.
-			ast selector: scopedSelector ].
-
-	ast sendNodes do: [ :send | send selector: (OCSelectorNode value: (actualClass package visibleSelectorForSymbol: send selector)) ].
-
-	method := compiler install.
-
-	(actualClass isKindOf: Extension) ifTrue: [
-		actualClass package methods do: [ :m |
-			"Recompile all but this method"
-			m ~= method ifTrue: [
-					m methodClass
-						compile: m sourceCode
-						classified: m protocol
-						withStamp: m timeStamp
-						notifying: nil
-						logSource: false ] ].
-	].
-
-	method selector asSymbol = selector asSymbol ifTrue: [ ^ self ]. "This can happen if we provide a selector that does not match the source code. I (Cyril Ferlicot) personnaly do not like that. I would prefer even that the MCMethodDefinition would not have a selector variable at all. But this is used in some places of the system :("
-	(aLoader isStrict
-		 ifTrue: [ Error ]
-		 ifFalse: [ Warning ]) signal: ('Monticello: Selector missmatch. Got {1}, expected {2} for class {3}.' format: {
-				 method selector.
-				 selector.
-				 className }).
+	method := compiler compileOrFail.
+	methodInstaller := (actualClass methodInstaller
+			   logged: true;
+			   changeStamp: timeStamp;
+			   protocol: category).
+	methodInstaller install: method into: actualClass compiler: compiler.
 
 	selector := method selector
 ]

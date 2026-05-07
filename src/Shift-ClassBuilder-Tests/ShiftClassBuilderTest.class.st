@@ -256,7 +256,7 @@ ShiftClassBuilderTest >> testCreateBuilderWithNil [
 ShiftClassBuilderTest >> testCreateClassWithFullExpandedDefinitionKeepsTheMinimum [
 	"check ClassDescription>>#definitionFullExpanded"
 
-	builder := self class compilerClass new evaluate: 'Object << #MyClass
+	builder := OpalEvaluator new evaluate: 'Object << #MyClass
 	layout: FixedLayout;
 	traits: {};
 	slots: {};
@@ -393,7 +393,7 @@ ShiftClassBuilderTest >> testFillShiftClassBuilder [
 ShiftClassBuilderTest >> testInstallMinimalMockClass [
 
 	| installedClass |
-	builder := self class compilerClass new evaluate: 'Object << #MyClass
+	builder := OpalEvaluator new evaluate: 'Object << #MyClass
 	layout: FixedLayout;
 	traits: {};
 	slots: {};

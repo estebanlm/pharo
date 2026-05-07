@@ -128,7 +128,6 @@ Package >> addExtensionImport: anExtension [
 			compile: m sourceCode
 			classified: m protocol
 			withStamp: m timeStamp
-			notifying: nil
 			logSource: true ]
 ]
 
@@ -205,6 +204,12 @@ Package >> definedClassNames [
 Package >> definedClasses [
 
 	^ self tags flatCollect: [ :tag | tag classes ]
+]
+
+{ #category : 'accessing' }
+Package >> definedClassesDo: aBlock [
+
+	^ self tags do: [ :tag | tag classesDo: aBlock ]
 ]
 
 { #category : 'accessing' }
@@ -408,7 +413,8 @@ Package >> includesClass: aClass [
 Package >> includesClassNamed: aSymbol [
 	"Returns true if the receiver includes class named aSymbol in the classes that are defined within it: only class definition are considered - not class extensions"
 
-	^ self definedClasses anySatisfy: [ :class | class name = aSymbol ]
+	self definedClassesDo: [ :class | class name = aSymbol ifTrue: [ ^ true ] ].
+	^ false
 ]
 
 { #category : 'testing' }
@@ -594,9 +600,10 @@ Package >> organizer: anObject [
 
 { #category : 'accessing' }
 Package >> packageManifestOrNil [
-	^ self definedClasses
-		detect: [ :each | each isManifest ]
-		ifNone: [ nil ]
+
+	self definedClassesDo: [ :class | class isManifest ifTrue: [ ^ class ] ].
+
+	^ nil
 ]
 
 { #category : 'system compatibility' }

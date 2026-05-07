@@ -69,9 +69,9 @@ MCTraitDefinition >> loadWithLoader: aLoader [
 		  aBuilder
 			  name: name;
 			  traitComposition:
-				  (Smalltalk compiler evaluate: self traitCompositionString);
+				  (OpalEvaluator new evaluate: self traitCompositionString);
 			  classTraitComposition:
-				  (Smalltalk compiler evaluate: self classTraitCompositionString);
+				  (OpalEvaluator new evaluate: self classTraitCompositionString);
 			  slots: self instanceVariables;
 			  classSlots: self classInstanceVariables;
 			  package: self packageName;

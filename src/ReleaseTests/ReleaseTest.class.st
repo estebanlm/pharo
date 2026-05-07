@@ -3,7 +3,10 @@ I contain tests that validate the integrity of the system.
 "
 Class {
 	#name : 'ReleaseTest',
-	#superclass : 'AbstractEnvironmentTestCase',
+	#superclass : 'TestCase',
+	#instVars : [
+		'testingEnvironment'
+	],
 	#category : 'ReleaseTests-Release',
 	#package : 'ReleaseTests',
 	#tag : 'Release'
@@ -101,6 +104,14 @@ ReleaseTest >> knownProcesses [
 		  OSSDL2Driver eventLoopProcess.
 		  TFCallbackQueue uniqueInstance callbackProcess.
 		  ((Smalltalk classNamed: #StThreadSafeTranscript) ifNotNil: [ :aClass | aClass defaultInstance workerProcess ]) } asSet
+]
+
+{ #category : 'running' }
+ReleaseTest >> setUp [
+
+	super setUp.
+	"These tests are written to work on the global environment"
+	testingEnvironment := Smalltalk globals
 ]
 
 { #category : 'tests - variables' }

@@ -26,13 +26,11 @@ DoItChunkV200 >> description [
 ]
 
 { #category : 'importing' }
-DoItChunkV200 >> importFor: requestor logSource: logSource [
+DoItChunkV200 >> importWithLogSource: logSource [
 
-	^ self class compiler class new
-		  source: contents;
-		  requestor: requestor;
+	^ OpalEvaluator new
 		  logged: logSource;
-		  evaluate
+		  evaluate: contents
 ]
 
 { #category : 'testing' }

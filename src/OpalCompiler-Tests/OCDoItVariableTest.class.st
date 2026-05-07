@@ -49,7 +49,7 @@ OCDoItVariableTest >> testDoItCompilation [
 		source: 'temp + 2';
 		isScripting: true;
 		bindings: { var };
-		compile.
+		compileOrFail.
 	self assert: (doIt valueWithReceiver: self) equals: 102
 ]
 
@@ -83,11 +83,17 @@ OCDoItVariableTest >> testFromTempVariable [
 
 { #category : 'tests' }
 OCDoItVariableTest >> testReadCompilation [
-	| temp var ast doIt |
+	| temp var ast doIt undeclaredNotices |
 	temp := 100.
 	var := OCDoItVariable named: #temp fromContext: thisContext.
 	ast := [ temp + 2 ] sourceNode body asDoit doSemanticAnalysis.
+
+	"We patch the AST with a binding, so we need to remove the notice too!"	
 	ast variableNodes first variable: var.
+	undeclaredNotices := ast variableNodes first notices select: [ :n |
+		n isUndeclaredNotice ].
+	ast variableNodes first notices removeAll: undeclaredNotices.
+
 	doIt := ast generateMethod.
 
 	self assert: (doIt valueWithReceiver: self) equals: 102
@@ -115,11 +121,17 @@ OCDoItVariableTest >> testUsingMethods [
 
 { #category : 'tests' }
 OCDoItVariableTest >> testWriteCompilation [
-	| temp var ast doIt |
+	| temp var ast doIt undeclaredNotices |
 	temp := 100.
 	var := OCDoItVariable named: #temp fromContext: thisContext.
 	ast := [ temp := 500 ] sourceNode body asDoit doSemanticAnalysis.
+
+	"We patch the AST with a binding, so we need to remove the notice too!"	
 	ast variableNodes first variable: var.
+	undeclaredNotices := ast variableNodes first notices select: [ :n |
+		n isUndeclaredNotice ].
+	ast variableNodes first notices removeAll: undeclaredNotices.
+
 	doIt := ast generateMethod.
 	doIt valueWithReceiver: self.
 

@@ -53,9 +53,11 @@ ClyClassDefinitionEditorToolMorph >> applyChangesAsMethodDefinition [
 	selectedClass := self editingClass.
 
 	selector := selectedClass
-		compile: self pendingText asString
-		classified: nil
-		notifying: textMorph.
+		            compile: self pendingText asString
+		            classified: nil
+		            withStamp: DateAndTime now
+		            notifying: textMorph
+		            logSource: selectedClass shouldLogSource.
 
 	selector ifNil: [ ^ false ].
 	newMethod := selectedClass >> selector.
