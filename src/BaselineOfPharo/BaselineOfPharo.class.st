@@ -215,6 +215,10 @@ BaselineOfPharo >> postload: loader package: packageSpec [
 		credential password = token ifTrue: [ (self classNamed: #IceCredentialStore) current removePlainTextCredential: credential ].
 		'Removing credential.' traceCr ].
 
+	"Reset all ffi structures that may have been initialised durying bootstrap"
+	(Smalltalk classNamed: #FFIStructure) 
+		ifNotNil: [ :aClass | aClass resetLastCompilationPlatform ].
+
 	"Open the WelcomeBrowser as last step"
 	(self class environment classNamed: #StWelcomeBrowser)
 		ifNotNil: [ :aClass | aClass openForRelease ]
