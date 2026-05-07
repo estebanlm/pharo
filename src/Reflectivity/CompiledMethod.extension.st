@@ -11,11 +11,6 @@ CompiledMethod >> blockNodes [
 ]
 
 { #category : '*Reflectivity' }
-CompiledMethod >> compiledMethod [
-	^self
-]
-
-{ #category : '*Reflectivity' }
 CompiledMethod >> createTwin [
 	self reflectiveMethod: (ReflectiveMethod on: self)
 ]

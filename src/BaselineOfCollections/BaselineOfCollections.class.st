@@ -32,7 +32,7 @@ BaselineOfCollections >> baseline: spec [
 				package: 'Collections-Streams-Tests' with: [ spec requires: #( 'Collections-Streams' ) ];
 				package: 'Collections-Strings-Tests' with: [ spec requires: #( 'Collections-Strings' ) ];
 				package: 'Collections-Support-Tests' with: [ spec requires: #( 'Collections-Support' ) ];
-				package: 'Collections-Unordered-Tests' with: [ spec requires: #( 'Collections-Unordered' 'Collections-Arithmetic') ];
+				package: 'Collections-Unordered-Tests' with: [ spec requires: #( 'Collections-Unordered' 'Collections-Arithmetic' 'Collections-Abstract-Tests') ];
 				package: 'Collections-Weak-Tests' with: [ spec requires: #( 'Collections-Weak' 'Collections-Unordered-Tests') ];
 				
 				package: 'Collections-Arithmetic-Tests' with: [ spec requires: #( 'Collections-Arithmetic' ) ];
