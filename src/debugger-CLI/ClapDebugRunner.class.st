@@ -7,22 +7,23 @@ Class {
 
 { #category : 'command line' }
 ClapDebugRunner class >> commandSpecification [
+
 	<commandline>
 	| spec |
 	spec := (ClapCommandSpec id: #debug)
-		commandClass: self;
-		description: 'A Debug runner to launch debugger from a shell';
-		addHelp;
-		addPositional: #EXPR spec: [ :positional |
-			positional
-				description: 'Debug this code';
-				multiple: true ];
-		yourself.
-		
-	self 
+		        commandClass: self;
+		        description: 'A Debug runner to launch debugger from a shell';
+		        addHelp;
+		        addPositional: #EXPR spec: [ :positional |
+				        positional
+					        description: 'Debug this code';
+					        multiple: true ];
+		        yourself.
+
+	self
 		addSaveFlagTo: spec;
 		addRenameOptionTo: spec.
-	^ spec	
+	^ spec
 ]
 
 { #category : 'private - printing' }

@@ -8,7 +8,8 @@ Class {
 	#instVars : [
 		'isActive',
 		'context',
-		'process'
+		'process',
+		'lineEnding'
 	],
 	#category : 'debugger-CLI',
 	#package : 'debugger-CLI'
@@ -67,8 +68,10 @@ CommandLineDebugger >> finishedDebugging [
 
 { #category : 'initialization' }
 CommandLineDebugger >> initialize [
-    super initialize.
-    isActive := true.
+
+	super initialize.
+	isActive := true.
+	lineEnding := OSPlatform current lineEnding
 ]
 
 { #category : 'initialization' }
@@ -86,6 +89,7 @@ CommandLineDebugger >> over [
 				ex pass ].
 
 	context := process suspendedContext.
+
 	context ifNil: [ ^ self finishedDebugging ].
 
 	^ 'Stepped OVER to: ' , context printString , ' (PC: ' , context pc asString , ')'
@@ -126,9 +130,10 @@ CommandLineDebugger >> printCode [
 	currentMethod := context method.
 	codeOfCurrentMethod := currentMethod sourceCode asString.
 
-	identedCode := (codeOfCurrentMethod lines collect: [ :eachLine | String tab , eachLine ]) joinUsing: String lf.
 
-	^ '====== Code of ' , currentMethod printString , ' ======' , String lf , identedCode , String lf
+	identedCode := (codeOfCurrentMethod lines collect: [ :eachLine | String tab , eachLine ]) joinUsing: lineEnding .
+
+	^ '====== Code of ' , currentMethod printString , ' ======' , lineEnding , identedCode , lineEnding
 ]
 
 { #category : 'execution' }
@@ -150,8 +155,8 @@ CommandLineDebugger >> printStack [
 	results := context contextStack collect: [ :ctx | ctx asString ].
 
 	firstOfStack := '------> ' , results first asString.
-	remainingStackText := (results allButFirst collect: [ :res | String tab , res ]) joinUsing: Character lf.
-	^ '==================== Call Stack ====================' , String lf , firstOfStack , String lf , remainingStackText
+	remainingStackText := (results allButFirst collect: [ :res | String tab , res ]) joinUsing: lineEnding.
+	^ '==================== Call Stack ====================' , lineEnding , firstOfStack , lineEnding , remainingStackText
 ]
 
 { #category : 'initialization' }
