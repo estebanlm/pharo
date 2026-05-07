@@ -393,7 +393,7 @@ FFIStructure class >> resetStructureIfNotIn: alreadyReset [
 
 	alreadyReset add: self.
 	self nestedStructures do: [ :each | each resetStructureIfNotIn: alreadyReset ].
-	compiledSpec := nil
+	self compileFields
 ]
 
 { #category : 'accessing' }
