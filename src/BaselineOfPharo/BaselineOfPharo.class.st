@@ -221,10 +221,7 @@ BaselineOfPharo >> postload: loader package: packageSpec [
 	"Also force a reset of libgit2, because it will ve annoying otherwise. 
 	 THIS IS FOR TEST. I will implemnt correctly if it works."
 	(Smalltalk classNamed: #LGitExternalStructure) ifNotNil: [ :aClass | 
-			| structures |
-			structures := aClass allSubclasses.
-			structures do: #resetCompiledSpec.
-			structures do: #compileFields ].
+		aClass allSubclasses do: #resetCompiledSpec ].
 
 	"Open the WelcomeBrowser as last step"
 	(self class environment classNamed: #StWelcomeBrowser)
