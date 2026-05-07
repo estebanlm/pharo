@@ -28,7 +28,7 @@ CodeImporterCodeSnippetTest >> testCodeImporter [
 
 	"Importer should fail when faulty"
 	snippet isFaulty ifTrue: [
-		self should: [ importer evaluate ] raise: OCCodeError.
+		self should: [ importer evaluate ] raise: OCCompilationError, OCCodeError.
 		snippet isScripting ifFalse: [ class removeFromSystem ].
 		^ self ].
 

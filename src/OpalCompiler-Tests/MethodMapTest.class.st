@@ -19,7 +19,9 @@ MethodMapTest >> compileExample: aSelector [
 
 	| oldMethod |
 	oldMethod := MethodMapExamples >> aSelector.
-	^ oldMethod methodClass compiler compile: oldMethod sourceCode
+	^ oldMethod methodClass compiler
+		  source: oldMethod sourceCode;
+		  compileOrFail
 ]
 
 { #category : 'tests - ast mapping' }
@@ -82,7 +84,7 @@ MethodMapTest >> testCompiledBlockSourceNode [
 	| method block |
 	"if we compile a method, but to not install it, make sure that we can map the block to the AST"
 
-	method := OpalCompiler new compile: 'foo Object. [ self ]. ^ #bar'.
+	method := OpalCompiler new source: 'foo Object. [ self ]. ^ #bar'; compileOrFail.
 	block := method literals detect: #isCompiledBlock.
 	self assert: block sourceNode equals: (self parseExpression: '[ self ]')
 ]

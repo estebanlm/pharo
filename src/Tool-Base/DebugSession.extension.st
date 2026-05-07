@@ -2,19 +2,21 @@ Extension { #name : 'DebugSession' }
 
 { #category : '*Tool-Base' }
 DebugSession >> implement: aMessage inClass: aClass forContext: aContext [
-	| method |
+	| method newContext |
 	aClass compile: (DynamicMessageImplementor for: aMessage in: aClass) value.
 	method := aClass lookupSelector: aMessage selector.
 
 	MethodClassifier classify: method.
 
-	aContext privRefreshWith: method.
-	aContext method numArgs > 0 ifTrue:
+	newContext := Context newForMethod: method.
+	newContext privRefreshWith: method.
+	method numArgs > 0 ifTrue:
 		[aMessage arguments withIndexDo:
 			[:arg :index|
-				aContext tempAt: index put: arg]].
-
-	self updateContextTo: aContext.
+				newContext tempAt: index put: arg]].
+	newContext sender: aContext sender.
+	newContext receiver: aContext receiver.
+	self updateContextTo: newContext.
 	self contextChanged.
 	^ method
 ]

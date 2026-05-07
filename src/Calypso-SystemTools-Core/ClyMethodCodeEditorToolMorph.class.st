@@ -39,7 +39,13 @@ ClyMethodCodeEditorToolMorph >> applyChanges [
 
 	| selector methodClass currentMethod |
 	methodClass := self chooseClassForNewMethodIfNone: [ ^ false ].
-	selector := methodClass compile: self pendingText asString classified: editingMethod protocol notifying: textMorph.
+	selector := methodClass 
+						compile: self pendingText asString
+		            classified: editingMethod protocol
+		            withStamp: DateAndTime now
+		            notifying: textMorph
+		            logSource: methodClass shouldLogSource.
+
 	selector ifNil: [ ^ false ].
 	currentMethod := methodClass >> selector.
 	self setMethodProtocol: currentMethod.
@@ -156,11 +162,13 @@ ClyMethodCodeEditorToolMorph >> editingMethod [
 
 { #category : 'accessing' }
 ClyMethodCodeEditorToolMorph >> editingMethod: aMethod [
+
 	editingMethod := aMethod
 ]
 
 { #category : 'accessing' }
 ClyMethodCodeEditorToolMorph >> editingText [
+
 	^editingMethod sourceCode
 ]
 

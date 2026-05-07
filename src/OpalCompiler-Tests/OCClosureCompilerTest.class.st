@@ -329,7 +329,10 @@ OCClosureCompilerTest >> doTestDebuggerTempAccessWith: one with: two [
 
 { #category : 'running' }
 OCClosureCompilerTest >> evaluate: aString in: aContext to: anObject [
-	^ aContext compiler evaluate: aString
+
+	^ OpalEvaluator new
+		  context: aContext;
+		  evaluate: aString
 ]
 
 { #category : 'running' }

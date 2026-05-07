@@ -68,7 +68,7 @@ OCExtensionMethodInstaller >> install: method into: extension compiler: compiler
 	packagesToRecompile := { extension package }.
 	extension hasUserPackages ifTrue: [ packagesToRecompile := packagesToRecompile , extension userPackages asArray ].
 	(packagesToRecompile flatCollect: [ :p | p methods ]) do: [ :m |
-			m methodClass compile: m sourceCode notifying: nil methodInstaller: (m methodClass methodInstaller
+			m methodClass compile: m sourceCode methodInstaller: (m methodClass methodInstaller
 					 logged: false;
 					 changeStamp: changeStamp;
 					 protocol: m protocol) ]

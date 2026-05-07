@@ -160,6 +160,10 @@ FLSerializationTest >> serializer [
 FLSerializationTest >> setUp [
 	super setUp.
 	
+	"Use the global environment by default: the serialization should not write to it and only use it to check if a class is a class in the environment or not.
+	If not, it will serialize it (we want to avoid it!). If it is, it will just serialize the class name"
+	testingEnvironment := self class environment.
+	
 	self
 		setUpEnvironment;
 		setUpClassFactory;

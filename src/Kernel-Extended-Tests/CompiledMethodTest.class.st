@@ -37,7 +37,6 @@ CompiledMethodTest >> packageNameForTests [
 { #category : 'running' }
 CompiledMethodTest >> setUp [
 	super setUp.
-	testingEnvironment := Smalltalk globals.
 	someClass := SomeClassForCompiledMethodTests
 ]
 
@@ -216,10 +215,12 @@ CompiledMethodTest >> testEqualityClassSideMethod [
    	| method1 method2 |
 
 	method1 := TestCase class compiler
-			compile: 'aMethod'.
+			source: 'aMethod';
+			compileOrFail.
 
 	method2 := TestCase class compiler
-			compile: 'aMethod'.
+			source: 'aMethod';
+			compileOrFail.
 
  	self assert: method1 equals: method2
 ]
@@ -227,8 +228,12 @@ CompiledMethodTest >> testEqualityClassSideMethod [
 { #category : 'tests - comparing' }
 CompiledMethodTest >> testEqualityInstanceSideMethod [
 	| method1 method2 |
-	method1 := TestCase compiler compile: 'aMethod'.
-	method2 := TestCase compiler compile: 'aMethod'.
+	method1 := TestCase compiler
+			source: 'aMethod';
+			compileOrFail.
+	method2 := TestCase compiler
+			source: 'aMethod';
+			compileOrFail.
 
 	self assert: (method1 literalAt: method1 numLiterals) identicalTo: (method2 literalAt: method2 numLiterals).
 	self assert: method1 equals: method2
@@ -252,13 +257,13 @@ CompiledMethodTest >> testHasLiteralSuchThat [
 { #category : 'tests - testing' }
 CompiledMethodTest >> testHasNonLocalReturn [
 	| method |
-	method := self class compiler compile: 'm ^1'.
+	method := self class compiler source: 'm ^1'; compileOrFail.
 	self deny: [method hasNonLocalReturn ].
-	method := self class compiler compile: 'm self doSomething'.
+	method := self class compiler source: 'm self doSomething'; compileOrFail.
 	self deny: [method hasNonLocalReturn ].
-	method := self class compiler compile: 'm []'.
+	method := self class compiler source: 'm []'; compileOrFail.
 	self deny: [method hasNonLocalReturn ].
-	method := self class compiler compile: 'm [^self]'.
+	method := self class compiler source: 'm [^self]'; compileOrFail.
 	self assert: [method hasNonLocalReturn ]
 ]
 
@@ -322,7 +327,7 @@ CompiledMethodTest >> testIsFaulty [
 	cm := OpalCompiler new
 				source: 'method 3+';
 				permitFaulty: true;
-				compile.
+				compileOrFail.
 	self assert: cm isFaulty.
 	self deny: (OCASTTranslator>>#visitParseErrorNode:) isFaulty
 ]
@@ -356,13 +361,13 @@ CompiledMethodTest >> testIsInstanceSide [
 
 { #category : 'tests - testing' }
 CompiledMethodTest >> testIsQuick [
-	| method  |
 
+	| method |
 	method := self someClass compiledMethodAt: #returnTrue.
-	self assert: (method isQuick).
+	self assert: method isQuick.
 
 	method := self someClass compiledMethodAt: #returnPlusOne:.
-	self deny: (method isQuick)
+	self deny: method isQuick
 ]
 
 { #category : 'tests - linesofcode' }
@@ -535,8 +540,8 @@ CompiledMethodTest >> testMethodInDeprecatedClassIsDeprecated [
 { #category : 'tests - comparing' }
 CompiledMethodTest >> testMethodsThatHaveOnlyDifferentSelectorsShouldBeDifferent [
 	| method1 method2 |
-	method1 := TestCase compiler compile: 'aMethod'.
-	method2 := TestCase compiler compile: 'aMethod2'.
+	method1 := TestCase compiler source: 'aMethod'; compileOrFail.
+	method2 := TestCase compiler source: 'aMethod2'; compileOrFail.
 
 	self assert: (method1 literalAt: method1 numLiterals) identicalTo: (method2 literalAt: method2 numLiterals).
 	self deny: method1 equals: method2
@@ -802,7 +807,7 @@ CompiledMethodTest >> testUndeclaredReparationWithClass [
 	Smalltalk globals removeKey: #TestUndeclaredVariable ifAbsent: [].
 	Undeclared removeKey: #TestUndeclaredVariable ifAbsent: []. "Because obsolete may remain"
 
-	method := self class compiler permitFaulty: true; compile: 'x ^TestUndeclaredVariable ifNil: [ TestUndeclaredVariable ]'.
+	method := self class compiler permitFaulty: true; source: 'x ^TestUndeclaredVariable ifNil: [ TestUndeclaredVariable ]'; compileOrFail.
 	self assert: method usesUndeclareds.
 	self should: [ nil executeMethod: method ] raise: UndeclaredVariableRead.
 
@@ -833,7 +838,7 @@ CompiledMethodTest >> testUndeclaredReparationWithGlobal [
 
 	Smalltalk globals removeKey: #TestUndeclaredVariable ifAbsent: [].
 
-	method := self class compiler permitFaulty: true; compile: 'x ^TestUndeclaredVariable ifNil: [ TestUndeclaredVariable ]'.
+	method := self class compiler permitFaulty: true; source: 'x ^TestUndeclaredVariable ifNil: [ TestUndeclaredVariable ]'; compileOrFail.
 	self assert: method usesUndeclareds.
 	self should: [ nil executeMethod: method ] raise: UndeclaredVariableRead.
 
@@ -911,7 +916,9 @@ CompiledMethodTest >> testUndeclaredReparationWithShared [
 	class := (Object << #TestUndeclaredVariableClass package: self packageNameForTests) install.
 	method := class compiler
 		          permitFaulty: true;
-		          compile: 'x ^TestUndeclaredVariable ifNil: [ TestUndeclaredVariable ]'.
+		          source: 'x ^TestUndeclaredVariable ifNil: [ TestUndeclaredVariable ]';
+		          compileOrFail.
+	
 	"Add and initialize a shared"
 	class := ((Object << #TestUndeclaredVariableClass)
 		          sharedVariables: { #TestUndeclaredVariable };
@@ -928,7 +935,9 @@ CompiledMethodTest >> testUndeclaredReparationWithSharedWasCrashingOnOldVM1001 [
 	class := (Object << #TestUndeclaredVariableClass package: self packageNameForTests) install.
 	method := class compiler
 		          permitFaulty: true;
-		          compile: 'x ^TestUndeclaredVariable ifNil: [ TestUndeclaredVariable ]'.
+		          source: 'x ^TestUndeclaredVariable ifNil: [ TestUndeclaredVariable ]';
+		          compileOrFail.
+	
 	"Add and initialize a shared"
 	class := ((Object << #TestUndeclaredVariableClass)
 		          sharedVariables: { #TestUndeclaredVariable };
@@ -941,11 +950,11 @@ CompiledMethodTest >> testUndeclaredReparationWithSharedWasCrashingOnOldVM1001 [
 { #category : 'tests - testing' }
 CompiledMethodTest >> testUsesUndeclareds [
 	| method |
-	method := self someClass compiler compile: 'x ^x'.
+	method := self someClass compiler source: 'x ^x'; compileOrFail.
 	self deny: method usesUndeclareds.
-	method := self someClass compiler permitFaulty: true; compile: 'z ^z'.
+	method := self someClass compiler permitFaulty: true; source: 'z ^z'; compileOrFail.
 	self assert: method usesUndeclareds.
-	method := self someClass compiler permitFaulty: true; compile: 'msg self in: [ :anObject | var1 := 1 ]'.
+	method := self someClass compiler permitFaulty: true; source: 'msg self in: [ :anObject | var1 := 1 ]'; compileOrFail.
 	self assert: method usesUndeclareds
 ]
 
@@ -1018,28 +1027,28 @@ CompiledMethodTest >> testWritesUndeclared [
 	| method |
 	
 	"x is an ivar"
-	method := self someClass compiler compile: 'x ^ x := 0'.
+	method := self someClass compiler source: 'x ^ x := 0'; compileOrFail.
 	self deny: method usesUndeclareds.
-	self assert: (self executeMethod: method) equals: 0.
+	self assert: (self someClass new executeMethod: method) equals: 0.
 
 	"undeclaredxyz is not declared"
-	method := self someClass compiler permitFaulty: true; compile: 'z ^ undeclaredxyz := 1'.
+	method := self someClass compiler permitFaulty: true; source: 'z ^ undeclaredxyz := 1'; compileOrFail.
 	self assert: method usesUndeclareds.
-	self should: [ self executeMethod: method ] raise: UndeclaredVariableWrite.
+	self should: [ self someClass new executeMethod: method ] raise: UndeclaredVariableWrite.
 	self
 		assert:
-			([ self executeMethod: method ]
+			([ self someClass new executeMethod: method ]
 				on: UndeclaredVariableWrite
 				do: [:e | e resume])
 		equals: 1.
 
 	"check same behavior in blocks"
-	method := self someClass compiler permitFaulty: true; compile: 'msg ^ self in: [ :anObject | undeclaredxyz := 2 ]'.
+	method := self someClass compiler permitFaulty: true; source: 'msg ^ self in: [ :anObject | undeclaredxyz := 2 ]'; compileOrFail.
 	self assert: method usesUndeclareds.
-	self should: [ self executeMethod: method ] raise: UndeclaredVariableWrite.
+	self should: [ self someClass new executeMethod: method ] raise: UndeclaredVariableWrite.
 	self
 		assert:
-			([ self executeMethod: method ]
+			([ self someClass new executeMethod: method ]
 				on: UndeclaredVariableWrite
 				do: [:e | e resume])
 		equals: 2

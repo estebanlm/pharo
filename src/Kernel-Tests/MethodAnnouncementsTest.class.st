@@ -21,7 +21,8 @@ MethodAnnouncementsTest >> testCompileMethodAnnounceAddition [
 
 	class compiler
 		protocol: #titan;
-		install: 'king ^ 1'.
+		source: 'king ^ 1';
+		install.
 
 	self assert: numberOfAnnouncements equals: 1
 ]
@@ -31,7 +32,8 @@ MethodAnnouncementsTest >> testRemoveMethodAnnounceRemoval [
 
 	class compiler
 		protocol: #titan;
-		install: 'king ^ 1'.
+		source: 'king ^ 1';
+		install.
 
 	self when: MethodRemoved do: [ :ann |
 		self assert: ann method selector equals: #king.
@@ -51,7 +53,8 @@ MethodAnnouncementsTest >> testRemoveSelectorDoesNotAnnounceRecategorization [
 
 	class compiler
 		protocol: #titan;
-		install: 'king ^ 1'.
+		source: 'king ^ 1';
+		install.
 
 	self when: MethodRecategorized do: [ :ann | self fail: 'No method recategorization should happen during the removal of a method' ].
 
@@ -68,7 +71,7 @@ MethodAnnouncementsTest >> testRemoveSelectorDoesNotAnnounceRecategorization [
 { #category : 'tests' }
 MethodAnnouncementsTest >> testUpdateMethodAnnounceAddedInCaseAMethodIsInTheMethodDictionaryWithoutBeenInAProtocol [
 
-	class compiler install: 'king ^ 2'.
+	class compiler source: 'king ^ 2'; install.
 
 	"It happenede that due to a loading error we had some methods in the method dictionary without been in the protocol list. So this test emulate this."
 	class instVarNamed: #protocols put: ((class instVarNamed: #protocols) copyWithout: (class >> #king) protocol).
@@ -82,7 +85,8 @@ MethodAnnouncementsTest >> testUpdateMethodAnnounceAddedInCaseAMethodIsInTheMeth
 
 	class compiler
 		protocol: #titan;
-		install: 'king ^ 1'.
+		source: 'king ^ 1';
+		install.
 
 	self assert: numberOfAnnouncements equals: 1
 ]
@@ -92,7 +96,8 @@ MethodAnnouncementsTest >> testUpdateMethodAnnounceModification [
 
 	class compiler
 		protocol: #titan;
-		install: 'king ^ 2'.
+		source: 'king ^ 2';
+		install.
 
 	self when: MethodModified do: [ :ann |
 		self assert: ann method selector equals: #king.
@@ -103,7 +108,8 @@ MethodAnnouncementsTest >> testUpdateMethodAnnounceModification [
 
 	class compiler
 		protocol: #titan;
-		install: 'king ^ 1'.
+		source: 'king ^ 1';
+		install.
 
 	self assert: numberOfAnnouncements equals: 1
 ]
@@ -113,7 +119,8 @@ MethodAnnouncementsTest >> testUpdateMethodAnnounceRecategorization [
 
 	class compiler
 		protocol: #demon;
-		install: 'king ^ 2'.
+		source: 'king ^ 2';
+		install.
 
 	self when: MethodRecategorized do: [ :ann |
 		self assert: ann method selector equals: #king.
@@ -125,7 +132,8 @@ MethodAnnouncementsTest >> testUpdateMethodAnnounceRecategorization [
 
 	class compiler
 		protocol: #titan;
-		install: 'king ^ 1'.
+		source: 'king ^ 1';
+		install.
 
 	self assert: numberOfAnnouncements equals: 1
 ]

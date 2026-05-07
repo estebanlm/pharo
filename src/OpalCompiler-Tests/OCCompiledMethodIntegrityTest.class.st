@@ -14,7 +14,7 @@ OCCompiledMethodIntegrityTest >> testBlockTemps [
 			'ascentOf: aCharacter
 											^ [ | temp1 temp2 temp3 | 1= temp1. 2 = temp2. 3 = temp3].';
 		class: OCMockCompilationClass;
-		compile.
+		compileOrFail.
 
 	self assert: newCompiledMethod numArgs equals: 1.
 	self assert: (newCompiledMethod numLiterals = 3 or: [ newCompiledMethod numLiterals = 4	"Sista Bytecode" ]).
@@ -30,7 +30,7 @@ OCCompiledMethodIntegrityTest >> testNotUsedArgument [
 			'ascentOf: aCharacter
 											^ self ascent.';
 		class: OCMockCompilationClass;
-		compile.
+		compileOrFail.
 
 	self assert: newCompiledMethod numArgs equals: 1.
 	self assert: newCompiledMethod numLiterals equals: 3.
@@ -47,7 +47,7 @@ OCCompiledMethodIntegrityTest >> testPragmas [
 											<hello: 5>
 											<hello: 2>';
 		class: OCMockCompilationClass;
-		compile.
+		compileOrFail.
 
 	self assert: newCompiledMethod numArgs equals: 0.
 	self assert: newCompiledMethod numLiterals equals: 2.
@@ -68,7 +68,7 @@ OCCompiledMethodIntegrityTest >> testPrimitive [
 											<primitive: 62>
 											^ self basicSize.';
 		class: OCMockCompilationClass;
-		compile.
+		compileOrFail.
 
 	self assert: newCompiledMethod numArgs equals: 0.
 	self assert: newCompiledMethod numLiterals equals: 3.
@@ -88,7 +88,7 @@ OCCompiledMethodIntegrityTest >> testRemoteTempInVector [
         															answer := each value].
    													 ^answer';
 		class: Object;
-		compile.
+		compileOrFail.
 
 	self assert: newCompiledMethod numArgs equals: 0.
 	self assert: newCompiledMethod numLiterals equals: 3.
@@ -105,7 +105,7 @@ OCCompiledMethodIntegrityTest >> testUndeclaredVariable [
 											^ undeclaredTestVar';
 		class: OCMockCompilationClass;
 		permitFaulty: true;
-		compile.
+		compileOrFail.
 
 	undeclaredBinding := newCompiledMethod literals detect: [ :each | each name = #undeclaredTestVar ].
 	self assert: undeclaredBinding class equals: UndeclaredVariable.
@@ -126,7 +126,7 @@ OCCompiledMethodIntegrityTest >> testUndeclaredVariableWhenItIsAlreadyRegistered
 											^ undeclaredTestVar';
 		class: OCMockCompilationClass;
 		permitFaulty: true;
-		compile.
+		compileOrFail.
 
 	undeclaredBinding := newCompiledMethod literals detect: [ :each | each name = #undeclaredTestVar ].
 	self assert: undeclaredBinding identicalTo: var.
@@ -148,7 +148,7 @@ OCCompiledMethodIntegrityTest >> testUndeclaredVariableWhenItIsAlreadyRegistered
 											^ undeclaredTestVar';
 		class: OCMockCompilationClass;
 		permitFaulty: true;
-		compile.
+		compileOrFail.
 
 	undeclaredBinding := newCompiledMethod literals detect: [ :each | each name = #undeclaredTestVar ].
 	self assert: undeclaredBinding class equals: UndeclaredVariable.

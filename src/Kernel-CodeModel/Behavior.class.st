@@ -1176,6 +1176,12 @@ Behavior >> isEphemeronClass [
 ]
 
 { #category : 'testing' }
+Behavior >> isExtension [
+
+	^ false
+]
+
+{ #category : 'testing' }
 Behavior >> isFixed [
 	"Answer whether the receiver does not have a variable (indexable) part."
 

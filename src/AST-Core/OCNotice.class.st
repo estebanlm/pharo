@@ -73,6 +73,12 @@ OCNotice >> isError [
 ]
 
 { #category : 'testing' }
+OCNotice >> isErrorOn: anOpalCompiler [
+
+	^ false
+]
+
+{ #category : 'testing' }
 OCNotice >> isSyntaxError [
 
 	^ false
@@ -88,6 +94,12 @@ OCNotice >> isUndeclaredNotice [
 OCNotice >> isWarning [
 
 	^ false
+]
+
+{ #category : 'testing' }
+OCNotice >> isWarningOn: anOpalCompiler [ 
+	
+	^ (self isErrorOn: anOpalCompiler) not
 ]
 
 { #category : 'accessing' }

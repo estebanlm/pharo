@@ -55,25 +55,19 @@ ClyBrowserMorph >> browseSendersOf: aSymbol [
 { #category : '*Calypso-SystemTools-QueryBrowser' }
 ClyBrowserMorph >> browseUppercasedReferencesTo: aSymbol inNameRespolver: anEnvironment [
 
-	anEnvironment 
-		ifNil: [
-			^ {
-				  (Smalltalk tools toolNamed: #messageList) browseReferencesToClass: (self class environment at: aSymbol) 
-				} ].
+	anEnvironment ifNil: [
+		^ { ((Smalltalk tools toolNamed: #messageList) browseReferencesToClass: (self class environment at: aSymbol)) } ].
 
-	(anEnvironment bindingOf: aSymbol) 
-		ifNotNil: [ : envBinding |
-			^ (envBinding value isClass and: [envBinding value isPool])
-				ifTrue: [ 
-					{ 
-						(self spawnQueryBrowserOn: (ClySharedPoolReferencesQuery of: envBinding)) .
-						#SendersWithEnvironment 
-					} ]
-				ifFalse: [ 
-					{
-					  (self spawnQueryBrowserOn: (ClyClassReferencesQuery of: envBinding)).
-					  #SendersWithEnvironment 
-					} ] ].
+	(anEnvironment bindingOf: aSymbol) ifNotNil: [ :envBinding |
+			^ (envBinding value isClass and: [ envBinding value isPool ])
+				  ifTrue: [
+						  {
+							  ((Smalltalk tools toolNamed: #messageList) browseUsersOfSharedPool: envBinding).
+							  #SendersWithEnvironment } ]
+				  ifFalse: [
+						  {
+							  ((Smalltalk tools toolNamed: #messageList) browseReferencesToVariables: { envBinding }).
+							  #SendersWithEnvironment } ] ]
 ]
 
 { #category : '*Calypso-SystemTools-QueryBrowser' }
