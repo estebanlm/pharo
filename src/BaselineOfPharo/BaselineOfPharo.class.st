@@ -217,7 +217,7 @@ BaselineOfPharo >> postload: loader package: packageSpec [
 
 	"Reset all ffi structures that may have been initialised durying bootstrap"
 	(Smalltalk classNamed: #FFIStructure) 
-		ifNotNil: [ :aClass | aClass resetAllStructures ].
+		ifNotNil: [ :aClass | aClass resetLastCompilationPlatform ].
 
 	"Open the WelcomeBrowser as last step"
 	(self class environment classNamed: #StWelcomeBrowser)
