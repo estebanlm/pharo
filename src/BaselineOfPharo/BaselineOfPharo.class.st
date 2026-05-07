@@ -218,10 +218,6 @@ BaselineOfPharo >> postload: loader package: packageSpec [
 	"Reset all ffi structures that may have been initialised durying bootstrap"
 	(Smalltalk classNamed: #FFIStructure) 
 		ifNotNil: [ :aClass | aClass resetLastCompilationPlatform ].
-	"Also force a reset of libgit2, because it will ve annoying otherwise. 
-	 THIS IS FOR TEST. I will implemnt correctly if it works."
-	(Smalltalk classNamed: #LGitExternalStructure) ifNotNil: [ :aClass | 
-		aClass allSubclasses do: #resetCompiledSpec ].
 
 	"Open the WelcomeBrowser as last step"
 	(self class environment classNamed: #StWelcomeBrowser)
