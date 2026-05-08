@@ -22,11 +22,9 @@ PharoDocCommentExpression >> evaluate [
 		self error: self methodClass name , '>>#' , self methodSelector , ': Doc comment is not well formed. Content: ' , node sourceNode contents ].
 	"we do not check for isFaulty here, as in the case of syntax errors, we want the evaluate to give us better error messages"
 
-	^ self methodClass compiler
-		  source: self source;
-		  isScripting: true;
+	^ OpalEvaluator new
 		  receiver: self methodClass;
-		  evaluate
+		  evaluate:  self source
 ]
 
 { #category : 'accessing' }
