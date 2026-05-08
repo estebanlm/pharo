@@ -29,28 +29,24 @@ BaselineOfKernel >> baseline: spec [
 	<baseline>
 	| repository |
 	repository := self packageRepositoryURLForSpec: spec.
-	
+
 	spec for: #common do: [
 			spec
-				baseline: 'Files-Tests' with: [ 
-					spec
-						className: 'BaselineOfFiles';
-						repository: repository;
-						loads: #( 'Tests' )];
-
-				baseline: 'Zinc-Character-Encoding-Tests' with: [ 
+				baseline: 'Files-Tests' with: [
+						spec
+							className: 'BaselineOfFiles';
+							repository: repository;
+							loads: #( 'Tests' ) ];
+				baseline: 'Zinc-Character-Encoding-Tests' with: [
 					spec
 						className: 'BaselineOfZincCharacterEncoding';
 						repository: repository;
-						loads: #( 'Tests' )];
-				
-
-				baseline: 'System-Platforms-Tests' with: [ 
+						loads: #( 'Tests' ) ];
+				baseline: 'System-Platforms-Tests' with: [
 					spec
 						className: 'BaselineOfSystemPlatforms';
 						repository: repository;
-						loads: #( 'Tests' )];
-					
+						loads: #( 'Tests' ) ];
 				baseline: 'Collections-Tests' with: [ 
 					spec 
 						className: 'BaselineOfCollections';
@@ -58,17 +54,15 @@ BaselineOfKernel >> baseline: spec [
 						loads: #('KernelTests') ];
 					
 					
-				baseline: 'Announcements-Core-Tests' with: [ 
+				baseline: 'Announcements-Core-Tests' with: [
 					spec
 						className: 'BaselineOfAnnouncements';
 						repository: repository;
-						loads: #( 'Tests' )];
-					
-				baseline: 'SystemFinalization' with: [ 
+						loads: #( 'Tests' ) ];
+				baseline: 'SystemFinalization' with: [
 					spec
 						repository: repository;
-						loads: #( 'Tests' )];
-					
+						loads: #( 'Tests' ) ];
 				package: 'Announcements-Core';
 				package: 'Collections-Abstract';
 				package: 'Collections-DoubleLinkedList';
@@ -104,22 +98,20 @@ BaselineOfKernel >> baseline: spec [
 				package: 'System-NumberPrinting';
 				package: 'System-Version';
 				package: 'Multilingual-Encodings';
-				
 				package: 'Kernel-Tests';
 				package: 'Kernel-CodeModel-Tests';
-				package: 'System-Time-Tests'.
-
-			"The order of packages in the groups are important for the bootstrap! It define the load order."
+				package: 'System-Time-Tests'. "The order of packages in the groups are important for the bootstrap! It define the load order."
 			spec
 				group: 'Core'
-				with: { 'Announcements-Core'. 'Collections-Abstract'. 'Collections-DoubleLinkedList'. 'Collections-Native'. 'Collections-Sequenceable'.
-					'Collections-Streams'. 'Collections-Strings'. 'Collections-Support'. 'Collections-Unordered'. 'Collections-Weak'. 'Files'. 'Hermes'. 'Kernel'. 'Kernel-CodeModel'.
-					'Kernel-BytecodeEncoders'. 'Transcript-NonInteractive'. 'PharoBootstrap-Initialization'. 'Shift-ClassBuilder'. 'System-Announcements'.
-					'System-CommandLineHandler'. 'System-Finalization'. 'System-Platforms'. 'System-SessionManager'.
-					'System-Support'. 'Zinc-Character-Encoding-Core' };
+				with:
+					{ 'Announcements-Core'. 'Collections-Abstract'. 'Collections-DoubleLinkedList'. 'Collections-Native'. 'Collections-Sequenceable'.
+					'Collections-Streams'. 'Collections-Strings'. 'Collections-Support'. 'Collections-Unordered'. 'Collections-Weak'.
+					'Files'. 'Hermes'. 'Kernel'. 'Kernel-CodeModel'. 'Kernel-BytecodeEncoders'. 'Transcript-NonInteractive'.
+					'PharoBootstrap-Initialization'. 'Shift-ClassBuilder'. 'System-Announcements'. 'System-CommandLineHandler'.
+					'System-Finalization'. 'System-Platforms'. 'System-SessionManager'. 'System-Support'. 'Zinc-Character-Encoding-Core' };
 				group: 'AdditionalPackages'
-				with: { 'Clap-Core'. 'Clap-Commands-Pharo'. 'Hermes-Extensions'. 'NumberParser'. 'ReflectionMirrors-Primitives'. 'System-Time'. 'Math-Operations-Extensions'.
-					'System-NumberPrinting'. 'System-Version'. 'Multilingual-Encodings' };
+				with: { 'Clap-Core'. 'Clap-Commands-Pharo'. 'Hermes-Extensions'. 'NumberParser'. 'ReflectionMirrors-Primitives'.
+					'System-Time'. 'Math-Operations-Extensions'. 'System-NumberPrinting'. 'System-Version'. 'Multilingual-Encodings' };
 				group: 'Tests'
 				with:
 					{ 'Collections-Tests'. 'Kernel-Tests'. 'Kernel-CodeModel-Tests'. 'Announcements-Core-Tests'. 'System-Platforms-Tests'.

@@ -184,7 +184,7 @@ WorldState class >> pharoItemsOn: aBuilder [
 						keyText: 'S';
 						iconName: #smallSave.
 					(aBuilder item: #'Save as...')
-						target: self;
+						target: aBuilder model;
 						selector: #saveAs;
 						help: 'Save the current version of the image on disk under a new name.';
 						order: 2;
@@ -233,15 +233,6 @@ WorldState class >> saveAndQuit [
 	Cursor write showWhile: [
 		Smalltalk snapshot: true andQuit: true
 	]
-]
-
-{ #category : 'world menu items' }
-WorldState class >> saveAs [
-
-	| reference |
-	reference := self uiManager chooseForSaveFileReference: 'Save Image as?' extensions: #( 'image' ) path: Smalltalk imageFile nextVersion.
-
-	reference ifNotNil: [ Smalltalk saveAs: reference parent / (reference basenameWithoutExtension: 'image') ]
 ]
 
 { #category : 'world menu items' }
@@ -770,6 +761,17 @@ WorldState >> runStepMethodsIn: aWorld [
 	[(nextInQueue := queue nextOrNil) isNil]
 		whileFalse: [ nextInQueue value].
 	self runLocalStepMethodsIn: aWorld.
+]
+
+{ #category : 'menu actions' }
+WorldState >> saveAs [
+
+	| reference |
+	reference := worldRenderer world morphicUIManager
+		             chooseForSaveFileReference: 'Save Image as?'
+		             extensions: #( 'image' )
+		             path: Smalltalk imageFile nextVersion.
+	reference ifNotNil: [ Smalltalk saveAs: reference parent / (reference basenameWithoutExtension: 'image') ]
 ]
 
 { #category : 'hands' }
