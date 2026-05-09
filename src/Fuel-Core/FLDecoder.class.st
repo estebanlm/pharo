@@ -248,8 +248,7 @@ FLDecoder >> nextEncodedUint8 [
 ]
 
 { #category : 'decoding' }
-FLDecoder >> nextEncodedWordsInto: aWordsObject [
-
+FLDecoder >> nextEncodedWordsInto: aWordsObject [ 
 	stream fuelNextWordsInto: aWordsObject
 ]
 
