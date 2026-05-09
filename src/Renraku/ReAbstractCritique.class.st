@@ -51,6 +51,15 @@ ReAbstractCritique class >> for: anEntity by: aRule [
 		yourself
 ]
 
+{ #category : 'class initialization' }
+ReAbstractCritique class >> initialize [
+
+	SeverityColors := Dictionary new.
+	SeverityColors at: 'error' put: Color red.
+	SeverityColors at: 'warning' put: Color yellow.
+	SeverityColors at: 'information' put: Color blue
+]
+
 { #category : 'testing' }
 ReAbstractCritique class >> isAbstract [
 
@@ -133,11 +142,7 @@ ReAbstractCritique >> change [
 { #category : 'accessing' }
 ReAbstractCritique >> color [
 
-	^ ({
-	#error -> Color red .
-	#warning -> Color yellow .
-	#information -> Color blue
-	 } asDictionary at: rule severity ifAbsent: [ super color ]) alpha: 0.1
+	^ SeverityColors at: rule severity ifAbsent: [ Color black alpha: 0.1 ]
 ]
 
 { #category : 'accessing' }

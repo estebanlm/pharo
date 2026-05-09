@@ -296,13 +296,13 @@ ReRuleManager >> classRules [
 ReRuleManager >> groupedRules [
 
 	| rulesByGroup |
-	(self visibleRuleClasses collect: [ :aClass | 
+	(self visibleRuleClasses collect: [ :aClass |
 		          aClass new ]) sorted: [ :a :b | a ruleName < b ruleName ].
-	rulesByGroup := (rules groupedBy: [:each | each group]) associations collect: [ :as | 
+	rulesByGroup := (rules groupedBy: [:each | each group]) associations collect: [ :as |
 		                CBCritiquesRuleGroup
 			                named: as key
 			                rules: as value ].
-	^ rulesByGroup 
+	^ rulesByGroup
 ]
 
 { #category : 'initialization' }
@@ -332,8 +332,7 @@ ReRuleManager >> packageRules [
 { #category : 'accessing' }
 ReRuleManager >> sortedGroupedRules [
 
-	^ self groupedRules sort: [ :a :b | a name < b name ].
-
+	^ self groupedRules sort: [ :a :b | a name < b name ]
 ]
 
 { #category : 'accessing' }
