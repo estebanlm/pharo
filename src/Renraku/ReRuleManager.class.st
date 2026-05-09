@@ -226,7 +226,7 @@ ReRuleManager class >> setBeginnerProfile [
 { #category : 'accessing' }
 ReRuleManager class >> setDefaultProfile [
 
-	self visibleRuleClasses do: [ :rule | rule enabled: rule isDefaultRule ].
+	self visibleRuleClasses do: [ :ruleClass | ruleClass enabled: ruleClass isDefaultRule ].
 	self reset
 ]
 
