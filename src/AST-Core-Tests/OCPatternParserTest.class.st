@@ -13,13 +13,13 @@ Class {
 
 { #category : 'accessing' }
 OCPatternParserTest class >> parserClass [
-	^ RBPatternParser
+	^ OCPatternParser
 ]
 
 { #category : 'tests - matching' }
 OCPatternParserTest >> testMatchingPatternBlockNode1 [
 	| searchPattern tree |
-	searchPattern := RBPatternParser
+	searchPattern := OCPatternParser
 		parseExpression: '(`a = `b) `{`a name size = `b name size}'.
 	tree := self parseExpression: 'a = c'.
 	self assert: (searchPattern match: tree inContext: Dictionary new)
@@ -28,7 +28,7 @@ OCPatternParserTest >> testMatchingPatternBlockNode1 [
 { #category : 'tests - matching' }
 OCPatternParserTest >> testMatchingPatternBlockNode2 [
 	| searchPattern tree |
-	searchPattern := RBPatternParser
+	searchPattern := OCPatternParser
 		parseExpression: '(`a = `b) `{`a name anySatisfy: [ :e | `b name includes: e]}'.
 	tree := self parseExpression: 'a = a1'.
 	self assert: (searchPattern match: tree inContext: Dictionary new)
@@ -53,7 +53,7 @@ OCPatternParserTest >> testParseFaultyPatternBlock [
 { #category : 'tests - parsing' }
 OCPatternParserTest >> testPatternNotStringExpression [
 	| searchPattern tree |
-	searchPattern := RBPatternParser parseExpression: '`{ :node | node isString }'.
+	searchPattern := OCPatternParser parseExpression: '`{ :node | node isString }'.
 
 	tree := self parseExpression: 'a = a1'.
 
@@ -64,7 +64,7 @@ OCPatternParserTest >> testPatternNotStringExpression [
 { #category : 'tests - parsing' }
 OCPatternParserTest >> testPatternStringExpression [
 	| searchPattern tree |
-	searchPattern := RBPatternParser parseExpression: '`{ :node | node isString }'.
+	searchPattern := OCPatternParser parseExpression: '`{ :node | node isString }'.
 
 	tree := self parseExpression: '''justAString'''.
 
@@ -75,7 +75,7 @@ OCPatternParserTest >> testPatternStringExpression [
 { #category : 'tests - parsing' }
 OCPatternParserTest >> testPatternVariable [
 	| searchPattern |
-	searchPattern := RBPatternParser parseExpression: '`a'.
+	searchPattern := OCPatternParser parseExpression: '`a'.
 	self assert: searchPattern class = OCPatternVariableNode.
 	self assert: searchPattern name equals: #'`a'
 ]
@@ -83,7 +83,7 @@ OCPatternParserTest >> testPatternVariable [
 { #category : 'tests - parsing' }
 OCPatternParserTest >> testPatternVariableSimpleVariable [
 	| searchPattern |
-	searchPattern := RBPatternParser parseExpression: '`a'.
+	searchPattern := OCPatternParser parseExpression: '`a'.
 	self assert: searchPattern class = OCPatternVariableNode.
 	self assert: searchPattern name equals: #'`a'
 ]
@@ -91,7 +91,7 @@ OCPatternParserTest >> testPatternVariableSimpleVariable [
 { #category : 'tests - parsing' }
 OCPatternParserTest >> testPatternVariableSymbol [
 	| searchPattern |
-	searchPattern := RBPatternParser parseExpression: '`#aSymbol'.
+	searchPattern := OCPatternParser parseExpression: '`#aSymbol'.
 	self assert: searchPattern class = OCPatternVariableNode.
 	self assert: searchPattern name equals: #'`#aSymbol'
 ]
