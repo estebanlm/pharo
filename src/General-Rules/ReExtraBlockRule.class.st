@@ -22,7 +22,7 @@ ReExtraBlockRule class >> ruleName [
 
 { #category : 'accessing' }
 ReExtraBlockRule class >> severity [
-	^ #information
+	^ 'information'
 ]
 
 { #category : 'accessing' }

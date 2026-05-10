@@ -21,7 +21,7 @@ ReUnnecessaryAssignmentRule class >> ruleName [
 
 { #category : 'accessing' }
 ReUnnecessaryAssignmentRule class >> severity [
-	^ #information
+	^ 'information'
 ]
 
 { #category : 'accessing' }

@@ -37,7 +37,7 @@ ReTrueFalseDuplicationRule class >> ruleName [
 
 { #category : 'accessing' }
 ReTrueFalseDuplicationRule class >> severity [
-	^ #information
+	^ 'information'
 ]
 
 { #category : 'accessing' }

@@ -33,7 +33,7 @@ ReInstVarInSubclassesRule class >> ruleName [
 
 { #category : 'accessing' }
 ReInstVarInSubclassesRule class >> severity [
-	^ #information
+	^ 'information'
 ]
 
 { #category : 'accessing' }

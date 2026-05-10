@@ -30,7 +30,7 @@ ReReturnMethodRule class >> ruleName [
 { #category : 'accessing' }
 ReReturnMethodRule class >> severity [
 
-	^ #error
+	^ 'error'
 ]
 
 { #category : 'running' }

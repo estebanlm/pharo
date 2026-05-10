@@ -46,7 +46,7 @@ ReGuardClauseRule class >> ruleName [
 { #category : 'accessing' }
 ReGuardClauseRule class >> severity [
 
-	^ #information
+	^ 'information'
 ]
 
 { #category : 'initialization' }

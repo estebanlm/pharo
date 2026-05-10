@@ -31,7 +31,7 @@ ReSentNotImplementedRule class >> ruleName [
 
 { #category : 'accessing' }
 ReSentNotImplementedRule class >> severity [
-	^ #error
+	^ 'error'
 ]
 
 { #category : 'accessing' }

@@ -400,7 +400,7 @@ ReAbstractRule >> ruleName [
 
 { #category : 'accessing' }
 ReAbstractRule >> severity [
-	"Answer the severity of issues reported by this rule. This method should return one of #error, #warning, or #information."
+	"Answer the severity of issues reported by this rule. This method should return one of 'error', 'warning', or 'information'."
 
 	^ self class severity
 ]
