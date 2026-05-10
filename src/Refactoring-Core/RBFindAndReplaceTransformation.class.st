@@ -224,7 +224,7 @@ RBFindAndReplaceTransformation >> nodesOf: methodNode [
 
 { #category : 'accessing' }
 RBFindAndReplaceTransformation >> patternParserClass [
-	^ RBPatternParser
+	^ OCPatternParser
 ]
 
 { #category : 'transforming' }
