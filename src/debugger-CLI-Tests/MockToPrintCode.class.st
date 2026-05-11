@@ -7,13 +7,13 @@ Class {
 }
 
 { #category : 'mock' }
-MockToPrintCode class >> mockMethodForTesting: arg [
+MockToPrintCode class >> mockMethodForTesting [
 	"Fake method to test printCode"
 
 	| a b |
 	a := 42.
 	b := a + 1.
-	^ b * arg
+	^ b * 2
 ]
 
 { #category : 'mock' }
@@ -27,13 +27,13 @@ MockToPrintCode class >> mockMethodForTesting: arg1 and: arg2 [
 ]
 
 { #category : 'mock' }
-MockToPrintCode >> mockMethodForTesting: arg [
+MockToPrintCode >> mockMethodForTesting [ 
 	"Fake method to test printCode"
 
 	| a b |
 	a := 42.
 	b := a + 1.
-	^ b * arg
+	^ b * 2
 ]
 
 { #category : 'mock' }

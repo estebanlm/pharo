@@ -86,17 +86,17 @@ CommandLineDebuggerTest >> testPrintCode [
 	currentContext := Context
 		                  sender: nil
 		                  receiver: self
-		                  method: MockToPrintCode >> #mockMethodForTesting:
+		                  method: MockToPrintCode >> #mockMethodForTesting
 		                  arguments: #(  ).
 	debugger context: currentContext.
 
 	response := debugger parsesAndExecuteCommand: 'printCode'.
 
-	self assert: (response includesSubstring: 'mockMethodForTesting: arg').
+	self assert: (response includesSubstring: 'mockMethodForTesting').
 	self assert: (response includesSubstring: '"Fake method to test printCode"').
-	self assert: (response includesSubstring: 'a := 42.').
+	self assert: (response includesSubstring: 'a := --->42<---.').
 	self assert: (response includesSubstring: 'b := a + 1.').
-	self assert: (response includesSubstring: '^ b * arg').
+	self assert: (response includesSubstring: '^ b * 2').
 
 	self assert: debugger isActive
 ]
