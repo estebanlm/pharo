@@ -60,6 +60,7 @@ OCInteractiveAPI >> compile: sourceCode notifying: requestor in: behavior [
 	compilationResult isError ifTrue: [
 			theCompiler ast allNotices sorted do: [ :n |
 					| check |
+					theCompiler failBlock ifNotNil: [  theCompiler failBlock value: n ].
 					shouldSignalErrors ifTrue: [ n signalError ].
 
 					requestor ifNil: [ n signalError ] ifNotNil: [

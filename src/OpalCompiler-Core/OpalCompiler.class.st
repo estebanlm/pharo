@@ -40,6 +40,7 @@ Class {
 		'protocol',
 		'requestor',
 		'priorMethod',
+		'failBlock',
 		'compilationResult'
 	],
 	#classInstVars : [
