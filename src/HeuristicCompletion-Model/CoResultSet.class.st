@@ -73,7 +73,7 @@ CoResultSet >> fetch: anInteger [
 
 	| newResults |
 	newResults := fetcher next: anInteger.
-	results addAll: "(sorter sortCompletionList:" newResults
+	results addAll: (filter complementResults: newResults )
 ]
 
 { #category : 'fetching' }

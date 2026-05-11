@@ -139,18 +139,18 @@ CoToleranceFilter class >> scoreForCandidate: aCandidateString token: aTokenStri
 		ifFalse: [ token asLowercase ].
 
 	(candidate beginsWith: token) ifTrue: [ ^ 0.0 ].
-	(self shouldTryFuzzyFor: token candidate: candidate tolerance: aTolerance) ifFalse: [ ^ nil ].
+	(self shouldTryFuzzyFor: token candidate: candidate tolerance: aTolerance) ifFalse: [ ^ 0 ].
 
 	maxSize := token size max: candidate size.
 	maxEdits := (aTolerance * maxSize) ceiling.
-	maxEdits <= 0 ifTrue: [ ^ nil ].
+	maxEdits <= 0 ifTrue: [ ^ 0 ].
 
 	distance := self
 		damerauLevenshteinDistanceBetween: token
 		and: candidate
 		maxDistance: maxEdits.
 
-	distance ifNil: [ ^ nil ].
+	distance ifNil: [ ^ 0 ].
 	^ distance asFloat / maxSize
 
 ]
@@ -159,10 +159,10 @@ CoToleranceFilter class >> scoreForCandidate: aCandidateString token: aTokenStri
 CoToleranceFilter class >> shouldTryFuzzyFor: token candidate: candidate tolerance: aTolerance [ 
 
 	| maxSize maxEdits |
-	(CoCompletionTolerance enabled not or: [ aTolerance <= 0.0 ]) ifTrue: [ ^ false ].
+	(self enabled not or: [ aTolerance <= 0.0 ]) ifTrue: [ ^ false ].
 	token isEmpty ifTrue: [ ^ false ].
 	candidate isEmpty ifTrue: [ ^ false ].
-	token size < CoCompletionTolerance minimumTokenSize ifTrue: [ ^ false ].
+	token size < self minimumTokenSize ifTrue: [ ^ false ].
 
 	"Keep keyword arity stable"
 	((token includes: $:) or: [ candidate includes: $: ]) ifTrue: [
@@ -181,6 +181,43 @@ CoToleranceFilter class >> shouldTryFuzzyFor: token candidate: candidate toleran
 CoToleranceFilter >> accepts: aCandidate [
 
 	^ (decoree accepts: aCandidate) or: [ self class enabled and: [ self fuzzyAccepts: aCandidate ]]
+]
+
+{ #category : 'testing' }
+CoToleranceFilter >> complementResults: aCollection [ 
+
+	| exact fuzzy |
+	self requiresFallbackEnumeration ifFalse: [ ^ aCollection ].
+
+	exact := OrderedCollection new.
+	fuzzy := OrderedCollection new.
+
+	aCollection do: [ :each |
+		(self fuzzyAccepts: each)
+			ifTrue: [ exact add: each ]
+			ifFalse: [ fuzzy add: each ] ].
+
+	fuzzy isEmpty ifTrue: [ ^ aCollection ].
+
+	fuzzy sort: [ :a :b |
+		| scoreA scoreB |
+		scoreA := self fuzzyScoreFor: a.
+		scoreB := self fuzzyScoreFor: b.
+		scoreA = scoreB
+			ifTrue: [ a contents <= b contents ]
+			ifFalse: [ scoreA < scoreB ] ].
+
+	^ OrderedCollection new
+		addAll: exact;
+		addAll: fuzzy;
+		yourself
+
+]
+
+{ #category : 'accessing' }
+CoToleranceFilter >> completionString [
+
+	^ decoree completionString
 ]
 
 { #category : 'testing' }
@@ -206,9 +243,39 @@ CoToleranceFilter >> fuzzyScoreFor: aCandidate [
 
 	^ self class scoreForCandidate: aCandidate contents
 		token: decoree completionString
-		caseSensitive: decoree isCaseSensitive
+		caseSensitive: (decoree class = CoCaseSensitiveBeginsWithFilter)
 		tolerance: Rate
 
+]
+
+{ #category : 'testing' }
+CoToleranceFilter >> isCaseSensitive [
+
+	^ decoree isCaseSensitive
+]
+
+{ #category : 'testing' }
+CoToleranceFilter >> isLessNarrowThanCaseInsensitive: anotherFilter [
+
+	^ decoree isLessNarrowThanCaseInsensitive: anotherFilter
+]
+
+{ #category : 'testing' }
+CoToleranceFilter >> isLessNarrowThanCaseSensitive: anotherFilter [
+
+	^ decoree isLessNarrowThanCaseSensitive: anotherFilter
+]
+
+{ #category : 'testing' }
+CoToleranceFilter >> isLessNarrowThanNegation: anotherFilter [
+
+	^ decoree isLessNarrowThanNegation: anotherFilter
+]
+
+{ #category : 'testing' }
+CoToleranceFilter >> isMoreNarrowThan: anotherFilter [
+
+	^ decoree isMoreNarrowThan: anotherFilter
 ]
 
 { #category : 'testing' }
