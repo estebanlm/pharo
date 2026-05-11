@@ -51,7 +51,7 @@ MCScriptDefinition >> description [
 
 { #category : 'installing' }
 MCScriptDefinition >> evaluate [
-	self class compiler evaluate: script
+	OpalEvaluator new evaluate: script
 ]
 
 { #category : 'initialization' }
