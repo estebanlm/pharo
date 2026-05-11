@@ -100,9 +100,9 @@ CoResultSet >> filter [
 ]
 
 { #category : 'accessing' }
-CoResultSet >> filter: anObject [
+CoResultSet >> filter: aFilter [
 
-	filter := anObject.
+	filter := aFilter.
 	fetcher filter: filter
 ]
 
