@@ -8,7 +8,7 @@ Class {
 { #category : 'printing' }
 StepCommand >> executeOn: aDebugger with: arguments [
 
-	[ aDebugger process step ]
+	[ aDebugger session stepInto ]
 		on: Error
 		do: [ :ex |
 				aDebugger process isTerminated ifTrue: [ ^ aDebugger finishedDebugging ].

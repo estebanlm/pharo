@@ -11,7 +11,8 @@ Class {
 		'process',
 		'lineEnding',
 		'commands',
-		'commandsStack'
+		'commandsStack',
+		'session'
 	],
 	#category : 'debugger-CLI',
 	#package : 'debugger-CLI'
@@ -45,17 +46,6 @@ CommandLineDebugger >> commands [
 CommandLineDebugger >> commands: anObject [
 
 	commands := anObject
-]
-
-{ #category : 'initialization' }
-CommandLineDebugger >> completeStep [
-
-	| callee |
-	process suspendedContext == context ifFalse: [ ^ process complete: (process calleeOf: context) ].
-	callee := process step.
-	callee == context ifTrue: [ ^ callee ].
-	context isDead ifTrue: [ ^ process suspendedContext ].
-	^ process complete: callee "finish send"
 ]
 
 { #category : 'initialization' }
@@ -168,4 +158,16 @@ CommandLineDebugger >> process [
 CommandLineDebugger >> process: aProcess [
 
 	process := aProcess
+]
+
+{ #category : 'accessing' }
+CommandLineDebugger >> session [
+
+	^ session
+]
+
+{ #category : 'accessing' }
+CommandLineDebugger >> session: anObject [
+
+	session := anObject
 ]

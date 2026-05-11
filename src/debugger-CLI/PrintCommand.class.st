@@ -11,7 +11,9 @@ PrintCommand >> executeOn: aDebugger with: arguments [
 	| evaluation |
 	arguments trim ifEmpty: [ ^ 'Nothing to print' ].
 	[
-		evaluation := aDebugger context tempNamed: arguments.
+		evaluation := OpalEvaluator new
+			              context: aDebugger context;
+			              evaluate: arguments.
 		^ arguments , ' : ' , evaluation asString ]
 		on: Error
 		do: [ :ex | ^ 'Error evaluating: ' , arguments ]

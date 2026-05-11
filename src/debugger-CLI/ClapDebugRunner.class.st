@@ -113,17 +113,19 @@ ClapDebugRunner >> readNextLineFrom: inStream [
 ClapDebugRunner >> startLoop [
 	"Start a loop launching a debugger with a context and process depending of the flag expr, waiting for the user's commands"
 
-	| input in tempRes debugger debuggingProcess |
+	| input in tempRes debugger debuggingProcess debuggingContext debuggingSession |
 	in := self context stdin.
 
 	debuggingProcess := self createDebuggingProcess.
 	debuggingProcess ifNil: [
 			self inform: 'No expression found' , String lf , 'usage: debug <expression>'.
 			^ self ].
-
+	debuggingContext := debuggingProcess suspendedContext.
+	debuggingSession := DebugSession named: 'd' on: debuggingProcess startedAt: debuggingContext.
 	debugger := CommandLineDebugger new
 		            process: debuggingProcess;
-		            context: debuggingProcess suspendedContext.
+		            context: debuggingContext;
+		            session: debuggingSession.
 
 	self inform: '--------------- Debug phase started ---------------'.
 	self inform: '  For help, type "help"'.
