@@ -344,6 +344,15 @@ RGMethodDefinitionTest >> testIsAbstractNonExistingMethod [
 ]
 
 { #category : 'test - accessing source' }
+RGMethodDefinitionTest >> testIsDeprecatedExistingMethod [
+
+	| method |
+	method := (SUnitTest >> #deprecatedMessage) asRingDefinition.
+	self assert: method isDeprecated .
+
+]
+
+{ #category : 'test - accessing source' }
 RGMethodDefinitionTest >> testMessagesExistingMethod [
 	"accessing ring sent messages for active method"
 

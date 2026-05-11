@@ -307,6 +307,12 @@ RGMethodDefinition >> isDefined [
 ]
 
 { #category : 'testing' }
+RGMethodDefinition >> isDeprecated [
+
+	^ self compiledMethod ifNotNil: [ :cm | cm isDeprecated ] ifNil: [ false ]
+]
+
+{ #category : 'testing' }
 RGMethodDefinition >> isDoIt [
 	^self selector isDoIt
 ]
