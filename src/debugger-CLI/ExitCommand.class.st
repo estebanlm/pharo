@@ -6,7 +6,7 @@ Class {
 }
 
 { #category : 'initialization' }
-ExitCommand >> executeOn: aDebugger with: arguments [
+ExitCommand >> executeOn: aDebugger with: args [
 
 	aDebugger disActivate.
 	^ 'Bye!'
@@ -17,5 +17,6 @@ ExitCommand >> initialize [
 
 	super initialize.
 	self commandName: #( 'quit' 'q' ).
-	self commandHelp: 'kills the debugger'
+	self commandHelp: 'kills the debugger'.
+	self arguments: ''
 ]

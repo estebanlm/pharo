@@ -35,6 +35,20 @@ ClapDebugRunner >> askTyping [
 				flush ]
 ]
 
+{ #category : 'as yet unclassified' }
+ClapDebugRunner >> createDebugger: debuggingProcess [
+
+	| debugger debuggingContext debuggingSession |
+	debuggingContext := debuggingProcess suspendedContext.
+	debuggingSession := DebugSession named: 'd' on: debuggingProcess startedAt: debuggingContext.
+	debugger := CommandLineDebugger new
+		            process: debuggingProcess;
+		            context: debuggingContext;
+		            session: debuggingSession.
+	debugger parsesAndExecuteCommand: 's'.
+	^ debugger
+]
+
 { #category : 'execution' }
 ClapDebugRunner >> createDebuggingProcess [
 	"Extracts the expression, compiles it, and returns a suspended process."
@@ -113,29 +127,19 @@ ClapDebugRunner >> readNextLineFrom: inStream [
 ClapDebugRunner >> startLoop [
 	"Start a loop launching a debugger with a context and process depending of the flag expr, waiting for the user's commands"
 
-	| input in tempRes debugger debuggingProcess debuggingContext debuggingSession |
+	| input in tempRes debugger debuggingProcess |
 	in := self context stdin.
-
 	debuggingProcess := self createDebuggingProcess.
 	debuggingProcess ifNil: [
 			self inform: 'No expression found' , String lf , 'usage: debug <expression>'.
 			^ self ].
-	debuggingContext := debuggingProcess suspendedContext.
-	debuggingSession := DebugSession named: 'd' on: debuggingProcess startedAt: debuggingContext.
-	debugger := CommandLineDebugger new
-		            process: debuggingProcess;
-		            context: debuggingContext;
-		            session: debuggingSession.
-
+	debugger := self createDebugger: debuggingProcess.
 	self inform: '--------------- Debug phase started ---------------'.
 	self inform: '  For help, type "help"'.
-
 	[ debugger isActive ] whileTrue: [
 			self askTyping.
 			input := self readNextLineFrom: in.
-
 			tempRes := debugger parsesAndExecuteCommand: input asString.
-
 			self informResults: tempRes ].
 	^ self
 ]

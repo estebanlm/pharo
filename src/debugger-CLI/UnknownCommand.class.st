@@ -21,7 +21,7 @@ UnknownCommand >> command: anObject [
 ]
 
 { #category : 'printing' }
-UnknownCommand >> executeOn: aDebugger with: arguments [
+UnknownCommand >> executeOn: aDebugger with: args [
 
 	^ 'Unknown command: ' , command
 ]
@@ -31,5 +31,6 @@ UnknownCommand >> initialize [
 
 	super initialize.
 	self commandName: #( 'any other command' 'anUnknownCommand' ).
-	self commandHelp: 'Unknown command'
+	self commandHelp: 'Unknown command'.
+	self arguments: ''
 ]

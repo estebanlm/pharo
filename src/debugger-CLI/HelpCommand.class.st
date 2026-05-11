@@ -6,7 +6,7 @@ Class {
 }
 
 { #category : 'printing' }
-HelpCommand >> executeOn: aDebugger with: arguments [
+HelpCommand >> executeOn: aDebugger with: args [
 
 	| helpArray informLine |
 	helpArray := aDebugger commands values collect: [ :command | String tab , command printHelp ].
@@ -20,5 +20,6 @@ HelpCommand >> initialize [
 
 	super initialize.
 	self commandName: #( 'help' 'h' ).
-	self commandHelp: 'print this help'
+	self commandHelp: 'print this help'.
+	self arguments: ''
 ]

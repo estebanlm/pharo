@@ -6,16 +6,18 @@ Class {
 }
 
 { #category : 'printing' }
-PrintCodeCommand >> executeOn: aDebugger with: arguments [
+PrintCodeCommand >> executeOn: aDebugger with: args [
 
-	| currentMethod codeOfCurrentMethod identedCode |
-	currentMethod := aDebugger context method.
-	codeOfCurrentMethod := currentMethod sourceCode asString.
+	| codeOfCurrentMethod sne debugContext |
+	debugContext := aDebugger context.
+	codeOfCurrentMethod := debugContext method sourceCode asString.
 
+	sne := debugContext sourceNodeExecuted.
 
-	identedCode := (codeOfCurrentMethod lines collect: [ :eachLine | String tab , eachLine ]) joinUsing: aDebugger lineEnding.
-
-	^ '====== Code of ' , currentMethod printString , ' ======' , aDebugger lineEnding , identedCode , aDebugger lineEnding
+	^ '{1} --->{2}<--- {3}' format: {
+			  (codeOfCurrentMethod copyFrom: 1 to: sne start - 1).
+			  (codeOfCurrentMethod copyFrom: sne start to: sne stop).
+			  (codeOfCurrentMethod copyFrom: sne stop + 1 to: codeOfCurrentMethod size) }
 ]
 
 { #category : 'initialization' }
@@ -23,5 +25,6 @@ PrintCodeCommand >> initialize [
 
 	super initialize.
 	self commandName: #( 'printCode' 'pc' ).
-	self commandHelp: 'print current''method code'
+	self commandHelp: 'print current''method code'.
+	self arguments: ''
 ]

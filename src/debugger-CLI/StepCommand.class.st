@@ -6,7 +6,7 @@ Class {
 }
 
 { #category : 'printing' }
-StepCommand >> executeOn: aDebugger with: arguments [
+StepCommand >> executeOn: aDebugger with: args [
 
 	[ aDebugger session stepInto ]
 		on: Error
@@ -25,5 +25,6 @@ StepCommand >> initialize [
 
 	super initialize.
 	self commandName: #( 'step' 's' ).
-	self commandHelp: 'execute next stepInto'
+	self commandHelp: 'execute next stepInto'.
+	self arguments: ''
 ]

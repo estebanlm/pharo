@@ -11,13 +11,16 @@ Class {
 { #category : 'running' }
 CommandLineDebuggerTest >> setUp [
 
-	| debuggingProcess |
+	| debuggingProcess debuggingContext debuggingSession |
 	super setUp.
 	debuggingProcess := [ self class compiler evaluate: 'OCParser parseMethod: foo self' ] newProcess.
 	debuggingProcess suspend.
+	debuggingContext := debuggingProcess suspendedContext.
+	debuggingSession := DebugSession named: 'test' on: debuggingProcess startedAt: debuggingContext.
 	debugger := CommandLineDebugger new
-		            context: debuggingProcess suspendedContext;
-		            process: debuggingProcess
+		            context: debuggingContext;
+		            process: debuggingProcess;
+		            session: debuggingSession
 ]
 
 { #category : 'tests' }

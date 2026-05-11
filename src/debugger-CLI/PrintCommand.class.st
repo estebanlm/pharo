@@ -6,17 +6,17 @@ Class {
 }
 
 { #category : 'printing' }
-PrintCommand >> executeOn: aDebugger with: arguments [
+PrintCommand >> executeOn: aDebugger with: args [
 
 	| evaluation |
-	arguments trim ifEmpty: [ ^ 'Nothing to print' ].
+	args trim ifEmpty: [ ^ 'Nothing to print' ].
 	[
 		evaluation := OpalEvaluator new
 			              context: aDebugger context;
-			              evaluate: arguments.
-		^ arguments , ' : ' , evaluation asString ]
+			              evaluate: args.
+		^ args , ' : ' , evaluation asString ]
 		on: Error
-		do: [ :ex | ^ 'Error evaluating: ' , arguments ]
+		do: [ :ex | ^ 'Error evaluating: ' , args ]
 ]
 
 { #category : 'initialization' }
@@ -24,14 +24,6 @@ PrintCommand >> initialize [
 
 	super initialize.
 	self commandName: #( 'print' 'p' ).
-	self commandHelp: 'evaluate the given expression'
-]
-
-{ #category : 'printing' }
-PrintCommand >> printHelp [
-
-	^ '{1} ( or ''{2}'') <exression> : {3}' format: {
-			  (commandName first).
-			  (commandName last).
-			  commandHelp }
+	self commandHelp: 'evaluate the expression'.
+	self arguments: '<expression>'
 ]

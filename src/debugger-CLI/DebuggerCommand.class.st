@@ -3,11 +3,24 @@ Class {
 	#superclass : 'Object',
 	#instVars : [
 		'commandName',
-		'commandHelp'
+		'commandHelp',
+		'arguments'
 	],
 	#category : 'debugger-CLI',
 	#package : 'debugger-CLI'
 }
+
+{ #category : 'accessing' }
+DebuggerCommand >> arguments [
+
+	^ arguments
+]
+
+{ #category : 'accessing' }
+DebuggerCommand >> arguments: anObject [
+
+	arguments := anObject
+]
 
 { #category : 'accessing' }
 DebuggerCommand >> commandHelp [
@@ -33,11 +46,17 @@ DebuggerCommand >> commandName: anObject [
 	commandName := anObject
 ]
 
+{ #category : 'as yet unclassified' }
+DebuggerCommand >> executeOn: aDebugger with: args [ 
+	^ self subclassResponsibility
+]
+
 { #category : 'printing' }
 DebuggerCommand >> printHelp [
 
-	^ '{1} ( or ''{2}'') : {3}' format: {
+	^ '{1} ( or ''{2}'') {3} : {4}' format: {
 			  (commandName first).
 			  (commandName last).
+			  (arguments).
 			  commandHelp }
 ]

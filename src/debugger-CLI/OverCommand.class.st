@@ -6,9 +6,9 @@ Class {
 }
 
 { #category : 'printing' }
-OverCommand >> executeOn: aDebugger with: arguments [
+OverCommand >> executeOn: aDebugger with: args [
 
-	[ aDebugger completeStep ]
+	[ aDebugger session stepOver ]
 		on: Error
 		do: [ :ex |
 				(ex value asString includesSubstring: 'computation has been terminated') ifTrue: [ ^ aDebugger finishedDebugging ].
@@ -26,5 +26,6 @@ OverCommand >> initialize [
 
 	super initialize.
 	self commandName: #( 'over' 'o' ).
-	self commandHelp: 'execute next stepOver'
+	self commandHelp: 'execute next stepOver'.
+	self arguments: ''
 ]

@@ -6,7 +6,7 @@ Class {
 }
 
 { #category : 'printing' }
-PrintStackCommand >> executeOn: aDebugger with: arguments [
+PrintStackCommand >> executeOn: aDebugger with: args [
 
 	| results remainingStackText firstOfStack |
 	results := aDebugger context contextStack collect: [ :ctx | ctx asString ].
@@ -22,5 +22,6 @@ PrintStackCommand >> initialize [
 
 	super initialize.
 	self commandName: #( 'printStack' 'ps' ).
-	self commandHelp: 'print the current Stack'
+	self commandHelp: 'print the current Stack'.
+	self arguments: ''
 ]
