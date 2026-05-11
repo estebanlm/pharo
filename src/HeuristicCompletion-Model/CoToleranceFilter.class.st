@@ -1,3 +1,6 @@
+"
+I let the user enter typos. I have a rate of acceptance. I use an edit distance to propose alternative.
+"
 Class {
 	#name : 'CoToleranceFilter',
 	#superclass : 'CoFilter',
@@ -73,6 +76,18 @@ CoToleranceFilter class >> defaultRate [
 	^ 0.6
 
 	
+]
+
+{ #category : 'configuration' }
+CoToleranceFilter class >> disable [
+
+	Rate := -1
+]
+
+{ #category : 'configuration' }
+CoToleranceFilter class >> enable [
+
+	Rate := self defaultRate 
 ]
 
 { #category : 'configuration' }
