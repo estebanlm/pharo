@@ -22,7 +22,7 @@ ReUseSetUpRule class >> ruleName [
 { #category : 'accessing' }
 ReUseSetUpRule class >> severity [
 
-	^ #error 
+	^ 'error'
 ]
 
 { #category : 'manifest' }

@@ -26,7 +26,7 @@ ReMethodSourceContainsLinefeedsRule class >> ruleName [
 
 { #category : 'accessing' }
 ReMethodSourceContainsLinefeedsRule class >> severity [
-	^ #error
+	^ 'error'
 ]
 
 { #category : 'accessing' }

@@ -21,7 +21,7 @@ ReAssignmentWithoutEffectRule class >> ruleName [
 
 { #category : 'accessing' }
 ReAssignmentWithoutEffectRule class >> severity [
-	^ #information
+	^ 'information'
 ]
 
 { #category : 'accessing' }

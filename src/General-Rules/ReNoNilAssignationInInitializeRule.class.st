@@ -26,7 +26,7 @@ ReNoNilAssignationInInitializeRule class >> ruleName [
 
 { #category : 'accessing' }
 ReNoNilAssignationInInitializeRule class >> severity [
-	^ #information
+	^ 'information'
 ]
 
 { #category : 'running' }

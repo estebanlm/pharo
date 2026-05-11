@@ -21,7 +21,7 @@ ReSendsUnknownMessageToGlobalRule class >> ruleName [
 
 { #category : 'accessing' }
 ReSendsUnknownMessageToGlobalRule class >> severity [
-	^ #error
+	^ 'error'
 ]
 
 { #category : 'accessing' }

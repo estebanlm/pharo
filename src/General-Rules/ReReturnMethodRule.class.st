@@ -30,12 +30,13 @@ ReReturnMethodRule class >> ruleName [
 { #category : 'accessing' }
 ReReturnMethodRule class >> severity [
 
-	^ #error
+	^ 'error'
 ]
 
 { #category : 'running' }
 ReReturnMethodRule >> basicCheck: aMethod [
-	(aMethod overriddenMethods anySatisfy: [ :method | method hasPragmaNamed: #shouldReturn ]) ifFalse: [ ^ false ].
 
+	(aMethod overriddenMethods anySatisfy: [ :method | method hasPragmaNamed: #shouldReturn ])
+		ifFalse: [ ^ false ].
 	^ aMethod ast lastIsReturn not
 ]

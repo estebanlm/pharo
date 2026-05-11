@@ -27,7 +27,7 @@ ReUnconditionalRecursionRule class >> ruleName [
 
 { #category : 'accessing' }
 ReUnconditionalRecursionRule class >> severity [
-	^ #error
+	^ 'error'
 ]
 
 { #category : 'accessing' }

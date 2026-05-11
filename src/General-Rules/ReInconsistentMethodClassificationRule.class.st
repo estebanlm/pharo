@@ -28,7 +28,8 @@ ReInconsistentMethodClassificationRule class >> ruleName [
 
 { #category : 'accessing' }
 ReInconsistentMethodClassificationRule class >> severity [
-	^ #information
+
+	^ 'information'
 ]
 
 { #category : 'accessing' }

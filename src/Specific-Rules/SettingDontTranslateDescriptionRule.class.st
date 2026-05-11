@@ -22,7 +22,9 @@ SettingDontTranslateDescriptionRule class >> ruleName [
 
 { #category : 'running' }
 SettingDontTranslateDescriptionRule >> basicCheck: aNode [
-	^ aNode methodNode ifNil: [ false ] ifNotNil: [ :methNode | self checkPreconditionOn: methNode ]
+	^ aNode methodNode 
+		ifNil: [ false ] 
+		ifNotNil: [ :methNode | self checkPreconditionOn: methNode ]
 ]
 
 { #category : 'helpers' }

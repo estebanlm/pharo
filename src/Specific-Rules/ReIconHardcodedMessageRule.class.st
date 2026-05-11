@@ -29,7 +29,7 @@ ReIconHardcodedMessageRule class >> ruleName [
 { #category : 'accessing' }
 ReIconHardcodedMessageRule class >> severity [
 
-	^ #error
+	^ 'error'
 ]
 
 { #category : 'initialization' }

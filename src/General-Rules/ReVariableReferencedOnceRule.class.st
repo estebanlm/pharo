@@ -26,7 +26,7 @@ ReVariableReferencedOnceRule class >> ruleName [
 
 { #category : 'accessing' }
 ReVariableReferencedOnceRule class >> severity [
-	^ #information
+	^ 'information'
 ]
 
 { #category : 'accessing' }

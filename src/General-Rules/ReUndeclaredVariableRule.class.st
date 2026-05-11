@@ -21,7 +21,7 @@ ReUndeclaredVariableRule class >> ruleName [
 
 { #category : 'accessing' }
 ReUndeclaredVariableRule class >> severity [
-	^ #error
+	^ 'error'
 ]
 
 { #category : 'running' }

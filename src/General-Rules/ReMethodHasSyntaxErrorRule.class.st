@@ -26,7 +26,7 @@ ReMethodHasSyntaxErrorRule class >> ruleName [
 
 { #category : 'accessing' }
 ReMethodHasSyntaxErrorRule class >> severity [
-	^ #error
+	^ 'error'
 ]
 
 { #category : 'accessing' }
