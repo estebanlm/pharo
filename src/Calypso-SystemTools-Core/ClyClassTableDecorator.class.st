@@ -17,7 +17,13 @@ ClyClassTableDecorator class >> decorateTableCell: anItemCellMorph of: aDataSour
 
 	| labelMorphExtension cmt |
 	labelMorphExtension := anItemCellMorph label assureExtension.
-	cmt := aDataSourceItem actualObject comment.
+	"This datasourceitem actual object may be either a class or a ring class
+	and guess what? their comments are not compatible!
+	"
+	
+	cmt := aDataSourceItem actualObject isClass 
+		ifTrue: [ aDataSourceItem actualObject comment]
+		ifFalse: [ aDataSourceItem actualObject comment content ].
 	cmt 
 		ifEmpty: [ cmt := ClyUncommentedItemTableDecorator balloonText ]
 		ifNotEmpty: [ | lines |
