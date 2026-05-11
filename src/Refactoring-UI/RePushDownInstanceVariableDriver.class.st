@@ -62,10 +62,10 @@ RePushDownInstanceVariableDriver >> defaultSelectDialog [
 { #category : 'execution' }
 RePushDownInstanceVariableDriver >> gatherUserInput [
 
-	variables := self selectVariables.
+	self selectVariables.
 	variables ifNil: [ ^ false ].
 	self configureRefactoring.
-	^ true
+	^ true 
 ]
 
 { #category : 'initialization' }
@@ -117,12 +117,13 @@ RePushDownInstanceVariableDriver >> selectVariables [
 		          title: 'There are potential breaking changes!'
 		          label: 'Push down variables from ' , variables first definingClass name
 		          withItems: (variables sort: [ :a :b | a asString < b asString ]) asOrderedCollection
-		          selecting: variables asOrderedCollection;
+		          selecting: variables asOrderedCollection
+		          acceptBlock: [ :selectedVariables | variables := selectedVariables ];
 		          openModal.
 
-	dialog isOk ifFalse: [ ^ nil ].
+	dialog isOk ifTrue: [ ^ self ].
 
-	^ dialog presenter selectedItems
+	variables := nil
 ]
 
 { #category : 'accessing' }
