@@ -19,6 +19,12 @@ ReMoveMethodToClassDriver class >> driverName [
 	^ 'Move method to class'
 ]
 
+{ #category : 'accessing' }
+ReMoveMethodToClassDriver class >> shouldPreviewChanges [
+
+	^ false 
+]
+
 { #category : 'configuration' }
 ReMoveMethodToClassDriver >> instantiateRefactoring [
 
