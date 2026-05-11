@@ -643,8 +643,9 @@ MessageTally >> method [
 
 { #category : 'accessing' }
 MessageTally >> originMethod [
-	
-	^ method
+	"Return the compiled method associated to this tally"
+
+	^method
 ]
 
 { #category : 'private' }
