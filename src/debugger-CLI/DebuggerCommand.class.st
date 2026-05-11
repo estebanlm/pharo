@@ -34,12 +34,6 @@ DebuggerCommand >> commandName: anObject [
 ]
 
 { #category : 'printing' }
-DebuggerCommand >> executeOn: aDebugger with: arguments [
-
-	^ self
-]
-
-{ #category : 'printing' }
 DebuggerCommand >> printHelp [
 
 	^ '{1} ( or ''{2}'') : {3}' format: {

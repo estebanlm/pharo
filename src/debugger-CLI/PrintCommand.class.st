@@ -22,5 +22,14 @@ PrintCommand >> initialize [
 
 	super initialize.
 	self commandName: #( 'print' 'p' ).
-	self commandHelp: 'evaluate the given expression and print the result'
+	self commandHelp: 'evaluate the given expression'
+]
+
+{ #category : 'printing' }
+PrintCommand >> printHelp [
+
+	^ '{1} ( or ''{2}'') <exression> : {3}' format: {
+			  (commandName first).
+			  (commandName last).
+			  commandHelp }
 ]

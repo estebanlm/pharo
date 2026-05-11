@@ -10,7 +10,8 @@ Class {
 		'context',
 		'process',
 		'lineEnding',
-		'commands'
+		'commands',
+		'commandsStack'
 	],
 	#category : 'debugger-CLI',
 	#package : 'debugger-CLI'
@@ -91,10 +92,17 @@ CommandLineDebugger >> finishedDebugging [
 { #category : 'initialization' }
 CommandLineDebugger >> initialize [
 
-	| commandsList |
 	super initialize.
 	isActive := true.
 	lineEnding := OSPlatform current lineEnding.
+	self initializeCommands.
+	commandsStack := Stack new.
+]
+
+{ #category : 'initialization' }
+CommandLineDebugger >> initializeCommands [
+
+	| commandsList |
 	commandsList := {
 		                ExitCommand new.
 		                HelpCommand new.
@@ -114,6 +122,14 @@ CommandLineDebugger >> isActive [
     ^ isActive
 ]
 
+{ #category : 'initialization' }
+CommandLineDebugger >> lastCommand [
+	
+	commandsStack ifNotEmpty: [ ^ commandsStack pop ]
+	ifEmpty: [ ^ '' ]
+	
+]
+
 { #category : 'accessing' }
 CommandLineDebugger >> lineEnding [
 
@@ -131,6 +147,7 @@ CommandLineDebugger >> parsesAndExecuteCommand: aString [
 	"Parses a string to change it into an executable command and executes it"
 
 	| subString command arguments |
+	commandsStack push: aString.
 	subString := aString trim substrings.
 	subString ifEmpty: [ ^ '' ].
 
