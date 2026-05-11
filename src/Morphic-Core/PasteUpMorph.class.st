@@ -533,7 +533,7 @@ PasteUpMorph >> handlesMouseDown: evt [
 
 { #category : 'thumbnail' }
 PasteUpMorph >> icon [
-	^ self iconNamed: #homeIcon
+	^ self iconNamed: #home
 ]
 
 { #category : 'initialization' }
