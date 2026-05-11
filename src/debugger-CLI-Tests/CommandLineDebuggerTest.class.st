@@ -35,7 +35,7 @@ CommandLineDebuggerTest >> testExit [
 
 	| response |
 	self assert: debugger isActive.
-	response := debugger parsesAndExecuteCommand: 'exit'.
+	response := debugger parsesAndExecuteCommand: 'q'.
 	self deny: debugger isActive.
 	self assert: response equals: 'Bye!'
 ]
