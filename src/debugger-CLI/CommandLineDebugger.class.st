@@ -9,11 +9,42 @@ Class {
 		'isActive',
 		'context',
 		'process',
-		'lineEnding'
+		'lineEnding',
+		'commands'
 	],
 	#category : 'debugger-CLI',
 	#package : 'debugger-CLI'
 }
+
+{ #category : 'initialization' }
+CommandLineDebugger >> activate [
+
+	isActive := true
+]
+
+{ #category : 'execution' }
+CommandLineDebugger >> commandClassInstanceFor: aString [
+	"Gives the right command class to use"
+
+	[ ^ commands at: aString ]
+		on: Error
+		do: [ :ex |
+				ex class name = #KeyNotFound
+					ifTrue: [ ^ UnknownCommand new command: aString ]
+					ifFalse: [ ex pass ] ]
+]
+
+{ #category : 'accessing' }
+CommandLineDebugger >> commands [
+
+	^ commands
+]
+
+{ #category : 'accessing' }
+CommandLineDebugger >> commands: anObject [
+
+	commands := anObject
+]
 
 { #category : 'initialization' }
 CommandLineDebugger >> completeStep [
@@ -37,26 +68,17 @@ CommandLineDebugger >> context: aDebugContext [
     context := aDebugContext
 ]
 
+{ #category : 'initialization' }
+CommandLineDebugger >> disActivate [
+
+	isActive := false
+]
+
 { #category : 'execution' }
 CommandLineDebugger >> executeCommand: aCommand arg: arguments [
 	"executes the command with potential arguments"
 
-	aCommand = 'help' ifTrue: [ ^ self printHelp ].
-	aCommand = 'exit' ifTrue: [ ^ self exit ].
-	aCommand = 'print' ifTrue: [ ^ self print: arguments asString ].
-	(aCommand = 'step' or: aCommand = 's') ifTrue: [ ^ self step ].
-	(aCommand = 'over' or: aCommand = 'o') ifTrue: [ ^ self over ].
-	(aCommand = 'printStack' or: aCommand = 'ps') ifTrue: [ ^ self printStack ].
-	(aCommand = 'printCode' or: aCommand = 'pc') ifTrue: [ ^ self printCode ].
-
-	^ self unknownCommand: aCommand
-]
-
-{ #category : 'execution' }
-CommandLineDebugger >> exit [
-
-	isActive := false.
-	^ 'Bye!' 
+	^ (self commandClassInstanceFor: aCommand) executeOn: self with: arguments
 ]
 
 { #category : 'execution' }
@@ -69,9 +91,22 @@ CommandLineDebugger >> finishedDebugging [
 { #category : 'initialization' }
 CommandLineDebugger >> initialize [
 
+	| commandsList |
 	super initialize.
 	isActive := true.
-	lineEnding := OSPlatform current lineEnding
+	lineEnding := OSPlatform current lineEnding.
+	commandsList := {
+		                ExitCommand new.
+		                HelpCommand new.
+		                StepCommand new.
+		                OverCommand new.
+		                PrintCodeCommand new.
+		                PrintCommand new.
+		                PrintStackCommand new }.
+	commands := Dictionary new.
+	commandsList do: [ :aCommand |
+			commands at: aCommand commandName first put: aCommand.
+			commands at: aCommand commandName last put: aCommand ]
 ]
 
 { #category : 'initialization' }
@@ -79,20 +114,16 @@ CommandLineDebugger >> isActive [
     ^ isActive
 ]
 
-{ #category : 'execution' }
-CommandLineDebugger >> over [
+{ #category : 'accessing' }
+CommandLineDebugger >> lineEnding [
 
-	[ self completeStep ]
-		on: Error
-		do: [ :ex |
-				(ex value asString includesSubstring: 'computation has been terminated') ifTrue: [ ^ self finishedDebugging ].
-				ex pass ].
+	^ lineEnding
+]
 
-	context := process suspendedContext.
+{ #category : 'accessing' }
+CommandLineDebugger >> lineEnding: anObject [
 
-	context ifNil: [ ^ self finishedDebugging ].
-
-	^ 'Stepped OVER to: ' , context printString , ' (PC: ' , context pc asString , ')'
+	lineEnding := anObject
 ]
 
 { #category : 'execution' }
@@ -106,57 +137,8 @@ CommandLineDebugger >> parsesAndExecuteCommand: aString [
 	command := subString first.
 
 	arguments := subString allButFirst joinUsing: ' '.
-	self skipInternalContexts.
 
 	^ self executeCommand: command arg: arguments
-]
-
-{ #category : 'execution' }
-CommandLineDebugger >> print: aVariable [
-
-	| evaluation |
-	aVariable trim ifEmpty: [ ^ 'Nothing to print' ].
-	[
-		evaluation := context tempNamed: aVariable.
-		^ aVariable , ' : ' , evaluation asString ]
-		on: Error
-		do: [ :ex | ^ 'Error evaluating: ' , aVariable ]
-]
-
-{ #category : 'execution' }
-CommandLineDebugger >> printCode [
-
-	| currentMethod codeOfCurrentMethod identedCode |
-	currentMethod := context method.
-	codeOfCurrentMethod := currentMethod sourceCode asString.
-
-
-	identedCode := (codeOfCurrentMethod lines collect: [ :eachLine | String tab , eachLine ]) joinUsing: lineEnding .
-
-	^ '====== Code of ' , currentMethod printString , ' ======' , lineEnding , identedCode , lineEnding
-]
-
-{ #category : 'execution' }
-CommandLineDebugger >> printHelp [
-
-	^ '========== Available commands ==========
-	  step (or s) : execute next step
-	  over (or o) : execute step over
-	  printStack (or ps) : print the current Stack
-	  printCode (or pc) : print current''s method code
-	  exit : kills the debugger
-	  help : print this help'
-]
-
-{ #category : 'execution' }
-CommandLineDebugger >> printStack [
-
-	| results remainingStackText firstOfStack |
-	results := context contextStack collect: [ :ctx | ctx asString ].
-
-	firstOfStack := '------> ' , results first asString.
-	remainingStackText := (results allButFirst collect: [ :res | String tab , res ]) joinUsing: lineEnding.
-	^ '==================== Call Stack ====================' , lineEnding , firstOfStack , lineEnding , remainingStackText
 ]
 
 { #category : 'initialization' }
@@ -169,32 +151,4 @@ CommandLineDebugger >> process [
 CommandLineDebugger >> process: aProcess [
 
 	process := aProcess
-]
-
-{ #category : 'execution' }
-CommandLineDebugger >> skipInternalContexts [
-	"To skip the first lines of the debugger"
-
-	[ context notNil and: [ #( DoIt newProcess ) includes: context method selector ] ] whileTrue: [ self step ]
-]
-
-{ #category : 'execution' }
-CommandLineDebugger >> step [
-
-	[ process step ]
-		on: Error
-		do: [ :ex |
-				process isTerminated ifTrue: [ ^ self finishedDebugging ].
-				ex pass ].
-	context := process suspendedContext.
-
-	context ifNil: [ ^ self finishedDebugging ].
-
-	^ 'Stepped to: ' , context printString , '(PC: ' , context pc printString , ')'
-]
-
-{ #category : 'execution' }
-CommandLineDebugger >> unknownCommand: aCommand [ 
-
-	^ 'Unknown command: ', aCommand
 ]

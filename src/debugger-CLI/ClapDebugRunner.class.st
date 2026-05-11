@@ -31,7 +31,7 @@ ClapDebugRunner >> askTyping [
 
 	self outputStreamDo: [ :out |
 			out
-				<< 'Type something -> ';
+				<< '(debug) ';
 				flush ]
 ]
 
@@ -45,7 +45,7 @@ ClapDebugRunner >> createDebuggingProcess [
 		               ifTrue: [ self expressionToDebug ].
 	codeString := codeToDebug joinUsing: ' '.
 
-	blockToDebug := self class compiler evaluate: '[ ' , codeString , ' ]'.
+	blockToDebug := OpalEvaluator new evaluate: '[ ' , codeString , ' ]'.
 
 	process := blockToDebug newProcess.
 	process suspend.
@@ -75,8 +75,7 @@ ClapDebugRunner >> handleZnIncompleteErrorInInput: ex [
 
 	ex class name = #ZnIncomplete
 		ifTrue: [ (Delay forMilliseconds: 50) wait ]
-		ifFalse: [
-				ex pass].
+		ifFalse: [ ex pass ]
 ]
 
 { #category : 'execution' }
@@ -90,7 +89,7 @@ ClapDebugRunner >> hasExpresion [
 ClapDebugRunner >> informResults: results [
 
 	self outputStreamDo: [ :out |
-			(out << ('(debug) > {1} ' format: { results }))
+			(out << results)
 				<< OSPlatform current lineEnding;
 				flush ]
 ]

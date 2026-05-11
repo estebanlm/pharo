@@ -1,0 +1,35 @@
+Class {
+	#name : 'UnknownCommand',
+	#superclass : 'DebuggerCommand',
+	#instVars : [
+		'command'
+	],
+	#category : 'debugger-CLI',
+	#package : 'debugger-CLI'
+}
+
+{ #category : 'accessing' }
+UnknownCommand >> command [
+
+	^ command
+]
+
+{ #category : 'accessing' }
+UnknownCommand >> command: anObject [
+
+	command := anObject
+]
+
+{ #category : 'printing' }
+UnknownCommand >> executeOn: aDebugger with: arguments [
+
+	^ 'Unknown command: ' , command
+]
+
+{ #category : 'initialization' }
+UnknownCommand >> initialize [
+
+	super initialize.
+	self commandName: #( 'any other command' 'anUnknownCommand' ).
+	self commandHelp: 'Unknown command'
+]
