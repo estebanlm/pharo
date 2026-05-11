@@ -21,7 +21,7 @@ ClyClassTableDecorator class >> decorateTableCell: anItemCellMorph of: aDataSour
 	and guess what? their comments are not compatible!
 	"
 	
-	cmt := aDataSourceItem actualObject isClass 
+	cmt := aDataSourceItem actualObject isClassOrTrait
 		ifTrue: [ aDataSourceItem actualObject comment]
 		ifFalse: [ aDataSourceItem actualObject comment content ].
 	cmt 
