@@ -97,7 +97,7 @@ ReImplementedNotSentRule class >> ruleName [
 
 { #category : 'accessing' }
 ReImplementedNotSentRule class >> severity [
-	^ #information
+	^ 'information'
 ]
 
 { #category : 'cleanup' }

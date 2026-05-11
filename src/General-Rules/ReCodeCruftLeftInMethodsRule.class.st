@@ -26,7 +26,7 @@ ReCodeCruftLeftInMethodsRule class >> ruleName [
 
 { #category : 'accessing' }
 ReCodeCruftLeftInMethodsRule class >> severity [
-	^ #error
+	^ 'error'
 ]
 
 { #category : 'accessing' }

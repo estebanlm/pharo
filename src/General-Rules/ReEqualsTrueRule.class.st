@@ -21,7 +21,7 @@ ReEqualsTrueRule class >> ruleName [
 
 { #category : 'accessing' }
 ReEqualsTrueRule class >> severity [
-	^ #information
+	^ 'information'
 ]
 
 { #category : 'accessing' }

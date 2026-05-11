@@ -34,7 +34,8 @@ ReJustSendsSuperRule class >> ruleName [
 
 { #category : 'accessing' }
 ReJustSendsSuperRule class >> severity [
-	^ #information
+
+	^ 'information'
 ]
 
 { #category : 'accessing' }

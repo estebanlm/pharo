@@ -44,7 +44,7 @@ ReOverridesSpecialMessageRule class >> ruleName [
 
 { #category : 'accessing' }
 ReOverridesSpecialMessageRule class >> severity [
-	^ #error
+	^ 'error'
 ]
 
 { #category : 'accessing' }

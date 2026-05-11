@@ -34,7 +34,7 @@ ReSentButNotUnderstoodBySuperRule class >> ruleName [
 { #category : 'accessing' }
 ReSentButNotUnderstoodBySuperRule class >> severity [
 
-	^ #error
+	^ 'error'
 ]
 
 { #category : 'accessing' }

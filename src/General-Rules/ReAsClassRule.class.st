@@ -28,7 +28,7 @@ ReAsClassRule class >> ruleName [
 { #category : 'accessing' }
 ReAsClassRule class >> severity [
 
-	^ #error
+	^ 'error'
 ]
 
 { #category : 'initialization' }

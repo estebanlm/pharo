@@ -21,7 +21,7 @@ SendsDeprecatedMethodToGlobalRule class >> ruleName [
 
 { #category : 'accessing' }
 SendsDeprecatedMethodToGlobalRule class >> severity [
-	^ #error
+	^ 'error'
 ]
 
 { #category : 'accessing' }

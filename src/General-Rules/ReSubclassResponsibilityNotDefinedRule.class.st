@@ -31,7 +31,7 @@ ReSubclassResponsibilityNotDefinedRule class >> ruleName [
 
 { #category : 'accessing' }
 ReSubclassResponsibilityNotDefinedRule class >> severity [
-	^ #error
+	^ 'error'
 ]
 
 { #category : 'accessing' }

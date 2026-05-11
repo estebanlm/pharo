@@ -29,7 +29,7 @@ ReMissingSuperSendsRule class >> ruleName [
 { #category : 'accessing' }
 ReMissingSuperSendsRule class >> severity [
 
-	^ #error
+	^ 'error'
 ]
 
 { #category : 'accessing' }

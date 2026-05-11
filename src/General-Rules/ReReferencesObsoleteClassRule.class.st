@@ -22,7 +22,8 @@ ReReferencesObsoleteClassRule class >> ruleName [
 
 { #category : 'accessing' }
 ReReferencesObsoleteClassRule class >> severity [
-	^ #error
+
+	^ 'error'
 ]
 
 { #category : 'helpers' }

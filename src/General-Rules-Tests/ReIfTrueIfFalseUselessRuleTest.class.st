@@ -14,6 +14,13 @@ ReIfTrueIfFalseUselessRuleTest >> testRule [
 ]
 
 { #category : 'tests' }
+ReIfTrueIfFalseUselessRuleTest >> testRule2 [
+
+	self generateMethod: 'method 1 = 1 ifFalse: [ ^ false ] ifTrue: [ ^ true ] '.
+	self assert: (self myCritiquesOnMethod: self class >> #method) size equals: 1
+]
+
+{ #category : 'tests' }
 ReIfTrueIfFalseUselessRuleTest >> testRuleNotViolated [
 
 	self generateMethod: 'method ^ ((1 = 1) & (2 = 2))'.

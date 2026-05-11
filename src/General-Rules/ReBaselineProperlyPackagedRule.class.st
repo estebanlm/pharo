@@ -29,7 +29,7 @@ ReBaselineProperlyPackagedRule class >> ruleName [
 
 { #category : 'accessing' }
 ReBaselineProperlyPackagedRule class >> severity [
-	^ #information
+	^ 'information'
 ]
 
 { #category : 'manifest' }

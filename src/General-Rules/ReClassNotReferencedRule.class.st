@@ -31,7 +31,7 @@ ReClassNotReferencedRule class >> ruleName [
 
 { #category : 'accessing' }
 ReClassNotReferencedRule class >> severity [
-	^ #information
+	^ 'information'
 ]
 
 { #category : 'accessing' }

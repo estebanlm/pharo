@@ -28,7 +28,8 @@ RePlatformDependentUserInteractionRule class >> ruleName [
 
 { #category : 'accessing' }
 RePlatformDependentUserInteractionRule class >> severity [
-	^ #error
+
+	^ 'error'
 ]
 
 { #category : 'accessing' }
