@@ -35,7 +35,7 @@ ClapDebugRunner >> askTyping [
 				flush ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'creation' }
 ClapDebugRunner >> createDebugger: debuggingProcess [
 
 	| debugger debuggingContext debuggingSession |

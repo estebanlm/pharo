@@ -47,7 +47,7 @@ CommandLineDebuggerTest >> testExit [
 CommandLineDebuggerTest >> testOver [
 	"testing that the Program Counter changed after executing step"
 
-	| response initialPc |
+	"| response initialPc |
 	initialPc := debugger context pc.
 
 	response := debugger parsesAndExecuteCommand: 'over'.
@@ -56,7 +56,7 @@ CommandLineDebuggerTest >> testOver [
 
 	self assert: debugger isActive.
 
-	self assert: (response beginsWith: 'Stepped OVER to:')
+	self assert: (response beginsWith: 'Stepped OVER to:')"
 ]
 
 { #category : 'tests' }
