@@ -209,8 +209,8 @@ CoToleranceFilter >> complementResults: aCollection [
 
 	aCollection do: [ :each |
 		(self fuzzyAccepts: each)
-			ifTrue: [ exact add: each ]
-			ifFalse: [ fuzzy add: each ] ].
+			ifFalse: [ exact add: each ]
+			ifTrue: [ fuzzy add: each ] ].
 
 	fuzzy isEmpty ifTrue: [ ^ aCollection ].
 

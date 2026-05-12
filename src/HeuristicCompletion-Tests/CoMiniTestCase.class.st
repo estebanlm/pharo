@@ -6,7 +6,8 @@ Class {
 		'completionClass',
 		'systemNavigation',
 		'fetcher',
-		'expectedElements'
+		'expectedElements',
+		'toleranceRate'
 	],
 	#category : 'HeuristicCompletion-Tests-Core',
 	#package : 'HeuristicCompletion-Tests',
@@ -35,4 +36,20 @@ CoMiniTestCase >> firstExpectedElement [
 { #category : 'accessing' }
 CoMiniTestCase >> secondExpectedElement [
 	^ expectedElements second
+]
+
+{ #category : 'running' }
+CoMiniTestCase >> setUp [ 
+	
+	super setUp.
+	toleranceRate := CoToleranceFilter rate.
+	CoToleranceFilter disable.
+	
+]
+
+{ #category : 'running' }
+CoMiniTestCase >> tearDown [
+	
+	CoToleranceFilter rate: toleranceRate.
+	super tearDown	
 ]
