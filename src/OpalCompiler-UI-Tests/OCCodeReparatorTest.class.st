@@ -16,10 +16,12 @@ OCCodeReparatorTest >> testDeclareClassVar [
 	goo ifNotNil: [ MockForCompilation removeClassVariable: goo ].
 
 	method := [ OCInteractiveAPI new compile: requestor text notifying: nil in: MockForCompilation ]
-		on: OCUndeclaredVariableWarning , OCCodeError
-		do: [ :e |
-			e notice reparator declareClassVar.
-			e retry ].
+		          on: OCUndeclaredVariableWarning , OCCodeError
+		          do: [ :e |
+				          OCCodeReparator new
+					          node: e notice node;
+					          declareClassVar.
+				          e retry ].
 
 	self assert: requestor text withSeparatorsCompacted equals: 'griffle ^ goo'.
 	self assert: method isCompiledMethod.
@@ -36,20 +38,22 @@ OCCodeReparatorTest >> testDeclareGlobal [
 	requestor := OCMockRequestor new.
 	requestor text: 'griffle ^ goo'.
 
-	Smalltalk globals removeKey: #goo ifAbsent: [].
+	Smalltalk globals removeKey: #goo ifAbsent: [ ].
 
 	method := [ OCInteractiveAPI new compile: requestor text notifying: nil in: MockForCompilation ]
-		on: OCUndeclaredVariableWarning , OCCodeError
-		do: [ :e |
-			e notice reparator declareGlobal.
-			e retry ].
+		          on: OCUndeclaredVariableWarning , OCCodeError
+		          do: [ :e |
+				          OCCodeReparator new
+					          node: e notice node;
+					          declareGlobal.
+				          e retry ].
 
 	self assert: requestor text withSeparatorsCompacted equals: 'griffle ^ goo'.
 	self assert: method isCompiledMethod.
 	self assert: method literals first equals: (Smalltalk globals associationAt: #goo).
 	self assert: method sourceCode withSeparatorsCompacted equals: 'griffle ^ goo'.
 
-	Smalltalk globals removeKey: #goo ifAbsent: []
+	Smalltalk globals removeKey: #goo ifAbsent: [ ]
 ]
 
 { #category : 'tests' }
@@ -59,16 +63,17 @@ OCCodeReparatorTest >> testDeclareInstVar [
 	requestor := OCMockRequestor new.
 	requestor text: 'griffle ^ goo'.
 
-	(MockForCompilation hasInstVarNamed: #goo) ifTrue: [
-		MockForCompilation removeInstVarNamed: #goo ].
+	(MockForCompilation hasInstVarNamed: #goo) ifTrue: [ MockForCompilation removeInstVarNamed: #goo ].
 
 	self deny: (MockForCompilation hasInstVarNamed: #goo).
 
 	method := [ OCInteractiveAPI new compile: requestor text notifying: nil in: MockForCompilation ]
-		on: OCUndeclaredVariableWarning , OCCodeError
-		do: [ :e |
-			e notice reparator declareInstVar: #goo.
-			e retry ].
+		          on: OCUndeclaredVariableWarning , OCCodeError
+		          do: [ :e |
+				          OCCodeReparator new
+					          node: e notice node;
+					          declareInstVar: #goo.
+				          e retry ].
 
 	self assert: requestor text withSeparatorsCompacted equals: 'griffle ^ goo'.
 	self assert: method isCompiledMethod.
@@ -85,12 +90,13 @@ OCCodeReparatorTest >> testDeclareTempAndPaste [
 	requestor text: 'griffle ^ goo'.
 
 	method := [ OCInteractiveAPI new compile: requestor text notifying: nil in: MockForCompilation ]
-		on: OCUndeclaredVariableWarning , OCCodeError
-		do: [ :e |
-			e notice reparator
-				requestor: requestor;
-				declareTempAndPaste: 'goo'.
-			e retry ].
+		          on: OCUndeclaredVariableWarning , OCCodeError
+		          do: [ :e |
+				          OCCodeReparator new
+					          node: e notice node;
+					          requestor: requestor;
+					          declareTempAndPaste: 'goo'.
+				          e retry ].
 
 	self assert: requestor text withSeparatorsCompacted equals: 'griffle | goo | ^ goo'.
 	self assert: method isCompiledMethod.
@@ -107,7 +113,8 @@ OCCodeReparatorTest >> testPossibleVariablesFor [
 	names := [ OCInteractiveAPI new compile: requestor text notifying: nil in: MockForCompilation ]
 		on: OCUndeclaredVariableWarning , OCCodeError
 		do: [ :e |
-			e notice reparator
+			OCCodeReparator new
+				node: e notice node;
 				requestor: requestor;
 				possibleVariablesFor: #goo.
 			].
@@ -125,7 +132,7 @@ OCCodeReparatorTest >> testSubstituteVariableAtInterval [
 	method := [ OCInteractiveAPI new compile: requestor text notifying: nil in: MockForCompilation ]
 		on: OCUndeclaredVariableWarning , OCCodeError
 		do: [ :e |
-			e notice reparator
+			OCCodeReparator new node: e notice node;
 				requestor: requestor;
 				substituteVariable: 'foo' atInterval: e node sourceInterval.
 			e retry ].

@@ -5,7 +5,8 @@ Class {
 		'compiler',
 		'permitFaulty',
 		'permitUndeclared',
-		'shouldSignalErrors'
+		'shouldSignalErrors',
+		'undeclaredVariableReparator'
 	],
 	#category : 'OpalCompiler-UI',
 	#package : 'OpalCompiler-UI'
@@ -40,7 +41,18 @@ OCInteractiveAPI >> checkNotice: aNotice requestor: aRequestor [
 			^ true ].
 			
 	"Quirks mode: otherwise, push the error message to the requestor"
-	aRequestor notify: aNotice messageText , ' ->' at: aNotice position in: aNotice node source.
+	(aNotice reparatorFor: self) ifNotNil: [ :reparator |
+		| res |
+		res := reparator
+			requestor: aRequestor;
+			repair.
+		res ifFalse: [ 
+			"operation cancelled, fail"
+			^ false].
+
+		"code was \repared\, we need to restart the compilation process"
+		^ nil ].
+
 	"Quirks mode: Then leave"
 	^ false
 ]
@@ -65,7 +77,10 @@ OCInteractiveAPI >> compile: sourceCode notifying: requestor in: behavior [
 
 					requestor ifNil: [ n signalError ] ifNotNil: [
 							check := self checkNotice: n requestor: requestor.
-							check ifNil: [ ^ self compile: requestor text asString notifying: requestor in: behavior ].
+							check ifNil: [
+								"Flush the AST and restart"
+								theCompiler source: requestor text asString.
+								^ self compile: requestor text asString notifying: requestor in: behavior ].
 							check ifFalse: [ ^ nil ] ] ].
 			^ nil ].
 
@@ -98,6 +113,12 @@ OCInteractiveAPI >> initialize [
 	super initialize.
 	permitFaulty := false.
 	shouldSignalErrors := false.
+]
+
+{ #category : 'compiling' }
+OCInteractiveAPI >> noticeReparator [
+
+	^ nil
 ]
 
 { #category : 'accessing' }
@@ -134,4 +155,20 @@ OCInteractiveAPI >> shouldSignalErrors [
 OCInteractiveAPI >> shouldSignalErrors: anObject [
 
 	shouldSignalErrors := anObject
+]
+
+{ #category : 'as yet unclassified' }
+OCInteractiveAPI >> undeclaredVariableReparator: aReparator [ 
+	
+	undeclaredVariableReparator := aReparator
+]
+
+{ #category : 'compiling' }
+OCInteractiveAPI >> undeclaredVariableReparatorWithNode: aNode [
+
+	undeclaredVariableReparator ifNotNil: [
+			^ undeclaredVariableReparator copy
+				  node: aNode;
+				  yourself ].
+	^ OCCodeReparator new node: aNode
 ]
