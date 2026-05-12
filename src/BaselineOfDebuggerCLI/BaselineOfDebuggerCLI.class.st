@@ -9,9 +9,14 @@ Class {
 BaselineOfDebuggerCLI >> baseline: spec [
 
 	<baseline>
+	| repository |
+	repository := self packageRepositoryURLForSpec: spec.
 	spec for: #common do: [
 			spec
-				baseline: 'Debugging' with: [ spec loads: #( 'Debugger-Model' ) ];
+				baseline: 'Debugging' with: [
+						spec
+							repository: repository;
+							loads: #( 'Debugger-Model' ) ];
 				package: 'debugger-CLI' with: [ spec requires: #( 'Debugging' ) ];
 				package: 'debugger-CLI-Tests' with: [ spec requires: #( 'debugger-CLI' Debugging ) ].
 
