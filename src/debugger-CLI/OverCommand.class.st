@@ -8,7 +8,7 @@ Class {
 { #category : 'printing' }
 OverCommand >> executeOn: aDebugger with: args [
 
-"	[ aDebugger session stepOver ]
+	[ aDebugger session stepOver ]
 		on: Error
 		do: [ :ex |
 				(ex value asString includesSubstring: 'computation has been terminated') ifTrue: [ ^ aDebugger finishedDebugging ].
@@ -18,7 +18,7 @@ OverCommand >> executeOn: aDebugger with: args [
 
 	aDebugger context ifNil: [ ^ aDebugger finishedDebugging ].
 
-	^ 'Stepped OVER to: ' , aDebugger context printString , ' (PC: ' , aDebugger context pc asString , ')'"
+	^ 'Stepped OVER to: ' , aDebugger context printString , ' (PC: ' , aDebugger context pc asString , ')'
 ]
 
 { #category : 'initialization' }

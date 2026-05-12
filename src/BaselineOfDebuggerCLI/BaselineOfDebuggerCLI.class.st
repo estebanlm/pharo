@@ -11,8 +11,9 @@ BaselineOfDebuggerCLI >> baseline: spec [
 	<baseline>
 	spec for: #common do: [
 			spec
-				package: 'debugger-CLI';
-				package: 'debugger-CLI-Tests' with: [ spec requires: #( 'debugger-CLI' ) ].
+				baseline: 'Debugging' with: [ spec loads: #( 'Debugger-Model' ) ];
+				package: 'debugger-CLI' with: [ spec requires: #( 'Debugging' ) ];
+				package: 'debugger-CLI-Tests' with: [ spec requires: #( 'debugger-CLI' Debugging ) ].
 
 			spec
 				group: 'Core' with: { 'debugger-CLI' };
