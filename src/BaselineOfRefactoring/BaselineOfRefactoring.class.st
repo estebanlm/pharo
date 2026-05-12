@@ -10,21 +10,25 @@ BaselineOfRefactoring >> baseline: spec [
 
 	<baseline>
 	spec
+		package: 'Refactoring-Conditions';
 		package: 'Refactoring-Environment';
 		package: 'Refactoring-Changes' with: [ spec requires: #( 'Refactoring-Environment' ) ];
 		package: 'Refactoring-CompilerSupport';
-		package: 'Refactoring-Transformations' with: [ spec requires: #( 'Refactoring-Core' ) ];
-		package: 'Refactoring-Core' with: [ spec requires: #( 'Refactoring-Changes' 'Refactoring-Environment' 'Refactoring-CompilerSupport' ) ];
+		package: 'Refactoring-Transformations' with: [ spec requires: #( 'Refactoring-Conditions' ) ];
+		package: 'Refactoring-Core'
+		with: [ spec requires: #( 'Refactoring-Changes' 'Refactoring-Environment' 'Refactoring-CompilerSupport' 'Refactoring-Transformations' 'Refactoring-Conditions') ];
 		package: 'Refactoring-UI' with: [ spec requires: #( 'Refactoring-Transformations' ) ];
 		package: 'Refactoring-DataForTesting';
+		package: 'Refactoring-CompilerSupport-Tests' with: [ spec requires: #( 'Refactoring-CompilerSupport' ) ];
 		package: 'Refactoring-UI-Tests' with: [ spec requires: #( 'Refactoring-DataForTesting' ) ];
 		package: 'Refactoring-Core-Tests' with: [ spec requires: #( 'Refactoring-Core' ) ];
 		package: 'Refactoring-Changes-Tests' with: [ spec requires: #( 'Refactoring-Changes' ) ];
 		package: 'Refactoring-Critics-Tests';
 		package: 'Refactoring-Environment-Tests' with: [ spec requires: #( 'Refactoring-Environment' ) ];
 		package: 'Refactoring-Transformations-Tests' with: [ spec requires: #( 'Refactoring-Transformations' ) ];
-		group: 'Core' with: #( 'Refactoring-Changes' 'Refactoring-Core' 'Refactoring-UI' 'Refactoring-Environment' 'Refactoring-Transformations' );
+		group: 'Core'
+		with: #( 'Refactoring-Changes' 'Refactoring-Conditions' 'Refactoring-Core' 'Refactoring-UI' 'Refactoring-Environment' 'Refactoring-Transformations' );
 		group: 'Tests'
-		with: #( 'Refactoring-Core-Tests' 'Refactoring-Changes-Tests' 'Refactoring-Critics-Tests' 'Refactoring-Environment-Tests' 'Refactoring-UI-Tests'
-			   'Refactoring-Transformations-Tests' )
+		with: #( 'Refactoring-Core-Tests' 'Refactoring-Changes-Tests' 'Refactoring-Critics-Tests' 'Refactoring-Environment-Tests'
+			   'Refactoring-UI-Tests' 'Refactoring-Transformations-Tests' )
 ]
