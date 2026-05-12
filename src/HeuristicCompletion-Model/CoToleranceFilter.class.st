@@ -73,7 +73,7 @@ CoToleranceFilter class >> defaultMinimumTokenSize [
 { #category : 'default values' }
 CoToleranceFilter class >> defaultRate [
 
-	^ 0.6
+	^ 0.75
 
 	
 ]
@@ -138,22 +138,25 @@ CoToleranceFilter class >> reset [
 
 { #category : 'algorithms' }
 CoToleranceFilter class >> scoreForCandidate: aCandidateString token: aTokenString caseSensitive: aBoolean tolerance: aTolerance [
-
+	"Return zero if the candidate matches the token.
+	
+	"
 	| candidate token maxSize maxEdits distance |
 	candidate := aCandidateString asString.
 	token := aTokenString asString.
 
-	token isEmpty ifTrue: [ ^ 0.0 ].
-	candidate = token ifTrue: [ ^ 0.0 ].
+	token isEmpty ifTrue: [ ^ 0 ].
+	candidate = token ifTrue: [ ^ 0 ].
 
 	candidate := aBoolean
 		ifTrue: [ candidate ]
-		ifFalse: [ candidate asLowercase ].
+		ifFalse: [ candidate asLowercase ]
+		.
 	token := aBoolean
 		ifTrue: [ token ]
 		ifFalse: [ token asLowercase ].
 
-	(candidate beginsWith: token) ifTrue: [ ^ 0.0 ].
+	(candidate beginsWith: token) ifTrue: [ ^ 0 ].
 	(self shouldTryFuzzyFor: token candidate: candidate tolerance: aTolerance) ifFalse: [ ^ 0 ].
 
 	maxSize := token size max: candidate size.
@@ -167,7 +170,6 @@ CoToleranceFilter class >> scoreForCandidate: aCandidateString token: aTokenStri
 
 	distance ifNil: [ ^ 0 ].
 	^ distance asFloat / maxSize
-
 ]
 
 { #category : 'algorithms' }
@@ -186,7 +188,6 @@ CoToleranceFilter class >> shouldTryFuzzyFor: token candidate: candidate toleran
 
 	"Cheap guardrails to avoid noisy matches"
 	token first = candidate first ifFalse: [ ^ false ].
-
 	maxSize := token size max: candidate size.
 	maxEdits := (aTolerance * maxSize) ceiling.
 	^ (token size - candidate size) abs <= maxEdits
@@ -208,9 +209,9 @@ CoToleranceFilter >> complementResults: aCollection [
 	fuzzy := OrderedCollection new.
 
 	aCollection do: [ :each |
-		(self fuzzyAccepts: each)
-			ifFalse: [ exact add: each ]
-			ifTrue: [ fuzzy add: each ] ].
+		(decoree accepts: each)
+			ifTrue: [ exact add: each ]
+			ifFalse: [ (self fuzzyAccepts: each) ifTrue: [ fuzzy add: each ] ] ].
 
 	fuzzy isEmpty ifTrue: [ ^ aCollection ].
 
