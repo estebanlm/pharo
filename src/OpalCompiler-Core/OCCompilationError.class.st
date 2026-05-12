@@ -25,5 +25,19 @@ OCCompilationError >> compilationResult: anObject [
 OCCompilationError >> initialize [
 
 	super initialize.
-	messageText := 'Error while compiling'
+	messageText := self messageText
+]
+
+{ #category : 'accessing' }
+OCCompilationError >> messageText [
+
+	| ast notices res |
+	ast := compilationResult ifNotNil: [ compilationResult ast ].
+	ast ifNil: [ ^ super messageText ].
+
+	notices := ast allNotices.
+	notices ifEmpty: [ ^ super messageText ].
+
+	res := (notices collect: [ :each | '- ' , each asString ]) joinUsing: OSPlatform current lineEnding.
+	^ 'Compilation failed with following errors:' , OSPlatform current lineEnding , res
 ]
