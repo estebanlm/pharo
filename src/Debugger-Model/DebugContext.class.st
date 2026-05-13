@@ -46,27 +46,6 @@ DebugContext class >> forContext: aContext [
 ]
 
 { #category : 'private' }
-DebugContext >> blockNotFoundDialog: aMethod with: aText [
-
-	| message result newMethod |
-	message := 'Method for block not found on stack, can''t edit and continue'.
-
-	"shouldn't edit doits"
-	aMethod selector isDoIt ifTrue: [ ^ InformativeNotification signal: message ].
-
-	result := self
-		          confirm: message
-		          trueChoice: 'Compile and Browse'
-		          falseChoice: 'Cancel'.
-
-	"possible return values are true | false | nil"
-	result ifFalse: [ ^ self ].
-
-	newMethod := self recompileCurrentMethodTo: aText notifying: nil.
-	newMethod ifNotNil: [ self browseMethod: newMethod ]
-]
-
-{ #category : 'private' }
 DebugContext >> browseMethod: aMethod [
 
 	aMethod browse
@@ -85,7 +64,9 @@ DebugContext >> checkSelectorUnchanged: aSelector [
 { #category : 'ui requests' }
 DebugContext >> confirm: message trueChoice: trueChoice falseChoice: falseChoice [
 
-	^ StPharoApplication current confirm: message trueChoice: trueChoice falseChoice: falseChoice
+	"self halt. 
+	""YOU SHOULD NOT CALL UIMANAGER""
+	^ UIManager default confirm: message trueChoice: trueChoice falseChoice: falseChoice"
 ]
 
 { #category : 'private' }
@@ -121,7 +102,7 @@ DebugContext >> forContext: aContext [
 ]
 
 { #category : 'accessing' }
-DebugContext >> locateClosureHomeWithContent: aText [
+DebugContext >> locateClosureHomeWithContent: aText inSession: aSession [
 	"In case the current context is a BlockContext locate the closureHome and ask the
 	user to validate the new context. If closureHome is not found or the user does not
 	validate the new context, return nil. aText is the new content of the current context.
@@ -131,9 +112,10 @@ DebugContext >> locateClosureHomeWithContent: aText [
 	context isBlockContext ifTrue: [
 			closureHome := context activeHome.
 			closureHome ifNil: [
-					self blockNotFoundDialog: context homeMethod with: aText.
+					aSession blockNotFoundDialog: context homeMethod with: aText inContext: self.
 					^ nil ].
-			(ConfirmationRequest signal: 'I will have to revert to the method from\which this block originated.  Is that OK?') ifFalse: [ ^ nil ].
+			(ConfirmationRequest signal: 'I will have to revert to the method from\which this block originated.  Is that OK?') ifFalse: [
+				^ nil ].
 			^ closureHome ].
 
 	^ context

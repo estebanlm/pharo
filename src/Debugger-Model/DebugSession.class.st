@@ -27,7 +27,8 @@ Class {
 		'interruptedContext',
 		'interruptedProcess',
 		'exception',
-		'stepThroughController'
+		'stepThroughController',
+		'cBDelegate'
 	],
 	#classVars : [
 		'FastStepThroughMode',
@@ -90,6 +91,35 @@ DebugSession class >> named: aString on: aProcess startedAt: aContext [
 		  process: aProcess context: aContext
 ]
 
+{ #category : 'accessing' }
+DebugSession >> blockNotFoundDialog: aMethod with: aText inContext: aContext [
+    | message result newMethod |
+    message := 'Method for block not found on stack, can''t edit and continue'.
+    
+    aMethod selector isDoIt ifTrue: [ ^ InformativeNotification signal: message ].
+    
+    result := self cBDelegate confirm: message. 
+
+    "possible return values are true | false | nil"
+    result ifFalse: [ ^ self ].
+    
+    "On demande au contexte de faire le boulot technique"
+    newMethod := aContext recompileCurrentMethodTo: aText notifying: nil.
+    newMethod ifNotNil: [ aContext browseMethod: newMethod ]
+]
+
+{ #category : 'accessing' }
+DebugSession >> cBDelegate [
+
+	^ cBDelegate
+]
+
+{ #category : 'accessing' }
+DebugSession >> cBDelegate: anObject [
+
+	cBDelegate := anObject
+]
+
 { #category : 'debugging actions' }
 DebugSession >> clear [
 	"If after resuming the process the user does plan to reuse this session with
@@ -99,6 +129,12 @@ DebugSession >> clear [
 	self updateContextTo: nil.
 	
 	self triggerEvent: #clear
+]
+
+{ #category : 'accessing' }
+DebugSession >> confirm: message [
+
+	^ false
 ]
 
 { #category : 'accessing' }
@@ -178,6 +214,14 @@ DebugSession >> implement: aMessage classified: aSymbol inClass: aClass forConte
 
 	self updateContextTo: aContext.
 	self contextChanged
+]
+
+{ #category : 'debugging actions' }
+DebugSession >> initialize [
+
+	super initialize.
+
+	cBDelegate := self
 ]
 
 { #category : 'private' }
@@ -336,28 +380,23 @@ DebugSession >> recompileMethodTo: aString inContext: aContext notifying: aNotif
 DebugSession >> recompileMethodTo: aString inContext: aContext notifying: aNotifyer force: aBoolean [
 	"The retrieved information has changed and its source must now be updated.
 	 In this case, the retrieved information is the method of the given context."
+
 	| newMethod recompilationContext canRewind |
-	
 	canRewind := (self isContextPostMortem: self interruptedContext) not.
-	canRewind ifFalse: [ 
-		aBoolean ifFalse: [
-			DebugAttemptToRewindPostMortemError signal ] ].
-		
-	recompilationContext := (self createModelForContext: aContext) locateClosureHomeWithContent: aString.
+	canRewind ifFalse: [ aBoolean ifFalse: [ DebugAttemptToRewindPostMortemError signal ] ].
+
+	recompilationContext := (self createModelForContext: aContext) locateClosureHomeWithContent: aString inSession: self.
 	recompilationContext ifNil: [ ^ false ].
 
-	newMethod := (self createModelForContext: recompilationContext) 
-		recompileCurrentMethodTo: aString 
-		notifying: aNotifyer.
+	newMethod := (self createModelForContext: recompilationContext) recompileCurrentMethodTo: aString notifying: aNotifyer.
 	newMethod ifNil: [ ^ false ].
 
-	(self isContextPostMortem: self interruptedContext)
-		ifFalse: [ self rewindContextToMethod: newMethod fromContext: recompilationContext ].
-
+	(self isContextPostMortem: self interruptedContext) ifFalse: [
+		self rewindContextToMethod: newMethod fromContext: recompilationContext ]. 
 	"Use an alarm instead of triggering the notification directly, as the content of
 	the editor can still be unaccepted. "
 	self installAlarm: #contextChanged.
-	
+
 	^ true
 ]
 
