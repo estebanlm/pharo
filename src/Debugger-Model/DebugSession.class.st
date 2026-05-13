@@ -104,7 +104,7 @@ DebugSession >> blockNotFoundDialog: aMethod with: aText inContext: aContext [
     result ifFalse: [ ^ self ].
     
     "On demande au contexte de faire le boulot technique"
-    newMethod := aContext recompileCurrentMethodTo: aText notifying: nil.
+    newMethod := aContext recompileCurrentMethodTo: aText notifying: nil inSession: self.
     newMethod ifNotNil: [ aContext browseMethod: newMethod ]
 ]
 
@@ -118,6 +118,12 @@ DebugSession >> cBDelegate [
 DebugSession >> cBDelegate: anObject [
 
 	cBDelegate := anObject
+]
+
+{ #category : 'accessing' }
+DebugSession >> chooseTraitOverwriteFor: aClass trait: aTrait [
+
+	^ aClass
 ]
 
 { #category : 'debugging actions' }
@@ -388,7 +394,7 @@ DebugSession >> recompileMethodTo: aString inContext: aContext notifying: aNotif
 	recompilationContext := (self createModelForContext: aContext) locateClosureHomeWithContent: aString inSession: self.
 	recompilationContext ifNil: [ ^ false ].
 
-	newMethod := (self createModelForContext: recompilationContext) recompileCurrentMethodTo: aString notifying: aNotifyer.
+	newMethod := (self createModelForContext: recompilationContext) recompileCurrentMethodTo: aString notifying: aNotifyer inSession: self.
 	newMethod ifNil: [ ^ false ].
 
 	(self isContextPostMortem: self interruptedContext) ifFalse: [

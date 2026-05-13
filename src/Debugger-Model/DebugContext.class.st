@@ -70,7 +70,7 @@ DebugContext >> confirm: message trueChoice: trueChoice falseChoice: falseChoice
 ]
 
 { #category : 'private' }
-DebugContext >> confirmOnTraitOverwrite: aSelector inClass: aClass [
+DebugContext >> confirmOnTraitOverwrite: aSelector inClass: aClass inSession: aSession [
 	"test if method originates from a trait and let the user choose which one should be change"
 
 	| target method |
@@ -78,12 +78,8 @@ DebugContext >> confirmOnTraitOverwrite: aSelector inClass: aClass [
 	method := aClass methodNamed: aSelector.
 	method isFromTrait ifTrue: [ |trait|
 		trait := method origin.
-		target := UIManager default
-			chooseFrom: {('Create copy in ' , aClass name).
-			('Compile Trait method in ' , trait name)}
-			values: {aClass. trait }
-			title: 'Where do you want to compile this trait method?' ].
-	^ target
+		target := aSession cBDelegate chooseTraitOverwriteFor: aClass trait: trait ].
+		^ target
 ]
 
 { #category : 'accessing' }
@@ -135,24 +131,22 @@ DebugContext >> receiverClass [
 ]
 
 { #category : 'evaluating actions' }
-DebugContext >> recompileCurrentMethodTo: aText notifying: aNotifyer [
+DebugContext >> recompileCurrentMethodTo: aText notifying: aNotifyer inSession: aSession [
 
 	| classOrTraitOfMethod selector |
 	self context method isDoIt ifFalse: [
-		selector := self selectedClass compiler parseSelector: aText.
-		(self checkSelectorUnchanged: selector) ifFalse: [ ^ nil ] ].
+			selector := self selectedClass compiler parseSelector: aText.
+			(self checkSelectorUnchanged: selector) ifFalse: [ ^ nil ] ].
 
 	(self selectedClass includesSelector: selector) ifFalse: [
-		^ self selectedClass compiler
-			  protocol: self selectedMessageCategoryName;
-			  isScripting: self selectedMessageName isDoIt;
-			  requestor: aNotifyer;
-			  source: aText;
-			  compile ].
+			^ self selectedClass compiler
+				  protocol: self selectedMessageCategoryName;
+				  isScripting: self selectedMessageName isDoIt;
+				  requestor: aNotifyer;
+				  source: aText;
+				  compile ].
 
-	classOrTraitOfMethod := self
-		                        confirmOnTraitOverwrite: selector
-		                        inClass: self selectedClass.
+	classOrTraitOfMethod := self confirmOnTraitOverwrite: selector inClass: self selectedClass inSession: aSession.
 	classOrTraitOfMethod ifNil: [ ^ nil ].
 
 	^ classOrTraitOfMethod compiler
