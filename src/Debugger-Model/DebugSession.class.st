@@ -28,7 +28,7 @@ Class {
 		'interruptedProcess',
 		'exception',
 		'stepThroughController',
-		'cBDelegate'
+		'debugCallBack'
 	],
 	#classVars : [
 		'FastStepThroughMode',
@@ -94,11 +94,11 @@ DebugSession class >> named: aString on: aProcess startedAt: aContext [
 { #category : 'accessing' }
 DebugSession >> blockNotFoundDialog: aMethod with: aText inContext: aContext [
     | message result newMethod |
-    message := 'Method for block not found on stack, can''t edit and continue'.
+    message := 'Method for block not found on stack, can''t edit and continue. Do you want to browse and recompile ? '.
     
     aMethod selector isDoIt ifTrue: [ ^ InformativeNotification signal: message ].
     
-    result := self cBDelegate confirm: message. 
+    result := self debugCallBack confirm: message. 
 
     "possible return values are true | false | nil"
     result ifFalse: [ ^ self ].
@@ -108,20 +108,10 @@ DebugSession >> blockNotFoundDialog: aMethod with: aText inContext: aContext [
     newMethod ifNotNil: [ aContext browseMethod: newMethod ]
 ]
 
-{ #category : 'accessing' }
-DebugSession >> cBDelegate [
-
-	^ cBDelegate
-]
-
-{ #category : 'accessing' }
-DebugSession >> cBDelegate: anObject [
-
-	cBDelegate := anObject
-]
-
-{ #category : 'accessing' }
+{ #category : 'callbacks' }
 DebugSession >> chooseTraitOverwriteFor: aClass trait: aTrait [
+	"call back method to avoid dependencies in debugger-model"
+	"By default, it returns aClass"
 
 	^ aClass
 ]
@@ -137,9 +127,11 @@ DebugSession >> clear [
 	self triggerEvent: #clear
 ]
 
-{ #category : 'accessing' }
+{ #category : 'callbacks' }
 DebugSession >> confirm: message [
-
+	"call back method to avoid dependencies in debugger-model"
+	"by default it returns false the modified code is not recompiled"
+	
 	^ false
 ]
 
@@ -159,6 +151,18 @@ DebugSession >> contextChanged [
 DebugSession >> createModelForContext: aContext [
 
 	^ (self class contextModelClass forContext: aContext)
+]
+
+{ #category : 'accessing' }
+DebugSession >> debugCallBack [
+
+	^ debugCallBack
+]
+
+{ #category : 'accessing' }
+DebugSession >> debugCallBack: anObject [
+
+	debugCallBack := anObject
 ]
 
 { #category : 'accessing' }
@@ -227,7 +231,7 @@ DebugSession >> initialize [
 
 	super initialize.
 
-	cBDelegate := self
+	debugCallBack := self
 ]
 
 { #category : 'private' }

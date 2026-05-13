@@ -61,14 +61,6 @@ DebugContext >> checkSelectorUnchanged: aSelector [
 	^ unchanged
 ]
 
-{ #category : 'ui requests' }
-DebugContext >> confirm: message trueChoice: trueChoice falseChoice: falseChoice [
-
-	"self halt. 
-	""YOU SHOULD NOT CALL UIMANAGER""
-	^ UIManager default confirm: message trueChoice: trueChoice falseChoice: falseChoice"
-]
-
 { #category : 'private' }
 DebugContext >> confirmOnTraitOverwrite: aSelector inClass: aClass inSession: aSession [
 	"test if method originates from a trait and let the user choose which one should be change"
@@ -78,7 +70,7 @@ DebugContext >> confirmOnTraitOverwrite: aSelector inClass: aClass inSession: aS
 	method := aClass methodNamed: aSelector.
 	method isFromTrait ifTrue: [ |trait|
 		trait := method origin.
-		target := aSession cBDelegate chooseTraitOverwriteFor: aClass trait: trait ].
+		target := aSession debugCallBack chooseTraitOverwriteFor: aClass trait: trait ].
 		^ target
 ]
 
