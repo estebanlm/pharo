@@ -23,7 +23,7 @@ OCInteraciveAPITest >> node: aNode [
 	node := aNode
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'correcting' }
 OCInteraciveAPITest >> repair [
 	
 	(OCCodeReparator new node: node)

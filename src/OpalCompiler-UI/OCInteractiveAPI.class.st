@@ -157,7 +157,7 @@ OCInteractiveAPI >> shouldSignalErrors: anObject [
 	shouldSignalErrors := anObject
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 OCInteractiveAPI >> undeclaredVariableReparator: aReparator [ 
 	
 	undeclaredVariableReparator := aReparator
