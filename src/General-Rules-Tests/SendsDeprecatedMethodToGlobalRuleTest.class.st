@@ -102,3 +102,12 @@ SendsDeprecatedMethodToGlobalRuleTest >> testBasicCheck3 [
 	self assert: (testMethod critiques noneSatisfy: [ :eprop |
 		eprop rule class = SendsDeprecatedMethodToGlobalRule ])
 ]
+
+{ #category : 'running' }
+SendsDeprecatedMethodToGlobalRuleTest >> testSetUp [
+	| global |
+	global := testingEnvironment at: self globalName.
+	self assert: (global class includesSelector: self deprecatedMethodName asSymbol).
+	self assert: (global class includesSelector: self nonDeprecatedMethodName asSymbol).
+	self assert: (global class compiledMethodAt: self deprecatedMethodName asSymbol) isDeprecated.
+]
