@@ -174,6 +174,7 @@ OCCodeReparator >> openMenu [
 		          chooseFrom: labels
 		          lines: lines
 		          title: caption.
+	1halt.
 	(actions at: choice ifAbsent: [ ^ false ]) value.
 	^ true
 ]
@@ -189,6 +190,12 @@ OCCodeReparator >> possibleVariablesFor: proposedVariable [
 		[ results := class possibleVariablesFor: proposedVariable
 						continuedFrom: results ].
 	^ proposedVariable correctAgainst: nil continuedFrom: results
+]
+
+{ #category : 'menu morph' }
+OCCodeReparator >> repair [
+	
+	^ self openMenu
 ]
 
 { #category : 'accessing' }
@@ -219,8 +226,4 @@ OCCodeReparator >> substituteWord: correctWord wordInterval: spot [
 	self requestor correctFrom: (spot first)
 					to: (spot last)
 					with: correctWord
-]
-
-{ #category : 'correcting' }
-OCCodeReparator >> toto [
 ]
