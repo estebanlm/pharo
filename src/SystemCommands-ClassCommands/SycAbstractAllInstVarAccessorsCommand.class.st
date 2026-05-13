@@ -56,13 +56,16 @@ SycAbstractAllInstVarAccessorsCommand >> prepareFullExecutionInContext: aToolCon
 
 { #category : 'execution' }
 SycAbstractAllInstVarAccessorsCommand >> selectVariables [
-	classes := classes collect: [:aClass | | vars dialog |
-		vars := aClass slots asOrderedCollection.
-		dialog := StVariablesSelectionPresenter
-		   label: aClass name,' - Select all variables to convert abstract'
-			withItems: vars
-			selecting: vars.
-		dialog cancelled ifTrue: [ CmdCommandAborted signal ].
-		aClass -> dialog selectedItems
-		]
+
+	classes := classes collect: [ :aClass |
+			           | vars dialog selectedVars |
+			           vars := aClass slots asOrderedCollection.
+			           dialog := StVariablesSelectionPresenter
+				                     title: 'Select variables'
+				                     label: aClass name , ' - Select all variables to convert abstract'
+				                     withItems: vars
+				                     selecting: vars
+				                     acceptBlock: [ :items | selectedVars := items ].
+			           dialog cancelled ifTrue: [ CmdCommandAborted signal ].
+			           aClass -> selectedVars ]
 ]

@@ -93,7 +93,7 @@ OCParser class >> parseRewriteExpression: aString [
 
 { #category : 'parsing' }
 OCParser class >> parseRewriteExpression: aString onError: aBlock [
-	^RBPatternParser parseExpression: aString onError: aBlock
+	^OCPatternParser parseExpression: aString onError: aBlock
 ]
 
 { #category : 'parsing' }
@@ -103,7 +103,7 @@ OCParser class >> parseRewriteMethod: aString [
 
 { #category : 'parsing' }
 OCParser class >> parseRewriteMethod: aString onError: aBlock [
-	^RBPatternParser parseMethod: aString onError: aBlock
+	^OCPatternParser parseMethod: aString onError: aBlock
 ]
 
 { #category : 'private' }

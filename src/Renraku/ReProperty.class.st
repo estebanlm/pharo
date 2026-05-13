@@ -10,8 +10,9 @@ Class {
 	#instVars : [
 		'sourceAnchor'
 	],
-	#category : 'Renraku',
-	#package : 'Renraku'
+	#category : 'Renraku-Critiques',
+	#package : 'Renraku',
+	#tag : 'Critiques'
 }
 
 { #category : 'item convertation' }

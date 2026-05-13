@@ -17,7 +17,7 @@ SycShowLocalSendersCommand class >> canBeExecutedInContext: aToolContext [
 { #category : 'accessing' }
 SycShowLocalSendersCommand >> defaultMenuIconName [
 
-	^ #edit
+	^ #browse
 ]
 
 { #category : 'accessing' }

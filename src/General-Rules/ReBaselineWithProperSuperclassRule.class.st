@@ -28,7 +28,7 @@ ReBaselineWithProperSuperclassRule class >> ruleName [
 { #category : 'accessing' }
 ReBaselineWithProperSuperclassRule class >> severity [
 
-	^ #information
+	^ 'information'
 ]
 
 { #category : 'manifest' }

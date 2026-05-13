@@ -65,7 +65,7 @@ ReCompactSourceCodeRule class >> ruleName [
 { #category : 'accessing' }
 ReCompactSourceCodeRule class >> severity [
 
-	^ #information
+	^ 'information'
 ]
 
 { #category : 'running' }

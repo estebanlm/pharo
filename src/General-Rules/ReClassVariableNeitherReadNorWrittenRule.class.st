@@ -28,7 +28,7 @@ ReClassVariableNeitherReadNorWrittenRule class >> ruleName [
 
 { #category : 'accessing' }
 ReClassVariableNeitherReadNorWrittenRule class >> severity [
-	^ #information
+	^ 'information'
 ]
 
 { #category : 'running' }

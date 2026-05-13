@@ -28,7 +28,7 @@ ReIvarNeitherReadNorWrittenRule class >> ruleName [
 
 { #category : 'accessing' }
 ReIvarNeitherReadNorWrittenRule class >> severity [
-	^ #information
+	^ 'information'
 ]
 
 { #category : 'running' }

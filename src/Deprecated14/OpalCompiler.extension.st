@@ -16,6 +16,18 @@ OpalCompiler class >> evaluate: textOrString [
 ]
 
 { #category : '*Deprecated14' }
+OpalCompiler >> failBlock [
+
+	^ failBlock
+]
+
+{ #category : '*Deprecated14' }
+OpalCompiler >> failBlock: anObject [
+
+	failBlock := anObject
+]
+
+{ #category : '*Deprecated14' }
 OpalCompiler >> noPattern: aBoolean [
 
 	self

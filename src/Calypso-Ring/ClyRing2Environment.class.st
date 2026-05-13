@@ -88,9 +88,9 @@ ClyRing2Environment >> defaultClassCompiler [
 ]
 
 { #category : 'accessing' }
-ClyRing2Environment >> definedClassesInPackage: aPackage [
-
-	^ aPackage definedClasses
+ClyRing2Environment >> definedClassesInPackage: aRGPackage [ 
+	
+	^ aRGPackage definedClasses
 ]
 
 { #category : 'accessing' }

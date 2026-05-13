@@ -93,6 +93,13 @@ BaselineOfBasicTools >> postload: loader package: packageSpec [
 
 	Initialized = true ifTrue: [ ^ self ].
 	"This should be removed in Pharo 14 or 15 or 17 since it's added in Pharo 13."
+	
+  	OCParser deprecatedAliases: { #RBParser }.
+	OCScanner deprecatedAliases: { #RBScanner }.
+	OCPatternScanner deprecatedAliases: { #RBPatternScanner }.
+	OCPatternParser deprecatedAliases: { #RBPatternParser }.
+	
+	
 	OCNode deprecatedAliases: { #RBNode. #ASTNode }.
 	OCProgramNode deprecatedAliases: { #RBProgramNode. #ASTProgramNode }.
 	OCValueNode deprecatedAliases: { #RBValueNode. #ASTValueNode }.

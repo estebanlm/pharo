@@ -31,7 +31,7 @@ ReSendsMethodDictRule class >> ruleName [
 
 { #category : 'accessing' }
 ReSendsMethodDictRule class >> severity [
-	^ #error
+	^ 'error'
 ]
 
 { #category : 'accessing' }

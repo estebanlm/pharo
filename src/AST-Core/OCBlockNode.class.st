@@ -102,15 +102,6 @@ OCBlockNode >> allDefinedVariables [
 ]
 
 { #category : 'accessing' }
-OCBlockNode >> allStatements [
-	"including temp variable definition."
-
-	^ (OrderedCollection withAll: self temporaries)
-		  addAll: super allStatements;
-		  yourself
-]
-
-{ #category : 'accessing' }
 OCBlockNode >> argumentNames [
 	^ self arguments collect: [:each | each name] as: Array
 ]

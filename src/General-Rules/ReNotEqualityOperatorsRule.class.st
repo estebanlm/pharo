@@ -21,7 +21,8 @@ ReNotEqualityOperatorsRule class >> ruleName [
 
 { #category : 'accessing' }
 ReNotEqualityOperatorsRule class >> severity [
-	^#error
+
+	^'error'
 ]
 
 { #category : 'initialization' }

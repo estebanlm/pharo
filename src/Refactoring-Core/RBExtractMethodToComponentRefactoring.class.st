@@ -67,7 +67,7 @@ RBExtractMethodToComponentRefactoring >> extractMethod [
 { #category : 'transforming' }
 RBExtractMethodToComponentRefactoring >> inlineForwarder [
 	| refactoring |
-	refactoring := ReInlineAllSendersRefactoring
+	refactoring := ReInlineIntoLocalSendersRefactoring
 				model: self model
 				sendersOf: extractedMethodSelector
 				in: class.

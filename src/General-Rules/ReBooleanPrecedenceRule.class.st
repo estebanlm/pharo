@@ -21,7 +21,7 @@ ReBooleanPrecedenceRule class >> ruleName [
 
 { #category : 'accessing' }
 ReBooleanPrecedenceRule class >> severity [
-	^ #error
+	^ 'error'
 ]
 
 { #category : 'accessing' }

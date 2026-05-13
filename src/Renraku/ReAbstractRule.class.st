@@ -40,25 +40,25 @@ Class {
 { #category : 'accessing - rule group' }
 ReAbstractRule class >> apiChangeGroup [
 
-	^ #'API Change'
+	^ 'API Change'
 ]
 
 { #category : 'accessing - rule group' }
 ReAbstractRule class >> apiHintsGroup [
 
-	^ #'API Hints'
+	^ 'API Hints'
 ]
 
 { #category : 'accessing - rule group' }
 ReAbstractRule class >> architecturalGroup [
 
-	^ #Architectural
+	^ 'Architectural'
 ]
 
 { #category : 'accessing - rule group' }
 ReAbstractRule class >> bugsGroup [
 
-	^ #Bugs
+	^ 'Bugs'
 ]
 
 { #category : 'testing - interest' }
@@ -92,19 +92,19 @@ ReAbstractRule class >> checksPackage [
 { #category : 'accessing - rule group' }
 ReAbstractRule class >> cleanCodeGroup [
 
-	^ #'Clean Code'
+	^ 'Clean Code'
 ]
 
 { #category : 'accessing - rule group' }
 ReAbstractRule class >> codingIdiomViolationGroup [
 
-	^ #'Coding Idiom Violation'
+	^ 'Coding Idiom Violation'
 ]
 
 { #category : 'accessing - rule group' }
 ReAbstractRule class >> designFlawGroup [
 
-	^ #'Design Flaws'
+	^ 'Design Flaws'
 ]
 
 { #category : 'accessing' }
@@ -148,7 +148,7 @@ ReAbstractRule class >> identifierMinorVersionNumber [
 { #category : 'accessing - rule group' }
 ReAbstractRule class >> instanceMethodProtocolGroup [
 
-	^ #'Instance Method Protocol'
+	^ 'Instance Method Protocol'
 ]
 
 { #category : 'testing' }
@@ -196,19 +196,19 @@ ReAbstractRule class >> methodOfInteresetSelectors [
 { #category : 'accessing - rule group' }
 ReAbstractRule class >> methodProtocolNameGroup [
 
-	^ #'Method Protocol Name'
+	^ 'Method Protocol Name'
 ]
 
 { #category : 'accessing - rule group' }
 ReAbstractRule class >> optimizationGroup [
 
-	^ #Optimization
+	^ 'Optimization'
 ]
 
 { #category : 'accessing - rule group' }
 ReAbstractRule class >> potentialBugsGroup [
 
-	^ #'Potential Bugs'
+	^ 'Potential Bugs'
 ]
 
 { #category : 'accessing' }
@@ -221,7 +221,7 @@ ReAbstractRule class >> rationale [
 { #category : 'accessing - rule group' }
 ReAbstractRule class >> rubricGroup [
 
-	^ #Rubric
+	^ 'Rubric'
 ]
 
 { #category : 'accessing' }
@@ -232,21 +232,21 @@ ReAbstractRule class >> ruleName [
 
 { #category : 'accessing' }
 ReAbstractRule class >> severity [
-	"Answer the severity of issues reported by this rule. This method should return one of #error, #warning, or #information."
+	"Answer the severity of issues reported by this rule. This method should return one of 'error', 'warning', or 'information'."
 
-	^ #warning
+	^ 'warning'
 ]
 
 { #category : 'accessing - rule group' }
 ReAbstractRule class >> styleGroup [
 
-	^ #Style
+	^ 'Style'
 ]
 
 { #category : 'accessing - rule group' }
 ReAbstractRule class >> sunitGroup [
 
-	^ #SUnit
+	^ 'SUnit'
 ]
 
 { #category : 'manifest' }
@@ -372,10 +372,15 @@ ReAbstractRule >> isRewriteRule [
 
 { #category : 'accessing' }
 ReAbstractRule >> name [
-	
-	"Should be deprecated when CBCritiquesRuleGroup will implement #ruleName also but this is in NewTools"
-	"self deprecated: 'Use #ruleName instead.' transformWith: '`@rcv name' -> '`@rcv ruleName'."
+	"helper method to support polymorphic API with composite (Group)"
 	^ self ruleName
+]
+
+{ #category : 'printing' }
+ReAbstractRule >> printOn: aStream [
+
+	super printOn: aStream.
+	aStream << ' - '; << self severity
 ]
 
 { #category : 'accessing' }
@@ -389,14 +394,13 @@ ReAbstractRule >> resetResult [
 
 { #category : 'accessing' }
 ReAbstractRule >> ruleName [
-	"Answer a human readable name of the rule."
 
 	^ self class ruleName
 ]
 
 { #category : 'accessing' }
 ReAbstractRule >> severity [
-	"Answer the severity of issues reported by this rule. This method should return one of #error, #warning, or #information."
+	"Answer the severity of issues reported by this rule. This method should return one of 'error', 'warning', or 'information'."
 
 	^ self class severity
 ]

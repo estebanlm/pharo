@@ -196,8 +196,11 @@ RBRemoveMethodRefactoring >> sendersExcluding: aSelectorsCollection [
 
 { #category : 'preconditions' }
 RBRemoveMethodRefactoring >> sendersOf: aSelector [
-	
-	^ self model allReferencesTo: aSelector
+
+	| occurrences |
+	occurrences := OrderedCollection new.
+	self model allReferencesTo: aSelector do: [ :aRBMethod | occurrences add: aRBMethod selector -> aRBMethod ]. 
+	^ occurrences
 ]
 
 { #category : 'preconditions' }
