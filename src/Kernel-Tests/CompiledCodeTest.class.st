@@ -41,6 +41,35 @@ CompiledCodeTest >> selfJustReturn [
 	^ self	
 ]
 
+{ #category : 'tests - equivalent' }
+CompiledCodeTest >> selfJustReturn2 [
+
+	^ self	
+]
+
+{ #category : 'tests - equivalent' }
+CompiledCodeTest >> selfJustReturnWithComment [
+	"this is a comment"
+
+	^ self	
+]
+
+{ #category : 'tests - equivalent' }
+CompiledCodeTest >> selfJustReturnWithCommentAndPragma [
+	"this is a comment"
+	<pragma: #pragma>
+	
+	^ self	
+]
+
+{ #category : 'tests - equivalent' }
+CompiledCodeTest >> selfJustReturnWithCommentAndPragma2 [
+	"this is a comment"
+	<pragma: #pragma2>
+	
+	^ self	
+]
+
 { #category : 'tests - scanning' }
 CompiledCodeTest >> selfTestMessages [
 
@@ -100,28 +129,42 @@ CompiledCodeTest >> testClearFlag [
 ]
 
 { #category : 'tests - equivalent' }
-CompiledCodeTest >> testEquivalentTo [
+CompiledCodeTest >> testEquivalentToNoCommentNoPragma [
 
-	| aClass origin |
-	aClass := Object newAnonymousSubclass.
-	aClass compile: 'm1 ^ self'.
-	origin := aClass >> #m1.
+	| origin |
+	origin := self class  >> #selfJustReturn.
+	self assert: (origin equivalentTo: origin).
+	self assert: (origin equivalentTo: origin copy).
+	
+	self deny: (origin equivalentTo: self class >> #selfJustReturn2).
+
+]
+
+{ #category : 'tests - equivalent' }
+CompiledCodeTest >> testEquivalentToWithComment [
+
+	|  origin |
+	origin := self class >> #selfJustReturnWithComment.
+	self assert: (origin equivalentTo: origin).
+	self assert: (origin equivalentTo: origin copy).
+	
+	self deny: (origin equivalentTo: (self class >> #selfJustReturn))
+	
+
+]
+
+{ #category : 'tests - equivalent' }
+CompiledCodeTest >> testEquivalentToWithCommentAndPragma [
+
+	|  origin |
+	origin := self class >> #selfJustReturnWithCommentAndPragma.
 	self assert: (origin equivalentTo: origin).
 	self assert: (origin equivalentTo: origin copy).
 
-	aClass compile: 'm1 "with comment" ^ self'.
-	self assert: (origin equivalentTo: aClass >> #m1).
-	self assert: (origin equivalentTo: (aClass >> #m1) copy).
+	self deny: (origin equivalentTo: self class >> #selfJustReturnWithCommentAndPragma2).
 
-	aClass compile: 'm2 ^ self'.
-	self deny: (origin equivalentTo: aClass >> #m2).
+	self deny: (origin equivalentTo: self class >> #selfJustReturnWithComment).
 
-	aClass compile: 'm1 <pragma: 1> ^ self'.
-	self deny: (origin equivalentTo: aClass >> #m1).
-
-	origin := aClass >> #m1.
-	aClass compile: 'm1 <pragma: 2> ^ self'.
-	self deny: (origin equivalentTo: aClass >> #m1)
 ]
 
 { #category : 'tests - flag' }
