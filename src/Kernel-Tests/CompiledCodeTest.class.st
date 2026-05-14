@@ -35,6 +35,13 @@ CompiledCodeTest >> methodReturnOne [
 	^ 1
 ]
 
+{ #category : 'tests - scanning' }
+CompiledCodeTest >> selfTestMessagesAndBlock [
+
+	self testMessages. 
+	[Object class]
+]
+
 { #category : 'tests - testing' }
 CompiledCodeTest >> testBlockReturnSpecial [
 	"we do not compile blocks with quick returns for now"
@@ -68,8 +75,8 @@ CompiledCodeTest >> testChangeProperties [
 
 { #category : 'tests - flag' }
 CompiledCodeTest >> testClearFlag [
+
 	| method |
-	
 	method := self class >> #methodReturnOne.
 	
 	method clearFlag.
@@ -107,9 +114,10 @@ CompiledCodeTest >> testEquivalentTo [
 
 { #category : 'tests - flag' }
 CompiledCodeTest >> testFlag [
-	| method |
-	
+
+	| method |	
 	method := self class >> #methodReturnOne.
+	
 	self deny: method flag.
 	method setFlag.
 	self assert: method flag.
@@ -277,7 +285,9 @@ CompiledCodeTest >> testHasTemporaries [
 	block := [ | b | b := 2  ].
 	self assert: block method hasTemporaries.
 	block := [  2  ].
-	self deny: block method hasTemporaries
+	self deny: block method hasTemporaries.
+	block := [ | b | b := 2  ].
+	self assert: block compiledBlock hasTemporaries.
 ]
 
 { #category : 'tests - literals' }
@@ -377,16 +387,16 @@ CompiledCodeTest >> testLiteralsEvenTheOnesInTheInnerCleanBlocks [
 { #category : 'tests - scanning' }
 CompiledCodeTest >> testLocalMessages [
 	| method |
-	method := self class compiler source: 'method self doit. [Object class]'; compileOrFail.
-	self assert: method localMessages asArray equals: #(#doit) .
+	method := self class >> #selfTestMessagesAndBlock.
+	self assert: method localMessages asArray equals: #(#testMessages)
 	
 ]
 
 { #category : 'tests - scanning' }
 CompiledCodeTest >> testMessages [
 	| method |
-	method := self class compiler source: 'method self doit. [Object class]'; compileOrFail.
-	self assertCollection: method messages asArray hasSameElements: #(#doit #class).
+	method := self class >> #selfTestMessagesAndBlock.
+	self assertCollection: method messages asArray hasSameElements: #(#testMessages #class).
 ]
 
 { #category : 'tests - testing' }
@@ -401,22 +411,37 @@ CompiledCodeTest >> testMethodReturnSpecial [
 ]
 
 { #category : 'tests - instance creation' }
-CompiledCodeTest >> testNewFrom [ 
+CompiledCodeTest >> testNewFromACompiledBlock [
+
+	| compiledBlock copy |
+	compiledBlock := [ 1 ] method.
+	copy := CompiledBlock newFrom: compiledBlock.
+	
+	self 
+		assert: compiledBlock header 
+		equals: copy header.
+	self 
+		assert: compiledBlock bytecodes 
+		equals: copy bytecodes
+	"blocks have no sourcePointer"
+]
+
+{ #category : 'tests - instance creation' }
+CompiledCodeTest >> testNewFromACompiledMethod [
 
 	| method copy |
 	method := OrderedCollection>>#do:.
 	copy := CompiledMethod newFrom: method.
 	
-	self assert: method header equals: copy header.
-	self assert: method bytecodes equals: copy bytecodes.
-	self deny: method sourcePointer equals: copy sourcePointer.
-	
-	method := [ 1 ] method.
-	copy := CompiledBlock newFrom: method.
-	
-	self assert: method header equals: copy header.
-	self assert: method bytecodes equals: copy bytecodes
-	"blocks have no sourcePointer"
+	self 
+		assert: method header 
+		equals: copy header.
+	self 
+		assert: method bytecodes 
+		equals: copy bytecodes.
+	self 
+		deny: method sourcePointer 
+		equals: copy sourcePointer.
 ]
 
 { #category : 'tests - scanning' }
@@ -514,6 +539,7 @@ CompiledCodeTest >> testRefersToLiteralsReturnsTrueWhenLiteralIsInPragmaSelector
 
 { #category : 'tests - flag' }
 CompiledCodeTest >> testSetFlag [
+
 	| method |
 	method := self class >> #methodReturnOne.
 	
@@ -524,18 +550,25 @@ CompiledCodeTest >> testSetFlag [
 	method setFlag.
 	self assert: method flag.
 	"we can execute the method"
-	self assert: self methodReturnOne equals: 1.
+	self 
+		assert: self methodReturnOne 
+		equals: 1.
 	method clearFlag.
 	self deny: method flag.
 ]
 
 { #category : 'tests - debugging support' }
 CompiledCodeTest >> testStepIntoQuickMethods [
-	|ctx compiledBlock|
+
+	| ctx compiledBlock |
 
 	self deny: self compiledMethod1 stepIntoQuickMethods.
+	
 	ctx := [ 1 + 1 ] asContext.
 	compiledBlock := ctx method.
 	compiledBlock stepIntoQuickMethods: true.
-	self assert: compiledBlock method stepIntoQuickMethods equals: compiledBlock stepIntoQuickMethods
+	
+	self 
+		assert: compiledBlock method stepIntoQuickMethods 
+		equals: compiledBlock stepIntoQuickMethods
 ]
