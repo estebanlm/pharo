@@ -54,6 +54,12 @@ OCArrayLiteralTest >> compile: methodSourceCode [
 ]
 
 { #category : 'tests' }
+OCArrayLiteralTest >> literalArrayLongHavingAnotherArrayLong [
+
+ 	^ {   . 1 . 2 . 3 . 4 . 5 . 6 . 7 . 8 . 9 . 10 . 11 . 12 . 13 . 14 . 15 . 16 . 17 . 18 . 19 . 20 . 21 . 22 . 23 . 24 . 25 . 26 . 27 . 28 . 29 . 30 . 31 .  {   . 1 . 2 . 3 . 4 . 5 . 6 . 7 . 8 . 9 . 10 . 11 . 12 . 13 . 14 . 15 . 16 . 17 . 18 . 19 . 20 . 21 . 22 . 23 . 24 . 25 . 26 . 27 . 28 . 29 . 30 . 31 . 32 } }
+]
+
+{ #category : 'tests' }
 OCArrayLiteralTest >> reservedIdentifiers [
 
 	^ #(nil true false)
@@ -133,13 +139,9 @@ OCArrayLiteralTest >> testByteArrayWithinArray [
 { #category : 'tests' }
 OCArrayLiteralTest >> testLiteralArrayLongHavingAnotherArrayLong [
 
-	| method array elements |
-	elements := ((1 to: 32) inject: ' ' into: [ :r :e | r , ' . ' , e asString ]).
-	array := ' { ' , elements , ' }'.
-	array := array copyReplaceAll: '32' with: array.
+	| array |
 	
-	method := self compile: 'array ^' , array.
-	array := method valueWithReceiver: #().
+	array := self literalArrayLongHavingAnotherArrayLong.
 	
 	self assert: ( array isKindOf: Array).
 	self assert: array size equals: 32.
