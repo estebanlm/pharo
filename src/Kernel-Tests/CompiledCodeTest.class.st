@@ -36,6 +36,18 @@ CompiledCodeTest >> methodReturnOne [
 ]
 
 { #category : 'tests - scanning' }
+CompiledCodeTest >> selfJustReturn [
+
+	^ self	
+]
+
+{ #category : 'tests - scanning' }
+CompiledCodeTest >> selfTestMessages [
+
+	^ self testMessages	
+]
+
+{ #category : 'tests - scanning' }
 CompiledCodeTest >> selfTestMessagesAndBlock [
 
 	self testMessages. 
@@ -87,7 +99,7 @@ CompiledCodeTest >> testClearFlag [
 	self deny: method flag.
 ]
 
-{ #category : 'tests - scanning' }
+{ #category : 'tests - equivalent' }
 CompiledCodeTest >> testEquivalentTo [
 
 	| aClass origin |
@@ -461,12 +473,15 @@ CompiledCodeTest >> testReadsRef [
 
 { #category : 'tests - scanning' }
 CompiledCodeTest >> testReadsSelf [
+
 	| method |
-	method := self class compiler source: 'method self doit'; compileOrFail.
+	method := self class >> #selfTestMessagesAndBlock.
 	self assert: method readsSelf.
+	
 	method := self class compiler source: 'method ^self'; compileOrFail.
 	self assert: method readsSelf.
 	method := self class compiler source: 'method ^thisContext'; compileOrFail.
+	
 	self deny: method readsSelf.
 	"take care! FFI methods have a self send, but they do not have self bytecode after the first call
 	Here we test just the case of a FFI method that was not yet called to not make this test depend on FFI
@@ -476,11 +491,42 @@ CompiledCodeTest >> testReadsSelf [
 ]
 
 { #category : 'tests - scanning' }
+CompiledCodeTest >> testReadsSelfFFI [
+
+	| method |
+	"take care! FFI methods have a self send, but they do not have self bytecode after the first call.
+	Here we test just the case of a FFI method that was not yet called to not make this test depend on FFI
+	calls"
+	method := self class compiler source: 'status ^ self ffiCall: #(int cairo_scaled_font_status (self))'; compileOrFail.
+	self assert: method readsSelf
+]
+
+{ #category : 'tests - scanning' }
+CompiledCodeTest >> testReadsSelfForThisContext [
+
+	| method |
+	method := self class >> #thisContextNoMessage.
+	self deny: method readsSelf.
+	
+]
+
+{ #category : 'tests - scanning' }
+CompiledCodeTest >> testReadsSelfReturn [
+
+	| method |
+	method := self class >> #selfJustReturn.
+	self assert: method readsSelf.
+	
+	
+]
+
+{ #category : 'tests - scanning' }
 CompiledCodeTest >> testReadsThisContext [
 	| method |
-	method := self class compiler source: 'method ^thisContext'; compileOrFail.
+	method := self class >> #thisContextNoMessage.
 	self assert: method readsThisContext.
-	method := self class compiler source: 'method ^self'; compileOrFail.
+	
+	method := self class >> #selfJustReturn.
 	self deny: method readsThisContext
 ]
 
@@ -571,4 +617,11 @@ CompiledCodeTest >> testStepIntoQuickMethods [
 	self 
 		assert: compiledBlock method stepIntoQuickMethods 
 		equals: compiledBlock stepIntoQuickMethods
+]
+
+{ #category : 'tests - scanning' }
+CompiledCodeTest >> thisContextNoMessage [
+
+	^ thisContext
+	
 ]
