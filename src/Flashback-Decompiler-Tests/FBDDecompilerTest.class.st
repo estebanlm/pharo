@@ -81,6 +81,12 @@ FBDDecompilerTest >> getMethodClassSide: selector [
 ]
 
 { #category : 'tests' }
+FBDDecompilerTest >> methodDoublePragma [
+											<hello: 5>
+											<hello: 2>
+]
+
+{ #category : 'tests' }
 FBDDecompilerTest >> test2Loops [
 
 	self checkCorrectDecompilation: #example2Loops
@@ -648,13 +654,7 @@ FBDDecompilerTest >> testOr [
 { #category : 'tests' }
 FBDDecompilerTest >> testPragma [
 	| aCompiledMethod bytecode |
-	aCompiledMethod := OpalCompiler new
-		source:
-			'methodDoublePragma
-											<hello: 5>
-											<hello: 2>';
-		class: OCMockCompilationClass;
-		compileOrFail.
+	aCompiledMethod := self class >> #methodDoublePragma.
 
 	bytecode := aCompiledMethod symbolic asString substrings: String cr.
 	self assert: bytecode first equals: 'Quick return self'
