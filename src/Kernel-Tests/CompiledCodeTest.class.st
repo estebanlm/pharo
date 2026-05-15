@@ -19,6 +19,11 @@ CompiledCodeTest >> compiledMethod1Copy [
 	^ self compiledMethod1 copy
 ]
 
+{ #category : 'tests - hasLiteral' }
+CompiledCodeTest >> doit: aBlock [
+	aBlock value
+]
+
 { #category : 'examples' }
 CompiledCodeTest >> method1 [
 
@@ -27,6 +32,20 @@ CompiledCodeTest >> method1 [
 	array := Array new.
 	array at: 1 put: 'Pharo loves tests'.
 	#(#add #at: #remove) do: #printOn:
+]
+
+{ #category : 'tests - hasLiteral' }
+CompiledCodeTest >> methodForTest1 [
+		<pragma: #pragma>
+		
+		| test |
+		test := 1+2.
+		self doit: [
+			test := 1 - 2.
+			test := #(arrayInBlock).
+			self methodForTest1 ].
+		^#(#array)
+	
 ]
 
 { #category : 'examples' }
@@ -181,41 +200,42 @@ CompiledCodeTest >> testFlag [
 
 ]
 
-{ #category : 'tests - scanning' }
+{ #category : 'tests - hasLiteral' }
 CompiledCodeTest >> testHasLiteral [
 
 	| method |
-	method := self class compiler permitFaulty: true; source: 'method
-		<pragma: #pragma>
-		test := 1+2.
-		self doIt: [
-		test := 1 - 2.
-		test := #(arrayInBlock).
-		self name ].
-		^#(#array) '; compileOrFail.
-	"simpe case: normal send in the method itself"
-	self assert: (method hasLiteral: #doIt:).
+	method := self class >> #methodForTest1.
+	
+	"simple case: normal send in the method itself"
+	self assert: (method hasLiteral: #doit:).
+	
 	"special selector in the method is not found"
 	self deny: (method hasLiteral: #+).
+	
 	"special selector in the block not found, either"
 	self deny: (method hasLiteral: #-).
+
 	"normal selector in the block"
-	self assert: (method hasLiteral: #name).
+	self assert: (method hasLiteral: #methodForTest1).
+	
 	"we do NOT into arrays, this is different to hasLiteralSuchThat:"
 	self flag: #FIXME. "LiteralScanningMissmatch"
 	self deny: (method hasLiteral: #array).
 	"we do not into arrays in Blocks. this is different to hasLiteralSuchThat:"
 	self flag: #FIXME. "LiteralScanningMissmatch"
+	
 	self deny: (method hasLiteral: #arrayInBlock).
+	
 	"pragmas are NOT covered."
 	self deny: (method hasLiteral: #pragma:).
 	"args of pragmas not found, too."
 	self deny: (method hasLiteral: #pragma).
+	
 	"the method selector NOT"
 	self deny: (method hasLiteral: #method)
 ]
 
-{ #category : 'tests - scanning' }
+{ #category : 'tests - hasLiteral' }
 CompiledCodeTest >> testHasLiteral2 [
 
 	| readMethod writeMethod classVar |
