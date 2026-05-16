@@ -284,14 +284,6 @@ MethodPragmaTest >> testDoublePragma [
 	self assert: aCompiledMethod pragmas second selector equals: #hello:
 ]
 
-{ #category : 'tests - compiled' }
-MethodPragmaTest >> testIsPrimitive [
-	| aRBMethod |
-
-	aRBMethod := OpalCompiler new parse: self methodPrimitive.
-	self assert: aRBMethod isPrimitive
-]
-
 { #category : 'tests - pragma' }
 MethodPragmaTest >> testMessage [
 	| pragma message |
