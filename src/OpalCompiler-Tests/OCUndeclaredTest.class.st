@@ -1,5 +1,5 @@
 Class {
-	#name : 'OCCompilationUndeclaredTest',
+	#name : 'OCUndeclaredTest',
 	#superclass : 'TestCase',
 	#category : 'OpalCompiler-Tests-Misc',
 	#package : 'OpalCompiler-Tests',
@@ -7,7 +7,7 @@ Class {
 }
 
 { #category : 'tests' }
-OCCompilationUndeclaredTest >> testUndeclaredVariable [
+OCUndeclaredTest >> testUndeclaredVariable [
 	| cm undeclaredBinding |
 	cm := OpalCompiler new
 		source:
@@ -27,7 +27,7 @@ OCCompilationUndeclaredTest >> testUndeclaredVariable [
 ]
 
 { #category : 'tests' }
-OCCompilationUndeclaredTest >> testUndeclaredVariableWhenItIsAlreadyRegistered [
+OCUndeclaredTest >> testUndeclaredVariableWhenItIsAlreadyRegistered [
 	| cm undeclaredBinding var |
 	var := UndeclaredVariable registeredWithName: #undeclaredTestVar.
 	cm := OpalCompiler new
@@ -44,7 +44,7 @@ OCCompilationUndeclaredTest >> testUndeclaredVariableWhenItIsAlreadyRegistered [
 ]
 
 { #category : 'tests' }
-OCCompilationUndeclaredTest >> testUndeclaredVariableWhenItIsAlreadyRegisteredAsAssociation [
+OCUndeclaredTest >> testUndeclaredVariableWhenItIsAlreadyRegisteredAsAssociation [
 	"Test describes current state of bootstrap where undeclared vars are encoded using associations.
 	It breaks introduced logic which explicitly return existing variable from Undeclared registry.
 	Compiler parts expect kind of variable and not a simple association.
@@ -64,4 +64,29 @@ OCCompilationUndeclaredTest >> testUndeclaredVariableWhenItIsAlreadyRegisteredAs
 	self assert: undeclaredBinding class equals: UndeclaredVariable.
 	self assert: undeclaredBinding identicalTo: (Undeclared associationAt: #undeclaredTestVar).
 	undeclaredBinding unregister
+]
+
+{ #category : 'tests' }
+OCUndeclaredTest >> testUndefinedVariable [
+	"This test shows that undefined variables behave as globals (for now) and is independent of the compilation mode"
+
+	Undeclared removeKey: #undefinedName123 ifAbsent: [ ].
+	self
+		assert: ( [ {
+			OpalEvaluator new
+				permitFaulty: true;
+				evaluate: 'undefinedName123'.
+			OpalEvaluator new
+				permitFaulty: true;
+				evaluate: 'undefinedName123 := 1'.
+			OpalEvaluator new
+				permitFaulty: true;
+				evaluate: 'undefinedName123 := 2. undefinedName123'.
+			OpalEvaluator new
+				permitFaulty: true;
+				evaluate: 'undefinedName123' }  ] on: UndeclaredVariableRead , UndeclaredVariableWrite do: [ :e | e resume: e class ] )
+		equals: { UndeclaredVariableRead. UndeclaredVariableWrite. UndeclaredVariableRead. UndeclaredVariableRead }.
+
+	"Cleanup"
+	Undeclared removeKey: #undefinedName123 ifAbsent: [ ]
 ]
