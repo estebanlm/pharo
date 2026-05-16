@@ -200,38 +200,51 @@ OCClosureTest >> testConstantBlockClosure [
 
 { #category : 'tests - empty' }
 OCClosureTest >> testEmptyBlockOneArgument [
-	self
-		assert: (OpalEvaluator new evaluate: '[ :a ] value: 1') isNil
-		description: 'Empty blocks in ST-80 should return nil'.
-	self
-		assert: (OpalEvaluator new evaluate: '[ :a | ] value: 1') isNil
-		description: 'Empty blocks in ST-80 should return nil'.
-	self
-		assert: (OpalEvaluator new evaluate: '[ :a | | t | ] value: 1') isNil
-		description: 'Empty blocks in ST-80 should return nil'
+
+	| b |
+	b := [ :a ].
+	b := b value: 1.
+	self assert: b isNil description: 'Empty blocks should return nil'.
+	
+	b := [ :a | ].
+	b := b value: 1.
+	self assert: b isNil description: 'Empty blocks should return nil'.
+	
+	b := [ :a | | t | ].
+	b := b value: 1.
+	self assert: b isNil description: 'Empty blocks in ST-80 should return nil'
 ]
 
 { #category : 'tests - empty' }
 OCClosureTest >> testEmptyBlockTwoArguments [
+
+	| b |
+	b := [ :a :b |  ].
+	b := b value: 1 value: 2.
+	self assert: b isNil description: 'Empty blocks should return nil'.
+	
+	b := [ :a :b | ].
+	b := b value: 1 value: 2.
+	self assert: b isNil description: 'Empty blocks should return nil'.
+
+	b := [ :a :b | | t | ].
+	b := b value: 1 value: 2.
 	self
-		assert: (OpalEvaluator new evaluate: '[ :a :b ] value: 1 value: 2') isNil
-		description: 'Empty blocks in ST-80 should return nil'.
-	self
-		assert: (OpalEvaluator new evaluate: '[ :a :b | ] value: 1 value: 2') isNil
-		description: 'Empty blocks in ST-80 should return nil'.
-	self
-		assert: (OpalEvaluator new evaluate: '[ :a :b | | t | ] value: 1 value: 2') isNil
-		description: 'Empty blocks in ST-80 should return nil'
+		assert: b isNil
+		description: 'Empty blocks should return nil'
 ]
 
 { #category : 'tests - empty' }
 OCClosureTest >> testEmptyBlockZeroArguments [
-	self
-		assert: (OpalEvaluator new evaluate: '[ ] value') isNil
-		description: 'Empty blocks in ST-80 should return nil'.
-	self
-		assert: (OpalEvaluator new evaluate: '[ | t | ] value') isNil
-		description: 'Empty blocks in ST-80 should return nil'
+
+	| b |
+	b := [ ].
+	b := b value.
+	self assert: b isNil description: 'Empty blocks should return nil'.
+	
+	b := [ | t | ].
+	b := b value.
+	self assert: b isNil description: 'Empty blocks in ST-80 should return nil'
 ]
 
 { #category : 'tests' }
