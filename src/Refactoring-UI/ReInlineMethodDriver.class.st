@@ -10,7 +10,8 @@ Class {
 		'interval',
 		'noOverridden',
 		'notExecutionOrder',
-		'noSuperMessage'
+		'noSuperMessage',
+		'noLastSender'
 	],
 	#category : 'Refactoring-UI-Drivers',
 	#package : 'Refactoring-UI',
@@ -30,8 +31,8 @@ ReInlineMethodDriver >> breakingChoices [
 	items := OrderedCollection new.
 
 	(noOverridden check and: [ notExecutionOrder check and: [ noSuperMessage check ] ]) ifFalse: [
-		items add: (ReInlineMethodChoice new driver: self) ].
-
+		items add: (ReInlineMethodChoice new driver: self) ]. 
+	noLastSender check ifFalse: [ items add: (ReInlineAndRemoveMethodChoice new driver: self) ].
 	^ items
 ]
 
@@ -54,8 +55,19 @@ ReInlineMethodDriver >> hasFailedBehaviorPreservingPreconditions [
 	noOverridden := refactoring preconditionIsMethodOverridden.
 	notExecutionOrder := refactoring preconditionExecutionOrder.
 	noSuperMessage := refactoring preconditionSuperMessages.
+	noLastSender := refactoring  preconditionIsLastSender. 
 
 	^ refactoring failedBreakingChangePreconditions isNotEmpty
+]
+
+{ #category : 'action' }
+ReInlineMethodDriver >> inlineAndRemoveMethod [
+
+	| removeRefactoring |
+	refactoring privateTransform.
+	removeRefactoring := ReRemoveMethodsRefactoring model: model classSelectorMapping: { (class -> selector) }.
+	removeRefactoring privateTransform.
+	self openPreviewWithChanges: refactoring changes + removeRefactoring changes
 ]
 
 { #category : 'action' }
