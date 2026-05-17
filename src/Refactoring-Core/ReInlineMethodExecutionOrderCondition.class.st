@@ -8,6 +8,10 @@ to be inlined.
 Class {
 	#name : 'ReInlineMethodExecutionOrderCondition',
 	#superclass : 'ReMethodsCondition',
+	#instVars : [
+		'sourceMessage',
+		'inlineParseTree'
+	],
 	#category : 'Refactoring-Core-Conditions',
 	#package : 'Refactoring-Core',
 	#tag : 'Conditions'

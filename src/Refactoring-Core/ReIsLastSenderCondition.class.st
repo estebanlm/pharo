@@ -31,9 +31,9 @@ ReIsLastSenderCondition >> violationMessageOn: aStream [
 
 	self violators do: [ :each |
 			aStream
-			
+			nextPutAll: 'This is the last sender of ';
 				nextPutAll: each;
-				nextPutAll: ' will have no senders. Consider removing the method.' ]
+				nextPutAll: '. Consider removing the method.' ]
 ]
 
 { #category : 'accessing' }
@@ -41,7 +41,7 @@ ReIsLastSenderCondition >> violators [
 
 	violators ifNotNil: [ ^ violators ].
 	violators := OrderedCollection new.
-1halt.
+
 	(model allReferencesTo: selector) size <= 1 ifTrue: [ violators add: selector ].
 
 	^ violators

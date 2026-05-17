@@ -327,7 +327,7 @@ RBInlineMethodRefactoring >> preconditionExecutionOrder [
 { #category : 'preconditions' }
 RBInlineMethodRefactoring >> preconditionIsLastSender [
 
-	^ ReIsLastSenderCondition new selector: self inlineSelector model: model   
+	^ ReIsLastSenderCondition new selector: self inlineSelector model: self model   
 ]
 
 { #category : 'preconditions' }

@@ -22,22 +22,35 @@ ReInlineMethodDriverTest >> intervalForMessageSend: aString inMethod: aSelector 
 { #category : 'initialization' }
 ReInlineMethodDriverTest >> setUpDataForTesting [
 
-    environment := RBPackageEnvironment packageName: 'Refactoring-DataForTesting'.
-    model := RBNamespace onEnvironment: environment.
+	environment := RBPackageEnvironment packageName: 'Refactoring-DataForTesting'.
+	model := RBNamespace onEnvironment: environment.
 
-    model
-        defineClass: [ :b | b superclass: Object; name: #RBInlineBase; package: #'Refactory-Test data' ];
-        defineClass: [ :b | b superclassName: #RBInlineBase; name: #RBInlineSub; package: #'Refactory-Test data'];
-		  defineClass: [ :b | b superclassName: #RBInlineSub; name: #RBInlineSubSub; package: #'Refactory-Test data' ].
+	model
+		defineClass: [ :b |
+				b
+					superclass: Object;
+					name: #RBInlineBase;
+					package: #'Refactory-Test data' ];
+		defineClass: [ :b |
+				b
+					superclassName: #RBInlineBase;
+					name: #RBInlineSub;
+					package: #'Refactory-Test data' ];
+		defineClass: [ :b |
+				b
+					superclassName: #RBInlineSub;
+					name: #RBInlineSubSub;
+					package: #'Refactory-Test data' ].
 
-    (model classNamed: #RBInlineBase)
-        compile: 'foo ^ 42'
-        classified: #( #accessing ).
+	(model classNamed: #RBInlineBase) compile: 'foo ^ 42' classified: #( #accessing ).
 
 
-    (model classNamed: #RBInlineBase)
-        compile: 'caller ^ self foo'
-        classified: #( #accessing ).
+	(model classNamed: #RBInlineBase) compile: 'caller ^ self foo' classified: #( #accessing ).
+
+	(model classNamed: #RBInlineBase) compile: 'tmpMethod ^ 28' classified: #( #accessing ).
+
+
+	(model classNamed: #RBInlineBase) compile: 'uniqueSender ^ self tmpMethod' classified: #( #accessing )
 ]
 
 { #category : 'tests' }
@@ -62,6 +75,25 @@ ReInlineMethodDriverTest >> testInlineMethodDriverWhenExecutionOrderChangedExpec
 
 	self assert: driver refactoring failedBreakingChangePreconditions size equals: 1.
 	self assert: (driver refactoring failedBreakingChangePreconditions first isKindOf: ReInlineMethodExecutionOrderCondition)
+]
+
+{ #category : 'tests' }
+ReInlineMethodDriverTest >> testInlineMethodDriverWhenLastSenderExpectBreakingChange [
+
+	| driver interval |
+	self setUpDataForTesting.
+
+	interval := self intervalForMessageSend: 'self tmpMethod' inMethod: #uniqueSender ofClass: (model classNamed: #RBInlineBase).
+
+	driver := ReInlineMethodDriver new
+		          scopes: { environment } 
+		          interval: interval
+		          selector: #uniqueSender
+		          class: (model classNamed: #RBInlineBase).
+	self setUpDriver: driver.
+	driver runRefactoring.
+	self assert: driver refactoring failedBreakingChangePreconditions size equals: 1.
+	self assert: (driver refactoring failedBreakingChangePreconditions first isKindOf: ReIsLastSenderCondition)
 ]
 
 { #category : 'tests' }

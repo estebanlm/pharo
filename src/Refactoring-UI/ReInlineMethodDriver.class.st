@@ -67,7 +67,8 @@ ReInlineMethodDriver >> inlineAndRemoveMethod [
 	refactoring privateTransform.
 	removeRefactoring := ReRemoveMethodsRefactoring model: model classSelectorMapping: { (class -> selector) }.
 	removeRefactoring privateTransform.
-	self openPreviewWithChanges: refactoring changes + removeRefactoring changes
+	removeRefactoring changes changes do: [ :change | refactoring changes addChange: change ].
+	self openPreviewWithChanges: refactoring changes
 ]
 
 { #category : 'action' }
