@@ -22,30 +22,22 @@ ReInlineMethodDriverTest >> intervalForMessageSend: aString inMethod: aSelector 
 { #category : 'initialization' }
 ReInlineMethodDriverTest >> setUpDataForTesting [
 
-	environment := RBPackageEnvironment packageName: 'Refactoring-DataForTesting'.
-	model := RBNamespace onEnvironment: environment.
+    environment := RBPackageEnvironment packageName: 'Refactoring-DataForTesting'.
+    model := RBNamespace onEnvironment: environment.
 
-	model
-		defineClass: [ :b |
-				b
-					superclass: Object;
-					name: #RBInlineBase;
-					package: #'Refactory-Test data' ];
-		defineClass: [ :b |
-				b
-					superclassName: #RBInlineBase;
-					name: #RBInlineSub;
-					package: #'Refactory-Test data' ];
-		defineClass: [ :b |
-				b
-					superclassName: #RBInlineSub;
-					name: #RBInlineSubSub;
-					package: #'Refactory-Test data' ].
+    model
+        defineClass: [ :b | b superclass: Object; name: #RBInlineBase; package: #'Refactory-Test data' ];
+        defineClass: [ :b | b superclassName: #RBInlineBase; name: #RBInlineSub; package: #'Refactory-Test data'];
+		  defineClass: [ :b | b superclassName: #RBInlineSub; name: #RBInlineSubSub; package: #'Refactory-Test data' ].
 
-	(model classNamed: #RBInlineBase) compile: 'foo ^ 42' classified: #( #accessing ).
+    (model classNamed: #RBInlineBase)
+        compile: 'foo ^ 42'
+        classified: #( #accessing ).
 
 
-	(model classNamed: #RBInlineBase) compile: 'caller ^ self foo' classified: #( #accessing )
+    (model classNamed: #RBInlineBase)
+        compile: 'caller ^ self foo'
+        classified: #( #accessing ).
 ]
 
 { #category : 'tests' }

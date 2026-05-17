@@ -43,8 +43,6 @@ ReInlineMethodDriver >> breakingChoices [
 
 	(noOverridden check and: [ notExecutionOrder check and: [ noSuperMessage check ] ]) ifFalse: [
 		items add: (ReInlineMethodChoice new driver: self) ].
-	self isLastSender ifTrue: [ items add: (ReInlineAndRemoveMethodChoice new driver: self) ].
-
 
 	^ items
 ]
