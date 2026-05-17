@@ -103,8 +103,7 @@ RBInlineMethodRefactoring >> breakingChangePreconditions [
 	^ {
 		  self preconditionIsMethodOverridden.
 		  self preconditionExecutionOrder.
-		  self preconditionSuperMessages.
-		  self preconditionIsLastSender }
+		  self preconditionSuperMessages }
 ]
 
 { #category : 'accessing' }
@@ -322,12 +321,6 @@ RBInlineMethodRefactoring >> preconditionExecutionOrder [
     ^ ReInlineMethodExecutionOrderCondition new
         sourceMessage: sourceMessage
         inlineParseTree: inlineParseTree 
-]
-
-{ #category : 'preconditions' }
-RBInlineMethodRefactoring >> preconditionIsLastSender [
-
-	^ ReIsLastSenderCondition new selector: self inlineSelector model: self model   
 ]
 
 { #category : 'preconditions' }
