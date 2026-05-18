@@ -30,6 +30,7 @@ ReInlineMethodDriver >> applyChanges [
 			| dialog selection |
 			dialog := self lastSenderSelectDialog.
 			selection := dialog openModal.
+			selection ifNil: [ ^ false ].
 			selection action.
 			^ self ].
 	super applyChanges
@@ -43,6 +44,8 @@ ReInlineMethodDriver >> breakingChoices [
 
 	(noOverridden check and: [ notExecutionOrder check and: [ noSuperMessage check ] ]) ifFalse: [
 		items add: (ReInlineMethodChoice new driver: self) ].
+	self isLastSender ifTrue: [ items add: (ReInlineAndRemoveMethodChoice new driver: self) ].
+
 
 	^ items
 ]
@@ -108,6 +111,11 @@ ReInlineMethodDriver >> labelBasedOnBreakingChanges [
 			  refactoring failedBreakingChangePreconditions do: [ :cond |
 					  cond violationMessageOn: stream.
 					  stream cr ].
+			  self isLastSender ifTrue: [
+					  stream
+						  nextPutAll: 'This is the last sender of ';
+						  nextPutAll: refactoring inlineSelector;
+						  nextPutAll: '.' ].
 			  stream cr.
 			  stream nextPutAll: 'Select a strategy' ]
 ]
