@@ -56,3 +56,32 @@ OCEvaluatorTest >> testDebuggerTempAccess [
 
 	self doTestDebuggerTempAccessWith: 1 with: 2
 ]
+
+{ #category : 'tests - empty' }
+OCEvaluatorTest >> testEmptyBlockOneArgument [
+
+	self assert: (OpalEvaluator new evaluate: '[ :a ] value: 1') isNil description: 'Empty blocks should return nil'.
+	self assert: (OpalEvaluator new evaluate: '[ :a | ] value: 1') isNil description: 'Empty blocks should return nil'.
+	self assert: (OpalEvaluator new evaluate: '[ :a | | t | ] value: 1') isNil description: 'Empty blocks should return nil'
+]
+
+{ #category : 'tests - empty' }
+OCEvaluatorTest >> testEmptyBlockTwoArguments [
+
+	self
+		assert: (OpalEvaluator new evaluate: '[ :a :b ] value: 1 value: 2') isNil
+		description: 'Empty blocks should return nil'.
+	self
+		assert: (OpalEvaluator new evaluate: '[ :a :b | ] value: 1 value: 2') isNil
+		description: 'Empty blocks should return nil'.
+	self
+		assert: (OpalEvaluator new evaluate: '[ :a :b | | t | ] value: 1 value: 2') isNil
+		description: 'Empty blocks should return nil'
+]
+
+{ #category : 'tests - empty' }
+OCEvaluatorTest >> testEmptyBlockZeroArguments [
+
+	self assert: (OpalEvaluator new evaluate: '[ ] value') isNil description: 'Empty blocks should return nil'.
+	self assert: (OpalEvaluator new evaluate: '[ | t | ] value') isNil description: 'Empty blocks should return nil'
+]

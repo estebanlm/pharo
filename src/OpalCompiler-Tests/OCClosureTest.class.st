@@ -198,55 +198,6 @@ OCClosureTest >> testConstantBlockClosure [
  	self should: [block valueWithArguments: #()] raise: ArgumentsCountMismatch
 ]
 
-{ #category : 'tests - empty' }
-OCClosureTest >> testEmptyBlockOneArgument [
-
-	| b |
-	b := [ :a ].
-	b := b value: 1.
-	self assert: b isNil description: 'Empty blocks should return nil'.
-	
-	b := [ :a | ].
-	b := b value: 1.
-	self assert: b isNil description: 'Empty blocks should return nil'.
-	
-	b := [ :a | | t | ].
-	b := b value: 1.
-	self assert: b isNil description: 'Empty blocks in ST-80 should return nil'
-]
-
-{ #category : 'tests - empty' }
-OCClosureTest >> testEmptyBlockTwoArguments [
-
-	| b |
-	b := [ :a :b |  ].
-	b := b value: 1 value: 2.
-	self assert: b isNil description: 'Empty blocks should return nil'.
-	
-	b := [ :a :b | ].
-	b := b value: 1 value: 2.
-	self assert: b isNil description: 'Empty blocks should return nil'.
-
-	b := [ :a :b | | t | ].
-	b := b value: 1 value: 2.
-	self
-		assert: b isNil
-		description: 'Empty blocks should return nil'
-]
-
-{ #category : 'tests - empty' }
-OCClosureTest >> testEmptyBlockZeroArguments [
-
-	| b |
-	b := [ ].
-	b := b value.
-	self assert: b isNil description: 'Empty blocks should return nil'.
-	
-	b := [ | t | ].
-	b := b value.
-	self assert: b isNil description: 'Empty blocks in ST-80 should return nil'
-]
-
 { #category : 'tests' }
 OCClosureTest >> testMethodArgument [
 	| temp block |
