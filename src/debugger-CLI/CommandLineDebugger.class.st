@@ -12,7 +12,9 @@ Class {
 		'lineEnding',
 		'commands',
 		'commandsStack',
-		'session'
+		'session',
+		'inStream',
+		'outStream'
 	],
 	#category : 'debugger-CLI',
 	#package : 'debugger-CLI'
@@ -22,6 +24,14 @@ Class {
 CommandLineDebugger >> activate [
 
 	isActive := true
+]
+
+{ #category : 'private - printing' }
+CommandLineDebugger >> askTyping [
+
+	outStream 
+        << '(debug) '; 
+        flush
 ]
 
 { #category : 'execution' }
@@ -138,6 +148,36 @@ CommandLineDebugger >> handleWordMatchingHistory: aString [
 	^ commandsArray detect: [ :command | command includesSubstring: unMot ] ifNone: [ 'no-match-found' ]
 ]
 
+{ #category : 'execution' }
+CommandLineDebugger >> handleZnIncompleteErrorInInput: ex [
+	"We automatically get a ZnIncomplete error when we use nextLine, so this is a way to handle it :
+	We wait 50ms until we get user's input."
+
+	ex class name = #ZnIncomplete
+		ifTrue: [ (Delay forMilliseconds: 50) wait ]
+		ifFalse: [ ex pass ]
+]
+
+{ #category : 'accessing' }
+CommandLineDebugger >> inStream [
+
+	^ inStream
+]
+
+{ #category : 'accessing' }
+CommandLineDebugger >> inStream: anObject [
+
+	inStream := anObject
+]
+
+{ #category : 'initialization' }
+CommandLineDebugger >> informResults: results [
+
+	(outStream << results)
+		<< self lineEnding;
+		flush
+]
+
 { #category : 'initialization' }
 CommandLineDebugger >> initialize [
 
@@ -192,13 +232,26 @@ CommandLineDebugger >> lineEnding: anObject [
 	lineEnding := anObject
 ]
 
+{ #category : 'accessing' }
+CommandLineDebugger >> outStream [
+
+	^ outStream
+]
+
+{ #category : 'accessing' }
+CommandLineDebugger >> outStream: anObject [
+
+	outStream := anObject
+]
+
 { #category : 'execution' }
 CommandLineDebugger >> parsesAndExecuteCommand: aString [
 	"Parses a string to change it into an executable command and executes it"
 
-	| subString command arguments |
-	commandsStack push: aString.
-	subString := aString trim substrings.
+	| subString command arguments finalString |
+	finalString := self handleHistory: aString .
+	commandsStack push: finalString.
+	subString := finalString substrings.
 	subString ifEmpty: [ ^ '' ].
 
 	command := subString first.
@@ -218,6 +271,36 @@ CommandLineDebugger >> process [
 CommandLineDebugger >> process: aProcess [
 
 	process := aProcess
+]
+
+{ #category : 'execution' }
+CommandLineDebugger >> readNextLine [
+	"create a nil input waiting for the user to type something, handling ZnIncomplete Error. Returns the input"
+
+	| input |
+	input := nil.
+	[ input isNil ] whileTrue: [
+			[ input := inStream nextLine ]
+				on: Error
+				do: [ :ex | self handleZnIncompleteErrorInInput: ex ] ].
+	^ input
+]
+
+{ #category : 'execution' }
+CommandLineDebugger >> run [
+	"Start debug phase, starting a loop, waiting for user's commands"
+
+	| input tempRes |
+	self informResults: '--------------- Debug phase started ---------------'.
+	self informResults: ' For help, type "help"'. 
+	self parsesAndExecuteCommand: 's'.
+
+	[ self isActive ] whileTrue: [
+			self askTyping.
+			input := self readNextLine.
+			input := self handleHistory: input trim.
+			tempRes := self parsesAndExecuteCommand: input.
+			self informResults: tempRes ]
 ]
 
 { #category : 'accessing' }

@@ -29,26 +29,18 @@ ClapDebugRunner class >> commandSpecification [
 	^ spec
 ]
 
-{ #category : 'private - printing' }
-ClapDebugRunner >> askTyping [
-
-	self outputStreamDo: [ :out |
-			out
-				<< '(debug) ';
-				flush ]
-]
-
 { #category : 'creation' }
 ClapDebugRunner >> createDebugger: debuggingProcess [
 
 	| debuggingContext debuggingSession |
 	debuggingContext := debuggingProcess suspendedContext.
-	debuggingSession := DebugSession named: 'd' on: debuggingProcess startedAt: debuggingContext.
+	debuggingSession := DebugSession named: 'debugger' on: debuggingProcess startedAt: debuggingContext.
 	debugger := CommandLineDebugger new
 		            process: debuggingProcess;
 		            context: debuggingContext;
-		            session: debuggingSession.
-	debugger parsesAndExecuteCommand: 's'.
+		            session: debuggingSession;
+		            inStream: self context stdin;
+		            outStream: self context stdout.
 	^ debugger
 ]
 
@@ -57,9 +49,7 @@ ClapDebugRunner >> createDebuggingProcess [
 	"Extracts the expression, compiles it, and returns a suspended process."
 
 	| codeToDebug codeString blockToDebug process |
-	codeToDebug := self hasExpresion
-		               ifFalse: [ ^ nil ]
-		               ifTrue: [ self expressionToDebug ].
+	codeToDebug := self expressionToDebug.
 	codeString := codeToDebug joinUsing: ' '.
 
 	blockToDebug := OpalEvaluator new evaluate: '[ ' , codeString , ' ]'.
@@ -74,7 +64,7 @@ ClapDebugRunner >> execute [
 
 	self prepareImageAndExit.
 
-	self startLoop.
+	self runDebugger.
 
 	self exitSuccess
 ]
@@ -82,68 +72,20 @@ ClapDebugRunner >> execute [
 { #category : 'execution' }
 ClapDebugRunner >> expressionToDebug [
 
-	self hasExpresion ifTrue: [ ^ self positional: #EXPR ]
+	^ self positional: #EXPR 
 ]
 
 { #category : 'execution' }
-ClapDebugRunner >> handleZnIncompleteErrorInInput: ex [
-	"We automatically get a ZnIncomplete error when we use nextLine, so this is a way to handle it :
-	We wait 50ms until we get user's input."
+ClapDebugRunner >> runDebugger [
+	"Create a debugger and run it"
 
-	ex class name = #ZnIncomplete
-		ifTrue: [ (Delay forMilliseconds: 50) wait ]
-		ifFalse: [ ex pass ]
-]
+	| debuggingProcess |
+	[ debuggingProcess := self createDebuggingProcess ]
+		on: Error
+		do: [ :e |
+				self inform: 'Cannot create process; Usage: debug <expression>. Error details : ' , OSPlatform current lineEnding , e asString.
+				^ self ].
 
-{ #category : 'execution' }
-ClapDebugRunner >> hasExpresion [
-	"Return True if the EXPR flag is set"
-
-	^ self hasFlag: #'EXPR'
-]
-
-{ #category : 'private - printing' }
-ClapDebugRunner >> informResults: results [
-
-	self outputStreamDo: [ :out |
-			(out << results)
-				<< OSPlatform current lineEnding;
-				flush ]
-]
-
-{ #category : 'execution' }
-ClapDebugRunner >> readNextLineFrom: inStream [
-	"create a nil input waiting for the user to type something, handling ZnIncomplete Error. Returns the input"
-
-	| input |
-	input := nil.
-
-	[ input isNil ] whileTrue: [
-			[ input := inStream nextLine ]
-				on: Error
-				do: [ :ex | self handleZnIncompleteErrorInInput: ex ] ].
-
-	^ input
-]
-
-{ #category : 'execution' }
-ClapDebugRunner >> startLoop [
-	"Start a loop launching a debugger with a context and process depending of the flag expr, waiting for the user's commands"
-
-	| input in tempRes debuggingProcess |
-	in := self context stdin.
-	debuggingProcess := self createDebuggingProcess.
-	debuggingProcess ifNil: [
-			self inform: 'No expression found' , String lf , 'usage: debug <expression>'.
-			^ self ].
 	debugger := self createDebugger: debuggingProcess.
-	self inform: '--------------- Debug phase started ---------------'.
-	self inform: '  For help, type "help"'.
-	[ debugger isActive ] whileTrue: [
-			self askTyping.
-			input := self readNextLineFrom: in.
-			input := debugger handleHistory: input trim.
-			tempRes := debugger parsesAndExecuteCommand: input.
-			self informResults: tempRes ].
-	^ self
+	debugger run
 ]
