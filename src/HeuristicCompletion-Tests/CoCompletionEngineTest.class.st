@@ -2,7 +2,6 @@ Class {
 	#name : 'CoCompletionEngineTest',
 	#superclass : 'CompletionEngineTest',
 	#instVars : [
-		'toleranceRate'
 	],
 	#category : 'HeuristicCompletion-Tests-Core',
 	#package : 'HeuristicCompletion-Tests',
@@ -24,14 +23,11 @@ CoCompletionEngineTest >> hasBindingOf: aSymbol [
 CoCompletionEngineTest >> setUp [ 
 
 	super setUp.
-	toleranceRate := CoToleranceFilter rate.
-	CoToleranceFilter disable.
 ]
 
 { #category : 'tests' }
 CoCompletionEngineTest >> tearDown [ 
 
-	CoToleranceFilter rate: toleranceRate.
 	super tearDown.
 
 ]
