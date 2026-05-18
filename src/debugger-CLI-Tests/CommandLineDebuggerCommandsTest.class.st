@@ -1,5 +1,5 @@
 Class {
-	#name : 'CommandLineDebuggerTest',
+	#name : 'CommandLineDebuggerCommandsTest',
 	#superclass : 'TestCase',
 	#instVars : [
 		'debugger'
@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : 'running' }
-CommandLineDebuggerTest >> setUp [
+CommandLineDebuggerCommandsTest >> setUp [
 
 	| debuggingProcess debuggingContext debuggingSession |
 	super setUp.
@@ -24,7 +24,7 @@ CommandLineDebuggerTest >> setUp [
 ]
 
 { #category : 'tests' }
-CommandLineDebuggerTest >> testEmptyCommand [
+CommandLineDebuggerCommandsTest >> testEmptyCommand [
 
 	| response |
 	response := debugger parsesAndExecuteCommand: '          '.
@@ -34,7 +34,7 @@ CommandLineDebuggerTest >> testEmptyCommand [
 ]
 
 { #category : 'tests' }
-CommandLineDebuggerTest >> testExit [
+CommandLineDebuggerCommandsTest >> testExit [
 
 	| response |
 	self assert: debugger isActive.
@@ -44,7 +44,7 @@ CommandLineDebuggerTest >> testExit [
 ]
 
 { #category : 'tests' }
-CommandLineDebuggerTest >> testOver [
+CommandLineDebuggerCommandsTest >> testOver [
 	"testing that the Program Counter changed after executing step"
 
 	| response initialPc |
@@ -60,7 +60,7 @@ CommandLineDebuggerTest >> testOver [
 ]
 
 { #category : 'tests' }
-CommandLineDebuggerTest >> testPrint [
+CommandLineDebuggerCommandsTest >> testPrint [
 
 	| currentContext response1 response2 |
 	currentContext := Context
@@ -80,7 +80,7 @@ CommandLineDebuggerTest >> testPrint [
 ]
 
 { #category : 'tests' }
-CommandLineDebuggerTest >> testPrintCode [
+CommandLineDebuggerCommandsTest >> testPrintCode [
 
 	| currentContext response |
 	currentContext := Context
@@ -102,7 +102,7 @@ CommandLineDebuggerTest >> testPrintCode [
 ]
 
 { #category : 'tests' }
-CommandLineDebuggerTest >> testPrintError [
+CommandLineDebuggerCommandsTest >> testPrintError [
 
 	| currentContext response |
 	currentContext := Context
@@ -119,7 +119,7 @@ CommandLineDebuggerTest >> testPrintError [
 ]
 
 { #category : 'tests' }
-CommandLineDebuggerTest >> testPrintStack [
+CommandLineDebuggerCommandsTest >> testPrintStack [
 
 	| response initialPc |
 	initialPc := debugger context pc.
@@ -136,7 +136,7 @@ CommandLineDebuggerTest >> testPrintStack [
 ]
 
 { #category : 'tests' }
-CommandLineDebuggerTest >> testPrintStackAfterStep [
+CommandLineDebuggerCommandsTest >> testPrintStackAfterStep [
 
 	| response contextAfterStep |
 	debugger parsesAndExecuteCommand: 'step'.
@@ -148,7 +148,7 @@ CommandLineDebuggerTest >> testPrintStackAfterStep [
 ]
 
 { #category : 'tests' }
-CommandLineDebuggerTest >> testPrintWithoutArguments [
+CommandLineDebuggerCommandsTest >> testPrintWithoutArguments [
 
 	| currentContext response |
 	currentContext := Context
@@ -164,7 +164,7 @@ CommandLineDebuggerTest >> testPrintWithoutArguments [
 ]
 
 { #category : 'tests' }
-CommandLineDebuggerTest >> testStep [
+CommandLineDebuggerCommandsTest >> testStep [
 	"testing that the Program Counter changed after executing step"
 
 	| response initialPc |
@@ -180,7 +180,7 @@ CommandLineDebuggerTest >> testStep [
 ]
 
 { #category : 'tests' }
-CommandLineDebuggerTest >> testUnknownCommand [
+CommandLineDebuggerCommandsTest >> testUnknownCommand [
 
 	| response unknownCommand |
 	unknownCommand := 'thisIsAnUnknownCommand'.
