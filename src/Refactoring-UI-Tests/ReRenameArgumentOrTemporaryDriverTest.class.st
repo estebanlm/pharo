@@ -9,11 +9,14 @@ Class {
 { #category : 'tests' }
 ReRenameArgumentOrTemporaryDriverTest >> testGatherUserInputUsesInjectedDialog [
 
-	| method ast node driver dialogMock |
+	| method driver dialogMock |
 	method := ReClassToConvertTemporaryToInstanceVariable >> #doAction1.
 	driver := ReRenameArgumentOrTemporaryDriver new.
 	driver
-		sourceNode: (OCVariableNode new name: 'temp'; yourself );
+		sourceNode: (OCVariableNode new
+				 name: 'temp';
+				 start: 15;
+				 yourself);
 		method: method;
 		scopes: { RBBrowserEnvironment default }.
 
