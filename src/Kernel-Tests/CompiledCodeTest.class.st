@@ -19,11 +19,6 @@ CompiledCodeTest >> compiledMethod1Copy [
 	^ self compiledMethod1 copy
 ]
 
-{ #category : 'tests - hasLiteral' }
-CompiledCodeTest >> doit: aBlock [
-	aBlock value
-]
-
 { #category : 'examples' }
 CompiledCodeTest >> method1 [
 
@@ -34,72 +29,10 @@ CompiledCodeTest >> method1 [
 	#(#add #at: #remove) do: #printOn:
 ]
 
-{ #category : 'tests - hasLiteral' }
-CompiledCodeTest >> methodForTest1 [
-		<pragma: #pragma>
-		
-		| test |
-		test := 1+2.
-		self doit: [
-			test := 1 - 2.
-			test := #(arrayInBlock).
-			self methodForTest1 ].
-		^#(#array)
-	
-]
-
 { #category : 'examples' }
 CompiledCodeTest >> methodReturnOne [
 
 	^ 1
-]
-
-{ #category : 'tests - scanning' }
-CompiledCodeTest >> selfJustReturn [
-
-	^ self	
-]
-
-{ #category : 'tests - equivalent' }
-CompiledCodeTest >> selfJustReturn2 [
-
-	^ self	
-]
-
-{ #category : 'tests - equivalent' }
-CompiledCodeTest >> selfJustReturnWithComment [
-	"this is a comment"
-
-	^ self	
-]
-
-{ #category : 'tests - equivalent' }
-CompiledCodeTest >> selfJustReturnWithCommentAndPragma [
-	"this is a comment"
-	<pragma: #pragma>
-	
-	^ self	
-]
-
-{ #category : 'tests - equivalent' }
-CompiledCodeTest >> selfJustReturnWithCommentAndPragma2 [
-	"this is a comment"
-	<pragma: #pragma2>
-	
-	^ self	
-]
-
-{ #category : 'tests - scanning' }
-CompiledCodeTest >> selfTestMessages [
-
-	^ self testMessages	
-]
-
-{ #category : 'tests - scanning' }
-CompiledCodeTest >> selfTestMessagesAndBlock [
-
-	self testMessages. 
-	[Object class]
 ]
 
 { #category : 'tests - testing' }
@@ -135,8 +68,8 @@ CompiledCodeTest >> testChangeProperties [
 
 { #category : 'tests - flag' }
 CompiledCodeTest >> testClearFlag [
-
 	| method |
+	
 	method := self class >> #methodReturnOne.
 	
 	method clearFlag.
@@ -147,51 +80,36 @@ CompiledCodeTest >> testClearFlag [
 	self deny: method flag.
 ]
 
-{ #category : 'tests - equivalent' }
-CompiledCodeTest >> testEquivalentToNoCommentNoPragma [
+{ #category : 'tests - scanning' }
+CompiledCodeTest >> testEquivalentTo [
 
-	| origin |
-	origin := self class  >> #selfJustReturn.
-	self assert: (origin equivalentTo: origin).
-	self assert: (origin equivalentTo: origin copy).
-	
-	self deny: (origin equivalentTo: self class >> #selfJustReturn2).
-
-]
-
-{ #category : 'tests - equivalent' }
-CompiledCodeTest >> testEquivalentToWithComment [
-
-	|  origin |
-	origin := self class >> #selfJustReturnWithComment.
-	self assert: (origin equivalentTo: origin).
-	self assert: (origin equivalentTo: origin copy).
-	
-	self deny: (origin equivalentTo: (self class >> #selfJustReturn))
-	
-
-]
-
-{ #category : 'tests - equivalent' }
-CompiledCodeTest >> testEquivalentToWithCommentAndPragma [
-
-	|  origin |
-	origin := self class >> #selfJustReturnWithCommentAndPragma.
+	| aClass origin |
+	aClass := Object newAnonymousSubclass.
+	aClass compile: 'm1 ^ self'.
+	origin := aClass >> #m1.
 	self assert: (origin equivalentTo: origin).
 	self assert: (origin equivalentTo: origin copy).
 
-	self deny: (origin equivalentTo: self class >> #selfJustReturnWithCommentAndPragma2).
+	aClass compile: 'm1 "with comment" ^ self'.
+	self assert: (origin equivalentTo: aClass >> #m1).
+	self assert: (origin equivalentTo: (aClass >> #m1) copy).
 
-	self deny: (origin equivalentTo: self class >> #selfJustReturnWithComment).
+	aClass compile: 'm2 ^ self'.
+	self deny: (origin equivalentTo: aClass >> #m2).
 
+	aClass compile: 'm1 <pragma: 1> ^ self'.
+	self deny: (origin equivalentTo: aClass >> #m1).
+
+	origin := aClass >> #m1.
+	aClass compile: 'm1 <pragma: 2> ^ self'.
+	self deny: (origin equivalentTo: aClass >> #m1)
 ]
 
 { #category : 'tests - flag' }
 CompiledCodeTest >> testFlag [
-
-	| method |	
-	method := self class >> #methodReturnOne.
+	| method |
 	
+	method := self class >> #methodReturnOne.
 	self deny: method flag.
 	method setFlag.
 	self assert: method flag.
@@ -200,42 +118,41 @@ CompiledCodeTest >> testFlag [
 
 ]
 
-{ #category : 'tests - hasLiteral' }
+{ #category : 'tests - scanning' }
 CompiledCodeTest >> testHasLiteral [
 
 	| method |
-	method := self class >> #methodForTest1.
-	
-	"simple case: normal send in the method itself"
-	self assert: (method hasLiteral: #doit:).
-	
+	method := self class compiler permitFaulty: true; source: 'method
+		<pragma: #pragma>
+		test := 1+2.
+		self doIt: [
+		test := 1 - 2.
+		test := #(arrayInBlock).
+		self name ].
+		^#(#array) '; compileOrFail.
+	"simpe case: normal send in the method itself"
+	self assert: (method hasLiteral: #doIt:).
 	"special selector in the method is not found"
 	self deny: (method hasLiteral: #+).
-	
 	"special selector in the block not found, either"
 	self deny: (method hasLiteral: #-).
-
 	"normal selector in the block"
-	self assert: (method hasLiteral: #methodForTest1).
-	
+	self assert: (method hasLiteral: #name).
 	"we do NOT into arrays, this is different to hasLiteralSuchThat:"
 	self flag: #FIXME. "LiteralScanningMissmatch"
 	self deny: (method hasLiteral: #array).
 	"we do not into arrays in Blocks. this is different to hasLiteralSuchThat:"
 	self flag: #FIXME. "LiteralScanningMissmatch"
-	
 	self deny: (method hasLiteral: #arrayInBlock).
-	
 	"pragmas are NOT covered."
 	self deny: (method hasLiteral: #pragma:).
 	"args of pragmas not found, too."
 	self deny: (method hasLiteral: #pragma).
-	
 	"the method selector NOT"
 	self deny: (method hasLiteral: #method)
 ]
 
-{ #category : 'tests - hasLiteral' }
+{ #category : 'tests - scanning' }
 CompiledCodeTest >> testHasLiteral2 [
 
 	| readMethod writeMethod classVar |
@@ -360,9 +277,7 @@ CompiledCodeTest >> testHasTemporaries [
 	block := [ | b | b := 2  ].
 	self assert: block method hasTemporaries.
 	block := [  2  ].
-	self deny: block method hasTemporaries.
-	block := [ | b | b := 2  ].
-	self assert: block compiledBlock hasTemporaries.
+	self deny: block method hasTemporaries
 ]
 
 { #category : 'tests - literals' }
@@ -462,16 +377,16 @@ CompiledCodeTest >> testLiteralsEvenTheOnesInTheInnerCleanBlocks [
 { #category : 'tests - scanning' }
 CompiledCodeTest >> testLocalMessages [
 	| method |
-	method := self class >> #selfTestMessagesAndBlock.
-	self assert: method localMessages asArray equals: #(#testMessages)
+	method := self class compiler source: 'method self doit. [Object class]'; compileOrFail.
+	self assert: method localMessages asArray equals: #(#doit) .
 	
 ]
 
 { #category : 'tests - scanning' }
 CompiledCodeTest >> testMessages [
 	| method |
-	method := self class >> #selfTestMessagesAndBlock.
-	self assertCollection: method messages asArray hasSameElements: #(#testMessages #class).
+	method := self class compiler source: 'method self doit. [Object class]'; compileOrFail.
+	self assertCollection: method messages asArray hasSameElements: #(#doit #class).
 ]
 
 { #category : 'tests - testing' }
@@ -486,37 +401,22 @@ CompiledCodeTest >> testMethodReturnSpecial [
 ]
 
 { #category : 'tests - instance creation' }
-CompiledCodeTest >> testNewFromACompiledBlock [
-
-	| compiledBlock copy |
-	compiledBlock := [ 1 ] method.
-	copy := CompiledBlock newFrom: compiledBlock.
-	
-	self 
-		assert: compiledBlock header 
-		equals: copy header.
-	self 
-		assert: compiledBlock bytecodes 
-		equals: copy bytecodes
-	"blocks have no sourcePointer"
-]
-
-{ #category : 'tests - instance creation' }
-CompiledCodeTest >> testNewFromACompiledMethod [
+CompiledCodeTest >> testNewFrom [ 
 
 	| method copy |
 	method := OrderedCollection>>#do:.
 	copy := CompiledMethod newFrom: method.
 	
-	self 
-		assert: method header 
-		equals: copy header.
-	self 
-		assert: method bytecodes 
-		equals: copy bytecodes.
-	self 
-		deny: method sourcePointer 
-		equals: copy sourcePointer.
+	self assert: method header equals: copy header.
+	self assert: method bytecodes equals: copy bytecodes.
+	self deny: method sourcePointer equals: copy sourcePointer.
+	
+	method := [ 1 ] method.
+	copy := CompiledBlock newFrom: method.
+	
+	self assert: method header equals: copy header.
+	self assert: method bytecodes equals: copy bytecodes
+	"blocks have no sourcePointer"
 ]
 
 { #category : 'tests - scanning' }
@@ -536,17 +436,14 @@ CompiledCodeTest >> testReadsRef [
 
 { #category : 'tests - scanning' }
 CompiledCodeTest >> testReadsSelf [
-
 	| method |
-	method := self class >> #selfTestMessagesAndBlock.
+	method := self class compiler source: 'method self doit'; compileOrFail.
 	self assert: method readsSelf.
-]
-
-{ #category : 'tests - scanning' }
-CompiledCodeTest >> testReadsSelfFFI [
-
-	| method |
-	"take care! FFI methods have a self send, but they do not have self bytecode after the first call.
+	method := self class compiler source: 'method ^self'; compileOrFail.
+	self assert: method readsSelf.
+	method := self class compiler source: 'method ^thisContext'; compileOrFail.
+	self deny: method readsSelf.
+	"take care! FFI methods have a self send, but they do not have self bytecode after the first call
 	Here we test just the case of a FFI method that was not yet called to not make this test depend on FFI
 	calls"
 	method := self class compiler source: 'status ^ self ffiCall: #(int cairo_scaled_font_status (self))'; compileOrFail.
@@ -554,31 +451,11 @@ CompiledCodeTest >> testReadsSelfFFI [
 ]
 
 { #category : 'tests - scanning' }
-CompiledCodeTest >> testReadsSelfForThisContext [
-
-	| method |
-	method := self class >> #thisContextNoMessage.
-	self deny: method readsSelf.
-	
-]
-
-{ #category : 'tests - scanning' }
-CompiledCodeTest >> testReadsSelfReturn [
-
-	| method |
-	method := self class >> #selfJustReturn.
-	self assert: method readsSelf.
-	
-	
-]
-
-{ #category : 'tests - scanning' }
 CompiledCodeTest >> testReadsThisContext [
 	| method |
-	method := self class >> #thisContextNoMessage.
+	method := self class compiler source: 'method ^thisContext'; compileOrFail.
 	self assert: method readsThisContext.
-	
-	method := self class >> #selfJustReturn.
+	method := self class compiler source: 'method ^self'; compileOrFail.
 	self deny: method readsThisContext
 ]
 
@@ -637,7 +514,6 @@ CompiledCodeTest >> testRefersToLiteralsReturnsTrueWhenLiteralIsInPragmaSelector
 
 { #category : 'tests - flag' }
 CompiledCodeTest >> testSetFlag [
-
 	| method |
 	method := self class >> #methodReturnOne.
 	
@@ -648,32 +524,18 @@ CompiledCodeTest >> testSetFlag [
 	method setFlag.
 	self assert: method flag.
 	"we can execute the method"
-	self 
-		assert: self methodReturnOne 
-		equals: 1.
+	self assert: self methodReturnOne equals: 1.
 	method clearFlag.
 	self deny: method flag.
 ]
 
 { #category : 'tests - debugging support' }
 CompiledCodeTest >> testStepIntoQuickMethods [
-
-	| ctx compiledBlock |
+	|ctx compiledBlock|
 
 	self deny: self compiledMethod1 stepIntoQuickMethods.
-	
 	ctx := [ 1 + 1 ] asContext.
 	compiledBlock := ctx method.
 	compiledBlock stepIntoQuickMethods: true.
-	
-	self 
-		assert: compiledBlock method stepIntoQuickMethods 
-		equals: compiledBlock stepIntoQuickMethods
-]
-
-{ #category : 'tests - scanning' }
-CompiledCodeTest >> thisContextNoMessage [
-
-	^ thisContext
-	
+	self assert: compiledBlock method stepIntoQuickMethods equals: compiledBlock stepIntoQuickMethods
 ]
