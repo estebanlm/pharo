@@ -32,57 +32,69 @@ MethodPragmaTest >> methodCategory [
 
 { #category : 'test data' }
 MethodPragmaTest >> methodDoublePragma [
-
-	<hello: 5>
-	<hello: 2>
+	^'methodDoublePragma
+		<hello: 5>
+		<hello: 2>'
 ]
 
 { #category : 'test data' }
 MethodPragmaTest >> methodDoublePragmaIdentical [
-	<hello>
-	<hello>
+		^'methodDoublePragma
+			<hello>
+			<hello>'
 ]
 
 { #category : 'test data' }
 MethodPragmaTest >> methodPragmaAfterBeforTemps [
-
-	<hello: 5>
-	| aTemp |
-	<world: #ok>
-	<blue: true>
-	aTemp := 33.
-		
-	
+	^'methodPragmaAfterBeforTemps
+		<hello: 5>
+		| aTemp |
+		<world: #ok>
+		<blue: true>'
 ]
 
 { #category : 'test data' }
 MethodPragmaTest >> methodPragmaTwoParam [
-	<hello: 5 by: 2>
+	^'methodDoublePragma
+		<hello: 5 by: 2>'
+]
+
+{ #category : 'test data' }
+MethodPragmaTest >> methodPragmaUnarayMessage [
+	^'methodPragmaUnarayMessage
+		<hello>'
 ]
 
 { #category : 'test data' }
 MethodPragmaTest >> methodPrimitive [
-	
-	<primitive: 4>
+	^'methodPrimitive
+		<primitive: 4>'
 ]
 
 { #category : 'test data' }
 MethodPragmaTest >> methodPrimitivePragma [
+	^'methodPrimitivePragma
 		<hello: 1>
 		<primitive: 4>
-		<hello: 1>
+		<hello: 1>'
 ]
 
 { #category : 'test data' }
 MethodPragmaTest >> methodPrimitiveString [
-
-	<primitive: 'aFunctionName'>
+	^'methodPrimitiveString
+		<primitive: ''aFunctionName''>'
 ]
 
 { #category : 'test data' }
 MethodPragmaTest >> methodPrimitiveStringModule [
+	^'methodPrimitiveStringModule
+		<primitive: ''aFunctionName'' module: ''aModuleName''>'
+]
 
-	<primitive: 'aFunctionName' module: 'aModuleName'>
+{ #category : 'test data' }
+MethodPragmaTest >> methodSinglePragma [
+	^'methodSinglePragma
+		<hello: 5>'
 ]
 
 { #category : 'utilities' }
@@ -172,7 +184,7 @@ MethodPragmaTest >> testAllNamedInSortedUsing [
 	self assert: pragmasDetected equals: (pragmasCompiled sort: [ :a :b | (a argumentAt: 1) > (b argumentAt: 1) ])
 ]
 
-{ #category : 'tests' }
+{ #category : 'tests - pragma instance' }
 MethodPragmaTest >> testArgumentAt [
 	| pragma |
 	pragma := Pragma selector: #value:value:value: arguments: #(3 2 1).
@@ -265,11 +277,19 @@ MethodPragmaTest >> testCompileValue [
 
 { #category : 'tests - compiled' }
 MethodPragmaTest >> testDoublePragma [
-
 	| aCompiledMethod |
-	aCompiledMethod := self class >> #methodDoublePragma.
+	aCompiledMethod := OpalCompiler new source: self methodDoublePragma; compileOrFail.
+
 	self assert: aCompiledMethod pragmas first selector equals: #hello:.
 	self assert: aCompiledMethod pragmas second selector equals: #hello:
+]
+
+{ #category : 'tests - compiled' }
+MethodPragmaTest >> testIsPrimitive [
+	| aRBMethod |
+
+	aRBMethod := OpalCompiler new parse: self methodPrimitive.
+	self assert: aRBMethod isPrimitive
 ]
 
 { #category : 'tests - pragma' }
@@ -302,7 +322,7 @@ MethodPragmaTest >> testMethodSelector [
 	self assert: pragma methodSelector identicalTo: #bar
 ]
 
-{ #category : 'tests' }
+{ #category : 'tests - pragma instance' }
 MethodPragmaTest >> testNumArgs [
 	| pragma |
 	pragma := Pragma selector: #value arguments: #().
@@ -315,64 +335,56 @@ MethodPragmaTest >> testNumArgs [
 
 { #category : 'tests - compiled' }
 MethodPragmaTest >> testPragmaAfterBeforTemp [
-
 	| aComiledMethod |
-	aComiledMethod := self class >> #methodPragmaAfterBeforTemps.
+	aComiledMethod := OpalCompiler new source: self methodPragmaAfterBeforTemps; compileOrFail.
 
-	self 
-		assert: aComiledMethod pragmas first selector 
-		equals: #hello:.
-	self 
-		assert: aComiledMethod pragmas second selector 
-		equals: #world:
+	self assert: aComiledMethod pragmas first selector equals: #hello:.
+	self assert: aComiledMethod pragmas second selector equals: #world:
 ]
 
 { #category : 'tests - compiled' }
 MethodPragmaTest >> testPragmaTwoParam [
-
 	| aCompiledMethod |
-	aCompiledMethod := self class >> #methodPragmaTwoParam.
+	aCompiledMethod := OpalCompiler new source: self methodPragmaTwoParam; compileOrFail.
+
 	self assert: aCompiledMethod pragmas first selector equals: #hello:by:
 ]
 
 { #category : 'tests - compiled' }
 MethodPragmaTest >> testPragmaUnaryMessage [
-
 	| aCompiledMethod |
-	aCompiledMethod := self class >> #methodDoublePragmaIdentical.
+	aCompiledMethod := OpalCompiler new source: self methodPragmaUnarayMessage; compileOrFail.
 
 	self assert: aCompiledMethod pragmas first selector equals: #hello
 ]
 
 { #category : 'tests - compiled' }
 MethodPragmaTest >> testPrimitiveNumber [
-
 	| aCompiledMethod |
-	aCompiledMethod := self class >> #methodPrimitive.
+	aCompiledMethod := OpalCompiler new source: self methodPrimitive; compileOrFail.
 	self assert: aCompiledMethod primitive equals: 4
 ]
 
 { #category : 'tests - compiled' }
 MethodPragmaTest >> testPrimitivePragmaNumber [
-
 	| aCompiledMethod |
-	aCompiledMethod := self class>>#methodPrimitivePragma.
+	aCompiledMethod := OpalCompiler new source: self methodPrimitivePragma; compileOrFail.
 	self assert: aCompiledMethod primitive equals: 4
 ]
 
 { #category : 'tests - compiled' }
 MethodPragmaTest >> testPrimitiveString [
-
 	| aCompiledMethod |
-	aCompiledMethod := self class >> #methodPrimitiveString.
+	aCompiledMethod := OpalCompiler new source: self methodPrimitiveString; compileOrFail.
+
 	self assert: aCompiledMethod primitive equals: 117
 ]
 
 { #category : 'tests - compiled' }
 MethodPragmaTest >> testPrimitiveStringModule [
-
 	| aCompiledMethod |
-	aCompiledMethod := self class >> #methodPrimitiveStringModule. 
+	aCompiledMethod := OpalCompiler new source: self methodPrimitiveStringModule; compileOrFail.
+
 	self assert: aCompiledMethod primitive equals: 117
 ]
 
@@ -383,7 +395,7 @@ MethodPragmaTest >> testSelector [
 	self assert: pragma selector equals: #foo:
 ]
 
-{ #category : 'tests' }
+{ #category : 'tests - pragma instance' }
 MethodPragmaTest >> testSendTo [
 	| pragma wasHere |
 	pragma := Pragma selector: #value:value: arguments: #(1 2).
@@ -400,16 +412,14 @@ MethodPragmaTest >> testSendTo [
 { #category : 'tests - compiled' }
 MethodPragmaTest >> testSinglePragma [
 	| aCompiledMethod |
-	aCompiledMethod := self class >> #methodPragmaTwoParam.
-	self 
-		assert: aCompiledMethod pragmas first selector 
-		equals: #hello:by:
+	aCompiledMethod := OpalCompiler new source: self methodSinglePragma; compileOrFail.
+	self assert: aCompiledMethod pragmas first selector equals: #hello:
 ]
 
 { #category : 'tests - compiled' }
 MethodPragmaTest >> testSourceNode [
 	| aCompiledMethod node1 node2|
-	aCompiledMethod := self class >> #methodDoublePragmaIdentical.
+	aCompiledMethod := OpalCompiler new source: self methodDoublePragmaIdentical; compileOrFail.
 	
 	node1 := aCompiledMethod pragmas first sourceNode.
 	node2 := aCompiledMethod pragmas second sourceNode.
@@ -421,7 +431,7 @@ MethodPragmaTest >> testSourceNode [
 	self deny: node1 identicalTo: node2
 ]
 
-{ #category : 'tests' }
+{ #category : 'tests - pragma instance' }
 MethodPragmaTest >> testWithArgumentsDo [
 	| pragma wasHere |
 	pragma := Pragma selector: #add:after: arguments: #(1 2).
