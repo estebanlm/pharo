@@ -1,0 +1,70 @@
+Class {
+	#name : 'CommandLineDebuggerHistoryTest',
+	#superclass : 'TestCase',
+	#instVars : [
+		'debugger'
+	],
+	#category : 'debugger-CLI-Tests',
+	#package : 'debugger-CLI-Tests'
+}
+
+{ #category : 'running' }
+CommandLineDebuggerHistoryTest >> setUp [
+    super setUp.
+    debugger := CommandLineDebugger new. 
+
+    debugger commandsStack push: 'print a'. 
+    debugger commandsStack push: 'step'.     
+    debugger commandsStack push: 'over'.   
+    debugger commandsStack push: 'help'.    
+]
+
+{ #category : 'running' }
+CommandLineDebuggerHistoryTest >> testHandleHistoryInvalidInputs [
+
+	self assert: (debugger handleHistory: '!-9') equals: 'No-history-for-this-index'.
+	self assert: (debugger handleHistory: '!9') equals: 'No-history-for-this-index'.
+
+	self assert: (debugger handleHistory: '!!!') equals: 'help!'.
+	self assert: (debugger handleHistory: '!abc') equals: '!abc'.
+
+	self assert: (debugger handleHistory: '!?wontfind') equals: 'no-match-found'
+]
+
+{ #category : 'running' }
+CommandLineDebuggerHistoryTest >> testHandleHistoryLastCommand [
+
+	self assert: (debugger handleHistory: '!!') equals: 'help'.
+	debugger commandsStack push: 'help'.
+	self assert: (debugger handleHistory: '!! arg1') equals: 'help arg1'
+]
+
+{ #category : 'running' }
+CommandLineDebuggerHistoryTest >> testHandleNumericHistoryNegative [
+
+	self assert: (debugger handleHistory: '!-1') equals: 'help'.
+	self assert: (debugger handleHistory: '!-2') equals: 'over'.
+	self assert: (debugger handleHistory: '!-4') equals: 'print a'
+]
+
+{ #category : 'running' }
+CommandLineDebuggerHistoryTest >> testHandleNumericHistoryPositive [
+
+	self assert: (debugger handleHistory: '!1') equals: 'print a'.
+	self assert: (debugger handleHistory: '!2') equals: 'step'.
+	self assert: (debugger handleHistory: '!4') equals: 'help'
+]
+
+{ #category : 'running' }
+CommandLineDebuggerHistoryTest >> testHandleWordMatchingHistory [
+
+	self assert: (debugger handleHistory: '!?ste') equals: 'step'.
+	self assert: (debugger handleHistory: '!?int') equals: 'print a'
+]
+
+{ #category : 'running' }
+CommandLineDebuggerHistoryTest >> testHanldeHistoryNormalCommandIsNotModified [
+
+	self assert: (debugger handleHistory: 'step') equals: 'step'.
+	self assert: (debugger handleHistory: 'p 10') equals: 'p 10'
+]

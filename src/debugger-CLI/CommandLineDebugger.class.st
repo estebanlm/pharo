@@ -91,6 +91,53 @@ CommandLineDebugger >> finishedDebugging [
 	^ 'Execution finished. The program has ended.'
 ]
 
+{ #category : 'execution' }
+CommandLineDebugger >> handleHistory: aString [
+	"Handles all the history related commands"
+
+	| trimmed |
+	trimmed := aString trim.
+	(trimmed beginsWith: '!!') ifTrue: [ ^ self lastCommand , (trimmed allButFirst: 2) ].
+
+	(trimmed beginsWith: '!?') ifTrue: [ ^ self handleWordMatchingHistory: trimmed ].
+
+	(trimmed beginsWith: '!') ifTrue: [ ^ self handleNumericHistory: trimmed ].
+
+
+	^ aString
+]
+
+{ #category : 'initialization' }
+CommandLineDebugger >> handleNumericHistory: aString [
+	"Handles command !<anInteger> and return (if it exists) the command related to the number
+	ex : !-2 returns the second last command
+		  !2 returns the second command "
+
+	| indexString targetIndex commandsArray |
+	indexString := aString allButFirst.
+
+	targetIndex := indexString asInteger.
+	targetIndex isInteger ifFalse: [ ^ aString ]. "checking if it is a number. If not, return the string typed by the user"
+	commandsArray := self commandsStack asArray.
+
+	targetIndex < 0 ifTrue: [ ^ commandsArray at: targetIndex abs ifAbsent: [ 'No-history-for-this-index' ] ].
+
+	targetIndex > 0 ifTrue: [ ^ commandsArray at: commandsArray size - targetIndex + 1 ifAbsent: [ 'No-history-for-this-index' ] ].
+
+	^ aString
+]
+
+{ #category : 'initialization' }
+CommandLineDebugger >> handleWordMatchingHistory: aString [
+	"Handles the command !?<aString> and return (if it exists) the last command typed contaning aString"
+
+	| unMot commandsArray |
+	unMot := aString copyFrom: 3 to: aString size.
+
+	commandsArray := self commandsStack asArray.
+	^ commandsArray detect: [ :command | command includesSubstring: unMot ] ifNone: [ 'no-match-found' ]
+]
+
 { #category : 'initialization' }
 CommandLineDebugger >> initialize [
 

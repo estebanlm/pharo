@@ -1,6 +1,9 @@
 Class {
 	#name : 'ClapDebugRunner',
 	#superclass : 'ClapPharoApplication',
+	#instVars : [
+		'debugger'
+	],
 	#category : 'debugger-CLI',
 	#package : 'debugger-CLI'
 }
@@ -38,7 +41,7 @@ ClapDebugRunner >> askTyping [
 { #category : 'creation' }
 ClapDebugRunner >> createDebugger: debuggingProcess [
 
-	| debugger debuggingContext debuggingSession |
+	| debuggingContext debuggingSession |
 	debuggingContext := debuggingProcess suspendedContext.
 	debuggingSession := DebugSession named: 'd' on: debuggingProcess startedAt: debuggingContext.
 	debugger := CommandLineDebugger new
@@ -127,7 +130,7 @@ ClapDebugRunner >> readNextLineFrom: inStream [
 ClapDebugRunner >> startLoop [
 	"Start a loop launching a debugger with a context and process depending of the flag expr, waiting for the user's commands"
 
-	| input in tempRes debugger debuggingProcess |
+	| input in tempRes debuggingProcess |
 	in := self context stdin.
 	debuggingProcess := self createDebuggingProcess.
 	debuggingProcess ifNil: [
@@ -139,7 +142,8 @@ ClapDebugRunner >> startLoop [
 	[ debugger isActive ] whileTrue: [
 			self askTyping.
 			input := self readNextLineFrom: in.
-			tempRes := debugger parsesAndExecuteCommand: input asString.
+			input := debugger handleHistory: input trim.
+			tempRes := debugger parsesAndExecuteCommand: input.
 			self informResults: tempRes ].
 	^ self
 ]
