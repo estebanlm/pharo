@@ -22,10 +22,10 @@ CommandLineDebuggerHistoryTest >> setUp [
 { #category : 'running' }
 CommandLineDebuggerHistoryTest >> testHandleHistoryInvalidInputs [
 
-	self assert: (debugger handleHistory: '!-9') equals: 'No-history-for-this-index'.
-	self assert: (debugger handleHistory: '!9') equals: 'No-history-for-this-index'.
-	self assert: (debugger handleHistory: '!abc') equals: '!abc'.
-	self assert: (debugger handleHistory: '!?wontfind') equals: 'no-match-found'
+	self should: [ debugger handleHistory: '!-9' ] raise: HistoryEventNotFound withExceptionDo: [ :ex | self assert: ex messageText equals: '!-9: event not found' ].
+	self should: [ debugger handleHistory: '!9' ] raise: HistoryEventNotFound withExceptionDo: [ :ex | self assert: ex messageText equals: '!9: event not found' ].
+	self should: [ debugger handleHistory: '!abc' ] raise: HistoryEventNotFound withExceptionDo: [ :ex | self assert: ex messageText equals: '!abc: event not found' ].
+	self should: [ debugger handleHistory: '!?wontfind' ] raise: HistoryEventNotFound withExceptionDo: [ :ex | self assert: ex messageText equals: '!?wontfind: event not found' ]
 ]
 
 { #category : 'running' }

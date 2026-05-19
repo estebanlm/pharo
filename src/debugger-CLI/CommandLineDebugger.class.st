@@ -14,7 +14,8 @@ Class {
 		'commandsStack',
 		'session',
 		'inStream',
-		'outStream'
+		'outStream',
+		'historyHandlers'
 	],
 	#category : 'debugger-CLI',
 	#package : 'debugger-CLI'
@@ -53,7 +54,7 @@ CommandLineDebugger >> activate [
 	isActive := true
 ]
 
-{ #category : 'private - printing' }
+{ #category : 'requests' }
 CommandLineDebugger >> askTyping [
 
 	outStream 
@@ -97,13 +98,13 @@ CommandLineDebugger >> commandsStack: anObject [
 	commandsStack := anObject
 ]
 
-{ #category : 'initialization' }
+{ #category : 'accessing' }
 CommandLineDebugger >> context [
 
 	^ context
 ]
 
-{ #category : 'initialization' }
+{ #category : 'accessing' }
 CommandLineDebugger >> context: aDebugContext [
     context := aDebugContext
 ]
@@ -115,10 +116,10 @@ CommandLineDebugger >> disActivate [
 ]
 
 { #category : 'execution' }
-CommandLineDebugger >> executeCommand: aCommand arg: arguments [
+CommandLineDebugger >> executeCommand: aCommandString arg: arguments [
 	"executes the command with potential arguments"
 
-	^ (self commandClassInstanceFor: aCommand) executeOn: self with: arguments
+	^ (self commandClassInstanceFor: aCommandString) executeOn: self with: arguments
 ]
 
 { #category : 'execution' }
@@ -128,51 +129,14 @@ CommandLineDebugger >> finishedDebugging [
 	^ 'Execution finished. The program has ended.'
 ]
 
-{ #category : 'execution' }
+{ #category : 'history' }
 CommandLineDebugger >> handleHistory: aString [
-	"Handles all the history related commands"
 
-	| trimmed |
+	| trimmed handler |
 	trimmed := aString trim.
-	(trimmed beginsWith: '!!') ifTrue: [ ^ self lastCommand , (trimmed allButFirst: 2) ].
 
-	(trimmed beginsWith: '!?') ifTrue: [ ^ self handleWordMatchingHistory: trimmed ].
-
-	(trimmed beginsWith: '!') ifTrue: [ ^ self handleNumericHistory: trimmed ].
-
-
-	^ aString
-]
-
-{ #category : 'initialization' }
-CommandLineDebugger >> handleNumericHistory: aString [
-	"Handles command !<anInteger> and return (if it exists) the command related to the number
-	ex : !-2 returns the second last command
-		  !2 returns the second command "
-
-	| indexString targetIndex commandsArray |
-	indexString := aString allButFirst.
-
-	targetIndex := indexString asInteger.
-	targetIndex isInteger ifFalse: [ ^ aString ]. "checking if it is a number. If not, return the string typed by the user"
-	commandsArray := self commandsStack asArray.
-
-	targetIndex < 0 ifTrue: [ ^ commandsArray at: targetIndex abs ifAbsent: [ 'No-history-for-this-index' ] ].
-
-	targetIndex > 0 ifTrue: [ ^ commandsArray at: commandsArray size - targetIndex + 1 ifAbsent: [ 'No-history-for-this-index' ] ].
-
-	^ aString
-]
-
-{ #category : 'initialization' }
-CommandLineDebugger >> handleWordMatchingHistory: aString [
-	"Handles the command !?<aString> and return (if it exists) the last command typed contaning aString"
-
-	| unMot commandsArray |
-	unMot := aString copyFrom: 3 to: aString size.
-
-	commandsArray := self commandsStack asArray.
-	^ commandsArray detect: [ :command | command includesSubstring: unMot ] ifNone: [ 'no-match-found' ]
+	handler := historyHandlers detect: [ :each | each canHandle: trimmed ] ifNone: [ ^ aString ].
+	^ handler handle: trimmed for: self
 ]
 
 { #category : 'execution' }
@@ -205,6 +169,12 @@ CommandLineDebugger >> initialize [
 	lineEnding := OSPlatform current lineEnding.
 	self initializeCommands.
 	commandsStack := Stack new.
+
+	historyHandlers := {
+		                   LastCommandHandler new.
+		                   ContansStringHandler new.
+		                   NumericHistoryHandler new.
+		                   StartsWithStringHandler new }
 ]
 
 { #category : 'initialization' }
@@ -226,12 +196,12 @@ CommandLineDebugger >> initializeCommands [
 			commands at: aCommand commandName last put: aCommand ]
 ]
 
-{ #category : 'initialization' }
+{ #category : 'accessing' }
 CommandLineDebugger >> isActive [
     ^ isActive
 ]
 
-{ #category : 'initialization' }
+{ #category : 'history' }
 CommandLineDebugger >> lastCommand [
 	
 	commandsStack ifNotEmpty: [ ^ commandsStack pop ]
@@ -267,20 +237,18 @@ CommandLineDebugger >> outStream: anObject [
 CommandLineDebugger >> parsesAndExecuteCommand: aString [
 	"Parses a string to change it into an executable command and executes it"
 
-	| subString command arguments finalString |
-	finalString := self handleHistory: aString .
-	commandsStack push: finalString.
-	subString := finalString substrings.
+	| subString command arguments |
+	commandsStack push: aString. 
+	subString := aString substrings.
 	subString ifEmpty: [ ^ '' ].
 
 	command := subString first.
-
 	arguments := subString allButFirst joinUsing: ' '.
 
 	^ self executeCommand: command arg: arguments
 ]
 
-{ #category : 'initialization' }
+{ #category : 'printing' }
 CommandLineDebugger >> printOutput: output [
 
 	(outStream << output)
@@ -288,19 +256,19 @@ CommandLineDebugger >> printOutput: output [
 		flush
 ]
 
-{ #category : 'initialization' }
+{ #category : 'accessing' }
 CommandLineDebugger >> process [
 
 	^ process
 ]
 
-{ #category : 'initialization' }
+{ #category : 'accessing' }
 CommandLineDebugger >> process: aProcess [
 
 	process := aProcess
 ]
 
-{ #category : 'execution' }
+{ #category : 'requests' }
 CommandLineDebugger >> readNextLine [
 	"create a nil input waiting for the user to type something, handling ZnIncomplete Error. Returns the input"
 
@@ -319,14 +287,17 @@ CommandLineDebugger >> run [
 
 	| input tempRes |
 	self printOutput: '--------------- Debug phase started ---------------'.
-	self printOutput: ' For help, type "help"'. 
+	self printOutput: ' For help, type "help"'.
 
 	[ self isActive ] whileTrue: [
 			self askTyping.
 			input := self readNextLine.
-			input := self handleHistory: input trim.
-			tempRes := self parsesAndExecuteCommand: input.
-			self printOutput: tempRes ]
+			[
+				input := self handleHistory: input trim.
+				tempRes := self parsesAndExecuteCommand: input.
+				self printOutput: tempRes ]
+				on: HistoryEventNotFound
+				do: [ :e | self printOutput: e messageText ] ]
 ]
 
 { #category : 'accessing' }
