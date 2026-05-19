@@ -171,14 +171,6 @@ CommandLineDebugger >> inStream: anObject [
 ]
 
 { #category : 'initialization' }
-CommandLineDebugger >> informResults: results [
-
-	(outStream << results)
-		<< self lineEnding;
-		flush
-]
-
-{ #category : 'initialization' }
 CommandLineDebugger >> initialize [
 
 	super initialize.
@@ -262,6 +254,14 @@ CommandLineDebugger >> parsesAndExecuteCommand: aString [
 ]
 
 { #category : 'initialization' }
+CommandLineDebugger >> printOutput: output [
+
+	(outStream << output)
+		<< self lineEnding;
+		flush
+]
+
+{ #category : 'initialization' }
 CommandLineDebugger >> process [
 
 	^ process
@@ -291,16 +291,15 @@ CommandLineDebugger >> run [
 	"Start debug phase, starting a loop, waiting for user's commands"
 
 	| input tempRes |
-	self informResults: '--------------- Debug phase started ---------------'.
-	self informResults: ' For help, type "help"'. 
-	self parsesAndExecuteCommand: 's'.
+	self printOutput: '--------------- Debug phase started ---------------'.
+	self printOutput: ' For help, type "help"'. 
 
 	[ self isActive ] whileTrue: [
 			self askTyping.
 			input := self readNextLine.
 			input := self handleHistory: input trim.
 			tempRes := self parsesAndExecuteCommand: input.
-			self informResults: tempRes ]
+			self printOutput: tempRes ]
 ]
 
 { #category : 'accessing' }

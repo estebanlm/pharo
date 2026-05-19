@@ -24,10 +24,7 @@ CommandLineDebuggerHistoryTest >> testHandleHistoryInvalidInputs [
 
 	self assert: (debugger handleHistory: '!-9') equals: 'No-history-for-this-index'.
 	self assert: (debugger handleHistory: '!9') equals: 'No-history-for-this-index'.
-
-	self assert: (debugger handleHistory: '!!!') equals: 'help!'.
 	self assert: (debugger handleHistory: '!abc') equals: '!abc'.
-
 	self assert: (debugger handleHistory: '!?wontfind') equals: 'no-match-found'
 ]
 
@@ -36,7 +33,16 @@ CommandLineDebuggerHistoryTest >> testHandleHistoryLastCommand [
 
 	self assert: (debugger handleHistory: '!!') equals: 'help'.
 	debugger commandsStack push: 'help'.
-	self assert: (debugger handleHistory: '!! arg1') equals: 'help arg1'
+	self assert: (debugger handleHistory: '!! arg1') equals: 'help arg1'.
+	debugger commandsStack push: 'help'.
+	self assert: (debugger handleHistory: '!!!') equals: 'help!'
+]
+
+{ #category : 'running' }
+CommandLineDebuggerHistoryTest >> testHandleHistoryLeavesStandardCommandsIntact [
+
+	self assert: (debugger handleHistory: 'step') equals: 'step'.
+	self assert: (debugger handleHistory: 'p 10') equals: 'p 10'
 ]
 
 { #category : 'running' }
@@ -59,12 +65,7 @@ CommandLineDebuggerHistoryTest >> testHandleNumericHistoryPositive [
 CommandLineDebuggerHistoryTest >> testHandleWordMatchingHistory [
 
 	self assert: (debugger handleHistory: '!?ste') equals: 'step'.
-	self assert: (debugger handleHistory: '!?int') equals: 'print a'
-]
-
-{ #category : 'running' }
-CommandLineDebuggerHistoryTest >> testHanldeHistoryNormalCommandIsNotModified [
-
-	self assert: (debugger handleHistory: 'step') equals: 'step'.
-	self assert: (debugger handleHistory: 'p 10') equals: 'p 10'
+	self assert: (debugger handleHistory: '!?int') equals: 'print a'.
+	self assert: (debugger handleHistory: '!?t') equals: 'step'.
+	self assert: (debugger handleHistory: '!?e') equals: 'help'
 ]

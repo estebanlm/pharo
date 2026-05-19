@@ -9,7 +9,7 @@ Class {
 ExitCommand >> executeOn: aDebugger with: args [
 
 	aDebugger disActivate.
-	^ 'Bye!'
+	^ 'Debugging finished'
 ]
 
 { #category : 'initialization' }
