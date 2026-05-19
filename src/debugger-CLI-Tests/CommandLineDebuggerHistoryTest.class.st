@@ -20,6 +20,15 @@ CommandLineDebuggerHistoryTest >> setUp [
 ]
 
 { #category : 'running' }
+CommandLineDebuggerHistoryTest >> testHandleContainingStringHistory [
+
+	self assert: (debugger handleHistory: '!?ste') equals: 'step'.
+	self assert: (debugger handleHistory: '!?int') equals: 'print a'.
+	self assert: (debugger handleHistory: '!?t') equals: 'step'.
+	self assert: (debugger handleHistory: '!?e') equals: 'help'
+]
+
+{ #category : 'running' }
 CommandLineDebuggerHistoryTest >> testHandleHistoryInvalidInputs [
 
 	self should: [ debugger handleHistory: '!-9' ] raise: HistoryEventNotFound withExceptionDo: [ :ex | self assert: ex messageText equals: '!-9: event not found' ].
@@ -62,10 +71,9 @@ CommandLineDebuggerHistoryTest >> testHandleNumericHistoryPositive [
 ]
 
 { #category : 'running' }
-CommandLineDebuggerHistoryTest >> testHandleWordMatchingHistory [
+CommandLineDebuggerHistoryTest >> testHandleStartingWithStringHistory [
 
-	self assert: (debugger handleHistory: '!?ste') equals: 'step'.
-	self assert: (debugger handleHistory: '!?int') equals: 'print a'.
-	self assert: (debugger handleHistory: '!?t') equals: 'step'.
-	self assert: (debugger handleHistory: '!?e') equals: 'help'
+	self assert: (debugger handleHistory: '!ste') equals: 'step'.
+	self assert: (debugger handleHistory: '!pr') equals: 'print a'.
+	self assert: (debugger handleHistory: '!h') equals: 'help'
 ]
