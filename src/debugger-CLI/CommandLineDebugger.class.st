@@ -20,6 +20,33 @@ Class {
 	#package : 'debugger-CLI'
 }
 
+{ #category : 'as yet unclassified' }
+CommandLineDebugger class >> forCode: aString [
+    "Compiles the code, create a process from it then build the debugger"
+    
+    | blockToDebug process |
+    blockToDebug := OpalEvaluator new evaluate: '[ ' , aString , ' ]'.
+    process := blockToDebug newProcess.
+    process suspend.
+    
+    ^ self forProcess: process
+]
+
+{ #category : 'as yet unclassified' }
+CommandLineDebugger class >> forProcess: aProcess [
+    "Create a debugger from a given process"
+    
+    | debuggingContext debuggingSession |
+    debuggingContext := aProcess suspendedContext.
+    debuggingSession := DebugSession named: 'debugger' on: aProcess startedAt: debuggingContext.
+    
+    ^ self new
+        process: aProcess;
+        context: debuggingContext;
+        session: debuggingSession;
+        yourself
+]
+
 { #category : 'initialization' }
 CommandLineDebugger >> activate [
 

@@ -29,36 +29,6 @@ ClapDebugRunner class >> commandSpecification [
 	^ spec
 ]
 
-{ #category : 'creation' }
-ClapDebugRunner >> createDebugger: debuggingProcess [
-
-	| debuggingContext debuggingSession |
-	debuggingContext := debuggingProcess suspendedContext.
-	debuggingSession := DebugSession named: 'debugger' on: debuggingProcess startedAt: debuggingContext.
-	debugger := CommandLineDebugger new
-		            process: debuggingProcess;
-		            context: debuggingContext;
-		            session: debuggingSession;
-		            inStream: self context stdin;
-		            outStream: self context stdout.
-	^ debugger
-]
-
-{ #category : 'execution' }
-ClapDebugRunner >> createDebuggingProcess [
-	"Extracts the expression, compiles it, and returns a suspended process."
-
-	| codeToDebug codeString blockToDebug process |
-	codeToDebug := self expressionToDebug.
-	codeString := codeToDebug joinUsing: ' '.
-
-	blockToDebug := OpalEvaluator new evaluate: '[ ' , codeString , ' ]'.
-
-	process := blockToDebug newProcess.
-	process suspend.
-	^ process
-]
-
 { #category : 'execution' }
 ClapDebugRunner >> execute [
 
@@ -79,13 +49,18 @@ ClapDebugRunner >> expressionToDebug [
 ClapDebugRunner >> runDebugger [
 	"Create a debugger and run it"
 
-	| debuggingProcess |
-	[ debuggingProcess := self createDebuggingProcess ]
+	| codeString |
+	codeString := self expressionToDebug joinUsing: ' '.
+	[
+		debugger := (CommandLineDebugger forCode: codeString)
+			            inStream: self context stdin;
+			            outStream: self context stdout ]
 		on: Error
 		do: [ :e |
-				self inform: 'Cannot create process; Usage: debug <expression>. Error details : ' , OSPlatform current lineEnding , e asString.
+				self inform:
+					'Cannot create start debugger; Usage: debug <expression>.' , OSPlatform current lineEnding , 'Error details : ' , e asString.
 				^ self ].
 
-	debugger := self createDebugger: debuggingProcess.
+	debugger parsesAndExecuteCommand: 's'.
 	debugger run
 ]
