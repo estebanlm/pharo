@@ -1,6 +1,8 @@
 Class {
 	#name : 'CoCompletionEngineTest',
 	#superclass : 'CompletionEngineTest',
+	#instVars : [
+	],
 	#category : 'HeuristicCompletion-Tests-Core',
 	#package : 'HeuristicCompletion-Tests',
 	#tag : 'Core'
@@ -15,6 +17,19 @@ CoCompletionEngineTest class >> shouldInheritSelectors [
 { #category : 'testing' }
 CoCompletionEngineTest >> hasBindingOf: aSymbol [
 	^ false
+]
+
+{ #category : 'tests' }
+CoCompletionEngineTest >> setUp [ 
+
+	super setUp.
+]
+
+{ #category : 'tests' }
+CoCompletionEngineTest >> tearDown [ 
+
+	super tearDown.
+
 ]
 
 { #category : 'tests - interaction' }
