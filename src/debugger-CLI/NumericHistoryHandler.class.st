@@ -32,7 +32,7 @@ NumericHistoryHandler >> handle: aString for: aDebugger [
 
 	targetIndex < 0 ifTrue: [ ^ commandsArray at: targetIndex abs ifAbsent: [ HistoryEventNotFound signal: aString , ': event not found' ] ].
 
-	targetIndex > 0 ifTrue: [ ^ commandsArray at: commandsArray size - targetIndex + 1 ifAbsent: [ HistoryEventNotFound signal: aString , ': event not found' ] ].
+	targetIndex > 0 ifTrue: [ ^ commandsArray at: commandsArray size - targetIndex + 1  ifAbsent: [ HistoryEventNotFound signal: aString , ': event not found' ] ].
 
 	^ aString
 ]

@@ -9,7 +9,7 @@ Class {
 HistoryCommand >> executeOn: aDebugger with: args [
 
 	| lines |
-	lines := aDebugger commandsStack asArray withIndexCollect: [ :command :index | index asString , ' : ' , command ].
+	lines := aDebugger commandsStack asArray reversed withIndexCollect: [ :command :index | index asString , ' : ' , command ].
 	^ aDebugger lineEnding join: lines
 ]
 
