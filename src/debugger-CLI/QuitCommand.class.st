@@ -1,19 +1,19 @@
 Class {
-	#name : 'ExitCommand',
+	#name : 'QuitCommand',
 	#superclass : 'DebuggerCommand',
 	#category : 'debugger-CLI',
 	#package : 'debugger-CLI'
 }
 
 { #category : 'initialization' }
-ExitCommand >> executeOn: aDebugger with: args [
+QuitCommand >> executeOn: aDebugger with: args [
 
 	aDebugger disActivate.
 	^ 'Debugging finished'
 ]
 
 { #category : 'initialization' }
-ExitCommand >> initialize [
+QuitCommand >> initialize [
 
 	super initialize.
 	self commandName: #( 'quit' 'q' ).

@@ -34,16 +34,6 @@ CommandLineDebuggerBasicCommandsTest >> testEmptyCommand [
 ]
 
 { #category : 'tests' }
-CommandLineDebuggerBasicCommandsTest >> testExit [
-
-	| response |
-	self assert: debugger isActive.
-	response := debugger parsesAndExecuteCommand: 'q'.
-	self deny: debugger isActive.
-	self assert: response equals: 'Debugging finished'
-]
-
-{ #category : 'tests' }
 CommandLineDebuggerBasicCommandsTest >> testOver [
 	"testing that the Program Counter changed after executing step"
 
@@ -115,7 +105,13 @@ CommandLineDebuggerBasicCommandsTest >> testPrintError [
 	response := debugger parsesAndExecuteCommand: 'print arg'.
 
 	self assert: debugger isActive.
-	self assert: response equals: 'Error evaluating: arg'
+	self assert: response equals: 'Error evaluating: arg'.
+
+
+	response := debugger parsesAndExecuteCommand: 'print 1/0'.
+
+	self assert: debugger isActive.
+	self assert: response equals: 'Error evaluating: 1/0'
 ]
 
 { #category : 'tests' }
@@ -161,6 +157,16 @@ CommandLineDebuggerBasicCommandsTest >> testPrintWithoutArguments [
 	response := debugger parsesAndExecuteCommand: 'print '.
 
 	self assert: response equals: 'Nothing to print'
+]
+
+{ #category : 'tests' }
+CommandLineDebuggerBasicCommandsTest >> testQuit [
+
+	| response |
+	self assert: debugger isActive.
+	response := debugger parsesAndExecuteCommand: 'q'.
+	self deny: debugger isActive.
+	self assert: response equals: 'Debugging finished'
 ]
 
 { #category : 'tests' }

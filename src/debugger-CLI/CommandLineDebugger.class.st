@@ -54,7 +54,7 @@ CommandLineDebugger >> activate [
 	isActive := true
 ]
 
-{ #category : 'requests' }
+{ #category : 'reading' }
 CommandLineDebugger >> askTyping [
 
 	outStream 
@@ -64,7 +64,7 @@ CommandLineDebugger >> askTyping [
 
 { #category : 'execution' }
 CommandLineDebugger >> commandClassInstanceFor: aString [
-	"Gives the right command class to use"
+	"Gives an instance of the right command class to use"
 
 	[ ^ commands at: aString ]
 		on: Error
@@ -131,6 +131,7 @@ CommandLineDebugger >> finishedDebugging [
 
 { #category : 'history' }
 CommandLineDebugger >> handleHistory: aString [
+	"Processes the input by applying history command handling through a chain of responsibility. Returns the command if a handler matches, or the original input otherwise"
 
 	| trimmed handler |
 	trimmed := aString trim.
@@ -169,12 +170,7 @@ CommandLineDebugger >> initialize [
 	lineEnding := OSPlatform current lineEnding.
 	self initializeCommands.
 	commandsStack := Stack new.
-
-	historyHandlers := {
-		                   LastCommandHandler new.
-		                   ContansStringHandler new.
-		                   NumericHistoryHandler new.
-		                   StartsWithStringHandler new }
+	self initializeHistoryHandlers
 ]
 
 { #category : 'initialization' }
@@ -182,7 +178,7 @@ CommandLineDebugger >> initializeCommands [
 
 	| commandsList |
 	commandsList := {
-		                ExitCommand new.
+		                QuitCommand new.
 		                HelpCommand new.
 		                StepCommand new.
 		                OverCommand new.
@@ -196,6 +192,16 @@ CommandLineDebugger >> initializeCommands [
 			commands at: aCommand commandName last put: aCommand ]
 ]
 
+{ #category : 'initialization' }
+CommandLineDebugger >> initializeHistoryHandlers [
+
+	^ historyHandlers := {
+		                     LastCommandHandler new.
+		                     ContansStringHandler new.
+		                     NumericHistoryHandler new.
+		                     StartsWithStringHandler new }
+]
+
 { #category : 'accessing' }
 CommandLineDebugger >> isActive [
     ^ isActive
@@ -203,6 +209,7 @@ CommandLineDebugger >> isActive [
 
 { #category : 'history' }
 CommandLineDebugger >> lastCommand [
+	"returns the last command in history and pops it"
 	
 	commandsStack ifNotEmpty: [ ^ commandsStack pop ]
 	ifEmpty: [ ^ '' ]
@@ -268,7 +275,7 @@ CommandLineDebugger >> process: aProcess [
 	process := aProcess
 ]
 
-{ #category : 'requests' }
+{ #category : 'reading' }
 CommandLineDebugger >> readNextLine [
 	"create a nil input waiting for the user to type something, handling ZnIncomplete Error. Returns the input"
 
