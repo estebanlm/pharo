@@ -46,6 +46,8 @@ OCInteractiveAPI >> checkNotice: aNotice requestor: aRequestor [
 		res := reparator
 			requestor: aRequestor;
 			repair.
+		res ifNil: [ ^ true
+			"reparation unneded, let AST as is" ].
 		res ifFalse: [ 
 			"operation cancelled, fail"
 			^ false].
