@@ -74,16 +74,14 @@ OCInteractiveAPI >> compile: sourceCode notifying: requestor in: behavior [
 	compilationResult isError ifTrue: [
 			theCompiler ast allNotices sorted do: [ :n |
 					| check |
-					theCompiler failBlock ifNotNil: [  theCompiler failBlock value: n ].
 					shouldSignalErrors ifTrue: [ n signalError ].
 
 					requestor ifNil: [ n signalError ] ifNotNil: [
 							check := self checkNotice: n requestor: requestor.
-							check ifNil: [
-								"Flush the AST and restart"
-								theCompiler source: requestor text asString.
-								^ self compile: requestor text asString notifying: requestor in: behavior ].
-							check ifFalse: [ ^ nil ] ] ].
+							check ifNil: [ "Flush the AST and restart"
+									theCompiler source: requestor text asString.
+									^ self compile: requestor text asString notifying: requestor in: behavior ].
+							check ifFalse: [ ^ theCompiler failBlock ifNotNil: [ theCompiler failBlock value: n ] ifNil: [ nil ] ] ] ].
 			^ nil ].
 
 	^ compilationResult compiledMethod
