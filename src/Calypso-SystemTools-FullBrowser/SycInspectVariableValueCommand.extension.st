@@ -1,7 +1,7 @@
-Extension { #name : 'SycInspectVariableCommand' }
+Extension { #name : 'SycInspectVariableValueCommand' }
 
 { #category : '*Calypso-SystemTools-FullBrowser' }
-SycInspectVariableCommand class >> fullBrowserDoubleClickActivation [
+SycInspectVariableValueCommand class >> fullBrowserDoubleClickActivation [
 	<classAnnotation>
 
 	^(CmdDoubleClickActivation for: ClyFullBrowserVariableContext)
@@ -9,14 +9,14 @@ SycInspectVariableCommand class >> fullBrowserDoubleClickActivation [
 ]
 
 { #category : '*Calypso-SystemTools-FullBrowser' }
-SycInspectVariableCommand class >> fullBrowserMenuActivation [
+SycInspectVariableValueCommand class >> fullBrowserMenuActivation [
 	<classAnnotation>
 
 	^CmdContextMenuActivation byItemOf: ClyQueryMenuGroup for: ClyFullBrowserVariableContext
 ]
 
 { #category : '*Calypso-SystemTools-FullBrowser' }
-SycInspectVariableCommand class >> fullBrowserShortcutActivation [
+SycInspectVariableValueCommand class >> fullBrowserShortcutActivation [
 	<classAnnotation>
 
 	^(CmdShortcutActivation
