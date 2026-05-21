@@ -1,14 +1,14 @@
-Extension { #name : 'SycInspectVariableCommand' }
+Extension { #name : 'SycInspectVariableValueCommand' }
 
 { #category : '*Calypso-SystemTools-Core' }
-SycInspectVariableCommand class >> sourceCodeMenuActivation [
+SycInspectVariableValueCommand class >> sourceCodeMenuActivation [
 	<classAnnotation>
 
 	^SycSourceCodeMenuActivation byItemOf: ClyQueryMenuGroup for: ClySourceCodeContext
 ]
 
 { #category : '*Calypso-SystemTools-Core' }
-SycInspectVariableCommand class >> sourceCodeShortcutActivation [
+SycInspectVariableValueCommand class >> sourceCodeShortcutActivation [
 	<classAnnotation>
 
 	^CmdShortcutActivation
