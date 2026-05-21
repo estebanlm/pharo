@@ -90,8 +90,7 @@ RePullUpMethodDriver >> browseSuperSendsSent [
 	methods do: [ :method |
 			(Smalltalk tools toolNamed: #messageList)
 				browse: (overrides collect: [ :ref | ref compiledMethod ])
-				asImplementorsOf: method selector
-				from: self class ]
+				asImplementorsOf: method selector ]
 ]
 
 { #category : 'execution' }

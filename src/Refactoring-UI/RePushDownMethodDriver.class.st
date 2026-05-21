@@ -64,11 +64,10 @@ RePushDownMethodDriver >> browseMethods [
 { #category : 'actions' }
 RePushDownMethodDriver >> browseSubclassesSuperSends [
 
-	subclassesSendSuper violators keysAndValuesDo: [ :violator :references | "we should pass the application! "
-			(Smalltalk tools toolNamed: #messageList)
+	subclassesSendSuper violators keysAndValuesDo: [ :violator :references | 
+			(application toolNamed: #messageList)
 				browse: (references collect: [ :ref | ref compiledMethod ])
-				asSendersOf: violator realClass
-				from: self class ]
+				asSendersOf: violator realClass ]
 ]
 
 { #category : 'execution' }

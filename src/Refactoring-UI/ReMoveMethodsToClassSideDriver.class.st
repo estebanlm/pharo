@@ -36,15 +36,12 @@ ReMoveMethodsToClassSideDriver >> breakingChoices [
 
 { #category : 'execution' }
 ReMoveMethodsToClassSideDriver >> browseMethod [
-	
-	| methods |
+
+	| methods names |
 	methods := refactoring refactorings collect: [ :each | each method ].
-	"the API of the StMessageBrowser is not good we should be able to pass mutiple pairs
-	of selector/implementors without the need to spawn multipe browser. 
-	Bad UX."
-	
-	methods do: [:each |
-		(Smalltalk tools toolNamed: #messageList) browseImplementorsOf: each selector from: self class ]
+	names := methods collect: [ :method | method selector ].
+
+	(Smalltalk tools toolNamed: #messageList) browseImplementorsOfAll: names from: methods anyOne methodClass
 ]
 
 { #category : 'execution' }

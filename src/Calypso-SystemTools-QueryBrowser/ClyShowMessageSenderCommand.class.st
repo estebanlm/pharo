@@ -94,8 +94,8 @@ ClyShowMessageSenderCommand >> description [
 ClyShowMessageSenderCommand >> execute [
 
 	| selectors |
-	selectors := messages collect: [ :each | each selector].
-	(Smalltalk tools toolNamed: #messageList) browseSendersOfAll: selectors from: self class
+	selectors := messages collect: [ :each | each selector ].
+	(Smalltalk tools toolNamed: #messageList) browseSendersOfAll: selectors from: messages anyOne contextUser methodClass
 ]
 
 { #category : 'execution' }
