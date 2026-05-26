@@ -61,7 +61,7 @@ ShClassInstallerTest >> testBuildingClassesWithSlotsClassifiesItsMethods [
 	"This is a regression test. 
 	What was happening before was that the slots were generating a method to initialize themselves and after that the old class organization was copied. The problem is that during the first class creation, this was reseting the protocol of the generated slot methods."
 
-	newClass := self newClass: #ShCITestClass slots: { (#anInstanceVariable => ObservableSlot) }.
+	newClass := self newClass: #ShCITestClass slots: { (#anInstanceVariable => SlotWithInitForTest) }.
 
 	self assertCollection: newClass selectors hasSameElements: { #initialize }.
 	self assert: (newClass protocolOfSelector: #initialize) isNotNil.
@@ -306,11 +306,11 @@ ShClassInstallerTest >> testDuplicateClassPreserveSharedVariables [
 { #category : 'tests' }
 ShClassInstallerTest >> testDuplicateClassPreserveSlots [
 
-	newClass := self newClass: #ShCITestClass slots: {#anInstanceVariable => ObservableSlot}.
+	newClass := self newClass: #ShCITestClass slots: {#anInstanceVariable => SlotWithInitForTest}.
 	newClass2 := newClass duplicateClassWithNewName: #ShCITestClass2.
 
 	self assert: (newClass2 hasSlotNamed: #anInstanceVariable).
-	self assert: (newClass2 slotNamed: #anInstanceVariable) class equals: ObservableSlot.
+	self assert: (newClass2 slotNamed: #anInstanceVariable) class equals: SlotWithInitForTest.
 	"Make sure the slots are copied"
 	self assert: (newClass slotNamed: #anInstanceVariable) definingClass equals: newClass.
 	self assert: (newClass2 slotNamed: #anInstanceVariable) definingClass equals: newClass2
