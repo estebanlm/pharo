@@ -410,7 +410,7 @@ OCScanner >> scanLiteral [
 	"Accept multiple #."
 	currentCharacter = $#
 		ifTrue: [ ^ self scanLiteral ].
-	^ self scanError: 'Literal expected'
+	^ self scanError: 'Literal Array, ByteArray or Symbol expected'
 ]
 
 { #category : 'private - scanning' }
