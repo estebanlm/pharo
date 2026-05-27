@@ -41,19 +41,21 @@ OCInteractiveAPI >> checkNotice: aNotice requestor: aRequestor [
 			^ true ].
 			
 	"Quirks mode: otherwise, push the error message to the requestor"
-	(aNotice reparatorFor: self) ifNotNil: [ :reparator |
-		| res |
-		res := reparator
-			requestor: aRequestor;
-			repair.
-		res ifNil: [ ^ true
-			"reparation unneded, let AST as is" ].
-		res ifFalse: [ 
-			"operation cancelled, fail"
-			^ false].
-
-		"code was \repared\, we need to restart the compilation process"
-		^ nil ].
+	((aRequestor respondsTo: #interactive)
+		and: [ aRequestor interactive ])
+			ifTrue: [
+				(aNotice reparatorFor: self) ifNotNil: [ :reparator |
+					| res |
+					res := reparator
+						       requestor: aRequestor;
+						       repair.
+					res ifNil: [ 
+						^ true "reparation unneded, let AST as is" ].
+					res ifFalse: [
+						^ false "operation cancelled, fail" ].
+					
+					"code was \repared\, we need to restart the compilation process"
+					^ nil ]].
 
 	"Quirks mode: Then leave"
 	aRequestor
