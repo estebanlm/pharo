@@ -56,6 +56,11 @@ OCInteractiveAPI >> checkNotice: aNotice requestor: aRequestor [
 		^ nil ].
 
 	"Quirks mode: Then leave"
+	aRequestor
+			notify: aNotice messageText , ' ->'
+			at: aNotice position
+			in: aNotice node source.
+
 	^ false
 ]
 
@@ -81,7 +86,7 @@ OCInteractiveAPI >> compile: sourceCode notifying: requestor in: behavior [
 							check ifNil: [ "Flush the AST and restart"
 									theCompiler source: requestor text asString.
 									^ self compile: requestor text asString notifying: requestor in: behavior ].
-							check ifFalse: [ ^ theCompiler failBlock ifNotNil: [ theCompiler failBlock value: n ] ifNil: [ nil ] ] ] ].
+							check ifFalse: [ ^ theCompiler failBlock ifNotNil: [ theCompiler failBlock cull: n ] ifNil: [ nil ] ] ] ].
 			^ nil ].
 
 	^ compilationResult compiledMethod

@@ -22,9 +22,6 @@ OCMethodInstaller >> addAndClassifyMethod: compiledMethod into: behavior [
 { #category : 'accessing' }
 OCMethodInstaller >> changeStamp [
 
-	"Lazy initialized.
-	Remember the stamp set at the moment of the installation.
-	Useful for testing and logging"
 	^ changeStamp
 ]
 
