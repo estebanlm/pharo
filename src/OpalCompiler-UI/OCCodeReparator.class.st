@@ -174,7 +174,6 @@ OCCodeReparator >> openMenu [
 		          chooseFrom: labels
 		          lines: lines
 		          title: caption.
-	1halt.
 	(actions at: choice ifAbsent: [ ^ false ]) value.
 	^ true
 ]

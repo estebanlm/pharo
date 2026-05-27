@@ -30,7 +30,6 @@ OpalCompiler >> evaluate [
 	| value doItMethod |
 	self isScripting: true.
 	doItMethod := OCInteractiveAPI new
-		shouldSignalErrors: true;
 		compiler: self;
 		compile: source
 		notifying: requestor
