@@ -816,7 +816,7 @@ OCScannerTest >> testNextLiteralBeginningWithDigitThrowsError [
 	token := scanner next.
 	self assert: token isError.
 	self assert: token value equals: '#'.
-	self assert: token cause equals: 'Literal expected'
+	self assert: token cause equals: 'Literal Array, ByteArray or Symbol expected'
 ]
 
 { #category : 'tests - Error' }
@@ -826,7 +826,7 @@ OCScannerTest >> testNextLiteralBeginningWithSpecialThrowsError [
 	token := scanner next.
 	self assert: token isError.
 	self assert: token value equals: '#'.
-	self assert: token cause equals: 'Literal expected'
+	self assert: token cause equals: 'Literal Array, ByteArray or Symbol expected'
 ]
 
 { #category : 'tests - Error' }
@@ -836,7 +836,7 @@ OCScannerTest >> testNextLiteralBeginningWithUnknownThrowsError [
 	token := scanner next.
 	self assert: token isError.
 	self assert: token value equals: '#'.
-	self assert: token cause equals: 'Literal expected'
+	self assert: token cause equals: 'Literal Array, ByteArray or Symbol expected'
 ]
 
 { #category : 'tests - Literal' }
@@ -1540,7 +1540,7 @@ OCScannerTest >> testNextWithAWrongSymbolGetError [
 	source := '#^'.
 	scanner := self buildScannerForText: source.
 	scannedToken := scanner next.
-	self verifyErrorToken: scannedToken message: 'Literal expected' translated valueExpected: '#'
+	self verifyErrorToken: scannedToken message: 'Literal Array, ByteArray or Symbol expected' translated valueExpected: '#'
 ]
 
 { #category : 'tests' }

@@ -1512,10 +1512,10 @@ OCCodeSnippet class >> badScanner [
 			         formattedCode: '#( # ## #ab # 10 # #''.'' 10 )';
 			         isFaulty: true;
 			         notices:
-				         #( #( 3 3 4 'Literal expected' )
-				            #( 5 6 7 'Literal expected' )
-				            #( 12 12 13 'Literal expected' )
-				            #( 16 16 17 'Literal expected' )
+				         #( #( 3 3 4 'Literal Array, ByteArray or Symbol expected' )
+				            #( 5 6 7 'Literal Array, ByteArray or Symbol expected' )
+				            #( 12 12 13 'Literal Array, ByteArray or Symbol expected' )
+				            #( 16 16 17 'Literal Array, ByteArray or Symbol expected' )
 				            #( 17 17 17 'Use a proper symbol literal' ) )). "Lonely # are errors"
 		        (self new
 			         source: '#(#"A"##"B")';
@@ -1524,8 +1524,8 @@ OCCodeSnippet class >> badScanner [
 			         formattedCode: '#( # ## )';
 			         isFaulty: true;
 			         notices:
-				         #( #( 3 3 4 'Literal expected' )
-				            #( 7 8 9 'Literal expected' ) )). "Check if comments are lost"
+				         #( #( 3 3 4 'Literal Array, ByteArray or Symbol expected' )
+				            #( 7 8 9 'Literal Array, ByteArray or Symbol expected' ) )). "Check if comments are lost"
 		        (self new
 			         source: '#(:=aa:=:==bb:==#cc:==)';
 			         nodeAt: '00112223445666778888990';
@@ -2245,7 +2245,7 @@ OCCodeSnippet class >> badTokens [
 			         source: '#';
 			         nodeAt: '0';
 			         styled: 'X';
-			         notices: #( #( 1 1 2 'Literal expected' ) )).
+			         notices: #( #( 1 1 2 'Literal Array, ByteArray or Symbol expected' ) )).
 		        (self new
 			         source: '$';
 			         nodeAt: '0';
@@ -2292,20 +2292,20 @@ OCCodeSnippet class >> badTokens [
 			         nodeAt: '12';
 			         styled: 'XX';
 			         formattedCode: '#. 1';
-			         notices: #( #( 1 1 2 'Literal expected' ) )). "Become a bad sequence"
+			         notices: #( #( 1 1 2 'Literal Array, ByteArray or Symbol expected' ) )). "Become a bad sequence"
 		        (self new
 			         source: '#1r0';
 			         nodeAt: '1322';
 			         styled: 'XXXu';
 			         formattedCode: '#. 1 r0';
 			         notices:
-				         #( #( 1 1 2 'Literal expected' )
+				         #( #( 1 1 2 'Literal Array, ByteArray or Symbol expected' )
 				            #( 2 2 3 'an integer greater than 1 as valid radix expected' ) )). "Two bad sequences"
 		        (self new
 			         source: '##';
 			         nodeAt: '00';
 			         styled: 'XX';
-			         notices: #( #( 1 2 3 'Literal expected' ) )).
+			         notices: #( #( 1 2 3 'Literal Array, ByteArray or Symbol expected' ) )).
 		        "Note: if quotes, same thing than strings"
 		        (self new
 			         source: '#''hello';
@@ -2577,7 +2577,7 @@ OCCodeSnippet class >> badTokens [
 			         styled: 'XX';
 			         formattedCode: '#. →';
 			         notices:
-				         #( #( 1 1 2 'Literal expected' )
+				         #( #( 1 1 2 'Literal Array, ByteArray or Symbol expected' )
 				            #( 2 2 2 'Unknown character' ) )) "Two independent errors" }.
 	"Setup default values"
 	self new
