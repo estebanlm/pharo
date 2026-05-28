@@ -52,12 +52,12 @@ DebugContext >> browseMethod: aMethod [
 ]
 
 { #category : 'private' }
-DebugContext >> checkSelectorUnchanged: aSelector [
+DebugContext >> checkSelectorUnchanged: aSelector inSession: aDebugSession [
 	| unchanged |
 	unchanged := aSelector == self selectedMessageName
 		or: [ self selectedMessageName isDoIt and: [ aSelector numArgs = self selectedMessageName numArgs ] ].
 	unchanged
-		ifFalse: [ InformativeNotification signal: 'can''t change selector' ].
+		ifFalse: [ aDebugSession debugCallBack informCannotRecompileWithDifferentSelector ].
 	^ unchanged
 ]
 
@@ -90,7 +90,7 @@ DebugContext >> forContext: aContext [
 ]
 
 { #category : 'accessing' }
-DebugContext >> locateClosureHomeWithContent: aText inSession: aSession [
+DebugContext >> locateClosureHomeWithContent: sourceCode inSession: aSession [
 	"In case the current context is a BlockContext locate the closureHome and ask the
 	user to validate the new context. If closureHome is not found or the user does not
 	validate the new context, return nil. aText is the new content of the current context.
@@ -100,7 +100,7 @@ DebugContext >> locateClosureHomeWithContent: aText inSession: aSession [
 	context isBlockContext ifTrue: [
 			closureHome := context activeHome.
 			closureHome ifNil: [
-					aSession blockNotFoundDialog: context homeMethod with: aText inContext: self.
+					aSession blockContextNotFoundForMethod: context homeMethod withSourceCode: sourceCode inContext: self.
 					^ nil ].
 			(ConfirmationRequest signal: 'I will have to revert to the method from\which this block originated.  Is that OK?') ifFalse: [
 				^ nil ].
@@ -128,7 +128,7 @@ DebugContext >> recompileCurrentMethodTo: aText notifying: aNotifyer inSession: 
 	| classOrTraitOfMethod selector |
 	self context method isDoIt ifFalse: [
 			selector := self selectedClass compiler parseSelector: aText.
-			(self checkSelectorUnchanged: selector) ifFalse: [ ^ nil ] ].
+			(self checkSelectorUnchanged: selector inSession: aSession ) ifFalse: [ ^ nil ] ].
 
 	(self selectedClass includesSelector: selector) ifFalse: [
 			^ self selectedClass compiler
