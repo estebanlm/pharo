@@ -226,7 +226,7 @@ DebugSession >> implement: aMessage classified: aSymbol inClass: aClass forConte
 	self contextChanged
 ]
 
-{ #category : 'debugging actions' }
+{ #category : 'initialization' }
 DebugSession >> initialize [
 
 	super initialize.
