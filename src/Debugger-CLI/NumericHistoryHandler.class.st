@@ -6,8 +6,8 @@
 Class {
 	#name : 'NumericHistoryHandler',
 	#superclass : 'DebuggerHistoryHandler',
-	#category : 'debugger-CLI',
-	#package : 'debugger-CLI'
+	#category : 'Debugger-CLI',
+	#package : 'Debugger-CLI'
 }
 
 { #category : 'testing' }

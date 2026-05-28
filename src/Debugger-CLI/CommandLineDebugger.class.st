@@ -17,8 +17,8 @@ Class {
 		'outStream',
 		'historyHandlers'
 	],
-	#category : 'debugger-CLI',
-	#package : 'debugger-CLI'
+	#category : 'Debugger-CLI',
+	#package : 'Debugger-CLI'
 }
 
 { #category : 'as yet unclassified' }

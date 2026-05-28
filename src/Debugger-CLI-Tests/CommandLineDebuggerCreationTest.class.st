@@ -1,8 +1,8 @@
 Class {
 	#name : 'CommandLineDebuggerCreationTest',
 	#superclass : 'TestCase',
-	#category : 'debugger-CLI-Tests',
-	#package : 'debugger-CLI-Tests'
+	#category : 'Debugger-CLI-Tests',
+	#package : 'Debugger-CLI-Tests'
 }
 
 { #category : 'tests' }

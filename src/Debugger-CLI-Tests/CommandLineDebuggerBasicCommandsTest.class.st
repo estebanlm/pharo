@@ -4,8 +4,8 @@ Class {
 	#instVars : [
 		'debugger'
 	],
-	#category : 'debugger-CLI-Tests',
-	#package : 'debugger-CLI-Tests'
+	#category : 'Debugger-CLI-Tests',
+	#package : 'Debugger-CLI-Tests'
 }
 
 { #category : 'running' }

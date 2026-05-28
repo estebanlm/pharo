@@ -1,6 +1,6 @@
 Class {
 	#name : 'HistoryEventNotFound',
 	#superclass : 'Error',
-	#category : 'debugger-CLI',
-	#package : 'debugger-CLI'
+	#category : 'Debugger-CLI',
+	#package : 'Debugger-CLI'
 }

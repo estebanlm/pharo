@@ -1,8 +1,8 @@
 Class {
 	#name : 'PrintCodeCommand',
 	#superclass : 'DebuggerCommand',
-	#category : 'debugger-CLI',
-	#package : 'debugger-CLI'
+	#category : 'Debugger-CLI',
+	#package : 'Debugger-CLI'
 }
 
 { #category : 'printing' }

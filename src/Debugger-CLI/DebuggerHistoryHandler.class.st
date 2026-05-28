@@ -1,8 +1,8 @@
 Class {
 	#name : 'DebuggerHistoryHandler',
 	#superclass : 'Object',
-	#category : 'debugger-CLI',
-	#package : 'debugger-CLI'
+	#category : 'Debugger-CLI',
+	#package : 'Debugger-CLI'
 }
 
 { #category : 'testing' }

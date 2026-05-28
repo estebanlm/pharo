@@ -1,8 +1,8 @@
 Class {
 	#name : 'MockToPrintCode',
 	#superclass : 'Object',
-	#category : 'debugger-CLI-Tests-Mock',
-	#package : 'debugger-CLI-Tests',
+	#category : 'Debugger-CLI-Tests-Mock',
+	#package : 'Debugger-CLI-Tests',
 	#tag : 'Mock'
 }
 
