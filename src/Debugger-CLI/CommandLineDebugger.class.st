@@ -142,8 +142,10 @@ CommandLineDebugger >> handleHistory: aString [
 
 { #category : 'execution' }
 CommandLineDebugger >> handleZnIncompleteErrorInInput: ex [
-	"We automatically get a ZnIncomplete error when we use nextLine, so this is a way to handle it :
-	We wait 50ms until we get user's input."
+	"The Stdin stream is wrapped by a Utf8 decoder, and assumes all input is encoded.
+	However, this is not always the case. Sometimes we consume the buffer that has partial information, and sometimes the terminal sends not encoded text, typically for control characters (e.g., arrows and such). If we are in one of these cases, let's wait for more input and retry.
+	
+	Ideally, we should rewrite it in a way that we have more fine control over the decoding"
 
 	ex class name = #ZnIncomplete
 		ifTrue: [ (Delay forMilliseconds: 50) wait ]
