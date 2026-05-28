@@ -260,7 +260,8 @@ CommandLineDebugger >> parsesAndExecuteCommand: aString [
 { #category : 'printing' }
 CommandLineDebugger >> printOutput: output [
 
-	(outStream << output)
+	outStream
+		<< output;
 		<< self lineEnding;
 		flush
 ]
