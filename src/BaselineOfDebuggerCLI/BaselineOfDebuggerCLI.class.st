@@ -17,10 +17,10 @@ BaselineOfDebuggerCLI >> baseline: spec [
 						spec
 							repository: repository;
 							loads: #( 'Debugger-Model' ) ];
-				package: 'debugger-CLI' with: [ spec requires: #( 'Debugging' ) ];
-				package: 'debugger-CLI-Tests' with: [ spec requires: #( 'debugger-CLI' Debugging ) ].
+				package: 'Debugger-CLI' with: [ spec requires: #( 'Debugging' ) ];
+				package: 'Debugger-CLI-Tests' with: [ spec requires: #( 'Debugger-CLI' 'Debugging' ) ].
 
 			spec
-				group: 'Core' with: { 'debugger-CLI' };
-				group: 'Tests' with: { 'debugger-CLI-Tests' } ]
+				group: 'Core' with: { 'Debugger-CLI' };
+				group: 'Tests' with: { 'Debugger-CLI-Tests' } ]
 ]
