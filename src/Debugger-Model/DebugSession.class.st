@@ -94,7 +94,7 @@ DebugSession class >> named: aString on: aProcess startedAt: aContext [
 { #category : 'accessing' }
 DebugSession >> blockContextNotFoundForMethod: aMethod withSourceCode: sourceCode inContext: aContext [
 
-	| message result newMethod |
+	| result newMethod |
 	result := self debugCallBack wantsToBroweAndRecompileMethodNotFoundInStack: aMethod. 
 	
 	"possible return values are true | false | nil"

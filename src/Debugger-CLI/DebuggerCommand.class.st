@@ -46,7 +46,7 @@ DebuggerCommand >> commandName: anObject [
 	commandName := anObject
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'execution' }
 DebuggerCommand >> executeOn: aDebugger with: args [ 
 	^ self subclassResponsibility
 ]

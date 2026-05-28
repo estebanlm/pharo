@@ -21,7 +21,7 @@ Class {
 	#package : 'Debugger-CLI'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'instance creation' }
 CommandLineDebugger class >> forCode: aString [
     "Compiles the code, create a process from it then build the debugger"
     
@@ -33,7 +33,7 @@ CommandLineDebugger class >> forCode: aString [
     ^ self forProcess: process
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'instance creation' }
 CommandLineDebugger class >> forProcess: aProcess [
     "Create a debugger from a given process"
     
