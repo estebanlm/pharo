@@ -24,6 +24,7 @@ MissionControlThumbnailMorph >> initializeForWindow: aSystemWindow extent: thumb
 	originalBounds := aSystemWindow bounds.
 	safeExtent := thumbExtent max: 10 @ 10.
 	thumbnailForm := self safeThumbnailOf: aSystemWindow size: safeExtent.
+	isHighlighted := false.
 	self extent: safeExtent.
 	self borderWidth: 2.
 	self borderColor: Color veryLightGray.
