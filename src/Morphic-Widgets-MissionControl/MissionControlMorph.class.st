@@ -47,7 +47,8 @@ MissionControlMorph >> deactivate [
 MissionControlMorph >> deactivateAndShowWindow: aSystemWindow [
 	self delete.
 	isActive := false.
-	aSystemWindow activate
+	aSystemWindow activate.
+	aSystemWindow expandBoxHit
 ]
 
 { #category : 'accessing' }
