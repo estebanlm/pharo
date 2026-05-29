@@ -133,6 +133,11 @@ MissionControlMorph >> handlesKeyboard: evt [
 ]
 
 { #category : 'event handling' }
+MissionControlMorph >> keyDown: evt [
+	evt keyCharacter = Character escape ifTrue: [ ^ self deactivate ]
+]
+
+{ #category : 'event handling' }
 MissionControlMorph >> handleKeystroke: evt [
 	evt keyCharacter = Character escape ifTrue: [ ^ self deactivate ]
 ]
