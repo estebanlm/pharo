@@ -128,10 +128,40 @@ ReExtractMethodDriver >> hasFailedBehaviorPreservingPreconditions [
 
 { #category : 'configuration' }
 ReExtractMethodDriver >> instantiateRefactoring [
-	"here we do not fully configure the refactoring because we are missing information such as the signature.
-	Since we want to let the refactoring validate input we need to create it upfront then configure later."
-
-	^ ReCompositeExtractMethodRefactoring new extract: body from: sourceMethod selector in: class name
+    "here we do not fully configure the refactoring because we are missing information such as the signature.
+    Since we want to let the refactoring validate input we need to create it upfront then configure later."
+    | refactore |
+    refactore := ReCompositeExtractMethodRefactoring new
+        extract: body
+        from: sourceMethod selector
+        in: class name.
+        
+    refactore setOption: #extractMethodName toUse: [ :initialMethodName |
+        | currentMethodName newAttempt newSelector |
+        currentMethodName := initialMethodName. "On copie l'argument dans une variable modifiable"
+        newSelector := nil.
+        newAttempt := true.
+        
+        [ newAttempt ] whileTrue: [
+            | returnedMethodName |
+            returnedMethodName := (StMethodNameEditorPresenter openOn: currentMethodName) methodName.
+            returnedMethodName
+                ifNil: [ newAttempt := false ]
+                ifNotNil: [ :newMethodName |
+                    newSelector := newMethodName selector.
+                    newAttempt := newSelector isNil.
+                    (newSelector isString and: [ refactore isValidSelector: newSelector ])
+                        ifFalse: [ 
+                            InformativeNotification signal: newSelector asString , ' is not a valid selector.'.
+                            newSelector := nil ].
+                    (refactore definingClass directlyDefinesLocalMethod: newSelector)
+                        ifTrue: [ 
+                            InformativeNotification signal: newSelector , ' is already defined in ' , class name asString.
+                            newSelector := nil ] ].
+            returnedMethodName ifNotNil: [ currentMethodName := returnedMethodName ] ].
+        currentMethodName ].
+        
+    ^ refactore
 ]
 
 { #category : 'configuration' }
