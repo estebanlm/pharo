@@ -102,13 +102,6 @@ MissionControlThumbnailMorph >> mouseLeave: evt event: aMorph [
 	self changed
 ]
 
-{ #category : 'event handling' }
-MissionControlThumbnailMorph >> mouseDown: evt [
-	self owner ifNotNil: [ :mc |
-		(mc isKindOf: MissionControlMorph) ifTrue: [
-			mc deactivateAndShowWindow: self window ] ]
-]
-
 { #category : 'initialization' }
 MissionControlThumbnailMorph >> useRoundedCorners [
 	super useRoundedCorners

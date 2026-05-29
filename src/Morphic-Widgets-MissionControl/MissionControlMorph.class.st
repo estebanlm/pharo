@@ -122,8 +122,12 @@ MissionControlMorph >> handlesMouseDown: evt [
 
 { #category : 'event handling' }
 MissionControlMorph >> handleMouseDown: evt [
+	| clicked |
 	evt wasHandled ifTrue: [ ^ self ].
 	(spacesBar bounds containsPoint: evt position) ifTrue: [ ^ self ].
+	clicked := thumbnails detect: [ :t |
+		t bounds containsPoint: evt position ] ifNone: [ nil ].
+	clicked ifNotNil: [ ^ self deactivateAndShowWindow: clicked window ].
 	self deactivate
 ]
 

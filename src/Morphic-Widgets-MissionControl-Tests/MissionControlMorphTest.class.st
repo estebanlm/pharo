@@ -59,7 +59,7 @@ MissionControlMorphTest >> testThumbnailClickActivatesWindow [
 	MissionControlMorph toggleInWorld: world.
 	mc := world submorphs detect: [ :m | m isKindOf: MissionControlMorph ].
 	thumb := mc thumbnails first.
-	thumb mouseDown: (MouseButtonEvent new
+	mc handleMouseDown: (MouseButtonEvent new
 		setType: #mouseDown
 		position: thumb center
 		which: MouseButtonEvent redButton
