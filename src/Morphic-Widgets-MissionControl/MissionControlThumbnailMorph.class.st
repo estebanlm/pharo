@@ -101,5 +101,5 @@ MissionControlThumbnailMorph >> mouseDown: evt [
 
 { #category : 'initialization' }
 MissionControlThumbnailMorph >> useRoundedCorners [
-	self borderStyle: (BorderStyle rounded width: self borderWidth color: self borderColor)
+	super useRoundedCorners
 ]
