@@ -89,7 +89,6 @@ OCInteractiveAPI >> compile: sourceCode notifying: requestor in: behavior [
 									theCompiler source: requestor text asString.
 									^ self compile: requestor text asString notifying: requestor in: behavior ].
 							check ifFalse: [ ^ theCompiler failBlock ifNotNil: [ theCompiler failBlock cull: n ] ifNil: [ nil ] ] ] ].
-					1haltOnce.
 			^ nil ].
 
 	^ compilationResult compiledMethod
