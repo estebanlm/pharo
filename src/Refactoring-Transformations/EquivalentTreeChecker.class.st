@@ -6,9 +6,8 @@ Class {
 		'model',
 		'extractedFromSelector'
 	],
-	#category : 'Refactoring-Transformations-Tests-Test',
-	#package : 'Refactoring-Transformations-Tests',
-	#tag : 'Test'
+	#category : 'Refactoring-Transformations',
+	#package : 'Refactoring-Transformations'
 }
 
 { #category : 'query' }
