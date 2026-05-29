@@ -29,10 +29,10 @@ MissionControlThumbnailMorph >> initializeForWindow: aSystemWindow extent: thumb
 	self useRoundedCorners.
 	self
 		on: #mouseEnter
-		send: #mouseEnter:event:in:
+		send: #mouseEnter:event:
 		to: self;
 		on: #mouseLeave
-		send: #mouseLeave:event:in:
+		send: #mouseLeave:event:
 		to: self
 ]
 
