@@ -19,10 +19,12 @@ MissionControlThumbnailMorph >> window [
 
 { #category : 'initialization' }
 MissionControlThumbnailMorph >> initializeForWindow: aSystemWindow extent: thumbExtent [
+	| safeExtent |
 	window := aSystemWindow.
 	originalBounds := aSystemWindow bounds.
-	thumbnailForm := aSystemWindow asFormOfSize: thumbExtent.
-	self extent: thumbExtent.
+	safeExtent := thumbExtent max: 10 @ 10.
+	thumbnailForm := self safeThumbnailOf: aSystemWindow size: safeExtent.
+	self extent: safeExtent.
 	self borderWidth: 2.
 	self borderColor: Color veryLightGray.
 	self color: Color white.
@@ -56,6 +58,13 @@ MissionControlThumbnailMorph >> buildLabel [
 	labelMorph := StringMorph contents: title font: StandardFonts defaultFont.
 	labelMorph color: Color white.
 	^ labelMorph
+]
+
+{ #category : 'private' }
+MissionControlThumbnailMorph >> safeThumbnailOf: aWindow size: extent [
+	^ [ aWindow asFormOfSize: extent ]
+		on: Error
+		do: [ Form extent: extent depth: 32 ]
 ]
 
 { #category : 'private' }
