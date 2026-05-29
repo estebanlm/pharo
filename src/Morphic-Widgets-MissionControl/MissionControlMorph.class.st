@@ -144,6 +144,7 @@ MissionControlMorph >> handlesKeyDown: evt [
 { #category : 'event handling' }
 MissionControlMorph >> keyDown: evt [
 	evt keyCharacter = Character escape ifTrue: [ ^ self deactivate ].
+	(evt commandKeyPressed and: [ evt keyValue = 30 ]) ifTrue: [ ^ self deactivate ].
 	(evt commandKeyPressed and: [ evt keyValue = 31 ]) ifTrue: [ ^ self deactivate ].
 	evt key = KeyboardKey F3 ifTrue: [ ^ self deactivate ]
 ]
