@@ -64,7 +64,7 @@ OCInteraciveAPITest >> requestor: anOCInteraciveAPITest [
 	requestor := anOCInteraciveAPITest
 ]
 
-{ #category : 'interactive error protocol' }
+{ #category : 'running' }
 OCInteraciveAPITest >> setUp [
 
 	super setUp.
@@ -73,7 +73,7 @@ OCInteraciveAPITest >> setUp [
 	"By default it is interactive, which will call a reparator"
 	interactive := true.
 	
-	repairBlock := [ self error: 'define a repairBlock for the test' ]
+	repairBlock := [ :reparator | self error: 'define a repairBlock for the test' ]
 ]
 
 { #category : 'tests' }
