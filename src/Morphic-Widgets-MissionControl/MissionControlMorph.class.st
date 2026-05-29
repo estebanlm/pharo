@@ -39,14 +39,20 @@ MissionControlMorph >> activateInWorld: aWorld [
 
 { #category : 'activation' }
 MissionControlMorph >> deactivate [
+	| w |
+	w := self world.
 	self delete.
-	isActive := false
+	isActive := false.
+	w ifNotNil: [ w activeHand newKeyboardFocus: nil ]
 ]
 
 { #category : 'activation' }
 MissionControlMorph >> deactivateAndShowWindow: aSystemWindow [
+	| w |
+	w := self world.
 	self delete.
 	isActive := false.
+	w ifNotNil: [ w activeHand newKeyboardFocus: nil ].
 	aSystemWindow
 		unexpandedFrame: aSystemWindow fullFrame;
 		activate;
