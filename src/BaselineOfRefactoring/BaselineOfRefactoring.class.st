@@ -18,10 +18,10 @@ BaselineOfRefactoring >> baseline: spec [
 		package: 'Refactoring-Conditions' with: [spec requires: #( 'Refactoring-Core' 'Refactoring-CompilerSupport') ];
 		package: 'Refactoring-Transformations' with: [ spec requires: #( 'Regex-Core' 'Refactoring-Core' 'Refactoring-Conditions' 'Refactoring-CompilerSupport') ];
 		package: 'Refactoring-UI' with: [ spec requires: #( 'Refactoring-Transformations' ) ];
-		package: 'Refactoring-DataForTesting';
+		package: 'Refactoring-DataForTesting' with: [ spec requires: #( 'Refactoring-Core' 'Refactoring-Environment' 'Refactoring-Changes') ];
 		package: 'Refactoring-CompilerSupport-Tests' with: [ spec requires: #( 'Refactoring-CompilerSupport' ) ];
-		package: 'Refactoring-UI-Tests' with: [ spec requires: #( 'Refactoring-DataForTesting' ) ];
-		package: 'Refactoring-Core-Tests' with: [ spec requires: #( 'Refactoring-Core' ) ];
+		package: 'Refactoring-UI-Tests' with: [ spec requires: #( 'Refactoring-DataForTesting' 'Refactoring-UI') ];
+		package: 'Refactoring-Core-Tests' with: [ spec requires: #( 'Refactoring-Core') ];
 		package: 'Refactoring-Changes-Tests' with: [ spec requires: #( 'Refactoring-Changes' ) ];
 		package: 'Refactoring-Critics-Tests';
 		package: 'Refactoring-Environment-Tests' with: [ spec requires: #( 'Refactoring-Environment' ) ];
