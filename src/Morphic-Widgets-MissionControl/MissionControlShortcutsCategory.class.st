@@ -39,6 +39,6 @@ MissionControlShortcutsCategory >> missionControlF3 [
 
 	<shortcut>
 	^ KMKeymap
-		shortcut: KeyboardKey F3
+		shortcut: KeyboardKey F3 asKeyCombination
 		action: [ WorldMorph allInstances first missionControl ]
 ]
