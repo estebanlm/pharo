@@ -197,6 +197,10 @@ WorldState class >> windowsOn: aBuilder [
 	(aBuilder item: #Windows)
 		order: 90;
 		with: [
+			(aBuilder item: #'Mission Control')
+				action: [ MissionControlMorph toggleInWorld: self currentWorld ];
+				help: 'Show all windows arranged in a single layer for easy navigation.';
+				iconName: #window.
 			(aBuilder item: #'Collapse all windows')
 				action: [ self currentWorld collapseAll ];
 				help: 'Reduce all open windows to collapsed forms that only show titles'.
