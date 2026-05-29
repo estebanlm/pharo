@@ -1449,7 +1449,7 @@ StringTest >> testIsCapitalizedWhenStringStartsWithLowerCase [
 
 { #category : 'requirements' }
 StringTest >> testIsCapitalizedWhenStringStartsWithSymbol [
-	self assert: '$foo' isCapitalized. 
+	self deny: '$foo' isCapitalized. 
 ]
 
 { #category : 'requirements' }
@@ -1459,7 +1459,7 @@ StringTest >> testIsCapitalizedWhenStringStartsWithUpperCase [
 
 { #category : 'requirements' }
 StringTest >> testIsCapitalizedWhenStringStartsWithWhitespace [
-	self assert: ' foo' isCapitalized. 
+	self deny: ' foo' isCapitalized. 
 ]
 
 { #category : 'tests' }
