@@ -5,7 +5,7 @@ PasteUpMorph class >> buildMissionControlShortcutsOn: aBuilder [
 	<keymap>
 	(aBuilder shortcut: #missionControl)
 		category: #WindowShortcuts;
-		default: Character arrowUp ctrl;
+		default: Character arrowUp meta;
 		do: [ :target | target world missionControl ];
 		description: 'Toggle Mission Control view of all windows'.
 	(aBuilder shortcut: #missionControlF3)
