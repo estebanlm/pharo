@@ -10,11 +10,11 @@ BaselineOfRefactoring >> baseline: spec [
 
 	<baseline>
 	spec
-		package: 'Refactoring-Conditions';
 		package: 'Refactoring-Environment';
 		package: 'Refactoring-Changes' with: [ spec requires: #( 'Refactoring-Environment' ) ];
 		package: 'Refactoring-CompilerSupport';
 		package: 'Refactoring-Core' with: [ spec requires: #( 'Refactoring-Changes' 'Refactoring-Environment' 'Refactoring-CompilerSupport' ) ];
+		package: 'Refactoring-Conditions' with: [spec requires: #( 'Refactoring-Core' 'Refactoring-CompilerSupport') ];
 		package: 'Refactoring-Transformations' with: [ spec requires: #( 'Refactoring-Core' ) ];
 		package: 'Refactoring-UI' with: [ spec requires: #( 'Refactoring-Transformations' ) ];
 		package: 'Refactoring-DataForTesting';
