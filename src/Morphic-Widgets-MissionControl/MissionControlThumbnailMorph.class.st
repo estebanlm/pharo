@@ -12,6 +12,13 @@ Class {
 	#package : 'Morphic-Widgets-MissionControl'
 }
 
+{ #category : 'drawing' }
+MissionControlThumbnailMorph >> borderColor [
+
+	^ isHighlighted ifTrue: [ Color blue ] ifFalse: [ Color veryLightGray ]
+
+]
+
 { #category : 'private' }
 MissionControlThumbnailMorph >> buildLabel [
 	| title |
@@ -29,10 +36,10 @@ MissionControlThumbnailMorph >> drawOn: aCanvas [
 
 	super drawOn: aCanvas.
 	thumbnailForm ifNotNil: [
-		aCanvas translucentImage: thumbnailForm at: self position + (self width - thumbnailForm width // 2 @ 2) ].
-	isHighlighted
-		ifTrue: [ aCanvas frameRectangle: self bounds width: 2 color: Color blue ]
-		ifFalse: [ aCanvas frameRectangle: self bounds width: 2 color: Color veryLightGray ].
+		aCanvas translucentImage: thumbnailForm at: self position + (self width - thumbnailForm width // 2 @ 2)
+	].
+
+	aCanvas frameRectangle: self bounds width: 2 color: self borderColor.
 ]
 
 { #category : 'initialization' }
@@ -51,7 +58,7 @@ MissionControlThumbnailMorph >> initializeForWindow: aSystemWindow extent: thumb
 	self extent: safeExtent.
 	self borderColor: Color veryLightGray.
 	self color: Color white.
-	self borderWidth: 4.
+	self borderWidth: 2.
 	self useRoundedCorners.
 	self on: #mouseEnter send: #mouseEnter:event: to: self;
 		on: #mouseLeave send: #mouseLeave:event: to: self
