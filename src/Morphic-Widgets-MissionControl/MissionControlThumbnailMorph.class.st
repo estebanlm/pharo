@@ -15,8 +15,7 @@ Class {
 { #category : 'drawing' }
 MissionControlThumbnailMorph >> borderColor [
 
-	^ isHighlighted ifTrue: [ Color blue ] ifFalse: [ Color veryLightGray ]
-
+	^ isHighlighted ifTrue: [ Color R: 55  G: 140 B: 240 ] ifFalse: [ Color veryLightGray ]
 ]
 
 { #category : 'private' }
@@ -39,7 +38,7 @@ MissionControlThumbnailMorph >> drawOn: aCanvas [
 		aCanvas translucentImage: thumbnailForm at: self position + (self width - thumbnailForm width // 2 @ 2)
 	].
 
-	aCanvas frameRectangle: self bounds width: 2 color: self borderColor.
+	aCanvas frameRectangle: self bounds width: 2 color: self borderColor
 ]
 
 { #category : 'initialization' }
