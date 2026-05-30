@@ -27,13 +27,12 @@ MissionControlMorph >> activateInWorld: aWorld [
 	nonCollapsed := (aWorld systemWindows select: [ :w | w isCollapsed not ]).
 	collapsed := (aWorld systemWindows select: [ :w | w isCollapsed ]).
 	self bounds: aWorld bounds.
-	self captureBlurredBackground.
 	spacesBar := MissionControlSpacesBar new
 		initializeForWorld: aWorld
 		collapsedWindows: collapsed.
 	self addMorph: spacesBar.
-	self createThumbnailsFor: nonCollapsed.
 	aWorld addMorphFront: self.
+	self createThumbnailsFor: nonCollapsed.
 	aWorld activeHand newKeyboardFocus: self.
 	isActive := true
 ]
@@ -116,18 +115,6 @@ MissionControlMorph >> createThumbnailsFor: windows [
 	]
 ]
 
-{ #category : 'private' }
-MissionControlMorph >> captureBlurredBackground [
-	| form extent small blurred |
-	[ form := Form fromDisplay: self bounds ]
-		on: Error
-		do: [ ^ self ].
-	extent := form extent.
-	small := form scaledToSize: (extent / 2) rounded.
-	blurred := small scaledToSize: extent.
-	self setProperty: #backgroundForm toValue: blurred
-]
-
 { #category : 'event handling' }
 MissionControlMorph >> handlesMouseDown: evt [
 	^ true
@@ -171,10 +158,6 @@ MissionControlMorph >> wantsToBeTopmost [
 
 { #category : 'drawing' }
 MissionControlMorph >> drawOn: aCanvas [
-	| bg |
-	bg := self valueOfProperty: #backgroundForm.
-	bg ifNotNil: [
-		aCanvas translucentImage: bg at: self position ].
 	aCanvas
 		fillRectangle: self bounds
 		fillStyle: (SolidFillStyle color: (Color black alpha: MissionControlSettings overlayOpacity))
