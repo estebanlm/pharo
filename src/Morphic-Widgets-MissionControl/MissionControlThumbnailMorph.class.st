@@ -26,8 +26,7 @@ MissionControlThumbnailMorph >> initializeForWindow: aSystemWindow extent: thumb
 	thumbnailForm := self safeThumbnailOf: aSystemWindow size: safeExtent.
 	isHighlighted := false.
 	self extent: safeExtent.
-	self borderWidth: 2.
-	self borderColor: Color veryLightGray.
+	self borderWidth: 0.
 	self color: Color white.
 	self useRoundedCorners.
 	self
@@ -78,27 +77,31 @@ MissionControlThumbnailMorph >> labelHeight [
 { #category : 'drawing' }
 MissionControlThumbnailMorph >> drawOn: aCanvas [
 	super drawOn: aCanvas.
+	isHighlighted
+		ifTrue: [
+			aCanvas
+				frameRectangle: self bounds
+				width: 4
+				color: (Color blue alpha: 0.6) ]
+		ifFalse: [
+			aCanvas
+				frameRectangle: self bounds
+				width: 2
+				color: Color veryLightGray ].
 	thumbnailForm ifNotNil: [
 		aCanvas translucentImage: thumbnailForm
-			at: self position + ((self width - thumbnailForm width) // 2 @ 2) ].
-	isHighlighted ifTrue: [
-		aCanvas
-			frameRectangle: self bounds
-			width: 4
-			color: (Color blue alpha: 0.6) ]
+			at: self position + ((self width - thumbnailForm width) // 2 @ 2) ]
 ]
 
 { #category : 'event handling' }
 MissionControlThumbnailMorph >> mouseEnter: evt event: aMorph [
 	isHighlighted := true.
-	self borderColor: Color blue.
 	self changed
 ]
 
 { #category : 'event handling' }
 MissionControlThumbnailMorph >> mouseLeave: evt event: aMorph [
 	isHighlighted := false.
-	self borderColor: Color veryLightGray.
 	self changed
 ]
 
