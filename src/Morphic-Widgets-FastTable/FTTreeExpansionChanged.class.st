@@ -15,9 +15,9 @@ Class {
 	#tag : 'Announcement'
 }
 
-{ #category : 'instance-creation' }
+{ #category : 'instance creation' }
 FTTreeExpansionChanged class >> item: anItem expanded: aBoolean [
-
+	
 	^ self new
 		  item: anItem;
 		  expanded: aBoolean;
