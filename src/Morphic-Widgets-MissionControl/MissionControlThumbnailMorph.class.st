@@ -91,14 +91,12 @@ MissionControlThumbnailMorph >> drawOn: aCanvas [
 { #category : 'event handling' }
 MissionControlThumbnailMorph >> mouseEnter: evt event: aMorph [
 	isHighlighted := true.
-	self borderColor: Color blue.
 	self changed
 ]
 
 { #category : 'event handling' }
 MissionControlThumbnailMorph >> mouseLeave: evt event: aMorph [
 	isHighlighted := false.
-	self borderColor: Color veryLightGray.
 	self changed
 ]
 
