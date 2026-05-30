@@ -123,7 +123,7 @@ MissionControlMorph >> captureBlurredBackground [
 		on: Error
 		do: [ ^ self ].
 	extent := form extent.
-	small := form scaledToSize: (extent / 4) rounded.
+	small := form scaledToSize: (extent / 2) rounded.
 	blurred := small scaledToSize: extent.
 	self setProperty: #backgroundForm toValue: blurred
 ]
