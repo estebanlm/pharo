@@ -2,44 +2,14 @@ Class {
 	#name : 'MissionControlSettings',
 	#superclass : 'Object',
 	#classVars : [
+		'AnimateTransitions',
 		'OverlayOpacity',
-		'ThumbnailPadding',
 		'ShowWindowLabels',
-		'AnimateTransitions'
+		'ThumbnailPadding'
 	],
 	#category : 'Morphic-Widgets-MissionControl',
 	#package : 'Morphic-Widgets-MissionControl'
 }
-
-{ #category : 'settings' }
-MissionControlSettings class >> overlayOpacity [
-	^ OverlayOpacity ifNil: [ OverlayOpacity := 0.5 ]
-]
-
-{ #category : 'settings' }
-MissionControlSettings class >> overlayOpacity: aNumber [
-	OverlayOpacity := aNumber
-]
-
-{ #category : 'settings' }
-MissionControlSettings class >> thumbnailPadding [
-	^ ThumbnailPadding ifNil: [ ThumbnailPadding := 20 ]
-]
-
-{ #category : 'settings' }
-MissionControlSettings class >> thumbnailPadding: anInteger [
-	ThumbnailPadding := anInteger
-]
-
-{ #category : 'settings' }
-MissionControlSettings class >> showWindowLabels [
-	^ ShowWindowLabels ifNil: [ ShowWindowLabels := true ]
-]
-
-{ #category : 'settings' }
-MissionControlSettings class >> showWindowLabels: aBoolean [
-	ShowWindowLabels := aBoolean
-]
 
 { #category : 'settings' }
 MissionControlSettings class >> animateTransitions [
@@ -79,4 +49,34 @@ MissionControlSettings class >> missionControlSettingsOn: aBuilder [
 				label: 'Animate transitions';
 				default: false;
 				description: 'Whether to animate entering and exiting Mission Control.' ]
+]
+
+{ #category : 'settings' }
+MissionControlSettings class >> overlayOpacity [
+	^ OverlayOpacity ifNil: [ OverlayOpacity := 0.5 ]
+]
+
+{ #category : 'settings' }
+MissionControlSettings class >> overlayOpacity: aNumber [
+	OverlayOpacity := aNumber
+]
+
+{ #category : 'settings' }
+MissionControlSettings class >> showWindowLabels [
+	^ ShowWindowLabels ifNil: [ ShowWindowLabels := true ]
+]
+
+{ #category : 'settings' }
+MissionControlSettings class >> showWindowLabels: aBoolean [
+	ShowWindowLabels := aBoolean
+]
+
+{ #category : 'settings' }
+MissionControlSettings class >> thumbnailPadding [
+	^ ThumbnailPadding ifNil: [ ThumbnailPadding := 20 ]
+]
+
+{ #category : 'settings' }
+MissionControlSettings class >> thumbnailPadding: anInteger [
+	ThumbnailPadding := anInteger
 ]

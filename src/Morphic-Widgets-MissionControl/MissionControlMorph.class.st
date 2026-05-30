@@ -37,43 +37,6 @@ MissionControlMorph >> activateInWorld: aWorld [
 	isActive := true
 ]
 
-{ #category : 'activation' }
-MissionControlMorph >> deactivate [
-	| w |
-	w := self world.
-	self delete.
-	isActive := false.
-	w ifNotNil: [ w activeHand newKeyboardFocus: nil ]
-]
-
-{ #category : 'activation' }
-MissionControlMorph >> deactivateAndShowWindow: aSystemWindow [
-	| w |
-	w := self world.
-	self delete.
-	isActive := false.
-	w ifNotNil: [ w activeHand newKeyboardFocus: nil ].
-	aSystemWindow
-		unexpandedFrame: aSystemWindow fullFrame;
-		activate;
-		fullscreen
-]
-
-{ #category : 'accessing' }
-MissionControlMorph >> thumbnails [
-	^ thumbnails
-]
-
-{ #category : 'accessing' }
-MissionControlMorph >> spacesBar [
-	^ spacesBar
-]
-
-{ #category : 'accessing' }
-MissionControlMorph >> isActive [
-	^ isActive
-]
-
 { #category : 'private' }
 MissionControlMorph >> createThumbnailsFor: windows [
 	| padding spacing available n cols rows cellW cellH labelHeight scale thumbExtent |
@@ -116,9 +79,33 @@ MissionControlMorph >> createThumbnailsFor: windows [
 	]
 ]
 
-{ #category : 'event handling' }
-MissionControlMorph >> handlesMouseDown: evt [
-	^ true
+{ #category : 'activation' }
+MissionControlMorph >> deactivate [
+	| w |
+	w := self world.
+	self delete.
+	isActive := false.
+	w ifNotNil: [ w activeHand newKeyboardFocus: nil ]
+]
+
+{ #category : 'activation' }
+MissionControlMorph >> deactivateAndShowWindow: aSystemWindow [
+	| w |
+	w := self world.
+	self delete.
+	isActive := false.
+	w ifNotNil: [ w activeHand newKeyboardFocus: nil ].
+	aSystemWindow
+		unexpandedFrame: aSystemWindow fullFrame;
+		activate;
+		fullscreen
+]
+
+{ #category : 'drawing' }
+MissionControlMorph >> drawOn: aCanvas [
+	aCanvas
+		fillRectangle: self bounds
+		fillStyle: (SolidFillStyle color: (Color black alpha: MissionControlSettings overlayOpacity))
 ]
 
 { #category : 'event handling' }
@@ -133,13 +120,23 @@ MissionControlMorph >> handleMouseDown: evt [
 ]
 
 { #category : 'event handling' }
+MissionControlMorph >> handlesKeyDown: evt [
+	^ true
+]
+
+{ #category : 'event handling' }
 MissionControlMorph >> handlesKeyboard: evt [
 	^ true
 ]
 
 { #category : 'event handling' }
-MissionControlMorph >> handlesKeyDown: evt [
+MissionControlMorph >> handlesMouseDown: evt [
 	^ true
+]
+
+{ #category : 'accessing' }
+MissionControlMorph >> isActive [
+	^ isActive
 ]
 
 { #category : 'event handling' }
@@ -153,13 +150,16 @@ MissionControlMorph >> morphicLayerNumber [
 ]
 
 { #category : 'accessing' }
-MissionControlMorph >> wantsToBeTopmost [
-	^ true
+MissionControlMorph >> spacesBar [
+	^ spacesBar
 ]
 
-{ #category : 'drawing' }
-MissionControlMorph >> drawOn: aCanvas [
-	aCanvas
-		fillRectangle: self bounds
-		fillStyle: (SolidFillStyle color: (Color black alpha: MissionControlSettings overlayOpacity))
+{ #category : 'accessing' }
+MissionControlMorph >> thumbnails [
+	^ thumbnails
+]
+
+{ #category : 'accessing' }
+MissionControlMorph >> wantsToBeTopmost [
+	^ true
 ]

@@ -9,14 +9,40 @@ Class {
 	#package : 'Morphic-Widgets-MissionControl'
 }
 
-{ #category : 'accessing' }
-MissionControlSpacesBar >> spaceThumbnails [
-	^ spaceThumbnails
+{ #category : 'private' }
+MissionControlSpacesBar >> buildDesktopThumbnailFor: aWorld extent: thumbExtent [
+	| image |
+	image := ImageMorph new
+		form: (aWorld asFormOfSize: thumbExtent);
+		yourself.
+	image setProperty: #isDesktopThumbnail toValue: true.
+	^ image
+]
+
+{ #category : 'private' }
+MissionControlSpacesBar >> buildSpaceThumbnailFor: aWindow extent: thumbExtent [
+	| image thumb |
+	image := aWindow taskThumbnailOfSize: thumbExtent.
+	image setProperty: #window toValue: aWindow.
+	^ image
 ]
 
 { #category : 'accessing' }
 MissionControlSpacesBar >> desktopThumbnail [
 	^ desktopThumbnail
+]
+
+{ #category : 'drawing' }
+MissionControlSpacesBar >> drawOn: aCanvas [
+	aCanvas
+		fillRectangle: self bounds
+		fillStyle: (SolidFillStyle color: (Color black alpha: 0.3)).
+	super drawOn: aCanvas
+]
+
+{ #category : 'event handling' }
+MissionControlSpacesBar >> handlesMouseDown: evt [
+	^ true
 ]
 
 { #category : 'initialization' }
@@ -47,37 +73,6 @@ MissionControlSpacesBar >> initializeForWorld: aWorld collapsedWindows: collapse
 		spaceThumbnails add: thumb ]
 ]
 
-{ #category : 'private' }
-MissionControlSpacesBar >> buildDesktopThumbnailFor: aWorld extent: thumbExtent [
-	| image |
-	image := ImageMorph new
-		form: (aWorld asFormOfSize: thumbExtent);
-		yourself.
-	image setProperty: #isDesktopThumbnail toValue: true.
-	^ image
-]
-
-{ #category : 'private' }
-MissionControlSpacesBar >> buildSpaceThumbnailFor: aWindow extent: thumbExtent [
-	| image thumb |
-	image := aWindow taskThumbnailOfSize: thumbExtent.
-	image setProperty: #window toValue: aWindow.
-	^ image
-]
-
-{ #category : 'drawing' }
-MissionControlSpacesBar >> drawOn: aCanvas [
-	aCanvas
-		fillRectangle: self bounds
-		fillStyle: (SolidFillStyle color: (Color black alpha: 0.3)).
-	super drawOn: aCanvas
-]
-
-{ #category : 'event handling' }
-MissionControlSpacesBar >> handlesMouseDown: evt [
-	^ true
-]
-
 { #category : 'event handling' }
 MissionControlSpacesBar >> mouseDown: evt [
 	| clicked |
@@ -94,4 +89,9 @@ MissionControlSpacesBar >> mouseDown: evt [
 		w := clicked valueOfProperty: #window.
 		self owner ifNotNil: [ :mc |
 			(mc isKindOf: MissionControlMorph) ifTrue: [ mc deactivateAndShowWindow: w ] ] ]
+]
+
+{ #category : 'accessing' }
+MissionControlSpacesBar >> spaceThumbnails [
+	^ spaceThumbnails
 ]
