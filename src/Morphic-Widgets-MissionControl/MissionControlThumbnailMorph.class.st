@@ -29,6 +29,7 @@ MissionControlThumbnailMorph >> initializeForWindow: aSystemWindow extent: thumb
 	self borderWidth: 2.
 	self borderColor: Color veryLightGray.
 	self color: Color white.
+	self useRoundedCorners.
 	self
 		on: #mouseEnter
 		send: #mouseEnter:event:
@@ -101,4 +102,7 @@ MissionControlThumbnailMorph >> mouseLeave: evt event: aMorph [
 	self changed
 ]
 
-
+{ #category : 'initialization' }
+MissionControlThumbnailMorph >> useRoundedCorners [
+	super useRoundedCorners
+]
