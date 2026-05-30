@@ -76,7 +76,7 @@ MissionControlMorph >> isActive [
 
 { #category : 'private' }
 MissionControlMorph >> createThumbnailsFor: windows [
-	| padding available n cols rows cellW cellH labelHeight scale thumbExtent |
+	| padding spacing available n cols rows cellW cellH labelHeight scale thumbExtent |
 	thumbnails := OrderedCollection new.
 	n := windows size.
 	n = 0 ifTrue: [ ^ self ].
@@ -88,8 +88,9 @@ MissionControlMorph >> createThumbnailsFor: windows [
 		ifFalse: [ 0 ].
 	cols := n sqrt ceiling.
 	rows := (n / cols) ceiling.
-	cellW := available width / cols.
-	cellH := (available height - (labelHeight * rows)) / rows.
+	spacing := 8.
+	cellW := (available width - (spacing * (cols - 1))) / cols.
+	cellH := (available height - (labelHeight * rows) - (spacing * (rows - 1))) / rows.
 	windows withIndexDo: [ :w :i |
 		| col row thumbnail cellLeft cellTop label lm |
 		col := (i - 1) \\ cols.
@@ -101,8 +102,8 @@ MissionControlMorph >> createThumbnailsFor: windows [
 			initializeForWindow: w extent: thumbExtent.
 		self addMorph: thumbnail.
 		thumbnails add: thumbnail.
-		cellLeft := available left + (col * cellW).
-		cellTop := available top + (row * (cellH + labelHeight)).
+		cellLeft := available left + (col * (cellW + spacing)).
+		cellTop := available top + (row * (cellH + labelHeight + spacing)).
 		thumbnail
 			position: (cellLeft + ((cellW - thumbExtent x) // 2))
 				@ (cellTop + ((cellH - thumbExtent y) // 2)).
