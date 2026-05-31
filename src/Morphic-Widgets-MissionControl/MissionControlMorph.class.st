@@ -128,6 +128,7 @@ MissionControlMorph >> handleMouseDown: event [
 	| clicked |
 	
 	event wasHandled ifTrue: [ ^ self ].
+	thumbnails ifNil: [ ^ self deactivate ].
 	
 	(spacesBar bounds containsPoint: event position) ifTrue: [ ^ self ].
 	clicked := thumbnails detect: [ :thumbnail| thumbnail bounds containsPoint: event position ] ifNone: [ nil ].
