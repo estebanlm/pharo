@@ -20,25 +20,12 @@ MissionControlShortcutsCategory class >> isGlobalCategory [
 MissionControlShortcutsCategory >> missionControlDismiss [
 
 	<shortcut>
-	^ KMKeymap
-		shortcut: Character arrowDown meta
-		action: [ WorldMorph allInstances first dismissMissionControl ]
-]
-
-{ #category : 'keymaps' }
-MissionControlShortcutsCategory >> missionControlF3 [
-
-	<shortcut>
-	^ KMKeymap
-		shortcut: KeyboardKey F3 asKeyCombination
-		action: [ WorldMorph allInstances first missionControl ]
+	^ KMKeymap shortcut: Character arrowDown meta action: [ WorldMorph allInstances first dismissMissionControl ]
 ]
 
 { #category : 'keymaps' }
 MissionControlShortcutsCategory >> missionControlToggle [
 
 	<shortcut>
-	^ KMKeymap
-		shortcut: Character arrowUp meta
-		action: [ WorldMorph allInstances first missionControl ]
+	^ KMKeymap shortcut: Character arrowUp meta action: [ WorldMorph allInstances first missionControl ]
 ]
