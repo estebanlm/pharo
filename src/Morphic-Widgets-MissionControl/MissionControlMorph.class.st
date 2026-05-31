@@ -66,97 +66,104 @@ MissionControlMorph >> createThumbnailsFor: windows [
 { #category : 'private' }
 MissionControlMorph >> createThumbnailsFor: windows cols: cols availableSpace: available cellW: cellW cellH: cellH labelHeight: labelHeight [
 
-	| currentThumbExtent spacing scale|
+	| thumbExtent spacing scale |
 	
 	spacing := self spacing.
 
-	windows withIndexDo: [ :w :i | | col row thumbnail cellLeft cellTop lm |
-		col := (i - 1) \\ cols.
-		row := (i - 1) // cols.
-		scale := (cellW / w extent x) min: (cellH / w extent y).
+	windows withIndexDo: [ :window :index | | col row thumbnail cellLeft cellTop lm |
+		col := (index - 1) \\ cols.
+		row := (index - 1) // cols.
+		scale := (cellW / window extent x) min: (cellH / window extent y).
 		scale := scale min: 1.0.
-		currentThumbExtent := (w extent * scale) rounded.
+		thumbExtent := (window extent * scale) rounded.
 		thumbnail := MissionControlThumbnailMorph new
-			initializeForWindow: w extent: currentThumbExtent.
+			initializeForWindow: window extent: thumbExtent.
 		self addMorph: thumbnail.
 		thumbnails add: thumbnail.
+
 		cellLeft := available left + (col * (cellW + spacing)).
 		cellTop := available top + (row * (cellH + labelHeight + spacing)).
-		thumbnail
-			position: (cellLeft + ((cellW - currentThumbExtent x) // 2))
-				@ (cellTop + ((cellH - currentThumbExtent y) // 2)).
+		thumbnail position: (self positionFor: thumbExtent cellW: cellW cellH: cellH cellLeft: cellLeft cellTop: cellTop).
+
 		MissionControlSettings showWindowLabels ifTrue: [
 			lm := thumbnail buildLabel.
 			lm ifNotNil: [
-				lm position: (cellLeft + ((cellW - lm width) // 2))
-					@ (thumbnail position y + currentThumbExtent y + 2).
-				self addMorph: lm ] ]
+				lm position: (cellLeft + ((cellW - lm width) // 2)) @ (thumbnail position y + thumbExtent y + 2).
+				self addMorph: lm
+			]
+		]
 	]
 ]
 
 { #category : 'activation' }
 MissionControlMorph >> deactivate [
-	| w |
-	w := self world.
+	
+	| world |
+	
+	world := self world.
 	self delete.
 	isActive := false.
-	w ifNotNil: [ w activeHand newKeyboardFocus: nil ]
+	world ifNotNil: [ world activeHand newKeyboardFocus: nil ].
 ]
 
 { #category : 'activation' }
-MissionControlMorph >> deactivateAndShowWindow: aSystemWindow [
-	| w |
-	w := self world.
-	self delete.
-	isActive := false.
-	w ifNotNil: [ w activeHand newKeyboardFocus: nil ].
-	aSystemWindow
-		unexpandedFrame: aSystemWindow fullFrame;
-		activate;
-		fullscreen
+MissionControlMorph >> deactivateAndShowWindow: window [
+
+	self deactivate.
+	window unexpandedFrame: window fullFrame; activate; fullscreen
 ]
 
 { #category : 'drawing' }
-MissionControlMorph >> drawOn: aCanvas [
-	aCanvas
+MissionControlMorph >> drawOn: canvas [
+
+	canvas
 		fillRectangle: self bounds
 		fillStyle: (SolidFillStyle color: (Color black alpha: MissionControlSettings overlayOpacity))
 ]
 
 { #category : 'event handling' }
-MissionControlMorph >> handleMouseDown: evt [
+MissionControlMorph >> handleMouseDown: event [
+	
 	| clicked |
-	evt wasHandled ifTrue: [ ^ self ].
-	(spacesBar bounds containsPoint: evt position) ifTrue: [ ^ self ].
-	clicked := thumbnails detect: [ :t |
-		t bounds containsPoint: evt position ] ifNone: [ nil ].
+	
+	event wasHandled ifTrue: [ ^ self ].
+	
+	(spacesBar bounds containsPoint: event position) ifTrue: [ ^ self ].
+	clicked := thumbnails detect: [ :thumbnail| thumbnail bounds containsPoint: event position ] ifNone: [ nil ].
+	
 	clicked ifNotNil: [ ^ self deactivateAndShowWindow: clicked window ].
+	
 	self deactivate
 ]
 
 { #category : 'event handling' }
-MissionControlMorph >> handlesKeyDown: evt [
+MissionControlMorph >> handlesKeyDown: event [
+
 	^ true
 ]
 
 { #category : 'event handling' }
-MissionControlMorph >> handlesKeyboard: evt [
+MissionControlMorph >> handlesKeyboard: event [
+
 	^ true
 ]
 
 { #category : 'event handling' }
-MissionControlMorph >> handlesMouseDown: evt [
+MissionControlMorph >> handlesMouseDown: event [
+
 	^ true
 ]
 
 { #category : 'accessing' }
 MissionControlMorph >> isActive [
+
 	^ isActive
 ]
 
 { #category : 'event handling' }
-MissionControlMorph >> keyDown: evt [
-	evt keyCharacter = Character escape ifTrue: [ ^ self deactivate ]
+MissionControlMorph >> keyDown: event [
+
+	event keyCharacter = Character escape ifTrue: [ ^ self deactivate ]
 ]
 
 { #category : 'private' }
@@ -169,11 +176,19 @@ MissionControlMorph >> labelHeight [
 
 { #category : 'wiw support' }
 MissionControlMorph >> morphicLayerNumber [
+
 	^ 5
+]
+
+{ #category : 'private' }
+MissionControlMorph >> positionFor: thumbExtent cellW: cellW cellH: cellH cellLeft: cellLeft cellTop: cellTop [
+
+	^ (cellLeft + ((cellW - thumbExtent x) // 2)) @ (cellTop + ((cellH - thumbExtent y) // 2))
 ]
 
 { #category : 'accessing' }
 MissionControlMorph >> spacesBar [
+
 	^ spacesBar
 ]
 
@@ -186,10 +201,12 @@ MissionControlMorph >> spacing [
 
 { #category : 'accessing' }
 MissionControlMorph >> thumbnails [
+
 	^ thumbnails
 ]
 
 { #category : 'accessing' }
 MissionControlMorph >> wantsToBeTopmost [
+
 	^ true
 ]
