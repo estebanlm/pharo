@@ -34,6 +34,7 @@ MissionControlMorph >> activateInWorld: world [
 	self addMorph: spacesBar.
 	world addMorphFront: self.
 	self createThumbnailsFor: nonCollapsed.
+
 	world activeHand newKeyboardFocus: self.
 	isActive := true
 ]
@@ -196,7 +197,7 @@ MissionControlMorph >> spacesBar [
 MissionControlMorph >> spacing [
 
 	"this defines the space between tabs"
-	^ 8
+	^ 20
 ]
 
 { #category : 'accessing' }
