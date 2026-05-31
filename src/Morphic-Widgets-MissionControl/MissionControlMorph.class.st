@@ -197,7 +197,7 @@ MissionControlMorph >> spacesBar [
 MissionControlMorph >> spacing [
 
 	"this defines the space between tabs"
-	^ 20
+	^ 10
 ]
 
 { #category : 'accessing' }
