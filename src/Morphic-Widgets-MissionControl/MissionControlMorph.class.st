@@ -11,70 +11,85 @@ Class {
 }
 
 { #category : 'activation' }
-MissionControlMorph class >> toggleInWorld: aWorld [
-	| current |
-	current := aWorld submorphs
-		detect: [ :m | m isKindOf: self ]
-		ifNone: [ nil ].
-	current
-		ifNil: [ self new activateInWorld: aWorld ]
-		ifNotNil: [ current deactivate ]
+MissionControlMorph class >> toggleInWorld: world [
+
+	| currentControlMission |
+	
+	currentControlMission := world submorphs detect: [ :m | m isKindOf: self ] ifNone: [ nil ].
+
+	currentControlMission ifNil: [ self new activateInWorld: world ]
 ]
 
 { #category : 'activation' }
-MissionControlMorph >> activateInWorld: aWorld [
+MissionControlMorph >> activateInWorld: world [
+
 	| nonCollapsed collapsed |
-	nonCollapsed := (aWorld systemWindows select: [ :w | w isCollapsed not ]).
-	collapsed := (aWorld systemWindows select: [ :w | w isCollapsed ]).
-	self bounds: aWorld bounds.
-	spacesBar := MissionControlSpacesBar new
-		initializeForWorld: aWorld
-		collapsedWindows: collapsed.
+
+	nonCollapsed := world systemWindows reject: #isCollapsed.
+	collapsed := world systemWindows select: #isCollapsed.
+
+	self bounds: world bounds.
+	spacesBar := MissionControlSpacesBar new initializeForWorld: world collapsedWindows: collapsed.
+	
 	self addMorph: spacesBar.
-	aWorld addMorphFront: self.
+	world addMorphFront: self.
 	self createThumbnailsFor: nonCollapsed.
-	aWorld activeHand newKeyboardFocus: self.
+	world activeHand newKeyboardFocus: self.
 	isActive := true
 ]
 
 { #category : 'private' }
 MissionControlMorph >> createThumbnailsFor: windows [
-	| padding spacing available n cols rows cellW cellH labelHeight scale thumbExtent |
+
+	| padding spacing available size cols rows cellW cellH labelHeight |
+
+	windows ifEmpty: [ ^ self ].
+	
 	thumbnails := OrderedCollection new.
-	n := windows size.
-	n = 0 ifTrue: [ ^ self ].
+	
+	size := windows size.
+	
 	padding := MissionControlSettings thumbnailPadding.
 	available := self bounds insetBy: padding.
 	available := available withTop: (available top + spacesBar height + padding).
-	labelHeight := MissionControlSettings showWindowLabels
-		ifTrue: [ StandardFonts defaultFont height + 4 ]
-		ifFalse: [ 0 ].
-	cols := n sqrt ceiling.
-	rows := (n / cols) ceiling.
-	spacing := 8.
+	labelHeight := self labelHeight.
+	cols := size sqrt ceiling.
+	rows := (size / cols) ceiling.
+	spacing := self spacing.
+	
 	cellW := (available width - (spacing * (cols - 1))) / cols.
 	cellH := (available height - (labelHeight * rows) - (spacing * (rows - 1))) / rows.
-	windows withIndexDo: [ :w :i |
-		| col row thumbnail cellLeft cellTop label lm |
+	
+	self createThumbnailsFor: windows cols: cols availableSpace: available cellW: cellW cellH: cellH labelHeight: labelHeight
+]
+
+{ #category : 'private' }
+MissionControlMorph >> createThumbnailsFor: windows cols: cols availableSpace: available cellW: cellW cellH: cellH labelHeight: labelHeight [
+
+	| currentThumbExtent spacing scale|
+	
+	spacing := self spacing.
+
+	windows withIndexDo: [ :w :i | | col row thumbnail cellLeft cellTop lm |
 		col := (i - 1) \\ cols.
 		row := (i - 1) // cols.
 		scale := (cellW / w extent x) min: (cellH / w extent y).
 		scale := scale min: 1.0.
-		thumbExtent := (w extent * scale) rounded.
+		currentThumbExtent := (w extent * scale) rounded.
 		thumbnail := MissionControlThumbnailMorph new
-			initializeForWindow: w extent: thumbExtent.
+			initializeForWindow: w extent: currentThumbExtent.
 		self addMorph: thumbnail.
 		thumbnails add: thumbnail.
 		cellLeft := available left + (col * (cellW + spacing)).
 		cellTop := available top + (row * (cellH + labelHeight + spacing)).
 		thumbnail
-			position: (cellLeft + ((cellW - thumbExtent x) // 2))
-				@ (cellTop + ((cellH - thumbExtent y) // 2)).
+			position: (cellLeft + ((cellW - currentThumbExtent x) // 2))
+				@ (cellTop + ((cellH - currentThumbExtent y) // 2)).
 		MissionControlSettings showWindowLabels ifTrue: [
 			lm := thumbnail buildLabel.
 			lm ifNotNil: [
 				lm position: (cellLeft + ((cellW - lm width) // 2))
-					@ (thumbnail position y + thumbExtent y + 2).
+					@ (thumbnail position y + currentThumbExtent y + 2).
 				self addMorph: lm ] ]
 	]
 ]
@@ -144,6 +159,14 @@ MissionControlMorph >> keyDown: evt [
 	evt keyCharacter = Character escape ifTrue: [ ^ self deactivate ]
 ]
 
+{ #category : 'private' }
+MissionControlMorph >> labelHeight [
+
+	^ MissionControlSettings showWindowLabels
+		  ifTrue: [ StandardFonts defaultFont height + 4 ]
+		  ifFalse: [ 0 ]
+]
+
 { #category : 'wiw support' }
 MissionControlMorph >> morphicLayerNumber [
 	^ 5
@@ -152,6 +175,13 @@ MissionControlMorph >> morphicLayerNumber [
 { #category : 'accessing' }
 MissionControlMorph >> spacesBar [
 	^ spacesBar
+]
+
+{ #category : 'private' }
+MissionControlMorph >> spacing [
+
+	"this defines the space between tabs"
+	^ 8
 ]
 
 { #category : 'accessing' }
