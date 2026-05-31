@@ -10,52 +10,57 @@ Class {
 }
 
 { #category : 'private' }
-MissionControlSpacesBar >> buildDesktopThumbnailFor: aWorld extent: thumbExtent [
+MissionControlSpacesBar >> buildDesktopThumbnailFor: world extent: thumbExtent [
+
 	| image |
-	image := ImageMorph new
-		form: (aWorld asFormOfSize: thumbExtent);
-		yourself.
+
+	image := ImageMorph new form: (world asFormOfSize: thumbExtent); yourself.
 	image setProperty: #isDesktopThumbnail toValue: true.
+
 	^ image
 ]
 
 { #category : 'private' }
-MissionControlSpacesBar >> buildSpaceThumbnailFor: aWindow extent: thumbExtent [
-	| image thumb |
-	image := aWindow taskThumbnailOfSize: thumbExtent.
-	image setProperty: #window toValue: aWindow.
+MissionControlSpacesBar >> buildSpaceThumbnailFor: window extent: thumbExtent [
+
+	| image |
+	
+	image := window taskThumbnailOfSize: thumbExtent.
+	image setProperty: #window toValue: window.
+	
 	^ image
 ]
 
 { #category : 'accessing' }
 MissionControlSpacesBar >> desktopThumbnail [
+
 	^ desktopThumbnail
 ]
 
 { #category : 'drawing' }
 MissionControlSpacesBar >> drawOn: aCanvas [
-	aCanvas
-		fillRectangle: self bounds
-		fillStyle: (SolidFillStyle color: (Color black alpha: 0.3)).
+
+	aCanvas fillRectangle: self bounds fillStyle: (SolidFillStyle color: (Color black alpha: 0.3)).
 	super drawOn: aCanvas
 ]
 
 { #category : 'event handling' }
-MissionControlSpacesBar >> handlesMouseDown: evt [
+MissionControlSpacesBar >> handlesMouseDown: event [
+
 	^ true
 ]
 
 { #category : 'initialization' }
 MissionControlSpacesBar >> initializeForWorld: aWorld collapsedWindows: collapsedWindows [
+
 	| barHeight thumbExtent |
+	
 	barHeight := 80.
 	thumbExtent := 120 @ 60.
+
+	self extent: aWorld width @ barHeight; position: aWorld position; color: (Color black alpha: 0.3); borderWidth: 0.
 	self
-		extent: (aWorld width @ barHeight);
-		position: aWorld position;
-		color: (Color black alpha: 0.3);
-		borderWidth: 0.
-	self changeTableLayout;
+		changeTableLayout;
 		listDirection: #leftToRight;
 		cellInset: 8;
 		layoutInset: 8;
@@ -64,34 +69,38 @@ MissionControlSpacesBar >> initializeForWorld: aWorld collapsedWindows: collapse
 		wrapCentering: #center;
 		cellPositioning: #center.
 	desktopThumbnail := self buildDesktopThumbnailFor: aWorld extent: thumbExtent.
+	
 	self addMorph: desktopThumbnail.
 	spaceThumbnails := OrderedCollection new.
-	collapsedWindows do: [ :w |
-		| thumb |
-		thumb := self buildSpaceThumbnailFor: w extent: thumbExtent.
+	
+	collapsedWindows do: [ :window | | thumb |
+		thumb := self buildSpaceThumbnailFor: window extent: thumbExtent.
 		self addMorph: thumb.
-		spaceThumbnails add: thumb ]
+		spaceThumbnails add: thumb
+	]
 ]
 
 { #category : 'event handling' }
-MissionControlSpacesBar >> mouseDown: evt [
+MissionControlSpacesBar >> mouseDown: event [
+
 	| clicked |
-	clicked := self submorphs
-		detect: [ :m | m bounds containsPoint: evt position ]
-		ifNone: [ nil ].
+	
+	clicked := self submorphs detect: [ :m | m bounds containsPoint: event position ] ifNone: [ nil ].
 	clicked ifNil: [ ^ self ].
+	
 	(clicked hasProperty: #isDesktopThumbnail) ifTrue: [
-		self owner ifNotNil: [ :mc |
-			(mc isKindOf: MissionControlMorph) ifTrue: [ mc deactivate ] ].
-		^ self ].
-	(clicked hasProperty: #window) ifTrue: [
-		| w |
-		w := clicked valueOfProperty: #window.
-		self owner ifNotNil: [ :mc |
-			(mc isKindOf: MissionControlMorph) ifTrue: [ mc deactivateAndShowWindow: w ] ] ]
+		self owner ifNotNil: [ :mc | (mc isKindOf: MissionControlMorph) ifTrue: [ mc deactivate ] ].
+		^ self
+	].
+
+	(clicked hasProperty: #window) ifTrue: [ | window |
+		window := clicked valueOfProperty: #window.
+		self owner ifNotNil: [ :mc | (mc isKindOf: MissionControlMorph) ifTrue: [ mc deactivateAndShowWindow: window ] ]
+	]
 ]
 
 { #category : 'accessing' }
 MissionControlSpacesBar >> spaceThumbnails [
+
 	^ spaceThumbnails
 ]
