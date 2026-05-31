@@ -39,10 +39,12 @@ MissionControlThumbnailMorph >> drawOn: aCanvas [
 	super drawOn: aCanvas.
 	thumbnailForm ifNotNil: [
 		aCanvas translucentImage: thumbnailForm at: self position + (self width - thumbnailForm width // 2 @ 2) ].
-
-	isHighlighted
-		ifTrue: [ aCanvas frameRectangle: self bounds width: 4 color: self highlightBorderColor ]
-		ifFalse: [ aCanvas frameRectangle: self bounds width: 2 color: self baseBorderColor ]
+	
+	borderColor := isHighlighted ifTrue: [ self highlightBorderColor ] ifFalse: [ self baseBorderColor ].
+	borderWidth := isHighlighted ifTrue: [ 4 ] ifFalse: [ 2 ].
+	
+	self borderColor: borderColor.
+	aCanvas frameRectangle: self bounds width: borderWidth color: borderColor
 ]
 
 { #category : 'drawing' }
