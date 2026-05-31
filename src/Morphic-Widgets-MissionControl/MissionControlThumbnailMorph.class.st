@@ -25,11 +25,15 @@ MissionControlThumbnailMorph >> buildLabel [
 
 	labelMorph ifNotNil: [ ^ labelMorph ].
 	MissionControlSettings showWindowLabels ifFalse: [ ^ nil ].
+	
 	title := window labelString.
-	title size > 30 ifTrue: [ title := (title first: 30) , '...' ].
+	title size > self maxTtleSize ifTrue: [
+		title := (title first: self maxTtleSize) , '...'
+	].
+
 	labelMorph := StringMorph contents: title font: StandardFonts defaultFont.
 	labelMorph color: Color white.
-	
+
 	^ labelMorph
 ]
 
@@ -94,6 +98,12 @@ MissionControlThumbnailMorph >> labelMorph [
 	^ labelMorph
 ]
 
+{ #category : 'private' }
+MissionControlThumbnailMorph >> maxTtleSize [
+
+	^ 30
+]
+
 { #category : 'event handling' }
 MissionControlThumbnailMorph >> mouseEnter: evt event: aMorph [
 
@@ -111,8 +121,7 @@ MissionControlThumbnailMorph >> mouseLeave: evt event: aMorph [
 { #category : 'private' }
 MissionControlThumbnailMorph >> safeThumbnailOf: aWindow size: extent [
 
-	^ [ aWindow asFormOfSize: extent ] on: Error
-		  do: [ Form extent: extent depth: 32 ]
+	^ [ aWindow asFormOfSize: extent ] on: Error do: [ Form extent: extent depth: 32 ]
 ]
 
 { #category : 'accessing' }
