@@ -20,7 +20,7 @@ MissionControlMorph class >> toggleInWorld: world [
 	currentControlMission ifNil: [ self new activateInWorld: world ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'world menu' }
 MissionControlMorph class >> worldMenuEntryOn: aBuilder [
 
 	<worldMenu>
