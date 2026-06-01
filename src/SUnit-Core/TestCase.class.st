@@ -658,12 +658,18 @@ TestCase >> debug [
 	"During the execution, if the receiver fails
 	due to an error or an assertion failure,
 	I open the debuger so user can see the context of failure"
-	| result |
 
+	| result |
 	result := self classForTestResult new.
-	^ [ self debug: result ] 
-	ensure: [ 
-		result updateResultsInHistory ].
+	[ self debug: result ]
+		on: Exception
+		do: [ :exception |
+				result updateResultsInHistory.
+				exception pass ].
+
+
+	result updateResultsInHistory.
+	^ result
 ]
 
 { #category : 'running' }
