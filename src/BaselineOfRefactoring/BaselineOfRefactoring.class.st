@@ -14,12 +14,12 @@ BaselineOfRefactoring >> baseline: spec [
 				spec
 					className: 'BaselineOfSpec2';
 					loads: #( 'Core' );
-					repository: 'github://pharo-spec/Spec2/src' ];
+					repository: 'github://pharo-spec/Spec:Pharo14/src' ];
 		project: 'Commander2' with: [
 			spec
 				className: 'BaselineOfCommander2';
 				loads: #( 'Core' );
-				repository: 'github://pharo-spec/Commander2/src' ].
+				repository: 'github://pharo-spec/Commander2:Pharo14/src' ].
 	spec package: 'Regex-Core'.
 	spec
 		package: 'Refactoring-Environment';
