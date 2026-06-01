@@ -15,5 +15,5 @@ WorldMorph >> dismissMissionControl [
 WorldMorph >> missionControl [
 
 	"Toggle Mission Control"
-	MissionControlMorph toggleInWorld: self
+	MissionControlMorph ensureMissionControlInWorld: self
 ]

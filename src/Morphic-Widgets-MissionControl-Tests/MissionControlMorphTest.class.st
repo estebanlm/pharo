@@ -53,7 +53,7 @@ MissionControlMorphTest >> testCollapsedWindowsInSpacesBar [
 	self openTestWindows: 1.
 	collapsedWin := testWindows first.
 	collapsedWin collapse.
-	MissionControlMorph toggleInWorld: world.
+	MissionControlMorph ensureMissionControlInWorld: world.
 	missionControl := world submorphs detect: [ :m | m isKindOf: MissionControlMorph ].
 	self assert: missionControl spacesBar spaceThumbnails size equals: 1
 ]
@@ -61,7 +61,7 @@ MissionControlMorphTest >> testCollapsedWindowsInSpacesBar [
 { #category : 'tests' }
 MissionControlMorphTest >> testNoWindowsShowsEmptyMissionControl [
 
-	MissionControlMorph toggleInWorld: world.
+	MissionControlMorph ensureMissionControlInWorld: world.
 	self assert: (world submorphs anySatisfy: [ :m | m isKindOf: MissionControlMorph ])
 ]
 
@@ -70,7 +70,7 @@ MissionControlMorphTest >> testThumbnailClickActivatesWindow [
 
 	| missionControl thumb event |
 	self openTestWindows: 1.
-	MissionControlMorph toggleInWorld: world.
+	MissionControlMorph ensureMissionControlInWorld: world.
 	missionControl := world submorphs detect: [ :m | m isKindOf: MissionControlMorph ].
 	thumb := missionControl thumbnails first.
 
@@ -90,6 +90,6 @@ MissionControlMorphTest >> testThumbnailClickActivatesWindow [
 MissionControlMorphTest >> testThumbnailCreation [
 
 	self openTestWindows: 3.
-	MissionControlMorph toggleInWorld: world.
+	MissionControlMorph ensureMissionControlInWorld: world.
 	self assert: (world submorphs detect: [ :m | m isKindOf: MissionControlMorph ] ifNone: [ nil ]) thumbnails size equals: 3
 ]

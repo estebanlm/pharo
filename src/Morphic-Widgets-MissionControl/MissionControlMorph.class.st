@@ -11,13 +11,9 @@ Class {
 }
 
 { #category : 'activation' }
-MissionControlMorph class >> toggleInWorld: world [
+MissionControlMorph class >> ensureMissionControlInWorld: world [
 
-	| currentControlMission |
-	
-	currentControlMission := world submorphs detect: [ :m | m isKindOf: self ] ifNone: [ nil ].
-
-	currentControlMission ifNil: [ self new activateInWorld: world ]
+	world submorphs detect: [ :m | m isKindOf: self ] ifNone: [ self new activateInWorld: world ]
 ]
 
 { #category : 'world menu' }
@@ -26,7 +22,7 @@ MissionControlMorph class >> worldMenuEntryOn: aBuilder [
 	<worldMenu>
 	(aBuilder item: #'Mission Control')
 		parent: #Windows;
-		action: [ MissionControlMorph toggleInWorld: self currentWorld ];
+		action: [ MissionControlMorph ensureMissionControlInWorld: self currentWorld ];
 		help: 'Show all windows arranged in a single layer for easy navigation.';
 		iconName: #window
 ]
@@ -82,7 +78,7 @@ MissionControlMorph >> createThumbnailsFor: windows cols: cols availableSpace: a
 	
 	spacing := self spacing.
 
-	windows withIndexDo: [ :window :index | | col row thumbnail cellLeft cellTop lm |
+	windows withIndexDo: [ :window :index | | col row thumbnail cellLeft cellTop |
 		col := (index - 1) \\ cols.
 		row := (index - 1) // cols.
 		scale := (cellW / window extent x) min: (cellH / window extent y).
@@ -98,10 +94,9 @@ MissionControlMorph >> createThumbnailsFor: windows cols: cols availableSpace: a
 		thumbnail position: (self positionFor: thumbExtent cellW: cellW cellH: cellH cellLeft: cellLeft cellTop: cellTop).
 
 		MissionControlSettings showWindowLabels ifTrue: [
-			lm := thumbnail buildLabel.
-			lm ifNotNil: [
-				lm position: (cellLeft + ((cellW - lm width) // 2)) @ (thumbnail position y + thumbExtent y + 2).
-				self addMorph: lm
+			thumbnail buildLabel ifNotNil: [ :label |
+				label position: (cellLeft + ((cellW - label width) // 2)) @ (thumbnail position y + thumbExtent y + 2).
+				self addMorph: label
 			]
 		]
 	]
@@ -142,7 +137,7 @@ MissionControlMorph >> handleMouseDown: event [
 	thumbnails ifNil: [ ^ self deactivate ].
 	
 	(spacesBar bounds containsPoint: event position) ifTrue: [ ^ self ].
-	clicked := thumbnails detect: [ :thumbnail| thumbnail bounds containsPoint: event position ] ifNone: [ nil ].
+	clicked := thumbnails detect: [ :thumbnail | thumbnail bounds containsPoint: event position ] ifNone: [ nil ].
 	
 	clicked ifNotNil: [ ^ self deactivateAndShowWindow: clicked window ].
 	
