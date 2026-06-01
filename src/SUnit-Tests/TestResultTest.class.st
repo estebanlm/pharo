@@ -10,24 +10,19 @@ Class {
 TestResultTest >> testDebugFiresNotificationBeforeAndAfter [
 
 	| unitTestClass historyAnnouncements |
-	unitTestClass := ClassFactoryForTestCaseTest.
-	unitTestClass resetAnnouncer.
-	unitTestClass resetHistory.
+	[
+		unitTestClass := SUnitTest.
+		unitTestClass resetAnnouncer.
+		unitTestClass resetHistory.
+		historyAnnouncements := OrderedCollection new.
+		unitTestClass historyAnnouncer when: TestSuiteEnded do: [ :announcement | historyAnnouncements add: announcement ] for: self.
+		[ unitTestClass debug: #expectedFailureFails ]
+			on: Exception
+			do: [ :ex | self denyEmpty: historyAnnouncements ].
 
-	unitTestClass compile: 'testFailing self assert: false'.
-
-
-	historyAnnouncements := OrderedCollection new.
-	unitTestClass historyAnnouncer when: TestSuiteEnded do: [ :announcement | historyAnnouncements add: announcement ] for: self.
-	[ unitTestClass debug: #testFailing ]
-		on: Exception
-		do: [ :ex | self assert: historyAnnouncements isNotEmpty ].
-
-	self assert: historyAnnouncements size equals: 2.
-
-	unitTestClass historyAnnouncer unsubscribe: self.
-	unitTestClass resetHistory.
-	unitTestClass removeSelector: #testFailing
+		self assert: historyAnnouncements size equals: 2 ] ensure: [
+			unitTestClass historyAnnouncer unsubscribe: self.
+			unitTestClass resetHistory ]
 ]
 
 { #category : 'tests' }
