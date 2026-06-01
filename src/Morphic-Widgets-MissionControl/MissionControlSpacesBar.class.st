@@ -12,23 +12,18 @@ Class {
 { #category : 'private' }
 MissionControlSpacesBar >> buildDesktopThumbnailFor: world extent: thumbExtent [
 
-	| image |
-
-	image := ImageMorph new form: (world asFormOfSize: thumbExtent); yourself.
-	image setProperty: #isDesktopThumbnail toValue: true.
-
-	^ image
+	^ ImageMorph new
+			form: (world asFormOfSize: thumbExtent);
+			setProperty: #isDesktopThumbnail toValue: true;
+			yourself
 ]
 
 { #category : 'private' }
 MissionControlSpacesBar >> buildSpaceThumbnailFor: window extent: thumbExtent [
 
-	| image |
-	
-	image := window taskThumbnailOfSize: thumbExtent.
-	image setProperty: #window toValue: window.
-	
-	^ image
+	^ (window taskThumbnailOfSize: thumbExtent)
+		  setProperty: #window toValue: window;
+		  yourself
 ]
 
 { #category : 'accessing' }
