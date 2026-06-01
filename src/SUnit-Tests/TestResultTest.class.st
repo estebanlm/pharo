@@ -7,6 +7,30 @@ Class {
 }
 
 { #category : 'tests' }
+TestResultTest >> testDebugFiresNotificationBeforeAndAfter [
+
+	| unitTestClass historyAnnouncements |
+	unitTestClass := ClassFactoryForTestCaseTest.
+	unitTestClass resetAnnouncer.
+	unitTestClass resetHistory.
+
+	unitTestClass compile: 'testFailing self assert: false'.
+
+
+	historyAnnouncements := OrderedCollection new.
+	unitTestClass historyAnnouncer when: TestSuiteEnded do: [ :announcement | historyAnnouncements add: announcement ] for: self.
+	[ unitTestClass debug: #testFailing ]
+		on: Exception
+		do: [ :ex | self assert: historyAnnouncements isNotEmpty ].
+
+	self assert: historyAnnouncements size equals: 2.
+
+	unitTestClass historyAnnouncer unsubscribe: self.
+	unitTestClass resetHistory.
+	unitTestClass removeSelector: #testFailing
+]
+
+{ #category : 'tests' }
 TestResultTest >> testRemoveFromTestHistoryFiresHistoryAnnouncement [
 	"Removing a method from test history should announce TestSuiteEnded
      on the class historyAnnouncer so the class-level bubble turns grey."
