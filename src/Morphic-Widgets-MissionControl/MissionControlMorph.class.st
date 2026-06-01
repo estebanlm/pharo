@@ -20,6 +20,17 @@ MissionControlMorph class >> toggleInWorld: world [
 	currentControlMission ifNil: [ self new activateInWorld: world ]
 ]
 
+{ #category : 'as yet unclassified' }
+MissionControlMorph class >> worldMenuEntryOn: aBuilder [
+
+	<worldMenu>
+	(aBuilder item: #'Mission Control')
+		parent: #Windows;
+		action: [ MissionControlMorph toggleInWorld: self currentWorld ];
+		help: 'Show all windows arranged in a single layer for easy navigation.';
+		iconName: #window
+]
+
 { #category : 'activation' }
 MissionControlMorph >> activateInWorld: world [
 
