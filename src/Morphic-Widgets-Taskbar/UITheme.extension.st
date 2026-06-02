@@ -39,15 +39,15 @@ UITheme >> newBasicTaskbarButtonIn: aTaskbar for: aMorph [
 { #category : '*Morphic-Widgets-Taskbar' }
 UITheme >> openTaskListIn: world from: aKeyboardEvent [
 
-	tasklistMorph
+		tasklistMorph
 		ifNil: [ tasklistMorph := TaskListMorph new ]
 		ifNotNil: [
-			(tasklistMorph hasCurrentWindows: self currentWorld taskbarTasks)
+			(tasklistMorph hasCurrentWindows: world taskbarTasks)
 				ifFalse: [ tasklistMorph := TaskListMorph new ] ].
 
 	aKeyboardEvent shiftPressed
-		ifTrue: [ tasklistMorph selectNextTask ]
-		ifFalse: [ tasklistMorph selectPreviousTask ].
+		ifTrue: [ tasklistMorph selectPreviousTask ]
+		ifFalse: [ tasklistMorph selectNextTask ].
 
 	tasklistMorph openInWorld: world
 ]

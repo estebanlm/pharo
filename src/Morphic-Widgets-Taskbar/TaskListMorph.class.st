@@ -1,6 +1,7 @@
 "
-Themed task list/switcher to select the topmost window. Use cmd + left or right arrows (not ideal but the os typically handles cmd + tab/shift-tab).
-On Linux, release of the command key is not detected (vm issue), so press and release cmd again or move the mouse!
+A themed task list/switcher to select the topmost window. Opens on Alt+Tab (Option+Tab on macOS).
+Hold the modifier key to keep the switcher open; press Tab to cycle forward, Shift+Tab to cycle backward.
+On Linux, release of the command key is not detected (vm issue), so press and release the modifier again or move the mouse.
 "
 Class {
 	#name : 'TaskListMorph',
@@ -64,7 +65,7 @@ TaskListMorph >> addMorphs [
 		self taskList }.
 	mainColumn
 		vResizing: #shrinkWrap;
-		cellInset: 8;
+		cellInset: 4;
 		cellPositioning: #center.
 	self addMorph: mainColumn.
 	self layoutChanged
@@ -74,7 +75,7 @@ TaskListMorph >> addMorphs [
 TaskListMorph >> defaultPreviewExtent [
 	"Answer the default extent of the preview holder."
 
-	^(320@320) scaledByDisplayScaleFactor
+	^(180@180) scaledByDisplayScaleFactor
 ]
 
 { #category : 'open/close' }
@@ -97,6 +98,18 @@ TaskListMorph >> handlesKeyboard: evt [
 	"Yes, we do it here."
 
 	^true
+]
+
+{ #category : 'event handling' }
+TaskListMorph >> keyDown: event [
+	"Handle Alt+Tab and Alt+Shift+Tab to cycle through tasks."
+
+	(self class isNavigationEvent: event) ifTrue: [
+		event shiftPressed
+			ifTrue: [ self selectPreviousTask ]
+			ifFalse: [ self selectNextTask ].
+		^ true ].
+	^ super keyDown: event
 ]
 
 { #category : 'testing' }
@@ -137,7 +150,7 @@ TaskListMorph >> initializeLayout [
 
 	self
 		changeTableLayout;
-		layoutInset: 16;
+		layoutInset: 8;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
 		extent: self minimumExtent
@@ -159,7 +172,7 @@ TaskListMorph >> keepOpen [
 TaskListMorph >> minimumExtent [
 	"Answer the minimum extent."
 
-	^self defaultPreviewExtent + 64
+	^self defaultPreviewExtent + 32
 ]
 
 { #category : 'instance creation' }
