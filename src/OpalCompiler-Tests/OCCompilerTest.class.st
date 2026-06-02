@@ -101,7 +101,7 @@ OCCompilerTest >> testAssignmentOfGlobalVarBinding [
 					class: MockForCompilation;
 					compileOrFail ]
 		raise: OCCompilationError
-		with: [ :err | self assert: err messageText equals: 'Error while compiling' ]
+		with: [ :err | self assert: (err messageText beginsWith: 'Compilation failed with following errors:') ]
 ]
 
 { #category : 'tests' }

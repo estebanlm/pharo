@@ -46,54 +46,23 @@ DebugContext class >> forContext: aContext [
 ]
 
 { #category : 'private' }
-DebugContext >> blockNotFoundDialog: aMethod with: aText [
-
-	| message result newMethod |
-	message := 'Method for block not found on stack, can''t edit and continue'.
-
-	"shouldn't edit doits"
-	aMethod selector isDoIt ifTrue: [ ^ InformativeNotification signal: message ].
-
-	result := self
-		          confirm: message
-		          trueChoice: 'Compile and Browse'
-		          falseChoice: 'Cancel'.
-
-	"possible return values are true | false | nil"
-	result ifFalse: [ ^ self ].
-
-	newMethod := self recompileCurrentMethodTo: aText notifying: nil.
-	newMethod ifNotNil: [ self browseMethod: newMethod ]
-]
-
-{ #category : 'private' }
 DebugContext >> browseMethod: aMethod [
 
 	aMethod browse
 ]
 
 { #category : 'private' }
-DebugContext >> checkSelectorUnchanged: aSelector [
+DebugContext >> checkSelectorUnchanged: aSelector inSession: aDebugSession [
 	| unchanged |
 	unchanged := aSelector == self selectedMessageName
 		or: [ self selectedMessageName isDoIt and: [ aSelector numArgs = self selectedMessageName numArgs ] ].
 	unchanged
-		ifFalse: [ InformativeNotification signal: 'can''t change selector' ].
+		ifFalse: [ aDebugSession debugCallBack informCannotRecompileWithDifferentSelector ].
 	^ unchanged
 ]
 
-{ #category : 'ui requests' }
-DebugContext >> confirm: message trueChoice: trueChoice falseChoice: falseChoice [
-	self halt.
-	"YOU SHOULD NOT CALL UIMANAGER"
-	^ UIManager default
-		confirm: message
-		trueChoice: trueChoice
-		falseChoice: falseChoice
-]
-
 { #category : 'private' }
-DebugContext >> confirmOnTraitOverwrite: aSelector inClass: aClass [
+DebugContext >> confirmOnTraitOverwrite: aSelector inClass: aClass inSession: aSession [
 	"test if method originates from a trait and let the user choose which one should be change"
 
 	| target method |
@@ -101,12 +70,8 @@ DebugContext >> confirmOnTraitOverwrite: aSelector inClass: aClass [
 	method := aClass methodNamed: aSelector.
 	method isFromTrait ifTrue: [ |trait|
 		trait := method origin.
-		target := UIManager default
-			chooseFrom: {('Create copy in ' , aClass name).
-			('Compile Trait method in ' , trait name)}
-			values: {aClass. trait }
-			title: 'Where do you want to compile this trait method?' ].
-	^ target
+		target := aSession debugCallBack chooseTraitOverwriteFor: aClass trait: trait ].
+		^ target
 ]
 
 { #category : 'accessing' }
@@ -125,7 +90,7 @@ DebugContext >> forContext: aContext [
 ]
 
 { #category : 'accessing' }
-DebugContext >> locateClosureHomeWithContent: aText [
+DebugContext >> locateClosureHomeWithContent: sourceCode inSession: aSession [
 	"In case the current context is a BlockContext locate the closureHome and ask the
 	user to validate the new context. If closureHome is not found or the user does not
 	validate the new context, return nil. aText is the new content of the current context.
@@ -135,9 +100,10 @@ DebugContext >> locateClosureHomeWithContent: aText [
 	context isBlockContext ifTrue: [
 			closureHome := context activeHome.
 			closureHome ifNil: [
-					self blockNotFoundDialog: context homeMethod with: aText.
+					aSession blockContextNotFoundForMethod: context homeMethod withSourceCode: sourceCode inContext: self.
 					^ nil ].
-			(ConfirmationRequest signal: 'I will have to revert to the method from\which this block originated.  Is that OK?') ifFalse: [ ^ nil ].
+			(ConfirmationRequest signal: 'I will have to revert to the method from\which this block originated.  Is that OK?') ifFalse: [
+				^ nil ].
 			^ closureHome ].
 
 	^ context
@@ -157,24 +123,22 @@ DebugContext >> receiverClass [
 ]
 
 { #category : 'evaluating actions' }
-DebugContext >> recompileCurrentMethodTo: aText notifying: aNotifyer [
+DebugContext >> recompileCurrentMethodTo: aText notifying: aNotifyer inSession: aSession [
 
 	| classOrTraitOfMethod selector |
 	self context method isDoIt ifFalse: [
-		selector := self selectedClass compiler parseSelector: aText.
-		(self checkSelectorUnchanged: selector) ifFalse: [ ^ nil ] ].
+			selector := self selectedClass compiler parseSelector: aText.
+			(self checkSelectorUnchanged: selector inSession: aSession ) ifFalse: [ ^ nil ] ].
 
 	(self selectedClass includesSelector: selector) ifFalse: [
-		^ self selectedClass compiler
-			  protocol: self selectedMessageCategoryName;
-			  isScripting: self selectedMessageName isDoIt;
-			  requestor: aNotifyer;
-			  source: aText;
-			  compile ].
+			^ self selectedClass compiler
+				  protocol: self selectedMessageCategoryName;
+				  isScripting: self selectedMessageName isDoIt;
+				  requestor: aNotifyer;
+				  source: aText;
+				  compile ].
 
-	classOrTraitOfMethod := self
-		                        confirmOnTraitOverwrite: selector
-		                        inClass: self selectedClass.
+	classOrTraitOfMethod := self confirmOnTraitOverwrite: selector inClass: self selectedClass inSession: aSession.
 	classOrTraitOfMethod ifNil: [ ^ nil ].
 
 	^ classOrTraitOfMethod compiler
