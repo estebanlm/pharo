@@ -197,7 +197,6 @@ TaskListMorph >> newPreviewMorph [
 
 	^ StringMorph new
 		contents: '';
-		fontName: (TextStyle defaultFont fontName) size: 12;
 		color: Color white;
 		yourself
 ]
@@ -366,15 +365,19 @@ TaskListMorph >> updateTaskButtons [
 	"Create clickable thumbnail morphs for all tasks, arranged horizontally."
 
 	self taskList removeAllMorphs.
-	self tasks do: [:t | | thumb wrapper |
+	self tasks do: [:t | | thumb button |
 		thumb := t morph taskThumbnailOfSize: self defaultPreviewExtent.
-		wrapper := Morph new
-			extent: thumb extent + (4@4);
+		button := PluggableButtonMorph new
+			model: self;
+			action: #taskClicked:;
+			arguments: {t};
+			label: thumb;
+			hResizing: #shrinkWrap;
+			vResizing: #shrinkWrap;
+			useSquareCorners;
 			color: Color transparent;
 			borderWidth: 2;
-			borderColor: (t isActive ifTrue: [Color blue] ifFalse: [Color transparent]).
-		thumb position: wrapper position + (2@2).
-		wrapper addMorph: thumb.
-		wrapper on: #mouseDown send: #taskClicked: to: self withValue: t.
-		self taskList addMorphBack: wrapper]
+			borderColor: (t isActive ifTrue: [Color blue] ifFalse: [Color transparent]);
+			yourself.
+		self taskList addMorphBack: button]
 ]
