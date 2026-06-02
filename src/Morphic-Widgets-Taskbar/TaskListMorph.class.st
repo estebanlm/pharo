@@ -55,14 +55,14 @@ TaskListMorph >> activeTask [
 
 { #category : 'private' }
 TaskListMorph >> addMorphs [
-	"Add our morphs."
+	"Add our morphs. macOS-style layout: horizontal thumbnails on top, task name below."
 
 	| mainColumn |
-	self preview: self newPreviewMorph.
 	self taskList: self newTasksMorph.
+	self preview: self newPreviewMorph.
 	mainColumn := self theme newColumnIn: self for: {
-		self preview.
-		self taskList }.
+		self taskList.
+		self preview }.
 	mainColumn
 		vResizing: #shrinkWrap;
 		cellInset: 4;
@@ -73,9 +73,9 @@ TaskListMorph >> addMorphs [
 
 { #category : 'private' }
 TaskListMorph >> defaultPreviewExtent [
-	"Answer the default extent of the preview holder."
+	"Answer the default extent for each individual task thumbnail."
 
-	^(180@180) scaledByDisplayScaleFactor
+	^(120@90) scaledByDisplayScaleFactor
 ]
 
 { #category : 'open/close' }
@@ -110,6 +110,22 @@ TaskListMorph >> keyDown: event [
 			ifFalse: [ self selectNextTask ].
 		^ true ].
 	^ super keyDown: event
+]
+
+{ #category : 'event handling' }
+TaskListMorph >> handleEvent: anEvent [
+	"Handle Alt+Tab navigation directly to avoid wasHandled flag issues.
+	When a SystemWindow delegates navigationKey: to the world, the event
+	arrives here already marked as handled, which would skip handleKeyDown:."
+
+	(anEvent isKeyboard
+		and: [ self class isNavigationEvent: anEvent ])
+		ifTrue: [
+			anEvent shiftPressed
+				ifTrue: [ self selectPreviousTask ]
+				ifFalse: [ self selectNextTask ].
+			^ true ].
+	^ super handleEvent: anEvent
 ]
 
 { #category : 'testing' }
@@ -172,27 +188,29 @@ TaskListMorph >> keepOpen [
 TaskListMorph >> minimumExtent [
 	"Answer the minimum extent."
 
-	^self defaultPreviewExtent + 32
+	^(200 @ (self defaultPreviewExtent y + 32))
 ]
 
 { #category : 'instance creation' }
 TaskListMorph >> newPreviewMorph [
-	"Answer a new preview holder."
-	^ Morph new
-		color: Color transparent;
-		extent: self defaultPreviewExtent;
+	"Answer a new task name label."
+
+	^ StringMorph new
+		contents: '';
+		fontName: (TextStyle defaultFont fontName) size: 12;
+		color: Color white;
 		yourself
 ]
 
 { #category : 'instance creation' }
 TaskListMorph >> newTasksMorph [
-	"Answer a new task list."
+	"Answer a new horizontal task thumbnail strip."
 
 	^Morph new
 		changeTableLayout;
 		listDirection: #leftToRight;
 		wrapDirection: #topToBottom;
-		cellInset: 1;
+		cellInset: 4;
 		color: Color transparent;
 		hResizing: #spaceFill;
 		vResizing: #shrinkWrap;
@@ -336,22 +354,27 @@ TaskListMorph >> updateButtonsAndPreview [
 
 { #category : 'private' }
 TaskListMorph >> updatePreview [
-	"Update the preview.."
+	"Update the task name label."
 
-	self preview removeAllMorphs.
-	self preview addMorphCentered: (
-		self activeTask
-				ifNil: [ 'No tasks...' asMorph	]
-				ifNotNil: [:t | t morph taskThumbnailOfSize: self preview extent])
+	self preview contents: (self activeTask
+		ifNil: ['']
+		ifNotNil: [:t | t label])
 ]
 
 { #category : 'private' }
 TaskListMorph >> updateTaskButtons [
-	"Make buttons for the ordered tasks."
-
+	"Create clickable thumbnail morphs for all tasks, arranged horizontally."
 
 	self taskList removeAllMorphs.
-	self tasks do: [:t | | button |
-		button := t taskListButtonFor: self.
-		button ifNotNil: [self taskList addMorphBack: button]]
+	self tasks do: [:t | | thumb wrapper |
+		thumb := t morph taskThumbnailOfSize: self defaultPreviewExtent.
+		wrapper := Morph new
+			extent: thumb extent + (4@4);
+			color: Color transparent;
+			borderWidth: 2;
+			borderColor: (t isActive ifTrue: [Color blue] ifFalse: [Color transparent]).
+		thumb position: wrapper position + (2@2).
+		wrapper addMorph: thumb.
+		wrapper on: #mouseDown send: #taskClicked: to: self withValue: t.
+		self taskList addMorphBack: wrapper]
 ]
