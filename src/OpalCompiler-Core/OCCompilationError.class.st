@@ -25,10 +25,10 @@ OCCompilationError >> compilationResult: anObject [
 OCCompilationError >> initialize [
 
 	super initialize.
-	messageText := self messageText 
+	messageText := self messageText
 ]
 
-{ #category : 'initialization' }
+{ #category : 'accessing' }
 OCCompilationError >> messageText [
 
 	| ast notices res |
