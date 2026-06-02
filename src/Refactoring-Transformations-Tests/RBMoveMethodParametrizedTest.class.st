@@ -177,6 +177,6 @@ RBMoveMethodParametrizedTest >> testMoveMethodThatReferencesPoolDictionary [
 	class := refactoring model classNamed: #RBLintRuleTestData.
 	self assert: (class parseTreeForSelector: #junk) equals: (self parseMethod: 'junk ^RBClassDataForRefactoringTest junk1').
 	self assert: ((refactoring model metaclassNamed: #RBClassDataForRefactoringTest) parseTreeForSelector: #junk1) equals: (self parseMethod: 'junk1
-	^self printString copyFrom: 1 to: CR').
-	self assert: (class directlyDefinesPoolDictionary: 'TextConstants' asSymbol)
+	^self printString copyFrom: 1 to: Var1').
+	self assert: (class directlyDefinesPoolDictionary: 'RBSharedPoolForTestData' asSymbol)
 ]
