@@ -10,16 +10,14 @@ BaselineOfRefactoring >> baseline: spec [
 
 	<baseline>
 	spec
-		project: 'Spec2' with: [
+		baseline: 'Spec2' with: [
 				spec
-					className: 'BaselineOfSpec2';
 					loads: #( 'Core' );
-					repository: 'github://pharo-spec/Spec:Pharo14/src' ];
-		project: 'Commander2' with: [
+					repository: 'github://pharo-spec/Spec' ];
+		baseline: 'Commander2' with: [
 			spec
-				className: 'BaselineOfCommander2';
 				loads: #( 'Core' );
-				repository: 'github://pharo-spec/Commander2:Pharo14/src' ].
+				repository: 'github://pharo-project/Commander2' ].
 	spec package: 'Regex-Core'.
 	spec
 		package: 'Refactoring-Environment';
