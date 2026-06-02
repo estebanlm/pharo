@@ -12,14 +12,8 @@ BaselineOfRefactoring >> baseline: spec [
 	| repository |
 	repository := (self classNamed: #BaselineOfPharo) specRepository.
 	spec
-		baseline: 'Spec2' with: [
-				spec
-					loads: #( 'Core' );
-					repository: repository ];
-		baseline: 'Commander2' with: [
-			spec
-				loads: #( 'Core' );
-				repository: repository ].
+		baseline: 'Spec2' with: [ spec loads: #( 'Core' ) ];
+		baseline: 'Commander2' with: [ spec loads: #( 'Core' ) ].
 	spec package: 'Regex-Core'.
 	spec
 		package: 'Refactoring-Environment';
