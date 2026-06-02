@@ -10,7 +10,7 @@ BaselineOfRefactoring >> baseline: spec [
 
 	<baseline>
 	| repository |
-	repository := self packageRepositoryURLForSpec: spec.
+	repository := (self classNamed: #BaselineOfPharo) specRepository.
 	spec
 		baseline: 'Spec2' with: [
 				spec
