@@ -9,15 +9,17 @@ Class {
 BaselineOfRefactoring >> baseline: spec [
 
 	<baseline>
+	| repository |
+	repository := self packageRepositoryURLForSpec: spec.
 	spec
 		baseline: 'Spec2' with: [
 				spec
 					loads: #( 'Core' );
-					repository: 'github://pharo-spec/Spec' ];
+					repository: repository ];
 		baseline: 'Commander2' with: [
 			spec
 				loads: #( 'Core' );
-				repository: 'github://pharo-project/Commander2' ].
+				repository: repository ].
 	spec package: 'Regex-Core'.
 	spec
 		package: 'Refactoring-Environment';
