@@ -11,6 +11,7 @@ BaselineOfRefactoring >> baseline: spec [
 	<baseline>
 	spec package: 'Regex-Core'.
 	spec
+		package: 'AST-Core-Tests';
 		package: 'Refactoring-Environment';
 		package: 'Refactoring-Changes' with: [ spec requires: #( 'Refactoring-Environment' ) ];
 		package: 'Refactoring-CompilerSupport';
@@ -22,7 +23,7 @@ BaselineOfRefactoring >> baseline: spec [
 		package: 'Refactoring-DataForTesting'
 		with: [ spec requires: #( 'Refactoring-Core' 'Refactoring-Environment' 'Refactoring-Changes' ) ];
 		package: 'Refactoring-CompilerSupport-Tests' with: [ spec requires: #( 'Refactoring-CompilerSupport' ) ];
-		package: 'Refactoring-Core-Tests' with: [ spec requires: #( 'Refactoring-Core' ) ];
+		package: 'Refactoring-Core-Tests' with: [ spec requires: #( 'Refactoring-Core' 'AST-Core-Tests' ) ];
 		package: 'Refactoring-Changes-Tests' with: [ spec requires: #( 'Refactoring-Changes' ) ];
 		package: 'Refactoring-Critics-Tests';
 		package: 'Refactoring-Environment-Tests' with: [ spec requires: #( 'Refactoring-Environment' ) ];
