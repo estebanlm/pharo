@@ -365,19 +365,17 @@ TaskListMorph >> updateTaskButtons [
 	"Create clickable thumbnail morphs for all tasks, arranged horizontally."
 
 	self taskList removeAllMorphs.
-	self tasks do: [:t | | thumb button |
+	self tasks do: [:t | | container thumb |
 		thumb := t morph taskThumbnailOfSize: self defaultPreviewExtent.
-		button := PluggableButtonMorph new
-			model: self;
-			action: #taskClicked:;
-			arguments: {t};
-			label: thumb;
-			hResizing: #shrinkWrap;
-			vResizing: #shrinkWrap;
-			useSquareCorners;
+		container := Morph new
+			changeTableLayout;
 			color: Color transparent;
 			borderWidth: 2;
 			borderColor: (t isActive ifTrue: [Color blue] ifFalse: [Color transparent]);
+			hResizing: #shrinkWrap;
+			vResizing: #shrinkWrap;
 			yourself.
-		self taskList addMorphBack: button]
+		container addMorph: thumb.
+		container on: #mouseUp send: #value to: [self selectTask: t; done].
+		self taskList addMorphBack: container]
 ]
