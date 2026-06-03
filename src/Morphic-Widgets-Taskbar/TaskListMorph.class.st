@@ -59,10 +59,16 @@ TaskListMorph >> addMorphs [
 ]
 
 { #category : 'private' }
+TaskListMorph >> baseBorderColor [
+
+	^ Color veryLightGray
+]
+
+{ #category : 'private' }
 TaskListMorph >> defaultPreviewExtent [
 	"Answer the default extent for each individual task thumbnail."
 
-	^(120@90) scaledByDisplayScaleFactor
+	^(140@100) scaledByDisplayScaleFactor
 ]
 
 { #category : 'open/close' }
@@ -110,6 +116,12 @@ TaskListMorph >> hasCurrentWindows: currentTasks [
 
 	^ (self tasks includesAll: currentTasks) and: [
 		  currentTasks includesAll: self tasks ]
+]
+
+{ #category : 'private' }
+TaskListMorph >> highlightBorderColor [
+
+	^ Color R: 55 G: 140 B: 240
 ]
 
 { #category : 'initialization' }
@@ -273,8 +285,9 @@ TaskListMorph >> updateButtonsAndPreview [
 	"Rebuild and recenter."
 
 	self updateTaskButtons.
-	self world ifNotNil:
-		[self center: self world center]
+	self world ifNotNil: [ :w |
+		self extent: (self extent max: self minExtent).
+		self center: w center ]
 ]
 
 { #category : 'private' }
@@ -286,6 +299,7 @@ TaskListMorph >> updateTaskButtons [
 	self removeAllMorphs.
 	self tasks do: [:t | | container thumb label |
 		thumb := t morph taskThumbnailOfSize: self defaultPreviewExtent.
+		thumb extent: self defaultPreviewExtent.
 		t isActive ifFalse: [ thumb color: (Color gray: 0.4) ].
 		label := StringMorph new
 			contents: ((t label size > 30) ifTrue: [
@@ -298,8 +312,8 @@ TaskListMorph >> updateTaskButtons [
 			changeTableLayout;
 			listDirection: #topToBottom;
 			color: Color transparent;
-			borderWidth: 3;
-			borderColor: (t isActive ifTrue: [Color white] ifFalse: [Color transparent]);
+			borderWidth: (t isActive ifTrue: 4 ifFalse: 2);
+			borderColor: (t isActive ifTrue: [ self highlightBorderColor ] ifFalse: [ self baseBorderColor ]);
 			cornerStyle: #rounded;
 			hResizing: #shrinkWrap;
 			vResizing: #shrinkWrap;
