@@ -91,10 +91,10 @@ TaskListMorph >> effectivePreviewExtent [
 
 { #category : 'private' }
 TaskListMorph >> maxWidth [
-	"Answer the maximum width the task list may occupy, derived from the world or display extent."
+	"Answer the maximum width the task list may occupy, derived from the world extent."
 
 	self world ifNotNil: [ ^ self world width - 100 ].
-	^ Display width - 100
+	^ RealEstateAgent maximumUsableArea x - 100
 ]
 
 { #category : 'open/close' }
