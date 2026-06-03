@@ -86,6 +86,24 @@ TaskListMorph >> done [
 	self activeTask ifNotNil: [ :t | t activate ]
 ]
 
+{ #category : 'private' }
+TaskListMorph >> effectivePreviewExtent [
+	"Answer the preview extent scaled down proportionally if there are too many
+	tasks to fit within maxWidth, otherwise the default.
+	Accounts for the per-container overhead (borders + layout insets) of 16px."
+
+	| maxWidth n overhead scale |
+	maxWidth := self maxWidth.
+	n := self tasks size.
+	n <= 1 ifTrue: [ ^ self defaultPreviewExtent ].
+	"Each container adds ~16px overhead: max(borderWidth*2) + 2*containerLayoutInset"
+	overhead := 16.
+	scale := (maxWidth - (self layoutInset * 2) - (n * overhead) - ((n - 1) * self cellInset))
+		/ (n * self defaultPreviewExtent x).
+	scale := (scale min: 1.0) max: 0.2.
+	^ (self defaultPreviewExtent * scale) asIntegerPoint
+]
+
 { #category : 'event handling' }
 TaskListMorph >> handleEvent: anEvent [
 	"Handle Alt+Tab navigation directly to avoid wasHandled flag issues.
@@ -183,6 +201,13 @@ TaskListMorph >> keyDown: event [
 			ifFalse: [ self selectNextTask ].
 		^ true ].
 	^ super keyDown: event
+]
+
+{ #category : 'private' }
+TaskListMorph >> maxWidth [
+	"Answer the maximum width the task list may occupy, derived from the world extent."
+
+	^ self currentWorld width - 100
 ]
 
 { #category : 'geometry' }
@@ -294,7 +319,7 @@ TaskListMorph >> uniformizeContainerWidths [
 TaskListMorph >> updateButtonsAndPreview [
 	"Rebuild and recenter."
 
-	self updateTaskButtons.
+	self updateTaskButtons: self effectivePreviewExtent.
 	self world ifNotNil: [ :w |
 		self hResizing = #rigid ifFalse: [
 			self extent: self minExtent.
@@ -303,15 +328,18 @@ TaskListMorph >> updateButtonsAndPreview [
 ]
 
 { #category : 'private' }
-TaskListMorph >> updateTaskButtons [
+TaskListMorph >> updateTaskButtons: aPreviewExtent [
 	"Create clickable thumbnail morphs for all tasks, arranged horizontally.
 	macOS-style: white selection glow, dimmed inactive thumbnails,
 	with the task name label below each thumbnail."
 
 	self removeAllMorphs.
-	self tasks do: [:t | | container thumbWrapper thumb label |
-		thumb := t morph taskThumbnailOfSize: self defaultPreviewExtent.
-		thumb extent: self defaultPreviewExtent.
+	self tasks do: [:t | | container thumbWrapper thumb label scaleFactor labelTruncation labelFontSize |
+		scaleFactor := aPreviewExtent x / self defaultPreviewExtent x.
+		labelTruncation := (25 * scaleFactor) asInteger max: 8.
+		labelFontSize := (11 * scaleFactor) asInteger max: 8.
+		thumb := t morph taskThumbnailOfSize: aPreviewExtent.
+		thumb extent: aPreviewExtent.
 		t isActive ifFalse: [ thumb color: (Color gray: 0.4) ].
 		thumbWrapper := Morph new
 			changeTableLayout;
@@ -324,9 +352,9 @@ TaskListMorph >> updateTaskButtons [
 			yourself.
 		thumbWrapper addMorphBack: thumb.
 		label := StringMorph new
-			contents: ((t label size > 25) ifTrue: [ (t label first: 22) , '...' ] ifFalse: [ t label ]);
+			contents: ((t label size > labelTruncation) ifTrue: [ (t label first: (labelTruncation - 3 max: 0)) , '...' ] ifFalse: [ t label ]);
 			color: Color white;
-			fontName: 'Standard' size: 11;
+			fontName: 'Standard' size: labelFontSize;
 			yourself.
 		container := Morph new
 			changeTableLayout;
