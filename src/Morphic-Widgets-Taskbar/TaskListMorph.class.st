@@ -117,9 +117,13 @@ TaskListMorph >> keyDown: event [
 TaskListMorph >> handleEvent: anEvent [
 	"Handle Alt+Tab navigation directly to avoid wasHandled flag issues.
 	When a SystemWindow delegates navigationKey: to the world, the event
-	arrives here already marked as handled, which would skip handleKeyDown:."
+	arrives here already marked as handled, which would skip handleKeyDown:.
+	
+	Only process keyDown events — keyUp also reaches here via
+	sendFocusEvent:to:clear: and would produce a duplicate step."
 
 	(anEvent isKeyboard
+		and: [ anEvent isKeyDown ]
 		and: [ self class isNavigationEvent: anEvent ])
 		ifTrue: [
 			anEvent shiftPressed
