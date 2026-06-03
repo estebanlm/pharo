@@ -31,7 +31,9 @@ HandMorph >> sendKeyboardEvent: anEvent [
 { #category : '*Morphic-Widgets-Taskbar' }
 HandMorph >> updateRecentModifiersFromEvent: anEvent [
 	"Update recentModifiers from the event's buttons field,
-	converting new-format modifier bits to old-format bits."
+	converting new-format modifier bits (Alt=32, Cmd=64, Ctrl=16)
+	to the old-format bits (Alt=4, Cmd=8, Ctrl=2) that
+	anyModifierKeyPressed expects."
 
 	| buttons |
 	buttons := anEvent buttons.

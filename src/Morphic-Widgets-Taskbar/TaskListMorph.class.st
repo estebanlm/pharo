@@ -122,9 +122,7 @@ TaskListMorph >> handleEvent: anEvent [
 	Only process keyDown events — keyUp also reaches here via
 	sendFocusEvent:to:clear: and would produce a duplicate step."
 
-	(anEvent isKeyboard
-		and: [ anEvent isKeyDown ]
-		and: [ self class isNavigationEvent: anEvent ])
+	anEvent isKeyboard and: [anEvent isKeyDown and: [self class isNavigationEvent: anEvent]]
 		ifTrue: [
 			anEvent shiftPressed
 				ifTrue: [ self selectPreviousTask ]
