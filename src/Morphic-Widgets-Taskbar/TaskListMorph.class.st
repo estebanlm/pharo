@@ -71,6 +71,28 @@ TaskListMorph >> defaultPreviewExtent [
 	^(140@100) scaledByDisplayScaleFactor
 ]
 
+{ #category : 'private' }
+TaskListMorph >> effectivePreviewExtent [
+	"Answer the preview extent scaled down proportionally if there are too many
+	tasks to fit within maxWidth, otherwise the default."
+
+	| maxWidth scale |
+	maxWidth := self maxWidth.
+	self tasks ifEmpty: [ ^ self defaultPreviewExtent ].
+	scale := (maxWidth - ((self tasks size - 1) * self cellInset) - (self layoutInset * 2))
+		/ (self tasks size * self defaultPreviewExtent x).
+	scale := (scale min: 1.0) max: 0.25.
+	^ (self defaultPreviewExtent * scale) asIntegerPoint
+]
+
+{ #category : 'private' }
+TaskListMorph >> maxWidth [
+	"Answer the maximum width the task list may occupy, derived from the world extent."
+
+	self world ifNil: [ ^ 800 ].
+	^ self world width - 100
+]
+
 { #category : 'open/close' }
 TaskListMorph >> doOpenInWorld: aWorld [
 	"Update the layout after opening."
@@ -294,7 +316,7 @@ TaskListMorph >> uniformizeContainerWidths [
 TaskListMorph >> updateButtonsAndPreview [
 	"Rebuild and recenter."
 
-	self updateTaskButtons.
+	self updateTaskButtons: self effectivePreviewExtent.
 	self world ifNotNil: [ :w |
 		self hResizing = #rigid ifFalse: [
 			self extent: self minExtent.
@@ -303,15 +325,15 @@ TaskListMorph >> updateButtonsAndPreview [
 ]
 
 { #category : 'private' }
-TaskListMorph >> updateTaskButtons [
+TaskListMorph >> updateTaskButtons: aPreviewExtent [
 	"Create clickable thumbnail morphs for all tasks, arranged horizontally.
 	macOS-style: white selection glow, dimmed inactive thumbnails,
 	with the task name label below each thumbnail."
 
 	self removeAllMorphs.
 	self tasks do: [:t | | container thumbWrapper thumb label |
-		thumb := t morph taskThumbnailOfSize: self defaultPreviewExtent.
-		thumb extent: self defaultPreviewExtent.
+		thumb := t morph taskThumbnailOfSize: aPreviewExtent.
+		thumb extent: aPreviewExtent.
 		t isActive ifFalse: [ thumb color: (Color gray: 0.4) ].
 		thumbWrapper := Morph new
 			changeTableLayout;
