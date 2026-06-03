@@ -8,9 +8,7 @@ Class {
 	#name : 'TaskListMorph',
 	#superclass : 'Morph',
 	#instVars : [
-		'tasks',
-		'taskList',
-		'preview'
+		'tasks'
 	],
 	#classVars : [
 		'KeepOpen'
@@ -56,12 +54,7 @@ TaskListMorph >> activeTask [
 
 { #category : 'private' }
 TaskListMorph >> addMorphs [
-	"Add our morphs. macOS-style layout: horizontal thumbnails on top, task name below."
-
-	self taskList: self newTasksMorph.
-	self preview: self newPreviewMorph.
-	self addMorphBack: self taskList.
-	self addMorphBack: self preview.
+	"Sub-morphs are populated by updateTaskButtons."
 	self layoutChanged
 ]
 
@@ -160,9 +153,9 @@ TaskListMorph >> initializeLayout [
 
 	self
 		changeTableLayout;
-		listDirection: #topToBottom;
+		listDirection: #leftToRight;
 		layoutInset: 16;
-		cellInset: 8;
+		cellInset: 12;
 		cellPositioning: #center;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap
@@ -184,31 +177,7 @@ TaskListMorph >> keepOpen [
 TaskListMorph >> minimumExtent [
 	"Answer the minimum extent."
 
-	^(200 @ (self defaultPreviewExtent y + 64))
-]
-
-{ #category : 'instance creation' }
-TaskListMorph >> newPreviewMorph [
-	"Answer a new task name label."
-
-	^ StringMorph new
-		contents: '';
-		color: Color white;
-		yourself
-]
-
-{ #category : 'instance creation' }
-TaskListMorph >> newTasksMorph [
-	"Answer a new horizontal task thumbnail strip."
-
-	^Morph new
-		changeTableLayout;
-		listDirection: #leftToRight;
-		cellInset: 12;
-		color: Color transparent;
-		hResizing: #shrinkWrap;
-		vResizing: #shrinkWrap;
-		yourself
+	^(self defaultPreviewExtent x + 32 @ (self defaultPreviewExtent y + 64))
 ]
 
 { #category : 'open/close' }
@@ -232,20 +201,6 @@ TaskListMorph >> postOpenInWorld: aWorld [
 TaskListMorph >> preOpenInWorld: aWorld [
 
 	"Do nothing"
-]
-
-{ #category : 'accessing' }
-TaskListMorph >> preview [
-	"Answer the value of preview"
-
-	^ preview
-]
-
-{ #category : 'accessing' }
-TaskListMorph >> preview: anObject [
-	"Set the value of preview"
-
-	preview := anObject
 ]
 
 { #category : 'cycling' }
@@ -299,29 +254,6 @@ TaskListMorph >> takesKeyboardFocus [
 	^true
 ]
 
-{ #category : 'private' }
-TaskListMorph >> taskClicked: aTask [
-	"A button for a task has been pressed.
-	Close after selecting."
-
-	self selectTask: aTask.
-	self done
-]
-
-{ #category : 'accessing' }
-TaskListMorph >> taskList [
-	"Answer the value of taskList"
-
-	^ taskList
-]
-
-{ #category : 'accessing' }
-TaskListMorph >> taskList: anObject [
-	"Set the value of taskList"
-
-	taskList := anObject
-]
-
 { #category : 'accessing' }
 TaskListMorph >> tasks [
 	"Answer the value of tasks"
@@ -338,43 +270,43 @@ TaskListMorph >> tasks: anObject [
 
 { #category : 'private' }
 TaskListMorph >> updateButtonsAndPreview [
-	"Update the buttons and the preview.."
+	"Rebuild and recenter."
 
-	self
-		updateTaskButtons;
-		updatePreview.
+	self updateTaskButtons.
 	self world ifNotNil:
 		[self center: self world center]
 ]
 
 { #category : 'private' }
-TaskListMorph >> updatePreview [
-	"Update the task name label."
-
-	self preview contents: (self activeTask
-		ifNil: ['']
-		ifNotNil: [:t | t label])
-]
-
-{ #category : 'private' }
 TaskListMorph >> updateTaskButtons [
 	"Create clickable thumbnail morphs for all tasks, arranged horizontally.
-	macOS-style: white selection glow, dimmed inactive thumbnails."
+	macOS-style: white selection glow, dimmed inactive thumbnails,
+	with the task name label below each thumbnail."
 
-	self taskList removeAllMorphs.
-	self tasks do: [:t | | container thumb |
+	self removeAllMorphs.
+	self tasks do: [:t | | container thumb label |
 		thumb := t morph taskThumbnailOfSize: self defaultPreviewExtent.
 		t isActive ifFalse: [ thumb color: (Color gray: 0.4) ].
+		label := StringMorph new
+			contents: t label;
+			color: Color white;
+			fontName: 'Standard' fontSize: 11;
+			yourself.
 		container := Morph new
 			changeTableLayout;
+			listDirection: #topToBottom;
 			color: Color transparent;
 			borderWidth: 3;
 			borderColor: (t isActive ifTrue: [Color white] ifFalse: [Color transparent]);
 			cornerStyle: #rounded;
 			hResizing: #shrinkWrap;
 			vResizing: #shrinkWrap;
+			layoutInset: 4;
+			cellInset: 4;
+			cellPositioning: #center;
 			yourself.
-		container addMorph: thumb.
+		container addMorphBack: thumb.
+		container addMorphBack: label.
 		container on: #mouseUp send: #value to: [self selectTask: t; done].
-		self taskList addMorphBack: container]
+		self addMorphBack: container]
 ]
