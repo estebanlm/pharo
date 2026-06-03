@@ -71,6 +71,21 @@ TaskListMorph >> defaultPreviewExtent [
 	^(140@100) scaledByDisplayScaleFactor
 ]
 
+{ #category : 'open/close' }
+TaskListMorph >> doOpenInWorld: aWorld [
+	"Update the layout after opening."
+
+	aWorld addMorphCentered: self
+]
+
+{ #category : 'running' }
+TaskListMorph >> done [
+	"Close the tasklist and make the active task current."
+
+	self delete.
+	self activeTask ifNotNil: [ :t | t activate ]
+]
+
 { #category : 'private' }
 TaskListMorph >> effectivePreviewExtent [
 	"Answer the preview extent scaled down proportionally if there are too many
@@ -87,29 +102,6 @@ TaskListMorph >> effectivePreviewExtent [
 		/ (n * self defaultPreviewExtent x).
 	scale := (scale min: 1.0) max: 0.2.
 	^ (self defaultPreviewExtent * scale) asIntegerPoint
-]
-
-{ #category : 'private' }
-TaskListMorph >> maxWidth [
-	"Answer the maximum width the task list may occupy, derived from the world extent."
-
-	self world ifNotNil: [ ^ self world width - 100 ].
-	^ RealEstateAgent maximumUsableArea x - 100
-]
-
-{ #category : 'open/close' }
-TaskListMorph >> doOpenInWorld: aWorld [
-	"Update the layout after opening."
-
-	aWorld addMorphCentered: self
-]
-
-{ #category : 'running' }
-TaskListMorph >> done [
-	"Close the tasklist and make the active task current."
-
-	self delete.
-	self activeTask ifNotNil: [ :t | t activate ]
 ]
 
 { #category : 'event handling' }
@@ -209,6 +201,13 @@ TaskListMorph >> keyDown: event [
 			ifFalse: [ self selectNextTask ].
 		^ true ].
 	^ super keyDown: event
+]
+
+{ #category : 'private' }
+TaskListMorph >> maxWidth [
+	"Answer the maximum width the task list may occupy, derived from the world extent."
+
+	^ self currentWorld width - 100
 ]
 
 { #category : 'geometry' }
