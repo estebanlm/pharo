@@ -316,7 +316,7 @@ TaskListMorph >> updateTaskButtons [
 		thumbWrapper := Morph new
 			changeTableLayout;
 			color: Color transparent;
-			borderWidth: (t isActive ifTrue: 4 ifFalse: 2);
+			borderWidth: (t isActive ifTrue: [ 4 ] ifFalse: [ 2 ]);
 			borderColor: (t isActive ifTrue: [ self highlightBorderColor ] ifFalse: [ self baseBorderColor ]);
 			cornerStyle: #rounded;
 			hResizing: #shrinkWrap;
@@ -324,15 +324,14 @@ TaskListMorph >> updateTaskButtons [
 			yourself.
 		thumbWrapper addMorphBack: thumb.
 		label := StringMorph new
-			contents: ((t label size > 25) ifTrue: [
-				(t label first: 22) , '...'
-			] ifFalse: [ t label ]);
+			contents: ((t label size > 25) ifTrue: [ (t label first: 22) , '...' ] ifFalse: [ t label ]);
 			color: Color white;
 			fontName: 'Standard' size: 11;
 			yourself.
 		container := Morph new
 			changeTableLayout;
 			listDirection: #topToBottom;
+			borderWidth: (t isActive ifTrue: [ 0 ] ifFalse: [ 2 ]);
 			color: Color transparent;
 			hResizing: #shrinkWrap;
 			vResizing: #shrinkWrap;
