@@ -266,6 +266,16 @@ TaskListMorph >> takesKeyboardFocus [
 	^true
 ]
 
+{ #category : 'private' }
+TaskListMorph >> uniformizeContainerWidths [
+	"Make all direct children the same width (the widest), so labels are vertically aligned."
+
+	| maxW |
+	self submorphs ifEmpty: [ ^ self ].
+	maxW := (self submorphs collect: [:c | c minExtent x]) max.
+	self submorphs do: [:c | c width: maxW]
+]
+
 { #category : 'accessing' }
 TaskListMorph >> tasks [
 	"Answer the value of tasks"
@@ -325,10 +335,12 @@ TaskListMorph >> updateTaskButtons [
 			hResizing: #shrinkWrap;
 			vResizing: #shrinkWrap;
 			cellPositioning: #center;
-			cellInset: 6;
+			cellInset: 8;
+			layoutInset: 4;
 			yourself.
 		container addMorphBack: thumbWrapper.
 		container addMorphBack: label.
 		container on: #mouseUp send: #value to: [self selectTask: t; done].
-		self addMorphBack: container]
+		self addMorphBack: container].
+	self uniformizeContainerWidths
 ]
