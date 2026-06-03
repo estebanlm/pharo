@@ -266,16 +266,6 @@ TaskListMorph >> takesKeyboardFocus [
 	^true
 ]
 
-{ #category : 'private' }
-TaskListMorph >> uniformizeContainerWidths [
-	"Make all direct children the same width (the widest), so labels are vertically aligned."
-
-	| maxW |
-	self submorphs ifEmpty: [ ^ self ].
-	maxW := (self submorphs collect: [:c | c minExtent x]) max.
-	self submorphs do: [:c | c width: maxW]
-]
-
 { #category : 'accessing' }
 TaskListMorph >> tasks [
 	"Answer the value of tasks"
@@ -291,12 +281,24 @@ TaskListMorph >> tasks: anObject [
 ]
 
 { #category : 'private' }
+TaskListMorph >> uniformizeContainerWidths [
+	"Make all direct children the same width (the widest), so labels are vertically aligned."
+
+	| maxW |
+	self submorphs ifEmpty: [ ^ self ].
+	maxW := (self submorphs collect: [:c | c minExtent x]) max.
+	self submorphs do: [:c | c width: maxW]
+]
+
+{ #category : 'private' }
 TaskListMorph >> updateButtonsAndPreview [
 	"Rebuild and recenter."
 
 	self updateTaskButtons.
 	self world ifNotNil: [ :w |
-		self extent: (self extent max: self minExtent).
+		self hResizing = #rigid ifFalse: [
+			self extent: self minExtent.
+			self hResizing: #rigid; vResizing: #rigid ].
 		self center: w center ]
 ]
 
@@ -322,8 +324,8 @@ TaskListMorph >> updateTaskButtons [
 			yourself.
 		thumbWrapper addMorphBack: thumb.
 		label := StringMorph new
-			contents: ((t label size > 30) ifTrue: [
-				(t label first: 30) , '...'
+			contents: ((t label size > 25) ifTrue: [
+				(t label first: 22) , '...'
 			] ifFalse: [ t label ]);
 			color: Color white;
 			fontName: 'Standard' size: 11;
