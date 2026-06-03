@@ -1,7 +1,8 @@
 "
 A themed task list/switcher to select the topmost window. Opens on Alt+Tab (Option+Tab on macOS).
 Hold the modifier key to keep the switcher open; press Tab to cycle forward, Shift+Tab to cycle backward.
-On Linux, release of the command key is not detected (vm issue), so press and release the modifier again or move the mouse.
+Styled similarly to the macOS app switcher (Cmd+Tab) with a dark rounded panel, horizontal thumbnails,
+and a white selection highlight.
 "
 Class {
 	#name : 'TaskListMorph',
@@ -145,19 +146,17 @@ TaskListMorph >> initialize [
 		initializeLayout;
 		initializeAppearance;
 		addMorphs;
-		updateButtonsAndPreview;
-		adoptPaneColor: self color
+		updateButtonsAndPreview
 ]
 
 { #category : 'initialization' }
 TaskListMorph >> initializeAppearance [
-	"Initialize the appearance."
+	"Initialize the appearance. macOS-style dark rounded panel."
 
 	self
-		color: (Color black alpha: 0.15);
-		fillStyle: (self theme taskListFillStyleFor: self);
-		borderStyle: (self theme taskbarThumbnailNormalBorderStyleFor: self);
-		cornerStyle: (self theme taskbarThumbnailCornerStyleFor: self)
+		color: (Color black alpha: 0.7);
+		borderStyle: (BorderStyle simple width: 0 color: Color transparent);
+		cornerStyle: #rounded
 ]
 
 { #category : 'initialization' }
@@ -166,10 +165,10 @@ TaskListMorph >> initializeLayout [
 
 	self
 		changeTableLayout;
-		layoutInset: 8;
+		layoutInset: 16;
+		cellInset: 8;
 		vResizing: #shrinkWrap;
-		hResizing: #shrinkWrap;
-		extent: self minimumExtent
+		hResizing: #shrinkWrap
 ]
 
 { #category : 'initialization' }
@@ -188,7 +187,7 @@ TaskListMorph >> keepOpen [
 TaskListMorph >> minimumExtent [
 	"Answer the minimum extent."
 
-	^(200 @ (self defaultPreviewExtent y + 32))
+	^(200 @ (self defaultPreviewExtent y + 64))
 ]
 
 { #category : 'instance creation' }
@@ -209,7 +208,7 @@ TaskListMorph >> newTasksMorph [
 		changeTableLayout;
 		listDirection: #leftToRight;
 		wrapDirection: #topToBottom;
-		cellInset: 4;
+		cellInset: 12;
 		color: Color transparent;
 		hResizing: #spaceFill;
 		vResizing: #shrinkWrap;
@@ -362,16 +361,19 @@ TaskListMorph >> updatePreview [
 
 { #category : 'private' }
 TaskListMorph >> updateTaskButtons [
-	"Create clickable thumbnail morphs for all tasks, arranged horizontally."
+	"Create clickable thumbnail morphs for all tasks, arranged horizontally.
+	macOS-style: white selection glow, dimmed inactive thumbnails."
 
 	self taskList removeAllMorphs.
 	self tasks do: [:t | | container thumb |
 		thumb := t morph taskThumbnailOfSize: self defaultPreviewExtent.
+		t isActive ifFalse: [ thumb color: (Color gray: 0.4) ].
 		container := Morph new
 			changeTableLayout;
 			color: Color transparent;
-			borderWidth: 2;
-			borderColor: (t isActive ifTrue: [Color blue] ifFalse: [Color transparent]);
+			borderWidth: 3;
+			borderColor: (t isActive ifTrue: [Color white] ifFalse: [Color transparent]);
+			cornerStyle: #rounded;
 			hResizing: #shrinkWrap;
 			vResizing: #shrinkWrap;
 			yourself.
