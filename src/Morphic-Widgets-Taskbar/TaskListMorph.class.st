@@ -352,7 +352,7 @@ TaskListMorph >> updateTaskButtons: aPreviewExtent [
 			yourself.
 		thumbWrapper addMorphBack: thumb.
 		label := StringMorph new
-			contents: ((t label size > labelTruncation) ifTrue: [ (t label first: (labelTruncation - 3 max: 0)) , '...' ] ifFalse: [ t label ]);
+			contents: ((t label size > labelTruncation) ifTrue: [ (t label first: (labelTruncation - 4 max: 0)) , '...' ] ifFalse: [ t label ]);
 			color: Color white;
 			fontName: 'Standard' size: labelFontSize;
 			yourself.
