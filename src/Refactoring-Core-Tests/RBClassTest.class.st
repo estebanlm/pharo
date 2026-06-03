@@ -42,7 +42,7 @@ RBClassTest >> setUp [
 				superclass: Object;
 				slots: { #instanceVariable1. #instanceVariable2 };
 				sharedVariables: { #ClassVariable1 };
-				sharedPools: { #TextConstants };
+				sharedPools: { #RBSharedPoolForTestData };
 				package: #'Refactory-Testing' ].
 	newClass := rbNamespace classNamed: #SomeClassName
 ]
@@ -103,10 +103,10 @@ RBClassTest >> testDefinesMethod [
 { #category : 'tests - definition' }
 RBClassTest >> testDefinesPoolDictionary [
 	self deny: (abstractTransformationClass definesPoolDictionary: #OpcodePool).
-	self assert: (newClass definesPoolDictionary: #TextConstants).
+	self assert: (newClass definesPoolDictionary: #RBSharedPoolForTestData).
 	self deny: (refactoringClass definesPoolDictionary: #OpcodePool).
-	self assert: ((RBNamespace new classNamed: #Text)
-				definesPoolDictionary: #TextConstants)
+	self assert: ((RBNamespace new classNamed: #RBDummyLintRuleTest)
+				definesPoolDictionary: #RBSharedPoolForTestData)
 ]
 
 { #category : 'tests - definition' }
