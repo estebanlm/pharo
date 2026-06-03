@@ -58,17 +58,10 @@ TaskListMorph >> activeTask [
 TaskListMorph >> addMorphs [
 	"Add our morphs. macOS-style layout: horizontal thumbnails on top, task name below."
 
-	| mainColumn |
 	self taskList: self newTasksMorph.
 	self preview: self newPreviewMorph.
-	mainColumn := self theme newColumnIn: self for: {
-		self taskList.
-		self preview }.
-	mainColumn
-		vResizing: #shrinkWrap;
-		cellInset: 4;
-		cellPositioning: #center.
-	self addMorph: mainColumn.
+	self addMorphBack: self taskList.
+	self addMorphBack: self preview.
 	self layoutChanged
 ]
 
@@ -155,8 +148,10 @@ TaskListMorph >> initializeLayout [
 
 	self
 		changeTableLayout;
+		listDirection: #topToBottom;
 		layoutInset: 16;
 		cellInset: 8;
+		cellPositioning: #center;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap
 ]
@@ -209,10 +204,9 @@ TaskListMorph >> newTasksMorph [
 	^Morph new
 		changeTableLayout;
 		listDirection: #leftToRight;
-		wrapDirection: #topToBottom;
 		cellInset: 12;
 		color: Color transparent;
-		hResizing: #spaceFill;
+		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		yourself
 ]
@@ -221,6 +215,7 @@ TaskListMorph >> newTasksMorph [
 TaskListMorph >> openInWorld: aWorld [
 
 	super openInWorld: aWorld.
+	self center: aWorld center.
 	self wantsKeyboardFocus
 		ifTrue: [self takeKeyboardFocus]
 ]
