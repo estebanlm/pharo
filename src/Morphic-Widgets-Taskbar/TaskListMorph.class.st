@@ -288,9 +288,11 @@ TaskListMorph >> updateTaskButtons [
 		thumb := t morph taskThumbnailOfSize: self defaultPreviewExtent.
 		t isActive ifFalse: [ thumb color: (Color gray: 0.4) ].
 		label := StringMorph new
-			contents: (t label truncateWith: '...' to: 30);
+			contents: ((t label size > 30) ifTrue: [
+				(t label first: 30) , '...'
+			] ifFalse: [ t label ]);
 			color: Color white;
-			fontName: 'Standard' fontSize: 11;
+			fontName: 'Standard' size: 11;
 			yourself.
 		container := Morph new
 			changeTableLayout;
