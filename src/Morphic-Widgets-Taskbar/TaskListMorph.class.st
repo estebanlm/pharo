@@ -155,7 +155,7 @@ TaskListMorph >> initializeAppearance [
 
 	self
 		color: (Color black alpha: 0.7);
-		borderStyle: (BorderStyle simple width: 0 color: Color transparent);
+		borderWidth: 0;
 		cornerStyle: #rounded
 ]
 
