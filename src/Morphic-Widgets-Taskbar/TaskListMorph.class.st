@@ -290,7 +290,7 @@ TaskListMorph >> updateTaskButtons [
 		label := StringMorph new
 			contents: t label;
 			color: Color white;
-			fontName: 'Standard' fontSize: 11;
+			fontName: 'Standard' size: 11
 			yourself.
 		container := Morph new
 			changeTableLayout;
