@@ -95,25 +95,6 @@ TaskListMorph >> done [
 ]
 
 { #category : 'event handling' }
-TaskListMorph >> handlesKeyboard: evt [
-	"Yes, we do it here."
-
-	^true
-]
-
-{ #category : 'event handling' }
-TaskListMorph >> keyDown: event [
-	"Handle Alt+Tab and Alt+Shift+Tab to cycle through tasks."
-
-	(self class isNavigationEvent: event) ifTrue: [
-		event shiftPressed
-			ifTrue: [ self selectPreviousTask ]
-			ifFalse: [ self selectNextTask ].
-		^ true ].
-	^ super keyDown: event
-]
-
-{ #category : 'event handling' }
 TaskListMorph >> handleEvent: anEvent [
 	"Handle Alt+Tab navigation directly to avoid wasHandled flag issues.
 	When a SystemWindow delegates navigationKey: to the world, the event
@@ -122,13 +103,20 @@ TaskListMorph >> handleEvent: anEvent [
 	Only process keyDown events — keyUp also reaches here via
 	sendFocusEvent:to:clear: and would produce a duplicate step."
 
-	anEvent isKeyboard and: [anEvent isKeyDown and: [self class isNavigationEvent: anEvent]]
+	(anEvent isKeyboard and: [anEvent isKeyDown and: [self class isNavigationEvent: anEvent]])
 		ifTrue: [
 			anEvent shiftPressed
 				ifTrue: [ self selectPreviousTask ]
 				ifFalse: [ self selectNextTask ].
 			^ true ].
 	^ super handleEvent: anEvent
+]
+
+{ #category : 'event handling' }
+TaskListMorph >> handlesKeyboard: evt [
+	"Yes, we do it here."
+
+	^true
 ]
 
 { #category : 'testing' }
@@ -183,6 +171,18 @@ TaskListMorph >> initializeTasks [
 { #category : 'settings' }
 TaskListMorph >> keepOpen [
 	^ self class keepOpen
+]
+
+{ #category : 'event handling' }
+TaskListMorph >> keyDown: event [
+	"Handle Alt+Tab and Alt+Shift+Tab to cycle through tasks."
+
+	(self class isNavigationEvent: event) ifTrue: [
+		event shiftPressed
+			ifTrue: [ self selectPreviousTask ]
+			ifFalse: [ self selectNextTask ].
+		^ true ].
+	^ super keyDown: event
 ]
 
 { #category : 'geometry' }
