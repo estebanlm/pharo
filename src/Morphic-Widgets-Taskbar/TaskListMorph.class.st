@@ -297,10 +297,20 @@ TaskListMorph >> updateTaskButtons [
 	with the task name label below each thumbnail."
 
 	self removeAllMorphs.
-	self tasks do: [:t | | container thumb label |
+	self tasks do: [:t | | container thumbWrapper thumb label |
 		thumb := t morph taskThumbnailOfSize: self defaultPreviewExtent.
 		thumb extent: self defaultPreviewExtent.
 		t isActive ifFalse: [ thumb color: (Color gray: 0.4) ].
+		thumbWrapper := Morph new
+			changeTableLayout;
+			color: Color transparent;
+			borderWidth: (t isActive ifTrue: 4 ifFalse: 2);
+			borderColor: (t isActive ifTrue: [ self highlightBorderColor ] ifFalse: [ self baseBorderColor ]);
+			cornerStyle: #rounded;
+			hResizing: #shrinkWrap;
+			vResizing: #shrinkWrap;
+			yourself.
+		thumbWrapper addMorphBack: thumb.
 		label := StringMorph new
 			contents: ((t label size > 30) ifTrue: [
 				(t label first: 30) , '...'
@@ -312,16 +322,12 @@ TaskListMorph >> updateTaskButtons [
 			changeTableLayout;
 			listDirection: #topToBottom;
 			color: Color transparent;
-			borderWidth: (t isActive ifTrue: 4 ifFalse: 2);
-			borderColor: (t isActive ifTrue: [ self highlightBorderColor ] ifFalse: [ self baseBorderColor ]);
-			cornerStyle: #rounded;
 			hResizing: #shrinkWrap;
 			vResizing: #shrinkWrap;
-			layoutInset: 4;
-			cellInset: 4;
 			cellPositioning: #center;
+			cellInset: 6;
 			yourself.
-		container addMorphBack: thumb.
+		container addMorphBack: thumbWrapper.
 		container addMorphBack: label.
 		container on: #mouseUp send: #value to: [self selectTask: t; done].
 		self addMorphBack: container]
