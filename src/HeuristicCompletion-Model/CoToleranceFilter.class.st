@@ -187,7 +187,6 @@ CoToleranceFilter class >> shouldTryFuzzyFor: token candidate: candidate toleran
 			ifFalse: [ ^ false ] ].
 
 	"Cheap guardrails to avoid noisy matches"
-	token first = candidate first ifFalse: [ ^ false ].
 	maxSize := token size max: candidate size.
 	maxEdits := (aTolerance * maxSize) ceiling.
 	^ (token size - candidate size) abs <= maxEdits
