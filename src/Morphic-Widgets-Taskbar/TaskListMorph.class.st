@@ -209,6 +209,18 @@ TaskListMorph >> keyDown: event [
 ]
 
 { #category : 'private' }
+TaskListMorph >> label: task truncation: labelTruncation size: size [
+
+	^ StringMorph new
+		  contents: (task label size > labelTruncation
+				   ifTrue: [ (task label first: (labelTruncation - 4 max: 0)) , '...' ]
+				   ifFalse: [ task label ]);
+		  color: Color white;
+		  fontName: 'Standard' size: size;
+		  yourself
+]
+
+{ #category : 'private' }
 TaskListMorph >> maxWidth [
 
 	"Answer the maximum width the task list may occupy, derived from the world extent."
@@ -309,6 +321,22 @@ TaskListMorph >> takesKeyboardFocus [
 	^ true
 ]
 
+{ #category : 'private' }
+TaskListMorph >> taskContainer: task [
+
+	^ Morph new
+		changeTableLayout;
+		listDirection: #topToBottom;
+		borderWidth: (task isActive ifTrue: [ 0 ] ifFalse: [ 2 ]);
+		color: Color transparent;
+		hResizing: #shrinkWrap;
+		vResizing: #shrinkWrap;
+		cellPositioning: #center;
+		cellInset: 8;
+		layoutInset: 4;
+		yourself
+]
+
 { #category : 'accessing' }
 TaskListMorph >> tasks [
 
@@ -319,6 +347,22 @@ TaskListMorph >> tasks [
 TaskListMorph >> tasks: someTasks [
 
 	tasks := someTasks
+]
+
+{ #category : 'private' }
+TaskListMorph >> thumbWrapper: task [
+
+	^ Morph new
+		changeTableLayout;
+		color: Color transparent;
+		borderWidth: (task isActive ifTrue: [ 4 ] ifFalse: [ 2 ]);
+		borderColor: (task isActive
+				 ifTrue: [ self highlightBorderColor ]
+				 ifFalse: [ self baseBorderColor ]);
+		cornerStyle: #rounded;
+		hResizing: #shrinkWrap;
+		vResizing: #shrinkWrap;
+		yourself
 ]
 
 { #category : 'private' }
@@ -345,48 +389,36 @@ TaskListMorph >> updateButtonsAndPreview [
 ]
 
 { #category : 'private' }
-TaskListMorph >> updateTaskButtons: aPreviewExtent [
+TaskListMorph >> updateTask: task extent: previewExtent [
+
+	| container thumbWrapper thumb label scaleFactor labelTruncation fontSize |
+	
+	scaleFactor := previewExtent x / self defaultPreviewExtent x.
+	labelTruncation := (25 * scaleFactor) asInteger max: 8.
+	fontSize := (11 * scaleFactor) asInteger max: 8.
+	thumb := task morph taskThumbnailOfSize: previewExtent.
+	thumb extent: previewExtent.
+
+	thumbWrapper := (self thumbWrapper: task) addMorphBack: thumb; yourself.
+	
+	label := self label: task truncation: labelTruncation size: fontSize.
+	container := (self taskContainer: task)
+		addMorphBack: thumbWrapper;
+		addMorphBack: label;
+		on: #mouseUp send: #value to: [ self selectTask: task; done ];
+		yourself.
+	
+	self addMorphBack: container
+]
+
+{ #category : 'private' }
+TaskListMorph >> updateTaskButtons: previewExtent [
+
 	"Create clickable thumbnail morphs for all tasks, arranged horizontally.
 	macOS-style: white selection glow, dimmed inactive thumbnails,
 	with the task name label below each thumbnail."
 
 	self removeAllMorphs.
-	self tasks do: [:t | | container thumbWrapper thumb label scaleFactor labelTruncation labelFontSize |
-		scaleFactor := aPreviewExtent x / self defaultPreviewExtent x.
-		labelTruncation := (25 * scaleFactor) asInteger max: 8.
-		labelFontSize := (11 * scaleFactor) asInteger max: 8.
-		thumb := t morph taskThumbnailOfSize: aPreviewExtent.
-		thumb extent: aPreviewExtent.
-		t isActive ifFalse: [ thumb color: (Color gray: 0.4) ].
-		thumbWrapper := Morph new
-			changeTableLayout;
-			color: Color transparent;
-			borderWidth: (t isActive ifTrue: [ 4 ] ifFalse: [ 2 ]);
-			borderColor: (t isActive ifTrue: [ self highlightBorderColor ] ifFalse: [ self baseBorderColor ]);
-			cornerStyle: #rounded;
-			hResizing: #shrinkWrap;
-			vResizing: #shrinkWrap;
-			yourself.
-		thumbWrapper addMorphBack: thumb.
-		label := StringMorph new
-			contents: ((t label size > labelTruncation) ifTrue: [ (t label first: (labelTruncation - 4 max: 0)) , '...' ] ifFalse: [ t label ]);
-			color: Color white;
-			fontName: 'Standard' size: labelFontSize;
-			yourself.
-		container := Morph new
-			changeTableLayout;
-			listDirection: #topToBottom;
-			borderWidth: (t isActive ifTrue: [ 0 ] ifFalse: [ 2 ]);
-			color: Color transparent;
-			hResizing: #shrinkWrap;
-			vResizing: #shrinkWrap;
-			cellPositioning: #center;
-			cellInset: 8;
-			layoutInset: 4;
-			yourself.
-		container addMorphBack: thumbWrapper.
-		container addMorphBack: label.
-		container on: #mouseUp send: #value to: [self selectTask: t; done].
-		self addMorphBack: container].
+	self tasks do: [ :task | self updateTask: task extent: previewExtent ].
 	self uniformizeContainerWidths
 ]
