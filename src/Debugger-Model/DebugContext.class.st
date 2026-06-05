@@ -128,7 +128,7 @@ DebugContext >> recompileCurrentMethodTo: aText notifying: aNotifyer inSession: 
 	| classOrTraitOfMethod selector |
 	self context method isDoIt ifFalse: [
 			selector := self selectedClass compiler parseSelector: aText.
-			(self checkSelectorUnchanged: selector inSession: aSession ) ifFalse: [ ^ nil ] ].
+			(self checkSelectorUnchanged: selector inSession: aSession) ifFalse: [ ^ nil ] ].
 
 	(self selectedClass includesSelector: selector) ifFalse: [
 			^ self selectedClass compiler
@@ -141,12 +141,7 @@ DebugContext >> recompileCurrentMethodTo: aText notifying: aNotifyer inSession: 
 	classOrTraitOfMethod := self confirmOnTraitOverwrite: selector inClass: self selectedClass inSession: aSession.
 	classOrTraitOfMethod ifNil: [ ^ nil ].
 
-	^ classOrTraitOfMethod compiler
-		  protocol: self selectedMessageCategoryName;
-		  isScripting: self selectedMessageName isDoIt;
-		  requestor: aNotifyer;
-		  source: aText;
-		  install
+	^ classOrTraitOfMethod compile: aText classified: self selectedMessageCategoryName notifying: aNotifyer
 ]
 
 { #category : 'accessing' }
