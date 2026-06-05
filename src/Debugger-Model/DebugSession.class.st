@@ -27,7 +27,8 @@ Class {
 		'interruptedContext',
 		'interruptedProcess',
 		'exception',
-		'stepThroughController'
+		'stepThroughController',
+		'debugCallBack'
 	],
 	#classVars : [
 		'FastStepThroughMode',
@@ -90,6 +91,28 @@ DebugSession class >> named: aString on: aProcess startedAt: aContext [
 		  process: aProcess context: aContext
 ]
 
+{ #category : 'accessing' }
+DebugSession >> blockContextNotFoundForMethod: aMethod withSourceCode: sourceCode inContext: aContext [
+
+	| result newMethod |
+	result := self debugCallBack wantsToBroweAndRecompileMethodNotFoundInStack: aMethod. 
+	
+	"possible return values are true | false | nil"
+	result ifNil: [ ^ self ].
+	result ifFalse: [ ^ self ].
+	
+	newMethod := aContext recompileCurrentMethodTo: sourceCode notifying: nil inSession: self.
+	newMethod ifNotNil: [ aContext browseMethod: newMethod ]
+]
+
+{ #category : 'callbacks' }
+DebugSession >> chooseTraitOverwriteFor: aClass trait: aTrait [
+	"call back method to avoid dependencies in debugger-model"
+	"By default, it returns aClass"
+
+	^ aClass
+]
+
 { #category : 'debugging actions' }
 DebugSession >> clear [
 	"If after resuming the process the user does plan to reuse this session with
@@ -117,6 +140,18 @@ DebugSession >> contextChanged [
 DebugSession >> createModelForContext: aContext [
 
 	^ (self class contextModelClass forContext: aContext)
+]
+
+{ #category : 'accessing' }
+DebugSession >> debugCallBack [
+
+	^ debugCallBack
+]
+
+{ #category : 'accessing' }
+DebugSession >> debugCallBack: anObject [
+
+	debugCallBack := anObject
 ]
 
 { #category : 'accessing' }
@@ -178,6 +213,26 @@ DebugSession >> implement: aMessage classified: aSymbol inClass: aClass forConte
 
 	self updateContextTo: aContext.
 	self contextChanged
+]
+
+{ #category : 'callbacks' }
+DebugSession >> informCannotRecompileWithDifferentSelector [ 
+
+	"Do nothing. There are no notifications by default"
+]
+
+{ #category : 'callbacks' }
+DebugSession >> informCannotRewindStack [
+
+	"Do nothing. There are no notifications by default"
+]
+
+{ #category : 'initialization' }
+DebugSession >> initialize [
+
+	super initialize.
+
+	debugCallBack := self
 ]
 
 { #category : 'private' }
@@ -333,31 +388,26 @@ DebugSession >> recompileMethodTo: aString inContext: aContext notifying: aNotif
 ]
 
 { #category : 'debugging actions' }
-DebugSession >> recompileMethodTo: aString inContext: aContext notifying: aNotifyer force: aBoolean [
+DebugSession >> recompileMethodTo: sourceCode inContext: aContext notifying: aNotifyer force: aBoolean [
 	"The retrieved information has changed and its source must now be updated.
 	 In this case, the retrieved information is the method of the given context."
+
 	| newMethod recompilationContext canRewind |
-	
 	canRewind := (self isContextPostMortem: self interruptedContext) not.
-	canRewind ifFalse: [ 
-		aBoolean ifFalse: [
-			DebugAttemptToRewindPostMortemError signal ] ].
-		
-	recompilationContext := (self createModelForContext: aContext) locateClosureHomeWithContent: aString.
+	canRewind ifFalse: [ aBoolean ifFalse: [ DebugAttemptToRewindPostMortemError signal ] ].
+
+	recompilationContext := (self createModelForContext: aContext) locateClosureHomeWithContent: sourceCode inSession: self.
 	recompilationContext ifNil: [ ^ false ].
 
-	newMethod := (self createModelForContext: recompilationContext) 
-		recompileCurrentMethodTo: aString 
-		notifying: aNotifyer.
+	newMethod := (self createModelForContext: recompilationContext) recompileCurrentMethodTo: sourceCode notifying: aNotifyer inSession: self.
 	newMethod ifNil: [ ^ false ].
 
-	(self isContextPostMortem: self interruptedContext)
-		ifFalse: [ self rewindContextToMethod: newMethod fromContext: recompilationContext ].
-
+	(self isContextPostMortem: self interruptedContext) ifFalse: [
+		self rewindContextToMethod: newMethod fromContext: recompilationContext ]. 
 	"Use an alarm instead of triggering the notification directly, as the content of
 	the editor can still be unaccepted. "
 	self installAlarm: #contextChanged.
-	
+
 	^ true
 ]
 
@@ -449,18 +499,16 @@ DebugSession >> returnValue: anObject from: aContext [
 DebugSession >> rewindContextToMethod: aMethod fromContext: aContext [
 	"this method is typically to be used after a hot compilation of a method from the stack.
 	in order to return to the context containg the compiled method."
+
 	| ctxt |
-	ctxt :=  interruptedProcess popTo: aContext.
+	ctxt := interruptedProcess popTo: aContext.
 
 	ctxt == aContext
-		ifFalse: [
-			InformativeNotification signal: 'Method saved, but current context unchanged\because of unwind error. Click OK to see error' withCRs ]
+		ifFalse: [ self debugCallBack informCannotRewindStack ]
 		ifTrue: [
-			interruptedProcess restartTopWith: aMethod.
-			self stepToFirstInterestingBytecodeIn: interruptedProcess ].
-	self updateContextTo:  ctxt.
-
-	"Issue 3015 - Hernan"
+				interruptedProcess restartTopWith: aMethod.
+				self stepToFirstInterestingBytecodeIn: interruptedProcess ].
+	self updateContextTo: ctxt.
 	self isInterruptedContextATest ifTrue: [ self prepareTestToRunAgain ]
 ]
 
@@ -677,4 +725,12 @@ DebugSession >> updateContextTo: aContext [
 DebugSession >> updateWithContext: newContext fromProcess: aProcess [
 
 	self process: aProcess context: newContext
+]
+
+{ #category : 'callbacks' }
+DebugSession >> wantsToBroweAndRecompileMethodNotFoundInStack: message [
+	"call back method to avoid dependencies in debugger-model"
+	"by default it returns false the modified code is not recompiled"
+	
+	^ false
 ]
