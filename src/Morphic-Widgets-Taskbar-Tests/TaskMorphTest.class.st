@@ -80,12 +80,13 @@ TaskMorphTest >> task3 [
 ]
 
 { #category : 'builders' }
-TaskMorphTest >> taskListWithTasks: aCollection [
-	"Create a fresh TaskListMorph with the given tasks and no submorphs yet."
+TaskMorphTest >> taskListWithTasks: someTasks [ 
 
 	| taskList |
+
 	taskList := TaskListMorph new.
 	taskList removeAllMorphs.
-	taskList tasks: aCollection asOrderedCollection.
+	taskList tasks: someTasks asOrderedCollection.
+
 	^ taskList
 ]
