@@ -60,7 +60,7 @@ TaskListMorph >> addMorphs [
 { #category : 'private' }
 TaskListMorph >> baseBorderColor [
 
-	^ Color veryLightGray
+	^ self theme baseBorderColor
 ]
 
 { #category : 'private' }
@@ -148,7 +148,7 @@ TaskListMorph >> hasCurrentWindows: currentTasks [
 { #category : 'private' }
 TaskListMorph >> highlightBorderColor [
 
-	^ Color R: 55 G: 140 B: 240
+	^ self theme selectedTabBorderColor
 ]
 
 { #category : 'initialization' }
@@ -168,8 +168,8 @@ TaskListMorph >> initializeAppearance [
 
 	self
 		color: (Color black alpha: 0.7);
-		borderWidth: 0;
-		cornerStyle: #rounded
+		borderWidth: (self theme taskbarThumbnailBorderWidthFor: self);
+		cornerStyle: (self theme taskbarThumbnailCornerStyleFor: self)
 ]
 
 { #category : 'initialization' }
