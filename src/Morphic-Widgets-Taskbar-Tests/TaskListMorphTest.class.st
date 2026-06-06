@@ -46,10 +46,15 @@ TaskListMorphTest >> testEffectivePreviewExtentRespectsFloor [
 { #category : 'tests - max width' }
 TaskListMorphTest >> testEffectivePreviewExtentReturnsDefaultForFewTasks [
 
-	| aTaskList |
+	| aTaskList previousWorldWidth |
+	
+	previousWorldWidth := self currentWorld width.
+	self currentWorld width: 1800.
 	
 	aTaskList := self taskListWithTasks: (self newTasks: 3).
-	self assert: aTaskList effectivePreviewExtent equals: aTaskList defaultPreviewExtent
+	self assert: aTaskList effectivePreviewExtent equals: aTaskList defaultPreviewExtent.
+	
+	self currentWorld width: previousWorldWidth.
 ]
 
 { #category : 'tests - max width' }
