@@ -49,6 +49,25 @@ PharoCommonTools class >> menuHistoryOn: aBuilder [
 ]
 
 { #category : 'world menu' }
+PharoCommonTools class >> menuRitaOn: aBuilder [
+
+	<worldMenu>
+	(aBuilder item: #LoadRita)
+		parent: #Tools;
+		label: 'Load Git Changes Visualizer (Rita)';
+		icon: (self iconNamed: #smallLoadProject);
+		help: 'This action loads Rita, a tool to visualize the history of a git repository to get more insight instead of just reading code.';
+		order: 115;
+		action: [
+				Metacello new
+					baseline: 'Rita';
+					repository: 'github://tinchodias/pharo-rita-history:Pharo14/src';
+					onConflictUseIncoming;
+					onWarningLog;
+					load ]
+]
+
+{ #category : 'world menu' }
 PharoCommonTools class >> menuToploOn: aBuilder [
 
 	<worldMenu>
