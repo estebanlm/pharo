@@ -56,6 +56,7 @@ PharoCommonTools class >> menuRitaOn: aBuilder [
 		parent: #Tools;
 		label: 'Load Git Changes Visualizer (Rita)';
 		icon: (self iconNamed: #smallLoadProject);
+		help: 'This action loads Rita, a tool to visualize the history of a git repository to get more insight instead of just reading code.';
 		order: 115;
 		action: [
 				Metacello new
