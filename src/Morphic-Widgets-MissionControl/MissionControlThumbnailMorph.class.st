@@ -15,7 +15,7 @@ Class {
 { #category : 'drawing' }
 MissionControlThumbnailMorph >> baseBorderColor [
 
-	^ Color veryLightGray
+	^ self theme baseBorderColor
 ]
 
 { #category : 'private' }
@@ -54,7 +54,7 @@ MissionControlThumbnailMorph >> drawOn: aCanvas [
 { #category : 'drawing' }
 MissionControlThumbnailMorph >> highlightBorderColor [
 
-	^ Color R: 55 G: 140 B: 240
+	^ self theme selectedTabBorderColor
 ]
 
 { #category : 'initialization' }
