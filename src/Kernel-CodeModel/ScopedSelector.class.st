@@ -12,6 +12,12 @@ Class {
 	#tag : 'Extensions'
 }
 
+{ #category : 'converting' }
+ScopedSelector >> <= another [
+
+	^ self asString <= another asString 
+]
+
 { #category : 'installing' }
 ScopedSelector >> addAliasedBehavior: aClass [
 
