@@ -14,7 +14,6 @@ CommandLineDebuggerBasicCommandsTest >> setUp [
 	| debuggingProcess debuggingContext debuggingSession |
 	super setUp.
 	debuggingProcess := [ self class compiler evaluate: 'OCParser parseMethod: foo self' ] newProcess.
-	debuggingProcess suspend.
 	debuggingContext := debuggingProcess suspendedContext.
 	debuggingSession := DebugSession named: 'test' on: debuggingProcess startedAt: debuggingContext.
 	debugger := CommandLineDebugger new

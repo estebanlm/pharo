@@ -302,6 +302,7 @@ CommandLineDebugger >> run [
 			self askTyping.
 			input := self readNextLine.
 			[
+
 				input := self handleHistory: input trim.
 				tempRes := self parsesAndExecuteCommand: input.
 				self printOutput: tempRes ]
