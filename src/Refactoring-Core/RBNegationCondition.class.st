@@ -12,8 +12,9 @@ Class {
 	#instVars : [
 		'condition'
 	],
-	#category : 'Refactoring-Core',
-	#package : 'Refactoring-Core'
+	#category : 'Refactoring-Core-OldConditions',
+	#package : 'Refactoring-Core',
+	#tag : 'OldConditions'
 }
 
 { #category : 'instance creation' }

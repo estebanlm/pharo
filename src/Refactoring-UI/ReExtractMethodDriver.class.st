@@ -181,9 +181,7 @@ ReExtractMethodDriver >> requestNewMessage [
 
 	| methodName dialog |
 	dialog := nil.
-	methodName := RBMethodName
-		              selector: (refactoring selectorStartingFrom: 'f' argumentsSize: refactoring arguments size)
-		              arguments: refactoring arguments.
+	methodName := refactoring newMethodName.
 	"Retry until the methodName is valid or the user cancels the dialog"
 	[ dialog isNil or: [ dialog methodName isValid not ] ] whileTrue: [
 			requestDialog := nil.

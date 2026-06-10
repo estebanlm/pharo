@@ -4,8 +4,9 @@ Class {
 	#instVars : [
 		'condition'
 	],
-	#category : 'Refactoring-Core',
-	#package : 'Refactoring-Core'
+	#category : 'Refactoring-Core-Conditions',
+	#package : 'Refactoring-Core',
+	#tag : 'Conditions'
 }
 
 { #category : 'instance creation' }

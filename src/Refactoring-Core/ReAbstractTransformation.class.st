@@ -8,8 +8,9 @@ Class {
 	#classVars : [
 		'RefactoringOptions'
 	],
-	#category : 'Refactoring-Core',
-	#package : 'Refactoring-Core'
+	#category : 'Refactoring-Core-Refactorings',
+	#package : 'Refactoring-Core',
+	#tag : 'Refactorings'
 }
 
 { #category : 'displaying' }
