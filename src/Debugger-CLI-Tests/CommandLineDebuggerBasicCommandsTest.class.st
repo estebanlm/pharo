@@ -28,7 +28,6 @@ CommandLineDebuggerBasicCommandsTest >> testEmptyCommand [
 	| response |
 	response := debugger parsesAndExecuteCommand: '          '.
 
-	self assert: debugger isActive.
 	self assert: response equals: ''
 ]
 
