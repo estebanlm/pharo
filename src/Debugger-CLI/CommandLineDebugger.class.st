@@ -28,7 +28,6 @@ CommandLineDebugger class >> forCode: aString [
     | blockToDebug process |
     blockToDebug := OpalEvaluator new evaluate: '[ ' , aString , ' ]'.
     process := blockToDebug newProcess.
-    process suspend.
     
     ^ self forProcess: process
 ]
