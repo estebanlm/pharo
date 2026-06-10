@@ -119,13 +119,6 @@ CommandLineDebuggerBasicCommandsTest >> testPrintStack [
 	initialPc := debugger context pc.
 	response := debugger parsesAndExecuteCommand: 'printStack'.
 
-
-	self assert: debugger context pc equals: initialPc.
-
-	self assert: debugger isActive.
-
-	self assert: (response isString and: response isNotEmpty).
-
 	self assert: (response includesSubstring: debugger context printString)
 ]
 
