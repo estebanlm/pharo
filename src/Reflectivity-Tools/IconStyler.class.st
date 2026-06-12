@@ -152,7 +152,7 @@ IconStyler >> stylerClasses: anObject [
 { #category : 'private' }
 IconStyler >> stylerName [
 
-	^ 'styler'
+	^ 'icon'
 ]
 
 { #category : 'accessing' }
