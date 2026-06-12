@@ -117,7 +117,7 @@ MissionControlMorph >> deactivate [
 MissionControlMorph >> deactivateAndShowWindow: window [
 
 	self deactivate.
-	window unexpandedFrame: window fullFrame; activate; fullscreen
+	window unexpandedFrame: window fullFrame; activate
 ]
 
 { #category : 'drawing' }
