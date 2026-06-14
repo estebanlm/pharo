@@ -68,13 +68,10 @@ BaselineOfBasicTools >> baseline: spec [
 			spec package: 'ClassDefinitionPrinters-Tests'.
 			spec package: 'Network-Mail'.
 			spec package: 'Network-Mail-Tests'.
-
-			spec package: 'OpalCompiler-ToolFeatures'.
-			spec package: 'OpalCompiler-ToolFeatures-Tests'.
 			spec baseline: 'Refactoring' with: [
 					spec
 						repository: repository;
-						loads: #( 'Core' ) ].
+						loads: #( 'Core' 'Refactoring-CompilerSupport' 'Refactoring-CompilerSupport-Tests' ) ].
 
 			spec package: 'Monticello-BackwardCompatibility'.
 			spec package: 'MonticelloFileServices'.
