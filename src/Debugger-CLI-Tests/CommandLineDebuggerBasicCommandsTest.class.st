@@ -22,6 +22,36 @@ CommandLineDebuggerBasicCommandsTest >> setUp [
 		            session: debuggingSession
 ]
 
+{ #category : 'running' }
+CommandLineDebuggerBasicCommandsTest >> setUpContextForPrinting [
+
+	| currentContext |
+	currentContext := Context
+		                  sender: nil
+		                  receiver: MockForDebugger new
+		                  method: MockForDebugger >> #methodToPrintCode:withArgument:
+		                  arguments: #( 1 32 ).
+	debugger context: currentContext
+]
+
+{ #category : 'running' }
+CommandLineDebuggerBasicCommandsTest >> setUpDebuggerOnNavigationMock [
+
+	| process context session |
+	process := [ MockForDebugger new methodForNavigationInACode ] newProcess.
+	context := process suspendedContext.
+
+	session := DebugSession named: 'TestNav' on: process startedAt: context.
+
+	debugger
+		process: process;
+		session: session;
+		context: context.
+
+	[ debugger context method selector = #methodForNavigationInACode ] whileFalse: [ debugger parsesAndExecuteCommand: 'step' ].
+	^ debugger context
+]
+
 { #category : 'tests' }
 CommandLineDebuggerBasicCommandsTest >> testEmptyCommand [
 
@@ -91,21 +121,10 @@ CommandLineDebuggerBasicCommandsTest >> testPrintCode [
 ]
 
 { #category : 'tests' }
-CommandLineDebuggerBasicCommandsTest >> testPrintError [
+CommandLineDebuggerBasicCommandsTest >> testPrintCommandWithDivisionByZeroReturnsError [
 
-	| currentContext response |
-	currentContext := Context
-		                  sender: nil
-		                  receiver: self
-		                  method: MockToPrintCode >> #mockMethodForTesting:and:
-		                  arguments: #( 1 32 ).
-	debugger context: currentContext.
-
-	response := debugger parsesAndExecuteCommand: 'print arg'.
-
-	self assert: debugger isActive.
-	self assert: response equals: 'Error evaluating: arg'.
-
+	| response |
+	self setUpContextForPrinting.
 
 	response := debugger parsesAndExecuteCommand: 'print 1/0'.
 
@@ -114,37 +133,10 @@ CommandLineDebuggerBasicCommandsTest >> testPrintError [
 ]
 
 { #category : 'tests' }
-CommandLineDebuggerBasicCommandsTest >> testPrintStack [
+CommandLineDebuggerBasicCommandsTest >> testPrintCommandWithNoArgumentsShowsNothingToPrint [
 
-	| response initialPc |
-	initialPc := debugger context pc.
-	response := debugger parsesAndExecuteCommand: 'printStack'.
-
-	self assert: (response includesSubstring: debugger context printString)
-]
-
-{ #category : 'tests' }
-CommandLineDebuggerBasicCommandsTest >> testPrintStackAfterStep [
-
-	| response contextAfterStep |
-	debugger parsesAndExecuteCommand: 'step'.
-	contextAfterStep := debugger context.
-
-	response := debugger parsesAndExecuteCommand: 'printStack'.
-
-	self assert: (response includesSubstring: contextAfterStep printString)
-]
-
-{ #category : 'tests' }
-CommandLineDebuggerBasicCommandsTest >> testPrintWithoutArguments [
-
-	| currentContext response |
-	currentContext := Context
-		                  sender: nil
-		                  receiver: self
-		                  method: MockToPrintCode >> #mockMethodForTesting:and:
-		                  arguments: #( 1 32 ).
-	debugger context: currentContext.
+	| response |
+	self setUpContextForPrinting.
 
 	response := debugger parsesAndExecuteCommand: 'print '.
 
@@ -152,7 +144,110 @@ CommandLineDebuggerBasicCommandsTest >> testPrintWithoutArguments [
 ]
 
 { #category : 'tests' }
-CommandLineDebuggerBasicCommandsTest >> testQuit [
+CommandLineDebuggerBasicCommandsTest >> testPrintCommandWithSyntaxErrorReturnsError [
+
+	| response |
+	self setUpContextForPrinting.
+
+	response := debugger parsesAndExecuteCommand: 'print 1 + '.
+
+	self assert: debugger isActive.
+
+	self assert: response equals: 'Error evaluating: 1 +'
+]
+
+{ #category : 'tests' }
+CommandLineDebuggerBasicCommandsTest >> testPrintCommandWithUnknownVariableReturnsError [
+
+    | response |
+    self setUpContextForPrinting.
+    
+    response := debugger parsesAndExecuteCommand: 'print arg'.
+
+    self assert: debugger isActive.
+    self assert: response equals: 'Error evaluating: arg'
+]
+
+{ #category : 'tests' }
+CommandLineDebuggerBasicCommandsTest >> testPrintStackCommandShowsCurrentContext [
+
+	| response |
+	response := debugger parsesAndExecuteCommand: 'printStack'.
+
+	self assert: (response includesSubstring: debugger context printString)
+]
+
+{ #category : 'tests' }
+CommandLineDebuggerBasicCommandsTest >> testPrintStackReflectsMethodCallsAndReturns [
+
+    | stackBefore stackInside stackAfter |
+
+    "1. On se place sur le pas de la porte de methodToStepInto"
+    self setUpDebuggerOnNavigationMock. 
+    
+    stackBefore := debugger parsesAndExecuteCommand: 'printStack'.
+    "On vérifie qu'on est bien dans la méthode appelante"
+    self assert: (stackBefore includesSubstring: 'methodForNavigationInACode').
+    self deny: (stackBefore includesSubstring: 'methodToStepInto').
+
+    "2. On PLONGE dans la méthode (Push)"
+    debugger parsesAndExecuteCommand: 'step'.
+    
+    stackInside := debugger parsesAndExecuteCommand: 'printStack'.
+    "La pile a grandi : la nouvelle méthode est là..."
+    self assert: (stackInside includesSubstring: 'methodToStepInto').
+    "... et la méthode appelante est toujours en dessous dans la pile !"
+    self assert: (stackInside includesSubstring: 'methodForNavigationInACode').
+
+    "3. On RESSORT de la méthode (Pop)"
+    "On fait des steps jusqu'à ce qu'on ne soit plus dans methodToStepInto"
+    [ debugger context method selector = #methodToStepInto ] 
+        whileTrue: [ debugger parsesAndExecuteCommand: 'step' ].
+        
+    stackAfter := debugger parsesAndExecuteCommand: 'printStack'.
+    "La pile a rétréci : la méthode interne a disparu"
+    self deny: (stackAfter includesSubstring: 'methodToStepInto').
+    "Mais on est bien de retour dans la méthode appelante"
+    self assert: (stackAfter includesSubstring: 'methodForNavigationInACode').
+]
+
+{ #category : 'tests' }
+CommandLineDebuggerBasicCommandsTest >> testPrintStackUpdatesCorrectlyOnMethodEntryAfterStep [
+
+	| stackBefore stackInside |
+	self setUpDebuggerOnNavigationMock.
+
+	stackBefore := debugger parsesAndExecuteCommand: 'printStack'.
+
+	debugger parsesAndExecuteCommand: 'step'. 
+	stackInside := debugger parsesAndExecuteCommand: 'printStack'.
+
+	self assert: (stackInside includesSubstring: 'methodToStepInto').
+	self assert: (stackInside includesSubstring: 'methodForNavigationInACode').
+	self deny: stackInside equals: stackBefore
+]
+
+{ #category : 'tests' }
+CommandLineDebuggerBasicCommandsTest >> testPrintStackUpdatesCorrectlyOnMethodExitAfterStep [
+
+	| stackInside stackAfter |
+	self setUpDebuggerOnNavigationMock.
+
+	debugger parsesAndExecuteCommand: 'step'.
+
+	stackInside := debugger parsesAndExecuteCommand: 'printStack'.
+
+	[ debugger context method selector = #methodToStepInto ] whileTrue: [ debugger parsesAndExecuteCommand: 'step' ]. "Get out of the method to get back on methodForNavigationInACode"
+
+	stackAfter := debugger parsesAndExecuteCommand: 'printStack'.
+
+	self assert: (stackAfter includesSubstring: 'methodForNavigationInACode').
+	self deny: (stackAfter includesSubstring: 'methodToStepInto').
+	self deny: stackInside equals: stackAfter
+]
+
+{ #category : 'tests' }
+CommandLineDebuggerBasicCommandsTest >> testQuitDisactivateTheDebuggerAndAnnouncesIt [
 
 	| response |
 	self assert: debugger isActive.
@@ -178,7 +273,7 @@ CommandLineDebuggerBasicCommandsTest >> testStep [
 ]
 
 { #category : 'tests' }
-CommandLineDebuggerBasicCommandsTest >> testUnknownCommand [
+CommandLineDebuggerBasicCommandsTest >> testUnknownCommandReturnsErrorMessage [
 
 	| response unknownCommand |
 	unknownCommand := 'thisIsAnUnknownCommand'.
