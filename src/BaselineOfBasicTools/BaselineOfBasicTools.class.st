@@ -72,6 +72,11 @@ BaselineOfBasicTools >> baseline: spec [
 					spec
 						repository: repository;
 						loads: #( 'Core' 'Refactoring-CompilerSupport' 'Refactoring-CompilerSupport-Tests' ) ].
+					
+			spec baseline: 'RefactoringUI' with: [
+					spec
+						repository: repository;
+						loads: #( 'Core' 'Tests' ) ].		
 
 			spec package: 'Monticello-BackwardCompatibility'.
 			spec package: 'MonticelloFileServices'.
