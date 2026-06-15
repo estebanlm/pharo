@@ -53,7 +53,7 @@ CommandLineDebuggerBasicCommandsTest >> setUpDebuggerOnNavigationMock [
 ]
 
 { #category : 'tests' }
-CommandLineDebuggerBasicCommandsTest >> testEmptyCommand [
+CommandLineDebuggerBasicCommandsTest >> testEmptyCommandDoesNothing [
 
 	| response |
 	response := debugger parsesAndExecuteCommand: '          '.
