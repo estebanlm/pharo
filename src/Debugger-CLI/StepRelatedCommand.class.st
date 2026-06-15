@@ -16,7 +16,7 @@ StepRelatedCommand >> executeOn: aDebugger with: args [
 
 	aDebugger context ifNil: [ ^ aDebugger finishedDebugging ].
 
-	self printResultFor: aDebugger
+	^ self printResultFor: aDebugger
 ]
 
 { #category : 'execution' }
