@@ -80,6 +80,7 @@ CommandLineDebuggerBasicCommandsTest >> testPrintCode [
 
 	response := debugger parsesAndExecuteCommand: 'printCode'.
 
+
 	self assert: (response includesSubstring: 'mockMethodForTesting').
 	self assert: (response includesSubstring: '"Fake method to test printCode"').
 	self assert: (response includesSubstring: 'a := --->42<---.').
