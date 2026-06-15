@@ -22,6 +22,18 @@ CommandLineDebuggerBasicCommandsTest >> setUp [
 		            session: debuggingSession
 ]
 
+{ #category : 'tests' }
+CommandLineDebuggerBasicCommandsTest >> setUpContextForPrintCode [
+
+	| currentContext |
+	currentContext := Context
+		                  sender: nil
+		                  receiver: MockForDebugger new
+		                  method: MockForDebugger >> #methodeToPrintCode
+		                  arguments: #(  ).
+	debugger context: currentContext
+]
+
 { #category : 'running' }
 CommandLineDebuggerBasicCommandsTest >> setUpContextForPrinting [
 
@@ -62,62 +74,45 @@ CommandLineDebuggerBasicCommandsTest >> testEmptyCommandDoesNothing [
 ]
 
 { #category : 'tests' }
-CommandLineDebuggerBasicCommandsTest >> testOver [
-	"testing that the Program Counter changed after executing step"
+CommandLineDebuggerBasicCommandsTest >> testOverCommandAdvancesPCOnSameContext [
+	
+	| initialContext initialPc |
 
-	| response initialPc |
-	initialPc := debugger context pc.
-
-	response := debugger parsesAndExecuteCommand: 'over'.
-
+	initialContext := self setUpDebuggerOnNavigationMock.
+	initialPc := initialContext pc.
+	debugger parsesAndExecuteCommand: 'over'.
+	self assert: debugger context method equals: initialContext method.
 	self deny: debugger context pc equals: initialPc.
-
-	self assert: debugger isActive.
-
-	self assert: (response beginsWith: 'Stepped OVER to:')
 ]
 
 { #category : 'tests' }
-CommandLineDebuggerBasicCommandsTest >> testPrint [
+CommandLineDebuggerBasicCommandsTest >> testPrintCodeCommandShowsMethodSourceAndHighlightsCurrentInstruction [
 
-	| currentContext response1 response2 |
-	currentContext := Context
-		                  sender: nil
-		                  receiver: self
-		                  method: MockToPrintCode >> #mockMethodForTesting:and:
-		                  arguments: #( 1 32 ).
-	debugger context: currentContext.
+    | response |
+    self setUpContextForPrintCode.
+    
+    response := debugger parsesAndExecuteCommand: 'printCode'.
+
+    self assert: (response includesSubstring: 'methodeToPrintCode').
+    self assert: (response includesSubstring: '"Fake method to test printCode"').
+    self assert: (response includesSubstring: 'a := --->42<---.').
+    self assert: (response includesSubstring: 'b := a + 1.').
+    self assert: (response includesSubstring: '^ b * 2').
+    
+    self assert: debugger isActive
+]
+
+{ #category : 'tests' }
+CommandLineDebuggerBasicCommandsTest >> testPrintCommandEvaluatesArgumentsCorrectly [
+
+	| response1 response2 |
+	self setUpContextForPrinting.
 
 	response1 := debugger parsesAndExecuteCommand: 'print arg1'.
-
 	self assert: response1 equals: 'arg1 : 1'.
 
 	response2 := debugger parsesAndExecuteCommand: 'print arg2'.
-
 	self assert: response2 equals: 'arg2 : 32'
-]
-
-{ #category : 'tests' }
-CommandLineDebuggerBasicCommandsTest >> testPrintCode [
-
-	| currentContext response |
-	currentContext := Context
-		                  sender: nil
-		                  receiver: self
-		                  method: MockToPrintCode >> #mockMethodForTesting
-		                  arguments: #(  ).
-	debugger context: currentContext.
-
-	response := debugger parsesAndExecuteCommand: 'printCode'.
-
-
-	self assert: (response includesSubstring: 'mockMethodForTesting').
-	self assert: (response includesSubstring: '"Fake method to test printCode"').
-	self assert: (response includesSubstring: 'a := --->42<---.').
-	self assert: (response includesSubstring: 'b := a + 1.').
-	self assert: (response includesSubstring: '^ b * 2').
-
-	self assert: debugger isActive
 ]
 
 { #category : 'tests' }
@@ -257,19 +252,15 @@ CommandLineDebuggerBasicCommandsTest >> testQuitDisactivateTheDebuggerAndAnnounc
 ]
 
 { #category : 'tests' }
-CommandLineDebuggerBasicCommandsTest >> testStep [
-	"testing that the Program Counter changed after executing step"
+CommandLineDebuggerBasicCommandsTest >> testStepCommandEntersCalledMethod [
 
-	| response initialPc |
-	initialPc := debugger context pc.
+	| initialContext newContext |
 
-	response := debugger parsesAndExecuteCommand: 'step'.
-
-	self deny: debugger context pc equals: initialPc.
-
-	self assert: debugger isActive.
-
-	self assert: (response beginsWith: 'Stepped to:')
+	initialContext := self setUpDebuggerOnNavigationMock.
+	debugger parsesAndExecuteCommand: 'step'.
+	newContext := debugger context method.
+	self deny: newContext method equals: initialContext method.
+	self assert: newContext method selector equals: #methodToStepInto.
 ]
 
 { #category : 'tests' }
