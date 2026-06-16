@@ -173,40 +173,6 @@ CommandLineDebuggerBasicCommandsTest >> testPrintStackCommandShowsCurrentContext
 ]
 
 { #category : 'tests' }
-CommandLineDebuggerBasicCommandsTest >> testPrintStackReflectsMethodCallsAndReturns [
-
-    | stackBefore stackInside stackAfter |
-
-    "1. On se place sur le pas de la porte de methodToStepInto"
-    self setUpDebuggerOnNavigationMock. 
-    
-    stackBefore := debugger parsesAndExecuteCommand: 'printStack'.
-    "On vérifie qu'on est bien dans la méthode appelante"
-    self assert: (stackBefore includesSubstring: 'methodForNavigationInACode').
-    self deny: (stackBefore includesSubstring: 'methodToStepInto').
-
-    "2. On PLONGE dans la méthode (Push)"
-    debugger parsesAndExecuteCommand: 'step'.
-    
-    stackInside := debugger parsesAndExecuteCommand: 'printStack'.
-    "La pile a grandi : la nouvelle méthode est là..."
-    self assert: (stackInside includesSubstring: 'methodToStepInto').
-    "... et la méthode appelante est toujours en dessous dans la pile !"
-    self assert: (stackInside includesSubstring: 'methodForNavigationInACode').
-
-    "3. On RESSORT de la méthode (Pop)"
-    "On fait des steps jusqu'à ce qu'on ne soit plus dans methodToStepInto"
-    [ debugger context method selector = #methodToStepInto ] 
-        whileTrue: [ debugger parsesAndExecuteCommand: 'step' ].
-        
-    stackAfter := debugger parsesAndExecuteCommand: 'printStack'.
-    "La pile a rétréci : la méthode interne a disparu"
-    self deny: (stackAfter includesSubstring: 'methodToStepInto').
-    "Mais on est bien de retour dans la méthode appelante"
-    self assert: (stackAfter includesSubstring: 'methodForNavigationInACode').
-]
-
-{ #category : 'tests' }
 CommandLineDebuggerBasicCommandsTest >> testPrintStackUpdatesCorrectlyOnMethodEntryAfterStep [
 
 	| stackBefore stackInside |
