@@ -868,8 +868,9 @@ Class >> removeSubclass: aSubclass [
 
 	<reflection: 'Class structural modification - Hierarchy modification'>
 	self subclasses ifNotNil: [ :classes |
-		self subclasses: (classes copyWithout: aSubclass).
-		self subclasses ifEmpty: [ self subclasses: nil ] ]
+		classes ifNotEmpty: [
+			self subclasses: (classes copyWithout: aSubclass).
+			self subclasses ifEmpty: [ self subclasses: nil ] ] ]
 ]
 
 { #category : 'class name' }
@@ -983,13 +984,6 @@ Class >> subclasses [
 { #category : 'accessing - class hierarchy' }
 Class >> subclasses: aCollection [
 	<reflection: 'Class structural inspection - Hierarchy modification'>
-	((subclasses isNil or: [ subclasses isEmpty ])
-		and: [ aCollection isNil or: [ aCollection isEmpty ] ])
-			ifTrue: [ 
-				"Nothing to do"
-				^ self ].
-	
-	subclasses = aCollection ifTrue: [ "Nothing to do" ^ self ].
 	
 	subclasses := aCollection
 ]
