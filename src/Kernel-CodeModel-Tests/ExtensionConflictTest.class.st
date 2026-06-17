@@ -306,9 +306,13 @@ ExtensionConflictTest >> test03ImportExtensionMethodConflictsWithPreExistingImpo
 	self compile: 'extension ^ 42' on: coloredPointClass. "We have a second extension"
 	definerPackage2 := Package named: 'Definer2'.
 	anotherExtensionOnPoint := self createExtensionNamed: #ExtensionOfPoint2 forBehavior: pointClass inPackage: definerPackage2.
-	self compile: 'extension ^ 17' on: anotherExtensionOnPoint. "We import both extensions"
+	self compile: 'extension ^ 17' on: anotherExtensionOnPoint.
+
+	"We import both extensions"
 	userPackage addExtensionImport: extensionOnPoint.
-	userPackage addExtensionImport: anotherExtensionOnPoint. "Recompilation should not change anything"
+	userPackage addExtensionImport: anotherExtensionOnPoint.
+	
+	"Recompilation should not change anything"
 	self compile: 'extension ^ 73' on: extensionOnPoint.
 
 	scopedSelector := userPackage visibleSelectorForSymbol: #extension.
