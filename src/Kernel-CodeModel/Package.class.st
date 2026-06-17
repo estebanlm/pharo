@@ -124,11 +124,7 @@ Package >> addExtensionImport: anExtension [
 	"Recompile dependencies, so they can see the extension.
 	For now, we recompile the entire package, since every callsite may now become a scoped callsite"
 	self methods do: [ :m |
-		m methodClass
-			compile: m sourceCode
-			classified: m protocol
-			withStamp: m timeStamp
-			logSource: true ]
+		m methodClass compile: m selector from: m methodClass ]
 ]
 
 { #category : 'add method - compiled method' }
@@ -687,7 +683,7 @@ Package >> removeExtensionImport: anExtension [
 		localScopedSelector := self visibleSelectorForSymbol: e symbol.
 		(anExtension extendedClass includesSelector: localScopedSelector) ifTrue: [
 			self assert: anExtension extendedClass >> localScopedSelector == (anExtension extendedClass >> e).
-			anExtension extendedClass removeSelector: localScopedSelector ]
+			anExtension extendedClass removeSelector: localScopedSelector logged: false ]
 	]
 ]
 
