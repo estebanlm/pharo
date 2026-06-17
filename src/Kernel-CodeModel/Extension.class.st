@@ -71,7 +71,7 @@ Extension >> methodInstaller [
 Extension >> removeFromSystem: logged [
 
 	self selectors do: [ :e |
-		self removeSelector: e ].
+		self removeSelector: e logged: logged ].
 	super removeFromSystem: logged
 ]
 

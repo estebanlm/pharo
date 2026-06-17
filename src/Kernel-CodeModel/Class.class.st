@@ -983,6 +983,14 @@ Class >> subclasses [
 { #category : 'accessing - class hierarchy' }
 Class >> subclasses: aCollection [
 	<reflection: 'Class structural inspection - Hierarchy modification'>
+	((subclasses isNil or: [ subclasses isEmpty ])
+		and: [ aCollection isNil or: [ aCollection isEmpty ] ])
+			ifTrue: [ 
+				"Nothing to do"
+				^ self ].
+	
+	subclasses = aCollection ifTrue: [ "Nothing to do" ^ self ].
+	
 	subclasses := aCollection
 ]
 
