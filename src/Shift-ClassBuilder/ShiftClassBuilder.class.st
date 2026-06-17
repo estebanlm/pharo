@@ -642,7 +642,7 @@ ShiftClassBuilder >> sourcesManager [
 	^ sourcesManager
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ShiftClassBuilder >> sourcesManager: aNoSourcesManager [ 
 	
 	sourcesManager := aNoSourcesManager 
