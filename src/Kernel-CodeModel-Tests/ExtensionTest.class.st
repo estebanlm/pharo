@@ -307,10 +307,10 @@ ExtensionTest >> test15ExtensionsWithIsolatedSuperSends [
 
 	| userInstance extensionOnPoint2 superSenderSelector pointObject |
 	definerPackage2 := Package named: 'Definer2'.
-	extensionOnPoint2 := self createExtensionNamed: #ExtensionOfInteger forBehavior: pointClass inPackage: definerPackage2.
+	extensionOnPoint2 := self createExtensionNamed: #ExtensionOfPoint2 forBehavior: pointClass inPackage: definerPackage2.
 
 	self compile: 'foo ^ 10' on: extensionOnObject.
-	superSenderSelector := self compile: 'foo ^ super foo + 1' on: extensionOnObject.
+	superSenderSelector := self compile: 'foo ^ super foo + 1' on: extensionOnPoint2.
 	self
 		compile: 'scopedUser: anObject
 		^ anObject foo'

@@ -769,9 +769,11 @@ ExtensionConflictTest >> test07NewExtensionOnImportExtensionMethodConflictsWithP
 ExtensionConflictTest >> test08LocalExtensionMethodConflictsWithPreExistingLocalExtension01ExtensionThrowsException [
 	"We have a first extension"
 
-	| anotherExtensionOnPoint scopedSelector |
-	self compile: 'extension ^ 73' on: extensionOnPoint. "We have a second extension"
-	anotherExtensionOnPoint := self createExtensionNamed: #ExtensionOfPoint2 forBehavior: pointClass inPackage: userPackage.
+	| scopedSelector |
+	self compile: 'extension ^ 73' on: extensionOnPoint.
+	
+	"We have a second extension"
+	anotherExtensionOnPoint := self createExtensionNamed: #ExtensionOfPoint2 forBehavior: pointClass inPackage: definerPackage.
 	self compile: 'extension ^ 17' on: anotherExtensionOnPoint.
 
 	scopedSelector := definerPackage visibleSelectorForSymbol: #extension.
@@ -802,10 +804,14 @@ ExtensionConflictTest >> test08LocalExtensionMethodConflictsWithPreExistingLocal
 ExtensionConflictTest >> test08LocalExtensionMethodConflictsWithPreExistingLocalExtension03ExtensionThrowsExceptionAfterRecompilation [
 	"We have a first extension"
 
-	| anotherExtensionOnPoint scopedSelector |
-	self compile: 'extension ^ 73' on: extensionOnPoint. "We have a second extension"
-	anotherExtensionOnPoint := self createExtensionNamed: #ExtensionOfPoint2 forBehavior: pointClass inPackage: userPackage.
-	self compile: 'extension ^ 17' on: anotherExtensionOnPoint. "Recompilation should not change anything"
+	| scopedSelector |
+	self compile: 'extension ^ 73' on: extensionOnPoint.
+	
+	"We have a second extension"
+	anotherExtensionOnPoint := self createExtensionNamed: #ExtensionOfPoint2 forBehavior: pointClass inPackage: definerPackage.
+	self compile: 'extension ^ 17' on: anotherExtensionOnPoint.
+	
+	"Recompilation should not change anything"
 	self compile: 'extension ^ 73' on: extensionOnPoint.
 
 	scopedSelector := definerPackage visibleSelectorForSymbol: #extension.

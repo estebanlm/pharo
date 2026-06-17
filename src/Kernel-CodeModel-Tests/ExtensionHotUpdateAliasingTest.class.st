@@ -218,18 +218,29 @@ ExtensionHotUpdateAliasingTest >> test03RemoveExtension04ShouldRemoveAliasesToEx
 
 	| extensionScopedSelector receiver userScopedSelector |
 	"We extend Object"
-	extensionScopedSelector := self compile: 'extension ^ 11' on: extensionOnObject. "We import and use the extension, which will generate an alias"
+	extensionScopedSelector := self compile: 'extension ^ 11' on: extensionOnObject.
+	
+	"We import and use the extension, which will generate an alias"
 	userPackage addExtensionImport: extensionOnObject.
 	self compile: 'userMethod: anObject ^ anObject extension' on: userClass.
 
-	userScopedSelector := userPackage visibleSelectorForSymbol: #extension. "Send the message to create the alias"
-	userClass new perform: #userMethod: with: objectClass new. "Now we remove the extension"
-	extensionOnObject removeSelector: extensionScopedSelector logged: false. "So the message is not understood anymore"
-
-	receiver := objectClass new. "Not from the package itself"
+	userScopedSelector := userPackage visibleSelectorForSymbol: #extension.
+	
+	"Send the message to create the alias"
+	userClass new perform: #userMethod: with: objectClass new.
+	
+	"Now we remove the extension"
+	extensionOnObject removeSelector: extensionScopedSelector logged: false.
+	
+	"So the message is not understood anymore"
+	receiver := objectClass new.
+	
+	"Not from the package itself"
 	self should: [ receiver perform: extensionScopedSelector ] raise: MessageNotUnderstood withExceptionDo: [ :dnu |
 			self assert: dnu receiver equals: receiver.
-			self assert: dnu message selector equals: extensionScopedSelector ]. "Nor from the user alias"
+			self assert: dnu message selector equals: extensionScopedSelector ].
+		
+	"Nor from the user alias"
 	self should: [ receiver perform: userScopedSelector ] raise: MessageNotUnderstood withExceptionDo: [ :dnu |
 			self assert: dnu receiver equals: receiver.
 			self assert: dnu message selector equals: userScopedSelector ]
