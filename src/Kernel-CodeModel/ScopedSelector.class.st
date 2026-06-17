@@ -189,6 +189,12 @@ ScopedSelector >> isDoIt [
 ]
 
 { #category : 'testing' }
+ScopedSelector >> isKeyword [
+
+	^ self symbol isKeyword
+]
+
+{ #category : 'testing' }
 ScopedSelector >> isScopedSelector [
 
 	^ true
