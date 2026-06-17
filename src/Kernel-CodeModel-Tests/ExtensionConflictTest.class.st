@@ -10,9 +10,7 @@ Class {
 		'nicerStringClass',
 		'userClass',
 		'extensionOnObject',
-		'extensionOnColoredPoint',
-		'definerPackage2',
-		'anotherExtensionOnPoint'
+		'extensionOnColoredPoint'
 	],
 	#category : 'Kernel-CodeModel-Tests-Extensions',
 	#package : 'Kernel-CodeModel-Tests',
@@ -341,7 +339,7 @@ ExtensionConflictTest >> test04NewExtensionOnImportExtensionMethodConflictsWithP
 { #category : 'tests' }
 ExtensionConflictTest >> test04NewExtensionOnImportExtensionMethodConflictsWithPreExistingImportedExtension02KeepFirstImportWorkingOnIsolation [
 
-	| scopedSelector |
+	| scopedSelector anotherExtensionOnPoint |
 	anotherExtensionOnPoint := self createExtensionNamed: #ExtensionOfPoint2 forBehavior: pointClass inPackage: userPackage.
 
 	userPackage addExtensionImport: extensionOnPoint. "We import both extensions"
@@ -769,7 +767,7 @@ ExtensionConflictTest >> test07NewExtensionOnImportExtensionMethodConflictsWithP
 ExtensionConflictTest >> test08LocalExtensionMethodConflictsWithPreExistingLocalExtension01ExtensionThrowsException [
 	"We have a first extension"
 
-	| scopedSelector |
+	| scopedSelector anotherExtensionOnPoint |
 	self compile: 'extension ^ 73' on: extensionOnPoint.
 	
 	"We have a second extension"
@@ -804,7 +802,7 @@ ExtensionConflictTest >> test08LocalExtensionMethodConflictsWithPreExistingLocal
 ExtensionConflictTest >> test08LocalExtensionMethodConflictsWithPreExistingLocalExtension03ExtensionThrowsExceptionAfterRecompilation [
 	"We have a first extension"
 
-	| scopedSelector |
+	| scopedSelector anotherExtensionOnPoint |
 	self compile: 'extension ^ 73' on: extensionOnPoint.
 	
 	"We have a second extension"
