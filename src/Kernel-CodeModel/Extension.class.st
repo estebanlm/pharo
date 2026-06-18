@@ -18,6 +18,12 @@ Extension >> addUserPackage: aPackage [
 	self userPackages add: aPackage
 ]
 
+{ #category : 'accessing - method dictionary' }
+Extension >> compiledMethodAt: selector [
+
+	^ self methodDict at: selector ifAbsent: [ self methodDict at: (self internScopedSelector: selector asSymbol) ]
+]
+
 { #category : 'accessing' }
 Extension >> defineScopedSelector: aSymbol [
 
