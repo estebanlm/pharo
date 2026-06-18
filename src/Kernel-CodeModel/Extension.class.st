@@ -27,7 +27,7 @@ Extension >> compiledMethodAt: selector [
 { #category : 'initialization' }
 Extension >> compiler [     
     ^ super compiler 
-        class: self extendedClass;
+        class: (self extendedClass ifNil: [ self ]);
         yourself
 ]
 
