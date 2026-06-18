@@ -127,6 +127,12 @@ ScopedSelector >> cleanupExtendedBehaviors [
 	extendedBehaviors := nil
 ]
 
+{ #category : 'enumerating' }
+ScopedSelector >> do: aBlock [
+    
+    ^ self symbol do: aBlock
+]
+
 { #category : 'accessing' }
 ScopedSelector >> extendedBehaviors [
 
