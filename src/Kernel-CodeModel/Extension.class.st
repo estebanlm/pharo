@@ -24,6 +24,13 @@ Extension >> compiledMethodAt: selector [
 	^ self methodDict at: selector ifAbsent: [ self methodDict at: (self internScopedSelector: selector asSymbol) ]
 ]
 
+{ #category : 'initialization' }
+Extension >> compiler [     
+    ^ super compiler 
+        class: self extendedClass;
+        yourself
+]
+
 { #category : 'accessing' }
 Extension >> defineScopedSelector: aSymbol [
 
