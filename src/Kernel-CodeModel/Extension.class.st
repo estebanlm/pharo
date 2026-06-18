@@ -55,6 +55,14 @@ Extension >> hasUserPackages [
 	^ userPackages notNil and: [ userPackages notEmpty ]
 ]
 
+{ #category : 'testing - method dictionary' }
+Extension >> includesSelector: aSymbol [
+
+	(super includesSelector: aSymbol) ifTrue: [ ^ true ].
+
+	^ self methodDict includesKey: (self internScopedSelector: aSymbol)
+]
+
 { #category : 'accessing' }
 Extension >> internScopedSelector: aSymbol [
 
