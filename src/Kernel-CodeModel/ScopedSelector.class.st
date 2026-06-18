@@ -53,7 +53,6 @@ ScopedSelector >> asSymbol [
 { #category : 'matching' }
 ScopedSelector >> beginsWith: aString [
 
-	1halt.
 	^ self asString beginsWith: aString
 ]
 
@@ -182,6 +181,12 @@ ScopedSelector >> isDoIt [
 	^ self symbol isDoIt
 ]
 
+{ #category : 'converting' }
+ScopedSelector >> isKeyword [ 
+
+	^ self symbol isKeyword 
+]
+
 { #category : 'testing' }
 ScopedSelector >> isScopedSelector [
 
@@ -268,6 +273,13 @@ ScopedSelector >> removeAliases [
 	aliasedBehaviors ifNil: [ ^ self ].
 	aliasedBehaviors do: [ :e | e removeSelector: self ].
 	aliasedBehaviors := nil
+]
+
+{ #category : 'ston persistence' }
+ScopedSelector >> stonOn: stonWriter [
+	"Use a hex representation"
+
+	stonWriter writeObject: self listSingleton: self asSymbol
 ]
 
 { #category : 'accessing' }
