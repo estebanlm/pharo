@@ -133,12 +133,6 @@ ScopedSelector >> cleanupExtendedBehaviors [
 	extendedBehaviors := nil
 ]
 
-{ #category : 'enumerating' }
-ScopedSelector >> do: aBlock [
-    
-    ^ self symbol do: aBlock
-]
-
 { #category : 'accessing' }
 ScopedSelector >> extendedBehaviors [
 
@@ -193,10 +187,10 @@ ScopedSelector >> isDoIt [
 	^ self symbol isDoIt
 ]
 
-{ #category : 'converting' }
-ScopedSelector >> isKeyword [ 
+{ #category : 'testing' }
+ScopedSelector >> isKeyword [
 
-	^ self symbol isKeyword 
+	^ self symbol isKeyword
 ]
 
 { #category : 'testing' }
@@ -289,7 +283,7 @@ ScopedSelector >> removeAliases [
 
 { #category : 'ston persistence' }
 ScopedSelector >> stonOn: stonWriter [
-	"Use a hex representation"
+	"Represent scoped selector as symbols when serialising"
 
 	stonWriter writeObject: self listSingleton: self asSymbol
 ]

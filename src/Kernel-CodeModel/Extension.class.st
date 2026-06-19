@@ -60,7 +60,7 @@ Extension >> includesSelector: aSymbol [
 
 	(super includesSelector: aSymbol) ifTrue: [ ^ true ].
 
-	^ self methodDict includesKey: (self internScopedSelector: aSymbol)
+	^ super includesSelector: (self package visibleSelectorForSymbol: aSymbol)
 ]
 
 { #category : 'accessing' }
