@@ -297,7 +297,7 @@ ScopedSelector >> symbol [
 { #category : 'accessing' }
 ScopedSelector >> symbol: anObject [
 
-	symbol := anObject
+	symbol := anObject asSymbol 
 ]
 
 { #category : 'accessing' }
