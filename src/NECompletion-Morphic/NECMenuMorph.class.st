@@ -312,11 +312,11 @@ NECMenuMorph >> drawLine: index on: aCanvas rectangle: rectangle [
 	| necEntry font type string preString highlightRectangle |
 
 	necEntry := context entries at: index.
-	string := necEntry displayedContents.
+	string := necEntry displayedContents asString.
 	preString := string asLowercase findString: context completionToken asLowercase.
 	preString := preString <= 0
 		ifFalse: [ string first: preString - 1 ]
-		ifTrue: [ String empty ].
+		ifTrue: [ String empty ]. 
 		
 	"shout is using the symbol to select the color so we pass a symbol"
 	type := necEntry hightlightSymbol.
