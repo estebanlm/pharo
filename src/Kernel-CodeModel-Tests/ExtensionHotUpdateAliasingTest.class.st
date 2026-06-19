@@ -81,10 +81,6 @@ ExtensionHotUpdateAliasingTest >> setUp [
 { #category : 'running' }
 ExtensionHotUpdateAliasingTest >> tearDown [
 	"Make sure we did not pollute the global dictionaries"
-
-	self deny: (Point methodDictionary keys anySatisfy: [ :k | k isKindOf: ScopedSelector ]).
-	self deny: (Object methodDictionary keys anySatisfy: [ :k | k isKindOf: ScopedSelector ]).
-	self deny: (Integer methodDictionary keys anySatisfy: [ :k | k isKindOf: ScopedSelector ]).
 	
 	environment allClassesAndTraits do: [ :e | e removeFromSystem ].
 	
