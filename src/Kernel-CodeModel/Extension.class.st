@@ -92,12 +92,16 @@ Extension >> removeFromSystem: logged [
 { #category : 'accessing - method dictionary' }
 Extension >> removeSelector: aSelector [
 
-	super removeSelector: aSelector.
+	| targetSelector |
+	targetSelector := (self methodDict includesKey: aSelector)
+		                  ifTrue: [ aSelector ]
+		                  ifFalse: [ self internScopedSelector: aSelector ].
+
+	super removeSelector: targetSelector. 
 	
 	"In some tests we removed the extension method by hand, breaking some invariants.
 	We should take a look a that"
-	(extendedClass includesSelector: aSelector)
-		ifTrue: [ extendedClass removeMethod: (extendedClass >> aSelector) ]
+	(extendedClass includesSelector: aSelector) ifTrue: [ extendedClass removeMethod: extendedClass >> aSelector ]
 ]
 
 { #category : 'accessing' }
