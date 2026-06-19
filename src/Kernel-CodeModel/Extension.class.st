@@ -85,23 +85,19 @@ Extension >> methodInstaller [
 Extension >> removeFromSystem: logged [
 
 	self selectors do: [ :e |
-		self removeSelector: e ].
+		self removeSelector: e logged: logged ].
 	super removeFromSystem: logged
 ]
 
 { #category : 'accessing - method dictionary' }
-Extension >> removeSelector: aSelector [
+Extension >> removeSelector: aSelector logged: logged [
 
-	| targetSelector |
-	targetSelector := (self methodDict includesKey: aSelector)
-		                  ifTrue: [ aSelector ]
-		                  ifFalse: [ self internScopedSelector: aSelector ].
-
-	super removeSelector: targetSelector. 
+	super removeSelector: aSelector logged: logged.
 	
 	"In some tests we removed the extension method by hand, breaking some invariants.
 	We should take a look a that"
-	(extendedClass includesSelector: aSelector) ifTrue: [ extendedClass removeMethod: extendedClass >> aSelector ]
+	(extendedClass includesSelector: aSelector)
+		ifTrue: [ extendedClass removeMethod: (extendedClass >> aSelector) ]
 ]
 
 { #category : 'accessing' }
