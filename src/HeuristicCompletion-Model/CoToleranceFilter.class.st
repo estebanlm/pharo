@@ -99,6 +99,7 @@ CoToleranceFilter class >> enabled [
 { #category : 'class initialization' }
 CoToleranceFilter class >> initialize [ 
 
+	self reset.
 	self disable
 ]
 
