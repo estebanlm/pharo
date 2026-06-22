@@ -21,7 +21,7 @@ Extension >> addUserPackage: aPackage [
 { #category : 'accessing - method dictionary' }
 Extension >> compiledMethodAt: selector [
 
-	^ self methodDict at: (self internScopedSelector: selector asSymbol)
+	^ self methodDict at: (self package visibleSelectorForSymbol: selector) 
 ]
 
 { #category : 'accessing' }
