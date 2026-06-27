@@ -6,32 +6,10 @@ See the #entriesDo:
 Class {
 	#name : 'CoGlobalSelectorFetcher',
 	#superclass : 'CoGlobalFetcher',
-	#classVars : [
-		'TokenSizes'
-	],
 	#category : 'HeuristicCompletion-Model-Fetchers',
 	#package : 'HeuristicCompletion-Model',
 	#tag : 'Fetchers'
 }
-
-{ #category : 'class initialization' }
-CoGlobalSelectorFetcher class >> fillTokenSizes [
-	"self fillTokenSizes"
-	
-	TokenSizes := Array new: 200 withAll: 1.
-	
-	2 to: TokenSizes size  do: [ :i | 
-		TokenSizes at: i put: (i - ((i-1) log: 2)) floor ].
-	TokenSizes at: 2 put: 1.
-	^ TokenSizes
-]
-
-{ #category : 'class initialization' }
-CoGlobalSelectorFetcher class >> initialize [ 
-	"self initialize"
-	
-	self fillTokenSizes
-]
 
 { #category : 'enumerating' }
 CoGlobalSelectorFetcher >> entriesDo: aBlock [
@@ -48,13 +26,15 @@ CoGlobalSelectorFetcher >> entriesDo: aBlock [
 	- the last one is to look globally in the method implementors and try to match. 		
 	"
 	
-	| size coml |
+	| size compl |
 	astNode ifNotNil: [ :node |
 		node parent ifNotNil: [ :parent | 
 			"Try first to continue the parent keyword message"
 			(parent isMessage and: [ parent isKeyword ]) ifTrue: [
+				compl := parent selector. 
+				size := compl size.
 				self systemNavigation 
-					allSelectorsStartingWith: parent selector 
+					allSelectorsStartingWith: (compl copyFrom: 1 to: (TokenSizes at: size))
 					do: [ :e |
 						aBlock value: (CoSelectorEntry new
 							displayedContents:
@@ -64,15 +44,15 @@ CoGlobalSelectorFetcher >> entriesDo: aBlock [
 							fetcherName: self class name;
 							selector: e) ] ] ] ]. 
 	"Otherwise, just go wide"
-	coml := filter completionString.
-	size := coml size.
+	compl := filter completionString.
+	size := compl size.
 	
 	"here we are trying to guide less the collection of possible matches so that the tolerance can then play its role
 	Indeed if we are looking for SpPresenter and type SpPrez looking for SpPrez* will not give SpPresenter so the idea if to reduce the 
 	length of the prefix so that at the end of the prefix we get more chances of copiing with typos."
 	self systemNavigation 
 		allSelectorsStartingWith: 
-			(coml copyFrom: 1 to: (TokenSizes at: size))   
+			(compl copyFrom: 1 to: (TokenSizes at: size))   
 		do: [ :e |
 				aBlock value: ((CoSelectorEntry contents: e node: astNode)
 					 fetcherName: self class name;
