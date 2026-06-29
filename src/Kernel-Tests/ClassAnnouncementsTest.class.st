@@ -6,6 +6,14 @@ Class {
 	#tag : 'Classes'
 }
 
+{ #category : 'running' }
+ClassAnnouncementsTest >> tearDown [
+	"We need to do the tear down before to ensure we are already unsubscribed of the announcements."
+
+	super tearDown.
+	self packageOrganizer removePackage: self packageNameForTests , '2'
+]
+
 { #category : 'tests' }
 ClassAnnouncementsTest >> testDuplicatingAClassAnnouncesAddition [
 
