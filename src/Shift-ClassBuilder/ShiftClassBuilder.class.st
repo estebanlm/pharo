@@ -124,9 +124,12 @@ ShiftClassBuilder >> build [
 
 	self installSlotsAndVariables.
 
-	self oldClass ifNotNil: [ self builderEnhancer compileMethodsFor: self ].
+	self oldClass ifNotNil: [ :old |
+		newClass basicTag: old packageTag.
+		self builderEnhancer compileMethodsFor: self ].
 
 	self builderEnhancer afterMethodsCompiled: self.
+	
 	^ newClass
 ]
 
