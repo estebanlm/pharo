@@ -10,6 +10,7 @@ Class {
 ClassAnnouncementsTest >> tearDown [
 	"We need to do the tear down before to ensure we are already unsubscribed of the announcements."
 
+	<tearDownIsNotLast>
 	super tearDown.
 	self packageOrganizer removePackage: self packageNameForTests , '2'
 ]
