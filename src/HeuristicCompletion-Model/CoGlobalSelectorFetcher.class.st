@@ -34,7 +34,7 @@ CoGlobalSelectorFetcher >> entriesDo: aBlock [
 				compl := parent selector. 
 				size := compl size.
 				self systemNavigation 
-					allSelectorsStartingWith: (compl copyFrom: 1 to: (TokenSizes at: size))
+					allSelectorsStartingWith: (self tokenToCheckFrom: compl withSize: size)
 					do: [ :e |
 						aBlock value: (CoSelectorEntry new
 							displayedContents:
@@ -52,9 +52,17 @@ CoGlobalSelectorFetcher >> entriesDo: aBlock [
 	length of the prefix so that at the end of the prefix we get more chances of copiing with typos."
 	self systemNavigation 
 		allSelectorsStartingWith: 
-			(compl copyFrom: 1 to: (TokenSizes at: size))   
+			(self tokenToCheckFrom: compl withSize: size)   
 		do: [ :e |
 				aBlock value: ((CoSelectorEntry contents: e node: astNode)
 					 fetcherName: self class name;
 					 yourself) ]
+]
+
+{ #category : 'enumerating' }
+CoGlobalSelectorFetcher >> tokenToCheckFrom: compl withSize: size [
+
+	compl isEmpty ifTrue: [ ^ compl ].
+	^  (compl copyFrom: 1 to: (TokenSizes at: size))
+				
 ]
