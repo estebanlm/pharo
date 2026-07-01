@@ -23,6 +23,7 @@ CoGlobalVariableFetcher >> entriesDo: aBlock [
 	size := compl size.
 	
 	size = 0 ifTrue: [ ^ self ].
+
 	self systemNavigation 
 		allGlobalNamesStartingWith: (compl copyFrom: 1 to: (TokenSizes at: size)) 
 		do:  [ :e |
