@@ -351,25 +351,24 @@ SettingDeclaration >> startupActionCode [
 	| currentValue |
 	currentValue := self findCurrentSettingValue.
 	^ String streamContents: [ :s |
-		  self targetSelector ifNotNil: [ s << '(' ].
-		  s << '(Smalltalk at: '.
-		  self targetSymbolOrObject asSymbol printOn: s.
-		  self targetSelector ifNotNil: [ :ts |
+			  self targetSelector ifNotNil: [ s << '(' ].
+			  s << '(Smalltalk globals at: '.
+			  self targetName printOn: s.
+			  self targetSelector ifNotNil: [ :ts |
+					  s << ') perform: '.
+					  ts printOn: s ].
 			  s << ') perform: '.
-			  ts printOn: s ].
-		  s << ') perform: '.
-		  self setSelector asSymbol printOn: s.
-		  s << ' with: ('.
-		  currentValue settingStoreOn: s.
-		  s << ')' ]
+			  self setSelector asSymbol printOn: s.
+			  s << ' with: ('.
+			  currentValue settingStoreOn: s.
+			  s << ')' ]
 ]
 
-{ #category : 'export' }
-SettingDeclaration >> targetSymbolOrObject [
+{ #category : 'accessing' }
+SettingDeclaration >> targetName [
 
-	^ self target isSymbol
-		  ifTrue: [ self target ]
-		  ifFalse: [ self target exportSettingAction ]
+	self assert: self target isClass.
+	^ self target name
 ]
 
 { #category : 'accessing' }
