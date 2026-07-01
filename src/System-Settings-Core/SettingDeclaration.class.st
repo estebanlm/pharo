@@ -166,11 +166,9 @@ SettingDeclaration >> exportSettingAction [
 { #category : 'export' }
 SettingDeclaration >> findCurrentSettingValue [
 
-	| targetSymbolOrObject |
-	targetSymbolOrObject := self targetSymbolOrObject.
 	^ self targetSelector
-		ifNil: [ (Smalltalk at: targetSymbolOrObject) perform: self getSelector ]
-		ifNotNil: [ : s | ((Smalltalk at: targetSymbolOrObject) perform: s) perform: self getSelector].
+		  ifNil: [ target perform: self getSelector withEnoughArguments: { nil } ]
+		  ifNotNil: [ :s | (target perform: s) perform: self getSelector withEnoughArguments: { nil } ]
 ]
 
 { #category : 'accessing' }
