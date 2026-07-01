@@ -22,10 +22,8 @@ CoGlobalVariableFetcher >> entriesDo: aBlock [
 	compl := filter completionString.
 	size := compl size.
 	
-	size = 0 ifTrue: [ ^ self ].
-
 	self systemNavigation 
-		allGlobalNamesStartingWith: (compl copyFrom: 1 to: (TokenSizes at: size)) 
+		allGlobalNamesStartingWith: (self tokenToCheckFrom: compl withSize: size ) 
 		do:  [ :e |
 				aBlock value: ((CoGlobalEntry contents: e node: astNode)
 						 fetcherName: self class name;

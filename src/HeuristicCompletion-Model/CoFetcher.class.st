@@ -178,6 +178,14 @@ CoFetcher >> reset [
 	generator := nil
 ]
 
+{ #category : 'helpers' }
+CoFetcher >> tokenToCheckFrom: compl withSize: size [
+
+	compl isEmpty ifTrue: [ ^ compl ].
+	^  (compl copyFrom: 1 to: (TokenSizes at: size))
+				
+]
+
 { #category : 'composing' }
 CoFetcher >> unnarrowFilter: aFilter narrowKey: aKey [
 
