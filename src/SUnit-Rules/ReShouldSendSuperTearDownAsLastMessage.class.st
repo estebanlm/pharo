@@ -17,9 +17,10 @@ ReShouldSendSuperTearDownAsLastMessage class >> checksMethod [
 	^ true
 ]
 
-{ #category : 'accessing' }
-ReShouldSendSuperTearDownAsLastMessage class >> group [
-	^ self sunitGroup
+{ #category : 'as yet unclassified' }
+ReShouldSendSuperTearDownAsLastMessage class >> groupSelector [
+
+	^ #sunitGroup
 ]
 
 { #category : 'utilities' }
@@ -59,6 +60,12 @@ ReShouldSendSuperTearDownAsLastMessage >> basicCheck: aMethod [
 	(aMethod hasPragmaNamed: #tearDownIsNotLast) ifTrue: [ ^ false ].
 
 	^ self class superTearDownNotCalledLastIn: aMethod
+]
+
+{ #category : 'as yet unclassified' }
+ReShouldSendSuperTearDownAsLastMessage >> groupSelector [
+
+	^ #sunitGroup
 ]
 
 { #category : 'testing' }
