@@ -14,7 +14,7 @@ ReLocalMethodsSameThanTraitRule class >> checksClass [
 	^ true
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReLocalMethodsSameThanTraitRule class >> groupSelector [
 
 	^ #optimizationGroup

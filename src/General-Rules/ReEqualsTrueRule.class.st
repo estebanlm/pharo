@@ -9,7 +9,7 @@ Class {
 	#tag : 'Optimization'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReEqualsTrueRule class >> groupSelector [
 
 	^ #optimizationGroup

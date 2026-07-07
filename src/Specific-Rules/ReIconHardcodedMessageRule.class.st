@@ -15,7 +15,7 @@ Class {
 	#tag : 'API Change'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReIconHardcodedMessageRule class >> groupSelector [
 
 	^ #apiChangeGroup

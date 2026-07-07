@@ -34,7 +34,7 @@ ReProperMethodProtocolNameRule class >> goodMethodProtocolName [
 	^self protocolIdiom key
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReProperMethodProtocolNameRule class >> groupSelector [
 
 	^ #methodProtocolNameGroup

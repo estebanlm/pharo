@@ -14,7 +14,7 @@ ReNoNilAssignationInInitializeRule class >> checksMethod [
 	^ true
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReNoNilAssignationInInitializeRule class >> groupSelector [
 
 	^ #styleGroup

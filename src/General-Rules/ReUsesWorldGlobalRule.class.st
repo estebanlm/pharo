@@ -10,7 +10,7 @@ Class {
 	#tag : 'Bugs'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReUsesWorldGlobalRule class >> groupSelector [
 
 	^ #bugsGroup

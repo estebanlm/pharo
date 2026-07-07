@@ -25,7 +25,7 @@ Class {
 	#tag : 'Potential Bugs'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReFileBlocksRule class >> groupSelector [
 
 	^ #potentialBugsGroup

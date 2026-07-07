@@ -19,7 +19,7 @@ ReOverridesSpecialMessageRule class >> classShouldNotOverride [
 	^ #( #== #~~ #class #basicAt: #basicAt:put: #basicSize #identityHash )
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReOverridesSpecialMessageRule class >> groupSelector [
 
 	^ #bugsGroup

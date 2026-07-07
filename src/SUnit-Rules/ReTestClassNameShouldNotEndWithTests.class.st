@@ -17,7 +17,7 @@ ReTestClassNameShouldNotEndWithTests class >> checksClass [
 	^ true
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReTestClassNameShouldNotEndWithTests class >> groupSelector [
 
 	^ #sunitGroup
@@ -37,10 +37,4 @@ ReTestClassNameShouldNotEndWithTests class >> ruleName [
 ReTestClassNameShouldNotEndWithTests >> basicCheck: aClass [
 
 	^ (aClass inheritsFrom: TestCase) and: [aClass name asString endsWith: 'Tests']
-]
-
-{ #category : 'as yet unclassified' }
-ReTestClassNameShouldNotEndWithTests >> groupSelector [
-
-	^ #sunitGroup
 ]

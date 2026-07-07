@@ -12,7 +12,7 @@ ReNoUnusedInstanceVariableRule class >> checksClass [
 	^ true
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReNoUnusedInstanceVariableRule class >> groupSelector [
 
 	^ #optimizationGroup

@@ -9,7 +9,7 @@ Class {
 	#tag : 'Coding Idiom Violation'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReEqualNilRule class >> groupSelector [
 
 	^ #codingIdiomViolationGroup

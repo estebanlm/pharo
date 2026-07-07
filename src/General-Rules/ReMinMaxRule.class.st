@@ -23,7 +23,7 @@ Class {
 	#tag : 'Coding Idiom Violation'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReMinMaxRule class >> groupSelector [
 
 	^ #codingIdiomViolationGroup

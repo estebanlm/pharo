@@ -39,12 +39,6 @@ ReAssertEqualSignIntoAssertEqualsRule >> afterCheck: aNode mappings: mappingDict
 		do: [ false ]
 ]
 
-{ #category : 'as yet unclassified' }
-ReAssertEqualSignIntoAssertEqualsRule >> groupSelector [
-
-	^ #sunitGroup
-]
-
 { #category : 'initialization' }
 ReAssertEqualSignIntoAssertEqualsRule >> initialize [
 	super initialize.

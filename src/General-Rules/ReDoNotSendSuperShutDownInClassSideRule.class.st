@@ -12,7 +12,7 @@ Class {
 	#tag : 'Potential Bugs'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReDoNotSendSuperShutDownInClassSideRule class >> groupSelector [
 
 	^ #potentialBugsGroup

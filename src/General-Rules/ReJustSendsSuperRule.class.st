@@ -17,7 +17,7 @@ ReJustSendsSuperRule class >> checksMethod [
 	^ true
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReJustSendsSuperRule class >> groupSelector [
 
 	^ #optimizationGroup

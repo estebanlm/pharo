@@ -20,7 +20,7 @@ Class {
 	#tag : 'Optimization'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReTrueFalseDuplicationRule class >> groupSelector [
 
 	^ #optimizationGroup

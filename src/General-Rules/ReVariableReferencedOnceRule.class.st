@@ -14,7 +14,7 @@ ReVariableReferencedOnceRule class >> checksClass [
 	^ true
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReVariableReferencedOnceRule class >> groupSelector [
 
 	^ #designFlawGroup

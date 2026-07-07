@@ -9,7 +9,7 @@ Class {
 	#tag : 'Potential Bugs'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReEmptyExceptionHandlerRule class >> groupSelector [
 
 	^ #potentialBugsGroup

@@ -19,7 +19,7 @@ ReUnpackagedCodeRule class >> checksMethod [
 	^ true
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReUnpackagedCodeRule class >> groupSelector [
 
 	^ #potentialBugsGroup

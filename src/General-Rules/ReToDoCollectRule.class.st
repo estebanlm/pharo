@@ -9,7 +9,7 @@ Class {
 	#tag : 'Coding Idiom Violation'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReToDoCollectRule class >> groupSelector [
 
 	^ #codingIdiomViolationGroup

@@ -16,7 +16,7 @@ ReUncommonMessageSendRule class >> checksMethod [
 	^ true
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReUncommonMessageSendRule class >> groupSelector [
 
 	^ #potentialBugsGroup

@@ -20,7 +20,7 @@ ReDefineEntityComplianceCheckRule class >> complianceMethods [
 	^ #(checksMethod checksClass checksPackage)
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReDefineEntityComplianceCheckRule class >> groupSelector [
 
 	^ #codingIdiomViolationGroup

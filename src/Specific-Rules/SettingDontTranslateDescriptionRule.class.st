@@ -9,7 +9,7 @@ Class {
 	#tag : 'API Hints'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 SettingDontTranslateDescriptionRule class >> groupSelector [
 
 	^ #apiHintsGroup

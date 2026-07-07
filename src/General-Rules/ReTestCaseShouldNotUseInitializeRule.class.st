@@ -18,7 +18,7 @@ ReTestCaseShouldNotUseInitializeRule class >> checksClass [
 	^ true
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReTestCaseShouldNotUseInitializeRule class >> groupSelector [
 
 	^ #cleanCodeGroup
