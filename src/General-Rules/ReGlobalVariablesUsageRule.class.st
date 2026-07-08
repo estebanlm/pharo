@@ -16,7 +16,7 @@ ReGlobalVariablesUsageRule class >> checksMethod [
 	^ true
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReGlobalVariablesUsageRule class >> groupSelector [
 
 	^ #designFlawGroup

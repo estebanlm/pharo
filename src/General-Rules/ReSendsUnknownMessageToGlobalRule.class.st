@@ -9,7 +9,7 @@ Class {
 	#tag : 'Bugs'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReSendsUnknownMessageToGlobalRule class >> groupSelector [
 
 	^ #bugsGroup

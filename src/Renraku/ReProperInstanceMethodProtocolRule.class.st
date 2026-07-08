@@ -15,7 +15,7 @@ ReProperInstanceMethodProtocolRule class >> checksClassMethod [
 	^ false
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReProperInstanceMethodProtocolRule class >> groupSelector [
 
 	^ #instanceMethodProtocolGroup

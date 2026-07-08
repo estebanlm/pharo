@@ -10,7 +10,7 @@ Class {
 	#tag : 'Bugs'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReSuperSendsNewRule class >> groupSelector [
 
 	^ #bugsGroup

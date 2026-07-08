@@ -14,7 +14,7 @@ ReInstanceVariableCapitalizationRule class >> checksClass [
 	^ true
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReInstanceVariableCapitalizationRule class >> groupSelector [
 
 	^ #styleGroup

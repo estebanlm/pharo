@@ -15,7 +15,7 @@ RePackageManifestShouldBePackagedInManifestTagRule class >> checksClass [
 	^ true
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 RePackageManifestShouldBePackagedInManifestTagRule class >> groupSelector [
 
 	^ #codingIdiomViolationGroup

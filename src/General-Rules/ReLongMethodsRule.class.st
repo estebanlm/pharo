@@ -22,7 +22,7 @@ ReLongMethodsRule class >> checksMethod [
 	^ true
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReLongMethodsRule class >> groupSelector [
 
 	^ #designFlawGroup

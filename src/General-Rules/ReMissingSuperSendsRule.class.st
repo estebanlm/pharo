@@ -16,7 +16,7 @@ ReMissingSuperSendsRule class >> checksMethod [
 	^ true
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReMissingSuperSendsRule class >> groupSelector [
 
 	^ #potentialBugsGroup

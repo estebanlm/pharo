@@ -9,7 +9,7 @@ Class {
 	#tag : 'Design Flaws'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 SendsDeprecatedMethodToGlobalRule class >> groupSelector [
 
 	^ #designFlawGroup

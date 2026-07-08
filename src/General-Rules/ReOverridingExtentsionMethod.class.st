@@ -9,7 +9,7 @@ Class {
 	#tag : 'Migrated'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReOverridingExtentsionMethod class >> groupSelector [
 
 	^ #potentialBugsGroup

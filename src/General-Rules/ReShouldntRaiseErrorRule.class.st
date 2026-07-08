@@ -40,7 +40,7 @@ Class {
 	#tag : 'Coding Idiom Violation'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReShouldntRaiseErrorRule class >> groupSelector [
 
 	^ #codingIdiomViolationGroup

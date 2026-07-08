@@ -13,7 +13,7 @@ ReTSUnitGroupedRule >> group [
 	^ ReAbstractRule sunitGroup
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReTSUnitGroupedRule >> groupSelector [
 
 	^ #sunitGroup

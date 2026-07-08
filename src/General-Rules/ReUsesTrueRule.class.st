@@ -16,7 +16,7 @@ ReUsesTrueRule class >> checksMethod [
 	^ true
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReUsesTrueRule class >> groupSelector [
 
 	^ #bugsGroup

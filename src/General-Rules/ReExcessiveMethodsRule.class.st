@@ -20,7 +20,7 @@ ReExcessiveMethodsRule class >> checksClass [
 	^ true
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReExcessiveMethodsRule class >> groupSelector [
 
 	^ #designFlawGroup

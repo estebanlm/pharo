@@ -10,7 +10,7 @@ Class {
 	#tag : 'Coding Idiom Violation'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReIsNotNilAndConditionalRule class >> groupSelector [
 
 	^ #codingIdiomViolationGroup

@@ -12,7 +12,7 @@ Class {
 	#tag : 'Coding Idiom Violation'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReToDoWithIncrementRule class >> groupSelector [
 
 	^ #codingIdiomViolationGroup

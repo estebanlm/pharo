@@ -17,7 +17,7 @@ ReTestClassNameShouldEndWithTestRule class >> checksClass [
 	^ true
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReTestClassNameShouldEndWithTestRule class >> groupSelector [
 
 	^ #sunitGroup
@@ -38,10 +38,4 @@ ReTestClassNameShouldEndWithTestRule >> basicCheck: aClass [
 	| suffixes |
 	suffixes := #('Test' 'TestCase').
 	^ (aClass inheritsFrom: TestCase) and: [ suffixes noneSatisfy: [ :suffix | aClass name asString endsWith: suffix ] ]
-]
-
-{ #category : 'as yet unclassified' }
-ReTestClassNameShouldEndWithTestRule >> groupSelector [
-
-	^ #sunitGroup
 ]

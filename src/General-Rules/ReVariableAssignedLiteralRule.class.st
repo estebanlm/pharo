@@ -15,7 +15,7 @@ ReVariableAssignedLiteralRule class >> checksClass [
 	^ true
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReVariableAssignedLiteralRule class >> groupSelector [
 
 	^ #designFlawGroup

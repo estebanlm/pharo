@@ -19,7 +19,7 @@ Class {
 	#tag : 'Coding Idiom Violation'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReWhileTrueRule class >> groupSelector [
 
 	^ #codingIdiomViolationGroup

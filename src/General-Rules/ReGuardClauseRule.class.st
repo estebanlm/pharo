@@ -28,7 +28,7 @@ Class {
 	#tag : 'Coding Idiom Violation'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReGuardClauseRule class >> groupSelector [
 
 	^ #codingIdiomViolationGroup

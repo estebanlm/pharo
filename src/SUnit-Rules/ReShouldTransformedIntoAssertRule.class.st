@@ -11,7 +11,7 @@ Class {
 	#tag : 'SUnit'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReShouldTransformedIntoAssertRule class >> groupSelector [
 
 	^ #sunitGroup
@@ -26,12 +26,6 @@ ReShouldTransformedIntoAssertRule class >> ruleName [
 ReShouldTransformedIntoAssertRule class >> uniqueIdentifierName [
 
 	^'ShouldTransformedIntoAssert'
-]
-
-{ #category : 'as yet unclassified' }
-ReShouldTransformedIntoAssertRule >> groupSelector [
-
-	^ #sunitGroup
 ]
 
 { #category : 'initialization' }

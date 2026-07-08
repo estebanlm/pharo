@@ -18,7 +18,7 @@ ReExcessiveArgumentsRule class >> checksMethod [
 	^ true
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReExcessiveArgumentsRule class >> groupSelector [
 
 	^ #designFlawGroup

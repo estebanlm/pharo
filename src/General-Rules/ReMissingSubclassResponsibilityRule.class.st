@@ -14,7 +14,7 @@ ReMissingSubclassResponsibilityRule class >> checksClass [
 	^ true
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReMissingSubclassResponsibilityRule class >> groupSelector [
 
 	^ #designFlawGroup

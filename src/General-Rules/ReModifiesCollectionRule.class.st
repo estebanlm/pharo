@@ -17,7 +17,7 @@ Class {
 	#tag : 'Potential Bugs'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReModifiesCollectionRule class >> groupSelector [
 
 	^ #potentialBugsGroup

@@ -24,7 +24,7 @@ ReDefinesEqualNotHashRule class >> checksClass [
 	^ true
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReDefinesEqualNotHashRule class >> groupSelector [
 
 	^ #potentialBugsGroup

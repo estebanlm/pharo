@@ -9,7 +9,7 @@ Class {
 	#tag : 'Potential Bugs'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReReturnsIfTrueRule class >> groupSelector [
 
 	^ #potentialBugsGroup

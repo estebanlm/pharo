@@ -57,7 +57,7 @@ ReImplementedNotSentRule class >> enabled: aBoolean [
 		ifFalse: [ self unsubscribe ]
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReImplementedNotSentRule class >> groupSelector [
 
 	^ #designFlawGroup

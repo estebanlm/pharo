@@ -19,7 +19,7 @@ ReShouldSendSuperInitializeAsFirstMessage class >> checksMethod [
 	^ true
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'accessing' }
 ReShouldSendSuperInitializeAsFirstMessage class >> groupSelector [
 
 	^ #cleanCodeGroup
@@ -56,10 +56,4 @@ ReShouldSendSuperInitializeAsFirstMessage class >> superInitializeNotCalledFirst
 ReShouldSendSuperInitializeAsFirstMessage >> basicCheck: aMethod [
 
 	^ (aMethod isClassSide not) and: [ aMethod selector = #initialize and: [ self class superInitializeNotCalledFirstIn: aMethod ] ]
-]
-
-{ #category : 'as yet unclassified' }
-ReShouldSendSuperInitializeAsFirstMessage >> groupSelector [
-
-	^ #sunitGroup
 ]
