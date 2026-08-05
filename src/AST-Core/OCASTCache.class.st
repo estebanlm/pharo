@@ -176,9 +176,8 @@ OCASTCache >> printOn: aStream [
 
 { #category : 'accessing' }
 OCASTCache >> removeKey: aCompiledMethod [
-	
-	"If absent do nothing"
-	self weakDictionary removeKey: aCompiledMethod ifAbsent: nil
+
+	self weakDictionary removeKey: aCompiledMethod
 ]
 
 { #category : 'accessing' }
