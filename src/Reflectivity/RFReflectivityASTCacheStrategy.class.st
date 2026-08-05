@@ -19,8 +19,7 @@ Class {
 { #category : 'system annoucements' }
 RFReflectivityASTCacheStrategy class >> handleMethodModified: aMethodModified [
 
-	aMethodModified oldMethod saveBcToASTCacheWithAST:
-		aMethodModified oldMethod ast
+	OCASTCache default removeKey: aMethodModified oldMethod
 ]
 
 { #category : 'class initialization' }
