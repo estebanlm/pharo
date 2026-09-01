@@ -50,16 +50,6 @@ ClapMetacelloTest >> testCanKeepAliveWithNoQuitOption [
 ]
 
 { #category : 'tests' }
-ClapMetacelloTest >> testCanSave [
-
-	| command |
-	context := ClapMetacello commandSpecification activationWith: #( 'metacello' 'install' '--save' 'github://myorg/myproject:main/src' 'MyProject').
-	command := context command.
-
-	self assert: command shouldSave
-]
-
-{ #category : 'tests' }
 ClapMetacelloTest >> testCanSignalErrorOnWarning [
 
 	| command |
@@ -70,16 +60,6 @@ ClapMetacelloTest >> testCanSignalErrorOnWarning [
 ]
 
 { #category : 'tests' }
-ClapMetacelloTest >> testDoesNotSaveByDefault [
-
-	| command |
-	context := ClapMetacello commandSpecification activationWith: #( 'metacello' 'install' 'github://myorg/myproject:main/src' 'MyProject').
-	command := context command.
-
-	self deny: command shouldSave
-]
-
-{ #category : 'tests' }
 ClapMetacelloTest >> testDoesNotSignalErrorOnWarningByDefault [
 
 	| command |
@@ -87,6 +67,16 @@ ClapMetacelloTest >> testDoesNotSignalErrorOnWarningByDefault [
 	command := context command.
 
 	self deny: command shouldSignalErrorOnWarning
+]
+
+{ #category : 'tests' }
+ClapMetacelloTest >> testDoesNotSaveWithNoSaveOption [
+
+	| command |
+	context := ClapMetacello commandSpecification activationWith: #( 'metacello' 'install' '--no-save' 'github://myorg/myproject:main/src' 'MyProject').
+	command := context command.
+
+	self deny: command shouldSave
 ]
 
 { #category : 'tests' }
@@ -107,6 +97,16 @@ ClapMetacelloTest >> testQuitByDefault [
 	command := context command.
 
 	self assert: command shouldQuit
+]
+
+{ #category : 'tests' }
+ClapMetacelloTest >> testSavesByDefault [
+
+	| command |
+	context := ClapMetacello commandSpecification activationWith: #( 'metacello' 'install' 'github://myorg/myproject:main/src' 'MyProject').
+	command := context command.
+
+	self assert: command shouldSave
 ]
 
 { #category : 'tests' }
