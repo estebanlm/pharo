@@ -101,7 +101,7 @@ PharoBootstrapInitialization class >> fixMethodsIn: aFileName [
 { #category : 'initialization' }
 PharoBootstrapInitialization class >> initializeCommandLineHandlerAndErrorHandling [
 	"This method is run before the new bootstrapped image is saved!"
-	
+
 	ProcessorScheduler initialize.
 
 	Delay initialize.
@@ -111,21 +111,19 @@ PharoBootstrapInitialization class >> initializeCommandLineHandlerAndErrorHandli
 	OSPlatform startUp: true.
 
 	AbstractAnnouncementSubscription initialize.
-	
+
 	SmallInteger initialize.
 	String initialize.
-	ByteString initialize. 
+	ByteString initialize.
 	Float initialize.
-	
+
 	ZnUTF8Encoder initialize. "needed by TextConverter to install LineEnd convention (called by Smalltalk openLog)"
 
 	"Weak array class initialization 2 lines"
-	Smalltalk specialObjectsArray at: 42 put: Semaphore new."to put in EPObjectSpace>>#createSpecialObjectsArray?"
+	Smalltalk specialObjectsArray at: 42 put: Semaphore new. "to put in EPObjectSpace>>#createSpecialObjectsArray?"
 	FinalizationProcess restartFinalizationProcess.
 
-	Smalltalk globals
-		at: #Transcript
-		put: (NonInteractiveTranscript stdout install).
+	Smalltalk globals at: #Transcript put: NonInteractiveTranscript stdout install.
 
 	ErrorHandler default: NonInteractiveErrorHandler new.
 
@@ -134,7 +132,7 @@ PharoBootstrapInitialization class >> initializeCommandLineHandlerAndErrorHandli
 	'Initializing Collections' traceCr.
 	CollectionElement initialize.
 	ExternalSemaphoreTable initialize.
-	
+
 	'Initializing code model' traceCr.
 	CompiledMethod initialize.
 	Slot initialize.
@@ -154,9 +152,10 @@ PharoBootstrapInitialization class >> initializeCommandLineHandlerAndErrorHandli
 	"Initialize basic command line behaviour"
 	NonInteractiveTranscript initialize.
 	PerformMessageCommandLineHandler registerAsCommandLinehandler.
-	
-	self undeclaredRegistry ifNotEmpty: [ 
-		self error: 'There should be no undeclared after loading the BaselineOfKernel. List of undeclared: ', (self undeclaredRegistry keys collect: [ :k | k -> k usingMethods ]) printString ].
+
+	self undeclaredRegistry ifNotEmpty: [
+			self error: 'There should be no undeclared variables after loading the BaselineOfKernel. List of undeclared: '
+				, self undeclaredRegistry keys printString ].
 
 	Smalltalk snapshot: true andQuit: true.
 	Processor terminateActive

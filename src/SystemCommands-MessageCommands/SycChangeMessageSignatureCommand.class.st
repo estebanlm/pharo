@@ -44,7 +44,7 @@ SycChangeMessageSignatureCommand >> applyResultInContext: aToolContext [
 	super applyResultInContext: aToolContext.
 	aToolContext
 		showMessage: originalMessage
-		renamedTo: self resultMessageSelector asSymbol
+		renamedTo: self resultMessageSelector selector asSymbol
 ]
 
 { #category : 'execution' }
